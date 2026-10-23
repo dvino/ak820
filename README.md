@@ -6,6 +6,8 @@ This project brings QMK and Vial to the **wired AJAZZ AK820 with a VS11K28A / CH
 
 Set up keys, layers, the encoder and macros in Vial. After that, the keyboard works without a desktop app running in the background. The port keeps the keyboard's original loader and stores settings in the keyboard.
 
+![Wired AJAZZ AK820 keyboard](docs/images/keyboard.webp)
+
 ## Features
 
 - Six layers, with separate clockwise and counterclockwise encoder actions on each layer.
@@ -15,6 +17,17 @@ Set up keys, layers, the encoder and macros in Vial. After that, the keyboard wo
 - 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
 - The source installer can back up and restore supported settings locally and carry them through a supported firmware update. Tap-hold, One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides are not supported by this profile.
+
+<details>
+<summary>PCB and controller photos</summary>
+
+![AK820 PCB](docs/images/pcb.webp)
+
+![PCB markings: SG-8976 VS11K28A RGB, Ver:01](docs/images/pcb-markings.webp)
+
+![VS11K28A controller](docs/images/controller.webp)
+
+</details>
 
 ## Get started
 
