@@ -4,7 +4,7 @@
 
 Updated 2026-10-24. Development source implements compact Mod-Tap/Layer-Tap.
 Its latest build uses pinned SDCC 4.6.0 and has 24 trailing CODE bytes. Complete
-qualification is being rerun after a Grave Escape ownership correction. The
+offline qualification passed after the Grave Escape ownership correction. The
 checked-in installer bundle still contains the earlier firmware. CI builds its
 own firmware and passes that fresh bundle to Windows packaging.
 No firmware or settings writes were performed in this work.
@@ -30,7 +30,7 @@ probe added three CODE bytes and was rejected. See the
 Exact application IHX hashes:
 
 - Checked-in release and installed-image profile: `f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e`.
-- Reproduced candidate and CI target: `feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8`.
+- Historical pointer-only candidate: `feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8`.
 
 The candidate has not been installed. Its IHX is an application, not a full
 flashable ROM. Local OEM recovery inputs are still needed to construct the
@@ -107,7 +107,7 @@ that checked result for the reproduced program. A machine build attestation
 is distinct from independent review and never authorizes device access.
 
 The current source approval binds 21 host files. The checked-in legacy release
-manifest SHA256 is `de139a02195c777bda20994e85ebae207f98015723e80a415cdfcca7d36cb2ac`.
+manifest SHA256 is `234d7d7d267bc2b5dd61faa63d00543366b0db2208407631053c8b73f91055db`.
 Its [review record](../releases/rc6/reviews/independent-review.md) keeps the old
 firmware and the updated host code separate. Source `verify` passed without
 HID load or USB access. [GitHub run 40007909621](https://github.com/dvino/ak820/actions/runs/40007909621)

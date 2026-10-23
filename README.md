@@ -44,6 +44,17 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - The source installer can back up and restore supported settings locally and carry them through a supported firmware update. One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides remain unsupported.
 
 
+## Disclaimer
+
+The source code, firmware and tools are provided **“as is”, without warranties**
+of any kind. Use, modification, flashing and recovery are performed at the
+user's own risk. The user is responsible for checking hardware compatibility,
+keeping backups and any resulting damage, an unusable device or loss of data.
+
+To the extent permitted by applicable law, the authors and contributors are
+not liable for damage or losses caused by using or being unable to use this
+project. See sections 15–17 of the [LICENSE](LICENSE).
+
 ## Get started
 
 > Install only on the supported wired hardware revision. A mismatched image can leave the keyboard unusable; a matching USB ID does not make another revision safe.
