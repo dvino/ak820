@@ -12,6 +12,10 @@ VS11K28A / CH555-like 8051**, USB `320F:505B`. AK820 V2, Pro и Max устрое
 
 ![Проводная клавиатура AJAZZ AK820](../images/keyboard.webp)
 
+<a href="../images/pcb.webp"><img src="../images/pcb.webp" alt="Плата" width="240"></a>
+<a href="../images/pcb-markings.webp"><img src="../images/pcb-markings.webp" alt="Маркировка платы" width="240"></a>
+<a href="../images/controller.webp"><img src="../images/controller.webp" alt="Контроллер" width="240"></a>
+
 ## Возможности
 
 - Шесть слоёв, на каждом можно отдельно назначить действия на вращение энкодера в обе стороны.
@@ -22,16 +26,6 @@ VS11K28A / CH555-like 8051**, USB `320F:505B`. AK820 V2, Pro и Max устрое
 - Сохранение раскладок, макросов и общих настроек RGB; физическая разблокировка Vial.
 - Исходный установщик локально сохраняет и восстанавливает поддерживаемые настройки, в том числе при обновлении прошивки. Профиль не поддерживает Tap-hold, One Shot, Mouse Keys, Tap Dance, Combos и Key Overrides.
 
-<details>
-<summary>Фотографии платы и контроллера</summary>
-
-![Плата AK820](../images/pcb.webp)
-
-![Маркировка платы: SG-8976 VS11K28A RGB, Ver:01](../images/pcb-markings.webp)
-
-![Контроллер VS11K28A](../images/controller.webp)
-
-</details>
 
 ## Начало работы
 

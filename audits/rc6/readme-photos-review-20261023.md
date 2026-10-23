@@ -3,7 +3,7 @@
 Date: 2026-10-23. Four supplied hardware photos were resized without cropping
 and encoded as WebP for the English and Russian README. Source photos remain
 unchanged. The keyboard photo is visible above the features; PCB, markings
-and controller photos are in a collapsible block.
+and controller photos are visible as linked 240-pixel thumbnails below it.
 
 | Image | Dimensions | Bytes |
 | --- | --- | ---: |
@@ -18,3 +18,7 @@ Independent reviewer review_readme_photos checked both README diffs, links,
 all four images, dimensions and metadata profiles; no findings remained.
 Documentation checks passed: 33 documents, zero failures. This is a
 documentation and image review, not hardware compatibility verification.
+
+Layout follow-up, 2026-10-23: the collapsed block was replaced with visible
+linked thumbnails after the display request. Independent review_readme_photos
+approved both README translations, paths and alt text; no image bytes changed.

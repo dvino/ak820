@@ -8,6 +8,10 @@ Set up keys, layers, the encoder and macros in Vial. After that, the keyboard wo
 
 ![Wired AJAZZ AK820 keyboard](docs/images/keyboard.webp)
 
+<a href="docs/images/pcb.webp"><img src="docs/images/pcb.webp" alt="PCB" width="240"></a>
+<a href="docs/images/pcb-markings.webp"><img src="docs/images/pcb-markings.webp" alt="PCB markings" width="240"></a>
+<a href="docs/images/controller.webp"><img src="docs/images/controller.webp" alt="Controller" width="240"></a>
+
 ## Features
 
 - Six layers, with separate clockwise and counterclockwise encoder actions on each layer.
@@ -18,16 +22,6 @@ Set up keys, layers, the encoder and macros in Vial. After that, the keyboard wo
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
 - The source installer can back up and restore supported settings locally and carry them through a supported firmware update. Tap-hold, One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides are not supported by this profile.
 
-<details>
-<summary>PCB and controller photos</summary>
-
-![AK820 PCB](docs/images/pcb.webp)
-
-![PCB markings: SG-8976 VS11K28A RGB, Ver:01](docs/images/pcb-markings.webp)
-
-![VS11K28A controller](docs/images/controller.webp)
-
-</details>
 
 ## Get started
 
