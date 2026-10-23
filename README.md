@@ -41,6 +41,7 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
 - Development source adds compact [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md). The bundled legacy release still uses only their tap action.
+- Development source also enables [C/W indicator outputs](docs/INDICATORS.md); physical light behavior remains unverified.
 - The source installer can back up and restore supported settings locally and carry them through a supported firmware update. One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides remain unsupported.
 
 

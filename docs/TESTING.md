@@ -5,7 +5,18 @@
 Keep source review, build/integrity checks, host/CPU execution and physical
 keyboard behavior separate. None substitutes for another.
 
-## Current offline result
+## Indicator candidate
+
+The C/W candidate `45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d`
+passed 11 focused indicator cases and 12 reactive RGB observations in the linked
+CPU model, including an independent rerun. Main-checkout reproduction matched
+the same IHX. The [full local qualification](../audits/rc6/oem-indicators-qualification-20261024/qualification.json)
+passed all 26 suites and 258 unit tests with no skips and unchanged IHX/MAP.
+Local LeakSanitizer detection was disabled; ASan/UBSan checks remained active.
+New CI is pending; the retained result below applies to the earlier tap-hold-only image. See [indicators](INDICATORS.md)
+for state-fixture and physical-test limits.
+
+## Retained tap-hold offline result
 
 The [compact tap-hold qualification](../audits/rc6/compact-tapping-qualification-20261024/qualification.json)
 passed all 26 required suites and 258 unit tests with no skips on 2026-10-24.

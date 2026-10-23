@@ -36,6 +36,7 @@ bool ak820_matrix_snapshot(uint8_t *rows);
 
 /* LED electrical index is the same 0..127 slot as row * 8 + column. */
 void ak820_set_slot_rgb(uint8_t slot, uint8_t r, uint8_t g, uint8_t b);
+void ak820_update_indicators(void);
 
 #ifdef __SDCC_mcs51
 extern volatile __xdata __at(AK820_LED_DMA_ADDRESS) uint8_t ak820_led_dma[AK820_LED_DMA_BYTES];

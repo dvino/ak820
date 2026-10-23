@@ -1,40 +1,43 @@
 # Independent program review — 2026-10-24
 
-The exact compact tap-hold program policy, packing receipt, legacy installer
+The exact tap-hold and C/W program policy, packing receipt, legacy installer
 host bindings and complete offline qualification evidence are approved for
 CI reproduction. This review did not author the production implementation,
-policy, packing receipt or qualification run. Scoped independent source,
-fixture and settings-profile reviews are retained in `audits/rc6/`.
+policy, packing receipt or qualification run. Source/ABI and settings reviews
+are retained in `audits/rc6/`.
 
-All 614 policy source records, 21 shared host records and nine retained legacy
+All 615 policy source records, 21 shared host records and nine retained legacy
 bundle records matched their current sizes and SHA256 hashes. The policy binds
-IHX `d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3`
-and symbols `9854215cfd08ae2e70fb5f30ba65be76af8880e893a0a8f85658a63ea870ac6c`.
-All 467 build input records and 77 build artifact records matched actual bytes.
+IHX `45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d`
+and symbols `11e50e3e0d6e1e9831d4ca85822a65306907753bed5000f7d4301f69af8ade06`.
+All 468 build input records and 78 build artifact records matched actual bytes.
 The legacy bundle keeps its earlier firmware; its review, manifest and installer
-approval hashes bind the updated host source without selecting the new image.
+approval bind updated host source without selecting the new image.
 
 The complete qualification passed all 26 required suites, 258 unit tests and
-zero skips with unchanged IHX/MAP. The exact suite contract, pinned tools and
-all 26 saved log hashes were checked independently. The corrected linked
-65-case report matches all expected snapshots and supplied report traces.
-The retained qualification is
-`audits/rc6/compact-tapping-qualification-20261024/qualification.json`.
-Findings and closure are recorded in
-`audits/rc6/compact-tapping-final-integration-review-20261024.md`.
+zero skips with unchanged IHX/MAP. The suite contract, pinned tools, all 26
+saved log hashes and retained evidence manifest were checked independently.
+The 12 RGB and 11 indicator observations match expected values. All 65 linked
+tap-hold cases match expected snapshots and supplied report traces. An
+independent 23-test settings run and production profile loading of the actual
+packed program also passed. Final documentation agrees with these scopes.
+Evidence is retained in
+`audits/rc6/oem-indicators-qualification-20261024/qualification.json` and
+`audits/rc6/oem-indicators-final-integration-review-20261024.md`.
 
 This approval covers offline reproduction of this exact program and reviewed
-host source. It does not establish a successful dev CI run, native interactive
-Windows acceptance, physical key or encoder timing, USB behavior, interrupt
-overlap, durable storage, reset execution, a new installed image or permission
-to flash. The macro cancellation case uses a disclosed simulator hook. Private
-OEM inputs and packed images remain outside Git and CI.
+host source. It does not establish successful public CI, fresh bundle
+acceptance, native interactive Windows acceptance, physical C/W connections,
+key/encoder timing, USB behavior, IRQ overlap, durable storage, reset execution
+or a new installed image. It grants no permission to flash. LeakSanitizer was
+excluded; ASan/UBSan remained active. The macro cancellation case uses a
+disclosed simulator hook. Private OEM inputs and images remain outside Git.
 
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "status": "passed",
   "hardware_validated": false,
-  "policy_sha256": "01ce9857aad8c36a32a93a25650e56d198e82d8454e60ae279dd5885b1f90781"
+  "policy_sha256": "93f60dcf6ac827c2315e88fff8fd266168585aaf330429128900954a3f2184b7"
 }
 ```

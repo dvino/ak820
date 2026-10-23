@@ -11,6 +11,7 @@ difference.
 | Install firmware, keep a backup, recover | [Installation](INSTALL.md) |
 | Remap keys, layers, encoder and lighting | [Configuration](CONFIGURATION.md) |
 | Understand Mod-Tap and Layer-Tap behavior | [Mod-Tap and Layer-Tap](TAP-HOLD.md) |
+| Understand Caps Lock and layer indicators | [C and W indicators](INDICATORS.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |
 | Check pushes and publish a release | [CI and releases](CI.md) |
 | Change code and submit a contribution | [Development](DEVELOPMENT.md) |

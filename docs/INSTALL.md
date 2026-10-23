@@ -16,7 +16,16 @@ For a Windows release, extract the complete archive and run `AK820/AK820.exe`. K
 .\AK820.cmd verify
 ```
 
-The source bundle passed offline `verify` with no HID load or USB access. The currently checked Windows applications predate settings backup/restore; use the source installer for this feature. No updated Windows package is available.
+Windows CI packages include settings backup, restore and the supported update workflow. Use the complete package from the selected release. The checked-in legacy bundle is older; [Status](STATUS.md) identifies the checked builds. Offline `verify` does not load HID or open USB.
+
+## Use a release firmware bundle with the source installer
+
+Use a clean checkout of the selected release tag. Verify `firmware-bundle.zip`
+with its accompanying SHA256 file, then extract it. Copy the contents of
+`firmware-bundle/` into `releases/rc6/` and copy its `approved-release.json` to
+`tools/installer/approved-release.json`. Run `./AK820.sh verify` before any
+device command. This selects the CI-built release rather than the legacy
+firmware stored in the source checkout. Keep the full bundle together.
 
 ## Linux source setup
 
@@ -38,7 +47,7 @@ configured; apply the udev command from the ordinary desktop terminal.
 
 ## Settings backup and supported update
 
-Read [Settings backup and restore](SETTINGS-BACKUP.md) before running the new commands. They support only the exact SDCC 4.6 RC6 image identified there. Every operation needs a valid OEM recovery session because exact CODE reconstruction uses native bytes not shipped in the repository. Keep the OEM session and settings backup separately.
+Read [Settings backup and restore](SETTINGS-BACKUP.md) before running the new commands. They support only the exact reviewed IHX/CODE pairs listed there. Every operation needs a valid OEM recovery session because exact CODE reconstruction uses native bytes not shipped in the repository. Keep the OEM session and settings backup separately.
 
 Before restore or update, confirm the wired VS11K28A hardware revision. Neither the AK820 name nor USB `320F:505B` alone proves compatibility; V2, Pro and Max are unsupported. A mismatched image can leave the keyboard unusable.
 
@@ -64,4 +73,4 @@ For recovery from an already visible loader, use the source command `recover --s
 
 The source installer retains the existing `install`, `install --trial` and `recover --session OEM_DIR` workflows. Their behavior and hardware verification state are described in [status](STATUS.md). Do not treat a successful transfer or checksum as proof of physical typing, settings persistence or power-cycle behavior.
 
-The current feature work does not authorize or perform live device operations. Physical acceptance and public release remain separate steps; this offline source check does not approve either.
+Offline checks do not authorize device writes. Each update needs its own confirmation, a fresh backup and an exact image check. Alpha releases are test builds; the release notes and Status distinguish source, package checks and device results.

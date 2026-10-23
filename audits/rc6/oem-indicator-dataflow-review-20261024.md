@@ -15,8 +15,7 @@ that buffer to a keyboard report or action 4 to a physical key combination.
 Physical W and the Windows-key interpretation therefore remain unproved.
 
 No source change, build, CPU execution, USB command, device test or flash was
-performed. The result authorizes neither an implementation mapping nor a live
-update.
+performed. The result does not establish a physical mapping or authorize a live update.
 
 ## Input and method
 
@@ -98,7 +97,7 @@ proved from its producer and transmitter, so the Windows-lock name remains
 a candidate. Follow the producers and transmitter of `0x087A`, callers of
 `0x9EC5` and `0xEC6E`, and the origin of action byte `0x0B1F` to close it.
 
-Before changing indicator code, trace the scheduled buffer-copy/output path,
+Before claiming verified physical indicators, trace the scheduled buffer-copy/output path,
 check alternate paths and initialization, and establish the board connection
 for slots 71 and 79. A physical indication and key behavior test would still
 be separate evidence, requiring the relevant explicit authorization.
@@ -113,3 +112,10 @@ and `0x07AA` correspond to destination `0x031D` and `0x033D`. No simulator
 execution or device command was used. The output scheduling, report-transmitter
 and physical-connection limits remain open; this check does not approve an
 indicator implementation.
+
+Implementation follow-up: the owner explicitly requested enabling the outputs
+as a development candidate. The source implementation uses the identified OEM
+outputs with physical behavior still unverified; see
+[oem-indicators-implementation-review-20261024.md](oem-indicators-implementation-review-20261024.md).
+The earlier analysis alone was not an implementation approval. Device operations
+still require their separate confirmation.

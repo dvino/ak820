@@ -20,6 +20,74 @@ def main():
     args = parser.parse_args()
     fw = support.Firmware(args.build_dir.resolve(), args.s51.resolve(),
                           (args.output_dir or args.build_dir / 'rgb-emitted').resolve())
+    indicator_commands = fw.initialize()
+    dma = fw.address('_ak820_led_dma')
+    # Dedicated slots 71/79 are absent from the published RGB slot map.
+    slot_caps, slot_layer = dma + 71 * 4, dma + 79 * 4
+    slotmap = [fw.code[fw.address('_ak820_rgb_slots') + i] for i in range(82)]
+    assert 71 not in slotmap and 79 not in slotmap
+    indicator_cases = []
+
+    def indicator_case(label, report, layer, default, configured, sleeping, irq, expected, producer=()):
+        nonlocal indicator_commands
+        indicator_commands += fw.write('_KB_USB_SetReport', [report])
+        indicator_commands += fw.write('_layer_state', [layer])
+        indicator_commands += fw.write('_default_layer_state', [default])
+        indicator_commands += fw.write('_D0UsbConfig', [configured])
+        indicator_commands += fw.write('_USB_SleepStatus', [2 if sleeping else 0])
+        for action in producer:
+            indicator_commands += action
+        # Preserve unrelated component bytes around each owned indicator.
+        indicator_commands += [support.memory('xram', slot_caps + 2, [0x5a, 0xa5]),
+                               support.memory('xram', slot_layer + 2, [0x3c, 0xc3]),
+                               support.memory('sfr', 0xe8, [0x20 if irq else 0])]
+        indicator_commands += fw.call('_ak820_update_indicators')
+        for suffix, address, extra in (('caps', slot_caps, [0x5a, 0xa5]),
+                                       ('layer', slot_layer, [0x3c, 0xc3])):
+            indicator_commands += fw.dump(f'{label}_{suffix}', 'xram', address, 4)
+        indicator_commands += fw.dump(f'{label}_irq', 'sfr', 0xe8, 1)
+        indicator_cases.append((label, expected, irq))
+
+    indicator_case('base_caps_with_unrelated_leds', 0xff, 0, 1, 1, False, True,
+                   {'caps': [255, 255, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+    indicator_case('unrelated_host_led_bits', 0xfd, 0, 1, 1, False, True,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+    indicator_case('layer_on_api', 0, 0, 1, 1, False, False,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 0xc3]},
+                   producer=(fw.call('_layer_on', 2),))
+    indicator_case('layer_off_api', 0, 0, 1, 1, False, True,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]},
+                   producer=(fw.call('_layer_on', 2), fw.call('_layer_off', 2)))
+    indicator_case('default_layer_api', 0, 0, 1, 1, False, True,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 0xc3]},
+                   producer=(fw.call('_default_layer_set', 3),))
+    indicator_case('tri_layer_api', 0, 0, 1, 1, False, True,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 0xc3]},
+                   producer=(fw.call('_layer_on', 1), fw.call('_layer_on', 2)))
+    indicator_case('capsword_without_host_led', 0, 0, 1, 1, False, True,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+    indicator_case('suspended', 2, 2, 1, 1, True, False,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+    indicator_case('resumed', 2, 2, 1, 1, False, True,
+                   {'caps': [255, 255, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 0xc3]})
+    indicator_case('reset_unconfigured', 0, 2, 1, 0, False, True,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+    indicator_case('disconnected', 2, 2, 1, 0, False, True,
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+    indicator_log, indicator_stack = fw.execute('dedicated-indicators', indicator_commands)
+    for label, expected, irq in indicator_cases:
+        actual = {
+            'caps': fw.extract(indicator_log, f'{label}_caps', slot_caps, 4),
+            'layer': fw.extract(indicator_log, f'{label}_layer', slot_layer, 4),
+            'irq': fw.extract(indicator_log, f'{label}_irq', 0xe8, 1),
+        }
+        target = {**expected, 'irq': [0x20 if irq else 0]}
+        indicator_cases[indicator_cases.index((label, expected, irq))] = {
+            'name': label, 'pass': actual == target, 'actual': actual, 'expected': target}
+    indicator_report = {'name': 'dedicated_host_and_layer_indicators',
+                        'pass': all(case['pass'] for case in indicator_cases),
+                        'cases': indicator_cases, **indicator_stack,
+                        'scope': 'Linked updater CPU model with simulated USB/layer state; CapsWord key activity and USB report generation are not invoked here.'}
     commands = fw.initialize() + fw.clock(0)
     # Existing EEPROM mode IDs: Solid=1, Direct=5; append Reactive=6.
     commands += fw.write('_rgb_matrix_config', [25, 0, 255, 160, 0, 255, 0, 0])
@@ -70,7 +138,8 @@ def main():
     for label, address, expected in observations:
         actual = fw.extract(log, label, address, 4)
         cases.append({'name': label, 'pass': actual == expected, 'actual': actual, 'expected': expected})
-    report = {'pass': all(c['pass'] for c in cases), 'cases': cases, **stack,
+    report = {'pass': all(c['pass'] for c in cases) and indicator_report['pass'], 'cases': cases,
+              'indicators': indicator_report, **stack,
               'linked_image_sha256': hashlib.sha256(fw.image.read_bytes()).hexdigest(),
               'limits': 'uCsim C52 CPU/linked-code fixtures; no VS11K28A peripheral, physical timing or device validation.'}
     (fw.output / 'results.json').write_text(json.dumps(report, indent=2) + '\n')

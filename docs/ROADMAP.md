@@ -32,8 +32,8 @@ a successful source build does not promote the candidate into the installer.
   and retain control/candidate listings. Partial coverage is explicit; a complete
   call graph and execution profile are not claimed.
 - [x] Investigate Caps language switching and C/W indicators. Record source
-  constraints and the event test plan. No implementation or hardware result is
-  claimed for these features.
+  constraints and the event test plan. Caps remapping remains deferred. C/W
+  outputs are implemented in a source candidate; hardware behavior is unverified.
 
 See the [bounded probes](../audits/rc6/bounded-optimization-20261023.md),
 [inventory](../audits/rc6/linked-inventory-20261023.md) and
@@ -56,8 +56,8 @@ required explicit confirmation; the current offline work grants none.
 
 | Feature | Next bounded task / blocker |
 | --- | --- |
-| C indicator | Establish the physical pin/DMA slot and polarity from a verified OEM trace, schematic or separately authorized hardware work. Then drive it from the host's real Caps Lock bit. Unused keylight slots are not a mapping. |
-| W indicator | Establish its electrical mapping. Turn it off on the main layer and on for an active additional layer; it must no longer report Win lock. |
+| C indicator | The source candidate drives OEM slot 71, component 1 from the host Caps LED bit. Verify the physical C connection and visible behavior; [source and CPU evidence](INDICATORS.md) do not establish device behavior. |
+| W indicator | The source candidate drives OEM slot 79, component 1 from additional-layer activity. Verify the physical W connection and visible behavior; the project meaning is layer activity rather than OEM lock state. |
 | Caps language key | Deferred by the current request; keep Caps and its mapping unchanged. The retained future plan uses a dedicated remappable keycode; Win+Space is the proposed Windows shortcut, either Shift selects ordinary Caps Lock. First settle deferral versus rejection when Space/Caps is already held, request ordering/coalescing, timeout and cancellation. Implement staged report delivery without losing held-key ownership, and test 6KRO/NKRO, modifiers, remap, unlock, reset and Repeat exclusion. Windows acceptance remains separate. |
 | Windows language helper | Report the actual active-window language, including window changes and other switch methods. Define stale/unknown state and a RAM-only status path before implementation. Do not count Caps presses or write flash for language updates. It depends on the indicator/status design and Windows testing. |
 | Direct Control | Keep RAM-only VialRGB Direct. Persistent palette work was cancelled on 2026-10-23 to prioritize keyboard input functions. Its code is retained only in the separate experimental branch `codex/experiment-direct-palette`; it is not approved for installation. |
@@ -81,10 +81,10 @@ this does not schedule those functions into the current firmware change.
 
 ## Further optimization only when needed
 
-The compact tap-hold candidate now fits with 24 trailing main-window bytes.
+The tap-hold and C/W candidate fits with 22 trailing main-window bytes and one low-window byte.
 The private event-pointer and ownership reductions are measured; the repeated
 protocol-field and transport variants were rejected. The system mapping and
-ASCII mask candidates saved code. See [Status](STATUS.md) for the exact image
+ASCII mask candidates saved code; C/W adds 78 bytes using a compact low-window helper. See [Status](STATUS.md) for the exact image
 and separate qualification state.
 
 Further byte-by-byte reduction is not a promise of room for major features.

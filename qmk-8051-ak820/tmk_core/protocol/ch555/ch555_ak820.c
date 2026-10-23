@@ -160,4 +160,8 @@ void protocol_post_task(void) {
         }
     }
 #endif
+    /* LED output state is maintained by SET_REPORT; active-layer state
+     * includes held, toggled, momentary and default layers. The indicators
+     * are forced dark until USB is configured and awake. */
+    ak820_update_indicators();
 }

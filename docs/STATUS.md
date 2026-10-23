@@ -2,12 +2,13 @@
 
 # Project status
 
-Updated 2026-10-24. Development source implements compact Mod-Tap/Layer-Tap.
-Its latest build uses pinned SDCC 4.6.0 and has 24 trailing CODE bytes. Complete
-offline qualification passed after the Grave Escape ownership correction. The
-checked-in installer bundle still contains the earlier firmware. CI builds its
-own firmware and passes that fresh bundle to Windows packaging.
-No firmware or settings writes were performed in this work.
+Updated 2026-10-24. Development source includes compact Mod-Tap/Layer-Tap
+and the new C/W indicator outputs. The indicator candidate builds with pinned
+SDCC 4.6.0: 40,477 populated CODE bytes, 22 trailing main-window bytes and one
+low-window byte free. All 26 local suites and 258 unit tests passed without
+skips; final package approval and CI for this new image are pending. The earlier tap-hold
+image passed Linux/Windows CI. The checked-in installer bundle still contains
+the legacy firmware. No firmware or settings writes were performed.
 
 ## Retained release and pointer-only comparison
 
@@ -38,7 +39,24 @@ complete update. The reviewed settings models now support same-image restore
 and the explicit legacy-to-candidate transition. Downgrades and unknown images
 are rejected. That transition has not been tested on a keyboard.
 
-## Current verification
+## Indicator candidate
+
+The [C/W implementation](INDICATORS.md) uses source-derived OEM slots 71 and 79.
+The exact rebuilt IHX is `45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d`:
+38,590 main + 1,887 low = 40,477 populated CODE bytes, highest address `0xc6e9`.
+XRAM remains 2,512 bytes; initial SP and stack capacity remain `0x62` / 157.
+The production IRQ and matrix scan code are unchanged.
+
+Independent linked CPU execution passed 11 indicator cases and 12 reactive RGB
+observations. Layer API calls exercised seven stack bytes in that fixture;
+this is not a worst-case interrupt-nesting bound. The [implementation review](../audits/rc6/oem-indicators-implementation-review-20261024.md)
+records the source, ABI and test scope. Local [offline packing](../audits/rc6/oem-indicators-offline-packing-20261024.json)
+verified trial/permanent images and byte-equal native recovery using private OEM
+inputs. No full ROM or private payload was added to Git. The [full local qualification](../audits/rc6/oem-indicators-qualification-20261024/qualification.json)
+passed all 26 suites and 258 unit tests with no skips and unchanged IHX/MAP.
+Final package review and CI are pending. The candidate is not installed.
+
+## Retained tap-hold verification
 
 The compact Mod-Tap/Layer-Tap implementation remains a development candidate.
 After the Grave Escape correction, its build fits with 24 trailing bytes before
@@ -113,7 +131,7 @@ that checked result for the reproduced program. A machine build attestation
 is distinct from independent review and never authorizes device access.
 
 The current source approval binds 21 host files. The checked-in legacy release
-manifest SHA256 is `234d7d7d267bc2b5dd61faa63d00543366b0db2208407631053c8b73f91055db`.
+manifest SHA256 is `e9137148a111581969158b69403a809817ccdf9650bce910ace83b1469d40d3b`.
 Its [review record](../releases/rc6/reviews/independent-review.md) keeps the old
 firmware and the updated host code separate. Source `verify` passed without
 HID load or USB access. [GitHub run 40007909621](https://github.com/dvino/ak820/actions/runs/40007909621)
@@ -140,8 +158,8 @@ after restart. Physical typing was confirmed separately. It does not prove
 this new host transition or cold power-loss persistence.
 
 Live settings writes, macro upload, saved RGB, physical encoder/lighting and
-power-loss acceptance remain open. C/W electrical mapping still needs evidence
-from OEM firmware before implementation. Persistent Direct palette work is
+power-loss acceptance remain open. C/W outputs now use the OEM-derived source
+map; physical connections and visible behavior still need validation. Persistent Direct palette work is
 cancelled; the Windows language helper remains unfinished. Caps remapping and language-key
 implementation are deferred by the current request. [Roadmap](ROADMAP.md)
 keeps those tasks and the remaining bounded optimization research separate.
@@ -157,5 +175,5 @@ files with the external private backup. No archive contents were added to Git.
 The latest [OEM data-flow analysis](../audits/rc6/oem-indicator-dataflow-review-20261024.md)
 connects a received report bit to staging slot 71, offset 1. State `0x0A79`
 controls slot 79, offset 1. These are source-derived indicator candidates;
-physical C/W connections remain unverified. Indicator implementation is the
-current work item; it is not present in the `586ac20` CI image.
+physical C/W connections remain unverified. The source implementation is enabled in the new candidate; it is not present
+in the earlier `586ac20` CI image.

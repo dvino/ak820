@@ -4,22 +4,22 @@
 
 The profile keeps six layers, sixteen macros and 8192 bytes of shared macro
 storage. Four layers remain a controlled comparison. Development source now
-includes compact tap-hold and the journal-pointer correction. Settings restore
+includes compact tap-hold, C/W outputs and the journal-pointer correction. Settings restore
 requires exact reviewed image pairs, not just a matching schema. The candidate
 is not installed; qualification is recorded in [Status](STATUS.md).
 
 ## Current measured builds
 
-The current measured source candidate is `d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3`. The stable release image remains `f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e`.
+The current measured source candidate is `45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d`. The stable release image remains `f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e`.
 
 | Image | CODE total | Main CODE window | Low CODE window | XRAM | Initial SP / allocated stack capacity |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Compact tap-hold candidate | 40,399 (38,588 main + 1,811 low) | 38,588 / 38,617 occupied; 29 addresses without IHX data | 1,811 / 1,888 occupied; 77 addresses without IHX data | 2,512 / 3,072 occupied; 560 free | 0x62 / 157 bytes |
+| Tap-hold + C/W candidate | 40,477 (38,590 main + 1,887 low) | 38,590 / 38,617 occupied; 27 addresses without IHX data | 1,887 / 1,888 occupied; 1 address without IHX data | 2,512 / 3,072 occupied; 560 free | 0x62 / 157 bytes |
 | Stable release | 38,100 (36,292 main + 1,808 low) | 36,292 / 38,617 occupied; 2,325 addresses without IHX data | 1,808 / 1,888 occupied; 80 addresses without IHX data | 2,067 / 3,072 occupied; 1,005 free | 0x62 / 157 bytes |
 
 Window unoccupied counts are address counts, not a guarantee of usable contiguous space. Five addresses, `0x302a..0x302e`, remain reserved in HOME and are included in the unoccupied main-window count; they are not free CODE. Stack capacity is the linker allocation limit, not proof that every runtime path uses at most that many bytes. The earlier pointer-only image saved 31 CODE bytes and one XRAM byte versus
 the stable image; that measurement is historical and does not describe the
-larger compact tap-hold candidate. Its main window now has 24 trailing bytes. The rejected delay-expression probe added three CODE bytes and is not adopted. The historical pointer-only build and bounded offline review are recorded in the [review](../audits/rc6/bounded-optimization-20261023.md) and [JSON report](../audits/rc6/bounded-optimization-20261023.json); retained evidence is in [its evidence directory](../audits/rc6/bounded-evidence-20261023/). The candidate has not been installed or promoted. See [Status](STATUS.md) for qualification state.
+larger compact tap-hold candidate. The C/W addition costs 78 CODE bytes versus the tap-hold-only build. Its main window has 22 trailing bytes; the low window has one free byte. The rejected delay-expression probe added three CODE bytes and is not adopted. The historical pointer-only build and bounded offline review are recorded in the [review](../audits/rc6/bounded-optimization-20261023.md) and [JSON report](../audits/rc6/bounded-optimization-20261023.json); retained evidence is in [its evidence directory](../audits/rc6/bounded-evidence-20261023/). The candidate has not been installed or promoted. See [Status](STATUS.md) for qualification state.
 
 ## Four versus six layers
 

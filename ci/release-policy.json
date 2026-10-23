@@ -1,8 +1,8 @@
 {
   "format": "ak820-ci-program-policy-1",
   "program": {
-    "ihx_sha256": "d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3",
-    "symbols_sha256": "9854215cfd08ae2e70fb5f30ba65be76af8880e893a0a8f85658a63ea870ac6c",
+    "ihx_sha256": "45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d",
+    "symbols_sha256": "11e50e3e0d6e1e9831d4ca85822a65306907753bed5000f7d4301f69af8ade06",
     "schema": 532482,
     "keyboard": "ajazz/ak820",
     "keymap": "vial",
@@ -86,15 +86,15 @@
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
     },
     "tools/installer/settings_backup.py": {
-      "size": 28710,
-      "sha256": "d864ff69d01a91ca653da407ff12b58b74bd0bff90e1aa51e315e74098e942dd"
+      "size": 28857,
+      "sha256": "89693d97e57bfabf4d54a83326848635bb5c6016d73272940bc94e9be99e76d0"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11338,
       "sha256": "ffa59acf7a6d1f90fa4e7056b577a0bef5d4553cbcc1aeab305fe0f15bee0b72"
     }
   },
-  "packing_receipt_sha256": "7ef3bfd8eab8f3369c34e2b89fe380bab62e1f6aa071822142f3f14717705c77",
+  "packing_receipt_sha256": "3ca05df08d592743c9b5fb8f027edd168c671b4cd23634f014656a5ba2a8cd32",
   "source_files": {
     ".github/workflows/windows-installer.yml": {
       "size": 12549,
@@ -541,8 +541,8 @@
       "sha256": "e7a0819030b7172c6b7590037d8c7c9de1eb3d1cbdbeeb38d0576fd7355294ad"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.h": {
-      "size": 1424,
-      "sha256": "6339680746820fb5a175f0d6368d32bbc2e5d5cb1ab768f15fb0cc5d93d71cf9"
+      "size": 1460,
+      "sha256": "8860252224aac214fc9b79a92a6d2c418c2093c830f7b745af902bbf45cd6606"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_boot.c": {
       "size": 1172,
@@ -551,6 +551,10 @@
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_flash.c": {
       "size": 5067,
       "sha256": "b5ef5524ff1206a7d49fc5e3aa3436b9feed9bba33c2a1062429f42c21c1b34b"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_indicators.c": {
+      "size": 890,
+      "sha256": "8f9af079a60f226d1ddfcfbd351e447f6c7907ab747c4d671ea536c49c768baf"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_macro.c": {
       "size": 6812,
@@ -617,8 +621,8 @@
       "sha256": "277fbf33128b606387e54526733b9a08dc4e604b19e795b23a23ea226b3101b0"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/rules.mk": {
-      "size": 739,
-      "sha256": "71aa94f2c9bfcb3fad70e9e3f4692897308166b99d35493dc71d57a01f4bb56b"
+      "size": 758,
+      "sha256": "cada082048bb740c58891f764a0f7c58bdc58fea4de9bdde77456fe4200025cd"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/tests/include/eeprom.h": {
       "size": 601,
@@ -2013,8 +2017,8 @@
       "sha256": "9c9d6f4bc6c3c3c895de8de54525529bd5180176b9c5ea518c220534238b18fd"
     },
     "qmk-8051-ak820/tests/ak820_rgb/emitted.py": {
-      "size": 3473,
-      "sha256": "03a569e53b35eead92da6d96f1c905fc825d153731c1cde97d1ededdf0042f1c"
+      "size": 8120,
+      "sha256": "394cae63fbd94d17628c97834b0f55d3e35d8bfb961beb97e670cc29aafb80b0"
     },
     "qmk-8051-ak820/tests/ak820_rgb/fn_bindings.py": {
       "size": 3944,
@@ -2205,8 +2209,8 @@
       "sha256": "832e3a5aca47a02a0d1732cb53a1785b873ebd583548a4116d8395052c7af15a"
     },
     "qmk-8051-ak820/tmk_core/protocol/ch555/ch555_ak820.c": {
-      "size": 5881,
-      "sha256": "1163574a4a5c64fa5a8e7272879372a660462cbd5d2f036ae6709dd144e31ffa"
+      "size": 6121,
+      "sha256": "df3c4beed9ac939a8dcd630d25b8ce20c3bdd17cfdaec421f8bb0900b50bfb88"
     },
     "qmk-8051-ak820/tmk_core/protocol/ch555/lufa_utils/LUFA/Drivers/USB/USB.h": {
       "size": 2059,
@@ -2442,7 +2446,7 @@
     },
     "tools/installer/approved-release.json": {
       "size": 154,
-      "sha256": "6bb33a5a09c7c298d72dd9472a2a9e1975bd63c206c955aad3276dd717c1516c"
+      "sha256": "d3ce8e59bbc4dd341198b7afa1e31bc02db2138781793a023c9b9fd1e8452152"
     },
     "tools/installer/gui.py": {
       "size": 21389,
@@ -2461,8 +2465,8 @@
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
     },
     "tools/installer/settings_backup.py": {
-      "size": 28710,
-      "sha256": "d864ff69d01a91ca653da407ff12b58b74bd0bff90e1aa51e315e74098e942dd"
+      "size": 28857,
+      "sha256": "89693d97e57bfabf4d54a83326848635bb5c6016d73272940bc94e9be99e76d0"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11338,
@@ -2485,8 +2489,8 @@
       "sha256": "56813aed0424fa0176acd73ba98672d2eee73ff6780c42d9301fb52e38752ae5"
     },
     "tools/installer/test_settings_backup.py": {
-      "size": 27159,
-      "sha256": "405aa5684965092c00d307ffebf5aa22b5b950e2d3c397e6910f948819c562c8"
+      "size": 27356,
+      "sha256": "7b71172ab938e7cfa3720d0c828f80262deb09a3e86630de7d4ad55adbcef9e6"
     },
     "tools/installer/test_settings_workflow.py": {
       "size": 19046,
@@ -2559,7 +2563,7 @@
     "encoder_assignments": 12,
     "macros": 16,
     "macro_capacity": 8192,
-    "allowed_transition": "same-image or forward in exact legacy -> pointer -> compact tap-hold order; no downgrade",
+    "allowed_transition": "same-image or forward in exact legacy -> pointer -> compact tap-hold -> C/W indicators order; no downgrade",
     "physical_validation": false
   }
 }

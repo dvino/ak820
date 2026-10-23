@@ -11,6 +11,7 @@ English source of truth: [Documentation](../INDEX.md).
 | Установка, копия и восстановление | [Установка](INSTALL.md) |
 | Клавиши, слои, энкодер и RGB | [Настройка](CONFIGURATION.md) |
 | Mod-Tap и Layer-Tap | [Mod-Tap и Layer-Tap](TAP-HOLD.md) |
+| Индикаторы Caps Lock и слоя | [Индикаторы C и W](INDICATORS.md) |
 | Сборка закреплённым инструментарием | [Сборка](BUILD.md) |
 | Проверки push и выпуск релизов | [CI и выпуски](CI.md) |
 | Изменения кода и участие | [Разработка](DEVELOPMENT.md) |

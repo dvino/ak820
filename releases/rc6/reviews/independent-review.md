@@ -1,14 +1,13 @@
 # Installer source review
 
-Independent source reviews on 2026-10-23 approved the qualification integration
-and the exact three-image settings profile. Their findings and closure are in
-`audits/rc6/compact-tapping-ci-review-20261023.md` and
-`audits/rc6/compact-tapping-settings-profile-review-20261023.md`.
-The 21 host-file records below bind that reviewed source. The firmware files in
-this legacy bundle are unchanged. This binding does not approve a new firmware
-image or hardware operation; the compact candidate has separate build, CPU,
-packing and CI policy evidence. Final combined qualification is recorded
-separately. No device write or interactive Windows acceptance is established.
+Independent source review on 2026-10-24 approved the fourth exact settings
+profile and its unchanged identity, provenance and downgrade gates. See
+`audits/rc6/oem-indicators-final-integration-review-20261024.md` for scope and
+verification. The 21 host-file records below bind that reviewed source.
+The legacy firmware remains unchanged. This source binding does not approve
+the new C/W firmware or a device operation; its full regression and CI policy
+review are separate. No device write or interactive Windows acceptance is
+established by this record.
 
 ```json
 {
@@ -99,8 +98,8 @@ separately. No device write or interactive Windows acceptance is established.
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
     },
     "tools/installer/settings_backup.py": {
-      "size": 28710,
-      "sha256": "d864ff69d01a91ca653da407ff12b58b74bd0bff90e1aa51e315e74098e942dd"
+      "size": 28857,
+      "sha256": "89693d97e57bfabf4d54a83326848635bb5c6016d73272940bc94e9be99e76d0"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11338,
