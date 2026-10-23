@@ -21,6 +21,15 @@ firmware behavior on hardware. Raw OEM data stays outside Git and CI.
   "format": "ak820-ci-program-review-1",
   "status": "passed",
   "hardware_validated": false,
-  "policy_sha256": "fe6889bf500301472f06661e1744a9063862e8bfe10584cd9525c7db0a10b27c"
+  "policy_sha256": "ce16546b6a6743a85363a88c7c73c0bfa08e60726096735fe0127b54294d8e9c"
 }
 ```
+
+Node.js 24 follow-up, 2026-10-23: independent reviewer review_fresh_ci
+approved the policy above after checking the four official pinned action
+revisions and upload/download archive compatibility. Only the workflow source
+pin changed; the firmware, host files and packing receipt remain unchanged.
+Other source records were checked against committed inputs, excluding ongoing
+uncommitted palette development. Actionlint and documentation checks passed.
+Hosted execution of these revised actions remains pending. This follow-up
+does not approve the palette implementation or its new schema.

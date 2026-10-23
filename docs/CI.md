@@ -6,6 +6,8 @@ The [workflow](../.github/workflows/windows-installer.yml) runs on every branch
 push, pull request and `v*` tag. It can also be started from the Actions page.
 No keyboard, OEM backup or repository secret is needed for checks and builds.
 
+The workflow pins Node.js 24 actions by full commit hash: checkout 7.0.1, setup-python 7.1.0, upload-artifact 7.0.2 and download-artifact 8.0.2.
+
 ## Checks and build outputs
 
 The Linux job checks the syntax of tracked Python and shell files, validates

@@ -7,6 +7,8 @@ push ветки, pull request и теге `v*`. Его также можно з�
 Actions. Для проверок и сборок не нужны клавиатура, OEM-копия или секрет
 репозитория.
 
+Workflow закрепляет actions с Node.js 24 по полному хешу коммита: checkout 7.0.1, setup-python 7.1.0, upload-artifact 7.0.2 и download-artifact 8.0.2.
+
 ## Проверки и результаты сборки
 
 Задача Linux проверяет синтаксис отслеживаемых файлов Python и shell,
