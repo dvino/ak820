@@ -116,7 +116,9 @@ this new host transition or cold power-loss persistence.
 
 Live settings writes, macro upload, saved RGB, physical encoder/lighting and
 power-loss acceptance remain open. C/W electrical mapping still needs evidence
-from OEM firmware before implementation. Persistent Direct palettes and the
-Windows language helper remain unfinished. Caps remapping and language-key
+from OEM firmware before implementation. Persistent Direct palette work is
+cancelled; the Windows language helper remains unfinished. Caps remapping and language-key
 implementation are deferred by the current request. [Roadmap](ROADMAP.md)
 keeps those tasks and the remaining bounded optimization research separate.
+
+Update, 2026-10-23: [Node.js 24 run 40009482255](https://github.com/dvino/ak820/actions/runs/40009482255) passed Linux and Windows; publication was skipped. Neither job log contains the Node.js 20 deprecation warning. Persistent Direct palette development was cancelled and removed from this branch. The stable schema remains `0x082002`; installer offline verification passes. The cancelled prototype is preserved separately as an unapproved experiment. Mod-Tap / Layer-Tap is the next selected input feature; Caps remains unchanged.

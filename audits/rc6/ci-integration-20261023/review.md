@@ -24,3 +24,14 @@ The initial import failure remains in ../archive-import-review-20261023; its
 GUI timeout finding is closed by the process deadline and passing current run.
 Generated evidence is preserved verbatim; evidence-manifest.json binds the
 machine evidence files. This review text is not a machine test result.
+
+Follow-up review, 2026-10-23: independent reviewer review_fresh_ci approved
+the Node.js 24 logs and summary for run 40009482255, bilingual status/roadmap
+and cancellation record. Saved log sizes and hashes match the summary; Linux
+and Windows passed, publication was skipped, and the Node.js 20 warning is
+absent. The final API recheck was rate-limited; retained connector logs support
+this review. Palette code was removed from dev and retained only in the
+independently reviewed experimental archive a68818e. Stable schema082002 and
+approved host bytes were restored; offline installer verification passed.
+Mod-Tap / Layer-Tap is selected next; Caps stays unchanged. This review does
+not approve experimental palette installation or physical device behavior.

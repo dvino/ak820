@@ -58,7 +58,7 @@ required explicit confirmation; the current offline work grants none.
 | W indicator | Establish its electrical mapping. Turn it off on the main layer and on for an active additional layer; it must no longer report Win lock. |
 | Caps language key | Deferred by the current request; keep Caps and its mapping unchanged. The retained future plan uses a dedicated remappable keycode; Win+Space is the proposed Windows shortcut, either Shift selects ordinary Caps Lock. First settle deferral versus rejection when Space/Caps is already held, request ordering/coalescing, timeout and cancellation. Implement staged report delivery without losing held-key ownership, and test 6KRO/NKRO, modifiers, remap, unlock, reset and Repeat exclusion. Windows acceptance remains separate. |
 | Windows language helper | Report the actual active-window language, including window changes and other switch methods. Define stale/unknown state and a RAM-only status path before implementation. Do not count Caps presses or write flash for language updates. It depends on the indicator/status design and Windows testing. |
-| Direct Control | Preserve existing RAM-only VialRGB Direct. Research a usable persistent per-key palette, save policy, storage cost and compatibility before a change. Packing HSV is a RAM/precision trade, not an established CODE saving. |
+| Direct Control | Keep RAM-only VialRGB Direct. Persistent palette work was cancelled on 2026-10-23 to prioritize keyboard input functions. Its code is retained only in the separate experimental branch `codex/experiment-direct-palette`; it is not approved for installation. |
 
 ## Next optimization probes
 
