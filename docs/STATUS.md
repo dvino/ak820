@@ -91,14 +91,19 @@ The current source approval binds 21 host files. The checked-in legacy release
 manifest SHA256 is `de139a02195c777bda20994e85ebae207f98015723e80a415cdfcca7d36cb2ac`.
 Its [review record](../releases/rc6/reviews/independent-review.md) keeps the old
 firmware and the updated host code separate. Source `verify` passed without
-HID load or USB access. A new GitHub `dev` run is pending; no new Windows EXE,
-native Tk result or published firmware release is claimed here.
+HID load or USB access. [GitHub run 40007909621](https://github.com/dvino/ak820/actions/runs/40007909621)
+passed on commit `4f55c59a7307c80f22888dd043b508cd7bef0416`: Linux built
+the firmware and passed all checks; Windows built both applications with that
+fresh bundle and passed packaging, CLI and Tk startup checks. Three artifacts
+were uploaded. Publication was skipped as expected for an untagged `dev` push.
+Visible dialogs and device behavior were not tested. The saved job logs and
+artifact metadata are in [the evidence directory](../audits/rc6/ci-integration-20261023/github-run.json).
 
 Three GitHub Issue Forms are defined for bugs, features and flashing/recovery.
 YAML and documentation checks passed, and independent review closed the issue
 chooser link correction. The forms exclude V2, Pro and Max and request sanitized
 logs rather than OEM ROM or private backups. The forms are committed separately
-on local `main`; remote publication is pending Git authorization.
+on `main`; remote commit `15ca3bce33866d5d8d7828f4f23338180ac94dad` was verified.
 
 ## Retained device evidence and remaining work
 
