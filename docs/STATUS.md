@@ -55,7 +55,13 @@ passed with 258 unit tests, no skips and unchanged IHX/MAP hashes. The earlier
 failed report is retained. [Independent offline review](../audits/rc6/compact-tapping-final-integration-review-20261024.md)
 passed. The [fresh bundle check](../audits/rc6/compact-tapping-fresh-bundle-20261024/check.json)
 also passed from commit `3c96e37`: the installer accepted the generated bundle
-with exact approval checks and no HID access. Dev CI awaits GitHub authentication. The 23-suite evidence below applies to the
+with exact approval checks and no HID access. [Dev CI 40026118029](https://github.com/dvino/ak820/actions/runs/40026118029)
+passed on `586ac20`: Linux rebuilt the same IHX, passed 26 suites and 258 unit
+tests without skips, and Windows built both applications with that fresh bundle.
+CLI help, offline verification and Tk startup passed. Publication was skipped.
+[Retained checks](../audits/rc6/ci-tap-hold-20261024/firmware-check.json)
+and [Windows input checks](../audits/rc6/ci-tap-hold-20261024/windows-check.json)
+bind the downloaded artifacts; visible dialogs and device behavior were not tested. The 23-suite evidence below applies to the
 retained earlier image, not this candidate.
 
 The [clean local run](../audits/rc6/ci-integration-20261023/qualification.json)
@@ -141,3 +147,15 @@ implementation are deferred by the current request. [Roadmap](ROADMAP.md)
 keeps those tasks and the remaining bounded optimization research separate.
 
 Update, 2026-10-23: [Node.js 24 run 40009482255](https://github.com/dvino/ak820/actions/runs/40009482255) passed Linux and Windows; publication was skipped. Neither job log contains the Node.js 20 deprecation warning. Persistent Direct palette development was cancelled and removed from this branch. The stable schema remains `0x082002`; installer offline verification passes. The cancelled prototype is preserved separately as an unapproved experiment. Mod-Tap / Layer-Tap is the next selected input feature; Caps remains unchanged.
+
+## Additional archive and indicator analysis
+
+The [archive preservation check](../audits/rc6/private-archive-preservation-check-20261024.json)
+matched the supplied SHA256, passed the ZIP CRC check and compared all 130
+files with the external private backup. No archive contents were added to Git.
+
+The latest [OEM data-flow analysis](../audits/rc6/oem-indicator-dataflow-review-20261024.md)
+connects a received report bit to staging slot 71, offset 1. State `0x0A79`
+controls slot 79, offset 1. These are source-derived indicator candidates;
+physical C/W connections remain unverified. Indicator implementation is the
+current work item; it is not present in the `586ac20` CI image.

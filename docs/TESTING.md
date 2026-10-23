@@ -15,7 +15,13 @@ commands were sent. LeakSanitizer was excluded; address and undefined-behavior
 checks remained active. [Independent offline review](../audits/rc6/compact-tapping-final-integration-review-20261024.md)
 passed. The [fresh bundle check](../audits/rc6/compact-tapping-fresh-bundle-20261024/check.json)
 also passed from commit `3c96e37`: the installer accepted the generated bundle
-with exact approval checks and no HID access. Dev CI awaits GitHub authentication.
+with exact approval checks and no HID access. [Dev CI 40026118029](https://github.com/dvino/ak820/actions/runs/40026118029)
+passed on `586ac20`: Linux rebuilt the same IHX, passed 26 suites and 258 unit
+tests without skips, and Windows built both applications with that fresh bundle.
+CLI help, offline verification and Tk startup passed. Publication was skipped.
+[Retained checks](../audits/rc6/ci-tap-hold-20261024/firmware-check.json)
+and [Windows input checks](../audits/rc6/ci-tap-hold-20261024/windows-check.json)
+bind the downloaded artifacts; visible dialogs and device behavior were not tested.
 
 ## Historical offline result
 

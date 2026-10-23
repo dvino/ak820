@@ -13,7 +13,7 @@ a successful source build does not promote the candidate into the installer.
 - [x] Configure CI for branch pushes, pull requests, manual runs and version
   tags. Linux builds and tests fresh firmware; Windows packages that bundle.
   SemVer tags reachable from `main` publish after both jobs pass. Earlier GitHub
-  Linux/Windows runs passed; the new tap-hold candidate still needs its dev run.
+  Linux/Windows runs passed; the tap-hold candidate also passed dev run 40026118029.
   Visible Windows dialog acceptance remains pending.
 - [x] Reproduce the stable firmware with pinned SDCC 4.6.0 and run the complete
   offline suite for that image: 23 suites, 257 unit tests, zero skips. The new
@@ -43,7 +43,7 @@ See the [bounded probes](../audits/rc6/bounded-optimization-20261023.md),
 
 | Work | Required result and current dependency |
 | --- | --- |
-| Windows package | Complete a GitHub run or native Windows build from this branch. Retain both EXEs, package provenance and CLI/GUI smoke reports. Check the visible RU/EN update and settings dialogs. Earlier CI packaging and startup checks passed. Repeat CI for the new tap-hold candidate; visible dialog acceptance remains pending. |
+| Windows package | Complete a GitHub run or native Windows build from this branch. Retain both EXEs, package provenance and CLI/GUI smoke reports. Check the visible RU/EN update and settings dialogs. Tap-hold CI packaging and startup checks passed in run 40026118029. Visible dialog acceptance remains pending. |
 | Host settings on a keyboard | Check backup, guarded restore and update with a valid private OEM session and separately authorized device operations. Test macro upload, saved RGB, cancellation, failure stops and cold-start persistence. Offline passes do not close this step. |
 | Candidate release | If a development image is selected for release, create a new exact artifact review and package using the private OEM inputs. Review settings compatibility explicitly before changing any image pin. Keep the existing release usable until this is done. |
 | Physical behavior | Check every key, encoder press and both rotation directions, lighting appearance, Alt Repeat, unlock and power-loss behavior. Record the image hash and distinguish ordinary restarts from complete power removal. |
