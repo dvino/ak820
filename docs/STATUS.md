@@ -41,8 +41,9 @@ paths. A compiler backport remains conditional future work.
 
 After cleanup, seven Windows offline suites passed. Dependency fixtures
 passed seven LUFA and eight SDCC tests; version selection passed three tests
-and packaging passed twelve. The new production host/CPU run is not yet
-complete. Its intermediate failures are not passes.
+and packaging passed twelve. The production host/CPU run finished with 17 suites passing initially; two
+invocation failures were closed by separate Linux reruns (19 device-adapter
+and 75 package tests). The original failed report remains unchanged.
 
 Latest read-only capture: host/runs/20261023-sdcc46-before-console-update/.
 All 65,536 bytes were saved; installed CODE matches the known 4.4 image.
@@ -64,5 +65,6 @@ unresolved. A bridge alone does not solve it.
 
 Direct Control remains research-only and requires permission before removal.
 Further optimizations, indicators and the Windows helper stay in
-[Roadmap](ROADMAP.md). Final tree review, clean history commit and later
-merge/push remain pending.
+[Roadmap](ROADMAP.md). The tree passed independent review and the clean source commit is c1779a8a.
+Old local ancestry was archived and removed; Git pack size is 1.84 MiB.
+Merge/push remain pending. See [cleanup result](../audits/rc6/clean-history-result-20261023.md).
