@@ -40,6 +40,8 @@ configured; apply the udev command from the ordinary desktop terminal.
 
 Read [Settings backup and restore](SETTINGS-BACKUP.md) before running the new commands. They support only the exact SDCC 4.6 RC6 image identified there. Every operation needs a valid OEM recovery session because exact CODE reconstruction uses native bytes not shipped in the repository. Keep the OEM session and settings backup separately.
 
+Before restore or update, confirm the wired VS11K28A hardware revision. Neither the AK820 name nor USB `320F:505B` alone proves compatibility; V2, Pro and Max are unsupported. A mismatched image can leave the keyboard unusable.
+
 The supported commands are:
 
 ```sh

@@ -6,6 +6,19 @@ This project brings QMK and Vial to the **wired AJAZZ AK820 with a VS11K28A / CH
 
 Set up keys, layers, the encoder and macros in Vial. After that, the keyboard works without a desktop app running in the background. The port keeps the keyboard's original loader and stores settings in the keyboard.
 
+## Hardware Compatibility
+
+| Model | Microcontroller | Support |
+| --- | --- | --- |
+| AJAZZ AK820 (wired) | VS11K28A | Supported |
+| AJAZZ AK820 V2 | Different platform | No |
+| AJAZZ AK820 Pro | Different platform | No |
+| AJAZZ AK820 Max | Different platform | No |
+
+USB VID:PID `320F:505B` is an additional identifying sign, not a compatibility guarantee. The AK820 name alone is not enough either. Check the controller and PCB revision against the photos below before installing firmware.
+
+Keep the original recovery files and read [stock firmware recovery](docs/INSTALL.md#oem-recovery).
+
 ![Wired AJAZZ AK820 keyboard](docs/images/keyboard.webp)
 
 <a href="docs/images/pcb.webp"><img src="docs/images/pcb.webp" alt="PCB" width="240"></a>
@@ -24,6 +37,8 @@ Set up keys, layers, the encoder and macros in Vial. After that, the keyboard wo
 
 
 ## Get started
+
+> Install only on the supported wired hardware revision. A mismatched image can leave the keyboard unusable; a matching USB ID does not make another revision safe.
 
 Start with the [installation and recovery guide](docs/INSTALL.md) before using the installer.
 
