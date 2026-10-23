@@ -17,13 +17,16 @@ key.
 
 Supported actions include standard keys and modifiers, media/system controls,
 MO/TO/TG/DF/LM, Caps Word, Repeat, Alt Repeat, Grave Escape and Tri Layer. Lower/Upper use
-layers 1/2 and activate layer 3 together; ordinary MO(1)/MO(2) do not activate
-Tri Layer. See [status](STATUS.md) for additions in the current candidate.
+layers 1/2 and activate layer 3 together. In the bundled legacy release,
+ordinary MO(1)/MO(2) do not activate Tri Layer. The compact development profile
+derives Adjust whenever both configured input layers are active, including
+MO, toggle and default-layer state. Each momentary hold retains its own owner.
 
-Vial may show actions that this firmware does not support. Mod Tap and Layer Tap
-send their tap key only; they do not detect a hold. One Shot, Mouse Keys,
-Tap Dance, Combos and Key Overrides are not supported. Importing a layout does
-not add those features.
+Vial may show unsupported actions. The bundled legacy release sends only the
+tap key for Mod-Tap and Layer-Tap. Development source adds the compact hold
+behavior described in [Tap and hold](TAP-HOLD.md); see [Status](STATUS.md)
+for its approval and test state. One Shot, Mouse Keys, Tap Dance, Combos and
+Key Overrides remain unsupported. Importing a layout does not add them.
 
 ## Macros and persistence
 

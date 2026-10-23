@@ -27,6 +27,9 @@
 
 #ifdef AK820_BOARD
 #    include "ak820_macro.h"
+#    ifdef AK820_COMPACT_TAPPING
+#        include "action_util.h"
+#    endif
 #endif
 
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
@@ -603,13 +606,20 @@ void dynamic_keymap_macro_send(uint8_t id) {
     /* All preflight returns precede this point; every interpreter exit
      * below reaches the release at the end of the function. */
     sending = true;
+#    ifdef AK820_COMPACT_TAPPING
+    ak820_macro_cancelled = ak820_macro_primitive = false;
+#    endif
 #endif
     // Send the macro string one or three chars at a time
     // by making temporary 1 or 3 char strings
     char data[4] = {0, 0, 0, 0};
     // AK820 validates the complete grammar before publication; retain the
     // explicit boundary as a second bound on the main interpreter loop.
-    while (p < end) {
+    while (p < end
+#ifdef AK820_COMPACT_TAPPING
+           && !ak820_macro_cancelled
+#endif
+    ) {
         data[0] = eeprom_read_byte(p++);
         data[1] = 0;
         // Stop at the null terminator of this macro string
@@ -629,9 +639,15 @@ void dynamic_keymap_macro_send(uint8_t id) {
                 /* The Vial stream is already decoded. Avoid parsing a second
                  * synthetic send-string byte stream for the same action. */
                 if (data[2] != 0) {
+#    ifdef AK820_COMPACT_TAPPING
+                    ak820_macro_primitive = data[1] != SS_TAP_CODE;
+#    endif
                     if (data[1] == SS_TAP_CODE) tap_code((uint8_t)data[2]);
                     else if (data[1] == SS_DOWN_CODE) register_code((uint8_t)data[2]);
                     else unregister_code((uint8_t)data[2]);
+#    ifdef AK820_COMPACT_TAPPING
+                    ak820_macro_primitive = false;
+#    endif
                 }
 #else
                 /* An earlier extended action used the fourth byte as data. */
@@ -650,6 +666,9 @@ void dynamic_keymap_macro_send(uint8_t id) {
                         memcpy(&kc, &data[2], sizeof(kc));
 #endif
                         kc = decode_keycode(kc);
+#ifdef AK820_COMPACT_TAPPING
+                        ak820_macro_primitive = data[1] != VIAL_MACRO_EXT_TAP;
+#endif
                         switch (data[1]) {
                         case VIAL_MACRO_EXT_TAP:
                             vial_keycode_tap(kc);
@@ -661,6 +680,9 @@ void dynamic_keymap_macro_send(uint8_t id) {
                             vial_keycode_up(kc);
                             break;
                         }
+#ifdef AK820_COMPACT_TAPPING
+                        ak820_macro_primitive = false;
+#endif
                     }
                 }
             } else if (data[1] == SS_DELAY_CODE) {
@@ -689,6 +711,9 @@ void dynamic_keymap_macro_send(uint8_t id) {
         }
     }
 #ifdef AK820_BOARD
+#    ifdef AK820_COMPACT_TAPPING
+    ak820_macro_primitive = false;
+#    endif
     sending = false;
 #endif
 }

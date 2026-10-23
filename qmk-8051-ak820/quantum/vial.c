@@ -131,6 +131,7 @@ static void vial_fill_packet(uint8_t __xdata *msg, uint8_t value) {
  * toggle/TO/default bits. Tri Layer recomputes its managed Adjust bit. Use the
  * press-time keycode so that an overlay or live remap cannot conceal MO/LM/TL. */
 static void vial_release_held_state(void) {
+#ifndef AK820_COMPACT_TAPPING
     keypos_t key;
     for (key.row = 0; key.row < MATRIX_ROWS; ++key.row) {
         for (key.col = 0; key.col < MATRIX_COLS; ++key.col) {
@@ -149,6 +150,7 @@ static void vial_release_held_state(void) {
             }
         }
     }
+#endif
 #    ifdef REPEAT_KEY_ENABLE
     repeat_key_cancel();
 #    endif
@@ -385,6 +387,14 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
 uint16_t g_vial_magic_keycode_override;
 
 void vial_keycode_down(uint16_t keycode) {
+#ifdef AK820_COMPACT_TAPPING
+    /* Macro commands already specify tap/down/up. Preserve their established
+     * basic-byte action without inventing a physical tap-hold position. */
+    if (keycode >= QK_MOD_TAP && keycode <= QK_LAYER_TAP_MAX) {
+        keycode = (uint8_t)keycode;
+        if (keycode <= KC_TRANSPARENT) return;
+    }
+#endif
     g_vial_magic_keycode_override = keycode;
 
     if (keycode <= QK_MODS_MAX) {
@@ -399,6 +409,14 @@ void vial_keycode_down(uint16_t keycode) {
 }
 
 void vial_keycode_up(uint16_t keycode) {
+#ifdef AK820_COMPACT_TAPPING
+    /* Macro commands already specify tap/down/up. Preserve their established
+     * basic-byte action without inventing a physical tap-hold position. */
+    if (keycode >= QK_MOD_TAP && keycode <= QK_LAYER_TAP_MAX) {
+        keycode = (uint8_t)keycode;
+        if (keycode <= KC_TRANSPARENT) return;
+    }
+#endif
     g_vial_magic_keycode_override = keycode;
 
     if (keycode <= QK_MODS_MAX) {

@@ -16,3 +16,7 @@
  * @return false stop handling keycodes
  */
 bool process_tri_layer(uint16_t keycode, keyrecord_t *record);
+
+#ifdef AK820_COMPACT_TAPPING
+void clear_macro_tri_layer(void);
+#endif

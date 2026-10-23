@@ -38,10 +38,17 @@ def main():
     tests = []
     paths = set()
     if "cache" in selected:
-        files = [root / "quantum/action_layer.c", root / "quantum/keymap_common.c", root / "tmk_core/protocol/report.c", root / "quantum/quantum.c", HERE / "fixtures/keycode_decoder_rc4.c"]
+        files = [root / "quantum/action_layer.c", root / "quantum/keymap_common.c", root / "tmk_core/protocol/report.c", root / "quantum/quantum.c", HERE / "fixtures/keycode_decoder_rc4.c", root / "quantum/action_util.c"]
         paths.update(files)
         parts = [without_includes(files[0]), function(files[1], "action_for_keycode"), function(files[2], "KEYCODE2CONSUMER"), function(files[3], "get_event_keycode"), files[4].read_text()]
-        body = (HERE / "harness.c").read_text().replace("/* PRODUCTION */", "\n".join(parts))
+        # Compact tapping's layer owner calls this shared production bitset
+        # transition. Include its real storage and implementation so this
+        # cache fixture still compiles against the current layer API.
+        parts += [function(files[5], "ak820_macro_change")]
+        adapter = ("#define AK820_STATE_MEM\n"
+                   "bool ak820_macro_change(uint8_t *bits, uint8_t index, bool pressed);\n"
+                   "bool ak820_macro_primitive, ak820_macro_cancelled;\n")
+        body = (HERE / "harness.c").read_text().replace("/* PRODUCTION */", adapter + "\n".join(parts))
         definitions = ["ENCODER_MAP_ENABLE", "VIAL_ENABLE", "DYNAMIC_KEYMAP_ENABLE", "EXTRAKEY_ENABLE"]
         tests += [("cache-profile", body, definitions), ("cache-with-optional-layer-array", body, definitions + ["KEY_OVERRIDE_ENABLE"])]
     if "color" in selected:
@@ -79,7 +86,9 @@ def main():
                                               root / "platforms", root / "tmk_core/protocol", root)], str(source), "-o", str(binary)]
             subprocess.run(argv, check=True)
             env = os.environ.copy(); env["ASAN_OPTIONS"] = "detect_leaks=0"
-            result = subprocess.run([str(binary)], check=True, env=env, text=True, capture_output=True)
+            result = subprocess.run([str(binary)], env=env, text=True, capture_output=True)
+            if result.returncode:
+                raise RuntimeError(result.stdout + result.stderr)
             print(f"{name}: {result.stdout.strip()}", flush=True)
             results.append({"name": name, "pass": True, "summary": result.stdout.strip()})
     paths.add(root / "keyboards/ajazz/ak820/config.h")

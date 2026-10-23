@@ -71,12 +71,12 @@ def cases(fw):
         ("physical_mod_preserved", "_actual_keyboard_report", 8, report(0, 2), fw.transition(rows(shift), 180)),
         ("all_released", "_actual_keyboard_report", 8, report(), fw.transition(rows(), 200)),
     ])
-    yield run_case(fw, "repeat-new-key-replaces-remembered-mods", setup, [
+    yield run_case(fw, "repeat-new-key-preserves-held-mod-owner", setup, [
         ("old_hotkey", "_actual_keyboard_report", 8, report(4, 1),
          fw.transition(rows(ctrl, a), 100) + fw.transition(rows(), 120) + fw.transition(rows(rep), 140)),
-        ("new_key_plain", "_actual_keyboard_report", 8, [0, 0, 4, 5, 0, 0, 0, 0], fw.transition(rows(rep, b), 160)),
+        ("new_key_with_held_ctrl", "_actual_keyboard_report", 8, [1, 0, 4, 5, 0, 0, 0, 0], fw.transition(rows(rep, b), 160)),
         ("old_repeat_up", "_actual_keyboard_report", 8, [0, 0, 0, 5, 0, 0, 0, 0], fw.transition(rows(b), 180)),
-        ("new_plain_repeat", "_actual_keyboard_report", 8, report(5), fw.transition(rows(), 200) + fw.transition(rows(rep), 220)),
+        ("new_repeat_captured_ctrl", "_actual_keyboard_report", 8, report(5, 1), fw.transition(rows(), 200) + fw.transition(rows(rep), 220)),
         ("plain_repeat_up", "_actual_keyboard_report", 8, report(), fw.transition(rows(), 240)),
     ])
     # Layer controls must not replace the last printable action. In the
@@ -164,7 +164,7 @@ def cases(fw):
          fw.transition(rows(ctrl), 100) + fw.transition(rows(ctrl, macro_key), 120)),
         ("macro_cleanup", "_actual_keyboard_report", 8, report(), fw.transition(rows(), 140) + fw.call("_clear_keyboard")),
         ("recursive_repeat_down", "_actual_keyboard_report", 8, report(4, 1), fw.transition(rows(rep), 160)),
-        ("recursive_weak_mods", "_weak_mods", 1, [1], []),
+        ("recursive_effective_report", "_actual_keyboard_report", 8, report(4, 1), []),
     ])
 
     alt = (1, 5)
@@ -199,8 +199,9 @@ def cases(fw):
     yield run_case(fw, "alt-repeat-mods-history-change-and-remap", alt_setup, [
         ("ctrl_left", "_actual_keyboard_report", 8, report(0x50, 1), fw.transition(rows(ctrl, a), 100)),
         ("ctrl_right", "_actual_keyboard_report", 8, report(0x4F, 1), fw.transition(rows(), 120) + fw.transition(rows(alt), 140)),
-        # QMK clears weak mods on a new physical press, as for normal Repeat.
-        ("other_key", "_actual_keyboard_report", 8, [0, 0, 0x4F, 5, 0, 0, 0, 0], fw.transition(rows(alt, b), 160)),
+        # A new press clears raw weak mods, but the held Alt Repeat keeps
+        # its owned Ctrl until its own release.
+        ("other_key", "_actual_keyboard_report", 8, [1, 0, 0x4F, 5, 0, 0, 0, 0], fw.transition(rows(alt, b), 160)),
         ("captured_release", "_actual_keyboard_report", 8, [0, 0, 0, 5, 0, 0, 0, 0], assign(*alt, 4) + fw.transition(rows(b), 180)),
         ("remapped_press", "_actual_keyboard_report", 8, report(4), fw.transition(rows(), 200) + fw.transition(rows(alt), 220)),
         ("remapped_up", "_actual_keyboard_report", 8, report(), fw.transition(rows(), 240)),

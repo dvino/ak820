@@ -69,7 +69,7 @@ def cases(fw):
     setup = fw.initialize() + [emitted.memory("rom", 0xC740 + 256 + (10 * 8 + 5) * 2, [0, 5])]
     yield run_case(fw, "momentary-layer-cache-and-toggle-preservation", setup, [
         ("mo_held", "_layer_state", 1, [2], fw.transition(rows, 100)),
-        ("retained_toggle", "_layer_state", 1, [0x20], fw.write("_layer_state", [0x22]) + vial(fw, 6)),
+        ("retained_toggle", "_layer_state", 1, [0x20], fw.call("_layer_state_set", 0x20) + vial(fw, 6)),
         ("repeat_idempotent", "_layer_state", 1, [0x20], vial(fw, 6)),
         ("released_clean", "_layer_state", 1, [0x20], fw.transition([0] * 16, 120) + vial(fw, 8)),
     ])

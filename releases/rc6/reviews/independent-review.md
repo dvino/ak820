@@ -1,15 +1,14 @@
 # Installer source review
 
-Independent code review, 2026-10-23: passed for the 21 host files recorded
-below. The approved firmware remains the legacy SDCC 4.6 image. No firmware
-file changed in this bundle. The new CI path separately reproduces the reviewed
-pointer candidate and never uses these legacy binaries as its target.
-
-Reviewed changes include Linux hidraw setup, exact image compatibility and
-forward settings transition, the CI authorization gates, and the fresh bundle
-assembler. Targeted checks passed. Final full-run evidence and finding closure
-are recorded in the CI integration report. No device write or Windows execution
-is established by this source review.
+Independent source reviews on 2026-10-23 approved the qualification integration
+and the exact three-image settings profile. Their findings and closure are in
+`audits/rc6/compact-tapping-ci-review-20261023.md` and
+`audits/rc6/compact-tapping-settings-profile-review-20261023.md`.
+The 21 host-file records below bind that reviewed source. The firmware files in
+this legacy bundle are unchanged. This binding does not approve a new firmware
+image or hardware operation; the compact candidate has separate build, CPU,
+packing and CI policy evidence. Final combined qualification is recorded
+separately. No device write or interactive Windows acceptance is established.
 
 ```json
 {
@@ -32,8 +31,8 @@ is established by this source review.
       "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
     },
     "qmk-8051-ak820/util/ak820_ci_authorization.py": {
-      "size": 12833,
-      "sha256": "8c96bcb611035453f319cc176015ec3f2eaa38a8d4e4e2e28154318f386a2d3d"
+      "size": 13290,
+      "sha256": "c4a035e2e97c0a07b9d26a81b6a177c9ebd95afe1974fe81b4f49a3789c7191f"
     },
     "qmk-8051-ak820/util/ak820_diagnose.py": {
       "size": 13505,
@@ -100,8 +99,8 @@ is established by this source review.
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
     },
     "tools/installer/settings_backup.py": {
-      "size": 28563,
-      "sha256": "82702346c22f608d6ad620e0a2939884173bbc3ea4f50052c397c253c2d68797"
+      "size": 28710,
+      "sha256": "d864ff69d01a91ca653da407ff12b58b74bd0bff90e1aa51e315e74098e942dd"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11338,

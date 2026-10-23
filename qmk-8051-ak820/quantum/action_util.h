@@ -123,3 +123,28 @@ void neutralize_flashing_modifiers(uint8_t active_mods);
 #ifdef __cplusplus
 }
 #endif
+
+#ifdef AK820_COMPACT_TAPPING
+void add_owned_mods(uint8_t mods);
+void del_owned_mods(uint8_t mods);
+void add_owned_weak_mods(uint8_t mods);
+void del_owned_weak_mods(uint8_t mods);
+void clear_owned_mods(void);
+extern bool ak820_macro_primitive, ak820_macro_cancelled;
+#if defined(__SDCC_mcs51)
+#    define AK820_STATE_MEM __xdata
+#else
+#    define AK820_STATE_MEM
+#endif
+bool ak820_macro_change(uint8_t AK820_STATE_MEM *bits, uint8_t index, bool pressed);
+bool add_owned_key(uint8_t code);
+bool del_owned_key(uint8_t code);
+void clear_owned_keys(void);
+void owned_usage_key(uint8_t code, bool pressed);
+void clear_owned_usages(void);
+#else
+#define add_owned_mods add_mods
+#define del_owned_mods del_mods
+#define add_owned_weak_mods add_weak_mods
+#define del_owned_weak_mods del_weak_mods
+#endif

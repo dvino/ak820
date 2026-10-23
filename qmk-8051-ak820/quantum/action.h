@@ -48,7 +48,7 @@ typedef struct {
 /* Key event container for recording */
 typedef struct {
     keyevent_t event;
-#ifndef NO_ACTION_TAPPING
+#if !defined(NO_ACTION_TAPPING) || defined(AK820_COMPACT_TAPPING)
     tap_t tap;
 #endif
 #if defined(COMBO_ENABLE) || defined(REPEAT_KEY_ENABLE)

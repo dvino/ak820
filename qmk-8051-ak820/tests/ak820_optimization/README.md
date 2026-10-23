@@ -1,8 +1,8 @@
 # AK820 size optimization regressions
 
-These tests compare the production functions with immutable RC4 function bodies
-from commit `cb9ff6ea`. They extract the current source at execution time; they do
-not use a rewritten model of the optimized implementation.
+These tests extract the current production functions at execution time and compare
+ordinary behavior with immutable RC4 function bodies from commit `cb9ff6ea`.
+The decoder also checks the explicit compact MT/LT contract described below.
 
 ## Host semantics
 
@@ -16,10 +16,12 @@ A C11 host compiler with AddressSanitizer and UndefinedBehaviorSanitizer is
 required. `--test cache`, `--test color`, `--test macro`, and `--test buffers`
 select individual suites. `--source-root` can test a separate checkout.
 
-- The action decoder is checked on all 65,536 input keycodes. 65,408 results
-  match immutable RC4; 128 LM right-modifier cases deliberately use the fixed
-  specification, because the old integer promotion leaked a modifier marker
-  into the layer number. The fixture itself is unchanged.
+- The action decoder is checked on all 65,536 input keycodes. MT/LT ranges
+  return opaque `ACTION_NO`: the compact engine consumes these keycodes before
+  ordinary dispatch. All other results match immutable RC4 except 128 LM
+  right-modifier cases, which use the corrected specification. The old integer
+  promotion leaked a modifier marker into the layer number. The MT/LT range
+  count is asserted separately; these decoder checks do not prove tap/hold timing.
 - The physical/encoder cache is checked on all coordinate byte combinations and
   all input layer bytes, with and without optional Key Override layer storage.
   Mutable keymaps cover letters, modifiers, MO, LM, TG, and consumer actions

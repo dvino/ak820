@@ -57,3 +57,7 @@ uint8_t get_tri_layer_upper_layer(void);
  * @return uint8_t
  */
 uint8_t get_tri_layer_adjust_layer(void);
+
+#ifdef AK820_COMPACT_TAPPING
+uint8_t ak820_tri_layer_derived(uint8_t state);
+#endif

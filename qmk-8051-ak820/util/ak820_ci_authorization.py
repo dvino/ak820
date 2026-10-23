@@ -164,12 +164,13 @@ def validate_qualification_contract(report: dict) -> None:
     }
     host = {'tests/' + name + '/run.py' for name in (
         'ak820_usb', 'ak820_keymap', 'ak820_caps_word', 'ak820_macro_guard',
-        'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_bounded')}
+        'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_via_decode', 'ak820_bounded')}
     cpu = {'tests/' + name + '/run.py' for name in (
         'ak820_features', 'ak820_unlock', 'ak820_tri_layer', 'ak820_iap')}
-    cpu |= {'tests/ak820_rgb/emitted.py', 'tests/ak820_bounded/emitted.py'}
+    cpu |= {'tests/ak820_rgb/emitted.py', 'tests/ak820_bounded/emitted.py', 'tests/ak820_tapping/emitted.py'}
+    tapping_host = 'tests/ak820_tapping/run.py'
     expected = {('discover', *item) for item in discovery} | {('host', item) for item in host}
-    expected |= {('cpu', item) for item in cpu} | {('docs', 'tools/check_docs.py')}
+    expected |= {('cpu', item) for item in cpu} | {('docs', 'tools/check_docs.py'), ('host', tapping_host)}
     tests = report.get('tests')
     require(isinstance(tests, list), 'Qualification has no test records')
     seen, roots, qmk_roots, builds = set(), set(), set(), set()
@@ -191,6 +192,10 @@ def validate_qualification_contract(report: dict) -> None:
             identity = ('docs', args[0]); roots.add(test.get('cwd'))
         elif len(args) == 1 and args[0] in host:
             identity = ('host', args[0]); qmk_roots.add(test.get('cwd'))
+        elif args[0] == tapping_host:
+            require(len(args) == 4 and args[1:3] == ['--negative-controls', '--output']
+                    and PurePosixPath(args[3]).is_absolute(), 'Tapping host qualification needs negative controls and output')
+            identity = ('host', tapping_host); qmk_roots.add(test.get('cwd'))
         elif args[0] in cpu:
             iap = args[0] == 'tests/ak820_iap/run.py'
             require(len(args) == (9 if iap else 7)

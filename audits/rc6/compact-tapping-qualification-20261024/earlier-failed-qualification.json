@@ -1,0 +1,733 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 162.777,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/00.txt",
+      "log_sha256": "8d51e5ce5ac9d461d7b3db7068ee1e08803e02655e201c6aee8cec0d55db836e",
+      "unit_tests": {
+        "run": 122,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.427,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/01.txt",
+      "log_sha256": "1fd580cff763011bee5c4e235c2eadcd4aef7c52c15a8fdcb5136b64a1e49682",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.317,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/02.txt",
+      "log_sha256": "284b4be9e6e9ecb9e7d409aa8479241aa7f7967a6c9020f050ac268dbabaa8c4",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.343,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/03.txt",
+      "log_sha256": "9595da2233186da57e8da1288d3748a82ae8a4b010ecd7de72b2868d4a14a9bf",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.445,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/04.txt",
+      "log_sha256": "aef47187693787bcb453c3adf53ae27b4bdc596fc2cae31900813fbe613601a3",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/05.txt",
+      "log_sha256": "5f0635b83af38a6c5d516fcb60dc3fa63c9c6ca4854e51a6a29ca33c92ccef16",
+      "unit_tests": {
+        "run": 9,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.692,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/06.txt",
+      "log_sha256": "4ef435d1d7929ea72fc1cb7d2ca94f977bc32e09084cdec058e465e7eadb90da",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.155,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/07.txt",
+      "log_sha256": "9ec9e3c52e7908b746c625587944c7e1eb71f90fc834fbb4527d510523684dd2",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.099,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/08.txt",
+      "log_sha256": "b7749c11e2ddca3b057e6099966caa13239ea539692a372a6e5181e2102f1d0b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.603,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.117,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 1,
+      "seconds": 0.389,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/11.txt",
+      "log_sha256": "e00a42563c687230b06dbec3a24b1b3a99cb5eea3ca72fd1c737a62e711a24db",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.429,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/12.txt",
+      "log_sha256": "aed1f8864c9289f67cc8ef8f084b5e6a2b55c97a3b722c7ac6f21132e6d52d56",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.532,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 9.201,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 10.458,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.238,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.905,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/17.txt",
+      "log_sha256": "ab78398099c1d788da902e043b115ff2f5097f44c7b9c8351b68aa793b0beb54",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 23.641,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/18.txt",
+      "log_sha256": "d092f065fa7da47b3e4b431a371e820166f63c24d1ddd9ed9162345a68f53714",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/compact-modtap-send-mask-20261023",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/ak820_features"
+      ],
+      "exit_code": 1,
+      "seconds": 14.643,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/19.txt",
+      "log_sha256": "73bc0378d7720f34a98e4544d5fc9ab3531e100875ebfcf70403e43e0a645349",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/compact-modtap-send-mask-20261023",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/ak820_unlock"
+      ],
+      "exit_code": 1,
+      "seconds": 5.764,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/20.txt",
+      "log_sha256": "ceb03c06835d06b0eecc8e829b242c67cdb5bb59b7281bca8e278d8d92786251",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/compact-modtap-send-mask-20261023",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/ak820_tri_layer"
+      ],
+      "exit_code": 1,
+      "seconds": 2.343,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/21.txt",
+      "log_sha256": "f10c366e11d264f273be84a6c24bf6957a785e42a888a58fab8b5d4ddadd4995",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/compact-modtap-send-mask-20261023",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 145.856,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/22.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/compact-modtap-send-mask-20261023",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.789,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/23.txt",
+      "log_sha256": "3d13c4e842658e059bf55b403415699f93d89466db81712ce14d7229d2684a7f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/compact-modtap-send-mask-20261023",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 2.575,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/24.txt",
+      "log_sha256": "ac0b374b73409ee22c0551c612013e6dcf8570287440bf67eb39576e5e9654c2",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/compact-modtap-send-mask-20261023",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 40.028,
+      "log": "/home/danil/Documents/git/ak820/host/runs/compact-tapping-final-qualification-20261023-logs-kbsvmb8x/25.txt",
+      "log_sha256": "ef013729ac25f06064b5e0315ad96300724437c95a85e191a71d3aceefc5bd8a",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      },
+      "build_after": {
+        "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+        "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0"
+  },
+  "unit_tests": {
+    "run": 258,
+    "skipped": 0
+  },
+  "passed": false,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "24e97578ee469e5343d6949976fef96898d87c0e38ec6148374af1b1611a1655",
+    "map": "e457bacda3ede08ba62a3f047d6c04deb773742de5137e26f9ffda4b63b8f478"
+  },
+  "build_unchanged": true
+}

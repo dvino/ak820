@@ -20,6 +20,9 @@
 #include "action_util.h"
 #ifdef AK820_BOARD
 #    include "action_layer.h"
+#    if defined(AK820_COMPACT_TAPPING) && defined(REPEAT_KEY_ENABLE)
+#        include "repeat_key.h"
+#    endif
 #endif
 
 /* true if the last press of QK_GRAVE_ESCAPE was shifted (i.e. GUI or SHIFT were pressed), false otherwise.
@@ -70,7 +73,14 @@ if (QS_grave_esc_shift_override) {
              * different modifiers. Save each resolved release separately. */
             uint16_t resolved = shifted ? KC_GRAVE : KC_ESCAPE;
 #    if defined(COMBO_ENABLE) || defined(REPEAT_KEY_ENABLE)
+#        if defined(AK820_COMPACT_TAPPING) && defined(REPEAT_KEY_ENABLE)
+            /* Compact physical records also carry a keycode. Only Repeat
+             * stores its resolved action in a retained synthetic record;
+             * physical/encoder releases need the source cache updated. */
+            if (get_repeat_key_count()) {
+#        else
             if (record->keycode) {
+#        endif
                 record->keycode = resolved;
             } else
 #    endif
@@ -80,12 +90,22 @@ if (QS_grave_esc_shift_override) {
 #else
             grave_esc_was_shifted = shifted;
 #endif
+#ifdef AK820_COMPACT_TAPPING
+            register_code(shifted ? KC_GRAVE : KC_ESCAPE);
+#else
             add_key(shifted ? KC_GRAVE : KC_ESCAPE);
+#endif
         } else {
+#ifdef AK820_COMPACT_TAPPING
+            unregister_code(grave_esc_was_shifted ? KC_GRAVE : KC_ESCAPE);
+#else
             del_key(grave_esc_was_shifted ? KC_GRAVE : KC_ESCAPE);
+#endif
         }
 
+#ifndef AK820_COMPACT_TAPPING
         send_keyboard_report();
+#endif
         return false;
     }
 

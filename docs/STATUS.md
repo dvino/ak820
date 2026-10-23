@@ -2,13 +2,14 @@
 
 # Project status
 
-Updated 2026-10-23. The pointer candidate was reproduced locally with pinned
-SDCC 4.6.0 and passed the complete current offline regression run. The
-checked-in installer bundle still contains the earlier firmware. CI now builds
-its own firmware and passes that fresh bundle to Windows packaging.
+Updated 2026-10-24. Development source implements compact Mod-Tap/Layer-Tap.
+Its latest build uses pinned SDCC 4.6.0 and has 24 trailing CODE bytes. Complete
+qualification is being rerun after a Grave Escape ownership correction. The
+checked-in installer bundle still contains the earlier firmware. CI builds its
+own firmware and passes that fresh bundle to Windows packaging.
 No firmware or settings writes were performed in this work.
 
-## Source, build and installed image
+## Retained release and pointer-only comparison
 
 | Measurement | Retained release control | Reproduced candidate |
 | --- | ---: | ---: |
@@ -17,8 +18,8 @@ No firmware or settings writes were performed in this work.
 | XRAM bytes | 2,067 | 2,066 |
 | Initial SP / allocated stack capacity | 0x62 / 157 bytes | 0x62 / 157 bytes |
 
-The source change affects only the private journal-header validator's XDATA
-pointer. Journal format, CRC, replay order, six layers and sixteen macros with
+In this retained earlier comparison, the source change affected only the
+private journal-header validator's XDATA pointer. Journal format, CRC, replay order, six layers and sixteen macros with
 8192 shared bytes are unchanged. The candidate saves 31 CODE bytes and one
 XRAM byte. The tested helper uses four stack bytes instead of six; this is not
 a bound for every runtime path or interrupt overlap. The delay-expression
@@ -38,6 +39,22 @@ and the explicit legacy-to-candidate transition. Downgrades and unknown images
 are rejected. That transition has not been tested on a keyboard.
 
 ## Current verification
+
+The compact Mod-Tap/Layer-Tap implementation remains a development candidate.
+After the Grave Escape correction, its build fits with 24 trailing bytes before
+`0xc700`: 40,399 populated CODE bytes, XRAM 2,512, stack allocation capacity 157.
+Its IHX is `d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3`. No candidate update
+has been installed. The latest corrected image passed all 65 tap-hold cases and the separate
+33 feature, 10 unlock and 16 Tri Layer cases. The first run
+failed because its cancellation fixture assumed the wrong reset branch; that
+fixture-only error was independently reviewed and corrected. Cancellation is
+tested through a scoped simulator hook, not EEPROM/reset execution. The first complete 26-suite run also found a real Grave Escape raw-owner/cache
+fault and outdated layer/weak-mod fixture assumptions. The source and fixtures
+were corrected and independently reviewed. The [fresh 26-suite qualification](../audits/rc6/compact-tapping-qualification-20261024/qualification.json)
+passed with 258 unit tests, no skips and unchanged IHX/MAP hashes. The earlier
+failed report is retained. [Independent offline review](../audits/rc6/compact-tapping-final-integration-review-20261024.md)
+passed. Fresh bundle assembly and dev CI remain pending. The 23-suite evidence below applies to the
+retained earlier image, not this candidate.
 
 The [clean local run](../audits/rc6/ci-integration-20261023/qualification.json)
 passed all **23 suites**, including **257 unit tests with zero skips**, eight

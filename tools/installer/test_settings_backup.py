@@ -39,27 +39,28 @@ def synthetic_profile():
 
 
 def transition_profiles():
-    """Two modeled programs with the same settings contract and NVM schema."""
+    """Three modeled programs with the same settings contract and NVM schema."""
     old = synthetic_profile()
-    new = dict(old)
-    new_payload = bytearray(old['payload'])
-    new_payload[:p.CODE_END-p.APP_START] = b'\xA4' * (p.CODE_END-p.APP_START)
-    new_hash = p.digest(new_payload[:p.CODE_END-p.APP_START])
-    at = p.MANIFEST_START-p.APP_START
-    new_payload[at:at+48] = (p.MAGIC + b'\1\0\0\0' + p.BUILD_ID.to_bytes(4, 'little') +
-                             bytes.fromhex(new_hash))
-    new['payload'] = bytes(new_payload)
-    new['ihx_sha256'] = 'feac' + '0'*60
-    new['code_sha256'] = new_hash
+    middle, new = dict(old), dict(old)
+    profiles = [old, middle, new]
+    for index, profile in enumerate(profiles, start=1):
+        payload = bytearray(old['payload'])
+        payload[:p.CODE_END-p.APP_START] = bytes((0xA3 + index,)) * (p.CODE_END-p.APP_START)
+        code_hash = p.digest(payload[:p.CODE_END-p.APP_START])
+        at = p.MANIFEST_START-p.APP_START
+        payload[at:at+48] = (p.MAGIC + b'\1\0\0\0' + p.BUILD_ID.to_bytes(4, 'little') +
+                             bytes.fromhex(code_hash))
+        profile['payload'] = bytes(payload)
+        profile['ihx_sha256'] = ('f1c4', 'feac', '24e9')[index-1] + '0'*60
+        profile['code_sha256'] = code_hash
     old['ihx_sha256'] = 'f1c4' + '0'*60
-    images = {
-        old['ihx_sha256']: {'ihx_sha256': old['ihx_sha256'], 'code_sha256': old['code_sha256'],
-                            'build_id': p.BUILD_ID},
-        new['ihx_sha256']: {'ihx_sha256': new['ihx_sha256'], 'code_sha256': new_hash,
-                            'build_id': p.BUILD_ID},
-    }
-    old['compatible_images'] = new['compatible_images'] = images
-    return old, new
+    images = {profile['ihx_sha256']: {'ihx_sha256': profile['ihx_sha256'],
+                                      'code_sha256': profile['code_sha256'],
+                                      'build_id': p.BUILD_ID}
+              for profile in profiles}
+    for profile in profiles:
+        profile['compatible_images'] = images
+    return old, middle, new
 
 
 class WireDevice:
@@ -476,7 +477,7 @@ class SettingsTests(unittest.TestCase):
             self.assertFalse(settings.keycode_supported(value), str(value))
 
     def test_approved_old_backup_restores_to_new_program_and_preserves_provenance(self):
-        old, new = transition_profiles()
+        old, middle, new = transition_profiles()
         source_nvm = self.changed_nvm()
         api, raw = self.api(source_nvm, profile=old)
         saved = settings.export_settings(api, self.root/'old-source', old)
@@ -490,8 +491,21 @@ class SettingsTests(unittest.TestCase):
         self.assertEqual(settings._rom_identity(raw.rom(), new)['ihx_sha256'], new['ihx_sha256'])
         self.assertEqual(raw.nvm, source_nvm)
 
+    def test_three_profile_transition_matrix_all_nine_pairs(self):
+        profiles = transition_profiles()
+        for source_rank, source in enumerate(profiles):
+            source_api, _ = self.api(self.changed_nvm(), profile=source)
+            saved = settings.export_settings(source_api, self.root/f'matrix-source-{source_rank}', source)
+            for target_rank, target in enumerate(profiles):
+                with self.subTest(source=source_rank, target=target_rank):
+                    if source_rank <= target_rank:
+                        self.assertIsInstance(settings.plan_restore(saved, target), dict)
+                    else:
+                        with self.assertRaisesRegex(ValueError, 'downgrade'):
+                            settings.plan_restore(saved, target)
+
     def test_candidate_backup_cannot_be_restored_to_legacy_profile(self):
-        old, new = transition_profiles()
+        old, middle, new = transition_profiles()
         api, _ = self.api(self.changed_nvm(), profile=new)
         saved = settings.export_settings(api, self.root/'new-source', new)
         self.assertEqual(saved['source_identity'], (new['ihx_sha256'], new['code_sha256']))
@@ -499,7 +513,7 @@ class SettingsTests(unittest.TestCase):
             settings.plan_restore(saved, old)
 
     def test_candidate_restore_rejects_legacy_target_snapshot_before_setters(self):
-        old, new = transition_profiles()
+        old, middle, new = transition_profiles()
         source_api, _ = self.api(self.changed_nvm(), profile=old)
         saved = settings.export_settings(source_api, self.root/'legacy-source', old)
         target_api, raw = self.api(self.changed_nvm(), writes=True, profile=old)
@@ -508,7 +522,7 @@ class SettingsTests(unittest.TestCase):
         self.assertEqual(raw.writes, [])
 
     def test_compatible_code_with_forged_manifest_identity_is_rejected(self):
-        old, new = transition_profiles()
+        old, middle, new = transition_profiles()
         api, _ = self.api(profile=old)
         saved = settings.export_settings(api, self.root/'forged', old)
         manifest_path = saved['path']/'manifest.json'
@@ -520,7 +534,7 @@ class SettingsTests(unittest.TestCase):
             settings.validate_backup(saved['path'], new)
 
     def test_image_with_wrong_embedded_manifest_header_is_rejected(self):
-        old, new = transition_profiles()
+        old, middle, new = transition_profiles()
         api, _ = self.api(profile=old)
         saved = settings.export_settings(api, self.root/'bad-header', old)
         rom = bytearray(saved['rom'])
@@ -535,7 +549,7 @@ class SettingsTests(unittest.TestCase):
             settings.validate_backup(saved['path'], new)
 
     def test_running_old_compatible_image_is_not_accepted_as_final_candidate(self):
-        old, new = transition_profiles()
+        old, middle, new = transition_profiles()
         api, _ = self.api(profile=old)
         saved = settings.export_settings(api, self.root/'old-final', old)
         with self.assertRaisesRegex(ValueError, 'Final running firmware'):

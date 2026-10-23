@@ -260,6 +260,10 @@ typedef void report_joystick_t; //SDCC cannot handle empty struct
 
 /* keycode to system usage */
 static inline uint16_t KEYCODE2SYSTEM(uint8_t key) {
+#ifdef AK820_BOARD
+    if (key < KC_SYSTEM_POWER || key > KC_SYSTEM_WAKE) return 0;
+    return SYSTEM_POWER_DOWN + (key - KC_SYSTEM_POWER);
+#else
     switch (key) {
         case KC_SYSTEM_POWER:
             return SYSTEM_POWER_DOWN;
@@ -270,6 +274,7 @@ static inline uint16_t KEYCODE2SYSTEM(uint8_t key) {
         default:
             return 0;
     }
+#endif
 }
 
 /* keycode to consumer usage */

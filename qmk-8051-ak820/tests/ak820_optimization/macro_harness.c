@@ -12,6 +12,8 @@ static uint8_t memory[UINT16_MAX + 1u];
 static uint16_t length;
 static uint32_t trace_events[65536], trace_count, expected_count;
 static bool compare_events;
+/* Production dynamic_keymap.c owns these per-playback flags. */
+bool ak820_macro_primitive, ak820_macro_cancelled;
 static void trace(uint8_t event, uint16_t value) {
     uint32_t encoded = ((uint32_t)event << 16) | value;
     assert(trace_count < sizeof(trace_events) / sizeof(trace_events[0]));

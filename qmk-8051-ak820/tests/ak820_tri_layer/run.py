@@ -62,7 +62,7 @@ def cases(fw):
         ('new_lower_assignment', '_actual_keyboard_report', 8, report(5), fw.transition(rows(lower), 160)),
         ('new_assignment_up', '_actual_keyboard_report', 8, report(), fw.transition(rows(), 180)),
     ])
-    yield run_case(fw, 'tri-layer-unlock-preserves-unrelated-toggle', setup + fw.write('_layer_state', [0x20]), [
+    yield run_case(fw, 'tri-layer-unlock-preserves-unrelated-toggle', setup + fw.call('_layer_state_set', 0x20), [
         ('held_with_toggle', '_layer_state', 1, [0x2E], fw.transition(rows(lower, upper), 100)),
         ('unlock_clear_held', '_layer_state', 1, [0x20], unlock.vial(fw, 6)),
         ('second_unlock_idempotent', '_layer_state', 1, [0x20], unlock.vial(fw, 6)),
@@ -70,7 +70,7 @@ def cases(fw):
         ('reusable_after_cancel', '_layer_state', 1, [0x2E], fw.transition(rows(lower, upper), 140)),
         ('reused_up', '_layer_state', 1, [0x20], fw.transition(rows(), 160)),
     ])
-    yield run_case(fw, 'tri-layer-unlock-preserves-other-member-toggle', setup + fw.write('_layer_state', [4]), [
+    yield run_case(fw, 'tri-layer-unlock-preserves-other-member-toggle', setup + fw.call('_layer_state_set', 4), [
         ('lower_with_upper_toggle', '_layer_state', 1, [14], fw.transition(rows(lower), 100)),
         ('unlock_preserves_upper', '_layer_state', 1, [4], unlock.vial(fw, 6)),
         ('cancel_preserves_upper', '_layer_state', 1, [4], fw.transition(rows(), 120) + unlock.vial(fw, 8)),
@@ -80,19 +80,19 @@ def cases(fw):
         ('new_up_suppressed', '_layer_state', 1, [0], fw.transition(rows(), 120)),
         ('cancel_clean', '_layer_state', 1, [0], unlock.vial(fw, 8)),
     ])
-    # These are ordinary QMK shared layer bits, not per-key reference counts:
-    # either duplicate Lower release clears Lower and recalculates Adjust.
+    # Compact layer holds retain independent owners: releasing one Lower
+    # preserves the other Lower and the derived Adjust until Upper releases.
     duplicate = setup_keys(fw, {lower: LOWER, upper: UPPER, second_lower: LOWER})
-    yield run_case(fw, 'tri-layer-duplicate-lower-shared-bit', duplicate, [
+    yield run_case(fw, 'tri-layer-duplicate-lower-owned-state', duplicate, [
         ('both_lower', '_layer_state', 1, [2], fw.transition(rows(lower), 100) + fw.transition(rows(lower, second_lower), 120)),
         ('duplicate_adjust', '_layer_state', 1, [14], fw.transition(rows(lower, second_lower, upper), 140)),
-        ('first_lower_up', '_layer_state', 1, [4], fw.transition(rows(second_lower, upper), 160)),
-        ('upper_up', '_layer_state', 1, [0], fw.transition(rows(second_lower), 180)),
+        ('first_lower_up', '_layer_state', 1, [14], fw.transition(rows(second_lower, upper), 160)),
+        ('upper_up', '_layer_state', 1, [2], fw.transition(rows(second_lower), 180)),
         ('last_lower_up', '_layer_state', 1, [0], fw.transition(rows(), 200)),
     ])
     mo = setup_keys(fw, {lower: 0x5221, upper: 0x5222})
-    yield run_case(fw, 'tri-layer-ordinary-mo-remains-ordinary', mo, [
-        ('mo_pair_no_adjust', '_layer_state', 1, [6], fw.transition(rows(lower, upper), 100)),
+    yield run_case(fw, 'tri-layer-ordinary-mo-derives-adjust', mo, [
+        ('mo_pair_with_adjust', '_layer_state', 1, [14], fw.transition(rows(lower, upper), 100)),
         ('mo_lower_only', '_layer_state', 1, [2], fw.transition(rows(lower), 120)),
         ('mo_all_up', '_layer_state', 1, [0], fw.transition(rows(), 140)),
     ])

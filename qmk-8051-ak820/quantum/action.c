@@ -33,6 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "debug.h"
 #include "quantum.h"
+#ifdef AK820_COMPACT_TAPPING
+#    include "ak820_tapping.h"
+#endif
 
 #ifdef BACKLIGHT_ENABLE
 #    include "backlight.h"
@@ -73,6 +76,9 @@ __attribute__((weak)) bool get_retro_tapping(uint16_t keycode, keyrecord_t *reco
  * FIXME: Needs documentation.
  */
 void action_exec(keyevent_t event) {
+#ifdef AK820_COMPACT_TAPPING
+    if (!ak820_tapping_before(&event)) return;
+#endif
 #if !defined(AK820_BOARD) || !defined(NO_DEBUG) || defined(RETRO_TAPPING) || defined(RETRO_TAPPING_PER_KEY) || (defined(AUTO_SHIFT_ENABLE) && defined(RETRO_SHIFT))
     /* Retain the runtime predicate only when this block has observable work. */
     if (IS_EVENT(event)) {
@@ -101,6 +107,9 @@ void action_exec(keyevent_t event) {
     //keyrecord_t record = {.event = event};
     keyrecord_t record;
     record.event = event;
+#ifdef AK820_COMPACT_TAPPING
+    record.tap.count = 0;
+#endif
 #if defined(COMBO_ENABLE) || defined(REPEAT_KEY_ENABLE)
     /* Synthetic Repeat records carry an explicit keycode. Physical and
      * encoder events must always start with a fresh position lookup. */
@@ -136,6 +145,9 @@ if (QS_oneshot_timeout > 0) {
     }
 #else
     if (IS_NOEVENT(record.event) || pre_process_record_quantum(&record)) {
+#ifdef AK820_COMPACT_TAPPING
+        if (!ak820_tapping_process(&record)) return;
+#endif
         process_record(&record);
     }
 #if !defined(AK820_BOARD) || !defined(NO_DEBUG)
@@ -428,9 +440,9 @@ void process_action(keyrecord_t *record, action_t action) {
                         // e.g. LSFT(KC_LEFT_GUI): we don't want the LSFT to be weak as it would make it useless.
                         // This also makes LSFT(KC_LEFT_GUI) behave exactly the same as LGUI(KC_LEFT_SHIFT).
                         // Same applies for some keys like KC_MEH which are declared as MEH(KC_NO).
-                        add_mods(mods);
+                        add_owned_mods(mods);
                     } else {
-                        add_weak_mods(mods);
+                        add_owned_weak_mods(mods);
                     }
                     send_keyboard_report();
                 }
@@ -439,9 +451,9 @@ void process_action(keyrecord_t *record, action_t action) {
                 unregister_code(action.key.code);
                 if (mods) {
                     if (IS_MODIFIER_KEYCODE(action.key.code) || action.key.code == KC_NO) {
-                        del_mods(mods);
+                        del_owned_mods(mods);
                     } else {
-                        del_weak_mods(mods);
+                        del_owned_weak_mods(mods);
                     }
                     send_keyboard_report();
                 }
@@ -524,6 +536,16 @@ void process_action(keyrecord_t *record, action_t action) {
 #ifdef EXTRAKEY_ENABLE
         /* other HID usage */
         case ACT_USAGE:
+#ifdef AK820_COMPACT_TAPPING
+            /* The only pipeline caller decodes this frozen record. In the
+             * supported profile ACT_USAGE comes only from basic A5..C2;
+             * encoded modifiers use register_code instead. Keep the raw
+             * action API when a caller has no corresponding basic record. */
+            if (record->keycode >= KC_SYSTEM_POWER && record->keycode <= KC_LAUNCHPAD) {
+                owned_usage_key((uint8_t)record->keycode, event.pressed);
+                break;
+            }
+#endif
             switch (action.usage.page) {
                 case PAGE_SYSTEM:
                     host_system_send(event.pressed ? action.usage.code : 0);
@@ -586,11 +608,11 @@ void process_action(keyrecord_t *record, action_t action) {
             break;
         case ACT_LAYER_MODS:
             if (event.pressed) {
-                layer_on(action.layer_mods.layer);
+                layer_hold_on(action.layer_mods.layer);
                 register_mods(action.layer_mods.mods);
             } else {
                 unregister_mods(action.layer_mods.mods);
-                layer_off(action.layer_mods.layer);
+                layer_hold_off(action.layer_mods.layer);
             }
             break;
         case ACT_LAYER_TAP:
@@ -612,7 +634,7 @@ void process_action(keyrecord_t *record, action_t action) {
 #    endif
                 case OP_ON_OFF:
                 momentary_layer_action:
-                    event.pressed ? layer_on(action.layer_tap.val) : layer_off(action.layer_tap.val);
+                    event.pressed ? layer_hold_on(action.layer_tap.val) : layer_hold_off(action.layer_tap.val);
                     break;
                 case OP_OFF_ON:
                     event.pressed ? layer_off(action.layer_tap.val) : layer_on(action.layer_tap.val);
@@ -897,6 +919,9 @@ __attribute__((weak)) void register_code(uint8_t code) {
         // TODO: should push command_proc out of this block?
         if (command_proc(code)) return;
 
+#ifdef AK820_COMPACT_TAPPING
+        if (!add_owned_key(code)) return;
+#else
         // Force a new key press if the key is already pressed
         // without this, keys with the same keycode, but different
         // modifiers will be reported incorrectly, see issue #1708
@@ -905,16 +930,20 @@ __attribute__((weak)) void register_code(uint8_t code) {
             send_keyboard_report();
         }
         add_key(code);
+#endif
         send_keyboard_report();
     } else if (IS_MODIFIER_KEYCODE(code)) {
-        add_mods(MOD_BIT(code));
+        add_owned_mods(MOD_BIT(code));
         send_keyboard_report();
 
 #ifdef EXTRAKEY_ENABLE
-    } else if (IS_SYSTEM_KEYCODE(code)) {
-        host_system_send(KEYCODE2SYSTEM(code));
-    } else if (IS_CONSUMER_KEYCODE(code)) {
-        host_consumer_send(KEYCODE2CONSUMER(code));
+    } else if (IS_SYSTEM_KEYCODE(code) || IS_CONSUMER_KEYCODE(code)) {
+#ifdef AK820_COMPACT_TAPPING
+        owned_usage_key(code, true);
+#else
+        if (IS_SYSTEM_KEYCODE(code)) host_system_send(KEYCODE2SYSTEM(code));
+        else host_consumer_send(KEYCODE2CONSUMER(code));
+#endif
 #endif
 
     } else if (IS_MOUSE_KEYCODE(code)) {
@@ -961,17 +990,24 @@ __attribute__((weak)) void unregister_code(uint8_t code) {
 #endif
 
     } else if (IS_BASIC_KEYCODE(code)) {
+#ifdef AK820_COMPACT_TAPPING
+        if (!del_owned_key(code)) return;
+#else
         del_key(code);
+#endif
         send_keyboard_report();
     } else if (IS_MODIFIER_KEYCODE(code)) {
-        del_mods(MOD_BIT(code));
+        del_owned_mods(MOD_BIT(code));
         send_keyboard_report();
 
 #ifdef EXTRAKEY_ENABLE
-    } else if (IS_SYSTEM_KEYCODE(code)) {
-        host_system_send(0);
-    } else if (IS_CONSUMER_KEYCODE(code)) {
-        host_consumer_send(0);
+    } else if (IS_SYSTEM_KEYCODE(code) || IS_CONSUMER_KEYCODE(code)) {
+#ifdef AK820_COMPACT_TAPPING
+        owned_usage_key(code, false);
+#else
+        if (IS_SYSTEM_KEYCODE(code)) host_system_send(0);
+        else host_consumer_send(0);
+#endif
 #endif
 
     } else if (IS_MOUSE_KEYCODE(code)) {
@@ -1006,7 +1042,7 @@ __attribute__((weak)) void tap_code(uint8_t code) {
  */
 __attribute__((weak)) void register_mods(uint8_t mods) {
     if (mods) {
-        add_mods(mods);
+        add_owned_mods(mods);
         send_keyboard_report();
     }
 }
@@ -1017,7 +1053,7 @@ __attribute__((weak)) void register_mods(uint8_t mods) {
  */
 __attribute__((weak)) void unregister_mods(uint8_t mods) {
     if (mods) {
-        del_mods(mods);
+        del_owned_mods(mods);
         send_keyboard_report();
     }
 }
@@ -1028,7 +1064,7 @@ __attribute__((weak)) void unregister_mods(uint8_t mods) {
  */
 __attribute__((weak)) void register_weak_mods(uint8_t mods) {
     if (mods) {
-        add_weak_mods(mods);
+        add_owned_weak_mods(mods);
         send_keyboard_report();
     }
 }
@@ -1039,7 +1075,7 @@ __attribute__((weak)) void register_weak_mods(uint8_t mods) {
  */
 __attribute__((weak)) void unregister_weak_mods(uint8_t mods) {
     if (mods) {
-        del_weak_mods(mods);
+        del_owned_weak_mods(mods);
         send_keyboard_report();
     }
 }
@@ -1067,6 +1103,20 @@ void clear_keyboard_but_mods(void) {
  * FIXME: Needs documentation.
  */
 void clear_keyboard_but_mods_and_keys(void) {
+#ifdef AK820_COMPACT_TAPPING
+    ak820_tapping_cancel();
+#    ifdef REPEAT_KEY_ENABLE
+    repeat_key_cancel();
+#    endif
+    clear_owned_mods();
+    clear_owned_keys();
+    clear_owned_usages();
+    layer_hold_clear();
+#    ifdef TRI_LAYER_ENABLE
+    clear_macro_tri_layer();
+#    endif
+    clear_keys();
+#endif
 #ifdef EXTRAKEY_ENABLE
     host_system_send(0);
     host_consumer_send(0);

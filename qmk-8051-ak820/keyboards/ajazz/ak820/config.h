@@ -16,6 +16,7 @@
 #endif
 #define HOLD_ON_OTHER_KEY_PRESS
 #define NO_ACTION_TAPPING
+#define AK820_COMPACT_TAPPING
 #define NO_ACTION_ONESHOT
 /* Repeat and Alternate Repeat use the compact target implementation. */
 #define LAYER_STATE_8BIT

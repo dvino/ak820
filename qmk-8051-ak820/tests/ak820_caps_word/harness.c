@@ -16,7 +16,8 @@ uint8_t get_mods(void) { return mods; }
 void clear_mods(void) { mods = 0; }
 void clear_weak_mods(void) { weak_mods = 0; }
 void add_weak_mods(uint8_t value) { weak_mods |= value; }
-void unregister_weak_mods(uint8_t value) { weak_mods &= ~value; ++reports; }
+void del_weak_mods(uint8_t value) { weak_mods &= ~value; }
+void unregister_weak_mods(uint8_t value) { del_weak_mods(value); ++reports; }
 void send_keyboard_report(void) { ++reports; }
 bool caps_word_press_user(uint16_t keycode);
 

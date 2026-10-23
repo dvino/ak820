@@ -29,6 +29,127 @@ extern keymap_config_t keymap_config;
 
 static uint8_t real_mods = 0;
 static uint8_t weak_mods = 0;
+#ifdef AK820_COMPACT_TAPPING
+/* Raw temporary modifiers (Caps Word, macros) and held action owners are
+ * separate. Clearing temporary weak state cannot release an encoded action. */
+static uint8_t owned_mod_refs[8], owned_weak_refs[8];
+static uint8_t owned_mods, owned_weak_mods;
+static uint8_t macro_mods[2];
+bool ak820_macro_primitive, ak820_macro_cancelled;
+bool ak820_macro_change(uint8_t AK820_STATE_MEM *bits, uint8_t index, bool pressed) {
+    if (!ak820_macro_primitive) return true;
+    uint8_t mask = 1u << (index & 7);
+    bits += index >> 3;
+    if (((*bits & mask) != 0) == pressed) return false;
+    *bits ^= mask;
+    return true;
+}
+static void change_owned(uint8_t mods, uint8_t mode) {
+    uint8_t kind = mode >> 1;
+    bool pressed = (mode & 1) != 0;
+    uint8_t AK820_STATE_MEM *refs = kind ? owned_weak_refs : owned_mod_refs;
+    if (ak820_macro_primitive) {
+        uint8_t old = macro_mods[kind];
+        macro_mods[kind] = pressed ? old | mods : old & ~mods;
+        mods &= pressed ? ~old : old;
+    }
+    uint8_t result = 0;
+    for (uint8_t i = 0, bit = 1; i < 8; ++i, bit <<= 1) {
+        if (mods & bit) {
+            if (pressed) ++refs[i];
+            else if (refs[i]) --refs[i];
+        }
+        if (refs[i]) result |= bit;
+    }
+    if (kind) owned_weak_mods = result;
+    else owned_mods = result;
+}
+void add_owned_mods(uint8_t mods) { change_owned(mods, 1); }
+void del_owned_mods(uint8_t mods) { change_owned(mods, 0); }
+void add_owned_weak_mods(uint8_t mods) { change_owned(mods, 3); }
+void del_owned_weak_mods(uint8_t mods) { change_owned(mods, 2); }
+void clear_owned_mods(void) {
+    for (uint8_t i = 0; i < 8; ++i) owned_mod_refs[i] = owned_weak_refs[i] = 0;
+    owned_mods = owned_weak_mods = macro_mods[0] = macro_mods[1] = 0;
+    ak820_macro_cancelled = true;
+}
+/* Keyboard usages need ownership even when a 6KRO packet has no free slot.
+ * The usage-domain bound also covers synthetic Repeat and immediate taps. */
+static uint8_t key_refs[KC_EXSEL + 1];
+static uint8_t distinct_keys;
+static uint8_t macro_keys[(KC_EXSEL + 8) / 8];
+void clear_owned_keys(void) {
+    for (uint8_t i = 0; i <= KC_EXSEL; ++i) key_refs[i] = 0;
+    distinct_keys = 0;
+    for (uint8_t i = 0; i < sizeof(macro_keys); ++i) macro_keys[i] = 0;
+}
+bool add_owned_key(uint8_t code) {
+    if (!ak820_macro_change(macro_keys, code, true)) return false;
+    if (key_refs[code]++) return false;
+    ++distinct_keys;
+#ifdef NKRO_ENABLE
+    if (keyboard_protocol && keymap_config.nkro) { add_key(code); return true; }
+#endif
+    if (distinct_keys > KEYBOARD_REPORT_KEYS) {
+        for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; ++i) keyboard_report->keys[i] = 1; /* HID ErrorRollOver */
+    } else add_key(code);
+    return true;
+}
+bool del_owned_key(uint8_t code) {
+    if (!ak820_macro_change(macro_keys, code, false)) return false;
+    if (!key_refs[code] || --key_refs[code]) return false;
+    --distinct_keys;
+#ifdef NKRO_ENABLE
+    if (keyboard_protocol && keymap_config.nkro) { del_key(code); return true; }
+#endif
+    if (distinct_keys > KEYBOARD_REPORT_KEYS) return true;
+    if (distinct_keys == KEYBOARD_REPORT_KEYS) {
+        clear_keys();
+        /* Leaving rollover: every surviving owner is now representable. */
+        for (uint8_t key = KC_A; key <= KC_EXSEL; ++key) if (key_refs[key]) add_key(key);
+    } else del_key(code);
+    return true;
+}
+
+/* Each namespace is a bounded activation-order list. A second owner of the
+ * same usage keeps its original priority; removing the winner restores the
+ * most recently activated remaining usage, never a later deferred tap. */
+#define USAGE_COUNT (KC_LAUNCHPAD - KC_SYSTEM_POWER + 1)
+#define SYSTEM_COUNT (KC_SYSTEM_WAKE - KC_SYSTEM_POWER + 1)
+static uint8_t usage_refs[USAGE_COUNT], usage_order[USAGE_COUNT], usage_lengths[2];
+static uint8_t macro_usages[(USAGE_COUNT + 7) / 8];
+_Static_assert(USAGE_COUNT == 30 && SYSTEM_COUNT == 3, "owned extra usage domain");
+void clear_owned_usages(void) {
+    for (uint8_t i = 0; i < USAGE_COUNT; ++i) usage_refs[i] = usage_order[i] = 0;
+    usage_lengths[0] = usage_lengths[1] = 0;
+    for (uint8_t i = 0; i < sizeof(macro_usages); ++i) macro_usages[i] = 0;
+}
+void owned_usage_key(uint8_t code, bool pressed) {
+    uint8_t which = code >= KC_AUDIO_MUTE;
+    uint8_t base = which ? SYSTEM_COUNT : 0;
+    uint8_t count = usage_lengths[which];
+    uint8_t index = code - KC_SYSTEM_POWER;
+    if (!ak820_macro_change(macro_usages, index, pressed)) return;
+    if (pressed) {
+        if (usage_refs[index]++) return;
+        usage_order[base + count++] = index;
+    } else {
+        if (!usage_refs[index] || --usage_refs[index]) return;
+        uint8_t pos = 0;
+        while (usage_order[base + pos] != index) ++pos;
+        --count;
+        for (uint8_t i = pos; i < count; ++i) usage_order[base + i] = usage_order[base + i + 1];
+        usage_lengths[which] = count;
+        if (pos != count) return; /* A non-winning owner changed only storage. */
+    }
+    usage_lengths[which] = count;
+    code = count ? usage_order[base + count - 1] + KC_SYSTEM_POWER : 0;
+    if (which) host_consumer_send(code ? KEYCODE2CONSUMER(code) : 0);
+    else host_system_send(code ? KEYCODE2SYSTEM(code) : 0);
+}
+
+#endif
+
 #ifdef KEY_OVERRIDE_ENABLE
 static uint8_t weak_override_mods = 0;
 static uint8_t suppressed_mods    = 0;
@@ -250,6 +371,9 @@ bool is_oneshot_enabled(void) {
 void send_keyboard_report(void) {
     keyboard_report->mods = real_mods;
     keyboard_report->mods |= weak_mods;
+#ifdef AK820_COMPACT_TAPPING
+    keyboard_report->mods |= owned_mods | owned_weak_mods;
+#endif
 
 #ifndef NO_ACTION_ONESHOT
     if (oneshot_mods) {
@@ -308,7 +432,11 @@ void send_keyboard_report(void) {
  * FIXME: needs doc
  */
 uint8_t get_mods(void) {
-    return real_mods;
+    return real_mods
+#ifdef AK820_COMPACT_TAPPING
+        | owned_mods
+#endif
+        ;
 }
 /** \brief add mods
  *
@@ -344,7 +472,11 @@ void clear_mods(void) {
  * FIXME: needs doc
  */
 uint8_t get_weak_mods(void) {
-    return weak_mods;
+    return weak_mods
+#ifdef AK820_COMPACT_TAPPING
+        | owned_weak_mods
+#endif
+        ;
 }
 /** \brief add weak mods
  *
@@ -498,7 +630,7 @@ __attribute__((weak)) void oneshot_layer_changed_kb(uint8_t layer) {
  * FIXME: needs doc
  */
 uint8_t has_anymod(void) {
-    return bitpop(real_mods);
+    return bitpop(get_mods());
 }
 
 #ifdef DUMMY_MOD_NEUTRALIZER_KEYCODE

@@ -144,6 +144,11 @@ __attribute__((weak)) const uint8_t ascii_to_keycode_lut[128] PROGMEM = {
 
 // clang-format on
 
+#ifdef AK820_BOARD
+// One-bit masks avoid three variable-count shift loops in send_char.
+static const uint8_t ascii_bit_mask_lut[8] PROGMEM = {1, 2, 4, 8, 16, 32, 64, 128};
+#endif
+
 // Note: we bit-pack in "reverse" order to optimize loading
 #ifdef AK820_BOARD
 /* AK820's macro parser rejects non-ASCII; current pos expressions are uint8_t. */
@@ -207,10 +212,20 @@ void send_char(char ascii_code) {
     }
 #endif
 
+#ifdef AK820_BOARD
+    uint8_t ascii_index = (uint8_t)ascii_code;
+    uint8_t bit_mask    = pgm_read_byte(&ascii_bit_mask_lut[ascii_index & 7]);
+    uint8_t bit_index   = ascii_index >> 3;
+    uint8_t keycode     = pgm_read_byte(&ascii_to_keycode_lut[ascii_index]);
+    bool    is_shifted  = (pgm_read_byte(&ascii_to_shift_lut[bit_index]) & bit_mask) != 0;
+    bool    is_altgred  = (pgm_read_byte(&ascii_to_altgr_lut[bit_index]) & bit_mask) != 0;
+    bool    is_dead     = (pgm_read_byte(&ascii_to_dead_lut[bit_index]) & bit_mask) != 0;
+#else
     uint8_t keycode    = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
     bool    is_shifted = PGM_LOADBIT(ascii_to_shift_lut, (uint8_t)ascii_code);
     bool    is_altgred = PGM_LOADBIT(ascii_to_altgr_lut, (uint8_t)ascii_code);
     bool    is_dead    = PGM_LOADBIT(ascii_to_dead_lut, (uint8_t)ascii_code);
+#endif
 
     if (is_shifted) {
         register_code(KC_LEFT_SHIFT);

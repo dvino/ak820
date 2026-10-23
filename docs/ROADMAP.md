@@ -2,7 +2,7 @@
 
 # Roadmap
 
-Updated 2026-10-23. Completed work and exact image identities are in
+Updated 2026-10-24. Completed work and exact image identities are in
 [Status](STATUS.md). The development source and installer release now differ;
 a successful source build does not promote the candidate into the installer.
 
@@ -12,11 +12,13 @@ a successful source build does not promote the candidate into the installer.
   workflow; retain its exact-image compatibility checks and fresh physical unlock.
 - [x] Configure CI for branch pushes, pull requests, manual runs and version
   tags. Linux builds and tests fresh firmware; Windows packages that bundle.
-  SemVer tags reachable from `main` publish after both jobs pass. GitHub and
-  native Windows execution remain pending.
+  SemVer tags reachable from `main` publish after both jobs pass. Earlier GitHub
+  Linux/Windows runs passed; the new tap-hold candidate still needs its dev run.
+  Visible Windows dialog acceptance remains pending.
 - [x] Reproduce the stable firmware with pinned SDCC 4.6.0 and run the complete
-  current offline suite with that compiler and simulator: 23 suites, 257 unit
-  tests, zero skips. The earlier 247-test qualification is historical.
+  offline suite for that image: 23 suites, 257 unit tests, zero skips. The new
+  compact tap-hold candidate passed 26 suites and 258 unit tests without skips.
+  The earlier 247-test qualification is historical.
   Keep initial failures and final results in the evidence.
 - [x] Assemble a fresh firmware bundle from commit `073047d` after review of
   the source and policy. The installer accepted it with
@@ -41,9 +43,9 @@ See the [bounded probes](../audits/rc6/bounded-optimization-20261023.md),
 
 | Work | Required result and current dependency |
 | --- | --- |
-| Windows package | Complete a GitHub run or native Windows build from this branch. Retain both EXEs, package provenance and CLI/GUI smoke reports. Check the visible RU/EN update and settings dialogs. The workflow and fresh source bundle are prepared, but GitHub execution and native Windows validation are pending. |
+| Windows package | Complete a GitHub run or native Windows build from this branch. Retain both EXEs, package provenance and CLI/GUI smoke reports. Check the visible RU/EN update and settings dialogs. Earlier CI packaging and startup checks passed. Repeat CI for the new tap-hold candidate; visible dialog acceptance remains pending. |
 | Host settings on a keyboard | Check backup, guarded restore and update with a valid private OEM session and separately authorized device operations. Test macro upload, saved RGB, cancellation, failure stops and cold-start persistence. Offline passes do not close this step. |
-| Candidate release | If the pointer image is selected for release, create a new exact artifact review and package using the private OEM inputs. Review settings compatibility explicitly before changing any image pin. Keep the existing release usable until this is done. |
+| Candidate release | If a development image is selected for release, create a new exact artifact review and package using the private OEM inputs. Review settings compatibility explicitly before changing any image pin. Keep the existing release usable until this is done. |
 | Physical behavior | Check every key, encoder press and both rotation directions, lighting appearance, Alt Repeat, unlock and power-loss behavior. Record the image hash and distinguish ordinary restarts from complete power removal. |
 
 A timeout, bad readback or storage fault stops the operation. Do not retry,
@@ -60,10 +62,37 @@ required explicit confirmation; the current offline work grants none.
 | Windows language helper | Report the actual active-window language, including window changes and other switch methods. Define stale/unknown state and a RAM-only status path before implementation. Do not count Caps presses or write flash for language updates. It depends on the indicator/status design and Windows testing. |
 | Direct Control | Keep RAM-only VialRGB Direct. Persistent palette work was cancelled on 2026-10-23 to prioritize keyboard input functions. Its code is retained only in the separate experimental branch `codex/experiment-direct-palette`; it is not approved for installation. |
 
-## Next optimization probes
+## Compact functions and selectable builds
 
-The first two ranked probes are complete. Continue from the current candidate,
-with a fresh independent control for each experiment:
+Future work: collect compact implementations of useful keyboard functions so
+that each build can include the functions needed for its use. Combos is the
+first candidate after the current tap-hold work. Investigate a roughly 1 KiB
+budget for a bounded two-key implementation; a 1–2 KiB planning allowance is
+an estimate, not a measured size. Other candidates are One Shot, Tap Dance,
+Key Overrides and Mouse Keys.
+
+For each function, record the linked CODE and RAM cost against a fixed control,
+its behavior and limits, required dependencies, host/CPU tests and interactions
+with other functions. A flag-only size probe does not establish a usable
+implementation. Preserve implementation source when a build profile disables a
+function. Measure complete profiles too: separate savings do not necessarily
+add up after linking. Profile selection and distribution are future design work;
+this does not schedule those functions into the current firmware change.
+
+## Further optimization only when needed
+
+The compact tap-hold candidate now fits with 24 trailing main-window bytes.
+The private event-pointer and ownership reductions are measured; the repeated
+protocol-field and transport variants were rejected. The system mapping and
+ASCII mask candidates saved code. See [Status](STATUS.md) for the exact image
+and separate qualification state.
+
+Further byte-by-byte reduction is not a promise of room for major features.
+After this feature, choose the needed functions and a build budget first;
+optional feature profiles can trade unused functions for new ones. The research
+options below are conditional, not an active instruction to keep shrinking the
+current image. Any new experiment needs a fresh independent control:
+
 
 1. Prove every origin and memory placement before trying a typed private event
    pointer. Preserve the public event ABI and release ownership.
@@ -114,7 +143,8 @@ benefit on this VS11K28A + SDCC 4.6.0 target.
   Require an accepted precision bound and a complete linked comparison.
 - The old flag-only One Shot probe used 40,549 CODE bytes, 44 above the total
   limit, and crossed the NVM boundary by 70 bytes. It was incomplete and remains
-  unusable. Any One Shot/tap-hold proposal needs a full event contract first.
+  unusable. Compact tap-hold now has its own event contract and candidate; a
+  future One Shot proposal still needs a complete separate contract.
 - SDCC 4.5 failed in compiler optimization and produced no usable comparison.
   SDCC 4.4 measurements are historical; production tooling remains pinned to 4.6.0.
 - Existing DCE is reachability-based, not full LTO. Startup, IRQ and retained

@@ -1,0 +1,14 @@
+/tmp/ak820-caps-word-1zthattu/host.c: In function ‘caps_word_off’:
+/tmp/ak820-caps-word-1zthattu/host.c:93:5: error: implicit declaration of function ‘del_weak_mods’; did you mean ‘add_weak_mods’? [-Werror=implicit-function-declaration]
+   93 |     del_weak_mods(MOD_MASK_SHIFT);
+      |     ^~~~~~~~~~~~~
+      |     add_weak_mods
+cc1: all warnings being treated as errors
+Traceback (most recent call last):
+  File "/home/danil/Documents/git/ak820/qmk-8051-ak820/tests/ak820_caps_word/run.py", line 64, in <module>
+    main()
+  File "/home/danil/Documents/git/ak820/qmk-8051-ak820/tests/ak820_caps_word/run.py", line 47, in main
+    subprocess.run(command, check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['cc', '-std=gnu11', '-O1', '-g', '-Wall', '-Wextra', '-Werror', '-Wno-unused-parameter', '-Wno-unknown-pragmas', '-Wno-old-style-declaration', '-fsanitize=address,undefined', '-fno-omit-frame-pointer', '-include', '/home/danil/Documents/git/ak820/qmk-8051-ak820/keyboards/ajazz/ak820/config.h', '-I/tmp/ak820-caps-word-1zthattu', '-I/home/danil/Documents/git/ak820/qmk-8051-ak820/quantum', '-I/home/danil/Documents/git/ak820/qmk-8051-ak820/quantum/keymap_extras', '-I/home/danil/Documents/git/ak820/qmk-8051-ak820/quantum/sequencer', '-I/home/danil/Documents/git/ak820/qmk-8051-ak820/platforms', '-I/home/danil/Documents/git/ak820/qmk-8051-ak820/tmk_core/protocol', '-I/home/danil/Documents/git/ak820/qmk-8051-ak820', '/tmp/ak820-caps-word-1zthattu/host.c', '-o', '/tmp/ak820-caps-word-1zthattu/active']' returned non-zero exit status 1.

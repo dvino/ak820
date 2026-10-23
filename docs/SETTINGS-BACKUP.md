@@ -6,23 +6,31 @@ The source installer can save supported settings to a private local folder, rest
 
 ## Supported firmware
 
-Two exact SDCC 4.6 images are recognized:
+Three exact SDCC 4.6 images are recognized by the settings profile:
 
 - Legacy RC6 IHX: `f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e`.
 - Pointer candidate IHX: `feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8`.
+- Compact tap-hold candidate IHX: `d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3`;
+  its permanent CODE SHA256 is `7e6b90f51a99ac335c0cb910fffc85f1d1705e7159a12de46f8e492807c36d40`.
 
-Same-image restores and the explicit legacy-to-candidate transition are
-supported by host models. Downgrades and unknown images are rejected. Both
-images use schema `0x082002`, the same Vial definition and protocol. Sharing a
-schema alone never grants compatibility: the actual CODE hash and manifest
-must match one of the exact reviewed image identities. The target snapshot
+Same-image restores and forward transitions in the listed order are supported
+by host models. Downgrades and unknown images are rejected. All three profiles
+use schema `0x082002` and the same UID, keycode and NVM capacities. The compact
+tap-hold candidate changes the 200 ms hold behavior and macro-owned primitive
+semantics; Caps Word behavior is described in [Mod-Tap and Layer-Tap](TAP-HOLD.md).
+Sharing a schema alone never grants compatibility: the actual CODE hash and
+manifest must match one of the exact profile identities. The target snapshot
 must match the selected target before physical unlock or setters.
 
-The checked-in installer bundle still selects the legacy image. CI packages
-select the freshly reproduced candidate under the [CI policy](CI.md).
-The transition has not been performed on a keyboard. Unsupported firmware
-or settings stop the operation before erase; arbitrary build migration is
-not supported.
+The compact tap-hold profile and host transition model are prepared. CPU and
+artifact qualification, independent review and release approval remain
+pending. This does not establish behavior on a keyboard or an installed update.
+
+The checked-in installer bundle and CI package selection are separate from
+this profile allowlist; see the [CI policy](CI.md) for package selection.
+No transition to the compact tap-hold candidate has been performed on a
+keyboard. Unsupported firmware or settings stop the operation before erase;
+arbitrary build migration is not supported.
 
 Every command takes `--session OEM_DIR`. This is required because the installer reconstructs the exact CODE image using the original native bytes from a valid OEM recovery session; those bytes are not shipped in the repository. Existing valid OEM recovery data may be used. The update image is regenerated from the approved bundle. A settings backup is not a substitute for the OEM recovery session.
 
@@ -52,4 +60,4 @@ Restore is blocked before any erase or setting write when a keycode is unknown o
 
 ## Offline verification
 
-The earlier settings-only run passed eight offline suites (222 tests, two skips); its [run record](../audits/rc6/host-settings-offline-20261023.json) is historical evidence. The current full qualification passes 23 suites with 257 unit tests and zero skips; see [status](STATUS.md) and [CI](CI.md). Read-only diagnosis passed on the installed legacy firmware. Settings writes, an update, candidate firmware behavior and power-loss behavior were not tested on the device. The existing Windows executables predate this feature; a new native Windows build and GUI check remain pending.
+The earlier settings-only run passed eight offline suites (222 tests, two skips); its [run record](../audits/rc6/host-settings-offline-20261023.json) is historical evidence. The current full qualification record is in [status](STATUS.md) and [CI](CI.md). The three-profile transition test is an in-memory host model; it does not qualify CPU behavior or a built artifact. Read-only diagnosis passed on the installed legacy firmware. Settings writes, an update, compact tap-hold candidate behavior and power-loss behavior were not tested on the device. CI has built the native Windows packages and passed Tk startup checks; visible dialogs and interactive behavior remain untested.

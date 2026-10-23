@@ -1,11 +1,12 @@
 # Mod-Tap and Layer-Tap contract
 
-Date: 2026-10-23. Source inspection at `453fa7c`. This is an implementation
-proposal, not evidence of implemented or installed tap-hold support. No build,
-CPU execution, USB command or device test was performed for this report.
-Caps behavior and the default Caps assignment stay unchanged.
+Date: 2026-10-23. The baseline inspection below refers to `453fa7c`; later
+sections define the candidate contract and review corrections. Build and test
+results are recorded separately in the candidate evidence, not proved by this
+contract. Tap-hold is not installed. The default Caps assignment stays unchanged;
+Caps Word interaction is specified below.
 
-## Current source and ABI
+## Baseline source and ABI at `453fa7c`
 
 `keyboards/ajazz/ak820/config.h` defines `NO_ACTION_TAPPING`,
 `NO_ACTION_ONESHOT` and `HOLD_ON_OTHER_KEY_PRESS`. The last flag currently has
@@ -165,6 +166,21 @@ holds even when a boot report cannot represent every ordinary key. Test
 rollover, removal and later report promotion without stuck modifiers or
 reordered release. Do not cap dual-role state at six keys.
 
+The boot protocol has only six distinct ordinary usage slots. If a seventh
+usage is active, emit the standard ErrorRollOver indication rather than
+silently ignoring it. Retain every held owner and restore the remaining
+usages when the count fits again. A completed tap while six distinct usages
+remain held is observable only as rollover; the boot protocol cannot encode
+its separate character without releasing another owner or deferring input
+unboundedly. Do not invent an unbounded queue or claim that character was
+delivered. NKRO must represent all distinct supported usages normally.
+Two physical sources holding the same usage share one HID down state. A tap
+of that already-held usage cannot produce a separate HID down edge without
+releasing the existing owner; retain it continuously and release only after
+the last owner ends. Test both report modes and document these HID encoding
+limits separately from the engine's event and ownership guarantees.
+
+
 Encoder CW and CCW are distinct synthetic positions. Their normal pulse
 press/release pair resolves MT/LT as a tap when no intervening press or elapsed
 hold exists. Encoder presses interrupt a pending physical MT/LT before their
@@ -189,6 +205,37 @@ on shutdown/reset, report clear paths and settings reset where held state is
 invalidated. Review all `clear_keyboard*` call sites, especially layer changes,
 so ordinary layer updates do not accidentally cancel legitimate LT owners.
 Cancellation never initiates reset, bootloader entry or a storage write.
+
+## Macro ownership
+
+The existing 8192-byte Vial macro grammar allows repeated DOWN, unmatched UP
+and held state across separate macro executions. Those commands manipulate
+one persistent macro namespace. A DOWN sets that namespace's basic usage,
+strong modifier bit, weak modifier bit, momentary layer or extra usage;
+repeated DOWN is idempotent. UP clears only the macro namespace's matching
+primitive state and does nothing if it was not set. An UP cannot consume a
+physical, tap-hold or Repeat contribution. Encoded actions set/clear their
+primitive components; they are script state commands, not independent
+physical owners per distinct 16-bit encoding. This bounds the namespace and
+prevents an 8192-byte macro from wrapping physical-owner byte counters.
+
+TAP and ASCII typing use separate balanced temporary contributions so they
+cannot release an earlier macro DOWN. DOWN in one macro and UP in another
+remains supported. Common explicit cancellation clears retained macro state
+and stops playback at the next checked boundary. No silent replay follows.
+
+Extended macro MT/LT commands retain their former low-byte action semantics:
+TAP emits the basic tap; DOWN and UP manipulate its basic macro state. They
+do not simulate a physical 200-ms tap-hold decision. NO/transparent emit
+nothing. Extended MO/LM actions affect only macro momentary contributions;
+TO/TG intentionally change persistent layer state. Tri Layer role targets
+are frozen for a macro hold across configuration changes.
+
+Required tests use the actual macro interpreter and Vial wrappers, not just
+calls to ownership helpers: unmatched UP with physical owners, more than 256
+repeated DOWNs within 8192 bytes, overlapping encoded modifier actions,
+TAP/ASCII during retained DOWN, extra usages, MT/LT extended commands,
+separate DOWN/UP executions, cancellation and fresh input after cancellation.
 
 ## Evidence required before enrollment
 
@@ -227,3 +274,14 @@ Independent architecture review, 2026-10-23: review_modtap_contract approved
 this implementation basis after clarifying persistent TG/TO state, explicit
 Adjust ownership and immediate unrelated releases as an intentional QMK
 difference. Source, resource and runtime approval remain separate gates.
+
+## Caps Word and pure holds
+
+A resolved tap enters the ordinary key processing pipeline, including Caps Word.
+A pure MT modifier or LT layer hold applies its owned state directly and does
+not notify Caps Word. Shift-MT therefore retains Caps Word; an ordinary Shift
+press follows the existing Caps Word stop rule. Ctrl-MT retains the mode until
+an ordinary press is processed with Ctrl held. Layer-Tap does not itself stop
+the mode. These are explicit compact-engine semantics, not a claim of general
+QMK tapping equivalence. Raw Caps Word weak Shift cleanup must not consume
+encoded-action, Repeat or macro weak modifier ownership.

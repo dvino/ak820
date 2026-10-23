@@ -1,0 +1,35 @@
+{
+  "format": "ak820-compact-tapping-offline-packing-1",
+  "hardware_validated": false,
+  "physical_usb_opened": false,
+  "ihx_sha256": "d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3",
+  "map_sha256": "9c33a575965b067b6d022c6f470bca5d3a5ba8deedffb0a0bf9c85085676311c",
+  "symbols_sha256": "9854215cfd08ae2e70fb5f30ba65be76af8880e893a0a8f85658a63ea870ac6c",
+  "schema": 532482,
+  "permanent_code_prefix_sha256": "7e6b90f51a99ac335c0cb910fffc85f1d1705e7159a12de46f8e492807c36d40",
+  "images": {
+    "ak820-vial-trial.bin": {
+      "trial": true,
+      "build_id": 532482,
+      "sha256": "cbb8a6ae22c8dc8708922e8fd8b10f11815184b6a9649231d3f6095a8443b017",
+      "size": 51136
+    },
+    "ak820-vial-permanent.bin": {
+      "trial": false,
+      "build_id": 532482,
+      "sha256": "4389a3f56f1b3de14d59eecaf53eac40d82cc0e5be8092a503d56a7abbdd1107",
+      "size": 51136
+    },
+    "restore-native.bin": {
+      "size": 51136,
+      "sha256": "d7152819712470cf37a0c29d69b756edc4a51aca1d20c13e1fcf4b96f9638535",
+      "restores": "native application and settings from this exact backup"
+    }
+  },
+  "reference_hashes": {
+    "stock": "1dc3e2f79bd03d0bdc4e7a0fc43241e6e89445799948990725ee644ec45c09d1",
+    "native": "d7152819712470cf37a0c29d69b756edc4a51aca1d20c13e1fcf4b96f9638535"
+  },
+  "recovery_byte_equal": true,
+  "limits": "Offline packing and manifest verification only; private OEM inputs/output images outside Git. No device operation or final update approval."
+}

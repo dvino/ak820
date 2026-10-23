@@ -89,9 +89,11 @@ def main(argv=None):
     ]
     if args.host:
         for name in ('ak820_usb', 'ak820_keymap', 'ak820_caps_word', 'ak820_macro_guard',
-                     'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb'):
+                     'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_via_decode'):
             suites.append((QMK, [py, f'tests/{name}/run.py']))
         suites.append((QMK, [py, 'tests/ak820_bounded/run.py']))
+        suites.append((QMK, [py, 'tests/ak820_tapping/run.py', '--negative-controls',
+                            '--output', str((logdir / 'tapping-host.json').resolve())]))
     build = None
     initial_hashes = {}
     def build_hashes():
@@ -113,6 +115,8 @@ def main(argv=None):
                             '--s51', str(simulator), '--output-dir', str((logdir / 'rgb').resolve())]))
         suites.append((QMK, [py, 'tests/ak820_bounded/emitted.py', '--build-dir', str(build),
                             '--s51', str(simulator), '--output-dir', str((logdir / 'bounded').resolve())]))
+        suites.append((QMK, [py, 'tests/ak820_tapping/emitted.py', '--build-dir', str(build),
+                            '--s51', str(simulator), '--output-dir', str((logdir / 'tapping').resolve())]))
     records = []
     for index, (cwd, command) in enumerate(suites):
         started = time.monotonic()

@@ -27,8 +27,19 @@ uint16_t action_for_key(uint8_t layer, keypos_t key) { return action_for_keycode
 /* PRODUCTION */
 
 int main(void) {
+    unsigned opaque_compact_taps = 0;
     for (uint32_t code = 0; code <= UINT16_MAX; ++code) {
         uint16_t actual = action_for_keycode(code), expected = rc4_action_for_keycode(code);
+#ifdef AK820_COMPACT_TAPPING
+        /* MT/LT payloads are consumed by the compact engine before the
+         * ordinary action dispatcher. The decoder contract is opaque ACTION_NO;
+         * linked-pipeline tests cover their actual tap/hold behavior. */
+        if ((code >= QK_MOD_TAP && code <= QK_MOD_TAP_MAX) ||
+            (code >= QK_LAYER_TAP && code <= QK_LAYER_TAP_MAX)) {
+            expected = ACTION_NO;
+            ++opaque_compact_taps;
+        }
+#endif
         if (code >= QK_LAYER_MOD && code <= QK_LAYER_MOD_MAX) {
             uint8_t mods = QK_LAYER_MOD_GET_MODS(code);
             if (mods & 0x10) mods = (uint8_t)(mods << 4);
@@ -39,6 +50,10 @@ int main(void) {
             return 1;
         }
     }
+#ifdef AK820_COMPACT_TAPPING
+    assert(opaque_compact_taps == (QK_MOD_TAP_MAX - QK_MOD_TAP + 1) +
+                                  (QK_LAYER_TAP_MAX - QK_LAYER_TAP + 1));
+#endif
     for (unsigned layer = 0; layer < (1u << MAX_LAYER_BITS); ++layer) {
         for (unsigned row = 0; row < MATRIX_ROWS; ++row)
             for (unsigned col = 0; col < MATRIX_COLS; ++col)
@@ -135,16 +150,18 @@ int main(void) {
         encoder_map[layer][0][1] = KC_A;
         assert(read_source_keycode_cache(key) == KC_VOLU);
         key.row = KEYLOC_ENCODER_CCW;
+        update_source_layers_cache(key, layer);
 #ifdef KEY_OVERRIDE_ENABLE
         assert(read_source_layers_cache(key) == layer);
 #endif
-        /* An encoder has one origin slot; its tap directions never overlap. */
-        assert(read_source_keycode_cache(key) == KC_VOLU);
+        /* CW and CCW use independent source slots, so remapping one direction
+         * while the other is cached does not replace its held keycode. */
+        assert(read_source_keycode_cache(key) == KC_VOLD);
         update_source_layers_cache(key, layer);
         assert(read_source_keycode_cache(key) == KC_VOLD);
         assert(update_source_keycode_cache(key, KC_ESC));
         key.row = KEYLOC_ENCODER_CW;
-        assert(read_source_keycode_cache(key) == KC_ESC);
+        assert(read_source_keycode_cache(key) == KC_VOLU);
 #ifdef KEY_OVERRIDE_ENABLE
         assert(read_source_layers_cache(key) == layer);
 #endif
@@ -157,5 +174,5 @@ int main(void) {
     keypos_t physical = {.row = 3, .col = 4};
     assert(read_source_keycode_cache(physical) == KC_NO);
     vial_unlock_in_progress = false;
-    puts("PASS: all 65536 decoder inputs match RC4 with the specified LM right-mod correction; all cache coordinates/layer bytes, live remap A/modifier/MO/LM/toggle/consumer releases, encoder, virtual keys and unlock suppression.");
+    puts("PASS: all 65536 decoder inputs satisfy RC4 ordinary-action semantics, the LM right-mod correction and opaque compact MT/LT decoding; all cache coordinates/layer bytes, live remap A/modifier/MO/LM/toggle/consumer releases, encoder, virtual keys and unlock suppression.");
 }

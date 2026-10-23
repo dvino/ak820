@@ -73,7 +73,14 @@ void caps_word_off(void) {
         return;
     }
 
-    unregister_weak_mods(MOD_MASK_SHIFT); // Make sure weak shift is off.
+#ifdef AK820_COMPACT_TAPPING
+    /* Caps Word adds temporary raw Shift. Its cleanup must not consume an
+     * encoded action, Repeat or macro primitive's owned weak contribution. */
+    del_weak_mods(MOD_MASK_SHIFT);
+    send_keyboard_report();
+#else
+    unregister_weak_mods(MOD_MASK_SHIFT);
+#endif
     caps_word_active = false;
     caps_word_set_user(false);
 }

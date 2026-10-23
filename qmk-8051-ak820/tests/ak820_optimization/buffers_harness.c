@@ -7,6 +7,8 @@
 #include "report.h"
 #define dprint(...) ((void)0)
 static uint8_t real_mods, weak_mods;
+/* The production report path folds these compact-action owners into mods. */
+uint8_t owned_mods, owned_weak_mods;
 static report_keyboard_t report;
 #define keyboard_report (&report)
 static unsigned sent;
@@ -28,6 +30,7 @@ static void compare_report(void) {
     rc4_send_keyboard_report();
     unsigned expected_count = sent;
     report_keyboard_t expected_report = sent_report;
+    expected_report.mods |= owned_mods | owned_weak_mods;
     sent = 0;
     send_keyboard_report();
     assert(sent == expected_count);
@@ -55,6 +58,11 @@ int main(void) {
     for (unsigned real = 0; real <= UINT8_MAX; ++real)
         for (unsigned weak = 0; weak <= UINT8_MAX; ++weak) {
             real_mods = real; weak_mods = weak;
+            compare_report();
+        }
+    for (unsigned owned = 0; owned <= UINT8_MAX; ++owned)
+        for (unsigned weak_owned = 0; weak_owned <= UINT8_MAX; ++weak_owned) {
+            owned_mods = owned; owned_weak_mods = weak_owned;
             compare_report();
         }
     for (unsigned event = 0; event < 10000; ++event) {

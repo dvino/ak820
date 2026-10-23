@@ -101,7 +101,15 @@ uint16_t action_for_keycode(uint16_t keycode) {
         return ACTION_NO;
     }
     if (kind < 0x20) return keycode; /* Encoded modifier+basic actions. */
-    if (kind < 0x50) return ACTION_KEY(key); /* MT and LT: existing tap-only fallback. */
+    if (kind < 0x50) {
+#ifdef AK820_COMPACT_TAPPING
+        /* Opaque during layer search, including a transparent tap byte.
+         * The compact engine consumes the original 16-bit record. */
+        return ACTION_NO;
+#else
+        return ACTION_KEY(key);
+#endif
+    }
     if (kind < 0x52) {
         uint8_t layer = ((kind & 1u) << 3) | (key >> 5);
         mods = key & 0x1f;

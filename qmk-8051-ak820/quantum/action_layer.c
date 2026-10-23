@@ -8,6 +8,10 @@
 #include "util.h"
 #include "action_layer.h"
 #include "keymap_common.h"
+#ifdef AK820_COMPACT_TAPPING
+#    include "tri_layer.h"
+#    include "action_util.h"
+#endif
 
 #ifdef VIAL_ENABLE
 #include "vial.h"
@@ -16,6 +20,9 @@
 /** \brief Default Layer State
  */
 layer_state_t default_layer_state = 0;
+#ifdef AK820_COMPACT_TAPPING
+void ak820_layer_refresh(void);
+#endif
 
 /** \brief Default Layer State Set At user Level
  *
@@ -43,6 +50,9 @@ static void default_layer_state_set(layer_state_t state) {
     default_layer_debug();
     ac_dprintf(" to ");
     default_layer_state = state;
+#ifdef AK820_COMPACT_TAPPING
+    ak820_layer_refresh();
+#endif
     default_layer_debug();
     ac_dprintf("\n");
 #if defined(STRICT_LAYER_RELEASE)
@@ -98,6 +108,21 @@ void default_layer_xor(layer_state_t state) {
 /** \brief Keymap Layer State
  */
 layer_state_t layer_state = 0;
+#ifdef AK820_COMPACT_TAPPING
+static layer_state_t persistent_layers;
+static uint8_t layer_refs[MAX_LAYER], macro_layers;
+void ak820_layer_refresh(void) {
+    layer_state_t state = persistent_layers;
+    for (uint8_t i = 0; i < MAX_LAYER; ++i) if (layer_refs[i]) state |= (layer_state_t)1 << i;
+#    ifdef TRI_LAYER_ENABLE
+    state |= ak820_tri_layer_derived(state | default_layer_state);
+#    endif
+    layer_state = layer_state_set_kb(state);
+}
+void layer_hold_on(uint8_t layer) { if (layer < MAX_LAYER && ak820_macro_change(&macro_layers, layer, true)) { ++layer_refs[layer]; ak820_layer_refresh(); } }
+void layer_hold_off(uint8_t layer) { if (layer < MAX_LAYER && ak820_macro_change(&macro_layers, layer, false) && layer_refs[layer]) { --layer_refs[layer]; ak820_layer_refresh(); } }
+void layer_hold_clear(void) { macro_layers = 0; for (uint8_t i = 0; i < MAX_LAYER; ++i) layer_refs[i] = 0; ak820_layer_refresh(); }
+#endif
 
 /** \brief Layer state set user
  *
@@ -120,6 +145,11 @@ __attribute__((weak)) layer_state_t layer_state_set_kb(layer_state_t state) {
  * Sets the layer to match the specified state (a bitmask)
  */
 void layer_state_set(layer_state_t state) {
+#ifdef AK820_COMPACT_TAPPING
+    persistent_layers = state;
+    ak820_layer_refresh();
+    return;
+#endif
     state = layer_state_set_kb(state);
     ac_dprintf("layer_state: ");
     layer_debug();
@@ -174,7 +204,13 @@ void layer_move(uint8_t layer) {
  * Turns on given layer
  */
 void layer_on(uint8_t layer) {
-    layer_state_set(layer_state | ((layer_state_t)1 << layer));
+    layer_state_set(
+#ifdef AK820_COMPACT_TAPPING
+        persistent_layers |
+#else
+        layer_state |
+#endif
+ ((layer_state_t)1 << layer));
 }
 
 /** \brief Layer off
@@ -182,7 +218,13 @@ void layer_on(uint8_t layer) {
  * Turns off given layer
  */
 void layer_off(uint8_t layer) {
-    layer_state_set(layer_state & ~((layer_state_t)1 << layer));
+    layer_state_set(
+#ifdef AK820_COMPACT_TAPPING
+        persistent_layers &
+#else
+        layer_state &
+#endif
+ ~((layer_state_t)1 << layer));
 }
 
 /** \brief Layer invert
@@ -190,7 +232,13 @@ void layer_off(uint8_t layer) {
  * Toggle the given layer (set it if it's unset, or unset it if it's set)
  */
 void layer_invert(uint8_t layer) {
-    layer_state_set(layer_state ^ ((layer_state_t)1 << layer));
+    layer_state_set(
+#ifdef AK820_COMPACT_TAPPING
+        persistent_layers ^
+#else
+        layer_state ^
+#endif
+ ((layer_state_t)1 << layer));
 }
 
 /** \brief Layer or
@@ -198,21 +246,39 @@ void layer_invert(uint8_t layer) {
  * Turns on layers based on matching bits between specified layer and existing layer state
  */
 void layer_or(layer_state_t state) {
-    layer_state_set(layer_state | state);
+    layer_state_set(
+#ifdef AK820_COMPACT_TAPPING
+        persistent_layers |
+#else
+        layer_state |
+#endif
+ state);
 }
 /** \brief Layer and
  *
  * Turns on layers based on matching enabled bits between specified layer and existing layer state
  */
 void layer_and(layer_state_t state) {
-    layer_state_set(layer_state & state);
+    layer_state_set(
+#ifdef AK820_COMPACT_TAPPING
+        persistent_layers &
+#else
+        layer_state &
+#endif
+ state);
 }
 /** \brief Layer xor
  *
  * Turns on layers based on non-matching bits between specified layer and existing layer state
  */
 void layer_xor(layer_state_t state) {
-    layer_state_set(layer_state ^ state);
+    layer_state_set(
+#ifdef AK820_COMPACT_TAPPING
+        persistent_layers ^
+#else
+        layer_state ^
+#endif
+ state);
 }
 
 /** \brief Layer debug printing
@@ -242,7 +308,7 @@ static uint16_t source_keycodes_cache[MATRIX_ROWS * MATRIX_COLS];
 static uint8_t source_layers_cache[MATRIX_ROWS * MATRIX_COLS];
 #    endif
 #    ifdef ENCODER_MAP_ENABLE
-static uint16_t encoder_source_keycodes_cache[NUM_ENCODERS];
+static uint16_t encoder_source_keycodes_cache[2 * NUM_ENCODERS];
 #        ifdef KEY_OVERRIDE_ENABLE
 static uint8_t encoder_source_layers_cache[NUM_ENCODERS];
 #        endif
@@ -261,7 +327,7 @@ static uint16_t SOURCE_CACHE_MEM *source_keycode_cache_slot(keypos_t key) {
     }
 #    ifdef ENCODER_MAP_ENABLE
     if ((key.row == KEYLOC_ENCODER_CW || key.row == KEYLOC_ENCODER_CCW) && key.col < NUM_ENCODERS) {
-        return &encoder_source_keycodes_cache[key.col];
+        return &encoder_source_keycodes_cache[key.col + (key.row == KEYLOC_ENCODER_CCW ? NUM_ENCODERS : 0)];
     }
 #    endif
     return 0;
@@ -482,6 +548,11 @@ layer_state_t update_tri_layer_state(layer_state_t state, uint8_t layer1, uint8_
 }
 
 void update_tri_layer(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
+#ifdef AK820_COMPACT_TAPPING
+    (void)layer1; (void)layer2; (void)layer3;
+    ak820_layer_refresh();
+#else
     layer_state_set(update_tri_layer_state(layer_state, layer1, layer2, layer3));
+#endif
 }
 #endif

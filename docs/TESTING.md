@@ -7,11 +7,22 @@ keyboard behavior separate. None substitutes for another.
 
 ## Current offline result
 
+The [compact tap-hold qualification](../audits/rc6/compact-tapping-qualification-20261024/qualification.json)
+passed all 26 required suites and 258 unit tests with no skips on 2026-10-24.
+IHX `d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3`
+and MAP hashes stayed unchanged. This is offline host/CPU evidence; no device
+commands were sent. LeakSanitizer was excluded; address and undefined-behavior
+checks remained active. [Independent offline review](../audits/rc6/compact-tapping-final-integration-review-20261024.md)
+passed. Fresh bundle assembly and dev CI remain pending.
+
+## Historical offline result
+
 The retained [qualification report](../audits/rc6/roadmap-qualification-20261023/final/report.json)
 records 23 passing suites, 247 unit tests with no skips, and unchanged IHX/MAP
 hashes throughout the run. Eight host C suites and six linked CPU suites passed;
-one suite checks public documentation. The image is the development candidate
-identified in [Status](STATUS.md), not a newly approved update package.
+one suite checks public documentation. This historical result applies to the
+pointer-only image `feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8`,
+not the current compact tap-hold candidate in [Status](STATUS.md).
 
 | Unit suite | Tests passed |
 | --- | ---: |
@@ -25,8 +36,9 @@ identified in [Status](STATUS.md), not a newly approved update package.
 | Linked inventory parser | 7 |
 
 Settings tests use synthetic raw protocol responses and temporary files. They
-do not read private ROM captures or open a keyboard. The live feature remains
-limited to the exact release in [Settings backup](SETTINGS-BACKUP.md). Source
+do not read private ROM captures or open a keyboard. Restore compatibility is
+limited to the exact reviewed image pairs in [Settings backup](SETTINGS-BACKUP.md);
+that does not establish a successful live restore. Source
 `verify` passes without HID access. The [source/package review](../releases/rc6/reviews/independent-review.md)
 binds the approved release and host files; it does not bind the new development
 image or a Windows binary.
@@ -35,8 +47,9 @@ The [evidence manifest](../audits/rc6/roadmap-qualification-20261023/manifest.js
 keeps the failed initial attempt as well as the final run. The final run disables
 LeakSanitizer because process metadata is inaccessible in the sandbox. Address
 and undefined-behavior checks remain active in the C harnesses that use them;
-leak checking is excluded. Native Windows EXE/Tk acceptance, live settings
-writes and physical persistence remain unperformed. Live-runner skips listed
+leak checking is excluded. The later Windows CI builds and Tk startup checks are recorded in
+[Status](STATUS.md). Interactive dialog acceptance, live settings writes and
+physical persistence remain unperformed. Live-runner skips listed
 below are separate from the zero-skip unit result.
 
 ## Run the offline suite
@@ -54,7 +67,10 @@ reported unit-test skips under `host/runs/`. It selects the local SDCC 4.6.0
 pair, or an explicit `--toolchain` installation. `AK820_SDCC_BIN` remains
 supported. The selected compiler and simulator reach all child suites.
 Inventory tests run by default; `--host` adds the bounded C checks, and
-`--build-dir` adds the bounded linked helper alongside the other CPU suites.
+`--build-dir` adds the linked CPU suites. The compact tap-hold candidate raises
+the required qualification to 26 suites: it adds actual VIA decoding, tap-hold
+host tests with negative controls, and linked tap-hold execution. This is a
+new requirement, not a result for the retained 23-suite run.
 No device commands or flash tests are run.
 
 For qualification with installed tools and a fresh completed build:

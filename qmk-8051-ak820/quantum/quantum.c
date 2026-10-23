@@ -300,6 +300,9 @@ uint16_t get_event_keycode(keyevent_t event, bool update_layer_cache) {
 /* Get keycode, and then process pre tapping functionality */
 bool pre_process_record_quantum(keyrecord_t *record) {
     uint16_t keycode = get_record_keycode(record, true);
+#ifdef AK820_COMPACT_TAPPING
+    record->keycode = keycode;
+#endif
     return pre_process_record_kb(keycode, record) &&
 #ifdef COMBO_ENABLE
            process_combo(keycode, record) &&
@@ -314,7 +317,11 @@ void post_process_record_quantum(keyrecord_t *record) {
 }
 
 bool process_record_quantum(keyrecord_t *record) {
+#ifdef AK820_COMPACT_TAPPING
+    uint16_t keycode = get_record_keycode(record, false);
+#else
     uint16_t keycode = get_record_keycode(record, true);
+#endif
     return process_record_quantum_helper(keycode, record);
 }
 /* Core keycode function, hands off handling to other functions,
@@ -477,6 +484,9 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record) {
 #endif
             case QK_CLEAR_EEPROM:
 #ifdef NO_RESET
+#    ifdef AK820_COMPACT_TAPPING
+                clear_keyboard();
+#    endif
                 eeconfig_init();
 #else
                 eeconfig_disable();

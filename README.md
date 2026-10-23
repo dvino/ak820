@@ -40,7 +40,8 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - Caps Word, Repeat, Alt Repeat, Grave Escape and Tri Layer.
 - 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
-- The source installer can back up and restore supported settings locally and carry them through a supported firmware update. Tap-hold, One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides are not supported by this profile.
+- Development source adds compact [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md). The bundled legacy release still uses only their tap action.
+- The source installer can back up and restore supported settings locally and carry them through a supported firmware update. One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides remain unsupported.
 
 
 ## Get started

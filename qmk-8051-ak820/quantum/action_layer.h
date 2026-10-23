@@ -183,3 +183,13 @@ uint8_t layer_switch_get_layer(keypos_t key);
 
 /* return action depending on current layer status */
 uint16_t layer_switch_get_action(keypos_t key);
+
+#ifdef AK820_COMPACT_TAPPING
+void layer_hold_on(uint8_t layer);
+void layer_hold_off(uint8_t layer);
+void layer_hold_clear(void);
+void ak820_layer_refresh(void);
+#else
+#define layer_hold_on layer_on
+#define layer_hold_off layer_off
+#endif
