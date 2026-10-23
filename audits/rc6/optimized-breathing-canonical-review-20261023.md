@@ -54,10 +54,10 @@ Host results do not prove visible smoothness, physical timing, DMA or device
 behavior. The host-only saving is 49 CODE and one XRAM byte; combined Breathing
 costs 85 CODE bytes over the earlier baseline, so it is not a net size saving.
 
-The separate offline update-preparation component has its own independent
-eight-test review in `general-update-preparation-review-20261023.md`. STATUS
-accurately leaves delayed RGB save, live snapshot capture and GUI integration
-unfinished. It makes no new live-updater claim.
+Historical note: the separate offline update-preparation prototype and its
+eight-test review were retired on 2026-10-23. They are retained only in the
+external private backup. The current host-only replacement is described in
+`general-update-implementation-plan-20261023.md`; implementation is deferred.
 
 ## Finding and remaining limits
 

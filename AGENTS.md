@@ -23,6 +23,13 @@ Owner's rule, 2026-10-21: update documentation alongside code; review must check
 
 ## Documentation language and style
 
+Documentation rule, 2026-10-23: use impersonal wording throughout documentation.
+Do not describe an owner's keyboard, personal installation or who performed a
+check. Record the result and its evidence without identifying a person.
+README introduces the project, features and getting started. Put package paths,
+extraction and launch instructions in INSTALL, and validation results and
+deployment state in STATUS or technical reports, never in the README introduction.
+
 Owner's rule, 2026-10-23: write all documentation in the owner's style, in
 plain language that a person can understand on the first reading. Apply this
 to new text and to documents changed during the task, including translations.

@@ -1,74 +1,25 @@
 Русский перевод: [Планы](ru/ROADMAP.md).
 
-## General update before flashing, 2026-10-23
+## Installer backup/restore plan, 2026-10-23
 
-The owner rejected the one-off snapshot-only console update. Finish and independently review the general updater before flashing: preserve the latest supported settings, account for pending RGB RAM changes, freeze the snapshot, keep a fresh full-ROM backup, require fresh physical consent and verify full readback. Stop on storage faults. Existing repair-only admission stays unchanged. No snapshot-only fallback is authorized.
+Implement preservation later in the PC installer only: export a verified local backup, flash once, restore with existing Vial commands and read back. No firmware freeze/token/import protocol. The as-is console flash with package defaults is complete; its backup is evidence, not an automatic restore. Detailed implementation: [host-only plan](../audits/rc6/general-update-implementation-plan-20261023.md).
 
 # Roadmap
 
-## Owner's current priorities — 2026-10-23
+## Current priorities — 2026-10-23
 
-The current task is to finish review and release preparation for the fixes
-already in source with SDCC 4.6.0. Those changes are the smoother
-Breathing curve, typed host pointer, shared report tail, bounded Breathing
-arithmetic and RGB action table. Do not start another optimization
-implementation during this work. Preserve six layers, sixteen macros and the
-supported behavior.
+SDCC 4.6 RC6 with smoother Breathing and the reviewed optimizations is installed. Full readback and read-only device tests passed; physical typing was confirmed separately. Current implementation evidence is in [Status](STATUS.md). Preserve the existing 38100-byte CODE image; no firmware backup protocol is included.
 
-The local SDCC 4.6.0 firmware bundle is assembled, promoted and independently
-reviewed offline. The Windows GUI/CLI package is built and its offline checks
-pass. Current work is independent review of the standalone ZIP and release
-preparation; no public release or installation has happened. Keep the installed
-SDCC 4.4.0 image unchanged until separately authorized. The general
-settings-preserving updater is incomplete. Direct Control remains research-only;
-do not describe every product feature as fixed.
+Local settings export and restoration are deferred PC-installer work. Implement the shared Windows GUI/CLI and Linux/WSL path in the [host-only plan](../audits/rc6/general-update-implementation-plan-20261023.md). Current as-is flashing uses package defaults, with a separate local backup and no restoration.
 
-The optional reproducible package path passes 48 installer tests and 11
-assembler tests. The broad compiler fixture passes 14 of 16 cases in both
-SDCC 4.4.0 and 4.6.0 and fails the two typed near-pointer Boolean-store cases.
-The retained firmware paths were checked and do not use that store shape; eight
-linked key-event checks pass on both images. Do not rebuild SDCC for this
-isolated failure; keep the accepted compiler backport as future work. A build or
-CPU model alone does not authorize installation or prove device behavior.
+Direct Control remains research-only and cannot be removed without permission. Indicators, Caps language switching, the Windows helper, physical persistence tests and further optimizations remain deferred. Reactive lighting worked normally before this update; appearance on the new image is not yet confirmed.
 
-Current 4.6.0 experiment: `.build/rc6-sdcc46-full-experiment-20261023/` inside
-QMK. It reports 38,100 CODE bytes (36,292 main, 1,808 low), 2,067 XRAM and
-157 bytes of linker stack capacity. Free CODE is 2,405 bytes: 2,325 main and
-80 low. IHX SHA256:
-`f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e`.
-The map's 38,105-byte CODE total includes the reserved HOME range
-`0x302A–0x302E`, which is absent from the IHX. The build report counts 38,100
-occupied IHX bytes, so the five-byte difference is explained by accounting.
-All 465 source-manifest and 76 additional manifest checks pass. The report is
-1,044 CODE bytes smaller than the SDCC 4.4.0 combined control. Neither figure
-establishes release suitability.
-
-The 4.6.0 focused CPU checks pass 161 Breathing inputs and 50 frames, plus 25
-host-tail assertions. Its RGB comparison passes 200 events at each of five
-state seeds plus 200 callback checks per image; tested foreground stack use is
-18 bytes on 4.6.0 versus 22 on the 4.4.0 control. The 4.6.0 full host/CPU
-regression passes 19/19 suites, and the Linux package check passes 75 tests with
-no skips. The Windows package checks also pass offline CLI help, verification
-and GUI self-test. These are host and model checks. No device tests were run on
-the 4.6.0 build.
-
-The general settings-preserving updater is still incomplete: pending RGB saves,
-a frozen live snapshot and GUI integration remain open. Direct Control stays
-research-only; it has no usable editor/save flow, and removing it requires the
-owner's explicit permission. Do not describe all product features as fixed.
-The owner reports that reactive lighting works normally; that is an observation,
-not an automated result.
-
-Other device tests, the unlock popup, Caps language switching, C/W/OS indicators
-and the Windows language helper remain deferred. The local package is ready;
-public release and hardware flashing require separate authorization.
-
-Compiler fix to retain for later: accepted SDCC patch 513 (r16814) fixes a typed near-pointer bool store. The isolated fixture reproduces the same failure in both 4.4 and 4.6 (14/16 cases pass). The retained current paths were checked and no matching defective store was found; eight linked key-event checks pass on both images. Do not rebuild SDCC for this isolated failure. Keep the backport as future work; an isolated compiler failure does not establish a current-firmware fault without an affected retained path. See [compiler regression audit](../audits/rc6/sdcc46-compiler-regression-20261023.md) and [full 4.6 experiment audit](../audits/rc6/sdcc46-probe-20261023.md).
+SDCC bool near-pointer fixtures still fail two of sixteen cases on both compilers. No affected shape was found in the reviewed current image; rebuild/backport the compiler only if an affected retained path is identified. Keep the documented negative result.
 
 ### Future optimization research
 
-The owner also asked for deep local and compiler research. Keep it as future
-work after current 4.6.0 release review and preparation.
+Deep local and compiler research remains future work after current 4.6.0 release
+review and preparation.
 The [analysis](../audits/rc6/optimization-deep-analysis-20261023.md),
 [local inventory](../audits/rc6/optimization-deep-local-20261023.md),
 [SDCC research](../audits/rc6/optimization-deep-sdcc-research-20261023.md)
@@ -91,24 +42,11 @@ None of these probes has a promised saving. Do not set a target such as 1 KB;
 accept a future change only after its actual linked benefit and behavior checks
 are measured. Preserve the detailed stop conditions in the linked audits.
 
-The combined SDCC 4.4.0 build uses 39,144 CODE bytes (37,285 main and 1,859
-low), 2,067 XRAM and 152 bytes of linker stack capacity. It saves 288 CODE
-bytes and four XRAM bytes against the earlier Breathing build; free CODE is
-1,332 main and 29 low. All 465 source/toolchain records and 76 artifact records
-match. The linked RGB CPU comparison passes 200 events at each of five seeds
-plus 200 callback checks. The Breathing and host-tail CPU suites also pass.
-The 72-test package suite reports two skips: the POSIX SDCC/8051 boot regression
-is unavailable on Windows, and the real-preprocessor check was skipped without
-`AK820_SDCC_BIN`. These local results do not prove device behavior. Installed
-firmware is unchanged and no packed update was produced. See the [combined
-optimization audit](../audits/rc6/optimization-batch-20261023.md) and [RGB CPU
-comparison](../audits/rc6/optimization-batch-rgb-cpu-20261023.md).
-
-## Completed candidate checkpoint — 2026-10-23
+## Earlier SDCC 4.4 checkpoint — historical, 2026-10-23
 
 The previous work package ended with a firmware candidate, its device tests
-and an independently checked handoff. The owner has now resumed local work
-under the priorities above. Git integration and publication remain out of scope.
+and an independently checked handoff. Local work continues under the priorities
+above. Git integration and publication remain out of scope.
 
 - [x] Record the RC6 encoder-write failure and preserve the personal recovery
   data. Startup, typing and one cold power cycle passed before the failed write.
@@ -123,23 +61,23 @@ under the priorities above. Git integration and publication remain out of scope.
 - [x] Build a fresh candidate, inspect its emitted instructions and resource
   limits, run the affected tests and close independent review findings.
 - [x] Finish the integrated RU/EN GUI and independently check its update path for an installed
-  Vial image. The owner will perform the flash through the new GUI.
+  Vial image. The flash was performed through the new GUI after confirmation.
 - [x] Assemble and verify its exact release and personal recovery session.
-  Ask for the owner's confirmation immediately before the next flash.
+  Obtain explicit confirmation immediately before any flash.
 - [x] Flash once after confirmation, verify startup and full readback, then
   run the automatic nonphysical tests. Record every failure and skip; do not
   retry, reset or restore blindly.
 - [x] Update status and write the external handoff with exact paths, hashes,
   evidence, remaining work and stop conditions. Obtain independent handoff
-  review and close its findings before giving it to the owner.
+  review and close its findings before delivery.
 
-Current step: the owner installed the candidate through the integrated RU/EN
-GUI. Startup, full ROM and read-only tests passed. With separate consent,
+Current step: the candidate was installed through the integrated RU/EN GUI.
+Startup, full ROM and read-only tests passed. With separate consent,
 six key, twelve encoder and one RGB RAM round trip passed; all settings were
 restored. Independent device review passed. The external handoff and its
 independent review are complete, with no open findings. No commit or publication was made.
 
-### Owner's requirements for the next agent
+### Requirements for the next agent
 
 These requirements remain in the plan. The current priorities above decide
 which ones to work on now; their evidence and stop conditions still apply.
@@ -148,13 +86,13 @@ which ones to work on now; their evidence and stop conditions still apply.
   before erase when Cancel is clicked.
 - General updates must preserve the latest supported keyboard settings from
   a fresh snapshot, rather than reusing an earlier prepared settings image.
-- Make Breathing smoother. The owner reports visible jumps from large
-  brightness steps. Check the step, update interval, visual result on the
+- Make Breathing smoother. Visible jumps from large brightness steps were
+  reported. Check the step, update interval, visual result on the
   keyboard, memory cost and processing time.
 - Research feasibility only for now. The eventual Direct Control goal is a usable per-LED editor,
   explicit palette save and restore after restart. Investigate the shown Vial
   Web client, which has no visible per-LED editor. If a working implementation
-  cannot be delivered, obtain the owner's explicit permission before removing
+  cannot be delivered, obtain explicit permission before removing
   the effect from available modes rather than
   presenting protocol-only RAM support as a finished feature.
 
@@ -205,11 +143,11 @@ agent should follow the current priorities above. The popup and release work
 below are deferred, with new review and approval required before another flash.
 
 1. The current SDCC 4.6.0 Windows GUI and command-line package is assembled and
-   checked locally. No public download is available. The owner must approve
-   publication and confirm each operation that writes to a keyboard.
+   checked locally. No public download is available. Publication requires
+   approval, and each operation that writes to a keyboard requires confirmation.
    Permission to read the keyboard does not include permission to flash it.
-2. Deferred: check Alt Repeat and saved settings on the keyboard. The owner
-   reports that reactive lighting works normally.
+2. Deferred: check Alt Repeat and saved settings on the keyboard. Reactive
+   lighting previously worked normally.
    Include a cold start, restart, power loss and recovery. Say how each result
    was checked: by reading code, running a computer model, building offline or
    testing a keyboard. A result from one kind of check does not prove another.
@@ -367,4 +305,4 @@ corrections. Keep README and `docs/STATUS.md` aligned when current behavior,
 release state, commands or measured resources change. Regenerate affected
 machine reports and reconcile artifact sizes, hashes, versions, addresses and
 commands. Do not merge evidence from different build levels. Public release
-and hardware writes remain subject to separate owner authorization.
+and hardware writes require separate explicit authorization.

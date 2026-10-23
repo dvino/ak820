@@ -1,161 +1,137 @@
-# General update implementation plan
+# Локальный бэкап и восстановление настроек
 
-Source audit, 2026-10-23. No USB commands, builds or source changes were made
-for this plan. The owner rejected the snapshot-only console update and requested
-completion of the general updater first.
+Решение от 23.10.2026: реализацию пока отложить. Делать её в
+установщиках Windows GUI/CLI и Linux/WSL через один общий модуль. В прошивку
+не добавлять команды заморозки, FD02, токены или записи импорта в журнал.
+Эксперимент с этим протоколом снят; код возвращён к проверенной сборке.
+Для текущей разовой прошивки настройки пакета остаются исходными,
+локальная копия хранится отдельно и автоматически не восстанавливается.
 
-The update must preserve the settings captured at a firmware-defined freeze
-point. A host cannot prove that settings stayed unchanged simply by reading
-them twice. The installed source has no freeze operation. Adding one to the
-target does not make it available before the first update.
+## Что добавить
 
-## Installed source: what can be recovered
+Общий модуль tools/installer/settings_backup.py:
+export_settings, validate_backup, plan_restore, restore_settings и verify_restore.
+GUI и консоль вызывают эти же функции. Упаковщик включает модуль в
+HOST_FILES и в оба Windows-приложения. AK820.cmd и AK820.sh продолжают
+передавать команды общему установщику. Новых служб и фоновых процессов нет.
 
-`quantum/vialrgb.c:vialrgb_save` exists and calls
-`eeconfig_update_rgb_matrix`. VIA dispatches `id_lighting_save` to that handler
-when VialRGB is enabled. This is a settings write, not a read-only operation.
-Do not send it during diagnosis without write authorization. It can persist the
-eight-byte RGB configuration, including fields that the ordinary RGB getter
-does not expose. Check the exact installed build's linked handler and command
-dispatch before relying on this capability; current source alone is not proof
-of installed behavior.
+Консольные команды: backup --output DIR и restore --backup DIR.
+Первая только читает устройство. Восстановление явно пишет настройки.
+Команда update --session DIR --backup-dir DIR связывает бэкап, одну прошивку,
+восстановление и проверку. Не выполнять restore при обычном запуске,
+диагностике или открытии файла.
 
-`vialrgb_get_mode` returns effective mode, speed and HSV. When disabled, it
-returns OFF rather than the hidden selected mode. It does not return flags.
-`vialrgb_get_led_info` returns static LED geometry and flags, not current color.
-`g_direct_mode_colors` has a setter but no getter. Saving the RGB configuration
-does not persist this Direct color array. The source exposes CODE reads, not a
-general RAM reader. Therefore existing Vial getters cannot export arbitrary
-current RGB RAM losslessly.
+## Формат локальной копии
 
-`ak820_rgb.c` has a private dirty flag. Its delayed save runs after 1000 ms;
-waiting does not prevent a later key, encoder or protocol command from making
-another change. Closing other clients reduces competing host writes but cannot
-freeze keyboard input. `bootloader_jump` performs a best-effort NVM flush and
-then allows loader entry even on a storage failure. The host cannot query the
-application status after that transition.
+Каталог содержит manifest.json, settings.json, before-full-rom.bin,
+saved-nvm.bin и журнал чтения. Записывать во временный каталог, проверять
+хэши повторным чтением с диска, затем публиковать каталог целиком.
+Готовую копию не перезаписывать. Никаких загрузок в облако или включения в Git.
 
-The first transition cannot promise preservation of arbitrary latest RAM with
-the existing interface. Do not call an idle delay, repeated reads, process
-closure, or a bridge image an atomic snapshot. A bridge image already requires
-the same first transition. Do not erase until this limitation has an explicit
-supported policy. An honest initial support matrix can reject this legacy
-source for fully automatic preservation, or offer a separately explained
-legacy procedure after the owner chooses its limits. That choice has not been
-made here; snapshot-only updating was explicitly rejected.
+Формат manifest: ak820-settings-backup-1. Поля: время, VID/PID,
+идентификатор Vial и хэш определения, версия схемы NVM, исходный build ID,
+идентичность CODE, размеры всех массивов и SHA256 каждого файла.
+Отдельно указывать, какие данные прочитаны из постоянной памяти, а какие
+из текущего RGB-ответа. Оригинальная OEM-сессия восстановления хранится
+отдельно: этот бэкап пользовательских настроек её не заменяет.
 
-## New source capability
+settings.json содержит:
 
-Implement a versioned update protocol separate from the RC6 repair pins. Keep
-FD01 version 1 decoding strict. Add a capability reply declaring protocol
-version, build identity, settings schema, RAM export schema and maximum export
-length. Unknown versions must stop preparation.
+- Все 498 назначений 83 физических клавиш на шести слоях, с координатами.
+- Все 12 назначений энкодера: оба направления на каждом слое.
+- 16 макросов: исходный поток байтов, его логическую длину и разбор команд.
+  Текущий лимит — 8192 байта; не обрезать данные и не восстанавливать
+  устаревший хвост за опубликованной длиной.
+- Поддерживаемые параметры раскладки и полный сохранённый RGB-конфиг из
+  NVM 24..31. Для RGB отдельно записывать ответ VialRGB с режимом, скоростью,
+  HSV и яркостью, включая выключенное состояние.
+- Список полей без существующего способа чтения или записи.
+  Не объявлять такой файл полным бэкапом этих полей.
 
-Use an explicit state machine: RUNNING, CONSENT, FREEZING, FROZEN, ENTERING and
-FAULT. Fresh physical Esc + left Control confirmation belongs to the displayed
-target update. Once confirmed, firmware rejects new settings mutations before
-saving anything. It stops key/encoder actions that alter settings and rejects
-VIA/Vial writers, macros, RGB setters and batch starts. Keep USB service and
-read-only queries responsive. Define whether ordinary typing continues; this
-must not reopen a settings mutation path.
+Не включать в контракт фазу анимации, возраст реактивной подсветки,
+зажатые клавиши или позицию выполняемого макроса. Массив Direct HSV в RAM
+не имеет getter в текущей прошивке: его нельзя выдумывать из ROM.
+Скрытые RGB-поля нельзя молча заменять доступным эффективным режимом.
+Совпадение доступных getters с NVM не доказывает совпадение скрытых RAM-полей.
+Обещать сохранение только фактически выгруженных и восстанавливаемых значений;
+нечитаемые текущие поля перечислять до стирания.
 
-At FREEZING, finish or reject any open batch, save private RGB configuration,
-flush NVM, verify storage completion and require an empty journal header. A
-failed save must enter FAULT and never enter the loader. Do not silently end
-an incomplete macro upload or retain a partial transaction. Export the exact
-RAM state that is part of the preservation contract, including all Direct HSV
-colors and hidden RGB configuration fields. Animation phase, reactive ages,
-currently held keys and executing macro position should have an explicit
-preserve/reset policy; they must not be accidentally called user settings.
+## Экспорт до стирания
 
-Freeze a generation number and a session token. Return both with every export
-chunk, status and enter-loader request. The host reads NVM and RAM under that
-token and verifies exact lengths and a content checksum. A stale token, wrong
-generation, storage fault, malformed offset or unsupported schema fails closed.
-Do not assume a checksum is authorization. Bind the fresh physical consent to
-the target image digest and session token; specify how the full digest is
-transferred within the 32-byte report limit.
+1. Проверить единственное поддерживаемое устройство и точную версию/схему.
+   Прочитать Vial-определение, число слоёв, энкодеров и объём макросов.
+2. Сохранить всю ROM через существующий FD00. Проверить CODE, защищённые
+   области, схему, пустой заголовок журнала и FD01 без ошибки/грязной страницы.
+   Повторно прочитать NVM и сравнить. При изменении данных остановиться;
+   повторное чтение не называть атомарной заморозкой.
+3. Прочитать назначения, макросы и RGB штатными getters. Сопоставить их
+   с сохранённой NVM. Не сохранять RGB командой Save в режиме только чтения.
+   При несовпадении RAM и NVM объяснить это до прошивки и остановить
+   автоматическое сохранение без потерь.
+4. Проверить совместимость восстановления с выбранной новой прошивкой.
+   Если поле невозможно восстановить её существующим API, остановиться
+   до стирания и перечислить поля. Не обходить это новой командой в прошивке.
+5. Проверить записанную на ПК копию. Перед загрузчиком повторно проверить
+   идентичность CODE и неизменность сохранённых настроек.
+   Пользователь не должен менять настройки во время операции; абсолютную
+   блокировку ввода текущая прошивка не предоставляет.
 
-ENTER_LOADER must require that token and the frozen clean state. It must not
-perform an unobserved best-effort settings flush. Marker erase/readback failure
-must return an error while retaining the frozen session and evidence. A
-successful transition must use the snapshot already acknowledged by the host.
-No automatic retry or reset follows an error.
+Экспорт читает ключи VIA 0x04, энкодер Vial FE/03, макросы VIA 0x0C/0x0D/0x0E,
+RGB VialRGB через VIA 0x08. Переиспользовать проверки ответов из
+tools/ak820_device_protocol.py, а не создавать второй независимый декодер.
+Его текущий allowlist разрешает не все команды восстановления. Расширить его
+явными методами для макросов, параметров раскладки и RGB Save, только в режиме
+разрешённой записи. Не превращать восстановление JSON в отправку произвольных
+USB-пакетов и не расширять режим диагностики только для чтения.
 
-Cancellation before erase must remain available. Specify a deliberate abort
-operation that invalidates the token and returns to normal operation without
-restoring old settings. A host timeout/disconnect must stop host actions; do
-not automatically reset or enter the loader. Decide and test whether firmware
-stays frozen until explicit abort or safely releases the freeze. The UI must
-explain the chosen behavior.
+## Прошивка и восстановление
 
-## Target restoration and session format
+После валидного бэкапа установщик показывает точный образ и просит свежее
+Esc + левый Ctrl на три секунды. Затем входит в загрузчик, пишет ровно один
+проверенный образ и проверяет CODE/защищённые области. Сохранённые настройки
+возвращаются после запуска приложения через существующий Vial API.
 
-Create a separate general-update manifest with exact source/target build IDs,
-IHX/MAP and payload hashes, full source ROM, frozen NVM/RAM export, protocol
-version, token/generation, native recovery backup and protected-region hashes.
-Validate every input before creating a flashable session. Reject unknown NVM
-or RAM schemas and any migration that would truncate macros or layers.
+Перед восстановлением проверить файл, идентичность устройства, целевую
+схему и возможность представить каждое значение. Сохранять новую копию
+целевого состояния до первой записи настроек. Не писать сырой блок NVM,
+служебные заголовки, журнал или boot marker по адресам из файла.
 
-Copy NVM bytes exactly when schemas match. For known migrations, emit the
-mapping and verify every preserved field. An empty journal header means the
-retained journal data page must not be replayed. Pack the target with a clear
-journal. A nonempty header is a stop condition, not permission to guess which
-copy is newer.
+Порядок: клавиши VIA 0x05, энкодеры FE/04, параметры раскладки, макросы
+VIA 0x0F порциями до 28 байт по существующим правилам загрузки, затем RGB.
+Проверять ответ и чтение назад после каждого логического блока.
 
-Direct colors need either a reviewed target startup import format or a guarded
-post-start RAM import while the target remains frozen. Do not add them to
-durable storage without checking capacity and defining the new layout. Keep
-the session and original recovery backup even if later verification fails.
-The target must report import completion, exported state equality and clean
-storage before normal input resumes. A failed import leaves an explicit stopped
-state; do not silently reset RGB or resume with partial settings.
+После перезапуска Vial снова заблокирован. Для макросов и защищённых
+keycode действующий протокол требует новой физической разблокировки.
+Запрашивать её внутри того же установщика, без отдельного Vial и ввода yes.
+Не обещать обойти эту защиту без изменения прошивки.
 
-## Host and UI work packages
+RGB восстанавливать штатным setter 0x07/0x41, затем Save 0x09.
+Для выключенной подсветки сначала вернуть сохранённый выбранный режим,
+затем выключить её, чтобы не потерять скрытый режим.
+Поля, для которых нет setter, должны быть выявлены на предварительной
+проверке, а не пропущены при восстановлении.
 
-1. Firmware protocol owner: inventory every settings writer; implement freeze,
-   status, token-bound export, abort and strict loader entry. Own firmware tests
-   and the protocol document. Report linked CODE/RAM/stack growth against the
-   actual SDCC 4.6 release before accepting the design.
-2. Settings owner: define NVM/RAM schemas, lossless migration and Direct RGB
-   export/import. Own schema fixtures, migration tests and target startup gates.
-   Do not change source support claims until installed-source capabilities are
-   independently verified.
-3. Host owner: add a separate general session builder and validator, immutable
-   artifact checks and a single update orchestrator. Reuse the reviewed loader
-   transport, not trial-provenance flags or modified repair pins. Console and
-   GUI must call this same state machine.
-4. UI owner: Update shows the exact image, requests fresh physical confirmation,
-   freezes/saves/captures, enters loader, flashes once and verifies. No typed
-   yes/ready, separate Vial app or manual Bootloader step. Show unsupported
-   legacy source before starting confirmation. Keep cancellation before erase.
-5. Independent reviewer: check code, protocol, source/target artifacts,
-   documentation and negative-test evidence together. Resolve findings before
-   any live operation. Root owns integration and any separately authorized
-   device action; implementers send no USB writes.
+После сохранения читать все назначения, оба направления энкодера, макросы,
+RGB и постоянные байты. Сравнивать пользовательские значения, а не всю ROM:
+код новой прошивки, служебные поля и известные миграции закономерно отличаются.
+Проверить FD01 и пустой заголовок журнала. Полный успех — только после этого.
 
-## Required gates
+## Ошибки и проверка реализации
 
-Offline tests must cover every writer while frozen; concurrent getter/setter
-ordering; pending RGB save; Direct HSV export boundaries; disabled RGB with a
-hidden mode; open batches/macros; dirty page, failed flush and nonempty journal;
-stale token/generation; malformed reports; input mutation during freeze;
-abort, timeout and disconnect at each phase; changed files after preparation;
-wrong source/target; and target import/readback failure. Assert that failures
-emit no loader/erase/retry/reset command.
+При тайм-ауте, ошибке хранилища, неподдерживаемой схеме или плохом readback
+остановиться с точным этапом. Не выполнять слепой повтор, автоматический
+откат, сброс или восстановление из другой копии. После ошибки импорта файл
+остаётся доступен для отдельной явно запущенной операции restore.
 
-Use CPU/host tests for firmware ordering and storage-fault paths. Build and
-inspect exact linked artifacts. Mock transport tests prove host sequencing,
-not USB or durable behavior. Read-only live capability/export checks require
-an installed supporting source. Settings-write tests, loader entry and flashing
-need explicit authorization for each operation. Hardware tests must cover
-power-loss persistence and real input separately; ordinary CODE readback cannot
-prove either. Automated regression must cover supported remapping and both
-encoder directions in host/CPU models and explicitly report physical checks
-that remain untested.
+До включения функции: негативные тесты формата/хэшей/чужого устройства,
+неизвестных версий и keycode; все шесть слоёв и оба направления энкодера;
+16 непустых макросов, граничные 8192 байта, бинарные аргументы и оборванная
+загрузка; включённый и выключенный RGB, несовпадение RAM/NVM;
+изменение файла между проверкой и записью; отмена до стирания; ошибка на
+каждом этапе без дополнительных erase/reset/retry. GUI и CLI должны
+проходить один сценарий на общем mock-транспорте.
 
-The release may advertise general preservation only after a supported source
-can freeze and export the complete declared settings state, the target can
-restore it, independent review passes, and separately authorized live evidence
-supports the protocol and storage claims. The currently installed legacy source
-remains a specific unresolved first-transition gate.
+Проверить оба Windows EXE и Linux/WSL-вход. Отдельно провести независимое
+ревью кода, документов и пакетов. Офлайн/CPU-тесты не заменяют проверку
+реальной записи, сохранения после снятия питания и физической работы.
+Сейчас реализация этой функции не начата; живые тесты потребуют разрешения.

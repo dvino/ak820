@@ -10,6 +10,11 @@ and what has been tested on a keyboard.
 
 ## Before installing
 
+The Windows package is `dist/AK820-sdcc46-breathing-20261023.zip`.
+Extract the complete archive and run `AK820/AK820.exe`. Keep all extracted
+files together. See [status](STATUS.md) for verification results and supported
+update paths.
+
 Have another keyboard or the operating system's on-screen keyboard ready. The
 AK820 cannot type while it is in its original loader. Close other keyboard
 configuration tools. Connect one supported AK820 and leave its cable connected
@@ -32,7 +37,11 @@ The recovery folder belongs to your keyboard. Keep a separate copy. Do not use
 another owner's backup and do not commit ROM captures or diagnostic archives
 containing personal settings to a public repository.
 
-## Updating the owner's installed RC6 candidate
+## Repairing the earlier RC6 candidate
+
+This GUI repair path supports the earlier exact repair candidate only. It does
+not update the currently installed SDCC 4.6 image. The SDCC 4.6 installation
+used a separate reviewed one-off console runner.
 
 The GUI's `Обновить прошивку` action is a limited repair workflow
 for the exact candidate and personal session checked in this work. It is not
@@ -45,14 +54,13 @@ preserves the durable settings from before the failed encoder probe, including
 the original clockwise assignment, and discards that probe's pending journal.
 It shows the image hash and asks for explicit consent before writing.
 
-The integrated update workflow passed review and this owner's installation. Click Update,
-then hold physical Esc + left Control together for three seconds when asked.
-That fresh hold confirms the displayed update. No typed `yes`, `ready`, Vial
-app or manual Bootloader action is required. The installer requests unlock,
-checks completion, sends one loader transition and waits for the loader.
-Cancellation is allowed before erase. If a command or transition fails, it
-stops without retry, reset or recovery. After one transfer it checks startup and full
-readback. Physical typing and a power cycle are not part of these checks.
+The integrated update workflow passed review and installation. Click Update,
+then make a fresh physical Esc + left Control hold for three seconds when asked.
+That hold confirms the displayed update. No typed `yes`, `ready`, Vial app or
+manual Bootloader action is required. The installer requests unlock, checks
+completion, enters the loader, flashes once and verifies the result. Cancellation
+is allowed before erase. If an operation fails, it stops without retry, reset or
+recovery. Physical typing and a power cycle are not part of these checks.
 
 The GUI starts in Russian only when the system language is Russian; otherwise
 it starts in English. The RU / EN button changes the interface language.

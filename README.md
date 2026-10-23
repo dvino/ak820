@@ -6,10 +6,6 @@ This project brings QMK and Vial to the **wired AJAZZ AK820 with a VS11K28A / CH
 
 Set up keys, layers, the encoder and macros in Vial. After that, the keyboard works without a desktop app running in the background. The port keeps the keyboard's original loader and stores settings in the keyboard.
 
-**A new local RC6 build with smoother Breathing is ready on SDCC 4.6.** The Windows package is `dist/AK820-sdcc46-breathing-20261023.zip`. Extract the complete folder and run `AK820/AK820.exe`. The build passed offline regressions and independent review; it has not been installed on the keyboard.
-
-The owner's keyboard still runs the earlier RC6 build. Startup, readback and automatic key/encoder remapping passed on that image; the owner reports normal reactive lighting. The general updater that preserves current settings is unfinished. Direct Control is unchanged. Exact builds, checks and limitations are on the [status page](docs/STATUS.md).
-
 ## Features
 
 - Six layers, with separate clockwise and counterclockwise encoder actions on each layer.
@@ -18,13 +14,11 @@ The owner's keyboard still runs the earlier RC6 build. Startup, readback and aut
 - Caps Word, Repeat, Alt Repeat, Grave Escape and Tri Layer.
 - 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
-- An installer that verifies the complete personal backup and creates private OEM comparison data in that recovery session.
-
-The installer starts in permanent mode and asks you to confirm preparation and writing. It does not include or download the manufacturer's ROM. On first use, it makes private comparison files from your complete verified keyboard backup. The checked Windows GUI and command-line app are available locally; see the status page for their paths. The old portable ZIP is superseded. Tap-hold, One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides are not supported by this profile.
+- A source installer for supported firmware updates. Tap-hold, One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides are not supported by this profile.
 
 ## Get started
 
-Read the [installation and recovery guide](docs/INSTALL.md) before writing firmware. Keep alternate input available while the keyboard is in the loader. The installer must create a complete backup of your keyboard before resetting or erasing it.
+Start with the [installation and recovery guide](docs/INSTALL.md) before using the installer.
 
 For the source installer, Python 3.10+ is required. Verify the complete bundle offline:
 

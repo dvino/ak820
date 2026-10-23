@@ -2,9 +2,9 @@
 
 # Project status
 
-Updated 2026-10-23. The keyboard still runs the earlier SDCC 4.4 RC6 candidate.
-The SDCC 4.6 image has not been installed. The owner rejected snapshot-only
-updating: finish the general settings-preserving updater first.
+Updated 2026-10-23. SDCC 4.6 RC6 is installed. Physical typing was confirmed separately.
+The approved as-is console flash used package defaults. Previous settings
+were saved locally and were not restored.
 
 ## Source and build
 
@@ -45,22 +45,25 @@ and packaging passed twelve. The production host/CPU run finished with 17 suites
 invocation failures were closed by separate Linux reruns (19 device-adapter
 and 75 package tests). The original failed report remains unchanged.
 
-Latest read-only capture: host/runs/20261023-sdcc46-before-console-update/.
-All 65,536 bytes were saved; installed CODE matches the known 4.4 image.
-NVM/journal repeat reads match, journal header is empty and FD01 reports no
-storage fault or dirty/batched write. Pending RGB RAM is not covered.
-No loader entry, erase or flash was sent during this work.
-Earlier authorized round trips covered six keys, twelve encoder slots and
-RGB RAM; all 10,240 durable bytes matched afterward. Macro upload, durable
-RGB save and power-cycle persistence remain untested. The owner reports
-normal reactive lighting.
+Installed evidence: host/runs/20261023-as-is-flash/. Payload SHA256:
+a1b8beec9a2a675c955bac946339e31f1823e17cdfb60f4755796e550530c711.
+Full ROM SHA256: 56b2de776924c48bda6d08a2604edc8ab94f24e5ec7365f7b584c0fe7dd70fc5.
+One loader command sequence 1,2,3,4,5 completed. Full CODE, manifest, protected
+regions, initial NVM and clean storage/journal were verified after restart.
+Physical typing was confirmed separately.
+
+Read-only post-install suite passed: 498 key assignments, 12 encoder slots,
+16 macros with an 8192-byte view and 82 LED descriptors. Evidence:
+host/runs/20261023-sdcc46-installed-readonly/report.json. No settings writes
+were requested. Macro upload, durable RGB save, physical encoder/lighting
+behavior and power-cycle persistence were not tested on this image.
 
 ## Remaining work
 
-The general updater needs firmware support to freeze settings, save pending
-RGB state, export the declared state and stop loader entry on storage failure.
-The installed legacy source lacks this capability; the first transition is
-unresolved. A bridge alone does not solve it.
+The firmware preservation protocol was cancelled. Its uncommitted code
+was archived outside the repository and removed. Local export and restoration
+will use existing Vial commands in one shared GUI/CLI installer module.
+Implementation is deferred; no freeze, token or import record is added to firmware.
 [Implementation plan](../audits/rc6/general-update-implementation-plan-20261023.md).
 
 Direct Control remains research-only and requires permission before removal.
