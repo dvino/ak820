@@ -1,6 +1,6 @@
 # README photos review
 
-Date: 2026-10-23. Four supplied hardware photos were resized without cropping
+Initial photo import, 2026-10-23. Four supplied hardware photos were resized without cropping
 and encoded as WebP for the English and Russian README. Source photos remain
 unchanged. The keyboard photo is visible above the features; PCB, markings
 and controller photos are visible as linked 240-pixel thumbnails below it.
@@ -22,3 +22,11 @@ documentation and image review, not hardware compatibility verification.
 Layout follow-up, 2026-10-23: the collapsed block was replaced with visible
 linked thumbnails after the display request. Independent review_readme_photos
 approved both README translations, paths and alt text; no image bytes changed.
+
+Final layout, 2026-10-23: the keyboard photo was replaced by the supplied
+banner, resized to 1440 × 720 and 74,610 bytes (source183,972 bytes). All
+three technical photos are now inside one collapsed Hardware Compatibility
+section. The previous keyboard asset was removed from the current tree; its
+tracked version remains in Git history. Independent review_readme_photos
+approved both README translations, readable banner, paths and unchanged
+compatibility claims. Documentation and whitespace checks passed.

@@ -2,6 +2,8 @@ English source of truth: [README](../../README.md).
 
 # QMK и Vial для AJAZZ AK820
 
+![Баннер прошивки QMK / Vial для AJAZZ AK820](../images/banner.webp)
+
 Этот проект переносит QMK и Vial на **проводную AJAZZ AK820 с контроллером
 VS11K28A / CH555-like 8051**, USB `320F:505B`. AK820 V2, Pro и Max устроены
 иначе и не поддерживаются.
@@ -23,11 +25,16 @@ USB VID:PID `320F:505B` — дополнительный признак, а не
 
 Сохраните исходные файлы восстановления и прочитайте [инструкцию восстановления штатной прошивки](INSTALL.md#oem-восстановление).
 
-![Проводная клавиатура AJAZZ AK820](../images/keyboard.webp)
+<details>
+<summary>Фотографии платы, маркировки и микроконтроллера</summary>
 
-<a href="../images/pcb.webp"><img src="../images/pcb.webp" alt="Плата" width="240"></a>
-<a href="../images/pcb-markings.webp"><img src="../images/pcb-markings.webp" alt="Маркировка платы" width="240"></a>
-<a href="../images/controller.webp"><img src="../images/controller.webp" alt="Контроллер" width="240"></a>
+![PCB](../images/pcb.webp)
+
+![SG-8976 VS11K28A RGB, Ver:01](../images/pcb-markings.webp)
+
+![VS11K28A](../images/controller.webp)
+
+</details>
 
 ## Возможности
 

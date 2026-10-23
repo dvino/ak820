@@ -2,6 +2,8 @@
 
 # QMK and Vial for AJAZZ AK820
 
+![AJAZZ AK820 QMK / Vial firmware banner](docs/images/banner.webp)
+
 This project brings QMK and Vial to the **wired AJAZZ AK820 with a VS11K28A / CH555-like 8051 controller**, USB `320F:505B`. AK820 V2, Pro and Max use different hardware and are not supported.
 
 Set up keys, layers, the encoder and macros in Vial. After that, the keyboard works without a desktop app running in the background. The port keeps the keyboard's original loader and stores settings in the keyboard.
@@ -19,11 +21,16 @@ USB VID:PID `320F:505B` is an additional identifying sign, not a compatibility g
 
 Keep the original recovery files and read [stock firmware recovery](docs/INSTALL.md#oem-recovery).
 
-![Wired AJAZZ AK820 keyboard](docs/images/keyboard.webp)
+<details>
+<summary>PCB, markings and controller photos</summary>
 
-<a href="docs/images/pcb.webp"><img src="docs/images/pcb.webp" alt="PCB" width="240"></a>
-<a href="docs/images/pcb-markings.webp"><img src="docs/images/pcb-markings.webp" alt="PCB markings" width="240"></a>
-<a href="docs/images/controller.webp"><img src="docs/images/controller.webp" alt="Controller" width="240"></a>
+![PCB](docs/images/pcb.webp)
+
+![SG-8976 VS11K28A RGB, Ver:01](docs/images/pcb-markings.webp)
+
+![VS11K28A](docs/images/controller.webp)
+
+</details>
 
 ## Features
 
