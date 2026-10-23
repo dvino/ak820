@@ -1,0 +1,68 @@
+diff --git a/platforms/mcs51/_print.h b/platforms/mcs51/_print.h
+--- a/platforms/mcs51/_print.h
++++ b/platforms/mcs51/_print.h
+@@ -24,11 +24,12 @@
+ #pragma once
+ 
+ #include <stdio.h>
++int mcs51_printf(const char *format, ...);
+ // Create user & normal print defines
+ #define print(s)    puts(s)
+ #define println(s)  puts(s "\r\n")
+ #define uprint(s)   puts(s)
+ #define uprintln(s) puts(s "\r\n")
+ //#define uprintf(fmt, ...) __xprintf(fmt), ##__VA_ARGS__
+-#define uprintf     printf
+-#define xprintf     printf
++#define uprintf     mcs51_printf
++#define xprintf     mcs51_printf
+diff --git a/quantum/logging/print.mk b/quantum/logging/print.mk
+--- a/quantum/logging/print.mk
++++ b/quantum/logging/print.mk
+@@ -1,7 +1,9 @@
+ PRINTF_PATH = $(LIB_PATH)/printf/src
+ 
+ VPATH += $(PRINTF_PATH) $(PRINTF_PATH)/printf
+-#SRC += printf.c
++ifeq ($(PLATFORM_KEY),mcs51)
++SRC += printf.c
++endif
+ QUANTUM_SRC +=$(QUANTUM_DIR)/logging/print.c
+ 
+ OPT_DEFS += -DPRINTF_SUPPORT_DECIMAL_SPECIFIERS=0
+@@ -9,4 +11,8 @@
+ OPT_DEFS += -DPRINTF_SUPPORT_LONG_LONG=0
+ OPT_DEFS += -DPRINTF_SUPPORT_WRITEBACK_SPECIFIER=0
+ OPT_DEFS += -DSUPPORT_MSVC_STYLE_INTEGER_SPECIFIERS=0
++ifeq ($(PLATFORM_KEY),mcs51)
++OPT_DEFS += -DPRINTF_ALIAS_STANDARD_FUNCTION_NAMES=0
++else
+ OPT_DEFS += -DPRINTF_ALIAS_STANDARD_FUNCTION_NAMES=1
++endif
+diff --git a/quantum/logging/print.c b/quantum/logging/print.c
+--- a/quantum/logging/print.c
++++ b/quantum/logging/print.c
+@@ -31,3 +31,23 @@
+ void putchar_(char character) {
+     func(character);
+ }
++
++#if defined(__SDCC_mcs51)
++#    include <stdio.h>
++#    include <stdarg.h>
++#    include "printf/printf.h"
++
++/* Preserve the MCS51 stdio UART sink; do not route through the null sendchar adapter. */
++static void mcs51_printf_uart(char character, void *context) {
++    (void)context;
++    (void)putchar((unsigned char)character);
++}
++
++int mcs51_printf(const char *format, ...) {
++    va_list arguments;
++    va_start(arguments, format);
++    int count = vfctprintf(mcs51_printf_uart, NULL, format, arguments);
++    va_end(arguments);
++    return count;
++}
++#endif

@@ -1,0 +1,22 @@
+diff --git a/quantum/keyboard.c b/quantum/keyboard.c
+--- a/quantum/keyboard.c
++++ b/quantum/keyboard.c
+@@ -191,7 +191,18 @@
+     last_matrix_modification_time          = matrix_timestamp;
+     last_encoder_modification_time         = encoder_timestamp;
+     last_pointing_device_modification_time = pointing_device_timestamp;
++#if defined(__SDCC_mcs51)
++    uint32_t latest_timestamp = matrix_timestamp;
++    if (encoder_timestamp > latest_timestamp) {
++        latest_timestamp = encoder_timestamp;
++    }
++    if (pointing_device_timestamp > latest_timestamp) {
++        latest_timestamp = pointing_device_timestamp;
++    }
++    last_input_modification_time = latest_timestamp;
++#else
+     last_input_modification_time           = MAX(matrix_timestamp, MAX(encoder_timestamp, pointing_device_timestamp));
++#endif
+ }
+ 
+ // Only enable this if console is enabled to print to

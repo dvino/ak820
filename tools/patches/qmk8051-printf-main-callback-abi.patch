@@ -1,0 +1,12 @@
+diff --git a/quantum/logging/print.c b/quantum/logging/print.c
+--- a/quantum/logging/print.c
++++ b/quantum/logging/print.c
+@@ -38,7 +38,7 @@
+ #    include "printf/printf.h"
+ 
+ /* Preserve the MCS51 stdio UART sink; do not route through the null sendchar adapter. */
+-static void mcs51_printf_uart(char character, void *context) {
++static void mcs51_printf_uart(char character, void *context) PRINTF_CALLBACK_QUALIFIER {
+     (void)context;
+     (void)putchar((unsigned char)character);
+ }

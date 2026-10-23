@@ -1,0 +1,200 @@
+--- a/quantum/process_keycode/process_tap_dance.c
++++ b/quantum/process_keycode/process_tap_dance.c
+@@ -21,11 +21,12 @@
+ #include "action_util.h"
+ #include "timer.h"
+ #include "wait.h"
++#include <string.h>
+ 
+ static uint16_t active_td;
+ static uint16_t last_tap_time;
+ 
+-void tap_dance_pair_on_each_tap(tap_dance_state_t *state, void *user_data) {
++void tap_dance_pair_on_each_tap(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     tap_dance_pair_t *pair = (tap_dance_pair_t *)user_data;
+ 
+     if (state->count == 2) {
+@@ -34,13 +35,13 @@
+     }
+ }
+ 
+-void tap_dance_pair_finished(tap_dance_state_t *state, void *user_data) {
++void tap_dance_pair_finished(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     tap_dance_pair_t *pair = (tap_dance_pair_t *)user_data;
+ 
+     register_code16(pair->kc1);
+ }
+ 
+-void tap_dance_pair_reset(tap_dance_state_t *state, void *user_data) {
++void tap_dance_pair_reset(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     tap_dance_pair_t *pair = (tap_dance_pair_t *)user_data;
+ 
+     if (state->count == 1) {
+@@ -51,7 +52,7 @@
+     }
+ }
+ 
+-void tap_dance_dual_role_on_each_tap(tap_dance_state_t *state, void *user_data) {
++void tap_dance_dual_role_on_each_tap(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     tap_dance_dual_role_t *pair = (tap_dance_dual_role_t *)user_data;
+ 
+     if (state->count == 2) {
+@@ -60,7 +61,7 @@
+     }
+ }
+ 
+-void tap_dance_dual_role_finished(tap_dance_state_t *state, void *user_data) {
++void tap_dance_dual_role_finished(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     tap_dance_dual_role_t *pair = (tap_dance_dual_role_t *)user_data;
+ 
+     if (state->count == 1) {
+@@ -70,7 +71,7 @@
+     }
+ }
+ 
+-void tap_dance_dual_role_reset(tap_dance_state_t *state, void *user_data) {
++void tap_dance_dual_role_reset(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     tap_dance_dual_role_t *pair = (tap_dance_dual_role_t *)user_data;
+ 
+     if (state->count == 1) {
+@@ -106,7 +107,7 @@
+     del_mods(action->state.oneshot_mods);
+ #endif
+     send_keyboard_report();
+-    action->state = (const tap_dance_state_t){0};
++    memset(&action->state, 0, sizeof(action->state));
+ }
+ 
+ void process_tap_dance_action_on_dance_finished(tap_dance_action_t *action) {
+@@ -152,8 +153,7 @@
+ bool process_tap_dance(uint16_t keycode, keyrecord_t *record) {
+     tap_dance_action_t *action;
+ 
+-    switch (keycode) {
+-        case QK_TAP_DANCE ... QK_TAP_DANCE_MAX:
++    if (keycode >= QK_TAP_DANCE && keycode <= QK_TAP_DANCE_MAX) {
+             action = &tap_dance_actions[TD_INDEX(keycode)];
+ 
+             action->state.pressed = record->event.pressed;
+@@ -171,7 +171,6 @@
+                 }
+             }
+ 
+-            break;
+     }
+ 
+     return true;
+@@ -180,7 +179,9 @@
+ void tap_dance_task(void) {
+     tap_dance_action_t *action;
+ 
+-    if (!active_td || timer_elapsed(last_tap_time) <= GET_TAPPING_TERM(active_td, &(keyrecord_t){})) return;
++    keyrecord_t empty_record;
++    memset(&empty_record, 0, sizeof(empty_record));
++    if (!active_td || timer_elapsed(last_tap_time) <= GET_TAPPING_TERM(active_td, &empty_record)) return;
+ 
+     action = &tap_dance_actions[TD_INDEX(active_td)];
+     if (!action->state.interrupted) {
+--- a/quantum/vial.c
++++ b/quantum/vial.c
+@@ -439,7 +439,7 @@
+     return MORE_TAPS;
+ }
+ 
+-static void on_dance(tap_dance_state_t *state, void *user_data) {
++static void on_dance(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     uint8_t index = (uintptr_t)user_data;
+     if (dynamic_keymap_get_tap_dance(index, &td_entry) != 0)
+         return;
+@@ -455,7 +455,7 @@
+     }
+ }
+ 
+-static void on_dance_finished(tap_dance_state_t *state, void *user_data) {
++static void on_dance_finished(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     uint8_t index = (uintptr_t)user_data;
+     if (dynamic_keymap_get_tap_dance(index, &td_entry) != 0)
+         return;
+@@ -508,7 +508,7 @@
+     }
+ }
+ 
+-static void on_dance_reset(tap_dance_state_t *state, void *user_data) {
++static void on_dance_reset(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK {
+     uint8_t index = (uintptr_t)user_data;
+     if (dynamic_keymap_get_tap_dance(index, &td_entry) != 0)
+         return;
+@@ -561,7 +561,7 @@
+     }
+ }
+ 
+-tap_dance_action_t tap_dance_actions[VIAL_TAP_DANCE_ENTRIES] = { };
++tap_dance_action_t tap_dance_actions[VIAL_TAP_DANCE_ENTRIES];
+ 
+ /* Load timings from eeprom into custom_tapping_term */
+ static void reload_tap_dance(void) {
+--- a/quantum/action_tapping.c
++++ b/quantum/action_tapping.c
+@@ -29,7 +29,7 @@
+ uint16_t g_tapping_term = TAPPING_TERM;
+ #    endif
+ 
+-#    ifdef TAPPING_TERM_PER_KEY
++#    if defined(TAPPING_TERM_PER_KEY) && !(defined(__SDCC_mcs51) && defined(VIAL_ENABLE))
+ __attribute__((weak)) uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+ #        ifdef DYNAMIC_TAPPING_TERM_ENABLE
+     return g_tapping_term;
+--- a/keyboards/ajazz/ak820/config.h
++++ b/keyboards/ajazz/ak820/config.h
+@@ -44,3 +44,6 @@
+ #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_COLOR
+ #define AK820_MATRIX_MASK { 0x3F, 0x2F, 0x3F, 0x1F, 0x1F, 0x3F, 0x1F, 0x1F, 0x1F, 0x3F, 0x3F, 0x3F, 0x07, 0x3F, 0x3C, 0x2E }
+ #define AK820_RGB_SLOT_MAP { 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 114, 1, 9, 17, 25, 33, 41, 49, 57, 65, 73, 81, 89, 97, 105, 121, 2, 10, 18, 26, 34, 42, 50, 58, 66, 74, 82, 90, 98, 106, 122, 3, 11, 19, 27, 35, 43, 51, 59, 67, 75, 83, 91, 107, 115, 4, 20, 28, 36, 44, 52, 60, 68, 76, 84, 92, 108, 116, 123, 5, 13, 21, 45, 77, 85, 93, 109, 117, 125 }
++
++/* Isolated size-only TD experiment, never a release profile. */
++#define VIAL_TAP_DANCE_ENTRIES 4
+--- a/keyboards/ajazz/ak820/rules.mk
++++ b/keyboards/ajazz/ak820/rules.mk
+@@ -18,7 +18,7 @@
+ SPACE_CADET_ENABLE = no
+ LEADER_ENABLE = no
+ DYNAMIC_MACRO_ENABLE = no
+-TAP_DANCE_ENABLE = no
++TAP_DANCE_ENABLE = yes
+ COMBO_ENABLE = no
+ KEY_OVERRIDE_ENABLE = no
+ AUTO_SHIFT_ENABLE = no
+--- a/quantum/process_keycode/process_tap_dance.h
++++ b/quantum/process_keycode/process_tap_dance.h
+@@ -32,7 +32,13 @@
+     bool interrupted : 1;
+ } tap_dance_state_t;
+ 
+-typedef void (*tap_dance_user_fn_t)(tap_dance_state_t *state, void *user_data);
++#if defined(__SDCC_mcs51)
++#    define TAP_DANCE_CALLBACK __reentrant
++#else
++#    define TAP_DANCE_CALLBACK
++#endif
++
++typedef void (*tap_dance_user_fn_t)(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK;
+ 
+ typedef struct {
+     tap_dance_state_t state;
+@@ -88,10 +94,10 @@
+ bool process_tap_dance(uint16_t keycode, keyrecord_t *record);
+ void tap_dance_task(void);
+ 
+-void tap_dance_pair_on_each_tap(tap_dance_state_t *state, void *user_data);
+-void tap_dance_pair_finished(tap_dance_state_t *state, void *user_data);
+-void tap_dance_pair_reset(tap_dance_state_t *state, void *user_data);
++void tap_dance_pair_on_each_tap(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK;
++void tap_dance_pair_finished(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK;
++void tap_dance_pair_reset(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK;
+ 
+-void tap_dance_dual_role_on_each_tap(tap_dance_state_t *state, void *user_data);
+-void tap_dance_dual_role_finished(tap_dance_state_t *state, void *user_data);
+-void tap_dance_dual_role_reset(tap_dance_state_t *state, void *user_data);
++void tap_dance_dual_role_on_each_tap(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK;
++void tap_dance_dual_role_finished(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK;
++void tap_dance_dual_role_reset(tap_dance_state_t *state, void *user_data) TAP_DANCE_CALLBACK;

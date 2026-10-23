@@ -1,0 +1,20 @@
+{
+  "pass": false,
+  "level": "Host C with ASan/UBSan; no SDCC ABI or hardware proof",
+  "tests": [
+    {
+      "profile": "tapping",
+      "pass": false,
+      "return_code": -6,
+      "stdout": "",
+      "stderr": "tapping: /tmp/ak820-caps-word-4j_ttikd/host.c:391: layer_tap_bounds: Assertion `key_tap(code, true, 0) && is_caps_word_on() && !weak_mods' failed."
+    }
+  ],
+  "source_sha256": {
+    "quantum/caps_word.c": "068fb4393d867592dd9a945380f959ce950f6573be9ceab6406aea75fdec972e",
+    "/tmp/rc5-capsword-old-lt-bound.c": "3815b4471cbf076e479b72d22431e64f1807760ca80718a2eee6224c14e6aa9d",
+    "keyboards/ajazz/ak820/config.h": "2de2690e747a7b84110ddb2052c898dc820ab17d9b6e57857e9415e332551850",
+    "tests/ak820_caps_word/harness.c": "32a325477f55529b32bd56d283d7e7db4f8cb857b13f96f7c2781164498aabba",
+    "tests/ak820_caps_word/run.py": "22f024fe7314b5314816c9a95b8e5c91e36e099c874a2cb1c0a46ae8e88d2691"
+  }
+}

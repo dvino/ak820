@@ -1,0 +1,36 @@
+{
+  "result": "PASS",
+  "hardware_validated": false,
+  "level": "host UBSan, actual production bodies vs immutable RC4; EEPROM/callback trace fixtures",
+  "baseline_commit": "cb9ff6ea",
+  "body_sha256": {
+    "baseline_get": "21d1415fe36135753ddd32d838c49a9f25a187bd1fe911f9a3a03c43ece10ff5",
+    "baseline_set": "d73c64cb79db24436d99e2f4eaf14af98fcfc5da78179fe5ea50559dcd1ecabb",
+    "candidate_get": "2571c055f4745c6a3b109a71a10aaba3d6e0a709c4adacba0ed952e0676223da",
+    "candidate_set": "75a66fbdd846fb337119768adcdf86a94f92532abcd12c08078ef33063c835a1"
+  },
+  "source_sha256": "0c2ac77f4364fb5d81f54783b398e4af6841127df7484aaa754bc06ee99a9550",
+  "runner_sha256": "28b5ca0514c175759e45fe321fb671f0d98ef1f8997a757c5c6f45c1cd2e5ba8",
+  "tests": [
+    {
+      "size": 1,
+      "pass": true,
+      "stdout": "PASS 1245440 layout read/write cases, size=1, exact callback/EEPROM trace\n"
+    },
+    {
+      "size": 2,
+      "pass": true,
+      "stdout": "PASS 1245440 layout read/write cases, size=2, exact callback/EEPROM trace\n"
+    },
+    {
+      "size": 3,
+      "pass": true,
+      "stdout": "PASS 1245440 layout read/write cases, size=3, exact callback/EEPROM trace\n"
+    },
+    {
+      "size": 4,
+      "pass": true,
+      "stdout": "PASS 1245440 layout read/write cases, size=4, exact callback/EEPROM trace\n"
+    }
+  ]
+}

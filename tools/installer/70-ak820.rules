@@ -1,0 +1,4 @@
+# Local active desktop session; no world-writable HID and no USB reset.
+# Place before 73-seat-late.rules so logind can apply TAG uaccess.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="320f", ATTRS{idProduct}=="505b", MODE="0600", TAG+="uaccess"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="0c45", ATTRS{idProduct}=="7687", MODE="0600", TAG+="uaccess"

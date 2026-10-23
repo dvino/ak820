@@ -1,0 +1,119 @@
+{
+  "format": "ak820-installer-release-2",
+  "release": "rc6",
+  "host_files": {
+    "AK820.cmd": {
+      "size": 1149,
+      "sha256": "dddbfaad0da2f79d3353bd2238eae323db53b0a066736c7743e84a845b77aaa0"
+    },
+    "AK820.sh": {
+      "size": 515,
+      "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
+    },
+    "qmk-8051-ak820/util/ak820_diagnose.py": {
+      "size": 13505,
+      "sha256": "2a3dd74d73d1b135107468d330818896a7158e16f4e4031b1c1757f14854dc0d"
+    },
+    "qmk-8051-ak820/util/ak820_release_manifest.py": {
+      "size": 2279,
+      "sha256": "d5e2a9ddaf47e17db30735df565bfe1277f3b610a802acd808071d1e6c2e632f"
+    },
+    "qmk-8051-ak820/util/ak820_tool.py": {
+      "size": 22039,
+      "sha256": "3a0cd520d0ba0b0125300095e5537e5abab2740f7098c836dc562c39eb6d4e1b"
+    },
+    "qmk-8051-ak820/util/native_macro_import.py": {
+      "size": 2499,
+      "sha256": "572f153de6ec9a71eefa8fd87c5ba2bd7da602619131e3ec66fa63d9a742b07f"
+    },
+    "qmk-8051-ak820/util/pack_ak820.py": {
+      "size": 23558,
+      "sha256": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+    },
+    "qmk-8051-ak820/util/prepare_ak820_trial.py": {
+      "size": 5745,
+      "sha256": "91458b9a14bad55f9bb9a056ec43f8daec0ffe996f21f4ffc15e9f6730aa9fc2"
+    },
+    "tools/build_release_bundle.py": {
+      "size": 12204,
+      "sha256": "46a839afbdda100cd57fd8e9c3f9a13f7e984c36c0ed72b054e0bc3ae2f96a91"
+    },
+    "tools/build_windows_installer.py": {
+      "size": 3692,
+      "sha256": "53fb19ad029610154a7a1c6a10d616f0f1c9f25ea6215eb44a36e84671a4bd09"
+    },
+    "tools/installer/70-ak820.rules": {
+      "size": 339,
+      "sha256": "f0b85bb730963057350a6a9cfe35e1f17e2859a5bfbcebfce9fccaa6534a3a52"
+    },
+    "tools/installer/ak820.py": {
+      "size": 47011,
+      "sha256": "b6eff1487c07d4d871b0df7bab44e58e870a23170ac827d066eab8777e2c905d"
+    },
+    "tools/installer/gui.py": {
+      "size": 15632,
+      "sha256": "c7406dc28815a7bf5daa2084adc8c8fffb7280daa9566a21161db346a38cdea6"
+    },
+    "tools/installer/i18n.py": {
+      "size": 14399,
+      "sha256": "c72831bc8e9b3a5f036e56d72baf2dc8fc0c5e9ba4c6801178a6115b87956018"
+    },
+    "tools/installer/requirements-build-windows.txt": {
+      "size": 235,
+      "sha256": "fe92377176d05e83a805899a51be8569cfc63768609bae64c543641f9d715bd5"
+    },
+    "tools/installer/requirements.txt": {
+      "size": 15,
+      "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
+    }
+  },
+  "hardware": "AJAZZ AK820 wired / VS11K28A / 320F:505B",
+  "trial_only": false,
+  "install_modes": [
+    "permanent",
+    "trial"
+  ],
+  "hardware_validated": false,
+  "offline_review": {
+    "status": "passed",
+    "report": "reviews/independent-review.md"
+  },
+  "files": {
+    "firmware/application.ihx": {
+      "size": 91236,
+      "sha256": "f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e"
+    },
+    "firmware/application.map": {
+      "size": 83782,
+      "sha256": "13474dc963ab0a292017164209862dff760ea09176bee622c6a1e1e200333d10"
+    },
+    "firmware/application.mem": {
+      "size": 1163,
+      "sha256": "64adfb1cbc3f800cb6cd066bd67ec190b3cfbbfca70991fb926c33a64b2a6add"
+    },
+    "reference/info.json": {
+      "size": 14377,
+      "sha256": "4f951f956ce11ad3efc3c692669c1da833dd07875940a67055356ba6e625c5aa"
+    },
+    "reference/vial.json": {
+      "size": 2598,
+      "sha256": "080192880c40c102022fe6b75dc865b1d36638ffd4e6585cfd429eed3478c071"
+    },
+    "reports/build-report.json": {
+      "size": 200855,
+      "sha256": "a8c35eda197ef2c9c86aaafa37a0948d28d4b4f95f34e9fa4be7afb033c744eb"
+    },
+    "reports/packing-validation.json": {
+      "size": 2412,
+      "sha256": "e8a0f260c58d027836455da1ee47612625aa060ac437979838487158c58ac695"
+    },
+    "reproduction/build_ak820.py": {
+      "size": 12642,
+      "sha256": "3f7a34aeb8666b0c98878d96ddc3335b4033515943af333449082bc733e93202"
+    },
+    "reviews/independent-review.md": {
+      "size": 5163,
+      "sha256": "0acbba5cf1257a58b99f489e6a03ca1afa0ac90d28d3d2047ecdfcbd55fdd033"
+    }
+  }
+}

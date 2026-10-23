@@ -1,0 +1,49 @@
+{
+  "format_version": 1,
+  "source_state": "Pinned upstream archives plus the AK820 port changes included in this complete source tree; no Git checkout metadata is present.",
+  "upstream_sources": [
+    {
+      "name": "qmk-8051",
+      "repository": "https://github.com/vuhuycan/qmk-8051",
+      "revision": "43efac45bff7a793719b050614a5dc5b80307e5f",
+      "download_url": "https://codeload.github.com/vuhuycan/qmk-8051/tar.gz/43efac45bff7a793719b050614a5dc5b80307e5f",
+      "archive_sha256": "b8f3d7215f4ab290257dc103145f55fe6e423d40730ab352697c30eceafc4df3"
+    },
+    {
+      "name": "lufa",
+      "repository": "https://github.com/qmk/lufa",
+      "revision": "549b97320d515bfca2f95c145a67bd13be968faa",
+      "download_url": "https://codeload.github.com/qmk/lufa/tar.gz/549b97320d515bfca2f95c145a67bd13be968faa",
+      "archive_sha256": "01a62a2258dc4fe574290ce5ccc3f947d4e101141a228cc927ae28e58a7bec23"
+    },
+    {
+      "name": "printf",
+      "repository": "https://github.com/qmk/printf",
+      "revision": "c2e3b4e10d281e7f0f694d3ecbd9f320977288cc",
+      "download_url": "https://codeload.github.com/qmk/printf/tar.gz/c2e3b4e10d281e7f0f694d3ecbd9f320977288cc",
+      "archive_sha256": "2fabf2d86b4118ab52f6f0d2e5fd6b20bb7a1c2f67f56e2d463753d6cd2bda42"
+    }
+  ],
+  "toolchain": {
+    "name": "SDCC",
+    "version": "4.4.0 #14620",
+    "source": "sdcc-4.4.0.tar.bz2 supplied in the user project",
+    "archive_sha256": "7cb4c96bd774f95e8032746e6808b59f3a8e2b3e7b4c72ac566bb67beeacff80",
+    "sdcc_sha256": "9b8d26bc440dea99004cd56a37f88eb5964ceb092a7e4b65fc7f16a3f732570b",
+    "sdas8051_sha256": "f941912fe419442a29594f0ac2b4e0db15b538d520b451401ff30400b18b23c9"
+  },
+  "python": "Python 3.12.14",
+  "qmk_cli": "1.2.0",
+  "python_requirements": "requirements-ak820-build.txt",
+  "python_requirements_sha256": "fd5e2d8288a1d99c1775d456898313c788070b70e411bb539b9219aea396d33c",
+  "build_id": "0x082001",
+  "qmk_builddate": "1970-01-01-00:00:00",
+  "build_command": "python util/build_ak820.py --toolchain /path/to/sdcc-4.4.0 --qmk-bin /path/to/venv/bin/qmk --build-dir .build/ak820",
+  "external_callback_roots": [
+    "_USB_DeviceInterrupt",
+    "_ak820_led_irq",
+    "_ak820_timer_irq"
+  ],
+  "provenance_scope": "build-report.json records exact compiler, assembler, builder, DCE, input/output ASM, object manifest, compiler flags and key board inputs; it is not a replacement for the complete source archive, which contains additional headers and build scripts.",
+  "hardware_validated": false
+}

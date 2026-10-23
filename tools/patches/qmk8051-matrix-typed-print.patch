@@ -1,0 +1,52 @@
+diff --git a/quantum/matrix_common.c b/quantum/matrix_common.c
+--- a/quantum/matrix_common.c
++++ b/quantum/matrix_common.c
+@@ -81,13 +81,48 @@
+ #    define print_matrix_row(row) print_bin_reverse32(matrix_get_row(row))
+ #endif
+ 
++#if defined(__SDCC_mcs51) && !defined(NO_PRINT) && !defined(USER_PRINT)
++#    include <stdio.h>
++
++/* Fixed-format matrix output keeps the MCS51 stdio UART sink. */
++static void matrix_print_hex8_typed(uint8_t value) {
++    uint8_t digit = value >> 4;
++    (void)putchar(digit < 10 ? '0' + digit : 'A' + digit - 10);
++    digit = value & 0x0f;
++    (void)putchar(digit < 10 ? '0' + digit : 'A' + digit - 10);
++}
++
++static void matrix_print_bits_typed(matrix_row_t value) {
++#    if MATRIX_COLS <= 8
++#        define MATRIX_PRINT_WIDTH 8
++#    elif MATRIX_COLS <= 16
++#        define MATRIX_PRINT_WIDTH 16
++#    else
++#        define MATRIX_PRINT_WIDTH 32
++#    endif
++    for (uint8_t bit = 0; bit < MATRIX_PRINT_WIDTH; ++bit) {
++        (void)putchar((value & 1) ? '1' : '0');
++        value >>= 1;
++    }
++#    undef MATRIX_PRINT_WIDTH
++}
++#endif
++
+ void matrix_print(void) {
+     print_matrix_header();
+ 
+     for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
++#if defined(__SDCC_mcs51) && !defined(NO_PRINT) && !defined(USER_PRINT)
++        matrix_print_hex8_typed(row);
++#else
+         print_hex8(row);
++#endif
+         print(": ");
++#if defined(__SDCC_mcs51) && !defined(NO_PRINT) && !defined(USER_PRINT)
++        matrix_print_bits_typed(matrix_get_row(row));
++#else
+         print_matrix_row(row);
++#endif
+         print("\n");
+     }
+ }

@@ -1,0 +1,150 @@
+--- a/quantum/action.c
++++ b/quantum/action.c
+@@ -389,6 +389,50 @@
+  *
+  * FIXME: Needs documentation.
+  */
++#ifndef NO_ACTION_TAPPING
++/* Experimental common output stage. action_tapping.c has already resolved
++ * the shared MT/LT/OSM/OSL state machine before this function runs. */
++static void process_dual_role_action(keyrecord_t *record, action_t action) {
++    bool is_layer = action.kind.id == ACT_LAYER_TAP || action.kind.id == ACT_LAYER_TAP_EXT;
++    uint8_t value = is_layer ? action.layer_tap.val :
++        (action.kind.id == ACT_LMODS_TAP ? action.key.mods : action.key.mods << 4);
++#    ifdef HOLD_ON_OTHER_KEY_PRESS_PER_KEY
++    if (!is_layer && record->event.pressed && record->tap.count && record->tap.interrupted &&
++        get_hold_on_other_key_press(get_event_keycode(record->event, false), record)) {
++        record->tap.count = 0;
++    }
++#    endif
++    if (record->tap.count) {
++        if (record->event.pressed) {
++            register_code(action.key.code);
++        } else {
++            qs_wait_ms(action.key.code == KC_CAPS_LOCK ? QS_tap_hold_caps_delay : QS_tap_code_delay);
++            unregister_code(action.key.code);
++        }
++        return;
++    }
++    if (is_layer) {
++        if (record->event.pressed) layer_on(value);
++        else layer_off(value);
++    } else {
++        if (record->event.pressed) register_mods(value);
++        else {
++#    if defined(RETRO_TAPPING) && defined(DUMMY_MOD_NEUTRALIZER_KEYCODE)
++            if (retro_tapping_counter == 2) neutralize_flashing_modifiers(get_mods());
++#    endif
++            unregister_mods(value);
++        }
++    }
++}
++#    ifndef NO_ACTION_ONESHOT
++static void release_oneshot_modifier(uint8_t mods) {
++    unregister_mods(mods);
++    del_oneshot_mods(mods);
++    del_oneshot_locked_mods(mods);
++}
++#    endif
++#endif
++
+ void process_action(keyrecord_t *record, action_t action) {
+     keyevent_t event;
+     event = record->event;
+@@ -496,13 +540,9 @@
+                         } else {
+                             if (tap_count == 0) {
+                                 // Release hold: unregister the held mod and its variants
+-                                unregister_mods(mods);
+-                                del_oneshot_mods(mods);
+-                                del_oneshot_locked_mods(mods);
++                                release_oneshot_modifier(mods);
+                             } else if (QS_oneshot_tap_toggle > 1 && tap_count == 1 && (mods & get_mods())) {
+-                                unregister_mods(mods);
+-                                del_oneshot_mods(mods);
+-                                del_oneshot_locked_mods(mods);
++                                release_oneshot_modifier(mods);
+                             }
+                         }
+                     }
+@@ -520,49 +560,7 @@
+                     }
+                     break;
+                 default:
+-                    if (event.pressed) {
+-                        if (tap_count > 0) {
+-#    ifdef HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+-                            if (
+-#        ifdef HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+-                                get_hold_on_other_key_press(get_event_keycode(record->event, false), record) &&
+-#        endif
+-                                record->tap.interrupted) {
+-                                ac_dprintf("mods_tap: tap: cancel: add_mods\n");
+-                                // ad hoc: set 0 to cancel tap
+-                                record->tap.count = 0;
+-                                register_mods(mods);
+-                            } else
+-#    endif
+-                            {
+-                                ac_dprintf("MODS_TAP: Tap: register_code\n");
+-                                register_code(action.key.code);
+-                            }
+-                        } else {
+-                            ac_dprintf("MODS_TAP: No tap: add_mods\n");
+-                            register_mods(mods);
+-                        }
+-                    } else {
+-                        if (tap_count > 0) {
+-                            ac_dprintf("MODS_TAP: Tap: unregister_code\n");
+-                            if (action.layer_tap.code == KC_CAPS_LOCK) {
+-                                qs_wait_ms(QS_tap_hold_caps_delay);
+-                            } else {
+-                                qs_wait_ms(QS_tap_code_delay);
+-                            }
+-                            unregister_code(action.key.code);
+-                        } else {
+-                            ac_dprintf("MODS_TAP: No tap: add_mods\n");
+-#    if defined(RETRO_TAPPING) && defined(DUMMY_MOD_NEUTRALIZER_KEYCODE)
+-                            // Send a dummy keycode to neutralize flashing modifiers
+-                            // if the key was held and then released with no interruptions.
+-                            if (retro_tapping_counter == 2) {
+-                                neutralize_flashing_modifiers(get_mods());
+-                            }
+-#    endif
+-                            unregister_mods(mods);
+-                        }
+-                    }
++                    process_dual_role_action(record, action);
+                     break;
+             }
+ #endif // NO_ACTION_TAPPING
+@@ -716,28 +714,7 @@
+                     break;
+                 default:
+ #    ifndef NO_ACTION_TAPPING /* tap key */
+-                    if (event.pressed) {
+-                        if (tap_count > 0) {
+-                            ac_dprintf("KEYMAP_TAP_KEY: Tap: register_code\n");
+-                            register_code(action.layer_tap.code);
+-                        } else {
+-                            ac_dprintf("KEYMAP_TAP_KEY: No tap: On on press\n");
+-                            layer_on(action.layer_tap.val);
+-                        }
+-                    } else {
+-                        if (tap_count > 0) {
+-                            ac_dprintf("KEYMAP_TAP_KEY: Tap: unregister_code\n");
+-                            if (action.layer_tap.code == KC_CAPS_LOCK) {
+-                                qs_wait_ms(QS_tap_hold_caps_delay);
+-                            } else {
+-                                qs_wait_ms(QS_tap_code_delay);
+-                            }
+-                            unregister_code(action.layer_tap.code);
+-                        } else {
+-                            ac_dprintf("KEYMAP_TAP_KEY: No tap: Off on release\n");
+-                            layer_off(action.layer_tap.val);
+-                        }
+-                    }
++                    process_dual_role_action(record, action);
+ #    else
+                     if (event.pressed) {
+                         ac_dprintf("KEYMAP_TAP_KEY: Tap: register_code\n");

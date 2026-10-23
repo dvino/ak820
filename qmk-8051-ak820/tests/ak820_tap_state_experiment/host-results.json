@@ -1,0 +1,34 @@
+{
+  "pass": true,
+  "level": "Host C/UBSan: real process_action bodies, differential call traces/final state/record; no SDCC ABI or timing proof",
+  "coverage": "Every 16-bit action payload in LMODS/RMODS/LMODS_TAP/RMODS_TAP/LAYER_MODS/LAYER_TAP/LAYER_TAP_EXT; both directions, all 16 tap counts, 16 state seeds per profile",
+  "baseline_commit": "cb9ff6ea",
+  "baseline_body_sha256": "eb41bd65c82c2331c5430cbbdc9742cb55afdb1f3b4fcf5627ed3e1465b71b05",
+  "tap_predicate_sha256": "3cb027dfb73aca56806d24b9e211577d92b47303e4ca25a9a61b8967dba09bff",
+  "candidate_body_sha256": "1bb81dd42f90e5fd516bdf6fce9a8f63b15f4d598b2b573df8987deeee469485",
+  "candidate_file_sha256": "59101d454d32b664a3435bce42633b9f3bb1531a108cc56696b7e771d3d9dacf",
+  "harness_sha256": "14ea3b9b2620e58e3ff9abcb163f9702c6fa8f97b3fed94ecad3c1a24ab702b7",
+  "runner_sha256": "695b7fd9ef52d4f2d62e756f6d9ce1d58d7d1a8322e67941068ff5f27db731ef",
+  "tests": [
+    {
+      "profile": "active-disabled",
+      "pass": true,
+      "summary": "PASS 14680064 action/event/state combinations"
+    },
+    {
+      "profile": "tapping-oneshot",
+      "pass": true,
+      "summary": "PASS 14680064 action/event/state combinations"
+    },
+    {
+      "profile": "hold-interrupt",
+      "pass": true,
+      "summary": "PASS 14680064 action/event/state combinations"
+    },
+    {
+      "profile": "retro-interrupt",
+      "pass": true,
+      "summary": "PASS 14680064 action/event/state combinations"
+    }
+  ]
+}

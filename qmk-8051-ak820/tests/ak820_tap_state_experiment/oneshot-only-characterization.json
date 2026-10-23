@@ -1,0 +1,296 @@
+{
+  "linked_image_sha256": "6ef121ee85b5b6a2bbd9c8f68f43c1e7057414a98dd55ffca35b925509c165c8",
+  "level": "uCsim C52 linked code, simulated matrix/NVM/USB readiness; no hardware validation",
+  "hardware_validated": false,
+  "oneshot_available": false,
+  "interpretation": "PASS confirms held OSM and inactive OSL fallbacks; it does not claim working One Shot",
+  "oneshot_state_code_retained": true,
+  "tests": [
+    {
+      "name": "oneshot-only-osm-is-held-shift",
+      "pass": true,
+      "observations": {
+        "osm_down": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held_chord": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "osm_up_removes_shift": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "osm_down": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held_chord": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "osm_up_removes_shift": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "oneshot-only-osm-tap-does-not-arm-next-key",
+      "pass": true,
+      "observations": {
+        "osm_tap_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_a_is_plain": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "osm_tap_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_a_is_plain": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "oneshot-only-osl-does-not-enable-held-layer",
+      "pass": true,
+      "observations": {
+        "osl_down_layer": [
+          0
+        ],
+        "held_base_a": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held_layer_still_zero": [
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "osl_down_layer": [
+          0
+        ],
+        "held_base_a": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held_layer_still_zero": [
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "oneshot-only-osl-tap-does-not-arm-next-layer",
+      "pass": true,
+      "observations": {
+        "osl_tap_up_layer": [
+          0
+        ],
+        "next_a_is_base": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "osl_tap_up_layer": [
+          0
+        ],
+        "next_a_is_base": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    }
+  ],
+  "test_source_sha256": {
+    "tests/ak820_tap_state_experiment/oneshot_only.py": "07789bb59a44570d86b6f9aa12fa56968bc3fb6476c3afd4df06a2f9e9343d92",
+    "tests/ak820_tri_layer/run.py": "a74de1f796ebd727bd807687ec5a1bac50e575d60a117d0362df467e0c33834b",
+    "tests/ak820_features/run.py": "6ccda346214c723a8fe6cdf7f444348bcdcbdce56427fef83ca1f8025e9cf9dd",
+    "tests/ak820_unlock/run.py": "16d554793c403935c568bfb990094a79d21e27b71b18c23f0cd00399b56ae61a",
+    "tests/ak820_emitted/run.py": "27aa969d76917a0a77bd0d9ef3deb94b74d20c16fca6dabc9979d074ded89eb9"
+  },
+  "characterization_pass": true
+}

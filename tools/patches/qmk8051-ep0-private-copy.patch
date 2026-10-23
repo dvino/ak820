@@ -1,0 +1,42 @@
+--- a/tmk_core/protocol/ch555/usb_device.c
++++ b/tmk_core/protocol/ch555/usb_device.c
+@@ -148,6 +148,21 @@
+ * Output         : None
+ * Return         : None
+ *******************************************************************************/ 
++/* Private to the USB ISR: no shared memcpy parameter/local storage. */
++#if defined(__SDCC_mcs51)
++static void usb_ep0_copy_isr(UINT8 __xdata *destination,
++                             const UINT8 *source,
++                             UINT16 length) __reentrant {
++    while (length != 0) {
++        *destination++ = *source++;
++        --length;
++    }
++}
++#define USB_EP0_COPY_ISR(destination, source, length) usb_ep0_copy_isr(destination, source, length)
++#else
++#define USB_EP0_COPY_ISR(destination, source, length) memcpy(destination, source, length)
++#endif
++
+ #pragma save
+ #pragma nooverlay
+ void USB_DeviceInterrupt( void ) __interrupt(INT_NO_USB) //__using(1)
+@@ -174,7 +189,7 @@
+ 				{
+ 					case USB_GET_DESCRIPTOR:
+ 						len = D0SetupLen >= DEF_ENDP0_SIZE ? DEF_ENDP0_SIZE : D0SetupLen;  /* The length of this transmission */
+-						memcpy( pD0_EP0_BUF, pD0Descr, len );  					/* Load upload data */
++						USB_EP0_COPY_ISR( pD0_EP0_BUF, pD0Descr, len );  					/* Load upload data */
+ 						D0SetupLen -= len;
+ 						pD0Descr += len;
+ 						D0_EP0T_L = len;
+@@ -524,7 +539,7 @@
+ 									}
+ 									len = D0SetupLen >= DEF_ENDP0_SIZE ? DEF_ENDP0_SIZE : D0SetupLen;  /* The length of this transmission */
+ 									D0SetupLen -= len;
+-									memcpy( pD0_EP0_BUF, pD0Descr, len );  			/* Load upload data */
++									USB_EP0_COPY_ISR( pD0_EP0_BUF, pD0Descr, len );  			/* Load upload data */
+ 									pD0Descr += len;
+ 								}
+ 								break;

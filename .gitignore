@@ -1,0 +1,46 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+target/
+build/
+dist/
+*.spec
+*.exe
+*.dll
+firmware/backups/
+firmware/**/*.bin
+firmware/**/write-*.json
+*.log
+.idea/
+# Device settings and filtered input captures remain local.
+firmware/**/before-physical-check.json
+firmware/**/physical-events*.json
+work/
+
+# One-click host runtime outputs
+host/windows/runs/
+host/windows/deps/
+# QMK generated builds within tracked full source
+qmk-8051-ak820/.build/
+qmk-8051-ak820/.venv/
+# Python runtime
+.pytest_cache/
+# Cross-platform installer: private sessions, local Python environment.
+host/runs/
+.venv-ak820-installer/
+.venv-windows-installer/
+.build-windows-installer/
+.venv-ak820-windows-build/
+
+# Owner captures and historical research stay in the private local archive.
+/evidence/
+/history/
+/investigation/
+/toolchains/
+/qmk-8051-ak820/lib/lufa/
+/.build/
+/.build-release-*/
+/releases/rc1/snapshot/
+/releases/rc2/snapshot/
+/releases/rc3/snapshot/

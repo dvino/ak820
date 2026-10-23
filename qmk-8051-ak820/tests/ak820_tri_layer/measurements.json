@@ -1,0 +1,39 @@
+{
+  "schema": "ak820-tri-layer-study-1",
+  "date": "2026-10-22",
+  "scope": "Isolated enablement from intermediate main source; final combined image must repeat tests",
+  "baseline": "Tri Layer enabled without TL-specific unlock cleanup; original upstream handler",
+  "fixed": "Same source plus cleanup and shared handler tail",
+  "profiles": [
+    {
+      "name": "tri-baseline",
+      "code_bytes": 39040,
+      "main_bytes": 37157,
+      "low_bytes": 1883,
+      "highest_code_address": "0xc14b",
+      "xram_bytes": 1975,
+      "stack_capacity": 152,
+      "observed_tri_stack_max": 47,
+      "pass_count": 12,
+      "test_count": 16,
+      "ihx_sha256": "90f8b0fa0ebc94db33cb3e45ed25f863255ce94657ffdf6d63c6d79097d664de",
+      "build_report_sha256": "20901f7a29288011248c2c7b65106a1de6cb63791e611294c20f6504aaf4f87a",
+      "release_artifact": false
+    },
+    {
+      "name": "tri-fixed",
+      "code_bytes": 39012,
+      "main_bytes": 37129,
+      "low_bytes": 1883,
+      "highest_code_address": "0xc12f",
+      "xram_bytes": 1976,
+      "stack_capacity": 152,
+      "observed_tri_stack_max": 47,
+      "pass_count": 16,
+      "test_count": 16,
+      "ihx_sha256": "39c1de97f061b6ec8da3c73d62ade93475c43b32a300af01ac100c0d7e268d6c",
+      "build_report_sha256": "a21a4540924a17e2de4bbf61f1582a655c22c69e2369055c514de8466c994afb",
+      "release_artifact": false
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+diff --git a/quantum/quantum.c b/quantum/quantum.c
+--- a/quantum/quantum.c
++++ b/quantum/quantum.c
+@@ -594,12 +594,28 @@
+  */
+ 
+ const char *get_numeric_str(char *buf, size_t buf_len, uint32_t curr_num, char curr_pad) {
++#if defined(__SDCC_mcs51)
++    size_t remaining = buf_len - 1;
++    uint8_t first = 1;
++    buf[remaining] = '\0';
++    while (remaining != 0) {
++        char selected = '0' + curr_num % 10;
++        if (!(first && selected == '0') && curr_num == 0) {
++            selected = curr_pad;
++        }
++        --remaining;
++        buf[remaining] = selected;
++        first = 0;
++        curr_num /= 10;
++    }
++#else
+     buf[buf_len - 1] = '\0';
+     for (size_t i = 0; i < buf_len - 1; ++i) {
+         char c               = '0' + curr_num % 10;
+         buf[buf_len - 2 - i] = (c == '0' && i == 0) ? '0' : (curr_num > 0 ? c : curr_pad);
+         curr_num /= 10;
+     }
++#endif
+     return buf;
+ }
+ 

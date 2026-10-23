@@ -1,0 +1,11 @@
+--- a/keyboards/ajazz/ak820/config.h
++++ b/keyboards/ajazz/ak820/config.h
+@@ -16,7 +16,7 @@
+ #endif
+ #define HOLD_ON_OTHER_KEY_PRESS
+ #define NO_ACTION_TAPPING
+-#define NO_ACTION_ONESHOT
++/* Experiment: One Shot state enabled; tapping intentionally remains disabled. */
+ /* Keep the complete Repeat Key engine; alternate repeat tables exceed budget. */
+ #define NO_ALT_REPEAT_KEY
+ #define LAYER_STATE_8BIT

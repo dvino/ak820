@@ -1,0 +1,109 @@
+{
+  "status": "PASS",
+  "hardware_validated": false,
+  "usb_opened": false,
+  "ihx_sha256": "7c25096e59412afc7a4aa1c030a7038c4b5d469a253319ef712ce4244c91ffb9",
+  "inputs": {
+    "ihx": {
+      "name": "ajazz_ak820_vial.ihx",
+      "sha256": "7c25096e59412afc7a4aa1c030a7038c4b5d469a253319ef712ce4244c91ffb9"
+    },
+    "map": {
+      "name": "ajazz_ak820_vial.map",
+      "sha256": "acf0120ef621b3212c8fcf28ff5543e0c9010cb10c70bd5fff1aba15745dd5de"
+    },
+    "legacy_ihx": {
+      "name": "application.ihx",
+      "sha256": "42447e53fa5b7e70154c5c4bb92973f9c3fbe75ab3c0fd27d8d5abadc1216e91"
+    },
+    "legacy_map": {
+      "name": "application.map",
+      "sha256": "1a360d7ca78eb2d1a25d32102b463b452ed229fea0f3b8146581588716ac20ff"
+    },
+    "stock_rom": {
+      "name": "stock-full.bin",
+      "sha256": "03c6bd3351f272c855b9bc736d597170f694b5260b2001d1fc9cbfba8b382994"
+    },
+    "packer": {
+      "name": "pack_ak820.py",
+      "sha256": "6a55212060685a4041b5edbdfd79b10ed1cf09fbc408ab935f2fdc318a05b58b"
+    },
+    "runner": {
+      "name": "run.py",
+      "sha256": "f39fc4c4f732a11eb02fab458d7b29c33b429cc52f110de658b9f5d1e10ad64d"
+    }
+  },
+  "actual_xinit_bytes": 117,
+  "xinit_start": 2978,
+  "synthetic_lengths": [
+    {
+      "length": 0,
+      "writes": 0,
+      "steps": 4
+    },
+    {
+      "length": 1,
+      "writes": 1,
+      "steps": 26
+    },
+    {
+      "length": 255,
+      "writes": 255,
+      "steps": 4090
+    },
+    {
+      "length": 256,
+      "writes": 256,
+      "steps": 4106
+    },
+    {
+      "length": 257,
+      "writes": 257,
+      "steps": 4123
+    },
+    {
+      "length": 512,
+      "writes": 512,
+      "steps": 8203
+    },
+    {
+      "length": 538,
+      "writes": 538,
+      "steps": 8620
+    },
+    {
+      "length": 2048,
+      "writes": 2048,
+      "steps": 32785
+    }
+  ],
+  "marker_cases": 65,
+  "permanent_two_entry_control": [
+    {
+      "boot": 1,
+      "reached_code_start": true,
+      "trial_erase_not_called": true,
+      "marker_preserved": true
+    },
+    {
+      "boot": 2,
+      "reached_code_start": true,
+      "trial_erase_not_called": true,
+      "marker_preserved": true
+    }
+  ],
+  "native_erase_leaf_instructions": 47,
+  "legacy_classic_p2_model": "PASS",
+  "legacy_low256_model": "CORRUPTS_XRAM",
+  "legacy_or_mutated_startup_pack_rejected": true,
+  "limits": [
+    "Alternative short-MOVX interpretations are model assumptions, not measurements of VS11.",
+    "This removes an unverified startup dependency; it does not prove the unique cause of rc3 hardware failure.",
+    "No flash erase/program, interrupt timing, USB hardware or physical matrix is simulated."
+  ],
+  "ucsim": {
+    "peak_sp": 105,
+    "tested_stack_bytes": 2,
+    "scope": "Generic C52 CRT and pre-erase ABI only; no VS11 peripherals or flash operation"
+  }
+}

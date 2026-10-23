@@ -1,0 +1,151 @@
+{
+  "schema": "ak820-common-action-study-1",
+  "date": "2026-10-22",
+  "base": "Frozen RC5 candidate3 source, before later LM-right-modifier and USB report-retry corrections",
+  "base_image_sha256": "76a12ea9dda4468026dadc9edfe19876ba0ea26e1144af1874169d98a252f055",
+  "scope": "Isolated compiler/size study and separate host output-trace validation; size-only profiles are not release images or hardware validation",
+  "active_binary_identical": true,
+  "common_tail_full_tapping_code_delta": -274,
+  "common_tail_td4_code_delta": -274,
+  "rejected_helper_code_delta": 149,
+  "profiles": [
+    {
+      "name": "active-baseline",
+      "code_bytes": 40461,
+      "main_bytes": 38578,
+      "low_bytes": 1883,
+      "highest_code_address": "0xc6d8",
+      "xram_bytes": 2323,
+      "stack_capacity": 152,
+      "ihx_sha256": "76a12ea9dda4468026dadc9edfe19876ba0ea26e1144af1874169d98a252f055",
+      "map_sha256": "c81c1c788bb93cd7a1776b29fdf8b354ee8e0375285bf7300d7056ad9d8865ec",
+      "build_report_sha256": "ab5c976fdbd17de6c843d47a16c1a0b1acdd5a9ec91bfbb0ed09e6f951a9e580",
+      "build_report": "reports/active-baseline.json",
+      "code_window": [
+        12327,
+        50944
+      ],
+      "fits_production_code_window": true,
+      "release_artifact": false
+    },
+    {
+      "name": "active-common-tail",
+      "code_bytes": 40461,
+      "main_bytes": 38578,
+      "low_bytes": 1883,
+      "highest_code_address": "0xc6d8",
+      "xram_bytes": 2323,
+      "stack_capacity": 152,
+      "ihx_sha256": "76a12ea9dda4468026dadc9edfe19876ba0ea26e1144af1874169d98a252f055",
+      "map_sha256": "61be72523a21aca85824f051dd7e2356865929376869fb43561b4fcfd3f09634",
+      "build_report_sha256": "a2148963f80015980ac38700d736f8dc338c74000e728d4b9da1d294b13da91b",
+      "build_report": "reports/active-common-tail.json",
+      "code_window": [
+        12327,
+        50944
+      ],
+      "fits_production_code_window": true,
+      "release_artifact": false
+    },
+    {
+      "name": "tap-os-baseline",
+      "code_bytes": 46444,
+      "main_bytes": 44558,
+      "low_bytes": 1886,
+      "highest_code_address": "0xde34",
+      "xram_bytes": 2526,
+      "stack_capacity": 145,
+      "ihx_sha256": "5b67adc097ada55093ad526bc05088498d72470abbde2b26920426a7c8aceed3",
+      "map_sha256": "04d4faa56f3e5841b34309cc28398a10ebb1f19a4a80d92a0f0a920b85bd1843",
+      "build_report_sha256": "5cea1814fda1b68be75301be7c70728c1dd605d1f38d02eaa3bf5934addaf4df",
+      "build_report": "reports/tap-os-baseline.json",
+      "code_window": [
+        12327,
+        63232
+      ],
+      "fits_production_code_window": false,
+      "release_artifact": false
+    },
+    {
+      "name": "tap-os-common",
+      "code_bytes": 46593,
+      "main_bytes": 44707,
+      "low_bytes": 1886,
+      "highest_code_address": "0xdec9",
+      "xram_bytes": 2532,
+      "stack_capacity": 144,
+      "ihx_sha256": "4c80ef0f1629ba0c1630d38981957710b0bdab07c88e71fced25dfe000d77418",
+      "map_sha256": "606c123fe88e47eef46fa975e4e6e1568b0a602ea52102d89bf213d8dfee0944",
+      "build_report_sha256": "43afcc308a1fa1a08dcb8cac9fca0c037f89aa4f69cdfdc22a02a431eab2282e",
+      "build_report": "reports/tap-os-common.json",
+      "code_window": [
+        12327,
+        63232
+      ],
+      "fits_production_code_window": false,
+      "release_artifact": false
+    },
+    {
+      "name": "tap-os-common-tail",
+      "code_bytes": 46170,
+      "main_bytes": 44284,
+      "low_bytes": 1886,
+      "highest_code_address": "0xdd22",
+      "xram_bytes": 2527,
+      "stack_capacity": 145,
+      "ihx_sha256": "e33ca6d08c6bc3e4b1ce2c5b0545a6bd2367f92d704ded5dce56b701c246e099",
+      "map_sha256": "b41d3ae0529b788d8b213cdef2f20ae69c26e76515c64d10e3152c686f8d2725",
+      "build_report_sha256": "beb651c0e2e3c73d01ff42438d61903e1f639cac73882dc665566ab2b73428be",
+      "build_report": "reports/tap-os-common-tail.json",
+      "code_window": [
+        12327,
+        63232
+      ],
+      "fits_production_code_window": false,
+      "release_artifact": false
+    },
+    {
+      "name": "tap-os-td4-baseline-3",
+      "code_bytes": 50557,
+      "main_bytes": 48671,
+      "low_bytes": 1886,
+      "highest_code_address": "0xee45",
+      "xram_bytes": 2725,
+      "stack_capacity": 143,
+      "ihx_sha256": "4640bdfce42e9135dafae5e2c38fe7fb478ec0fa8f70c5b96a77969678ce3364",
+      "map_sha256": "4f1d2569c6cb48e6a1e3b64be20853e97474f7df91b5dfd4e069ef79dfa22450",
+      "build_report_sha256": "9610d31aeae0aff7c5ac25fdf32f085a299bb1b4c699321d2ac15733e8647b81",
+      "build_report": "reports/tap-os-td4-baseline-3.json",
+      "code_window": [
+        12327,
+        63232
+      ],
+      "fits_production_code_window": false,
+      "release_artifact": false
+    },
+    {
+      "name": "tap-os-td4-tail",
+      "code_bytes": 50283,
+      "main_bytes": 48397,
+      "low_bytes": 1886,
+      "highest_code_address": "0xed33",
+      "xram_bytes": 2726,
+      "stack_capacity": 143,
+      "ihx_sha256": "8a259849bf7bdb51b9db5506a3b392c35b2619a0ba00522a7a79538d83c24aad",
+      "map_sha256": "1ccfa0b45f24b10bf5e4901b582fc40a22eba1c8af018716cb510cd5cdf29f65",
+      "build_report_sha256": "76c964abbdecbc672c6d18a0db8a0c1b553bc7ba6cc3cd7e2a7a50285f9a46c0",
+      "build_report": "reports/tap-os-td4-tail.json",
+      "code_window": [
+        12327,
+        63232
+      ],
+      "fits_production_code_window": false,
+      "release_artifact": false
+    }
+  ],
+  "patch_sha256": {
+    "common-tail.patch": "7c5bd6224912ce882a22a8e85f20cd62603705f02389a42f89c10c4db83751bf",
+    "rejected-common-helper.patch": "f85b7c4282b3ab5761eff6b360b1437d40e1685fcc7cb3a1243d52a4ba79b11b",
+    "td4-size-only-port.patch": "407e195a6c63bf24e8df2e5214f1c2734161fba736ddb028dfa00abb667e6c30"
+  }
+}

@@ -1,0 +1,5649 @@
+{
+  "format": "ak820-instruction-repetition-measurements-v1",
+  "date": "2026-10-22",
+  "algorithm": "Exact symbolic straight-line Quantum CSEG instructions; 3-byte LCALL and 1-byte RET; no added argument setup.",
+  "net_formula": "(occurrences - 1) * body_bytes - 3 * occurrences - 1",
+  "costs": {
+    "call_bytes": 3,
+    "return_bytes": 1,
+    "maximum_extra_stack_bytes": 2
+  },
+  "measured_same_profile_pairs": [
+    {
+      "before": "size-cand3-cache-slot",
+      "after": "size-cand3-outline",
+      "saving_bytes": 858
+    },
+    {
+      "before": "size-cand3-cache-slot",
+      "after": "size-cand3-outline-40",
+      "saving_bytes": 1369
+    },
+    {
+      "before": "size-callee-base",
+      "after": "size-callee-base-outlined",
+      "saving_bytes": 1195
+    },
+    {
+      "before": "size-callee-combined",
+      "after": "size-callee-combined-outlined",
+      "saving_bytes": 1195
+    },
+    {
+      "before": "rc5-combined-1-no-outline",
+      "after": "rc5-combined-1",
+      "saving_bytes": 1211
+    },
+    {
+      "before": "rc5-release-no-outline",
+      "after": "rc5-release",
+      "saving_bytes": 1202
+    },
+    {
+      "before": "rc5-release-no-outline-v2",
+      "after": "rc5-release-v2",
+      "saving_bytes": 1202
+    }
+  ],
+  "experiments": [
+    {
+      "build_id": "size-callee-base-outlined",
+      "linked_image_sha256": "5838e7299129e46cf3398b3ec6da919588e8779c6ae8da2637b293c6dbc3f541",
+      "linked_code_bytes": 38502,
+      "helpers": 32,
+      "call_sites": 210,
+      "nominal_saved_bytes": 1195,
+      "selected_groups": [
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 13,
+          "nominal_net_bytes": 104
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 20,
+          "nominal_net_bytes": 91
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 13,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6"
+          ],
+          "body_bytes": 19,
+          "occurrences": 4,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 16,
+          "occurrences": 3,
+          "nominal_net_bytes": 22
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "d2f2dd94e3098b37f51244de782e512d866853ed700f0c35ce862bbed1c0044b"
+    },
+    {
+      "build_id": "size-callee-combined-outlined",
+      "linked_image_sha256": "6122ef89fb333591cf9cc2a9f9717fca63d9927be648afd771617131a7dd5f7b",
+      "linked_code_bytes": 38003,
+      "helpers": 32,
+      "call_sites": 210,
+      "nominal_saved_bytes": 1195,
+      "selected_groups": [
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 13,
+          "nominal_net_bytes": 104
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 20,
+          "nominal_net_bytes": 91
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 13,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6"
+          ],
+          "body_bytes": 19,
+          "occurrences": 4,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 16,
+          "occurrences": 3,
+          "nominal_net_bytes": 22
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "257023df8a61ca9dd52357e573dd3a7c4cecbf4d9a6750fc9164a9612d3c3e3f"
+    },
+    {
+      "build_id": "size-cand3-outline",
+      "linked_image_sha256": "193b1f498511ac22f94e27e7a83ab868e4fb36def8e958ff4d774b6c08398fdc",
+      "linked_code_bytes": 39552,
+      "helpers": 12,
+      "call_sites": 132,
+      "nominal_saved_bytes": 858,
+      "selected_groups": [
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 13,
+          "nominal_net_bytes": 104
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 17,
+          "nominal_net_bytes": 92
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 20,
+          "nominal_net_bytes": 91
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 13,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "mov\ta,r6",
+            "rr\ta",
+            "rr\ta",
+            "anl\ta,#0x3f",
+            "mov\tr6,a",
+            "clr\ta",
+            "swap\ta",
+            "rl\ta",
+            "anl\ta,#0xe0",
+            "xch\ta,r6",
+            "swap\ta",
+            "rl\ta",
+            "xch\ta,r6",
+            "xrl\ta,r6",
+            "xch\ta,r6",
+            "anl\ta,#0xe0",
+            "xch\ta,r6",
+            "xrl\ta,r6"
+          ],
+          "body_bytes": 21,
+          "occurrences": 4,
+          "nominal_net_bytes": 50
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6"
+          ],
+          "body_bytes": 19,
+          "occurrences": 4,
+          "nominal_net_bytes": 44
+        }
+      ],
+      "source_manifest_sha256": "361e402af6dc1b1ff25de3b3b05ef3e1e88e0bacf3d081c6af55b5903c96209f"
+    },
+    {
+      "build_id": "size-cand3-outline-40",
+      "linked_image_sha256": "c432812ddf1ab234351c34c6a16d8eb2fd935736f457ac520041d9b451df2834",
+      "linked_code_bytes": 39041,
+      "helpers": 36,
+      "call_sites": 235,
+      "nominal_saved_bytes": 1369,
+      "selected_groups": [
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 13,
+          "nominal_net_bytes": 104
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 17,
+          "nominal_net_bytes": 92
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 20,
+          "nominal_net_bytes": 91
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 13,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "mov\ta,r6",
+            "rr\ta",
+            "rr\ta",
+            "anl\ta,#0x3f",
+            "mov\tr6,a",
+            "clr\ta",
+            "swap\ta",
+            "rl\ta",
+            "anl\ta,#0xe0",
+            "xch\ta,r6",
+            "swap\ta",
+            "rl\ta",
+            "xch\ta,r6",
+            "xrl\ta,r6",
+            "xch\ta,r6",
+            "anl\ta,#0xe0",
+            "xch\ta,r6",
+            "xrl\ta,r6"
+          ],
+          "body_bytes": 21,
+          "occurrences": 4,
+          "nominal_net_bytes": 50
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6"
+          ],
+          "body_bytes": 19,
+          "occurrences": 4,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "clr\tc"
+          ],
+          "body_bytes": 9,
+          "occurrences": 6,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 16,
+          "occurrences": 3,
+          "nominal_net_bytes": 22
+        },
+        {
+          "body": [
+            "anl\tar6,#0x1f",
+            "mov\ta,#0x03",
+            "anl\ta,r6",
+            "mov\tr5,a",
+            "mov\tr7,#0x00",
+            "mov\tb,r5",
+            "inc\tb",
+            "mov\tr5,#0x01"
+          ],
+          "body_bytes": 15,
+          "occurrences": 3,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "mov\tdptr,#_action_for_keycode_keycode_10000_300",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "clr\tc"
+          ],
+          "body_bytes": 9,
+          "occurrences": 5,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "clr\tc"
+          ],
+          "body_bytes": 9,
+          "occurrences": 5,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        },
+        {
+          "body": [
+            "mov\tr4,a",
+            "mov\ta,r6",
+            "orl\tar5,a",
+            "mov\ta,r4",
+            "orl\tar7,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "30fc73216671b1f16b4f40cda56d4e3b938e443c81519a16d8e587a81ffa6b5c"
+    },
+    {
+      "build_id": "rc5-combined-1",
+      "linked_image_sha256": "9b2d518e48ee8f8857dacc3942ed770d45729da2fd818b4f00c0e2fee80c02cd",
+      "linked_code_bytes": 38595,
+      "helpers": 33,
+      "call_sites": 215,
+      "nominal_saved_bytes": 1211,
+      "selected_groups": [
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 13,
+          "nominal_net_bytes": 104
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 20,
+          "nominal_net_bytes": 91
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 13,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "xch\ta,r7",
+            "xch\ta,dpl",
+            "xch\ta,r7",
+            "xch\ta,r6",
+            "xch\ta,dph",
+            "xch\ta,r6"
+          ],
+          "body_bytes": 19,
+          "occurrences": 4,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 16,
+          "occurrences": 3,
+          "nominal_net_bytes": 22
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "7e4e06a1e953a11c79cf70606b66815a6f8135e34d470a2faf8f4fe0492d6878"
+    },
+    {
+      "build_id": "rc5-release",
+      "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+      "linked_code_bytes": 38239,
+      "helpers": 32,
+      "call_sites": 217,
+      "nominal_saved_bytes": 1202,
+      "selected_groups": [
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 14,
+          "nominal_net_bytes": 113
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 22,
+          "nominal_net_bytes": 101
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 16,
+          "nominal_net_bytes": 71
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 4,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_hsv_to_rgb_into_rgb_10000_54",
+            "movx\t@dptr,a",
+            "mov\ta,#(_hsv_to_rgb_into_rgb_10000_54>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x03",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 2,
+          "nominal_net_bytes": 15
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "08be61fdb3428711fda6e1ba07e319bbb4c8ec548d5044ba9bc809a556ad997f"
+    },
+    {
+      "build_id": "rc5-repeat",
+      "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+      "linked_code_bytes": 38239,
+      "helpers": 32,
+      "call_sites": 217,
+      "nominal_saved_bytes": 1202,
+      "selected_groups": [
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 14,
+          "nominal_net_bytes": 113
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 22,
+          "nominal_net_bytes": 101
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 16,
+          "nominal_net_bytes": 71
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 4,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_hsv_to_rgb_into_rgb_10000_54",
+            "movx\t@dptr,a",
+            "mov\ta,#(_hsv_to_rgb_into_rgb_10000_54>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x03",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 2,
+          "nominal_net_bytes": 15
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "d4411309f599ade5deede003e3c31eabbf1b2cfb9e72e8e930b69a0189fdf030"
+    },
+    {
+      "build_id": "rc5-release-no-callee",
+      "linked_image_sha256": "710afbb86131ed081bb3ed01a167588793efe9de324347be788123544dc4f7ce",
+      "linked_code_bytes": 38698,
+      "helpers": 32,
+      "call_sites": 217,
+      "nominal_saved_bytes": 1202,
+      "selected_groups": [
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 14,
+          "nominal_net_bytes": 113
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 22,
+          "nominal_net_bytes": 101
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 16,
+          "nominal_net_bytes": 71
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 4,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_hsv_to_rgb_into_rgb_10000_54",
+            "movx\t@dptr,a",
+            "mov\ta,#(_hsv_to_rgb_into_rgb_10000_54>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x03",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 2,
+          "nominal_net_bytes": 15
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "d03f089728a35c6623fc8570fd18c435b50a88ab4579d9ff1578a97ba8a947c0"
+    },
+    {
+      "build_id": "rc5-release-v2",
+      "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+      "linked_code_bytes": 38239,
+      "helpers": 32,
+      "call_sites": 217,
+      "nominal_saved_bytes": 1202,
+      "selected_groups": [
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 14,
+          "nominal_net_bytes": 113
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 22,
+          "nominal_net_bytes": 101
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 16,
+          "nominal_net_bytes": 71
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 4,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_hsv_to_rgb_into_rgb_10000_54",
+            "movx\t@dptr,a",
+            "mov\ta,#(_hsv_to_rgb_into_rgb_10000_54>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x03",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 2,
+          "nominal_net_bytes": 15
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "3202879124f362d39ae3371803b6315f7f8f48013e15b157bb59f16d11cdce5f"
+    },
+    {
+      "build_id": "rc5-repeat-v2",
+      "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+      "linked_code_bytes": 38239,
+      "helpers": 32,
+      "call_sites": 217,
+      "nominal_saved_bytes": 1202,
+      "selected_groups": [
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 14,
+          "nominal_net_bytes": 113
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 22,
+          "nominal_net_bytes": 101
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 16,
+          "nominal_net_bytes": 71
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 4,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_hsv_to_rgb_into_rgb_10000_54",
+            "movx\t@dptr,a",
+            "mov\ta,#(_hsv_to_rgb_into_rgb_10000_54>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x03",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 2,
+          "nominal_net_bytes": 15
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "cf9835bc1295ac84f0374de28d8dfd8e71f922b99f294464a69f3e671910b6a3"
+    },
+    {
+      "build_id": "rc5-release-no-callee-v2",
+      "linked_image_sha256": "710afbb86131ed081bb3ed01a167588793efe9de324347be788123544dc4f7ce",
+      "linked_code_bytes": 38698,
+      "helpers": 32,
+      "call_sites": 217,
+      "nominal_saved_bytes": 1202,
+      "selected_groups": [
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 12,
+          "occurrences": 14,
+          "nominal_net_bytes": 113
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "mov\tb,r7"
+          ],
+          "body_bytes": 10,
+          "occurrences": 17,
+          "nominal_net_bytes": 108
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 22,
+          "nominal_net_bytes": 101
+        },
+        {
+          "body": [
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "mov\tdptr,#_dynamic_keymap_macro_send_p_10001_331",
+            "mov\ta,#0x01",
+            "add\ta,r2",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "addc\ta,r3",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 24,
+          "occurrences": 5,
+          "nominal_net_bytes": 80
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr3,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 16,
+          "nominal_net_bytes": 71
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 10,
+          "occurrences": 11,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 15,
+          "nominal_net_bytes": 66
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_get_event_keycode_PARM_1",
+            "movx\t@dptr,a",
+            "mov\ta,#(_get_event_keycode_PARM_1>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x02"
+          ],
+          "body_bytes": 18,
+          "occurrences": 5,
+          "nominal_net_bytes": 56
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "mov\tb,r6"
+          ],
+          "body_bytes": 10,
+          "occurrences": 8,
+          "nominal_net_bytes": 45
+        },
+        {
+          "body": [
+            "mov\ta,r4",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 7,
+          "nominal_net_bytes": 44
+        },
+        {
+          "body": [
+            "add\ta,r5",
+            "mov\tr2,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr3,a",
+            "mov\tar4,r7",
+            "mov\tdpl,r2",
+            "mov\tdph,r3",
+            "mov\tb,r4"
+          ],
+          "body_bytes": 13,
+          "occurrences": 5,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 9,
+          "nominal_net_bytes": 36
+        },
+        {
+          "body": [
+            "mov\tdpl,r4",
+            "mov\tdph,r7",
+            "movx\ta,@dptr",
+            "mov\tr2,a",
+            "mov\tr1,#0x00",
+            "mov\tdpl,r5",
+            "mov\tdph,r6",
+            "inc\tdptr",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr3,#0x00",
+            "orl\tar1,a",
+            "mov\ta,r3",
+            "orl\tar2,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 3,
+          "nominal_net_bytes": 34
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdpl,r6",
+            "mov\tdph,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 7,
+          "nominal_net_bytes": 32
+        },
+        {
+          "body": [
+            "mov\tdptr,#_remember_last_key_keycode_10000_222",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 8,
+          "nominal_net_bytes": 31
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 7,
+          "nominal_net_bytes": 26
+        },
+        {
+          "body": [
+            "mov\tdptr,#_process_caps_word_keycode_10000_234",
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 6,
+          "nominal_net_bytes": 21
+        },
+        {
+          "body": [
+            "mov\ta,#0x05",
+            "add\ta,r5",
+            "mov\tr5,a",
+            "clr\ta",
+            "addc\ta,r6",
+            "mov\tr6,a",
+            "mov\tdpl,r5",
+            "mov\tdph,r6"
+          ],
+          "body_bytes": 11,
+          "occurrences": 4,
+          "nominal_net_bytes": 20
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 14,
+          "occurrences": 3,
+          "nominal_net_bytes": 18
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tdptr,#_g_vial_magic_keycode_override",
+            "mov\ta,r6",
+            "movx\t@dptr,a",
+            "mov\ta,r7",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7",
+            "clr\tc",
+            "mov\ta,#0xff",
+            "subb\ta,r4",
+            "mov\ta,#0x1f",
+            "subb\ta,r5"
+          ],
+          "body_bytes": 24,
+          "occurrences": 2,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x06"
+          ],
+          "body_bytes": 10,
+          "occurrences": 4,
+          "nominal_net_bytes": 17
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_a",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_a>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "add\ta,#_encoders_pad_b",
+            "mov\tdpl,a",
+            "clr\ta",
+            "addc\ta,#(_encoders_pad_b>>8)",
+            "mov\tdph,a",
+            "movx\ta,@dptr",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 13,
+          "occurrences": 3,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\ta,r3",
+            "movx\t@dptr,a",
+            "mov\tdpl,r1",
+            "mov\tdph,r0",
+            "mov\tb,r2"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tar1,r5",
+            "mov\tar2,r6",
+            "mov\tar0,r2",
+            "mov\tr2,#0x00"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#(_process_action_PARM_2+0x0001)",
+            "movx\ta,@dptr",
+            "anl\ta,#0x1f",
+            "mov\tdpl,a"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "movx\t@dptr,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "inc\tdptr",
+            "inc\tdptr"
+          ],
+          "body_bytes": 8,
+          "occurrences": 5,
+          "nominal_net_bytes": 16
+        },
+        {
+          "body": [
+            "mov\tdptr,#___memcpy_PARM_2",
+            "mov\ta,#_hsv_to_rgb_into_rgb_10000_54",
+            "movx\t@dptr,a",
+            "mov\ta,#(_hsv_to_rgb_into_rgb_10000_54>>8)",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\tdptr,#___memcpy_PARM_3",
+            "mov\ta,#0x03",
+            "movx\t@dptr,a",
+            "clr\ta",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 22,
+          "occurrences": 2,
+          "nominal_net_bytes": 15
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr4,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr5,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\ta,#0x02",
+            "add\ta,r4",
+            "mov\tr3,a",
+            "clr\ta",
+            "addc\ta,r5",
+            "mov\tr6,a",
+            "mov\tdpl,r4",
+            "mov\tdph,r5",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr2,a"
+          ],
+          "body_bytes": 21,
+          "occurrences": 2,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "movx\ta,@dptr",
+            "mov\tr6,a",
+            "inc\tdptr",
+            "movx\ta,@dptr",
+            "mov\tr7,a",
+            "mov\tar4,r6",
+            "mov\tar5,r7"
+          ],
+          "body_bytes": 9,
+          "occurrences": 4,
+          "nominal_net_bytes": 14
+        },
+        {
+          "body": [
+            "mov\ta,r5",
+            "mov\tb,#0x04",
+            "mul\tab",
+            "add\ta,#_supported_modes",
+            "mov\tr3,a",
+            "mov\ta,#(_supported_modes>>8)",
+            "addc\ta,b",
+            "mov\tr4,a",
+            "mov\tdpl,r3",
+            "mov\tdph,r4",
+            "inc\tdptr",
+            "inc\tdptr",
+            "clr\ta"
+          ],
+          "body_bytes": 20,
+          "occurrences": 2,
+          "nominal_net_bytes": 13
+        },
+        {
+          "body": [
+            "mov\ta,r7",
+            "movx\t@dptr,a",
+            "mov\ta,r6",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r5",
+            "inc\tdptr",
+            "movx\t@dptr,a",
+            "mov\ta,r4",
+            "inc\tdptr",
+            "movx\t@dptr,a"
+          ],
+          "body_bytes": 11,
+          "occurrences": 3,
+          "nominal_net_bytes": 12
+        }
+      ],
+      "source_manifest_sha256": "edaebf95f5b0ebdd29f86129c5a740ced4cb4df871c6aa8ad38eaeceaba0ea9a"
+    }
+  ],
+  "limits": "Normalized relocation/register families are audit candidates only and are never auto-factored. Physical timing is not validated. Per-build source manifests and CPU differential reports bind final helpers and call relocations."
+}

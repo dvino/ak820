@@ -1,0 +1,8 @@
+diff --git a/tmk_core/protocol/ch555/ch555_usb_stack.c b/tmk_core/protocol/ch555/ch555_usb_stack.c
+--- a/tmk_core/protocol/ch555/ch555_usb_stack.c
++++ b/tmk_core/protocol/ch555/ch555_usb_stack.c
+@@ -316,3 +316,3 @@
+ //#pragma stackauto
+-void raw_hid_receive(__xdata uint8_t *data, uint8_t length) {
++void raw_hid_receive(uint8_t *data, uint8_t length) {
+     // Users should #include "raw_hid.h" in their own code

@@ -1,0 +1,888 @@
+{
+  "format": "ak820-optimization-final-evidence-v1",
+  "date": "2026-10-22",
+  "baseline_commit": "cb9ff6ea",
+  "build_id": "rc5-release-v2",
+  "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+  "pass": true,
+  "hardware_validated": false,
+  "unit_gates": {
+    "command": "python tests/ak820_optimization/outline_unit.py",
+    "tests": 7,
+    "pass": true,
+    "source_sha256": "811e09f4d450ac0d58dfba54ae6de323cf7c4ae50caeac3496fd3f02b656ab18"
+  },
+  "evidence": {
+    "host": {
+      "source_report": ".build/rc5-size-final-host.json",
+      "report_sha256": "9043f9c3c23d7b8ea699edf97f7ca7ddff6de5c8b0165a6d4bb7b7de2830d0cc",
+      "result": {
+        "pass": true,
+        "limits": "Host C semantics with sanitizers; actual SDCC/8051 ABI requires emitted.py and ak820_emitted tests.",
+        "tests": [
+          {
+            "name": "cache-profile",
+            "pass": true,
+            "summary": "PASS: all 65536 decoder inputs match RC4 with the specified LM right-mod correction; all cache coordinates/layer bytes, live remap A/modifier/MO/LM/toggle/consumer releases, encoder, virtual keys and unlock suppression."
+          },
+          {
+            "name": "cache-with-optional-layer-array",
+            "pass": true,
+            "summary": "PASS: all 65536 decoder inputs match RC4 with the specified LM right-mod correction; all cache coordinates/layer bytes, live remap A/modifier/MO/LM/toggle/consumer releases, encoder, virtual keys and unlock suppression."
+          },
+          {
+            "name": "color",
+            "pass": true,
+            "summary": "PASS: all 16777216 HSV colors, with and without CIE (33554432 cases), exactly match RC4."
+          },
+          {
+            "name": "macro",
+            "pass": true,
+            "summary": "PASS: 196019 playback cases match RC4 event+delay traces (all binary 8-bit/16-bit operands, ASCII, slot bounds, mixed commands, delay boundaries)."
+          },
+          {
+            "name": "buffers",
+            "pass": true,
+            "summary": "PASS: report send/suppression all byte values and 65536 modifier combinations; randomized reports and 40000 debounce events including timer rollover and row bounds equal RC4."
+          }
+        ],
+        "source_sha256": {
+          "keyboards/ajazz/ak820/config.h": "2de2690e747a7b84110ddb2052c898dc820ab17d9b6e57857e9415e332551850",
+          "quantum/action_layer.c": "e5d010f3e467954ca8ca80d35c04b13051bce2898fa5a3d350d57b708fb143fd",
+          "quantum/action_util.c": "4faa6188dc92ee48ce7b1c3b22cba4a1845d15b6fa0b3786c90cc116b184ca1c",
+          "quantum/color.c": "7d57070e622c1a7b72ea466b6e0d85db7db70d10a9f1b4ec40d55e3d5724c51f",
+          "quantum/debounce/sym_defer_g.c": "d4552a565df2e24e15c5b3251eaea3d52c9a7d4321041d6b620a69dfbf086a71",
+          "quantum/dynamic_keymap.c": "6f35d614232037edb938bcc44399816ede6a080b7ded62f1e60fffabc3ad463b",
+          "quantum/keymap_common.c": "5e66c31c7378d0c8d5d3d0b0a32f2bfe0b3629729bee7cd52120453ddf563ce5",
+          "quantum/led_tables.c": "7fb90a2b42d4c93e9276362aca6942fad514c3837d2b3529b99df462364bd534",
+          "quantum/quantum.c": "762cfe1a622156fe2ec9a8b614a28211a686e40e20cbcf26e4c7c05ac673203b",
+          "quantum/send_string/send_string.c": "cc4715117aa7bb6361547285e11adb3bf04b9349b9d6c064f84209303b0bc48f",
+          "tests/ak820_optimization/buffers_harness.c": "ddaf0745bac018e68196db8ed2449276458f8233d590b8c4202f0e918a763af6",
+          "tests/ak820_optimization/callee.py": "9eebdaa918914d258ab16bfede35c039525a93f93d93679958aaec89e9ed5b88",
+          "tests/ak820_optimization/color_harness.c": "19b9af241500d51eab44c2d0b6a8269b8d740196675c15eeea18c081bbc96a95",
+          "tests/ak820_optimization/emitted.py": "30099e926c1c780b2f1eb47e0c8fcb82b5e6df19619fd428f591e44e1fa06ff3",
+          "tests/ak820_optimization/fixtures/color_rc4.c": "b1b6258f1b409d47a252fc34ded4a58a6403a96f22777a704cbb456447b3ec3b",
+          "tests/ak820_optimization/fixtures/debounce_rc4.c": "be15060d96fc03cddcff90f45d86b51122d6c218e1cf103c5c4e5dd0d0ee8cbe",
+          "tests/ak820_optimization/fixtures/keycode_decoder_rc4.c": "0952776e1cd478ec0a58a66e1cd61fd9ccf4694da2bb59208ccb4b92c2c88c00",
+          "tests/ak820_optimization/fixtures/macro_playback_rc4.c": "76a34b809e4008258ca6348fa8ba2c1b1d84521afef73b96ecb0f761fa8f1d11",
+          "tests/ak820_optimization/fixtures/report_rc4.c": "88a9d8dfdbf5a9bc95e6443198a1365515089aa85016ac04aebf41be624e4a6f",
+          "tests/ak820_optimization/harness.c": "347a54c2f5f4616d4fe553cd9ff80ec95c103ffc4427852b0721fc979efc7f7b",
+          "tests/ak820_optimization/macro_harness.c": "5da66671893e56411e31fa854a97e9aa2998b1d11f454382daa19e7dba891d12",
+          "tests/ak820_optimization/outline.py": "baf1a52a4792f7280f940d928e4b88d58ee580b059ddadfb1335a095ba01dc0b",
+          "tests/ak820_optimization/outline_unit.py": "811e09f4d450ac0d58dfba54ae6de323cf7c4ae50caeac3496fd3f02b656ab18",
+          "tests/ak820_optimization/run.py": "337daa31d7b3d07196ea2235f494fa702ca67edc178d3775639b8726a9631dc6",
+          "tmk_core/protocol/report.c": "49864f87b34fa2eba6dfc80b783e0befe24cf9217ec8b0fd2e0f105652eaadd6"
+        }
+      }
+    },
+    "keycode": {
+      "source_report": ".build/rc5-release/review-size-keycode/results.json",
+      "report_sha256": "ad57b8963476a3723783128df20a308994c1430ad77e0ca3bc45fd4cbe820fc4",
+      "result": {
+        "pass": true,
+        "hardware_validated": false,
+        "host": {
+          "pass": true,
+          "keycodes": 65536,
+          "unchanged_actions": 65408,
+          "corrected_right_lm_actions": 128,
+          "modifier_extractions": 65536,
+          "register_unregister_traces": 131072
+        },
+        "source_sha256": {
+          "quantum/quantum.c": "762cfe1a622156fe2ec9a8b614a28211a686e40e20cbcf26e4c7c05ac673203b",
+          "quantum/keymap_common.c": "5e66c31c7378d0c8d5d3d0b0a32f2bfe0b3629729bee7cd52120453ddf563ce5",
+          "tmk_core/protocol/report.c": "49864f87b34fa2eba6dfc80b783e0befe24cf9217ec8b0fd2e0f105652eaadd6",
+          "keyboards/ajazz/ak820/config.h": "2de2690e747a7b84110ddb2052c898dc820ab17d9b6e57857e9415e332551850",
+          "tests/ak820_keycode/code16_rc4.c": "53a33ec4d398327b43835a45955427fb7cc7afdae7eab10bc10148c71622458f",
+          "tests/ak820_optimization/fixtures/keycode_decoder_rc4.c": "0952776e1cd478ec0a58a66e1cd61fd9ccf4694da2bb59208ccb4b92c2c88c00",
+          "tests/ak820_keycode/run.py": "8bf24f913ffa52c820a631941769ead6a6cde3f3ce7c385c7272a3bff9686814"
+        },
+        "golden_table_sha256": "92d49210a47963d5907141a0d1f0688fb7ebae22610b40bb0f0364d4bb6c50c2",
+        "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+        "cpu": [
+          {
+            "name": "_action_for_keycode",
+            "pass": true,
+            "cases": 65536,
+            "peak_sp": 102,
+            "tested_stack_bytes": 4
+          },
+          {
+            "name": "_extract_mod_bits",
+            "pass": true,
+            "cases": 65536,
+            "peak_sp": 100,
+            "tested_stack_bytes": 2
+          }
+        ],
+        "limits": "Host semantics and linked generic C52 instructions; no physical USB, flash, IRQ timing or global stack bound."
+      }
+    },
+    "callee": {
+      "source_report": ".build/rc5-release/review-size-callee/results.json",
+      "report_sha256": "553316bd9f6933063cdeba0b3a96c183bc6fda6c13fac38a1743a1c176e46a68",
+      "result": {
+        "pass": true,
+        "tests": [
+          {
+            "function": "timer_read",
+            "pass": true,
+            "cases": 16,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 110,
+            "tested_stack_bytes": 12
+          },
+          {
+            "function": "timer_read32",
+            "pass": true,
+            "cases": 16,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 104,
+            "tested_stack_bytes": 6
+          },
+          {
+            "function": "ak820_nvm_ok",
+            "pass": true,
+            "cases": 2,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 101,
+            "tested_stack_bytes": 3
+          },
+          {
+            "function": "get_mods",
+            "pass": true,
+            "cases": 256,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 101,
+            "tested_stack_bytes": 3
+          },
+          {
+            "function": "get_weak_mods",
+            "pass": true,
+            "cases": 256,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 101,
+            "tested_stack_bytes": 3
+          },
+          {
+            "function": "matrix_get_row",
+            "pass": true,
+            "cases": 256,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 101,
+            "tested_stack_bytes": 3
+          },
+          {
+            "function": "readPin",
+            "pass": true,
+            "cases": 1024,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 104,
+            "tested_stack_bytes": 6
+          },
+          {
+            "function": "eeprom_read_byte",
+            "pass": true,
+            "cases": 324,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 119,
+            "tested_stack_bytes": 21
+          },
+          {
+            "function": "eeprom_update_byte",
+            "pass": true,
+            "cases": 263,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 132,
+            "tested_stack_bytes": 34
+          },
+          {
+            "function": "ak820_flash_read",
+            "pass": true,
+            "cases": 256,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 102,
+            "tested_stack_bytes": 4
+          },
+          {
+            "function": "mDelaymS",
+            "pass": true,
+            "cases": 5,
+            "failed_cases": 0,
+            "first_failures": [],
+            "peak_sp": 112,
+            "tested_stack_bytes": 14
+          }
+        ],
+        "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+        "selected_callee_saves": [
+          "timer_read",
+          "timer_read32",
+          "ak820_nvm_ok",
+          "get_mods",
+          "get_weak_mods",
+          "matrix_get_row",
+          "readPin",
+          "eeprom_read_byte",
+          "eeprom_update_byte",
+          "ak820_flash_read",
+          "mDelaymS"
+        ],
+        "checked_registers": [
+          "R0",
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5",
+          "R6",
+          "R7"
+        ],
+        "register_bank": 0,
+        "linked_listings_sha256": {
+          "ak820_timer.asm": "16d05e1ab67ba059629d3762448686999c75502bbd087bd53acdb41d8df23d94",
+          "ak820_nvm.asm": "819037a65393306ffa7f7136e07b8a1d06c2c0dee62f9e423a1ff0006924d759",
+          "quantum/action_util.asm": "677b6bd529b96088269ddc4bb45da5477ec73914104a806870b70632336cc2ef",
+          "matrix.asm": "6f53b78e4dc96c65c5297df86e988c659c099e498839eb75467d51d88f9a9ce5",
+          "lib/ch555/gpio.asm": "931be12e122f651de1e189e4c653d3ea126c4678ba26cc4cb2cb1109f835d28d",
+          "eeprom_driver.asm": "df1d1eee4ff31363081b3475367faaad7f9cd555f22d1bdfa0b6b4c6935a87c8",
+          "ak820_flash.asm": "8a9ac68e71ef901b5ab9eb7c8f50334eb617001d9cfcdb271868f1a08a21183b",
+          "lib/ch555/hal.asm": "a40d762cb8c98046dd8bb711575c81b5e1e0551a4f9bdb0d46a585cf8f273e15"
+        },
+        "test_source_sha256": {
+          "tests/ak820_optimization/callee.py": "9eebdaa918914d258ab16bfede35c039525a93f93d93679958aaec89e9ed5b88",
+          "tests/ak820_emitted/run.py": "27aa969d76917a0a77bd0d9ef3deb94b74d20c16fca6dabc9979d074ded89eb9"
+        },
+        "limits": "CPU ABI, returns, bounds and simulated memory branches only. Not an exhaustive firmware stack bound or physical IRQ/timing/IAP/USB proof."
+      }
+    },
+    "mul": {
+      "source_report": ".build/rc5-release/review-size-mul/results.json",
+      "report_sha256": "dacbc069de8cee324ab51db5a49e963a3695b57695c2e3be4801915c8a122391",
+      "result": {
+        "pass": true,
+        "cpu": "uCsim C52",
+        "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+        "tests": [
+          {
+            "name": "native_mul_all_operands_and_register_preservation",
+            "pass": true,
+            "cases": 65536,
+            "preserved_registers": [
+              "R0",
+              "R1",
+              "R2",
+              "R3",
+              "R4",
+              "R5",
+              "R6",
+              "R7"
+            ],
+            "helper_address": 30815,
+            "linked_helper_bytes": "8582f090086ce0a485f08222",
+            "peak_sp": 100,
+            "tested_stack_bytes": 2
+          }
+        ],
+        "limits": "CPU/ABI proof only; the complete RGB path is checked separately by ak820_emitted. No physical timing, DMA, USB or IAP validation."
+      }
+    },
+    "emitted": {
+      "source_report": ".build/rc5-release/review-size-emitted/results.json",
+      "report_sha256": "8e7c4c8c7140905c5ec2f53ad4f8b81def847f6ca67d8a22e3f05b2de5aa8bd4",
+      "result": {
+        "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+        "cpu": "uCsim C52",
+        "initial_sp": 98,
+        "stack_capacity_bytes": 157,
+        "limits": "CPU/ABI checks with supplied peripheral state; no physical USB/IAP/DMA/timing validation; stack peaks cover only exercised paths without IRQ overlap",
+        "tests": [
+          {
+            "name": "matrix_debounce_fn_release_and_key",
+            "pass": true,
+            "observations": {
+              "fn_down": [
+                2
+              ],
+              "fn_f1_down": [
+                148,
+                1
+              ],
+              "fn_up": [
+                0
+              ],
+              "f1_release": [
+                0,
+                0
+              ],
+              "a_down": [
+                0,
+                0,
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "a_up": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "peak_sp": 149,
+            "tested_stack_bytes": 51
+          },
+          {
+            "name": "macro_extended_layer_and_recursion_guard",
+            "pass": true,
+            "macro_bytes": "010621526101072152010577ff6200000000000000000000000000000000",
+            "final_layer": [
+              0
+            ],
+            "final_report": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "peak_sp": 151,
+            "tested_stack_bytes": 53
+          },
+          {
+            "name": "rgb_solid_direct_suspend_resume",
+            "pass": true,
+            "observations": {
+              "solid": [
+                255,
+                18,
+                0,
+                0
+              ],
+              "before_sleep": [
+                255,
+                60,
+                30,
+                10
+              ],
+              "direct_0": [
+                255,
+                18,
+                18,
+                18
+              ],
+              "direct_1": [
+                255,
+                0,
+                0,
+                18
+              ],
+              "direct_2": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "direct_81": [
+                255,
+                0,
+                18,
+                0
+              ],
+              "resume_0": [
+                255,
+                18,
+                18,
+                18
+              ],
+              "resume_1": [
+                255,
+                0,
+                0,
+                18
+              ],
+              "resume_81": [
+                255,
+                0,
+                18,
+                0
+              ],
+              "sleep_immediate_nonzero_bytes": 0,
+              "sleep_rendered_nonzero_bytes": 0,
+              "sleep_usb_state": [
+                3
+              ],
+              "resume_usb_state": [
+                2
+              ]
+            },
+            "expected": {
+              "solid": [
+                255,
+                18,
+                0,
+                0
+              ],
+              "before_sleep": [
+                255,
+                60,
+                30,
+                10
+              ],
+              "direct_0": [
+                255,
+                18,
+                18,
+                18
+              ],
+              "direct_1": [
+                255,
+                0,
+                0,
+                18
+              ],
+              "direct_2": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "direct_81": [
+                255,
+                0,
+                18,
+                0
+              ],
+              "resume_0": [
+                255,
+                18,
+                18,
+                18
+              ],
+              "resume_1": [
+                255,
+                0,
+                0,
+                18
+              ],
+              "resume_81": [
+                255,
+                0,
+                18,
+                0
+              ],
+              "sleep_immediate_nonzero_bytes": 0,
+              "sleep_rendered_nonzero_bytes": 0,
+              "sleep_usb_state": [
+                3
+              ],
+              "resume_usb_state": [
+                2
+              ]
+            },
+            "peak_sp": 121,
+            "tested_stack_bytes": 23
+          }
+        ],
+        "pass": true
+      }
+    },
+    "outline": {
+      "source_report": ".build/rc5-release/review-size-outline/results.json",
+      "report_sha256": "4bff1b3f342fb684e1c4075372817dc4ea16ce263791ee74fd9794edbf0288fc",
+      "result": {
+        "pass": true,
+        "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+        "runner_sha256": "baf1a52a4792f7280f940d928e4b88d58ee580b059ddadfb1335a095ba01dc0b",
+        "outline_manifest_sha256": "08be61fdb3428711fda6e1ba07e319bbb4c8ec548d5044ba9bc809a556ad997f",
+        "verified_helpers": 32,
+        "verified_replacements": 217,
+        "nominal_net_bytes": 1202,
+        "tests": [
+          {
+            "name": "_ak820_outline_0000",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 14,
+            "body_bytes": 12,
+            "nominal_net_bytes": 113,
+            "linked_body_hex": "ebf0eca3f0eda3f08e828f83",
+            "complete_log_sha256": "391776295d249acb2eb284d62d16ffa4645d077df3e26c5e8fd73404a503067d"
+          },
+          {
+            "name": "_ak820_outline_0001",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 17,
+            "body_bytes": 10,
+            "nominal_net_bytes": 108,
+            "linked_body_hex": "f0e4a3f08d828e838ff0",
+            "complete_log_sha256": "927ad62cda78186dbc7584d3b2330cc35e173645b22b736849e2cfc4f213a10a"
+          },
+          {
+            "name": "_ak820_outline_0002",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 22,
+            "body_bytes": 8,
+            "nominal_net_bytes": 101,
+            "linked_body_hex": "e0fda3e0fea3e0ff",
+            "complete_log_sha256": "285263f487418c3a1c69782a3eda2680897e8bcacf36aa798667c49e23fdc860"
+          },
+          {
+            "name": "_ak820_outline_0003",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 5,
+            "body_bytes": 24,
+            "nominal_net_bytes": 80,
+            "linked_body_hex": "fba3e0fc9008cd74012af0e43ba3f0eca3f08a828b838cf0",
+            "complete_log_sha256": "6a1ceb211f0aca00bfe0d620216cf9ed5d413cb8a63e6cad1324a7ee7e795bf2"
+          },
+          {
+            "name": "_ak820_outline_0004",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 16,
+            "body_bytes": 8,
+            "nominal_net_bytes": 71,
+            "linked_body_hex": "e0fba3e0fca3e0fd",
+            "complete_log_sha256": "aa5899e011cbb1bf3ba25a24a8fe10b132808b4cd3085bc04e7197c52da453e5"
+          },
+          {
+            "name": "_ak820_outline_0005",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 11,
+            "body_bytes": 10,
+            "nominal_net_bytes": 66,
+            "linked_body_hex": "a3f0e4a3f0900b2f7402",
+            "complete_log_sha256": "0d6cb10a013fe55d988d4ea066124fed8dd23aafaf744f6a4de1af5bc32879f1"
+          },
+          {
+            "name": "_ak820_outline_0006",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 15,
+            "body_bytes": 8,
+            "nominal_net_bytes": 66,
+            "linked_body_hex": "8d828e83a3a3a3a3",
+            "complete_log_sha256": "64c663d27150536187d2828853407d6f65fcd78615be9224e10f3dd3168fe83b"
+          },
+          {
+            "name": "_ak820_outline_0007",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 5,
+            "body_bytes": 18,
+            "nominal_net_bytes": 56,
+            "linked_body_hex": "900b2c74a2f07409a3f0e4a3f0900b2f7402",
+            "complete_log_sha256": "fa9ef9b66c95dd99752a43301b6908494c5b3b90fdc22bfea49e888c8314d431"
+          },
+          {
+            "name": "_ak820_outline_0008",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 8,
+            "body_bytes": 10,
+            "nominal_net_bytes": 45,
+            "linked_body_hex": "f0e4a3f08c828d838ef0",
+            "complete_log_sha256": "5c146e7bb665f67c07b952344a70e1d58746f91534e9c0253f4e134468defe77"
+          },
+          {
+            "name": "_ak820_outline_0009",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 7,
+            "body_bytes": 11,
+            "nominal_net_bytes": 44,
+            "linked_body_hex": "ecf0eda3f0eea3f0efa3f0",
+            "complete_log_sha256": "b6b6c434d98956c3fa1bc582b5faec18b2c4db8805eba44b6f38477a4a0f2be0"
+          },
+          {
+            "name": "_ak820_outline_0010",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 5,
+            "body_bytes": 13,
+            "nominal_net_bytes": 36,
+            "linked_body_hex": "2dfae43efb8f048a828b838cf0",
+            "complete_log_sha256": "58e0bab472c1a8ee65cc9aa7a00a04c3cb89c66c9d0776ed965eec319d9d92f6"
+          },
+          {
+            "name": "_ak820_outline_0011",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 9,
+            "body_bytes": 8,
+            "nominal_net_bytes": 36,
+            "linked_body_hex": "8d828e83a3a3a3e0",
+            "complete_log_sha256": "eab40bbd00f5ae72c9af4d61cdbc8897e7b742fbee7890e63f1258b0c2ca0abc"
+          },
+          {
+            "name": "_ak820_outline_0012",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 3,
+            "body_bytes": 22,
+            "nominal_net_bytes": 34,
+            "linked_body_hex": "8c828f83e0fa79008d828e83a3a3e07b004201eb4202",
+            "complete_log_sha256": "a0a380e5fb05cbecf400242e6756cfb3971d0653a74fbbb08fa22ea1d2ae0a8f"
+          },
+          {
+            "name": "_ak820_outline_0013",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 7,
+            "body_bytes": 9,
+            "nominal_net_bytes": 32,
+            "linked_body_hex": "e0fea3e0ff8e828f83",
+            "complete_log_sha256": "b508650b9e1f0e3ed95fdf556e78ed7365347749306bf8eb2d352fa663ed92dc"
+          },
+          {
+            "name": "_ak820_outline_0014",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 8,
+            "body_bytes": 8,
+            "nominal_net_bytes": 31,
+            "linked_body_hex": "900963e0fea3e0ff",
+            "complete_log_sha256": "cfed090c46fdf9a0a325a609584ee7a0c92156f6e075e3c8f272896b40a3ca13"
+          },
+          {
+            "name": "_ak820_outline_0015",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 7,
+            "body_bytes": 8,
+            "nominal_net_bytes": 26,
+            "linked_body_hex": "edf0eea3f0efa3f0",
+            "complete_log_sha256": "14ad11f8e8a24a4fd3611fcfa552445a6a64d726728e22e7aaaa3f28dd3b5d1d"
+          },
+          {
+            "name": "_ak820_outline_0016",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 6,
+            "body_bytes": 8,
+            "nominal_net_bytes": 21,
+            "linked_body_hex": "900950e0fea3e0ff",
+            "complete_log_sha256": "f7588fbb74c254fca401580221eef4c0a234742c2028a247efd72971a50b5a3d"
+          },
+          {
+            "name": "_ak820_outline_0017",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 4,
+            "body_bytes": 11,
+            "nominal_net_bytes": 20,
+            "linked_body_hex": "74052dfde43efe8d828e83",
+            "complete_log_sha256": "102fc9623fc654812354f042ab198a5a4357b2825a9928d3d27c0430b7f764c8"
+          },
+          {
+            "name": "_ak820_outline_0018",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 3,
+            "body_bytes": 14,
+            "nominal_net_bytes": 18,
+            "linked_body_hex": "a3f0e4a3f0900b2f7406f0e4a3f0",
+            "complete_log_sha256": "14db9574d7139316bb23890cd9d652015c1818c0f3a6f96f5d4af932f4bdf1e8"
+          },
+          {
+            "name": "_ak820_outline_0019",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 2,
+            "body_bytes": 24,
+            "nominal_net_bytes": 17,
+            "linked_body_hex": "e0fea3e0ff900a04eef0efa3f08e048f05c374ff9c741f9d",
+            "complete_log_sha256": "a10e215d46e24a73e20716f4f6ee6d36f0ac80734b802fa3e25b993b7844119f"
+          },
+          {
+            "name": "_ak820_outline_0020",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 4,
+            "body_bytes": 10,
+            "nominal_net_bytes": 17,
+            "linked_body_hex": "a3f0e4a3f0900b2f7406",
+            "complete_log_sha256": "55f6f52393ee3f51a62edbf116dcb37243a514de0ef1629899a27d8e09fa549a"
+          },
+          {
+            "name": "_ak820_outline_0021",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 3,
+            "body_bytes": 13,
+            "nominal_net_bytes": 16,
+            "linked_body_hex": "ef2471f582e4340bf583e0f582",
+            "complete_log_sha256": "8e18f27081bdd6d5ef9ae9f67cfe79e5cf628ed100769fbfd05e9a6468a7625a"
+          },
+          {
+            "name": "_ak820_outline_0022",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 3,
+            "body_bytes": 13,
+            "nominal_net_bytes": 16,
+            "linked_body_hex": "ef2472f582e4340bf583e0f582",
+            "complete_log_sha256": "ef2958c4284f390e1683c8848e68756997c6066da7e5f4ca8ba92b529a37227a"
+          },
+          {
+            "name": "_ak820_outline_0023",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 5,
+            "body_bytes": 8,
+            "nominal_net_bytes": 16,
+            "linked_body_hex": "ebf0898288838af0",
+            "complete_log_sha256": "a848b10c351b9487924a57108fe7d147e6efd16abdac02bfd19d208d04cc4fa7"
+          },
+          {
+            "name": "_ak820_outline_0024",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 5,
+            "body_bytes": 8,
+            "nominal_net_bytes": 16,
+            "linked_body_hex": "8d018e028a007a00",
+            "complete_log_sha256": "9656990e16a8e913830478bb81a9f09153a521598c7bd6c3b726f6be2cd2690e"
+          },
+          {
+            "name": "_ak820_outline_0025",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 5,
+            "body_bytes": 8,
+            "nominal_net_bytes": 16,
+            "linked_body_hex": "9006ffe0541ff582",
+            "complete_log_sha256": "50099641e62a74e60b7f921cf35d33d3658ba8ecc66da32d85e3652a2fd56d60"
+          },
+          {
+            "name": "_ak820_outline_0026",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 5,
+            "body_bytes": 8,
+            "nominal_net_bytes": 16,
+            "linked_body_hex": "f08c828d83a3a3a3",
+            "complete_log_sha256": "a4f06d5bd8d47687acdbb0823a812097a0341c33209df9402e5119b9b093c243"
+          },
+          {
+            "name": "_ak820_outline_0027",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 2,
+            "body_bytes": 22,
+            "nominal_net_bytes": 15,
+            "linked_body_hex": "900b2c7473f07408a3f0e4a3f0900b2f7403f0e4a3f0",
+            "complete_log_sha256": "afb17554fa3dc200d933e214fe50167dcec76bc9d9ec497c017a00a835bd26a0"
+          },
+          {
+            "name": "_ak820_outline_0028",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 2,
+            "body_bytes": 21,
+            "nominal_net_bytes": 14,
+            "linked_body_hex": "e0fca3e0fda3e074022cfbe43dfe8c828d83a3e0fa",
+            "complete_log_sha256": "64f5a66d1348959c532ce9de370fc6dfe26b0729776a74dbdef022fbebba9de7"
+          },
+          {
+            "name": "_ak820_outline_0029",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 4,
+            "body_bytes": 9,
+            "nominal_net_bytes": 14,
+            "linked_body_hex": "e0fea3e0ff8e048f05",
+            "complete_log_sha256": "0dd4c68278df019f0634863039a8e66b568451592482e6af17b0056b7eb54878"
+          },
+          {
+            "name": "_ak820_outline_0030",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 2,
+            "body_bytes": 20,
+            "nominal_net_bytes": 13,
+            "linked_body_hex": "ed75f004a424b2fb74bd35f0fc8b828c83a3a3e4",
+            "complete_log_sha256": "e0298c1c5ccebe0c1b095fc7a4dc694bc09236d0944ec7db5755e5d316e0b633"
+          },
+          {
+            "name": "_ak820_outline_0031",
+            "pass": true,
+            "state_cases": 16,
+            "call_sites": 3,
+            "body_bytes": 11,
+            "nominal_net_bytes": 12,
+            "linked_body_hex": "eff0eea3f0eda3f0eca3f0",
+            "complete_log_sha256": "e4317731416863db6dbb6d1fa7fd75aa46c5dc6eae9ff74320b09242996b90ce"
+          }
+        ],
+        "limits": "CPU and relocation equivalence of chosen straight-line blocks; LCALL adds two live stack bytes. No physical timing, interrupt latency, USB, flash or DMA validation."
+      }
+    }
+  },
+  "callee_negative_control": {
+    "linked_image_sha256": "977982cc72d16d5da676157cf3e4f4e81256a40b6e83fcf7dd6c4189cdf08192",
+    "report_sha256": "491ee22d97057c2ce0552c20a9719f4e4c50cc55480572043c768b4a7a9f523d",
+    "expected_failure": true,
+    "cases": 2674,
+    "failed_cases": 2159,
+    "failed_functions": [
+      "timer_read",
+      "timer_read32",
+      "matrix_get_row",
+      "readPin",
+      "eeprom_read_byte",
+      "eeprom_update_byte",
+      "ak820_flash_read",
+      "mDelaymS"
+    ]
+  },
+  "limits": "Host/CPU and selected-function ABI evidence only. Physical USB/IAP/DMA/timing and a whole-program worst-case stack bound are not claimed.",
+  "runtime_execution_build_id": "rc5-release",
+  "comment_only_refresh_binding": {
+    "pass": true,
+    "kind": "comment-only-build-refresh-integrity-binding",
+    "from_build": "rc5-release",
+    "to_build": "rc5-release-v2",
+    "reason": "Only a stale capacity comment in dynamic_keymap.h changed; final source manifest is refreshed. No executable change.",
+    "linked_image_sha256": "1e3c61a4a1c7aeca4bfa74dea72865165c70710f8e20a0c4d27d0b58a9a66f78",
+    "byte_identity": {
+      "ihx": true,
+      "mem": true,
+      "all_four_comparison_profiles": true
+    },
+    "new_build_report_sha256": "05c83b901a0bffed0ea093888b817433e1ae2a786e8ee7dff112fa49e6114269",
+    "new_outline_manifest_sha256": "3202879124f362d39ae3371803b6315f7f8f48013e15b157bb59f16d11cdce5f",
+    "previous_cpu_report_sha256": "4bff1b3f342fb684e1c4075372817dc4ea16ce263791ee74fd9794edbf0288fc",
+    "verified_helpers": 32,
+    "verified_replacements": 217,
+    "reused_cpu_state_pairs": 512,
+    "verification": "Re-resolved all original immediates in new input listings, verified all final helper/LCALL bytes and counts, all new input ASM hashes, then matched every helper body to the CPU-executed report.",
+    "limits": "This is a read-only provenance/byte-equivalence rebind, not another CPU execution and not hardware validation."
+  }
+}

@@ -1,0 +1,1654 @@
+{
+  "linked_image_sha256": "39c1de97f061b6ec8da3c73d62ade93475c43b32a300af01ac100c0d7e268d6c",
+  "level": "uCsim C52 linked code; no physical peripheral/USB/IRQ validation",
+  "tests": [
+    {
+      "name": "repeat-basic-rolled-new-key",
+      "pass": true,
+      "observations": {
+        "no_history": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remember_a": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat_down": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "other_down": [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "release_original": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_repeat": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "physical_after_repeat": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "no_history": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remember_a": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat_down": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "other_down": [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "release_original": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_repeat": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "physical_after_repeat": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-modifiers-combine-and-release",
+      "pass": true,
+      "observations": {
+        "ctrl_a": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "restored_mods": [
+          3,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "physical_mod_preserved": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "ctrl_a": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "restored_mods": [
+          3,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "physical_mod_preserved": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-new-key-replaces-remembered-mods",
+      "pass": true,
+      "observations": {
+        "old_hotkey": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_key_plain": [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "old_repeat_up": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_plain_repeat": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plain_repeat_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "old_hotkey": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_key_plain": [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "old_repeat_up": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_plain_repeat": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plain_repeat_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-ignores-layer-mod-before-unlock",
+      "pass": true,
+      "observations": {
+        "last_letter": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "letter_repeated": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_replayed_layer": [
+          0
+        ],
+        "unlock_no_layer": [
+          0
+        ]
+      },
+      "expected": {
+        "last_letter": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "letter_repeated": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_replayed_layer": [
+          0
+        ],
+        "unlock_no_layer": [
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-ignores-default-layer",
+      "pass": true,
+      "observations": {
+        "before_default_change": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_default_layer": [
+          2
+        ],
+        "letter_after_default": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "letter_after_default_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "before_default_change": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_default_layer": [
+          2
+        ],
+        "letter_after_default": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "letter_after_default_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 150,
+      "tested_stack_bytes": 47
+    },
+    {
+      "name": "repeat-live-remap-release",
+      "pass": true,
+      "observations": {
+        "repeat_origin": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remapped_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remapped_next": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "repeat_origin": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remapped_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remapped_next": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-release-after-noop",
+      "pass": true,
+      "observations": {
+        "repeat_active": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "origin_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "history_preserved": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "history_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "repeat_active": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "origin_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "history_preserved": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "history_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-unlock-cleans-report",
+      "pass": true,
+      "observations": {
+        "repeat_held": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "unlock_clean": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "cancel_clean": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "owner_reusable": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "owner_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "repeat_held": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "unlock_clean": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "cancel_clean": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "owner_reusable": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "owner_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-two-origins-secondary-up-first",
+      "pass": true,
+      "observations": {
+        "first_owner": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "second_ignored": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_release": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_owner": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_owner_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "first_owner": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "second_ignored": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_release": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_owner": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_owner_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-two-origins-owner-up-first",
+      "pass": true,
+      "observations": {
+        "first_owner": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "second_ignored": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_owner": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_owner_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "first_owner": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "second_ignored": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_owner": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_owner_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-macro-recursion-and-following-event",
+      "pass": true,
+      "observations": {
+        "first_macro_report": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_macro_layer": [
+          0
+        ],
+        "repeated_macro_report": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeated_macro_layer": [
+          0
+        ],
+        "following_physical": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "first_macro_report": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_macro_layer": [
+          0
+        ],
+        "repeated_macro_report": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeated_macro_layer": [
+          0
+        ],
+        "following_physical": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 167,
+      "tested_stack_bytes": 64
+    },
+    {
+      "name": "repeat-recursive-macro-preserves-down-state",
+      "pass": true,
+      "observations": {
+        "original_ctrl_a": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "macro_cleanup": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "recursive_repeat_down": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "recursive_weak_mods": [
+          1
+        ]
+      },
+      "expected": {
+        "original_ctrl_a": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "macro_cleanup": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "recursive_repeat_down": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "recursive_weak_mods": [
+          1
+        ]
+      },
+      "peak_sp": 163,
+      "tested_stack_bytes": 60
+    },
+    {
+      "name": "grave-escape-release-uses-press-state",
+      "pass": true,
+      "observations": {
+        "plain_escape": [
+          0,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_added": [
+          2,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plain_release": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shifted_grave": [
+          2,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_removed": [
+          0,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shifted_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "plain_escape": [
+          0,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_added": [
+          2,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plain_release": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shifted_grave": [
+          2,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_removed": [
+          0,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shifted_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "grave-escape-live-remap-release",
+      "pass": true,
+      "observations": {
+        "gesc_origin": [
+          0,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gesc_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "gesc_origin": [
+          0,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gesc_released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    },
+    {
+      "name": "repeat-shifted-grave-escape",
+      "pass": true,
+      "observations": {
+        "original_grave": [
+          2,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeated_grave": [
+          2,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat_grave_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "original_grave": [
+          2,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeated_grave": [
+          2,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat_grave_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 155,
+      "tested_stack_bytes": 52
+    },
+    {
+      "name": "grave-escape-overlaps-repeat",
+      "pass": true,
+      "observations": {
+        "physical_escape": [
+          0,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "two_resolved_actions": [
+          2,
+          0,
+          41,
+          53,
+          0,
+          0,
+          0,
+          0
+        ],
+        "physical_up": [
+          2,
+          0,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeated_up": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "everything_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "physical_escape": [
+          0,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "two_resolved_actions": [
+          2,
+          0,
+          41,
+          53,
+          0,
+          0,
+          0,
+          0
+        ],
+        "physical_up": [
+          2,
+          0,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeated_up": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "everything_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 150,
+      "tested_stack_bytes": 47
+    },
+    {
+      "name": "grave-escape-two-physical-origins",
+      "pass": true,
+      "observations": {
+        "first_plain": [
+          0,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "second_shifted": [
+          2,
+          0,
+          41,
+          53,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_plain_up": [
+          2,
+          0,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0
+        ],
+        "second_shifted_up": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_plain_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "first_plain": [
+          0,
+          0,
+          41,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "second_shifted": [
+          2,
+          0,
+          41,
+          53,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_plain_up": [
+          2,
+          0,
+          0,
+          53,
+          0,
+          0,
+          0,
+          0
+        ],
+        "second_shifted_up": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_plain_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 148,
+      "tested_stack_bytes": 45
+    }
+  ],
+  "hardware_validated": false,
+  "pass": true
+}

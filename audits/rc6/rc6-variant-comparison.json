@@ -1,0 +1,31 @@
+{
+  "level": "offline pinned SDCC4.4 linked controls; no hardware validation",
+  "variants": {
+    "six_layers_compact_cie": {
+      "code_bytes": 39262,
+      "ihx_sha256": "12260272ccf410b434e28aa661bce8f3f44baff6192b094f3df5f21c5c07e114",
+      "mem_tail": "\n   Name             Start    End      Size     Max     \n   ---------------- -------- -------- -------- --------\n   PAGED EXT. RAM                         0      256   \n   EXTERNAL RAM     0x0400   0x0c16    2071     3072   \n   ROM/EPROM/FLASH  0x28a0   0xc241   39262    50944   \n"
+    },
+    "six_layers_full_cie": {
+      "code_bytes": 39478,
+      "ihx_sha256": "168eafc00f4e950852b8ed543f06df8a323f5f21692bd7158c66e773d5af2247",
+      "mem_tail": "\n   Name             Start    End      Size     Max     \n   ---------------- -------- -------- -------- --------\n   PAGED EXT. RAM                         0      256   \n   EXTERNAL RAM     0x0400   0x0c16    2071     3072   \n   ROM/EPROM/FLASH  0x28a0   0xc319   39478    50944   \n"
+    },
+    "four_layers_compact_cie": {
+      "code_bytes": 39262,
+      "ihx_sha256": "837922ccdca61abae1eec463de2b72cdccd8cd76d21a143ae30095032ee9a4fc",
+      "mem_tail": "\n   Name             Start    End      Size     Max     \n   ---------------- -------- -------- -------- --------\n   PAGED EXT. RAM                         0      256   \n   EXTERNAL RAM     0x0400   0x0c16    2071     3072   \n   ROM/EPROM/FLASH  0x28a0   0xc241   39262    50944   \n"
+    }
+  },
+  "compact_cie_code_saved": 216,
+  "four_layer_code_saved": 0,
+  "four_layer_xram_saved": 0,
+  "four_layer_logical_nvm_saved": 520,
+  "physical_nvm_bytes_unchanged": 10240,
+  "four_layer_encoder_base_changes": [
+    1600,
+    1088
+  ],
+  "four_layer_requires_schema_migration": true,
+  "main_configuration_layers": 6
+}

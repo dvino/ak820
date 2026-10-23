@@ -1,0 +1,51 @@
+{
+  "schema": "ak820-oneshot-only-study-1",
+  "date": "2026-10-22",
+  "base": "Frozen later RC5 working source after Tri Layer enable and byte/outlined optimizations; before final release freeze",
+  "scope": "Compiler/size comparison and four linked CPU characterization cases; no hardware; the flag-only configuration does not implement usable One Shot",
+  "changed_feature_flags": [
+    "remove NO_ACTION_ONESHOT; retain NO_ACTION_TAPPING"
+  ],
+  "profiles": [
+    {
+      "name": "baseline",
+      "code_bytes": 38929,
+      "code_main_bytes": 37046,
+      "code_low_bytes": 1883,
+      "highest_code_address": "0xc0dc",
+      "xram_bytes": 1975,
+      "stack_capacity": 152,
+      "ihx_sha256": "ebb117969c153af5dd5c79012666775162448904de0a4b4ef846c465a00bc36b",
+      "build_report": "reports/oneshot-only-baseline.json",
+      "build_report_sha256": "4f26a290c1db8d5305b4b5a34eb2ebf42282aa9ef4a771880eda3a0023e08298",
+      "fits_production_code_window": true,
+      "release_artifact": false
+    },
+    {
+      "name": "oneshot-only",
+      "code_bytes": 40198,
+      "code_main_bytes": 38312,
+      "code_low_bytes": 1886,
+      "highest_code_address": "0xc5ce",
+      "xram_bytes": 1995,
+      "stack_capacity": 152,
+      "ihx_sha256": "6ef121ee85b5b6a2bbd9c8f68f43c1e7057414a98dd55ffca35b925509c165c8",
+      "build_report": "reports/oneshot-only-oneshot-only.json",
+      "build_report_sha256": "4c9e5a176b6f38fa6e0d9498bce9c779129955ddf8b8e156c16f54d3df425b3c",
+      "fits_production_code_window": true,
+      "release_artifact": false
+    }
+  ],
+  "code_delta": 1269,
+  "xram_delta": 20,
+  "non_generated_input_changes": [
+    {
+      "path": "keyboards/ajazz/ak820/config.h",
+      "baseline_sha256": "2de2690e747a7b84110ddb2052c898dc820ab17d9b6e57857e9415e332551850",
+      "oneshot_only_sha256": "8a0a7b4afd786943437068d57a25134ca99fd9fea0c2d60c4fe2048940e01103"
+    }
+  ],
+  "characterization_report": "oneshot-only-characterization.json",
+  "conclusion": "Reject flag-only enable: OSM remains held modifier, OSL does not enable a layer; 4/4 characterization PASS establishes missing behavior, not working One Shot",
+  "patch_sha256": "4991e9225f7185049646dbb37ae996d20632deae15fc5e04f2d0f7f6eb10d941"
+}

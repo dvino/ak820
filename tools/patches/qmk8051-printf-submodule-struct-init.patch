@@ -1,0 +1,66 @@
+diff --git a/src/printf/printf.c b/src/printf/printf.c
+--- a/src/printf/printf.c
++++ b/src/printf/printf.c
+@@ -373,7 +373,12 @@
+ {
+   printf_size_t usable_buffer_size = (buffer_size > PRINTF_MAX_POSSIBLE_BUFFER_SIZE) ?
+     PRINTF_MAX_POSSIBLE_BUFFER_SIZE : (printf_size_t) buffer_size;
++#if defined(__SDCC_mcs51)
++  output_gadget_t result;
++  result = discarding_gadget();
++#else
+   output_gadget_t result = discarding_gadget();
++#endif
+   if (buffer != NULL) {
+     result.buffer = buffer;
+     result.max_chars = usable_buffer_size;
+@@ -383,7 +388,12 @@
+ 
+ static inline output_gadget_t function_gadget(printf_output_fn function, void* extra_arg)
+ {
++#if defined(__SDCC_mcs51)
++  output_gadget_t result;
++  result = discarding_gadget();
++#else
+   output_gadget_t result = discarding_gadget();
++#endif
+   result.function = function;
+   result.extra_function_arg = extra_arg;
+   result.max_chars = PRINTF_MAX_POSSIBLE_BUFFER_SIZE;
+@@ -1358,13 +1368,23 @@
+ 
+ int vprintf_(const char* format, va_list arg)
+ {
++#if defined(__SDCC_mcs51)
++  output_gadget_t gadget;
++  gadget = extern_putchar_gadget();
++#else
+   output_gadget_t gadget = extern_putchar_gadget();
++#endif
+   return vsnprintf_impl(&gadget, format, arg);
+ }
+ 
+ int vsnprintf_(char* s, size_t n, const char* format, va_list arg)
+ {
++#if defined(__SDCC_mcs51)
++  output_gadget_t gadget;
++  gadget = buffer_gadget(s, n);
++#else
+   output_gadget_t gadget = buffer_gadget(s, n);
++#endif
+   return vsnprintf_impl(&gadget, format, arg);
+ }
+ 
+@@ -1375,7 +1395,12 @@
+ 
+ int vfctprintf(printf_output_fn out, void* extra_arg, const char* format, va_list arg)
+ {
++#if defined(__SDCC_mcs51)
++  output_gadget_t gadget;
++  gadget = function_gadget(out, extra_arg);
++#else
+   output_gadget_t gadget = function_gadget(out, extra_arg);
++#endif
+   return vsnprintf_impl(&gadget, format, arg);
+ }
+ 

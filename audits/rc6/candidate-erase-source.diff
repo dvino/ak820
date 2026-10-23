@@ -1,0 +1,61 @@
+--- final3/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_flash.c
++++ candidate/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_flash.c
+@@ -31,6 +31,25 @@
+     __endasm;
+ }
+ 
++/* Keep the erase status check and opcode in registers, like OEM 16CA..
++ * 16D2, without compiler-generated XRAM accesses in that sequence. This
++ * removes an ordering difference; it does not establish a DPTR requirement
++ * for A6. As in program_block(), A/B/DPTR are scratch, DPH:DPL returns
++ * before:after, and no register-bank register or interrupt state is changed. */
++static uint16_t erase_page(void) __naked {
++    __asm
++        mov a, _ROM_CTRL
++        mov b, a
++        jnb acc.6, 00002$
++        mov _ROM_CTRL, #0xa6
++        mov a, _ROM_CTRL
++00002$:
++        mov dpl, a
++        mov dph, b
++        ret
++    __endasm;
++}
++
+ uint8_t ak820_flash_read(uint16_t address) {
+     return *((const __code uint8_t *)address);
+ }
+@@ -54,12 +73,9 @@
+     ROM_BUF_MOD = operation ? 0x80 : AK820_FLASH_PAGE - 1;
+     ROM_DAT_BUF = value;
+     if (operation) {
+-        before = ROM_STATUS;
+-        status = before;
+-        if (before & 0x40) {
+-            ROM_CTRL = operation;
+-            status = ROM_STATUS;
+-        }
++        uint16_t states = erase_page();
++        before = (uint8_t)(states >> 8);
++        status = (uint8_t)states;
+     } else {
+         uint16_t states = program_block(block_data);
+         before = (uint8_t)(states >> 8);
+@@ -76,8 +92,15 @@
+ }
+ 
+ bool ak820_flash_erase(uint16_t address) {
++    uint8_t i;
+     if (address & (AK820_FLASH_PAGE - 1)) return false;
+-    return flash_operation(address, 0, 0xA6);
++    if (!flash_operation(address, 0, 0xA6)) return false;
++    /* Status success alone does not prove erase. Stop before programming if
++     * any CODE byte remains set, retaining A6 as the last IAP diagnostic. */
++    for (i = 0; i != AK820_FLASH_PAGE; ++i) {
++        if (ak820_flash_read(address + i) != 0) return false;
++    }
++    return true;
+ }
+ 
+ bool ak820_flash_program(uint16_t address, uint8_t value) {
