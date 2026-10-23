@@ -1,0 +1,66 @@
+--- a/qmk-8051-ak820/tmk_core/protocol/report.c
++++ b/qmk-8051-ak820/tmk_core/protocol/report.c
+@@ -1,3 +1,8 @@
++#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
++/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
++#pragma noinvariant
++#endif
++
+ //#include "sdcc_dummy_macros.h"
+ /* Copyright 2017 Fred Sundvik
+  *
+--- a/qmk-8051-ak820/tmk_core/protocol/ch555/usb_ak820.c
++++ b/qmk-8051-ak820/tmk_core/protocol/ch555/usb_ak820.c
+@@ -1,3 +1,8 @@
++#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
++/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
++#pragma noinvariant
++#endif
++
+ /* SPDX-License-Identifier: GPL-2.0-or-later
+  * AK820/VS11K28A USB device transport. The original loader calls this service
+  * through its register-saving IRQ wrapper, so USB_DeviceInterrupt returns RET.
+--- a/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.c
++++ b/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.c
+@@ -1,3 +1,8 @@
++#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
++/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
++#pragma noinvariant
++#endif
++
+ /* SPDX-License-Identifier: GPL-2.0-or-later
+  *
+  * AJAZZ AK820 VS11K28A board driver, reconstructed from the supplied OEM ROM
+--- a/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_nvm.c
++++ b/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_nvm.c
+@@ -1,3 +1,8 @@
++#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
++/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
++#pragma noinvariant
++#endif
++
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ // Persistent QMK EEPROM with one 64-byte redo journal. No USB or ISR calls.
+ #include <stddef.h>
+--- a/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_rgb.c
++++ b/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_rgb.c
+@@ -1,3 +1,8 @@
++#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
++/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
++#pragma noinvariant
++#endif
++
+ /* SPDX-License-Identifier: GPL-2.0-or-later
+  * Compact QMK RGB Matrix API for the AK820 8051 target.
+  * Effects: solid, breathing, cycle-all, cycle-left-right, and Vial direct.
+--- a/qmk-8051-ak820/drivers/eeprom/eeprom_driver.c
++++ b/qmk-8051-ak820/drivers/eeprom/eeprom_driver.c
+@@ -1,3 +1,8 @@
++#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
++/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
++#pragma noinvariant
++#endif
++
+ /* Copyright 2019 Nick Brassel (tzarc)
+  *
+  * This program is free software: you can redistribute it and/or modify

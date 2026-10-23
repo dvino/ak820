@@ -40,11 +40,12 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - Standard keys, modifiers, media and system controls, plus NKRO (sending more than six keys at once).
 - Sixteen macro slots with 8192 bytes of shared storage.
 - Caps Word, Repeat, Alt Repeat, Grave Escape and Tri Layer.
+- The development source adds eight configurable [two-key Combos](docs/COMBOS.md) with a fixed 40 ms term. The published alpha does not include them.
 - 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
 - Alpha includes compact [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md). The checked-in legacy bundle still uses only their tap action.
 - Alpha includes [C/W indicators](docs/INDICATORS.md): host Caps Lock and an active additional layer.
-- The source installer can back up and restore supported settings locally and carry them through a supported firmware update. One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides remain unsupported.
+- The source installer can back up and restore supported settings locally and carry them through a supported firmware update. One Shot, Mouse Keys, Tap Dance and Key Overrides remain unsupported. Combo settings are not yet included in installer backup/restore.
 
 
 ## Disclaimer

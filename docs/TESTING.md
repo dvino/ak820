@@ -2,6 +2,35 @@
 
 # Testing
 
+## Current Combo candidate
+
+The development image is built in `qmk-8051-ak820/.build/combos-candidate`;
+it is separate from the installed alpha. Focused Combo host and linked CPU
+checks pass. The complete qualification passed 28 suites and 258 unit tests with no skips
+and unchanged IHX/MAP. See [the current report](../audits/rc6/combos-20261024.md)
+and [machine summary](../audits/rc6/combos-20261024/summary.json). No device or
+physical Combo behavior was tested. The installed alpha does not contain this
+feature.
+
+The candidate-specific commands, run from `qmk-8051-ak820/`, are:
+
+```sh
+python tests/ak820_combo/run.py
+python tests/ak820_combo/emitted.py --build-dir .build/combos-candidate \
+  --s51 ../toolchains/sdcc-4.6.0/bin/s51 --output-dir .build/combo-cpu
+python tests/ak820_tapping/run.py --negative-controls \
+  --output .build/combo-tapping-host.json
+```
+
+The linked Combo suite passed 26 cases with peak observed SP 128. That is a
+measurement of tested paths: 33 bytes above initial SP `0x5f` (95). The
+combined foreground suites observed at most 61 bytes. Neither value is a
+global stack or IRQ-overlap bound. The old macro-cancellation test expected an
+obsolete register-save pattern. The corrected fixture locates the actual
+function-scoped call in ASM/RST and verifies its linked bytes; all 65 tapping
+cases and the full rerun pass. The first failure is retained in the report.
+
+
 Keep source review, build/integrity checks, host/CPU execution and physical
 keyboard behavior separate. None substitutes for another.
 

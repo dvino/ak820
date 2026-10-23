@@ -10,16 +10,14 @@ qualification and device results are recorded in [Status](STATUS.md).
 
 ## Current measured builds
 
-The current measured source candidate is `45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d`. The stable release image remains `f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e`.
+The current development Combo candidate is `a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f`. The published and installed alpha remains `45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d` (`v0.6.0-alpha.1`, source `bb6eca9`); it does not include Combos.
 
-| Image | CODE total | Main CODE window | Low CODE window | XRAM | Initial SP / allocated stack capacity |
+| Image | CODE total | Main / low CODE | Trailing main / low-window bytes | XRAM | Initial SP / allocated stack capacity |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Tap-hold + C/W candidate | 40,477 (38,590 main + 1,887 low) | 38,590 / 38,617 occupied; 27 addresses without IHX data | 1,887 / 1,888 occupied; 1 address without IHX data | 2,512 / 3,072 occupied; 560 free | 0x62 / 157 bytes |
-| Stable release | 38,100 (36,292 main + 1,808 low) | 36,292 / 38,617 occupied; 2,325 addresses without IHX data | 1,808 / 1,888 occupied; 80 addresses without IHX data | 2,067 / 3,072 occupied; 1,005 free | 0x62 / 157 bytes |
+| Development Combo candidate | 40,313 (38,492 main + 1,821 low) | Main window ends at `0xc687` | 120 / 67 | 2,621 / 3,072 (451 free) | `0x5f` / 160 bytes |
+| Installed alpha | 40,477 (38,590 main + 1,887 low) | Main window ends at `0xc6e9` | 22 / 1 | 2,512 / 3,072 (560 free) | `0x62` / 157 bytes |
 
-Window unoccupied counts are address counts, not a guarantee of usable contiguous space. Five addresses, `0x302a..0x302e`, remain reserved in HOME and are included in the unoccupied main-window count; they are not free CODE. Stack capacity is the linker allocation limit, not proof that every runtime path uses at most that many bytes. The earlier pointer-only image saved 31 CODE bytes and one XRAM byte versus
-the stable image; that measurement is historical and does not describe the
-larger compact tap-hold candidate. The C/W addition costs 78 CODE bytes versus the tap-hold-only build. Its main window has 22 trailing bytes; the low window has one free byte. The rejected delay-expression probe added three CODE bytes and is not adopted. The historical pointer-only build and bounded offline review are recorded in the [review](../audits/rc6/bounded-optimization-20261023.md) and [JSON report](../audits/rc6/bounded-optimization-20261023.json); retained evidence is in [its evidence directory](../audits/rc6/bounded-evidence-20261023/). This image is installed as `v0.6.0-alpha.1`. See [Status](STATUS.md) for qualification state.
+Five addresses reserved in HOME are not free CODE. Linker stack capacity is an allocation limit, not proof of a global runtime stack bound. One linked Combo run observed peak SP 128; a separate path measured 33 bytes above the 95-byte baseline. The full candidate image is 164 CODE bytes smaller than alpha. Probe savings are non-additive and cannot be summed to predict complete-image size. The qualification and device state are in [Status](STATUS.md).
 
 ## Four versus six layers
 

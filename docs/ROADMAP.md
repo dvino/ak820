@@ -5,20 +5,26 @@
 ## After alpha
 
 `v0.6.0-alpha.1` is published and installed; results are in [Status](STATUS.md).
-The next work is to diagnose and fix the post-restart `open failed` installer
-stop, verify power-cycle settings persistence, and perform native Windows
-interactive acceptance. Broaden physical Mod-Tap/Layer-Tap timing checks and
-reversible remap tests after that. Compact optional feature profiles, including
-a measured Combos implementation, remain future work; no size is promised.
-Caps remapping and the unfinished language helper remain deferred.
+The source now has a bounded two-key Combo candidate that fits the memory
+windows. The candidate is not in the published alpha or the installed
+installer bundle. Its settings format needs a reviewed backup/restore extension
+and migration before a future installer package can use it. The full qualification passed 28 suites and 258 unit tests without skips;
+see [Status](STATUS.md). The post-restart
+`open failed` installer stop still needs diagnosis and a correction. Power-cycle persistence,
+native Windows interactive acceptance and physical timing remain open.
 
 
 Updated 2026-10-24. Completed work and exact image identities are in
 [Status](STATUS.md). The development source and installer release now differ;
 a successful source build does not promote the candidate into the installer.
 
-## Completed in the current work
+## Completed work
 
+- [x] Add eight dynamic two-key Combos with a fixed 40 ms term. Fit the complete
+  image by optimizing the existing code, preserving Grave Escape, NKRO, six
+  layers and the full macro store. The normal build uses 40,313 CODE bytes;
+  the new linked Combo tests pass 26 cases. Complete qualification is recorded
+  separately in [Status](STATUS.md).
 - [x] Keep the existing host settings backup, restore and in-installer update
   workflow; retain its exact-image compatibility checks and fresh physical unlock.
 - [x] Configure CI for branch pushes, pull requests, manual runs and version
@@ -75,27 +81,29 @@ required explicit confirmation; the current offline work grants none.
 
 ## Compact functions and selectable builds
 
-Future work: collect compact implementations of useful keyboard functions so
-that each build can include the functions needed for its use. Combos is the
-first candidate after the current tap-hold work. Investigate a roughly 1 KiB
-budget for a bounded two-key implementation; a 1–2 KiB planning allowance is
-an estimate, not a measured size. Other candidates are One Shot, Tap Dance,
-Key Overrides and Mouse Keys.
+The bounded two-key Combo implementation is complete in development source
+and fits alongside the existing functions. Its full-image size is 164 bytes
+below the installed alpha image; separate probe savings do not add up to the
+final linked size. Further compact functions and selectable profiles remain
+future work. Other possible candidates are One Shot, Tap Dance, Key Overrides
+and Mouse Keys.
 
 For each function, record the linked CODE and RAM cost against a fixed control,
 its behavior and limits, required dependencies, host/CPU tests and interactions
 with other functions. A flag-only size probe does not establish a usable
 implementation. Preserve implementation source when a build profile disables a
 function. Measure complete profiles too: separate savings do not necessarily
-add up after linking. Profile selection and distribution are future design work;
-this does not schedule those functions into the current firmware change.
+add up after linking. Profile selection and distribution are future design work. Remaining Combo
+acceptance includes physical timing and behavior,
+settings backup/restore migration, installer packaging and release review.
 
 ## Further optimization only when needed
 
-The tap-hold and C/W candidate fits with 22 trailing main-window bytes and one low-window byte.
-The private event-pointer and ownership reductions are measured; the repeated
-protocol-field and transport variants were rejected. The system mapping and
-ASCII mask candidates saved code; C/W adds 78 bytes using a compact low-window helper. See [Status](STATUS.md) for the exact image
+The Combo candidate fits with 120 trailing main-window bytes and 67 low-window
+bytes; see [the resource table](RESOURCE-BUDGET.md). The private event-pointer
+and ownership reductions are measured. Earlier protocol-field probes were
+rejected; the current USB dispatch, descriptor and EEPROM changes save code. Probe savings are non-additive. The complete image is
+164 bytes below the installed alpha. See [Status](STATUS.md) for the exact image
 and separate qualification state.
 
 Further byte-by-byte reduction is not a promise of room for major features.

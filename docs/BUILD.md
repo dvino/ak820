@@ -54,7 +54,9 @@ not spare executable CODE. Measure linked occupied bytes rather than binary
 file length or source size.
 
 The default exact instruction outlining and audited callee-save list have
-comparison switches `--no-outline` and `--no-callee-saves`. ABI changes require
+comparison switches `--no-outline` and `--no-callee-saves`. The Combo candidate
+uses the normal audited outlining configuration; summary savings from individual
+probes are non-additive and do not predict complete linked-image size. ABI changes require
 new stack/interrupt evidence. Build configurations must not run concurrently
 in the same source tree because Make uses shared generated files.
 

@@ -2,6 +2,41 @@
 
 # Project status
 
+Updated 2026-10-24. The published and installed image remains
+`v0.6.0-alpha.1` (`bb6eca9`); it does not include Combos. The current
+development source builds a separate bounded two-key Combo candidate. Its IHX
+SHA256 is `a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f`.
+It contains 40,313 CODE bytes (38,492 main + 1,821 low), reaches `0xc687`,
+and leaves 120 trailing main-window and 67 low-window bytes. Five reserved
+HOME bytes are not free space. XRAM is 2,621/3,072 bytes; initial SP is
+`0x5f`, with 160 bytes of allocated stack capacity. These linker figures do
+not prove a global runtime stack bound.
+
+The candidate keeps the earlier functions, including Grave Escape, NKRO,
+six layers and sixteen macros with 8192 shared bytes, RGB, Mod-Tap/Layer-Tap,
+Caps Word, Repeat and Tri Layer. It provides eight dynamic two-key Combos with
+a fixed 40 ms term. The complete image is 164 bytes smaller than the 40,477-byte
+installed alpha image. Earlier implementation probes are non-additive; their
+individual savings must not be summed to predict a linked image.
+
+The complete local qualification passed all 28 suites and 258 unit tests with
+no skips and unchanged IHX/MAP. The [current report](../audits/rc6/combos-20261024.md)
+and [machine summary](../audits/rc6/combos-20261024/summary.json) retain the
+initial fixture failure and corrected run. Linked execution passed 26 Combo
+cases and 65 tapping cases. Exact outlining passed 150 helper bodies and 1525
+replacement sites with sixteen CPU states per helper; 2674 callee ABI cases
+also passed. The largest foreground stack use observed in the combined suites
+was 61 bytes above initial SP. These are tested paths, not a global or physical
+IRQ-overlap bound.
+
+No device access, flash, installer promotion or release occurred for the
+candidate. Physical timing, GUI acceptance, power-cycle persistence and
+installer support remain open. The installer uses exact reviewed image pins
+and does not export Combo settings; migration is required before a future
+package can include this candidate.
+
+## Published alpha baseline
+
 Updated 2026-10-24. [v0.6.0-alpha.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.1)
 is published and installed from the downloaded GitHub release. Dev CI and all
 three release CI jobs passed. The build includes compact Mod-Tap/Layer-Tap and
