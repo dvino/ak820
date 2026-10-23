@@ -10,11 +10,18 @@ a successful source build does not promote the candidate into the installer.
 
 - [x] Keep the existing host settings backup, restore and in-installer update
   workflow; retain its exact-image compatibility checks and fresh physical unlock.
-- [x] Make Windows packaging reproducible, verify both collected application
-  trees and add a manual-only Windows workflow. Native execution remains below.
+- [x] Configure CI for branch pushes, pull requests, manual runs and version
+  tags. Linux builds and tests fresh firmware; Windows packages that bundle.
+  SemVer tags reachable from `main` publish after both jobs pass. GitHub and
+  native Windows execution remain pending.
 - [x] Reproduce the stable firmware with pinned SDCC 4.6.0 and run the complete
-  current offline suite with that compiler and simulator: 23 suites, 247 unit
-  tests, zero skips. Keep initial failures and final results in the evidence.
+  current offline suite with that compiler and simulator: 23 suites, 257 unit
+  tests, zero skips. The earlier 247-test qualification is historical.
+  Keep initial failures and final results in the evidence.
+- [x] Assemble a fresh firmware bundle from commit `073047d` after review of
+  the source and policy. The installer accepted it with
+  `load_release(approved=True)`; no device was accessed. This source-package
+  check does not establish Windows packaging or device behavior.
 - [x] Test the private XDATA journal pointer in a controlled build. Adopt it in
   source after review: 31 fewer CODE bytes and one fewer XRAM byte.
 - [x] Test the macro delay replacement. Reject it: three more CODE bytes;
@@ -34,7 +41,7 @@ See the [bounded probes](../audits/rc6/bounded-optimization-20261023.md),
 
 | Work | Required result and current dependency |
 | --- | --- |
-| Windows package | Run the committed workflow or native Windows build from this branch. Retain both EXEs, package provenance and CLI/GUI smoke reports. Check the visible RU/EN update and settings dialogs. No native Windows environment was available in this work. |
+| Windows package | Complete a GitHub run or native Windows build from this branch. Retain both EXEs, package provenance and CLI/GUI smoke reports. Check the visible RU/EN update and settings dialogs. The workflow and fresh source bundle are prepared, but GitHub execution and native Windows validation are pending. |
 | Host settings on a keyboard | Check backup, guarded restore and update with a valid private OEM session and separately authorized device operations. Test macro upload, saved RGB, cancellation, failure stops and cold-start persistence. Offline passes do not close this step. |
 | Candidate release | If the pointer image is selected for release, create a new exact artifact review and package using the private OEM inputs. Review settings compatibility explicitly before changing any image pin. Keep the existing release usable until this is done. |
 | Physical behavior | Check every key, encoder press and both rotation directions, lighting appearance, Alt Repeat, unlock and power-loss behavior. Record the image hash and distinguish ordinary restarts from complete power removal. |
