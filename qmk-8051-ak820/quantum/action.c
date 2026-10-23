@@ -35,6 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 #ifdef AK820_COMPACT_TAPPING
 #    include "ak820_tapping.h"
+#    ifdef AK820_COMPACT_COMBO
+#        include "ak820_combo.h"
+#    endif
 #endif
 
 #ifdef BACKLIGHT_ENABLE
@@ -76,6 +79,9 @@ __attribute__((weak)) bool get_retro_tapping(uint16_t keycode, keyrecord_t *reco
  * FIXME: Needs documentation.
  */
 void action_exec(keyevent_t event) {
+#ifdef AK820_COMPACT_COMBO
+    ak820_combo_tick(event.time);
+#endif
 #ifdef AK820_COMPACT_TAPPING
     if (!ak820_tapping_before(&event)) return;
 #endif
@@ -402,9 +408,9 @@ void register_mouse(uint8_t mouse_keycode, bool pressed) {
  * FIXME: Needs documentation.
  */
 void process_action(keyrecord_t *record, action_t action) {
-    keyevent_t event;
+    bool pressed;
     uint8_t mods;
-    event = record->event;
+    pressed = record->event.pressed;
 #ifndef NO_ACTION_TAPPING
     uint8_t tap_count;
     tap_count = record->tap.count;
@@ -413,7 +419,7 @@ void process_action(keyrecord_t *record, action_t action) {
 #ifndef NO_ACTION_ONESHOT
     bool do_release_oneshot = false;
     // notice we only clear the one shot layer if the pressed key is not a modifier.
-    if (is_oneshot_layer_active() && event.pressed &&
+    if (is_oneshot_layer_active() && pressed &&
         (action.kind.id == ACT_USAGE || !(IS_MODIFIER_KEYCODE(action.key.code)
 #    ifndef NO_ACTION_TAPPING
                                           || (tap_count == 0 && (action.kind.id == ACT_LMODS_TAP || action.kind.id == ACT_RMODS_TAP))
@@ -434,7 +440,7 @@ void process_action(keyrecord_t *record, action_t action) {
         case ACT_RMODS: {
             mods = (action.kind.id == ACT_LMODS) ? action.key.mods : action.key.mods << 4;
         ordinary_modifier_action:
-            if (event.pressed) {
+            if (pressed) {
                 if (mods) {
                     if (IS_MODIFIER_KEYCODE(action.key.code) || action.key.code == KC_NO) {
                         // e.g. LSFT(KC_LEFT_GUI): we don't want the LSFT to be weak as it would make it useless.
@@ -470,7 +476,7 @@ void process_action(keyrecord_t *record, action_t action) {
                     if (!keymap_config.oneshot_enable) {
                         goto ordinary_modifier_action;
                     } else {
-                        if (event.pressed) {
+                        if (pressed) {
                             if (tap_count == 0) {
                                 // Not a tap, but a hold: register the held mod
                                 ac_dprintf("MODS_TAP: Oneshot: 0\n");
@@ -496,7 +502,7 @@ void process_action(keyrecord_t *record, action_t action) {
                     break;
 #    endif
                 case MODS_TAP_TOGGLE:
-                    if (event.pressed) {
+                    if (pressed) {
                         if (tap_count <= QS_tapping_toggle) {
                             register_mods(mods);
                         }
@@ -508,7 +514,7 @@ void process_action(keyrecord_t *record, action_t action) {
                     break;
                 default:
 #    ifdef HOLD_ON_OTHER_KEY_PRESS_PER_KEY
-                    if (event.pressed && tap_count > 0 &&
+                    if (pressed && tap_count > 0 &&
                         get_hold_on_other_key_press(get_event_keycode(record->event, false), record) &&
                         record->tap.interrupted) {
                         record->tap.count = 0;
@@ -519,7 +525,7 @@ void process_action(keyrecord_t *record, action_t action) {
                     if (tap_count > 0) {
                         goto ordinary_tap_action;
                     }
-                    if (event.pressed) {
+                    if (pressed) {
                         register_mods(mods);
                     } else {
 #    if defined(RETRO_TAPPING) && defined(DUMMY_MOD_NEUTRALIZER_KEYCODE)
@@ -542,72 +548,54 @@ void process_action(keyrecord_t *record, action_t action) {
              * encoded modifiers use register_code instead. Keep the raw
              * action API when a caller has no corresponding basic record. */
             if (record->keycode >= KC_SYSTEM_POWER && record->keycode <= KC_LAUNCHPAD) {
-                owned_usage_key((uint8_t)record->keycode, event.pressed);
+                owned_usage_key((uint8_t)record->keycode, pressed);
                 break;
             }
 #endif
             switch (action.usage.page) {
                 case PAGE_SYSTEM:
-                    host_system_send(event.pressed ? action.usage.code : 0);
+                    host_system_send(pressed ? action.usage.code : 0);
                     break;
                 case PAGE_CONSUMER:
-                    host_consumer_send(event.pressed ? action.usage.code : 0);
+                    host_consumer_send(pressed ? action.usage.code : 0);
                     break;
             }
             break;
 #endif // EXTRAKEY_ENABLE
         /* Mouse key */
         case ACT_MOUSEKEY:
-            register_mouse(action.key.code, event.pressed);
+            register_mouse(action.key.code, pressed);
             break;
 #ifndef NO_ACTION_LAYER
-        case ACT_LAYER:
-            if (action.layer_bitop.on == 0) {
-                /* Default Layer Bitwise Operation */
-                if (!event.pressed) {
-                    uint8_t       shift = action.layer_bitop.part * 4;
-                    layer_state_t bits  = ((layer_state_t)action.layer_bitop.bits) << shift;
-                    layer_state_t mask  = (action.layer_bitop.xbit) ? ~(((layer_state_t)0xf) << shift) : 0;
+        case ACT_LAYER: {
+            uint8_t on = action.layer_bitop.on;
+            /* Both layer banks use the same mask. Keep their separate setters
+             * so held-layer ownership and default-layer hooks are preserved. */
+            if (on ? (pressed ? (on & ON_PRESS) : (on & ON_RELEASE)) : !pressed) {
+                uint8_t shift = action.layer_bitop.part * 4;
+                layer_state_t bits = ((layer_state_t)action.layer_bitop.bits) << shift;
+                layer_state_t mask = action.layer_bitop.xbit ? ~(((layer_state_t)0xf) << shift) : 0;
+                bits |= mask;
+                if (!on) {
                     switch (action.layer_bitop.op) {
-                        case OP_BIT_AND:
-                            default_layer_and(bits | mask);
-                            break;
-                        case OP_BIT_OR:
-                            default_layer_or(bits | mask);
-                            break;
-                        case OP_BIT_XOR:
-                            default_layer_xor(bits | mask);
-                            break;
-                        case OP_BIT_SET:
-                            default_layer_set(bits | mask);
-                            break;
+                        case OP_BIT_AND: default_layer_and(bits); break;
+                        case OP_BIT_OR: default_layer_or(bits); break;
+                        case OP_BIT_XOR: default_layer_xor(bits); break;
+                        case OP_BIT_SET: default_layer_set(bits); break;
                     }
-                }
-            } else {
-                /* Layer Bitwise Operation */
-                if (event.pressed ? (action.layer_bitop.on & ON_PRESS) : (action.layer_bitop.on & ON_RELEASE)) {
-                    uint8_t       shift = action.layer_bitop.part * 4;
-                    layer_state_t bits  = ((layer_state_t)action.layer_bitop.bits) << shift;
-                    layer_state_t mask  = (action.layer_bitop.xbit) ? ~(((layer_state_t)0xf) << shift) : 0;
+                } else {
                     switch (action.layer_bitop.op) {
-                        case OP_BIT_AND:
-                            layer_and(bits | mask);
-                            break;
-                        case OP_BIT_OR:
-                            layer_or(bits | mask);
-                            break;
-                        case OP_BIT_XOR:
-                            layer_xor(bits | mask);
-                            break;
-                        case OP_BIT_SET:
-                            layer_state_set(bits | mask);
-                            break;
+                        case OP_BIT_AND: layer_and(bits); break;
+                        case OP_BIT_OR: layer_or(bits); break;
+                        case OP_BIT_XOR: layer_xor(bits); break;
+                        case OP_BIT_SET: layer_state_set(bits); break;
                     }
                 }
             }
             break;
+        }
         case ACT_LAYER_MODS:
-            if (event.pressed) {
+            if (pressed) {
                 layer_hold_on(action.layer_mods.layer);
                 register_mods(action.layer_mods.mods);
             } else {
@@ -621,7 +609,7 @@ void process_action(keyrecord_t *record, action_t action) {
 #    ifndef NO_ACTION_TAPPING
                 case OP_TAP_TOGGLE:
                     /* tap toggle */
-                    if (event.pressed) {
+                    if (pressed) {
                         if (tap_count < QS_tapping_toggle) {
                             layer_invert(action.layer_tap.val);
                         }
@@ -634,13 +622,13 @@ void process_action(keyrecord_t *record, action_t action) {
 #    endif
                 case OP_ON_OFF:
                 momentary_layer_action:
-                    event.pressed ? layer_hold_on(action.layer_tap.val) : layer_hold_off(action.layer_tap.val);
+                    pressed ? layer_hold_on(action.layer_tap.val) : layer_hold_off(action.layer_tap.val);
                     break;
                 case OP_OFF_ON:
-                    event.pressed ? layer_off(action.layer_tap.val) : layer_on(action.layer_tap.val);
+                    pressed ? layer_off(action.layer_tap.val) : layer_on(action.layer_tap.val);
                     break;
                 case OP_SET_CLEAR:
-                    event.pressed ? layer_move(action.layer_tap.val) : layer_clear();
+                    pressed ? layer_move(action.layer_tap.val) : layer_clear();
                     break;
 #    if !defined(NO_ACTION_ONESHOT) && !defined(NO_ACTION_TAPPING)
                 case OP_ONESHOT:
@@ -650,7 +638,7 @@ void process_action(keyrecord_t *record, action_t action) {
                     } else {
 if (QS_oneshot_tap_toggle > 1) {
                         do_release_oneshot = false;
-                        if (event.pressed) {
+                        if (pressed) {
                             if (get_oneshot_layer_state() == ONESHOT_TOGGLED) {
                                 reset_oneshot_layer();
                                 layer_off(action.layer_tap.val);
@@ -668,7 +656,7 @@ if (QS_oneshot_tap_toggle > 1) {
                             }
                         }
 } else {
-                        if (event.pressed) {
+                        if (pressed) {
                             layer_on(action.layer_tap.val);
                             set_oneshot_layer(action.layer_tap.val, ONESHOT_START);
                         } else {
@@ -680,7 +668,7 @@ if (QS_oneshot_tap_toggle > 1) {
 }
                     }
 #    else  // NO_ACTION_ONESHOT && NO_ACTION_TAPPING
-                    if (event.pressed) {
+                    if (pressed) {
                         layer_on(action.layer_tap.val);
                     } else {
                         layer_off(action.layer_tap.val);
@@ -694,7 +682,7 @@ if (QS_oneshot_tap_toggle > 1) {
                     }
                     goto momentary_layer_action;
 #    else
-                    if (event.pressed) {
+                    if (pressed) {
                         ac_dprintf("KEYMAP_TAP_KEY: Tap: register_code\n");
                         register_code(action.layer_tap.code);
                     } else {
@@ -716,29 +704,29 @@ if (QS_oneshot_tap_toggle > 1) {
         case ACT_SWAP_HANDS:
             switch (action.swap.code) {
                 case OP_SH_TOGGLE:
-                    if (event.pressed) {
+                    if (pressed) {
                         swap_hands = !swap_hands;
                     }
                     break;
                 case OP_SH_ON_OFF:
-                    swap_hands = event.pressed;
+                    swap_hands = pressed;
                     break;
                 case OP_SH_OFF_ON:
-                    swap_hands = !event.pressed;
+                    swap_hands = !pressed;
                     break;
                 case OP_SH_ON:
-                    if (!event.pressed) {
+                    if (!pressed) {
                         swap_hands = true;
                     }
                     break;
                 case OP_SH_OFF:
-                    if (!event.pressed) {
+                    if (!pressed) {
                         swap_hands = false;
                     }
                     break;
 #    ifndef NO_ACTION_ONESHOT
                 case OP_SH_ONESHOT:
-                    if (event.pressed) {
+                    if (pressed) {
                         set_oneshot_swaphands();
                     } else {
                         release_oneshot_swaphands();
@@ -750,7 +738,7 @@ if (QS_oneshot_tap_toggle > 1) {
                 case OP_SH_TAP_TOGGLE:
                     /* tap toggle */
 
-                    if (event.pressed) {
+                    if (pressed) {
                         if (swap_held) {
                             swap_held = false;
                         } else {
@@ -769,7 +757,7 @@ if (QS_oneshot_tap_toggle > 1) {
                             swap_hands = !swap_hands; // undo hold set up in _tap_hint
                             swap_held  = false;
                         }
-                        if (event.pressed) {
+                        if (pressed) {
                             register_code(action.swap.code);
                         } else {
                             qs_wait_ms(QS_tap_code_delay);
@@ -777,7 +765,7 @@ if (QS_oneshot_tap_toggle > 1) {
                             *record = (keyrecord_t){}; // hack: reset tap mode
                         }
                     } else {
-                        if (swap_held && !event.pressed) {
+                        if (swap_held && !pressed) {
                             swap_hands = !swap_hands; // undo hold set up in _tap_hint
                             swap_held  = false;
                         }
@@ -793,7 +781,7 @@ if (QS_oneshot_tap_toggle > 1) {
     goto action_complete;
 ordinary_tap_action:
     // MT and LT share the same basic tap output, including the release delay.
-    if (event.pressed) {
+    if (pressed) {
         register_code(action.key.code);
     } else {
         if (action.key.code == KC_CAPS_LOCK) {
@@ -827,7 +815,7 @@ action_complete:
     if (!is_tap_action(action)) {
         retro_tapping_counter = 0;
     } else {
-        if (event.pressed) {
+        if (pressed) {
             if (tap_count > 0) {
                 retro_tapping_counter = 0;
             }
@@ -855,7 +843,7 @@ action_complete:
 
 #ifdef SWAP_HANDS_ENABLE
 #    ifndef NO_ACTION_ONESHOT
-    if (event.pressed && !(action.kind.id == ACT_SWAP_HANDS && action.swap.code == OP_SH_ONESHOT)) {
+    if (pressed && !(action.kind.id == ACT_SWAP_HANDS && action.swap.code == OP_SH_ONESHOT)) {
         use_oneshot_swaphands();
     }
 #    endif
@@ -1105,6 +1093,9 @@ void clear_keyboard_but_mods(void) {
 void clear_keyboard_but_mods_and_keys(void) {
 #ifdef AK820_COMPACT_TAPPING
     ak820_tapping_cancel();
+#    ifdef AK820_COMPACT_COMBO
+    ak820_combo_cancel();
+#    endif
 #    ifdef REPEAT_KEY_ENABLE
     repeat_key_cancel();
 #    endif

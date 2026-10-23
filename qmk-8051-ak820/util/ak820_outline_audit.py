@@ -19,8 +19,31 @@ import shutil
 
 LISTED = re.compile(r"^\s*([0-9A-F]{6})\s+((?:[rstup*]?[0-9A-F]{2}\s*)+)\[[\d ]+\]\s*(\d+)\s+(\w+)\s*(.*?)\s*$")
 SYMBOL = re.compile(r"(?<![\w$])(_[A-Za-z_$][\w$]*)(?![\w$])")
-SAFE_OPS = {"mov", "movx", "inc", "dec", "add", "addc", "subb", "clr", "cpl", "anl", "orl", "xrl", "rl", "rr", "rlc", "rrc", "swap", "mul", "div", "xch"}
+SAFE_OPS = {"mov", "movx", "movc", "inc", "dec", "add", "addc", "subb", "clr", "cpl", "anl", "orl", "xrl", "rl", "rr", "rlc", "rrc", "swap", "mul", "div", "xch"}
 REGS = {"a", "b", "c", "dpl", "dph", "dptr", "ab", *[f"r{i}" for i in range(8)], *[f"ar{i}" for i in range(8)]}
+
+
+# Additional foreground modules. None admits every CSEG function in that
+# module; a set admits only those named functions. Actual IAP, delay, board IRQ
+# and USB control/interrupt code remain outside this explicit scope.
+FOREGROUND_MODULES = {
+    "protocol/report.asm": None,
+    "protocol/host.asm": None,
+    "keyboards/ajazz/ak820/ak820_rgb.asm": None,
+    "ak820_nvm.asm": None,
+    "eeprom_driver.asm": None,
+    "protocol/ch555/usb_ak820.asm": frozenset({
+        "ak820_usb_raw_task", "ak820_usb_raw_send",
+        "raw_request_is_nonpersistent", "ak820_usb_take_keyboard_reset",
+    }),
+}
+
+
+def eligible_module(module: str, function: str) -> bool:
+    if module.startswith("quantum/"):
+        return True
+    return module in FOREGROUND_MODULES and (
+        FOREGROUND_MODULES[module] is None or function in FOREGROUND_MODULES[module])
 
 
 @dataclass(frozen=True)
@@ -48,6 +71,10 @@ class Instruction:
 def allowed(opcode: str, operands: str) -> bool:
     if opcode not in SAFE_OPS or re.search(r"\b(?:sp|psw|pc)\b|@r[01]|\b\d+\$|(?<![\w.])\.(?![\w.])", operands, re.I):
         return False
+    if opcode == "movc":
+        # DPTR addresses absolute CODE. The PC-relative form changes when the
+        # instructions move to a helper and must remain excluded.
+        return operands == "a,@a+dptr"
     for operand in operands.split(","):
         if operand.startswith("#") or operand == "@dptr" or operand in REGS:
             continue
@@ -95,9 +122,9 @@ def parse_dce(dce: Path, listing_suffix=".rst"):
                 continue
             address, data, opcode, operands = instruction
             valid_aliases = all(name in alias_names for name in re.findall(r"\bar[0-7]\b", operands))
-            eligible_module = module.startswith("quantum/") and area == "CSEG" and bank_zero_aliases and valid_aliases
-            if not eligible_module or not allowed(opcode, operands):
-                rejected["non_quantum_or_non_cseg" if not eligible_module else opcode] += 1
+            module_is_eligible = eligible_module(module, function) and area == "CSEG" and bank_zero_aliases and valid_aliases
+            if not module_is_eligible or not allowed(opcode, operands):
+                rejected["ineligible_module_or_non_cseg" if not module_is_eligible else opcode] += 1
                 if current: blocks.append(current); current = []
                 continue
             # Verify source/listing alignment before using listing byte sizes.
@@ -126,7 +153,7 @@ def normalized(sequence):
     return tuple(result)
 
 
-def occurrences(blocks, min_instructions=4, max_instructions=18, used=frozenset(), normalize=False):
+def occurrences(blocks, min_instructions=2, max_instructions=40, used=frozenset(), normalize=False):
     found = defaultdict(list)
     for block in blocks:
         for start in range(len(block)):
@@ -135,7 +162,7 @@ def occurrences(blocks, min_instructions=4, max_instructions=18, used=frozenset(
                 if any((i.module,i.line) in used for i in sequence):
                     break
                 size = sum(len(i.data) for i in sequence)
-                if size < 8:
+                if size < 4:
                     continue
                 key = normalized(sequence) if normalize else tuple(i.exact for i in sequence)
                 found[key].append(sequence)
@@ -165,7 +192,7 @@ def describe(candidate):
             "locations":[{"module":s[0].module,"function":s[0].function,"line":s[0].line+1,"address":s[0].address} for s in matches]}
 
 
-def select(blocks, max_helpers=40, min_saving=12):
+def select(blocks, max_helpers=200, min_saving=1):
     selected=[];used=set()
     for _ in range(max_helpers):
         remaining=occurrences(blocks,used=used)
@@ -207,7 +234,7 @@ def outline_dce(source: Path, target: Path, selected):
         path.write_text(result)
 
 
-def outline_assembled(source_dce: Path, output_dce: Path, *, max_helpers=40, min_saving=12):
+def outline_assembled(source_dce: Path, output_dce: Path, *, max_helpers=200, min_saving=1):
     """Factor freshly assembled DCE ASM, before the final firmware link.
 
     The builder must assemble source_dce first (producing .lst), then assemble
@@ -220,11 +247,14 @@ def outline_assembled(source_dce: Path, output_dce: Path, *, max_helpers=40, min
         raise ValueError("Refusing an already outlined input: helpers must never nest")
     blocks,rejected = parse_dce(source_dce, ".lst")
     selected = select(blocks, max_helpers, min_saving)
-    report = {"algorithm": "exact-quantum-register-xdata-v1", "listing_suffix": ".lst",
+    report = {"algorithm": "exact-foreground-register-xdata-code-v3", "listing_suffix": ".lst",
               "tool_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               "input_asm_sha256": {p.relative_to(source_dce).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
                                    for p in sorted(source_dce.rglob("*.asm"))},
               "max_helpers": max_helpers, "min_saving": min_saving,
+              "min_instructions": 2, "max_instructions": 40, "min_body_bytes": 4,
+              "foreground_modules": {name: None if functions is None else sorted(functions)
+                                     for name, functions in FOREGROUND_MODULES.items()},
               "safe_blocks": len(blocks), "rejected_instructions": rejected,
               "selected_exact": [describe(c) for c in selected],
               "selected_nominal_net_bytes": sum(c[0] for c in selected),
@@ -240,8 +270,8 @@ def main():
     parser.add_argument("--build-dir",required=True,type=Path)
     parser.add_argument("--output",required=True,type=Path)
     parser.add_argument("--outline-dir",type=Path,help="Experimental separate assembler output, never the source build")
-    parser.add_argument("--max-helpers",type=int,default=40)
-    parser.add_argument("--min-saving",type=int,default=12)
+    parser.add_argument("--max-helpers",type=int,default=200)
+    parser.add_argument("--min-saving",type=int,default=1)
     parser.add_argument("--listing-suffix", choices=(".rst", ".lst"), default=".rst",
                         help=".rst audits a linked image; .lst permits outlining before any link")
     args=parser.parse_args()
@@ -253,7 +283,7 @@ def main():
     image=build/'ajazz_ak820_vial.ihx'
     report={"linked_image_sha256":hashlib.sha256(image.read_bytes()).hexdigest() if image.is_file() else None,
             "listing_suffix":args.listing_suffix,
-            "scope":"Quantum CSEG straight-line register/XDATA instructions only; no branch/call/return, stack, PC, SFR/direct-memory or indirect-IRAM accesses; labels break windows",
+            "scope":"Quantum and explicit foreground CSEG straight-line register/XDATA/CODE-DPTR instructions only; no branch/call/return, stack, PC, SFR/direct-memory or indirect-IRAM accesses; labels break windows",
             "limits":"Static candidates, not applied savings or a correctness proof. Every helper needs relink, byte/relocation checks, stack review and CPU regression. Normalized families require extra argument/live-register analysis and are never auto-outlined.",
             "safe_blocks":len(blocks),"rejected_instructions":rejected,
             "exact_top":[describe(c) for c in candidates[:20]],

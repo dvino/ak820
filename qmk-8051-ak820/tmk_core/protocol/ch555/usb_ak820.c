@@ -1,3 +1,8 @@
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
+#pragma noinvariant
+#endif
+
 /* SPDX-License-Identifier: GPL-2.0-or-later
  * AK820/VS11K28A USB device transport. The original loader calls this service
  * through its register-saving IRQ wrapper, so USB_DeviceInterrupt returns RET.
@@ -135,6 +140,19 @@ static void control_next(void) {
     D0_EP0RES = (D0_EP0RES & (bUEP_T_TOG | bUEP_R_TOG)) | UEP_T_RES_ACK | UEP_R_RES_ACK;
 }
 
+/* Interface numbers index this private CODE-only descriptor table. */
+typedef struct {
+    const uint8_t __code *report;
+    const USB_HID_Descriptor_HID_t __code *hid;
+} interface_descriptors_t;
+static const interface_descriptors_t __code interface_descriptors[TOTAL_INTERFACES] = {
+    [KEYBOARD_INTERFACE] = {(const uint8_t __code *)KeyboardReport, &ConfigurationDescriptor.Keyboard_HID},
+    [RAW_INTERFACE] = {(const uint8_t __code *)RawReport, &ConfigurationDescriptor.Raw_HID},
+#ifdef SHARED_EP_ENABLE
+    [SHARED_INTERFACE] = {(const uint8_t __code *)SharedReport, &ConfigurationDescriptor.Shared_HID},
+#endif
+};
+
 /* Descriptor indexes are checked before the EP0 buffer can be overwritten. */
 static uint16_t descriptor_select(uint8_t type, uint8_t index, uint16_t interface) {
     if (type == USB_DESCR_TYP_DEVICE && !index && !interface) {
@@ -158,29 +176,15 @@ static uint16_t descriptor_select(uint8_t type, uint8_t index, uint16_t interfac
         }
     }
     if (index || interface >= TOTAL_INTERFACES) return 0;
-    if (type == USB_DESCR_TYP_REPORT) {
-        switch (interface) {
-            case KEYBOARD_INTERFACE:
-                control_pointer = (const uint8_t __code *)KeyboardReport;
-                return ConfigurationDescriptor.Keyboard_HID.HIDReportLength;
-            case RAW_INTERFACE:
-                control_pointer = (const uint8_t __code *)RawReport;
-                return ConfigurationDescriptor.Raw_HID.HIDReportLength;
-#ifdef SHARED_EP_ENABLE
-            case SHARED_INTERFACE:
-                control_pointer = (const uint8_t __code *)SharedReport;
-                return ConfigurationDescriptor.Shared_HID.HIDReportLength;
-#endif
+    if (type == USB_DESCR_TYP_REPORT || type == USB_DESCR_TYP_HID) {
+        const USB_HID_Descriptor_HID_t __code *hid = interface_descriptors[interface].hid;
+        if (!hid) return 0;
+        if (type == USB_DESCR_TYP_REPORT) {
+            control_pointer = interface_descriptors[interface].report;
+            return hid->HIDReportLength;
         }
-    }
-    if (type == USB_DESCR_TYP_HID) {
-        switch (interface) {
-            case KEYBOARD_INTERFACE: control_pointer = (const uint8_t __code *)&ConfigurationDescriptor.Keyboard_HID; return 9;
-            case RAW_INTERFACE: control_pointer = (const uint8_t __code *)&ConfigurationDescriptor.Raw_HID; return 9;
-#ifdef SHARED_EP_ENABLE
-            case SHARED_INTERFACE: control_pointer = (const uint8_t __code *)&ConfigurationDescriptor.Shared_HID; return 9;
-#endif
-        }
+        control_pointer = (const uint8_t __code *)hid;
+        return 9;
     }
     return 0;
 }
@@ -190,6 +194,12 @@ static void control_setup(void) {
     uint16_t value = pD0_SETUP_REQ->wValueL | ((uint16_t)pD0_SETUP_REQ->wValueH << 8);
     uint16_t index = pD0_SETUP_REQ->wIndexL | ((uint16_t)pD0_SETUP_REQ->wIndexH << 8);
     uint16_t length;
+    /* These predicates use this SETUP packet only. No branch tests them after
+     * changing D0SetupLen, and this service is not reentrant. */
+    __bit valid_interface = index < TOTAL_INTERFACES;
+    __bit zero_index = !index;
+    __bit zero_value = !value;
+    __bit zero_length;
     uint8_t endpoint;
     uint8_t i;
     uint8_t offset = 0;
@@ -200,132 +210,163 @@ static void control_setup(void) {
     control_zlp = 0;
     D0SetupReqCode = pD0_SETUP_REQ->bRequest;
     D0SetupLen = pD0_SETUP_REQ->wLengthL | ((uint16_t)pD0_SETUP_REQ->wLengthH << 8);
+    zero_length = !D0SetupLen;
     D0_EP0RES = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_NAK;
     D0_EP0T_L = 0;
 
-    if (D0SetupReqCode == USB_GET_DESCRIPTOR && (type == 0x80 || type == 0x81)) {
-        if (((value >> 8) == USB_DESCR_TYP_HID || (value >> 8) == USB_DESCR_TYP_REPORT) != (type == 0x81)) {
-            control_stall(); return;
-        }
-        length = descriptor_select(value >> 8, value, index);
-        if (!length) { control_stall(); return; }
-        control_zlp = length < D0SetupLen && !(length & (DEF_ENDP0_SIZE - 1));
-        if (D0SetupLen > length) D0SetupLen = length;
-        control_phase = D0SetupLen ? CTRL_DATA_IN : CTRL_STATUS_OUT;
-        if (D0SetupLen) control_next();
-        return;
-    }
-    if (type == 0x00 && D0SetupReqCode == USB_SET_ADDRESS && !index && !D0SetupLen && value <= 127) {
-        D0SetupLen = value; /* applied after status-IN ACK */
-        control_phase = CTRL_STATUS_IN;
-    } else if (type == 0x00 && D0SetupReqCode == USB_SET_CONFIGURATION && !index && !D0SetupLen && value <= 1) {
-        endpoints_reset();
-        D0UsbConfig = value;
-        USB_EnumStatus = value != 0;
-        keyboard_reset = 1;
-        control_phase = CTRL_STATUS_IN;
-    } else if (type == 0x80 && D0SetupReqCode == USB_GET_CONFIGURATION && !index && !value && D0SetupLen == 1) {
-        pD0_EP0_BUF[0] = D0UsbConfig;
-        D0_EP0T_L = 1;
-        control_phase = CTRL_STATUS_OUT;
-    } else if (type == 0x81 && D0SetupReqCode == USB_GET_INTERFACE && index < TOTAL_INTERFACES && !value && D0SetupLen == 1 && D0UsbConfig) {
-        pD0_EP0_BUF[0] = 0;
-        D0_EP0T_L = 1;
-        control_phase = CTRL_STATUS_OUT;
-    } else if (type == 0x01 && D0SetupReqCode == USB_SET_INTERFACE && index < TOTAL_INTERFACES && !value && !D0SetupLen && D0UsbConfig) {
-        control_phase = CTRL_STATUS_IN;
-    } else if (D0SetupReqCode == USB_GET_STATUS && !value && D0SetupLen == 2 &&
-               ((type == 0x80 && !index) || (type == 0x81 && index < TOTAL_INTERFACES && D0UsbConfig) ||
-                (type == 0x82 && D0UsbConfig && (index == 0 || index == 0x80 || (index >= 0x81 && index <= 0x83))))) {
-        endpoint = index & 7;
-        pD0_EP0_BUF[0] = type == 0x80 ? ((USB_SleepStatus & 1) << 1) :
-            ((type == 0x82 && endpoint && (EP_RESPONSE(endpoint) & MASK_UEP_X_RES) == UEP_X_RES_STALL) ? 1 : 0);
-        pD0_EP0_BUF[1] = 0;
-        D0_EP0T_L = 2;
-        control_phase = CTRL_STATUS_OUT;
-    } else if ((D0SetupReqCode == USB_SET_FEATURE || D0SetupReqCode == USB_CLEAR_FEATURE) && !D0SetupLen && D0UsbConfig) {
-        if (type == 0x00 && value == 1 && !index) {
-            if (D0SetupReqCode == USB_SET_FEATURE) USB_SleepStatus |= 1;
-            else USB_SleepStatus &= ~1;
-        } else if (type == 0x02 && !value && index >= 0x81 && index <= 0x83) {
-            endpoint = index & 7;
-            /* Clearing HALT restarts DATA0 and discards any undelivered packet. */
-            EP_RESPONSE(endpoint) = bUEP_X_AUTO_TOG | (D0SetupReqCode == USB_SET_FEATURE ? UEP_X_RES_STALL : UEP_X_RES_NAK);
-            if (endpoint == RAW_IN_EPNUM) raw_complete();
-        } else { control_stall(); return; }
-        control_phase = CTRL_STATUS_IN;
-    } else if (type == 0xa1 && D0SetupReqCode == HID_GET_REPORT && D0UsbConfig && D0SetupLen) {
-        report_id = value;
-        if ((value >> 8) == 1 && index == KEYBOARD_INTERFACE && !report_id) {
-            length = KEYBOARD_EPSIZE;
-            offset = SNAPSHOT_KEYBOARD;
-        } else if ((value >> 8) == 1 && index == SHARED_INTERFACE &&
-                   report_id < sizeof(shared_lengths) && shared_lengths[report_id]) {
-            length = shared_lengths[report_id];
-            offset = shared_offsets[report_id];
-        } else if ((value >> 8) == 1 && index == RAW_INTERFACE && !report_id) {
-            length = D0SetupLen < RAW_EPSIZE ? D0SetupLen : RAW_EPSIZE;
-            for (i = 0; i < length; ++i) pD0_EP0_BUF[i] = pUSB_BUF_DEV0[UX_EP3_ADDR + i];
-            length = 0; /* data already copied */
-        } else if (value == 0x0200 && index == KEYBOARD_INTERFACE) {
-            pD0_EP0_BUF[0] = KB_USB_SetReport;
-            length = 0;
-            D0SetupLen = 1;
-        } else if (value == (0x0200 | REPORT_ID_NKRO) && index == SHARED_INTERFACE) {
-            pD0_EP0_BUF[0] = REPORT_ID_NKRO;
-            pD0_EP0_BUF[1] = KB_USB_SetReport;
-            length = 0;
-            if (D0SetupLen > 2) D0SetupLen = 2;
-        } else if (value == 0x0300 && index == RAW_INTERFACE) {
-            /* Read-only EP0 Feature report, independent of Raw HID main-loop
-             * dispatch and EP3. Never flush NVM or change raw_state here. */
-            pD0_EP0_BUF[0] = 'A';
-            pD0_EP0_BUF[1] = 'K';
-            pD0_EP0_BUF[2] = 'B';
-            pD0_EP0_BUF[3] = 'T';
-            pD0_EP0_BUF[4] = 1;
-            pD0_EP0_BUF[5] = ak820_boot_stage;
-            pD0_EP0_BUF[6] = ak820_main_heartbeat;
-            pD0_EP0_BUF[7] = (USB_EnumStatus ? 1 : 0) | (USB_SleepStatus & 2);
-            length = 0;
-            if (D0SetupLen > 8) D0SetupLen = 8;
-        } else { control_stall(); return; }
-        if (length) {
-            if (D0SetupLen > length) D0SetupLen = length;
-            for (i = 0; i < D0SetupLen; ++i) pD0_EP0_BUF[i] = input_snapshot[offset + i];
-        } else if (index == RAW_INTERFACE && D0SetupLen > RAW_EPSIZE) D0SetupLen = RAW_EPSIZE;
-        D0_EP0T_L = D0SetupLen;
-        control_phase = CTRL_STATUS_OUT;
-    } else if (type == 0x21 && D0SetupReqCode == HID_SET_REPORT && D0UsbConfig) {
-        if (index == RAW_INTERFACE && value == 0x0200 && D0SetupLen == RAW_EPSIZE && raw_state == RAW_IDLE) {
-            raw_state = RAW_RX;
-            output_kind = OUTPUT_RAW;
-        } else if (index == KEYBOARD_INTERFACE && value == 0x0200 && D0SetupLen == 1) {
-            output_kind = OUTPUT_LED;
+    /* Dispatch the request byte once; recipient, direction and every field
+     * remain checked in the request-specific predicates below. */
+    switch (D0SetupReqCode) {
+        case USB_GET_DESCRIPTOR:
+            if (type == 0x80 || type == 0x81) {
+                if (((value >> 8) == USB_DESCR_TYP_HID || (value >> 8) == USB_DESCR_TYP_REPORT) != (type == 0x81)) {
+                    control_stall(); return;
+                }
+                length = descriptor_select(value >> 8, value, index);
+                if (!length) { control_stall(); return; }
+                control_zlp = length < D0SetupLen && !(length & (DEF_ENDP0_SIZE - 1));
+                if (D0SetupLen > length) D0SetupLen = length;
+                control_phase = D0SetupLen ? CTRL_DATA_IN : CTRL_STATUS_OUT;
+                if (D0SetupLen) control_next();
+                return;
+            } else { control_stall(); return; }
+        case USB_SET_ADDRESS:
+            if (type == 0x00 && zero_index && zero_length && value <= 127) {
+                D0SetupLen = value; /* applied after status-IN ACK */
+                control_phase = CTRL_STATUS_IN;
+            } else { control_stall(); return; }
+            break;
+        case USB_SET_CONFIGURATION: /* HID_SET_REPORT has the same request byte. */
+            if (type == 0x00 && zero_index && zero_length && value <= 1) {
+                endpoints_reset();
+                D0UsbConfig = value;
+                USB_EnumStatus = value != 0;
+                keyboard_reset = 1;
+                control_phase = CTRL_STATUS_IN;
+            } else if (type == 0x21 && D0UsbConfig) {
+                if (index == RAW_INTERFACE && value == 0x0200 && D0SetupLen == RAW_EPSIZE && raw_state == RAW_IDLE) {
+                    raw_state = RAW_RX;
+                    output_kind = OUTPUT_RAW;
+                } else if (index == KEYBOARD_INTERFACE && value == 0x0200 && D0SetupLen == 1) {
+                    output_kind = OUTPUT_LED;
 #if defined(NKRO_ENABLE) && defined(SHARED_EP_ENABLE)
-        } else if (index == SHARED_INTERFACE && value == (0x0200 | REPORT_ID_NKRO) && D0SetupLen == 2) {
-            output_kind = OUTPUT_SHARED_LED;
-            output_report_id = REPORT_ID_NKRO;
+                } else if (index == SHARED_INTERFACE && value == (0x0200 | REPORT_ID_NKRO) && D0SetupLen == 2) {
+                    output_kind = OUTPUT_SHARED_LED;
+                    output_report_id = REPORT_ID_NKRO;
 #endif
-        } else { control_stall(); return; }
-        control_phase = CTRL_DATA_OUT;
-        return; /* OUT data must arrive before status-IN becomes ACK */
-    } else if (index == KEYBOARD_INTERFACE && D0UsbConfig && type == 0x21 && D0SetupReqCode == DEF_USB_SET_PROTOCOL && !D0SetupLen && value <= 1) {
-        keyboard_protocol = value;
-        keyboard_reset = 1;
-        control_phase = CTRL_STATUS_IN;
-    } else if (index == KEYBOARD_INTERFACE && D0UsbConfig && type == 0xa1 && D0SetupReqCode == DEF_USB_GET_PROTOCOL && !value && D0SetupLen == 1) {
-        pD0_EP0_BUF[0] = keyboard_protocol;
-        D0_EP0T_L = 1;
-        control_phase = CTRL_STATUS_OUT;
-    } else if (index < TOTAL_INTERFACES && D0UsbConfig && type == 0x21 && D0SetupReqCode == DEF_USB_SET_IDLE && !D0SetupLen) {
-        if (index == KEYBOARD_INTERFACE) keyboard_idle = value >> 8;
-        control_phase = CTRL_STATUS_IN;
-    } else if (index < TOTAL_INTERFACES && D0UsbConfig && type == 0xa1 && D0SetupReqCode == DEF_USB_GET_IDLE && !(value >> 8) && D0SetupLen == 1) {
-        pD0_EP0_BUF[0] = index == KEYBOARD_INTERFACE ? keyboard_idle : 0;
-        D0_EP0T_L = 1;
-        control_phase = CTRL_STATUS_OUT;
-    } else { control_stall(); return; }
+                } else { control_stall(); return; }
+                control_phase = CTRL_DATA_OUT;
+                return; /* OUT data must arrive before status-IN becomes ACK */
+            } else { control_stall(); return; }
+            break;
+        case USB_GET_CONFIGURATION:
+            if (type == 0x80 && zero_index && zero_value && D0SetupLen == 1) {
+                pD0_EP0_BUF[0] = D0UsbConfig;
+                D0_EP0T_L = 1;
+                control_phase = CTRL_STATUS_OUT;
+            } else { control_stall(); return; }
+            break;
+        case USB_GET_INTERFACE: /* DEF_USB_SET_IDLE has the same request byte. */
+            if (type == 0x81 && valid_interface && zero_value && D0SetupLen == 1 && D0UsbConfig) {
+                pD0_EP0_BUF[0] = 0;
+                D0_EP0T_L = 1;
+                control_phase = CTRL_STATUS_OUT;
+            } else if (valid_interface && D0UsbConfig && type == 0x21 && zero_length) {
+                if (index == KEYBOARD_INTERFACE) keyboard_idle = value >> 8;
+                control_phase = CTRL_STATUS_IN;
+            } else { control_stall(); return; }
+            break;
+        case USB_SET_INTERFACE: /* DEF_USB_SET_PROTOCOL has the same request byte. */
+            if (type == 0x01 && valid_interface && zero_value && zero_length && D0UsbConfig) {
+                control_phase = CTRL_STATUS_IN;
+            } else if (index == KEYBOARD_INTERFACE && D0UsbConfig && type == 0x21 && zero_length && value <= 1) {
+                keyboard_protocol = value;
+                keyboard_reset = 1;
+                control_phase = CTRL_STATUS_IN;
+            } else { control_stall(); return; }
+            break;
+        case USB_GET_STATUS:
+            if (zero_value && D0SetupLen == 2 &&
+                ((type == 0x80 && zero_index) || (type == 0x81 && valid_interface && D0UsbConfig) ||
+                 (type == 0x82 && D0UsbConfig && (index == 0 || index == 0x80 || (index >= 0x81 && index <= 0x83))))) {
+                endpoint = index & 7;
+                pD0_EP0_BUF[0] = type == 0x80 ? ((USB_SleepStatus & 1) << 1) :
+                    ((type == 0x82 && endpoint && (EP_RESPONSE(endpoint) & MASK_UEP_X_RES) == UEP_X_RES_STALL) ? 1 : 0);
+                pD0_EP0_BUF[1] = 0;
+                D0_EP0T_L = 2;
+                control_phase = CTRL_STATUS_OUT;
+            } else { control_stall(); return; }
+            break;
+        case USB_CLEAR_FEATURE: /* HID_GET_REPORT has the same request byte. */
+        case USB_SET_FEATURE: /* DEF_USB_GET_PROTOCOL has the same request byte. */
+            if (zero_length && D0UsbConfig) {
+                if (type == 0x00 && value == 1 && zero_index) {
+                    if (D0SetupReqCode == USB_SET_FEATURE) USB_SleepStatus |= 1;
+                    else USB_SleepStatus &= ~1;
+                } else if (type == 0x02 && zero_value && index >= 0x81 && index <= 0x83) {
+                    endpoint = index & 7;
+                    /* Clearing HALT restarts DATA0 and discards any undelivered packet. */
+                    EP_RESPONSE(endpoint) = bUEP_X_AUTO_TOG | (D0SetupReqCode == USB_SET_FEATURE ? UEP_X_RES_STALL : UEP_X_RES_NAK);
+                    if (endpoint == RAW_IN_EPNUM) raw_complete();
+                } else { control_stall(); return; }
+                control_phase = CTRL_STATUS_IN;
+            } else if (type == 0xa1 && D0SetupReqCode == HID_GET_REPORT && D0UsbConfig && D0SetupLen) {
+                report_id = value;
+                if ((value >> 8) == 1 && index == KEYBOARD_INTERFACE && !report_id) {
+                    length = KEYBOARD_EPSIZE;
+                    offset = SNAPSHOT_KEYBOARD;
+                } else if ((value >> 8) == 1 && index == SHARED_INTERFACE &&
+                           report_id < sizeof(shared_lengths) && shared_lengths[report_id]) {
+                    length = shared_lengths[report_id];
+                    offset = shared_offsets[report_id];
+                } else if ((value >> 8) == 1 && index == RAW_INTERFACE && !report_id) {
+                    length = D0SetupLen < RAW_EPSIZE ? D0SetupLen : RAW_EPSIZE;
+                    for (i = 0; i < length; ++i) pD0_EP0_BUF[i] = pUSB_BUF_DEV0[UX_EP3_ADDR + i];
+                    length = 0; /* data already copied */
+                } else if (value == 0x0200 && index == KEYBOARD_INTERFACE) {
+                    pD0_EP0_BUF[0] = KB_USB_SetReport;
+                    length = 0;
+                    D0SetupLen = 1;
+                } else if (value == (0x0200 | REPORT_ID_NKRO) && index == SHARED_INTERFACE) {
+                    pD0_EP0_BUF[0] = REPORT_ID_NKRO;
+                    pD0_EP0_BUF[1] = KB_USB_SetReport;
+                    length = 0;
+                    if (D0SetupLen > 2) D0SetupLen = 2;
+                } else if (value == 0x0300 && index == RAW_INTERFACE) {
+                    /* Read-only EP0 Feature report, independent of Raw HID main-loop
+                     * dispatch and EP3. Never flush NVM or change raw_state here. */
+                    pD0_EP0_BUF[0] = 'A';
+                    pD0_EP0_BUF[1] = 'K';
+                    pD0_EP0_BUF[2] = 'B';
+                    pD0_EP0_BUF[3] = 'T';
+                    pD0_EP0_BUF[4] = 1;
+                    pD0_EP0_BUF[5] = ak820_boot_stage;
+                    pD0_EP0_BUF[6] = ak820_main_heartbeat;
+                    pD0_EP0_BUF[7] = (USB_EnumStatus ? 1 : 0) | (USB_SleepStatus & 2);
+                    length = 0;
+                    if (D0SetupLen > 8) D0SetupLen = 8;
+                } else { control_stall(); return; }
+                if (length) {
+                    if (D0SetupLen > length) D0SetupLen = length;
+                    for (i = 0; i < D0SetupLen; ++i) pD0_EP0_BUF[i] = input_snapshot[offset + i];
+                } else if (index == RAW_INTERFACE && D0SetupLen > RAW_EPSIZE) D0SetupLen = RAW_EPSIZE;
+                D0_EP0T_L = D0SetupLen;
+                control_phase = CTRL_STATUS_OUT;
+            } else if (index == KEYBOARD_INTERFACE && D0UsbConfig && type == 0xa1 && D0SetupReqCode == DEF_USB_GET_PROTOCOL && zero_value && D0SetupLen == 1) {
+                pD0_EP0_BUF[0] = keyboard_protocol;
+                D0_EP0T_L = 1;
+                control_phase = CTRL_STATUS_OUT;
+            } else { control_stall(); return; }
+            break;
+        case DEF_USB_GET_IDLE:
+            if (valid_interface && D0UsbConfig && type == 0xa1 && !(value >> 8) && D0SetupLen == 1) {
+                pD0_EP0_BUF[0] = index == KEYBOARD_INTERFACE ? keyboard_idle : 0;
+                D0_EP0T_L = 1;
+                control_phase = CTRL_STATUS_OUT;
+            } else { control_stall(); return; }
+            break;
+        default: control_stall(); return;
+    }
     D0_EP0RES = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_ACK;
 }
 

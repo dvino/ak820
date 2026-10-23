@@ -1,3 +1,8 @@
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
+#pragma noinvariant
+#endif
+
 /* Copyright 2017 Jason Williams (Wilba)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +32,10 @@
 
 #ifdef AK820_BOARD
 #    include "ak820_macro.h"
+#    include "ak820_nvm.h"
+#    ifdef AK820_COMPACT_COMBO
+#        include "ak820_combo.h"
+#    endif
 #    ifdef AK820_COMPACT_TAPPING
 #        include "action_util.h"
 #    endif
@@ -111,6 +120,16 @@ typedef uint16_t dynamic_buffer_size_t;
 #endif
 
 // Combos
+#ifdef AK820_COMPACT_COMBO
+/* Additive v1 extension: each 10-byte slot stays within one journal page.
+ * The standard packet reserves input[2:4] for more keys; storage uses them
+ * as version markers, while the wire representation keeps them zero. */
+#define AK820_COMBO_MARKER 0x0820
+#define AK820_COMBO_VERSION 1
+_Static_assert((VIAL_TAP_DANCE_EEPROM_ADDR + VIAL_TAP_DANCE_SIZE) == 0x658, "combo extension base");
+_Static_assert(VIAL_COMBO_ENTRIES == 8, "combo extension slot count");
+_Static_assert(sizeof(vial_combo_entry_t) == 10, "combo extension slot size");
+#endif
 #define VIAL_COMBO_EEPROM_ADDR (VIAL_TAP_DANCE_EEPROM_ADDR + VIAL_TAP_DANCE_SIZE)
 
 #ifdef VIAL_COMBO_ENABLE
@@ -245,22 +264,58 @@ int dynamic_keymap_set_tap_dance(uint8_t index, const vial_tap_dance_entry_t *en
 #endif
 
 #ifdef VIAL_COMBO_ENABLE
-int dynamic_keymap_get_combo(uint8_t index, vial_combo_entry_t *entry) {
+int dynamic_keymap_get_combo(uint8_t index, vial_combo_entry_t *buffer) {
+#ifdef AK820_COMPACT_COMBO
+    /* Every board caller passes a model-large automatic XDATA entry. */
+    vial_combo_entry_t AK820_STATE_MEM *entry = (vial_combo_entry_t AK820_STATE_MEM *)buffer;
+#else
+    vial_combo_entry_t *entry = buffer;
+#endif
     if (index >= VIAL_COMBO_ENTRIES)
         return -1;
 
     uint8_t *address = (uint8_t *)(VIAL_COMBO_EEPROM_ADDR + index * sizeof(vial_combo_entry_t));
+#ifdef AK820_COMPACT_COMBO
+    ak820_eeprom_read_block_xdata(entry, address, sizeof(vial_combo_entry_t));
+#else
     eeprom_read_block(entry, address, sizeof(vial_combo_entry_t));
+#endif
+#ifdef AK820_COMPACT_COMBO
+    bool marked = entry->input[2] == AK820_COMBO_MARKER && entry->input[3] == AK820_COMBO_VERSION;
+    entry->input[2] = entry->input[3] = 0;
+    if (!marked || !ak820_combo_valid(entry)) memset(entry, 0, sizeof(*entry));
+#endif
 
     return 0;
 }
 
-int dynamic_keymap_set_combo(uint8_t index, const vial_combo_entry_t *entry) {
+int dynamic_keymap_set_combo(uint8_t index, const vial_combo_entry_t *buffer) {
+#ifdef AK820_COMPACT_COMBO
+    const vial_combo_entry_t AK820_STATE_MEM *entry = (const vial_combo_entry_t AK820_STATE_MEM *)buffer;
+#else
+    const vial_combo_entry_t *entry = buffer;
+#endif
+#ifdef AK820_COMPACT_COMBO
+    if (!ak820_combo_valid(entry) || !ak820_nvm_ok()) return -1;
+#endif
     if (index >= VIAL_COMBO_ENTRIES)
         return -1;
 
     uint8_t *address = (uint8_t *)(VIAL_COMBO_EEPROM_ADDR + index * sizeof(vial_combo_entry_t));
+#ifdef AK820_COMPACT_COMBO
+    clear_keyboard();
+    vial_combo_entry_t stored = *entry;
+    stored.input[2] = AK820_COMBO_MARKER;
+    stored.input[3] = AK820_COMBO_VERSION;
+    ak820_eeprom_write_block_xdata(&stored, address, sizeof(stored));
+#else
     eeprom_write_block(entry, address, sizeof(vial_combo_entry_t));
+#endif
+#ifdef AK820_COMPACT_COMBO
+    ak820_nvm_flush();
+    if (!ak820_nvm_ok()) return -1;
+    /* flush() verifies the entire journal target page before success. */
+#endif
 
     return 0;
 }
@@ -330,7 +385,7 @@ void dynamic_keymap_reset(void) {
 #endif
 
 #ifdef VIAL_COMBO_ENABLE
-    vial_combo_entry_t combo = { 0 };
+    vial_combo_entry_t combo = { { 0 }, 0 };
     for (size_t i = 0; i < VIAL_COMBO_ENTRIES; ++i)
         dynamic_keymap_set_combo(i, &combo);
 #endif
@@ -360,7 +415,7 @@ static void ak820_dynamic_read_buffer(uint16_t base, uint16_t limit, uint16_t of
         uint16_t remaining = limit - offset;
         available = remaining < size ? remaining : size;
     }
-    if (available) eeprom_read_block(data, (const void *)(uintptr_t)(base + offset), available);
+    if (available) ak820_eeprom_read_block_xdata(target, (const void *)(uintptr_t)(base + offset), available);
     for (uint8_t i = available; i < size; ++i) target[i] = 0;
 }
 #endif
@@ -453,7 +508,7 @@ void dynamic_keymap_set_buffer(uint16_t offset, uint16_t size, uint8_t *data) {
     /* The board backend compares each byte, batches pages and verifies the
      * durable write. Repeating its comparison through byte wrappers adds no
      * guarantee and is costly on the 8051 generic-pointer ABI. */
-    eeprom_write_block(data, (void *)(uintptr_t)(DYNAMIC_KEYMAP_EEPROM_ADDR + offset), size);
+    ak820_eeprom_write_block_xdata(buffer, (void *)(uintptr_t)(DYNAMIC_KEYMAP_EEPROM_ADDR + offset), size);
 #else
     for (dynamic_buffer_size_t i = 0; i < count; i++) {
         if (offset + i < dynamic_keymap_eeprom_size) {

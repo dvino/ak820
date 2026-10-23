@@ -1,3 +1,8 @@
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
+#pragma noinvariant
+#endif
+
 #include "sdcc_dummy_macros.h"
 // Copyright 2022-2023 Google LLC
 //

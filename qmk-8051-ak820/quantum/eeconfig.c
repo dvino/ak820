@@ -5,6 +5,9 @@
 #include "eeprom.h"
 #include "eeconfig.h"
 #include "action_layer.h"
+#ifdef AK820_BOARD
+#    include "ak820_nvm.h"
+#endif
 
 #if defined(EEPROM_DRIVER)
 #    include "eeprom_driver.h"
@@ -62,7 +65,11 @@ void eeconfig_init_quantum(void) {
     eeprom_update_byte(EECONFIG_UNICODEMODE, 0);
     eeprom_update_byte(EECONFIG_STENOMODE, 0);
     uint64_t dummy = 0;
+#ifdef AK820_BOARD
+    ak820_eeprom_update_block_xdata(&dummy, EECONFIG_RGB_MATRIX, sizeof(uint64_t));
+#else
     eeprom_update_block(&dummy, EECONFIG_RGB_MATRIX, sizeof(uint64_t));
+#endif
     eeprom_update_dword(EECONFIG_HAPTIC, 0);
 #if defined(HAPTIC_ENABLE)
     haptic_reset();

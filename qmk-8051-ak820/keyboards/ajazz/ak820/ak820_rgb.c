@@ -1,3 +1,8 @@
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
+#pragma noinvariant
+#endif
+
 /* SPDX-License-Identifier: GPL-2.0-or-later
  * Compact QMK RGB Matrix API for the AK820 8051 target.
  * Effects: solid, breathing, cycle-all, cycle-left-right, and Vial direct.
@@ -10,6 +15,7 @@
 #include "timer.h"
 #include "vialrgb.h"
 #include "ak820_board.h"
+#include "ak820_nvm.h"
 #include "led_tables.h"
 #include <string.h>
 
@@ -41,11 +47,13 @@ static void clear_reactive(void) {
 
 static void age_reactive(void) {
     uint16_t ticks = timer_elapsed(reactive_at) >> 4;
-    uint8_t i;
+    uint8_t i, decay;
     if (!ticks) return;
     reactive_at += ticks << 4;
+    /* Every age is one byte, so larger tick counts have the same zero result. */
+    decay = ticks > 255 ? 255 : (uint8_t)ticks;
     for (i = 0; i < RGB_MATRIX_LED_COUNT; ++i) {
-        reactive_age[i] = ticks >= reactive_age[i] ? 0 : reactive_age[i] - ticks;
+        reactive_age[i] = decay >= reactive_age[i] ? 0 : reactive_age[i] - decay;
     }
 }
 
@@ -66,7 +74,7 @@ void eeconfig_update_rgb_matrix(void) {
     /* The trailing bytes are part of the stable QMK EEPROM ABI. */
     uint8_t *raw = (uint8_t *)&rgb_matrix_config;
     raw[6] = raw[7] = 0;
-    eeprom_update_block(&rgb_matrix_config, EECONFIG_RGB_MATRIX, sizeof(rgb_matrix_config));
+    ak820_eeprom_update_block_xdata(&rgb_matrix_config, EECONFIG_RGB_MATRIX, sizeof(rgb_matrix_config));
     dirty = false;
 }
 
@@ -83,7 +91,7 @@ void eeconfig_update_rgb_matrix_default(void) {
 }
 
 void rgb_matrix_reload_from_eeprom(void) {
-    eeprom_read_block(&rgb_matrix_config, EECONFIG_RGB_MATRIX, sizeof(rgb_matrix_config));
+    ak820_eeprom_read_block_xdata(&rgb_matrix_config, EECONFIG_RGB_MATRIX, sizeof(rgb_matrix_config));
     if (!rgb_matrix_config.mode || rgb_matrix_config.mode >= RGB_MATRIX_EFFECT_MAX || rgb_matrix_config.enable > 1) {
         eeconfig_update_rgb_matrix_default();
     }
@@ -174,22 +182,21 @@ void rgb_matrix_task(void) {
         if (!frame_mode || !(LED_FLAG_KEYLIGHT & frame_flags)) {
             rgb_matrix_set_color(led_index, 0, 0, 0);
         } else {
-            hsv.h = frame_hue;
-            hsv.s = frame_sat;
-            hsv.v = frame_val;
-            if (frame_mode == RGB_MATRIX_CYCLE_ALL) hsv.h += frame_phase;
-            if (frame_mode == RGB_MATRIX_CYCLE_LEFT_RIGHT) hsv.h += ak820_led_points[led_index].x - frame_phase;
-            if (frame_mode == RGB_MATRIX_SOLID_REACTIVE_SIMPLE) {
-                /* Four speed bands select 2048/1024/512/256 ms. */
-                uint8_t shift = 7 - (rgb_matrix_config.speed >> 6);
-                uint8_t duration = 1 << shift;
-                uint8_t age = reactive_age[led_index];
-                hsv.v = age >= duration ? frame_val : ((uint16_t)frame_val * age) >> shift;
-            }
             if (frame_mode == RGB_MATRIX_VIALRGB_DIRECT) {
-                hsv.h = g_direct_mode_colors[led_index].h;
-                hsv.s = g_direct_mode_colors[led_index].s;
-                hsv.v = g_direct_mode_colors[led_index].v;
+                hsv = g_direct_mode_colors[led_index];
+            } else {
+                hsv.h = frame_hue;
+                hsv.s = frame_sat;
+                hsv.v = frame_val;
+                if (frame_mode == RGB_MATRIX_CYCLE_ALL) hsv.h += frame_phase;
+                if (frame_mode == RGB_MATRIX_CYCLE_LEFT_RIGHT) hsv.h += ak820_led_points[led_index].x - frame_phase;
+                if (frame_mode == RGB_MATRIX_SOLID_REACTIVE_SIMPLE) {
+                    /* Four speed bands select 2048/1024/512/256 ms. */
+                    uint8_t shift = 7 - (rgb_matrix_config.speed >> 6);
+                    uint8_t duration = 1 << shift;
+                    uint8_t age = reactive_age[led_index];
+                    hsv.v = age >= duration ? frame_val : ((uint16_t)frame_val * age) >> shift;
+                }
             }
             /* This model-large local is XDATA. Pass a two-byte typed output
              * pointer instead of SDCC's generic aggregate-return pointer. */

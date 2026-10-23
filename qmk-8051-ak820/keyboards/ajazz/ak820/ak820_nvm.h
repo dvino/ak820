@@ -2,6 +2,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #define AK820_NVM_BASE 0xC700u
 #define AK820_NVM_SIZE 0x2800u
@@ -61,3 +62,9 @@ bool ak820_flash_program_page(uint16_t address, const uint8_t __xdata *data);
 bool ak820_flash_program_page(uint16_t address, const uint8_t *data);
 #endif
 
+
+/* Private target APIs: every buffer originates in model-large XDATA storage.
+ * Public generic EEPROM functions remain available for other pointer spaces. */
+void ak820_eeprom_read_block_xdata(void AK820_XDATA *buf, const void *addr, size_t len);
+void ak820_eeprom_write_block_xdata(const void AK820_XDATA *buf, void *addr, size_t len);
+void ak820_eeprom_update_block_xdata(const void AK820_XDATA *buf, void *addr, size_t len);

@@ -31,8 +31,8 @@ static uint16_t now;
 static uint16_t timer_read(void) { return now; }
 static uint16_t timer_elapsed(uint16_t then) { return (uint16_t)(now - then); }
 static uint8_t eeprom[8];
-static void eeprom_update_block(const void *p, void *a, unsigned n) { (void)a; memcpy(eeprom,p,n); }
-static void eeprom_read_block(void *p, const void *a, unsigned n) { (void)a; memcpy(p,eeprom,n); }
+static void ak820_eeprom_update_block_xdata(const void *p, void *a, unsigned n) { (void)a; memcpy(eeprom,p,n); }
+static void ak820_eeprom_read_block_xdata(void *p, const void *a, unsigned n) { (void)a; memcpy(p,eeprom,n); }
 static RGB output[82];
 static void init(void) {}
 static void set_color(int i,uint8_t r,uint8_t g,uint8_t b) { output[i]=(RGB){r,g,b}; }

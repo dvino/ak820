@@ -82,14 +82,14 @@ python tests/ak820_optimization/outline_unit.py
 python tests/ak820_optimization/outline.py \
   --build-dir .build/CANDIDATE \
   --input-dce .build/CANDIDATE/dce-input \
-  --s51 ../toolchains/sdcc-4.4.0/bin/s51 \
+  --s51 ../toolchains/sdcc-4.6.0/bin/s51 \
   --output-dir .build/CANDIDATE/outline-tests
 python util/ak820_outline_audit.py \
   --build-dir .build/CANDIDATE \
   --output .build/CANDIDATE/repetition-audit.json
 ```
 
-Seven synthetic gates check label boundaries, private symbol identity, excluded
+Eleven synthetic gates check label boundaries, private symbol identity, excluded
 hardware/non-CSEG code, forbidden operands, overlap, relocation markers and
 repeated application. The linked verifier independently resolves each retained
 immediate against final symbols, checks all helper bytes and every LCALL/count,
@@ -100,10 +100,16 @@ permitted difference is the two temporary unused stack bytes written by LCALL;
 the final SP is identical. Execution logs are compressed, with hashes retained.
 
 The accepted bodies have no branches, calls, return, stack operations, arbitrary
-direct memory/SFR/bit access, indirect IRAM, MOVC or PC-relative expression.
+direct memory/SFR/bit access, indirect IRAM or PC-relative expression. Only the
+DPTR-relative `MOVC A,@A+DPTR` form is permitted; the PC-relative form is not.
 Architectural ACC/B/DPL/DPH and carry are explicitly whitelisted; SP/PSW are not. They
 cannot nest. Relocation/register-normalized families are audit candidates only;
-they are not silently substituted. The script is an instruction-semantics
+they are not silently substituted. Version 3 admits profitable bodies of at
+least four bytes and two instructions, with at most 200 nonoverlapping helpers.
+Besides Quantum, it admits explicitly listed foreground report, host, RGB,
+NVM and EEPROM modules, and four named foreground USB functions. USB control
+and interrupt handling, IAP, board IRQ and delay code are excluded. The manifest
+records this scope and every chosen site. The script is an instruction-semantics
 check, not a model of physical IRQ timing.
 
 ## Selective callee-save ABI
@@ -111,13 +117,14 @@ check, not a model of physical IRQ timing.
 ```sh
 python tests/ak820_optimization/callee.py \
   --build-dir .build/CANDIDATE \
-  --s51 ../toolchains/sdcc-4.4.0/bin/s51 \
+  --s51 ../toolchains/sdcc-4.6.0/bin/s51 \
   --output-dir .build/CANDIDATE/callee-tests
 ```
 
 This verifies all eleven audited C callees in the real IHX, using 2,674 calls
 with changing R0–R7 sentinels. It checks stack restoration separately from return
-values and memory effects: timers/IE restoration, all modifier and matrix-row
+values and memory effects, comparing SP with the actual post-initialization
+entry SP, including the CRT return address. Cases cover timers/IE restoration, all modifier and matrix-row
 bytes, 1,024 pin fixtures, ROM/EEPROM cached and uncached reads, valid/invalid
 updates, previous fault, rejected flush and several delay lengths. The ABI
 contract is bank 0, matching application C and the OEM wrapper normalization;

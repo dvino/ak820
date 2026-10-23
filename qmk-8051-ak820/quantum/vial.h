@@ -104,7 +104,7 @@ _Static_assert(sizeof(vial_tap_dance_entry_t) == 10, "Unexpected size of the via
 #endif
 
 
-#ifdef COMBO_ENABLE
+#if defined(COMBO_ENABLE) || defined(AK820_COMPACT_COMBO)
 #define VIAL_COMBO_ENABLE
 
 #ifndef VIAL_COMBO_ENTRIES

@@ -17,6 +17,9 @@
 #include "process_tri_layer.h"
 #include "qmk_settings.h"
 #include "ak820_tapping.h"
+#include "ak820_combo.h"
+static vial_combo_entry_t fixture_combos[VIAL_COMBO_ENTRIES];
+int dynamic_keymap_get_combo(uint8_t i, vial_combo_entry_t *entry) {*entry=fixture_combos[i];return 0;}
 #include "caps_word.h"
 #include "process_caps_word.h"
 #include "timer.h"
@@ -84,6 +87,7 @@ static void event(uint8_t id,bool down,uint16_t time) {
 static void tick(uint16_t time) { keyevent_t e={0};e.type=TICK_EVENT;e.time=now=time;action_exec(e); }
 static void reset(void) {
  clear_keyboard();caps_word_off();memset(source_state,0,sizeof(source_state));
+ memset(fixture_combos,0,sizeof(fixture_combos));ak820_combo_reload();
  ak820_macro_primitive=false;repeat_key_cancel();set_tri_layer_layers(1,2,3);layer_clear();default_layer_set(0);memset(map,0,sizeof(map));memset(enc,0,sizeof(enc));log_count=extra_count=0;
 }
 static void assign(uint8_t id,uint16_t code) {for(unsigned l=0;l<6;l++)map[l][id/MATRIX_COLS][id%MATRIX_COLS]=code;}
@@ -251,5 +255,15 @@ int main(int argc,char **argv) {
  reset();assign(0,QK_GRAVE_ESCAPE);assign(1,KC_LSFT);assign(2,QK_REPEAT_KEY);event(0,1,10);event(1,1,20);event(2,1,30);assert(is_key_pressed(keyboard_report,KC_ESCAPE)&&is_key_pressed(keyboard_report,KC_GRAVE));event(0,0,40);assert(!is_key_pressed(keyboard_report,KC_ESCAPE)&&is_key_pressed(keyboard_report,KC_GRAVE));event(2,0,50);assert(!is_key_pressed(keyboard_report,KC_GRAVE));event(1,0,60);clean();
  for(unsigned dir=0;dir<2;dir++){reset();assign(1,KC_LSFT);enc[0][dir]=QK_GRAVE_ESCAPE;event(1,1,10);encoder(dir,1,20);assert(is_key_pressed(keyboard_report,KC_GRAVE));event(1,0,30);encoder(dir,0,40);clean();}
  reset();assign(1,KC_LSFT);event(1,1,10);vial_keycode_down(QK_GRAVE_ESCAPE);assert(is_key_pressed(keyboard_report,KC_GRAVE));event(1,0,30);vial_keycode_up(QK_GRAVE_ESCAPE);clean();
- puts("PASS: production host tap/cache/action/ownership traces");return 0;
+ /* Configured Combos through real admission/cache/action/Repeat/owners. */
+ for(unsigned mode=0;mode<2;mode++)for(unsigned reverse=0;reverse<2;reverse++) {
+  reset();keymap_config.nkro=mode;fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,KC_A);assign(1,KC_B);assign(2,KC_C);assign(3,QK_REPEAT_KEY);
+  event(2,1,1);event(0,1,10);assert(key_refs[KC_A]==0);event(1,1,20);assert(key_refs[KC_C]==2&&get_last_keycode()==KC_C);event(reverse?0:1,0,30);assert(key_refs[KC_C]==1);event(reverse?1:0,0,40);event(2,0,50);event(3,1,60);assert(key_refs[KC_C]==1);event(3,0,70);clean();
+ }
+ reset();keymap_config.nkro=0;fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},0x0106};ak820_combo_reload();assign(0,KC_A);assign(1,KC_B);assign(2,KC_LCTL);event(2,1,1);event(0,1,10);event(1,1,20);assert(get_mods()==1&&get_weak_mods()==1&&key_refs[KC_C]==1);event(0,0,30);assert(get_mods()==1&&!get_weak_mods()&&!key_refs[KC_C]);event(1,0,40);event(2,0,50);clean();
+ reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,KC_A);assign(1,KC_B);caps_word_on();event(0,1,10);event(1,1,20);assert(is_caps_word_on()&&get_weak_mods()==2&&get_last_keycode()==KC_C);event(0,0,30);event(1,0,40);caps_word_off();clean();
+ reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,KC_A);assign(1,KC_B);event(0,1,10);clear_keyboard();tick(100);event(0,0,110);assert(!key_refs[KC_A]&&!key_refs[KC_C]);event(0,1,120);event(1,1,130);assert(key_refs[KC_C]==1);clear_keyboard();event(0,0,140);event(1,0,150);clean();
+ reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,KC_A);assign(1,0x2205);event(0,1,10);event(1,1,20);assert(key_refs[KC_A]==1&&!get_mods());tick(220);assert(get_mods()==2);event(0,0,230);event(1,0,240);clean();
+ reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,0x4107);assign(1,KC_A);map[1][0][1]=KC_B;event(0,1,10);event(1,1,20);assert(layer_state==2);tick(60);assert(key_refs[KC_B]==1&&!key_refs[KC_A]);event(1,0,70);event(0,0,80);clean();
+ puts("PASS: production host tap/cache/action/ownership/configured-combo traces");return 0;
 }

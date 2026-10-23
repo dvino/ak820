@@ -149,12 +149,24 @@ def cases(fw):
 
 def macro_cancel_case(fw):
     # Inject a public clear immediately after the interpreter's first DOWN.
-    # Match the emitted caller's saves/restores rather than a fixed address.
+    # Find the actual relocated call in this function. Compiler optimizations
+    # can remove caller saves without changing the DOWN operation or its ABI.
     register=fw.address('_register_code');clear=fw.address('_clear_keyboard')
-    pattern=[0xc0,7,0xc0,6,0xc0,5,0x12,register>>8,register&255,0xd0,5,0xd0,6,0xd0,7]
-    begin=fw.address('_dynamic_keymap_macro_send')
-    matches=[a+6 for a in range(begin,begin+0x400) if [fw.code.get(a+i) for i in range(len(pattern))]==pattern]
-    if len(matches)!=1:raise ValueError('Expected one macro DOWN call with preserved r5/r6/r7')
+    assembly=fw.build/'dce/quantum/dynamic_keymap.asm'
+    listing=assembly.with_suffix('.rst')
+    source=assembly.read_text().splitlines();matches=[]
+    for row in listing.read_text().splitlines():
+        m=re.match(r'^\s*([0-9A-F]{6})\s+12\s+([0-9A-F]{2})\s+([0-9A-F]{2})\s+\[\d+\]\s+(\d+)\s+lcall\s+_register_code\s*$',row)
+        if not m:continue
+        line=int(m[4])-1
+        functions=re.findall(r'^;\s*function\s+(\w+)\s*$', '\n'.join(source[:line]), re.M)
+        if not functions or functions[-1]!='dynamic_keymap_macro_send':continue
+        if not re.fullmatch(r'\s*lcall\s+_register_code\s*',source[line]):raise ValueError('Macro call ASM/RST mismatch')
+        address=int(m[1],16);encoded=[0x12,int(m[2],16),int(m[3],16)]
+        if encoded != [0x12,register>>8,register&255] or [fw.code.get(address+i) for i in range(3)]!=encoded:
+            raise ValueError('Macro DOWN listing does not match the linked target bytes')
+        matches.append(address)
+    if len(matches)!=1:raise ValueError('Expected one linked register_code call in the macro interpreter')
     patched=matches[0];original=[fw.code[patched+i] for i in range(3)];hook=0x2640
     registers=list(range(8))+[0xe0,0xf0,0x82,0x83,0xd0]
     trampoline=[0x12,register>>8,register&255]
@@ -172,6 +184,7 @@ def macro_cancel_case(fw):
     t.map((0,0),5);t.event((0,0),0,200);t.event((0,1),0,201);t.event((0,0),1,202);t.check('fresh-key-after-cancel',packet(0,5));t.event((0,0),0,203);t.check('fresh-release',packet());r=t.run()
     r['expected_hid_send_trace']=[packet(2),packet(2,4),packet(),packet(0,5),packet()];r['expected_extra_callback_trace']=[[4,0xe9,0],[4,0,0]]
     r['simulator_patch']={'symbol':'_dynamic_keymap_macro_send','address':patched,'original_bytes':original,'replacement_bytes':[0x12,hook>>8,hook&255],'trampoline_address':hook,'trampoline_bytes':trampoline,'preserved_direct_registers':registers,'reason':'Model a public clear_keyboard call after the first actual macro DOWN output, then resume the real interpreter','limits':'Injected call timing only; no EE_CLR dispatch, reset, EEPROM, NVM persistence, IRQ overlap, power-fail or physical hardware proof. Other cases execute the original image.'}
+    r['simulator_patch']['callsite_evidence_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (assembly,listing)}
     r['pass_'] &= r['hid_send_trace']==r['expected_hid_send_trace'] and r['extra_callback_trace']==r['expected_extra_callback_trace']
     return r
 

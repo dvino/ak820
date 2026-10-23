@@ -1,3 +1,8 @@
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
+#pragma noinvariant
+#endif
+
 /* SPDX-License-Identifier: GPL-2.0-or-later
  *
  * AJAZZ AK820 VS11K28A board driver, reconstructed from the supplied OEM ROM

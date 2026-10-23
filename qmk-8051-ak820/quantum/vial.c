@@ -16,6 +16,9 @@
  */
 
 #include "vial.h"
+#ifdef AK820_COMPACT_COMBO
+#    include "ak820_combo.h"
+#endif
 #ifdef REPEAT_KEY_ENABLE
 #    include "repeat_key.h"
 #endif
@@ -91,7 +94,11 @@ static void reload_tap_dance(void);
 #endif
 
 #ifdef VIAL_COMBO_ENABLE
+#    ifdef AK820_COMPACT_COMBO
+#        define reload_combo ak820_combo_reload
+#    else
 static void reload_combo(void);
+#    endif
 #endif
 
 #ifdef VIAL_KEY_OVERRIDE_ENABLE
@@ -344,7 +351,7 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
 #ifdef VIAL_COMBO_ENABLE
             case dynamic_vial_combo_get: {
                 uint8_t idx = msg[3];
-                vial_combo_entry_t entry = { 0 };
+                vial_combo_entry_t entry = { { 0 }, 0 };
                 msg[0] = dynamic_keymap_get_combo(idx, &entry);
                 memcpy(&msg[1], &entry, sizeof(entry));
                 break;
@@ -355,7 +362,7 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
                 memcpy(&entry, &msg[4], sizeof(entry));
                 entry.output = vial_keycode_firewall(entry.output);
                 msg[0] = dynamic_keymap_set_combo(idx, &entry);
-                reload_combo();
+                if (!msg[0]) reload_combo();
                 break;
             }
 #endif
@@ -617,7 +624,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 }
 #endif
 
-#ifdef VIAL_COMBO_ENABLE
+#if defined(VIAL_COMBO_ENABLE) && !defined(AK820_COMPACT_COMBO)
 combo_t key_combos[VIAL_COMBO_ENTRIES] = { };
 uint16_t key_combos_keys[VIAL_COMBO_ENTRIES][5];
 

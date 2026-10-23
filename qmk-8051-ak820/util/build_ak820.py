@@ -180,7 +180,7 @@ def main():
     assemble_tree(dce_input, 'assemble-input-' if apply_outlining else 'assemble-')
     outlining = None
     if apply_outlining:
-        outlining = outline_assembled(dce_input, dce, max_helpers=40, min_saving=12)
+        outlining = outline_assembled(dce_input, dce, max_helpers=200, min_saving=1)
         assemble_tree(dce, 'assemble-outlined-')
     objects = sorted(str(path) for path in dce.rglob('*.rel'))
     ihx = build/(target+'.ihx')

@@ -45,7 +45,7 @@ static void commit_length(uint16_t length) {
     metadata[0] = 0;
     metadata[1] = (uint8_t)length;
     metadata[2] = (uint8_t)(length >> 8);
-    eeprom_write_block(metadata, (void *)(uintptr_t)AK820_MACRO_BUSY_ADDR, sizeof(metadata));
+    ak820_eeprom_write_block_xdata(metadata, (void *)(uintptr_t)AK820_MACRO_BUSY_ADDR, sizeof(metadata));
     ak820_nvm_flush();
     if (ak820_nvm_ok()) used_length = length;
 }
@@ -127,7 +127,8 @@ bool ak820_macro_write(uint16_t offset, uint16_t size, const uint8_t *packet) {
     } else {
         if (offset > covered) return false; /* A hole is never old EEPROM data. */
         if (offset == covered) {
-            next = parsed;
+            next.terminated = parsed.terminated;
+            next.arguments = parsed.arguments;
         } else {
             /* A changed retransmission may rewind to an already received
              * prefix, but must validate that prefix again. This also permits
@@ -146,13 +147,14 @@ bool ak820_macro_write(uint16_t offset, uint16_t size, const uint8_t *packet) {
         busy_write(1);
         if (!ak820_nvm_ok()) { ak820_nvm_end(); return false; }
     }
-    eeprom_write_block(data, (void *)(uintptr_t)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + offset), size);
+    ak820_eeprom_write_block_xdata(data, (void *)(uintptr_t)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + offset), size);
     ak820_nvm_flush();
     if (complete && ak820_nvm_ok()) commit_length(end);
     ak820_nvm_end();
     if (!ak820_nvm_ok()) return false;
     covered = end;
-    parsed = next;
+    parsed.terminated = next.terminated;
+    parsed.arguments = next.arguments;
     uploading = !complete;
     return true;
 }

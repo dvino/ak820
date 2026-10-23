@@ -1,3 +1,8 @@
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* SDCC 4.6: keep loop expressions local to reduce AK820 CODE. */
+#pragma noinvariant
+#endif
+
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Persistent QMK EEPROM with one 64-byte redo journal. No USB or ISR calls.
 #include <stddef.h>
@@ -168,14 +173,26 @@ static bool load_page(uint16_t page) {
     return true;
 }
 
+static uint8_t read_offset(uint16_t offset) {
+    if (offset >= AK820_NVM_SIZE) return 0;
+    if (page_valid && (offset / AK820_FLASH_PAGE) == cached_page)
+        return page_data[offset % AK820_FLASH_PAGE];
+    return ak820_flash_read(AK820_NVM_BASE + offset);
+}
+
+#if defined(AK820_BOARD) || defined(AK820_NVM_SCALAR_TEST)
+uint8_t eeprom_read_byte(const uint8_t *addr) {
+    return read_offset((uint16_t)(uintptr_t)addr);
+}
+
+#endif
+
 void eeprom_read_block(void *buf, const void *addr, size_t len) {
     uint16_t offset = (uint16_t)(uintptr_t)addr;
     uint8_t *out = (uint8_t *)buf;
     while (len--) {
         if (offset >= AK820_NVM_SIZE) { *out++ = 0; continue; }
-        if (page_valid && (offset / AK820_FLASH_PAGE) == cached_page)
-            *out++ = page_data[offset % AK820_FLASH_PAGE];
-        else *out++ = ak820_flash_read(AK820_NVM_BASE + offset);
+        *out++ = read_offset(offset);
         ++offset;
     }
 }
@@ -198,6 +215,48 @@ void eeprom_write_block(const void *buf, void *addr, size_t len) {
         ++offset;
     }
     if (!batch_depth) ak820_nvm_flush();
+}
+
+void ak820_eeprom_read_block_xdata(void AK820_XDATA *buf, const void *addr, size_t len) {
+    uint16_t offset = (uint16_t)(uintptr_t)addr;
+    uint8_t AK820_XDATA *out = (uint8_t AK820_XDATA *)buf;
+    while (len--) {
+        if (offset >= AK820_NVM_SIZE) { *out++ = 0; continue; }
+        *out++ = read_offset(offset);
+        ++offset;
+    }
+}
+
+void ak820_eeprom_write_block_xdata(const void AK820_XDATA *buf, void *addr, size_t len) {
+    uint16_t offset = (uint16_t)(uintptr_t)addr;
+    const uint8_t AK820_XDATA *in = (const uint8_t AK820_XDATA *)buf;
+    // Reject the complete request before changing any page; no wrap/clamping.
+    if (offset > AK820_NVM_SIZE || len > AK820_NVM_SIZE - offset) {
+        nvm_fail(AK820_NVM_FAULT_WRITE_RANGE);
+        return;
+    }
+    while (len--) {
+        uint8_t value = *in++;
+        if (!load_page(offset / AK820_FLASH_PAGE)) return;
+        if (page_data[offset % AK820_FLASH_PAGE] != value) {
+            page_data[offset % AK820_FLASH_PAGE] = value;
+            page_dirty = true;
+        }
+        ++offset;
+    }
+    if (!batch_depth) ak820_nvm_flush();
+}
+
+void ak820_eeprom_update_block_xdata(const void AK820_XDATA *buf, void *addr, size_t len) {
+    const uint8_t AK820_XDATA *source = (const uint8_t AK820_XDATA *)buf;
+    uint16_t offset = (uint16_t)(uintptr_t)addr;
+    size_t i;
+    for (i = 0; i < len; ++i) {
+        if (read_offset(offset + i) != source[i]) {
+            ak820_eeprom_write_block_xdata(buf, addr, len);
+            return;
+        }
+    }
 }
 
 void eeprom_driver_erase(void) {

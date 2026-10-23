@@ -16,6 +16,9 @@
  */
 
 #include "quantum.h"
+#ifdef AK820_COMPACT_COMBO
+#    include "ak820_combo.h"
+#endif
 #include "magic.h"
 #include "qmk_settings.h"
 
@@ -304,6 +307,10 @@ bool pre_process_record_quantum(keyrecord_t *record) {
     record->keycode = keycode;
 #endif
     return pre_process_record_kb(keycode, record) &&
+#ifdef AK820_COMPACT_COMBO
+           /* Board callers are action_exec's model-large XDATA record. */
+           ak820_combo_process((keyrecord_t AK820_STATE_MEM *)record) &&
+#endif
 #ifdef COMBO_ENABLE
            process_combo(keycode, record) &&
 #endif

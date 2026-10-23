@@ -89,7 +89,7 @@ def main(argv=None):
     ]
     if args.host:
         for name in ('ak820_usb', 'ak820_keymap', 'ak820_caps_word', 'ak820_macro_guard',
-                     'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_via_decode'):
+                     'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_via_decode', 'ak820_combo'):
             suites.append((QMK, [py, f'tests/{name}/run.py']))
         suites.append((QMK, [py, 'tests/ak820_bounded/run.py']))
         suites.append((QMK, [py, 'tests/ak820_tapping/run.py', '--negative-controls',
@@ -117,6 +117,8 @@ def main(argv=None):
                             '--s51', str(simulator), '--output-dir', str((logdir / 'bounded').resolve())]))
         suites.append((QMK, [py, 'tests/ak820_tapping/emitted.py', '--build-dir', str(build),
                             '--s51', str(simulator), '--output-dir', str((logdir / 'tapping').resolve())]))
+        suites.append((QMK, [py, 'tests/ak820_combo/emitted.py', '--build-dir', str(build),
+                            '--s51', str(simulator), '--output-dir', str((logdir / 'combo').resolve())]))
     records = []
     for index, (cwd, command) in enumerate(suites):
         started = time.monotonic()

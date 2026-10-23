@@ -31,7 +31,7 @@ FUNCTIONS = {
     "get_weak_mods": "quantum/action_util.asm",
     "matrix_get_row": "matrix.asm",
     "readPin": "lib/ch555/gpio.asm",
-    "eeprom_read_byte": "eeprom_driver.asm",
+    "eeprom_read_byte": "ak820_nvm.asm",
     "eeprom_update_byte": "eeprom_driver.asm",
     "ak820_flash_read": "ak820_flash.asm",
     "mDelaymS": "lib/ch555/hal.asm",
@@ -133,7 +133,9 @@ def function_cases(fw: Firmware, function: str):
 
 
 def run_function(fw: Firmware, function: str) -> dict:
-    commands = fw.initialize()
+    # initialize() stops at main with the CRT return address still on stack.
+    # Compare each call with that actual entry state, not the linker SP seed.
+    commands = fw.initialize() + fw.dump("entry-sp", "sfr", 0x81, 1)
     cases = list(function_cases(fw, function))
     for index, (_, setup, argument, returned, extra) in enumerate(cases):
         sentinel = [(index * 43 + r * 29 + 17) & 255 for r in range(8)]
@@ -154,7 +156,7 @@ def run_function(fw: Firmware, function: str) -> dict:
         label = f"case-{index:04d}-end"
         sentinel = [(index * 43 + r * 29 + 17) & 255 for r in range(8)]
         observed = {"regs": snapshot(log, label + "-regs", 0, 8), "sp": snapshot(log, label + "-sp", 0x81, 1)}
-        expected = {"regs": sentinel, "sp": [fw.initial_sp]}
+        expected = {"regs": sentinel, "sp": snapshot(log, "entry-sp", 0x81, 1)}
         if returned is not None:
             observed["return"] = snapshot(log, label + "-dptr", 0x82, min(len(returned), 2))
             if len(returned) == 4:

@@ -140,8 +140,8 @@ class OfflineRunnerTests(unittest.TestCase):
             self.assertEqual((first_code, second_code), (0, 0))
             self.assertTrue(first['passed'] and second['passed'])
             self.assertTrue(first['build_unchanged'] and second['build_unchanged'])
-            self.assertEqual(len(first_outputs), 7)
-            self.assertEqual(len(second_outputs), 7)
+            self.assertEqual(len(first_outputs), 8)
+            self.assertEqual(len(second_outputs), 8)
             self.assertFalse(set(first_outputs) & set(second_outputs))
             for report in (first, second):
                 self.assertEqual(set(report['build_hashes']), {'ihx', 'map'})
@@ -162,7 +162,8 @@ class OfflineRunnerTests(unittest.TestCase):
         self.assertEqual(code, 0)
         commands = [' '.join(record['command']) for record in report['tests']]
         self.assertTrue(any('ak820_bounded/emitted.py' in command for command in commands))
-        self.assertEqual(len(outputs), 7)
+        self.assertEqual(len(outputs), 8)
+        self.assertTrue(any('ak820_combo/emitted.py' in command for command in commands))
 
         with tempfile.TemporaryDirectory() as temporary:
             code, report, _ = self.run_fixture(Path(temporary), host=True)
@@ -171,6 +172,7 @@ class OfflineRunnerTests(unittest.TestCase):
         self.assertTrue(any('ak820_inventory' in command for command in commands))
         self.assertTrue(any('ak820_bounded/run.py' in command for command in commands))
         self.assertTrue(any('ak820_via_decode/run.py' in command for command in commands))
+        self.assertTrue(any('ak820_combo/run.py' in command for command in commands))
         tapping = next(row['command'] for row in report['tests'] if 'tests/ak820_tapping/run.py' in row['command'])
         self.assertIn('--negative-controls', tapping)
         self.assertIn('--output', tapping)
