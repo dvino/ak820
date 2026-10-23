@@ -53,7 +53,9 @@ fault and outdated layer/weak-mod fixture assumptions. The source and fixtures
 were corrected and independently reviewed. The [fresh 26-suite qualification](../audits/rc6/compact-tapping-qualification-20261024/qualification.json)
 passed with 258 unit tests, no skips and unchanged IHX/MAP hashes. The earlier
 failed report is retained. [Independent offline review](../audits/rc6/compact-tapping-final-integration-review-20261024.md)
-passed. Fresh bundle assembly and dev CI remain pending. The 23-suite evidence below applies to the
+passed. The [fresh bundle check](../audits/rc6/compact-tapping-fresh-bundle-20261024/check.json)
+also passed from commit `3c96e37`: the installer accepted the generated bundle
+with exact approval checks and no HID access. Dev CI awaits GitHub authentication. The 23-suite evidence below applies to the
 retained earlier image, not this candidate.
 
 The [clean local run](../audits/rc6/ci-integration-20261023/qualification.json)

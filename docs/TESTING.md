@@ -13,7 +13,9 @@ IHX `d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3`
 and MAP hashes stayed unchanged. This is offline host/CPU evidence; no device
 commands were sent. LeakSanitizer was excluded; address and undefined-behavior
 checks remained active. [Independent offline review](../audits/rc6/compact-tapping-final-integration-review-20261024.md)
-passed. Fresh bundle assembly and dev CI remain pending.
+passed. The [fresh bundle check](../audits/rc6/compact-tapping-fresh-bundle-20261024/check.json)
+also passed from commit `3c96e37`: the installer accepted the generated bundle
+with exact approval checks and no HID access. Dev CI awaits GitHub authentication.
 
 ## Historical offline result
 

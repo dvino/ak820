@@ -74,3 +74,32 @@ transition, flash or commit was performed. Interactive Windows acceptance,
 dev CI, physical input, USB timing, IRQ overlap, durable storage and power-loss
 behavior remain outside this offline approval. No new distributable archive
 was claimed as built by this review.
+
+## Post-commit fresh bundle
+
+A fresh local bundle was assembled from exact committed HEAD
+`3c96e37dbd27b2f6c7c0216cf51c5447b459c0e0` using the unchanged qualification.
+Independent verification of `host/runs/compact-tapping-fresh-bundle-20261024`
+passed. Archive SHA256 is
+`4023b0bd96bcbbfda0c1a1cd508bb28a1f3470b531e326210f11ac6e49a27e31`;
+manifest SHA256 is
+`e85760a33c6b30c53ee60681cdaba50923e249f16a7e843e709318a8277f0229`.
+Every ZIP entry matches its bundle file; names are unique and contain no
+absolute or parent-traversal paths. The actual installer
+`load_release(approved=True)` passed with the fresh bundle and approval paths.
+Only `hid_module` was replaced with a raising guard; it was never called.
+The real build, host manifest, review, receipt, qualification and approval
+validators ran. The build attestation binds the committed source, exact policy,
+independent program review and unchanged final qualification hashes.
+
+This confirms the generated local bundle's offline authorization and integrity.
+It does not establish a hosted CI run, a native Windows binary or any device
+operation. The prior statement that this review did not build an archive remains
+true: assembly was performed separately, then inspected independently here.
+
+The public follow-up evidence under
+`compact-tapping-fresh-bundle-20261024/` also passed independent verification:
+all four manifest hashes match and all retained bytes equal the generated
+bundle or original check record. English and Russian STATUS/TESTING documents
+correctly report this local committed-source bundle check without HID access,
+and keep dev CI pending GitHub authentication. This follow-up scope is closed.
