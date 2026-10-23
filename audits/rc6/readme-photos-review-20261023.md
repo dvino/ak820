@@ -24,9 +24,12 @@ linked thumbnails after the display request. Independent review_readme_photos
 approved both README translations, paths and alt text; no image bytes changed.
 
 Final layout, 2026-10-23: the keyboard photo was replaced by the supplied
-banner, resized to 1440 × 720 and 74,610 bytes (source183,972 bytes). All
-three technical photos are now inside one collapsed Hardware Compatibility
-section. The previous keyboard asset was removed from the current tree; its
+banner, resized to 1440 × 720 and 74,610 bytes (source183,972 bytes). The markings photo is visible as a linked320-pixel thumbnail in Hardware
+Compatibility; PCB and controller photos are inside its collapsed block. The previous keyboard asset was removed from the current tree; its
 tracked version remains in Git history. Independent review_readme_photos
 approved both README translations, readable banner, paths and unchanged
 compatibility claims. Documentation and whitespace checks passed.
+
+The visible markings thumbnail and the two-photo collapsed block were checked
+by independent review_readme_photos in both languages after the final display
+request. Links, alt text, summaries and documentation checks passed.

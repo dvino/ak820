@@ -25,12 +25,12 @@ USB VID:PID `320F:505B` — дополнительный признак, а не
 
 Сохраните исходные файлы восстановления и прочитайте [инструкцию восстановления штатной прошивки](INSTALL.md#oem-восстановление).
 
+<a href="../images/pcb-markings.webp"><img src="../images/pcb-markings.webp" alt="Маркировка платы: SG-8976 VS11K28A RGB, Ver:01" width="320"></a>
+
 <details>
-<summary>Фотографии платы, маркировки и микроконтроллера</summary>
+<summary>Фотографии платы и микроконтроллера</summary>
 
 ![PCB](../images/pcb.webp)
-
-![SG-8976 VS11K28A RGB, Ver:01](../images/pcb-markings.webp)
 
 ![VS11K28A](../images/controller.webp)
 

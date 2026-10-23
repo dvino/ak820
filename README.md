@@ -21,12 +21,12 @@ USB VID:PID `320F:505B` is an additional identifying sign, not a compatibility g
 
 Keep the original recovery files and read [stock firmware recovery](docs/INSTALL.md#oem-recovery).
 
+<a href="docs/images/pcb-markings.webp"><img src="docs/images/pcb-markings.webp" alt="PCB markings: SG-8976 VS11K28A RGB, Ver:01" width="320"></a>
+
 <details>
-<summary>PCB, markings and controller photos</summary>
+<summary>PCB and controller photos</summary>
 
 ![PCB](docs/images/pcb.webp)
-
-![SG-8976 VS11K28A RGB, Ver:01](docs/images/pcb-markings.webp)
 
 ![VS11K28A](docs/images/controller.webp)
 
