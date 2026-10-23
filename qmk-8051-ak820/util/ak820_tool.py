@@ -305,7 +305,7 @@ def validate_prepared_update(session, snapshot=None):
 
 def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
           application_descriptor=None,loader_descriptor=None,phase_guard=None,
-          native_install=False, prepared_update_snapshot=None):
+          native_install=False, prepared_update_snapshot=None, host_update_snapshot=None):
     """Use the unchanged OEM loader protocol with optional orchestration guards.
 
     A guard is called before reset/erase/restart, after the corresponding local
@@ -328,7 +328,16 @@ def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
         if name != 'permanent' or enter_loader or native_install or phase_guard is None or loader_descriptor is None:
             raise ValueError('Prepared update requires a guarded, explicitly authorized loader')
         validate_prepared_update(session, prepared_update_snapshot)
-    if name=='permanent' and not native_install and not prepared_update and (not accept_hardware_check or 'permanent_prepared_from_verified_trial' not in manifest):
+    host_update = host_update_snapshot is not None
+    if host_update:
+        if (name != 'permanent' or enter_loader or native_install or prepared_update or
+                phase_guard is None or loader_descriptor is None):
+            raise ValueError('Host update requires an exclusive guarded loader workflow')
+        if host_update_snapshot != {'payload_sha256': digest(payload), 'backup_sha256': digest(backup)}:
+            raise ValueError('Host update image/recovery binding changed')
+        if manifest.get('nvm_provenance') != {'mode': 'native_backup', 'source_sha256': digest(backup)}:
+            raise ValueError('Host update requires an original OEM migration')
+    if name=='permanent' and not native_install and not prepared_update and not host_update and (not accept_hardware_check or 'permanent_prepared_from_verified_trial' not in manifest):
         raise ValueError('Verify physical operation of the trial, run prepare-permanent, then explicitly pass --accept-hardware-check')
     log=[]
     logfile=session/f'flash-{name}-{time.time_ns()}.json'

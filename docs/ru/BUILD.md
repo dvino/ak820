@@ -52,8 +52,11 @@ NVM/макросы не являются свободным CODE. Считайт
 дереве: Make использует общие генерируемые файлы.
 
 После тестов и независимого ревью комплект собирает
-`tools/build_release_bundle.py --build-dir .build/local-1 --review docs/REVIEW.md --oem-reference-dir /path/to/private-oem-references --toolchain toolchains/sdcc-4.6.0 --builder-source qmk-8051-ak820/util/build_ak820.py --output releases/rc6-new`.
+`python3 tools/build_release_bundle.py --build-dir qmk-8051-ak820/.build/local-1 --review /path/to/exact-candidate-review.md --oem-reference-dir /path/to/private-oem-references --toolchain toolchains/sdcc-4.6.0 --builder-source qmk-8051-ak820/util/build_ak820.py --output releases/rc6-new`.
 Команду упаковки запускайте из корня репозитория.
+Путь к ревью — пример для нового JSON-решения по точной сборке.
+`docs/REVIEW.md` содержит указатель на отчёты, а не такое решение; прежнее
+ревью выпуска не одобряет кандидата из исходников.
 Пример пути указывает на собственную локальную пару. Ревью связывается с
 точными IHX/MAP, отчётом и host inputs. Упаковка не разрешает аппаратную
 запись. Изменение входов делает прежние доказательства неприменимыми. После
@@ -62,19 +65,31 @@ NVM/макросы не являются свободным CODE. Считайт
 
 ## Windows-приложения установщика
 
-Текущий проверенный комплект: `dist/AK820-sdcc46-breathing-20261023/`, полные папки
-`AK820/` и `AK820-cli/`. Одного EXE недостаточно. Python уже включён;
-исходному wrapper нужен Python 3.10+.
+Проверенные папки приложений и ZIP от 2026-10-23 — исторические артефакты.
+Они созданы до появления функции настроек на ПК. Соберите новый комплект из
+проверенного выпуска на Windows, используя Python 3.12 и закреплённый
+PyInstaller 6.16.0:
 
-Команда: `tools/build_windows_installer.py --output dist/AK820-sdcc46-breathing-20261023`.
-Лог: `host/runs/20261023-sdcc46-windows.json`, результат процесса:
-`host/runs/20261023-sdcc46-windows.json`.
-Справка CLI, офлайн-проверка и self-test GUI прошли.
-[Независимая проверка](../../audits/rc6/sdcc46-release-review-20261023.md)
-содержит результаты проверки комплекта. Результат устройства —
-в [статусе](STATUS.md).
+```powershell
+py -3.12 -m venv .venv-windows-installer
+.venv-windows-installer\Scripts\python -m pip install -r tools\installer\requirements-build-windows.txt
+.venv-windows-installer\Scripts\python tools\test_build_windows_installer.py
+.venv-windows-installer\Scripts\python tools\build_windows_installer.py --output dist\AK820-Windows
+```
 
-Прежние папки GUI и `dist/AK820-RC6-Windows-20261023.zip` неактуальны.
-Для этого кандидата их не использовать. Локальный ZIP:
-`dist/AK820-sdcc46-breathing-20261023.zip`. Публичной загрузки нет.
+Команда откажется заменять существующую папку или ZIP. Она соберёт оба
+приложения, сверит SHA256 каждого разрешённого файла в обеих полных папках
+PyInstaller, запустит справку CLI и офлайн-проверку выпуска, затем создаст и
+закроет интерфейс Tk через `--self-test`. Это нативная проверка создания UI,
+а не проверка удобства интерактивной работы. В папке будут `AK820/`,
+`AK820-cli/`, `AK820.cmd`, `build-provenance.json` и `smoke-report.json`;
+соседний `dist/AK820-Windows.zip` сохранит все эти пути. Перед передачей
+проверьте оба JSON-отчёта и ZIP. Сборка не перечисляет USB-устройства, не
+проверяет физическую клавиатуру и не прошивает её. OEM-файлы, личные копии
+резервных данных и журналы сессий исключены.
+GitHub Actions собирает и проверяет каждый push ветки и pull request.
+Теги версий публикуют проверенный Windows-комплект после успешных проверок
+Linux и Windows. Windows-пакет получает прошивку из Linux-сборки того же запуска CI. Теги на
+коммитах main публикуют ZIP прошивки и установщика. Запуски, артефакты и
+правило повторяемой сборки описаны в [CI и выпусках](CI.md).
 OEM ROM и личные копии не должны входить в комплект.

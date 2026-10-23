@@ -11,6 +11,7 @@ difference.
 | Install firmware, keep a backup, recover | [Installation](INSTALL.md) |
 | Remap keys, layers, encoder and lighting | [Configuration](CONFIGURATION.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |
+| Check pushes and publish a release | [CI and releases](CI.md) |
 | Change code and submit a contribution | [Development](DEVELOPMENT.md) |
 | Run offline tests and check a real keyboard | [Testing](TESTING.md) |
 | See what is built and what is device-tested | [Status](STATUS.md) |

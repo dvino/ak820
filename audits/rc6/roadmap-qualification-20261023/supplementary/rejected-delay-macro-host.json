@@ -1,0 +1,30 @@
+{
+  "pass": true,
+  "limits": "Host C semantics with sanitizers; actual SDCC/8051 ABI requires emitted.py and ak820_emitted tests.",
+  "tests": [
+    {
+      "name": "macro",
+      "pass": true,
+      "summary": "PASS: 196019 playback cases match RC4 event+delay traces (all binary 8-bit/16-bit operands, ASCII, slot bounds, mixed commands, delay boundaries)."
+    }
+  ],
+  "source_sha256": {
+    "keyboards/ajazz/ak820/config.h": "4ce39c7dec3be1356d26e3f7ae8fa0ebb535a10818d99ed70f527b2dc83b3145",
+    "quantum/dynamic_keymap.c": "5a94624d4fa015c9dabf00b341bbdf24899bd11c6f6696d88017b728267b6527",
+    "quantum/send_string/send_string.c": "cc4715117aa7bb6361547285e11adb3bf04b9349b9d6c064f84209303b0bc48f",
+    "tests/ak820_optimization/buffers_harness.c": "ddaf0745bac018e68196db8ed2449276458f8233d590b8c4202f0e918a763af6",
+    "tests/ak820_optimization/callee.py": "9eebdaa918914d258ab16bfede35c039525a93f93d93679958aaec89e9ed5b88",
+    "tests/ak820_optimization/color_harness.c": "19b9af241500d51eab44c2d0b6a8269b8d740196675c15eeea18c081bbc96a95",
+    "tests/ak820_optimization/emitted.py": "30099e926c1c780b2f1eb47e0c8fcb82b5e6df19619fd428f591e44e1fa06ff3",
+    "tests/ak820_optimization/fixtures/color_rc4.c": "b1b6258f1b409d47a252fc34ded4a58a6403a96f22777a704cbb456447b3ec3b",
+    "tests/ak820_optimization/fixtures/debounce_rc4.c": "be15060d96fc03cddcff90f45d86b51122d6c218e1cf103c5c4e5dd0d0ee8cbe",
+    "tests/ak820_optimization/fixtures/keycode_decoder_rc4.c": "0952776e1cd478ec0a58a66e1cd61fd9ccf4694da2bb59208ccb4b92c2c88c00",
+    "tests/ak820_optimization/fixtures/macro_playback_rc4.c": "76a34b809e4008258ca6348fa8ba2c1b1d84521afef73b96ecb0f761fa8f1d11",
+    "tests/ak820_optimization/fixtures/report_rc4.c": "88a9d8dfdbf5a9bc95e6443198a1365515089aa85016ac04aebf41be624e4a6f",
+    "tests/ak820_optimization/harness.c": "347a54c2f5f4616d4fe553cd9ff80ec95c103ffc4427852b0721fc979efc7f7b",
+    "tests/ak820_optimization/macro_harness.c": "5da66671893e56411e31fa854a97e9aa2998b1d11f454382daa19e7dba891d12",
+    "tests/ak820_optimization/outline.py": "baf1a52a4792f7280f940d928e4b88d58ee580b059ddadfb1335a095ba01dc0b",
+    "tests/ak820_optimization/outline_unit.py": "811e09f4d450ac0d58dfba54ae6de323cf7c4ae50caeac3496fd3f02b656ab18",
+    "tests/ak820_optimization/run.py": "ed2321e54d0bf325a5521cceda545755dbc2a840daf9267a66eabbbc67bef8f3"
+  }
+}

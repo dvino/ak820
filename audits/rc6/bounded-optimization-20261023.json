@@ -1,0 +1,85 @@
+{
+  "scope": "offline source, host and linked CPU only; no device operations",
+  "base_commit": "5887e92",
+  "builds": {
+    "control": {
+      "path": "/workspace/scratch/664bab7a0eb4/probes/bounded-control/qmk-8051-ak820/.build/bounded-control",
+      "ihx_sha256": "f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e",
+      "code_bytes": 38100,
+      "code_main_bytes": 36292,
+      "code_low_bytes": 1808,
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "assembler_sha256": "2ae1a62eb7454d80787352fc398ffe87847b1bb048988908f2241d1a4a37d877",
+      "compiler_extra_flags": "--opt-code-size --callee-saves timer_read,timer_read32,ak820_nvm_ok,get_mods,get_weak_mods,matrix_get_row,readPin,eeprom_read_byte,eeprom_update_byte,ak820_flash_read,mDelaymS",
+      "xram_bytes": 2067,
+      "stack_capacity": 157,
+      "initial_sp": 98,
+      "journal_helper_bytes": 113,
+      "retained_root": "audits/rc6/bounded-evidence-20261023/control",
+      "retained_build_report": "audits/rc6/bounded-evidence-20261023/control/.build/bounded-control/build-report.json"
+    },
+    "pointer": {
+      "path": "/workspace/scratch/664bab7a0eb4/probes/bounded-pointer/qmk-8051-ak820/.build/bounded-probe",
+      "ihx_sha256": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+      "code_bytes": 38069,
+      "code_main_bytes": 36261,
+      "code_low_bytes": 1808,
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "assembler_sha256": "2ae1a62eb7454d80787352fc398ffe87847b1bb048988908f2241d1a4a37d877",
+      "compiler_extra_flags": "--opt-code-size --callee-saves timer_read,timer_read32,ak820_nvm_ok,get_mods,get_weak_mods,matrix_get_row,readPin,eeprom_read_byte,eeprom_update_byte,ak820_flash_read,mDelaymS",
+      "xram_bytes": 2066,
+      "stack_capacity": 157,
+      "initial_sp": 98,
+      "journal_helper_bytes": 85,
+      "retained_root": "audits/rc6/bounded-evidence-20261023/pointer",
+      "retained_build_report": "audits/rc6/bounded-evidence-20261023/pointer/.build/bounded-probe/build-report.json"
+    },
+    "delay": {
+      "path": "/workspace/scratch/664bab7a0eb4/probes/bounded-delay/qmk-8051-ak820/.build/bounded-probe",
+      "ihx_sha256": "847f4c8be31c62dc652d23e0bd0c147b8f910d28ca6869d121855a07b2dbe448",
+      "code_bytes": 38103,
+      "code_main_bytes": 36295,
+      "code_low_bytes": 1808,
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "assembler_sha256": "2ae1a62eb7454d80787352fc398ffe87847b1bb048988908f2241d1a4a37d877",
+      "compiler_extra_flags": "--opt-code-size --callee-saves timer_read,timer_read32,ak820_nvm_ok,get_mods,get_weak_mods,matrix_get_row,readPin,eeprom_read_byte,eeprom_update_byte,ak820_flash_read,mDelaymS",
+      "xram_bytes": 2067,
+      "stack_capacity": 157,
+      "initial_sp": 98,
+      "journal_helper_bytes": 113,
+      "retained_root": "audits/rc6/bounded-evidence-20261023/delay",
+      "retained_build_report": "audits/rc6/bounded-evidence-20261023/delay/.build/bounded-probe/build-report.json"
+    }
+  },
+  "decisions": {
+    "pointer": "adopted in canonical source after independent review: saves 31 CODE (main window), 1 XRAM; direct helper CPU stack 6 to 4; no release promotion",
+    "delay": "reject: increases CODE3; SDCC4.6 control already uses MUL AB; no combined probe"
+  },
+  "checks": {
+    "host_legal_delay_pairs": 65025,
+    "host_header_cases": 264448,
+    "macro_slots_zero_max_and_guard": 16,
+    "historical_macro_differential_cases": 196019,
+    "nvm_host_powercut_cases": 10944,
+    "linked_header_cases_each": 2304,
+    "linked_iap_cases": 12,
+    "linked_emitted_cases": 3,
+    "warning_multiset_each": 137,
+    "new_warning_messages": 0,
+    "helper_stack_bytes": {
+      "control": 6,
+      "pointer": 4
+    },
+    "physical_checks": false
+  },
+  "rejected_delay_diff": "- uint16_t ms = (uint16_t)(d0 - 1) + (uint16_t)(d1 - 1) * 255u;\n+ uint16_t high = (uint16_t)(d1 - 1);\n+ uint16_t ms = (uint16_t)((high << 8) - high) + (uint16_t)(d0 - 1);",
+  "test_sha256": {
+    "emitted.py": "2211ae06d60e60c0595ab89aa32916e7ddfcb903e6d5ab9000538fa19bf80735",
+    "run.py": "8f09303806b3ed99dd58a13149a27a541d0bd338a23e2e2b11c3e5532abca67e",
+    "README.md": "cd2f1d85dd83d3d19f0f0f7e780d0b02216aedbae3869ee65328a46eb4a6a703"
+  },
+  "retained_evidence": "audits/rc6/bounded-evidence-20261023/manifest.json",
+  "canonical_candidate_ihx_sha256": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+  "independent_review": "audits/rc6/bounded-optimization-review-20261023.md",
+  "canonical_qualification": "audits/rc6/roadmap-qualification-20261023/final/report.json"
+}

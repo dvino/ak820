@@ -30,6 +30,7 @@ import ak820_tool as transport
 import ak820_diagnose as diagnostic
 import pack_ak820 as packer
 from prepare_ak820_trial import write_trial
+from ak820_ci_authorization import CI_EXTRA_FILES, validate_bundle_authorization
 from ak820_release_manifest import MANIFEST_FORMAT, RELEASE, validate_host_manifest, read_review_record
 
 BUNDLE = ROOT / 'releases' / RELEASE
@@ -118,7 +119,8 @@ def load_release(*, approved):
             'Independent offline review is missing')
     files = manifest.get('files', {})
     require(isinstance(files, dict) and set(files) in (
-        REQUIRED_FILES, REQUIRED_FILES | {REPRODUCTION_BUILDER}),
+        REQUIRED_FILES, REQUIRED_FILES | {REPRODUCTION_BUILDER},
+        REQUIRED_FILES | CI_EXTRA_FILES, REQUIRED_FILES | CI_EXTRA_FILES | {REPRODUCTION_BUILDER}),
         'Incomplete or unexpected release contents')
     for name in sorted(files):
         data = (BUNDLE / name).read_bytes()
@@ -141,6 +143,7 @@ def load_release(*, approved):
         'map_sha256': files['firmware/application.map']['sha256'],
         'build_report_sha256': files['reports/build-report.json']['sha256'],
     }, 'Independent review belongs to different build or host code')
+    validate_bundle_authorization(BUNDLE, manifest, review)
     if approved:
         require(APPROVAL.is_file(), 'Release approval is missing; installation is blocked pending independent review')
         approval = json.loads(APPROVAL.read_text(encoding='utf-8'))
@@ -668,8 +671,18 @@ def setup():
         # The wrapper may already be running this interpreter. Windows cannot
         # replace an in-use python.exe; reuse it, including after a pip failure.
         subprocess.run([str(python), '-m', 'ensurepip', '--upgrade'], check=True)
-    subprocess.run([str(python), '-m', 'pip', 'install', '--disable-pip-version-check',
-                    '-r', str(Path(__file__).with_name('requirements.txt'))], check=True)
+    pip = [str(python), '-m', 'pip', 'install', '--disable-pip-version-check']
+    environment = None
+    if sys.platform.startswith('linux'):
+        # The pinned Linux wheel uses libusb and reports non-hidraw paths under
+        # hidraw-only udev access. Build HIDAPI's hidraw backend explicitly.
+        pip.extend(('--no-binary=hidapi', '--no-cache-dir', '--force-reinstall'))
+        environment = os.environ.copy()
+        environment.update({'HIDAPI_WITH_HIDRAW': '1', 'HIDAPI_WITH_LIBUSB': '0'})
+        print('Building Linux hidapi from source with its hidraw backend. This requires gcc, Python development headers, '
+              'and libudev development files (for example, libudev-dev on Debian or Ubuntu).')
+    pip.extend(('-r', str(Path(__file__).with_name('requirements.txt'))))
+    subprocess.run(pip, check=True, **({'env': environment} if environment is not None else {}))
     subprocess.run([str(python), '-c', 'import hid; print("hidapi", hid.__version__)'], check=True)
     print('Ready. AK820.sh / AK820.cmd will use this environment automatically.')
 
@@ -715,6 +728,11 @@ def parser():
                           help='Your personal installation/recovery session containing a complete OEM backup')
     update = sub.add_parser('update-prepared', help='Reviewed RC6 repair; fresh physical Esc + left Ctrl consent')
     update.add_argument('--session', type=Path, required=True)
+    for name in ('backup', 'restore', 'update'):
+        command = sub.add_parser(name, help='Validated local settings ' + name)
+        command.add_argument('--session', type=Path, required=True, help='Original valid OEM recovery session')
+        command.add_argument('--output' if name == 'backup' else '--backup' if name == 'restore' else '--backup-dir',
+                             type=Path, required=True)
     for command in (prep, installation, verification, recovery, update):
         command.add_argument('--reference-dir', type=Path, help='Directory with your own exact stock-full.bin and native-installed.bin; never downloaded')
     return out
@@ -741,7 +759,7 @@ def main(argv=None, *, prompt=None, interactive=None, progress=None, cancel_even
         log.record('start', mode=mode, python=sys.version.split()[0], platform=sys.platform,
                    firmware_scope='wired AK820 VS11K28A only')
         require(sys.version_info >= (3, 10), 'Python 3.10 or newer is required')
-        if mode in ('install', 'recover', 'check-device', 'update-prepared'):
+        if mode in ('install', 'recover', 'check-device', 'update-prepared', 'restore', 'update'):
             require(interactive is True or (sys.stdin is not None and sys.stdin.isatty()),
                     'An interactive terminal or the installer GUI is required')
         # Offline release/recovery checks precede importing hid or enumeration.
@@ -754,6 +772,12 @@ def main(argv=None, *, prompt=None, interactive=None, progress=None, cancel_even
                 capture_references(log, backup)
             if mode == 'update-prepared':
                 transport.validate_prepared_update(args.session)
+        workflow_context = None
+        if mode in ('backup', 'restore', 'update'):
+            import settings_workflow
+            workflow_context = settings_workflow.prepare(sys.modules[__name__], log, args.session)
+            if mode == 'restore':
+                settings_workflow.settings.validate_backup(args.backup, workflow_context['profile'])
         if mode == 'verify':
             log.record('offline_bundle_verified', release=RELEASE,
                        approval_matches=True, device_opened=False, physical_mutations=0)
@@ -764,7 +788,15 @@ def main(argv=None, *, prompt=None, interactive=None, progress=None, cancel_even
             print('Offline session prepared. USB was not opened; no firmware was written.')
         else:
             hid = hid_module()
-            if mode == 'diagnose':
+            if workflow_context is not None:
+                host = sys.modules[__name__]
+                if mode == 'backup':
+                    settings_workflow.backup(host, log, hid, workflow_context, args.output)
+                elif mode == 'restore':
+                    settings_workflow.restore(host, log, hid, workflow_context, args.backup)
+                else:
+                    settings_workflow.update(host, log, hid, workflow_context, args.backup_dir)
+            elif mode == 'diagnose':
                 state, _ = inventory(log, hid)
                 print('State:', state)
                 print('HID enumeration only: no device opened and no commands sent.')

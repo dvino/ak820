@@ -1,0 +1,21 @@
+In file included from tmk_core/protocol/usb_descriptor.h:46,
+                 from tmk_core/protocol/ch555/usb_device.h:15,
+                 from tests/ak820_usb/ak820_usb_test_shim.h:22,
+                 from tests/ak820_usb/test_usb.c:5:
+tmk_core/protocol/ch555/lufa_utils/LUFA/Drivers/USB/USB.h:9:10: fatal error: lib/lufa/LUFA/Common/Architectures.h: No such file or directory
+    9 | #include "lib/lufa/LUFA/Common/Architectures.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+In file included from tmk_core/protocol/usb_descriptor.h:46,
+                 from tmk_core/protocol/report.h:132,
+                 from tmk_core/protocol/usb_descriptor.c:40:
+tmk_core/protocol/ch555/lufa_utils/LUFA/Drivers/USB/USB.h:9:10: fatal error: lib/lufa/LUFA/Common/Architectures.h: No such file or directory
+    9 | #include "lib/lufa/LUFA/Common/Architectures.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+Traceback (most recent call last):
+  File "/home/danil/Documents/git/ak820/qmk-8051-ak820/tests/ak820_usb/run.py", line 35, in <module>
+    subprocess.run(command,cwd=root,check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['cc', '-std=gnu11', '-Wall', '-Wextra', '-Wno-unknown-pragmas', '-Wno-unused-parameter', '-Wno-old-style-declaration', '-fsanitize=address,undefined', '-fno-omit-frame-pointer', '-g', '-O1', '-I.', '-Itests/ak820_usb', '-Itmk_core', '-Itmk_core/protocol', '-Itmk_core/protocol/ch555', '-Itmk_core/protocol/ch555/lufa_utils', '-Iquantum', '-Iplatforms', '-Iplatforms/mcs51', '-Ilib/ch555', '-DAK820_BOARD', '-DAK820_USB_HOST_TEST', '-DQMK_MCU_CH555', '-DPROTOCOL_CH555', '-DRAW_ENABLE', '-DSHARED_EP_ENABLE', '-DMOUSE_ENABLE', '-DMOUSE_SHARED_EP', '-DEXTRAKEY_ENABLE', '-DNKRO_ENABLE', '-DMATRIX_ROWS=16', '-DMATRIX_COLS=8', '-DEEPROM_CUSTOM', '-DEEPROM_SIZE=0x2800', '-DFIXED_CONTROL_ENDPOINT_SIZE=64', '-DFIXED_NUM_CONFIGURATIONS=1', '-DUSB_POLLING_INTERVAL_MS=1', '-DUSB_MAX_POWER_CONSUMPTION=500', '-DARCH=ARCH_MCS51', '-DVENDOR_ID=0x320F', '-DPRODUCT_ID=0x505B', '-DDEVICE_VER=0x0100', '-DMANUFACTURER="AJAZZ"', '-DPRODUCT="AK820 wired RGB (VS11K28A)"', '-DSERIAL_NUMBER="vial:f64c2b3c"', 'tests/ak820_usb/test_usb.c', 'tmk_core/protocol/usb_descriptor.c', '-o', '/tmp/ak820-usb-8tdktflz/test_usb']' returned non-zero exit status 1.

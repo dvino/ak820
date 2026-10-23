@@ -8,7 +8,7 @@ import sys
 import time
 import lzma
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(ROOT / 'qmk-8051-ak820/util'))
 import pack_ak820 as pack
 import ak820_diagnose as diag
@@ -45,8 +45,10 @@ def bind(release: Path, session: Path, approval: Path):
 
 
 class DeviceAPI:
-    def __init__(self, binding, output, app_factory=None):
+    def __init__(self, binding, output, app_factory=None, *, allow_writes=False):
         self.binding, self.output = binding, output
+        require(type(allow_writes) is bool, 'allow_writes must be an explicit boolean')
+        self.allow_writes = allow_writes
         self.trace = (output / 'transport.jsonl').open('a', encoding='utf-8')
         self.app = None
         try:
@@ -74,12 +76,7 @@ class DeviceAPI:
         return bytes(values) + bytes(32-len(values))
 
     def exchange(self, packet):
-        # Allowlist only the getters and two benign mapping setters used below.
-        require(packet[0] in (1, 4, 5, 7, 8, 12, 13, 14, 17, 253, 254), 'Forbidden command')
-        if packet[0] == 7:
-            require(packet[1] == 0x41, 'Forbidden RGB command')
-        if packet[0] == 254:
-            require(packet[1] in (0, 1, 2, 3, 4), 'Forbidden Vial command')
+        self._validate_request(packet)
         row = {'request_hex': packet.hex()}
         try:
             reply = bytes(self.app.raw(packet))
@@ -92,7 +89,72 @@ class DeviceAPI:
         finally:
             self.trace.write(json.dumps(row)+'\n'); self.trace.flush()
 
+    def _validate_request(self, packet):
+        """Accept only fixed, typed VIA/Vial requests used by this adapter."""
+        require(isinstance(packet, bytes) and len(packet) == 32, 'Protocol request must be exactly 32 bytes')
+        command, sub = packet[0], packet[1]
+        zero_tail = lambda start: packet[start:] == bytes(32-start)
+        write = False
+        if command == 1:
+            require(zero_tail(1), 'Malformed protocol-version request')
+        elif command == 2:
+            require(sub == 2 and zero_tail(2), 'Unknown or malformed keyboard-value request')
+        elif command == 3:
+            write = True
+            require(sub == 2 and packet[2:5] == bytes(3) and zero_tail(6),
+                    'Unknown or malformed keyboard-value setter')
+        elif command == 4:
+            require(packet[1] < 6 and packet[2] < 16 and packet[3] < 6 and zero_tail(4), 'Malformed key getter')
+        elif command == 5:
+            write = True
+            require(packet[1] < 6 and packet[2] < 16 and packet[3] < 6 and zero_tail(6), 'Malformed key setter')
+        elif command == 7:
+            write = True
+            require(sub == 0x41 and zero_tail(8), 'Unknown or malformed RGB setter')
+        elif command == 8:
+            require(sub in (0x40, 0x41, 0x42, 0x43, 0x44), 'Unknown VialRGB getter')
+            if sub in (0x40, 0x41, 0x43): require(zero_tail(2), 'Malformed VialRGB getter')
+            elif sub == 0x42: require(zero_tail(4), 'Malformed VialRGB effect query')
+            else: require(packet[2] < 82 and packet[3] == 0 and zero_tail(4), 'Malformed VialRGB LED query')
+        elif command == 9:
+            write = True
+            require(zero_tail(1), 'Malformed RGB save request')
+        elif command in (12, 13):
+            require(zero_tail(1), 'Malformed macro metadata getter')
+        elif command == 14:
+            offset, count = int.from_bytes(packet[1:3], 'big'), packet[3]
+            require(1 <= count <= 28 and offset <= 8192-count and zero_tail(4), 'Malformed macro getter')
+        elif command == 15:
+            write = True
+            offset, count = int.from_bytes(packet[1:3], 'big'), packet[3]
+            require(1 <= count <= 28 and offset <= 8192-count and zero_tail(4+count), 'Malformed macro upload chunk')
+        elif command == 17:
+            require(zero_tail(1), 'Malformed layer-count getter')
+        elif command == 253:
+            require(sub in (0, 1), 'Unknown FD diagnostic command')
+            if sub == 0:
+                address, count = int.from_bytes(packet[2:4], 'big'), packet[4]
+                require(1 <= count <= 27 and address <= 65536-count and zero_tail(5), 'Malformed FD00 read')
+            else: require(zero_tail(2), 'Malformed FD01 status request')
+        elif command == 254:
+            require(sub in (0, 1, 2, 3, 4), 'Unknown FE Vial command')
+            if sub in (0, 1): require(zero_tail(2), 'Malformed Vial metadata request')
+            elif sub == 2: require(packet[4:6] == bytes(2) and zero_tail(6), 'Malformed Vial definition page request')
+            elif sub == 3: require(packet[2] < 6 and packet[3] == 0 and zero_tail(4), 'Malformed encoder getter')
+            else:
+                write = True
+                require(packet[2] < 6 and packet[3] == 0 and packet[4] in (0, 1) and zero_tail(7), 'Malformed encoder setter')
+        else:
+            raise ValueError('Forbidden command')
+        if write:
+            require(self.allow_writes, 'Writes are disabled for this DeviceAPI instance')
+
+    def _require_writes(self):
+        require(self.allow_writes, 'Writes are disabled for this DeviceAPI instance')
+
     def read_code(self, address, size):
+        require(0 <= address <= 65536 and 0 <= size <= 65536 and address <= 65536-size,
+                'Invalid CODE read range')
         data = bytearray()
         for delta in range(0, size, 27):
             at, count = address+delta, min(27, size-delta)
@@ -145,7 +207,7 @@ class DeviceAPI:
 
     def status(self):
         status = diag.decode_status(self.exchange(self.packet(253, 1)))
-        require(not status['storage_failed'] and not status['page_dirty'] and status['batch_depth'] == 0
+        require(status['first_failure_stage'] == 0 and not status['storage_failed'] and not status['page_dirty'] and status['batch_depth'] == 0
                 and not status['vial_unlock_in_progress'], 'Storage failure, busy storage or unlock in progress')
         return status
 
@@ -193,19 +255,27 @@ class DeviceAPI:
         return pack.ENCODER_ADDR+layer*4+(1-direction)*2
 
     def get_key(self, layer, key):
+        require(0 <= layer < 6 and len(key) == 2 and 0 <= key[0] < 16 and 0 <= key[1] < 6,
+                'Invalid key getter arguments')
         reply = self.exchange(self.packet(4, layer, *key))
         require(reply[:4] == bytes((4, layer, *key)), 'Key getter header mismatch')
         return int.from_bytes(reply[4:6], 'big')
 
     def get_encoder(self, layer, direction):
+        require(0 <= layer < 6 and direction in (0, 1), 'Invalid encoder getter arguments')
         reply = self.exchange(self.packet(254, 3, layer, 0))
         return int.from_bytes(reply[direction*2:direction*2+2], 'big')
 
     def set_key(self, layer, key, value):
+        self._require_writes()
+        require(0 <= layer < 6 and len(key) == 2 and 0 <= key[0] < 16 and 0 <= key[1] < 6
+                and 0 <= value <= 0xFFFF, 'Invalid key setter arguments')
         packet = self.packet(5, layer, *key, value >> 8, value & 255)
         return self.exchange(packet) == packet
 
     def set_encoder(self, layer, direction, value):
+        self._require_writes()
+        require(0 <= layer < 6 and direction in (0, 1) and 0 <= value <= 0xFFFF, 'Invalid encoder setter arguments')
         packet = self.packet(254, 4, layer, 0, direction, value >> 8, value & 255)
         return self.exchange(packet) == packet
 
@@ -220,6 +290,22 @@ class DeviceAPI:
             require(reply[:4] == packet[:4], 'Macro getter header mismatch')
             data.extend(reply[4:4+count])
         return bytes(data)
+
+    def get_macro_buffer(self, offset, count):
+        """Read a published logical macro range through VIA 0x0E.
+
+        The firmware intentionally hides in-progress upload data from this
+        getter. During an upload, verify physical bytes with read_code() at
+        pack.NVM_START + pack.MACRO_ADDR + offset instead.
+        """
+        require(0 <= offset <= 8192 and 0 <= count <= 28 and offset <= 8192-count,
+                'Invalid macro read range')
+        if count == 0:
+            return b''
+        packet = self.packet(14, offset >> 8, offset & 255, count)
+        reply = self.exchange(packet)
+        require(reply[:4] == packet[:4], 'Macro getter header mismatch')
+        return reply[4:4+count]
 
     @staticmethod
     def macro_view(nvm):
@@ -239,8 +325,35 @@ class DeviceAPI:
         return reply[2:8]
 
     def set_rgb_mode(self, mode):
-        require(len(mode) == 6, 'RGB mode requires six bytes')
+        self._require_writes()
+        require(isinstance(mode, (bytes, bytearray)) and len(mode) == 6, 'RGB mode requires six bytes')
         packet = self.packet(7, 0x41, *mode)
+        return self.exchange(packet) == packet
+
+    def get_layout_options(self):
+        reply = self.exchange(self.packet(2, 2))
+        require(reply[:2] == b'\x02\x02', 'Layout options response mismatch')
+        require(reply[2:5] == bytes(3), 'Layout options exceed the persisted one-byte field')
+        return int.from_bytes(reply[2:6], 'big')
+
+    def set_layout_options(self, value):
+        self._require_writes()
+        require(0 <= value <= 0xFF, 'Layout options must fit the persisted one-byte field')
+        packet = self.packet(3, 2, value >> 24, (value >> 16) & 255, (value >> 8) & 255, value & 255)
+        return self.exchange(packet) == packet
+
+    def upload_macro_chunk(self, offset, data):
+        """Upload one existing VIA macro chunk; caller must satisfy Vial unlock."""
+        self._require_writes()
+        require(isinstance(data, (bytes, bytearray)) and 1 <= len(data) <= 28
+                and 0 <= offset <= 8192-len(data), 'Invalid macro upload chunk')
+        packet = self.packet(15, offset >> 8, offset & 255, len(data), *data)
+        return self.exchange(packet) == packet
+
+    def save_rgb(self):
+        """Persist current VialRGB values through VIA lighting-save command."""
+        self._require_writes()
+        packet = self.packet(9)
         return self.exchange(packet) == packet
 
     def rgb(self):

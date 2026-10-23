@@ -1,0 +1,2525 @@
+{
+  "format": "ak820-ci-program-policy-1",
+  "program": {
+    "ihx_sha256": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+    "symbols_sha256": "7cbbde22a6a7ab08b4a6769cc8abf142298558754c97301d0d23636bd47cf471",
+    "schema": 532482,
+    "keyboard": "ajazz/ak820",
+    "keymap": "vial",
+    "sdcc_version": "4.6.0"
+  },
+  "host_files": {
+    "AK820.cmd": {
+      "size": 1149,
+      "sha256": "dddbfaad0da2f79d3353bd2238eae323db53b0a066736c7743e84a845b77aaa0"
+    },
+    "AK820.sh": {
+      "size": 515,
+      "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
+    },
+    "qmk-8051-ak820/util/ak820_ci_authorization.py": {
+      "size": 12833,
+      "sha256": "8c96bcb611035453f319cc176015ec3f2eaa38a8d4e4e2e28154318f386a2d3d"
+    },
+    "qmk-8051-ak820/util/ak820_diagnose.py": {
+      "size": 13505,
+      "sha256": "2a3dd74d73d1b135107468d330818896a7158e16f4e4031b1c1757f14854dc0d"
+    },
+    "qmk-8051-ak820/util/ak820_release_manifest.py": {
+      "size": 2517,
+      "sha256": "a97a8b902b4bbf7cb7799109c00fa9e5d068d06417146e85736fc5cd04bbee30"
+    },
+    "qmk-8051-ak820/util/ak820_tool.py": {
+      "size": 22775,
+      "sha256": "9f7fcacc803be7c3e1bc18dcfc11f50b24960be9f1c48a3e6268fbacc1113f92"
+    },
+    "qmk-8051-ak820/util/native_macro_import.py": {
+      "size": 2499,
+      "sha256": "572f153de6ec9a71eefa8fd87c5ba2bd7da602619131e3ec66fa63d9a742b07f"
+    },
+    "qmk-8051-ak820/util/pack_ak820.py": {
+      "size": 23558,
+      "sha256": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+    },
+    "qmk-8051-ak820/util/prepare_ak820_trial.py": {
+      "size": 5745,
+      "sha256": "91458b9a14bad55f9bb9a056ec43f8daec0ffe996f21f4ffc15e9f6730aa9fc2"
+    },
+    "tools/ak820_device_protocol.py": {
+      "size": 19409,
+      "sha256": "e108c591ad017f029f6fa97c6e76dcc85a842123d0b61270cf8d8a1406257921"
+    },
+    "tools/build_ci_release.py": {
+      "size": 20973,
+      "sha256": "0246b827de8dabeb291910857c69aca7c1303799261bf18585143c2743115d3a"
+    },
+    "tools/build_release_bundle.py": {
+      "size": 12204,
+      "sha256": "46a839afbdda100cd57fd8e9c3f9a13f7e984c36c0ed72b054e0bc3ae2f96a91"
+    },
+    "tools/build_windows_installer.py": {
+      "size": 8190,
+      "sha256": "8fd2f9eb5c337da8fce82e58ab7efcd7a82be407136bfb253b82973c3288899d"
+    },
+    "tools/installer/70-ak820.rules": {
+      "size": 339,
+      "sha256": "f0b85bb730963057350a6a9cfe35e1f17e2859a5bfbcebfce9fccaa6534a3a52"
+    },
+    "tools/installer/ak820.py": {
+      "size": 49261,
+      "sha256": "313460af31e3165c797edb0c2d1d57e6bf6410d1074dde3d66cd0ef11b78193a"
+    },
+    "tools/installer/gui.py": {
+      "size": 21389,
+      "sha256": "94c99aa505208fadb4eb3496c1c4bdb060a60dcd8304464869d268c665873a6f"
+    },
+    "tools/installer/i18n.py": {
+      "size": 21250,
+      "sha256": "94901c2826c7936410f9e799518c4a6ccdff7d1800f10784d03d81c53dc45dd5"
+    },
+    "tools/installer/requirements-build-windows.txt": {
+      "size": 235,
+      "sha256": "fe92377176d05e83a805899a51be8569cfc63768609bae64c543641f9d715bd5"
+    },
+    "tools/installer/requirements.txt": {
+      "size": 15,
+      "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
+    },
+    "tools/installer/settings_backup.py": {
+      "size": 28563,
+      "sha256": "82702346c22f608d6ad620e0a2939884173bbc3ea4f50052c397c253c2d68797"
+    },
+    "tools/installer/settings_workflow.py": {
+      "size": 11338,
+      "sha256": "ffa59acf7a6d1f90fa4e7056b577a0bef5d4553cbcc1aeab305fe0f15bee0b72"
+    }
+  },
+  "packing_receipt_sha256": "ca982ab1a0dd1c1debb627d0cc8eda8bb8c2cd6217fe484ee7cb01a686ee7c1f",
+  "source_files": {
+    ".github/workflows/windows-installer.yml": {
+      "size": 12549,
+      "sha256": "a773f0e8f3f6a20409665803eecb2f3bb16fc6a148b69fee00b46a7260f92b43"
+    },
+    "AK820.cmd": {
+      "size": 1149,
+      "sha256": "dddbfaad0da2f79d3353bd2238eae323db53b0a066736c7743e84a845b77aaa0"
+    },
+    "AK820.sh": {
+      "size": 515,
+      "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
+    },
+    "qmk-8051-ak820/builddefs/build_json.mk": {
+      "size": 821,
+      "sha256": "b2b79bdeb1e5b483eedd600429cb054567615744f8df1f39148aadbf2692156f"
+    },
+    "qmk-8051-ak820/builddefs/build_keyboard.mk": {
+      "size": 18683,
+      "sha256": "a038d47c04773dc48853a73fc23066f768b1c31cda46d8ba506101c415ec5df3"
+    },
+    "qmk-8051-ak820/builddefs/build_vial.mk": {
+      "size": 1528,
+      "sha256": "4e6635f76f09b8e4bb993d0731aa11dd6d84ef50e459df987c990bb3be07cfe7"
+    },
+    "qmk-8051-ak820/builddefs/common_features.mk": {
+      "size": 37068,
+      "sha256": "43caed240bd6e1183290e7410e470d066b1e8651d22b9b8a2783ae45b7752c83"
+    },
+    "qmk-8051-ak820/builddefs/common_rules.mk": {
+      "size": 16019,
+      "sha256": "5b9d728d867f87cdbb43e09efa4b5328f93b13916298235c768908538eb08ef6"
+    },
+    "qmk-8051-ak820/builddefs/converters.mk": {
+      "size": 1710,
+      "sha256": "a941efe7dcc4afc03df6d0493e28e53fa1478c2f6cbbffb465f037fc7a90a130"
+    },
+    "qmk-8051-ak820/builddefs/disable_features.mk": {
+      "size": 766,
+      "sha256": "389fd381edbe236434e62a7520c70886dcf9102804ed089ddf9d67bcce767032"
+    },
+    "qmk-8051-ak820/builddefs/generic_features.mk": {
+      "size": 1554,
+      "sha256": "d3ec23d2b42def795b0c4f107960579b4d043c0ad006ae1ef8343028a73dae25"
+    },
+    "qmk-8051-ak820/builddefs/message.mk": {
+      "size": 5586,
+      "sha256": "40b99e072c533cb0afd498451b0f4e0abd045ee4b3dd178187d881e2bcaf02ce"
+    },
+    "qmk-8051-ak820/builddefs/show_options.mk": {
+      "size": 3880,
+      "sha256": "dd5156ba7150b38aeec5fae596a607f0d6cfe1eccf49c2d51b32aba86a81e740"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_belgian_0.0.1.hjson": {
+      "size": 11993,
+      "sha256": "5696fb90d37e07deb0a5c69a69614b28d360924a1b0f968006c8f5e81a80090d"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_bepo_0.0.1.hjson": {
+      "size": 19553,
+      "sha256": "b7f0583b800bb09d460368a5cf33f115dd0708a69424b29254cc1f25f06bb775"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_brazilian_abnt2_0.0.1.hjson": {
+      "size": 12030,
+      "sha256": "32bde0deff85a6a7ea8b9a904a3a2aba45b6d09d9d61a904374b842e1f5cfa06"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_canadian_multilingual_0.0.1.hjson": {
+      "size": 20894,
+      "sha256": "4539c5cc5a538bb7c6220b68e6dd236b756677ea98a8f58a0c5a7d9f8c83b3a5"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_colemak_0.0.1.hjson": {
+      "size": 8937,
+      "sha256": "fa8c41538bfca7a475472b1fffb564c2e4bc6ffa8f9da0769ccad34d69587f71"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_croatian_0.0.1.hjson": {
+      "size": 12628,
+      "sha256": "9ff5c801f7e6ed9ebf321a15c0b2b25a390a68557c458ddc5ab8d463627ce33a"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_czech_0.0.1.hjson": {
+      "size": 13435,
+      "sha256": "6394d5cac4c71e82f9343de94d1c1d7eae05aaa62be4f4f96880f704c02a2228"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_danish_0.0.1.hjson": {
+      "size": 11579,
+      "sha256": "b6a27c8b6e3545ba57cacf29ff51b402ac6318ec92b18984e79d9221f2f9995f"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_dvorak_0.0.1.hjson": {
+      "size": 8937,
+      "sha256": "c02aad31a696de0a8c758c97c63f5abf8c61de3e99a568263b9ac1f3dddd063a"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_dvorak_fr_0.0.1.hjson": {
+      "size": 9350,
+      "sha256": "3af93a300822e81c7e14b14b52000b63fe2f9e2dbf89356d5495d662d98cfbe2"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_dvorak_programmer_0.0.1.hjson": {
+      "size": 8965,
+      "sha256": "458f6baaa0db252b32b71e3b7e4cd83a532e5c555f72eba9258d3b553eabb576"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_estonian_0.0.1.hjson": {
+      "size": 11771,
+      "sha256": "0c3123994b299cdbfd71e9d264e1deca5ee71bc912a642f1dd436d6744d63356"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_finnish_0.0.1.hjson": {
+      "size": 11581,
+      "sha256": "fe26d0d68e6f2474cc4c1b160657a8d685bfd82c3a30441a5041886c266dbe4f"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_french_0.0.1.hjson": {
+      "size": 11808,
+      "sha256": "a735cc7c88bcfc81339fa624e348c52df1d059a7dd0d3d57ef44700b97ecb040"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_french_afnor_0.0.1.hjson": {
+      "size": 19934,
+      "sha256": "7063f566a852936a16a9d36eceef290239921451d038c2314f2214791aa37fb3"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_french_mac_iso_0.0.1.hjson": {
+      "size": 20018,
+      "sha256": "6f451049853b864a6b9d0408b063339bd47739dd3a5d20d6f503ef954dc452bf"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_german_0.0.1.hjson": {
+      "size": 11561,
+      "sha256": "3744f5fe271e591a6d1401ec77505304c7b22da1d1463537bc6eb4e5d02f79c7"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_german_mac_iso_0.0.1.hjson": {
+      "size": 19491,
+      "sha256": "b8ccd0c0f027a37e6e4d5c64d683de4a3a95ac027b68962803865f7ab2f076d6"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_greek_0.0.1.hjson": {
+      "size": 12432,
+      "sha256": "d61447615b4f3423fd15bc51ff19d33df6b628621d5f8c6dde6cb2fa429d9fa0"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_hebrew_0.0.1.hjson": {
+      "size": 11387,
+      "sha256": "f76a4f76f76e48a49e99b3408d46b399b84293563564c8e0f91489fe2c80556e"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_hungarian_0.0.1.hjson": {
+      "size": 13385,
+      "sha256": "bc9c4995408842ade6e98c78f9c2dcb0162ea294a0a3e4d53d05ef72f1640722"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_icelandic_0.0.1.hjson": {
+      "size": 11495,
+      "sha256": "6791b75649785534067cb00ef4b35203eb2a37b83f636575abbad3054eb86776"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_irish_0.0.1.hjson": {
+      "size": 11454,
+      "sha256": "e5f03ec6310f5c6fa8ed88f3b9b57fdf466b08b8b8f6ce0a29e3d2a98039d9fd"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_italian_0.0.1.hjson": {
+      "size": 12983,
+      "sha256": "9e0f277b251c064cef2d5bfd5ce705fba97ad74f26e2fa57a57b8147af3fe807"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_italian_mac_ansi_0.0.1.hjson": {
+      "size": 20232,
+      "sha256": "a15dc275adf57a48b5a5ca9cc54a88c7bafc6ec69bcd9706a1ded56bad59368f"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_italian_mac_iso_0.0.1.hjson": {
+      "size": 20242,
+      "sha256": "d9261426854ae0afb1b47d018e86620645295420015aae712e961213a5f1ae39"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_japanese_0.0.1.hjson": {
+      "size": 9759,
+      "sha256": "424364856843dbf8b5b69c4077ab538665617f4d7b2bb04076311ee8c573f3d4"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_korean_0.0.1.hjson": {
+      "size": 9161,
+      "sha256": "cb480bbfa0ccb59fb773fc63a1f8e21f5cdb691ed5ddb7c275c1ce8b66893498"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_latvian_0.0.1.hjson": {
+      "size": 14795,
+      "sha256": "0a8ac4899a9e35cdcdcc8e03c9c375c202ca9a60568041ff0cf4cc05a1af1ae5"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_lithuanian_azerty_0.0.1.hjson": {
+      "size": 11988,
+      "sha256": "bd6e3bb77a364f0a318bdc139dc6ca043397e5737a32ba532572dbf7cdb2c87a"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_lithuanian_qwerty_0.0.1.hjson": {
+      "size": 13171,
+      "sha256": "d9f0356c9605f5a0664d508584c6555674d1a4a33a86342812553ace3a13fae2"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_neo2_0.0.1.hjson": {
+      "size": 5794,
+      "sha256": "31d9e06fb3ad9e517304194a449c03e8f0133260a8c978920f0b218e85db7a32"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_nordic_0.0.1.hjson": {
+      "size": 2432,
+      "sha256": "23606fa50ea207d635de3cc348b840cfc173401c5925a2b6908fed578efe5561"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_norman_0.0.1.hjson": {
+      "size": 8937,
+      "sha256": "5f12c3f6f4068446a4e1903c76602ffffe45ee8c597d8995ef94dfb5da36ca0a"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_norwegian_0.0.1.hjson": {
+      "size": 11484,
+      "sha256": "5550683dbad0525a541341f639c49a5d7103549e4256aa9deb51ee717ca68631"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_plover_0.0.1.hjson": {
+      "size": 2885,
+      "sha256": "ebbdc870e2d7f7f5fb64a443286ddce0643853d4273d30e7aadca4dc1992b64a"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_plover_dvorak_0.0.1.hjson": {
+      "size": 1299,
+      "sha256": "902607fa359d931f9aa9556d84e4e8e867a1205ca646afc47c0b5ff0a0c7dd7d"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_polish_0.0.1.hjson": {
+      "size": 11459,
+      "sha256": "5a7c025c4868afc862f3396a069bb66bfde24bfb9020d6d44a31abee94640550"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_portuguese_0.0.1.hjson": {
+      "size": 11483,
+      "sha256": "6f215a01687e9fd2e7f0ba495ab09ddc055f7cf9fdb523cd511bb4a30f3e8523"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_portuguese_mac_iso_0.0.1.hjson": {
+      "size": 18694,
+      "sha256": "1fad0cf39c74b8eaef99c0724630a30da8bffedcedec8a3c9991cdfd6cd69eeb"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_romanian_0.0.1.hjson": {
+      "size": 14945,
+      "sha256": "f84321ee66fb2f901a8ea71ea779a6db2f201c86898fd9c08babb3412e13b734"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_russian_0.0.1.hjson": {
+      "size": 10097,
+      "sha256": "0c33f3a8998fe42d5a07084f258790979707c47b34e5da893075c0dc2ba61c65"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_serbian_0.0.1.hjson": {
+      "size": 10443,
+      "sha256": "93c51fe9888c61f7e6accdc328cf5d5283bb6ed91e0148657647c63a1930b61f"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_serbian_latin_0.0.1.hjson": {
+      "size": 12735,
+      "sha256": "781b07b4dfd1176ba6a17246a7bc926fec3fae3dc229428843b50bcb9eef10b3"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_slovak_0.0.1.hjson": {
+      "size": 13610,
+      "sha256": "5833b1597757b97d6beae9dc65bfdc3840f899d2f0f114b0ff08f564ffacdc84"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_slovenian_0.0.1.hjson": {
+      "size": 12628,
+      "sha256": "0cfe1ff5d7cc8a7bc0a29b9f3887b2e5e8f2016d02af803eaafeea172dd052a2"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_spanish_0.0.1.hjson": {
+      "size": 11578,
+      "sha256": "2266c7e2ec3ddde72a4ff9e241f084f221ec47c151f2f5eb99e41ccdb335ac3e"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_spanish_dvorak_0.0.1.hjson": {
+      "size": 11578,
+      "sha256": "ebda71dc7fa6518b24176d5f0bd97ba8b536806ca474195944d0e7091e229a6c"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_swedish_0.0.1.hjson": {
+      "size": 11581,
+      "sha256": "400defff6518e9f6ce51c4a2029ffc1bc4087cb68822d73a9e7a9a6c12ae9aad"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_swedish_mac_ansi_0.0.1.hjson": {
+      "size": 19135,
+      "sha256": "b4160deb17acdd5a82818d4907e1685ba4eefc0f1fc967e11f8c24323cd825db"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_swedish_mac_iso_0.0.1.hjson": {
+      "size": 19129,
+      "sha256": "a4776d255991381200ce6915ac0886b98a7eb72ad3a6b4382a3af1de147925ab"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_swedish_pro_mac_ansi_0.0.1.hjson": {
+      "size": 19135,
+      "sha256": "b3a2be31dc52a09f441b4209927f1aba39dc9a7d650581a7f32a16b6e5a07eee"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_swedish_pro_mac_iso_0.0.1.hjson": {
+      "size": 19129,
+      "sha256": "ae348602cb908935abb9559277cea126c60ddbae0c810d01126c33ff4edb84a3"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_swiss_de_0.0.1.hjson": {
+      "size": 12049,
+      "sha256": "934479b9283e27e61d7a4205bf487767de299551f686b6851e2355339b056f24"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_swiss_fr_0.0.1.hjson": {
+      "size": 12049,
+      "sha256": "6aff10ec30dc896b6f1807b837097cd28a71b152a602c72aa5490d7d6cf4561c"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_turkish_f_0.0.1.hjson": {
+      "size": 15721,
+      "sha256": "84c2f9acc0b7fc7d21151ff8b5cc8b9318ab8302d7c531e1bdbee1fc135d0073"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_turkish_q_0.0.1.hjson": {
+      "size": 11956,
+      "sha256": "540c385bb633c1c2d3f8353da062eeceff079698c210f51c7bf9b15a5460fec5"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_uk_0.0.1.hjson": {
+      "size": 11353,
+      "sha256": "469971d79678d195cfa3bc5124f8ea9ba9b814ebfb8c0d17929e65cf9bc62a2b"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_ukrainian_0.0.1.hjson": {
+      "size": 10182,
+      "sha256": "b24317779981a28fcf385f9793741ebb797f72d18acfd830c026391bf7b1a93f"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_us_0.0.1.hjson": {
+      "size": 4826,
+      "sha256": "f11cf6f91bc75c57ef19418fdc8e1631bb258d8dc74b797fbdcf1924e7d81399"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_us_extended_0.0.1.hjson": {
+      "size": 18348,
+      "sha256": "551cfd23e61f9db5b7ee7038ee5dce64e0d400176d92d65b496f9484f28a41db"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_us_international_0.0.1.hjson": {
+      "size": 16379,
+      "sha256": "f24fd75f284c6a7dae83d782e8b2e90d189c8d2c48d30377ee49840706d7978a"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_us_international_linux_0.0.1.hjson": {
+      "size": 18079,
+      "sha256": "99ce36e1592e3da74e571a070b6b37ca12b8582260a9dbf4f06dab8e75cd909b"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_workman_0.0.1.hjson": {
+      "size": 8937,
+      "sha256": "4be2733dc094ecd3318720e96ae6155b0542608a305e005d189cdd7b11794906"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/extras/keycodes_workman_zxcvm_0.0.1.hjson": {
+      "size": 8937,
+      "sha256": "9d4edf6c38df612c503c75cc2e982e990b097ada1d2a8b1bd548f11fb9118bd8"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1.hjson": {
+      "size": 2312,
+      "sha256": "94841d9cab0745104958ab81086f596a52209b02295d46d0c3f0e10cd3357160"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_audio.hjson": {
+      "size": 2507,
+      "sha256": "ca5636448dc0732ef40678ee880b32b1ee1a95274fe19e5324651acd436b1361"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_basic.hjson": {
+      "size": 36245,
+      "sha256": "51c87c257c590338a177fd28ca135ff1e9b96e4bff6b53bda2e241ed388c5cf3"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_joystick.hjson": {
+      "size": 5478,
+      "sha256": "9637b8290c64e52b25c7d10c968e62f7d56e7f3ed7ee0b48c6d2362b03db52a1"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_lighting.hjson": {
+      "size": 3966,
+      "sha256": "e27d96c5004366084f60a47e7c1abac92e93dbf139e81aff6d75ee9fc30d0810"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_macro.hjson": {
+      "size": 5064,
+      "sha256": "aa706b4a8dd73ffe29a09d4fc21a375e1d5825fd5e17f45e33c95150eb94b8ab"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_magic.hjson": {
+      "size": 6006,
+      "sha256": "313749de46e6ff6ab5f144b5bf7ec9804861dec4e7a82ef35a7be70f50436e01"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_midi.hjson": {
+      "size": 24578,
+      "sha256": "ab276bcd14133831ce1b4ec860113414400106d7c4d8b831ba38b9a7ccc0e853"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_programmable_button.hjson": {
+      "size": 5960,
+      "sha256": "fbc94fe931bcb6cc73d1fefa64a51a9851d0b09eeae32ddd31909a7bb6f8f42f"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_quantum.hjson": {
+      "size": 12079,
+      "sha256": "40b7fb53d12c952e78469d0ff4139856ab2098be83e23c861d5491ab4c82a7eb"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_sequencer.hjson": {
+      "size": 868,
+      "sha256": "f0e5b811d5a8dc3a0b0131a64bc4fbdfe0396e757c3baf4c7d6b84f3006bff17"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_steno.hjson": {
+      "size": 417,
+      "sha256": "4a4b8b51b8a163f555da39589311ce7270f7533e8b5fb3510afae980a174bd7a"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.1_swap_hands.hjson": {
+      "size": 682,
+      "sha256": "4b72be744020fcc8e2e75f59cfcd7953cb0b91ace3278be0904a3677605e0f94"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2.hjson": {
+      "size": 395,
+      "sha256": "5622857a50fd0010850e930549eaecb0decbdbba88a424bafaaf8fc48d08ac7c"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2_basic.hjson": {
+      "size": 438,
+      "sha256": "c35e647e67c56f8ebbc4e4f9571485d12c4cd41b6916841fa3520d75bb936d93"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2_kb.hjson": {
+      "size": 2874,
+      "sha256": "839993a754f4380f9fad1f34d73dad47e2205b28e9b46c74bba103dc7c09a379"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2_magic.hjson": {
+      "size": 6138,
+      "sha256": "1ab66f826acc1a5d37d90790c42449f77c8a5339aba8891e6318d3f9293301a7"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2_midi.hjson": {
+      "size": 24600,
+      "sha256": "0e12938f76953a01663922c64357778019a9a3e0ac1941423b04f1d8e0166560"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2_quantum.hjson": {
+      "size": 365,
+      "sha256": "c3fafc590a29646b9d487c45697e7de5378164b4154f4afacbb69de99a896118"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2_sequencer.hjson": {
+      "size": 1616,
+      "sha256": "e48f73c345714565c1b0f6a015af35300cfdb96e5a30615062a50372a761ee13"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2_swap_hands.hjson": {
+      "size": 1249,
+      "sha256": "4f07bb2a3ba3bb74eb43bed20d54ba40130343c4eadeddf6303ccffacade38a5"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.2_user.hjson": {
+      "size": 3002,
+      "sha256": "1e381fee6f3ecb5ead1c288b1ab1cf18c9f62f70c9a7512867f821fd692ad6c2"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.3.hjson": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/data/constants/keycodes/keycodes_0.0.3_quantum.hjson": {
+      "size": 357,
+      "sha256": "d9eee81a6a6c7ef778fd1dead408b1fa55b03e8108e200cf3ef29dd02c6611a5"
+    },
+    "qmk-8051-ak820/data/mappings/defaults.hjson": {
+      "size": 2342,
+      "sha256": "3be591ba43f286b07948048228e00c7bd06f3d550d58f21d889e793483db2eee"
+    },
+    "qmk-8051-ak820/data/mappings/info_config.hjson": {
+      "size": 12943,
+      "sha256": "346a409e1d05c017864fb7f2b343ac2590c8e5f84160b4902c6aa55eebf7ab8b"
+    },
+    "qmk-8051-ak820/data/mappings/info_rules.hjson": {
+      "size": 3456,
+      "sha256": "b6b7451aac9cc06c7de6614face2804ba448287cb8a8c17cfc6e50efb4fb0d1f"
+    },
+    "qmk-8051-ak820/data/mappings/keyboard_aliases.hjson": {
+      "size": 29764,
+      "sha256": "e968390218179623302844b08a477ff7d85a191d5c73ab3f7e814e17682946ae"
+    },
+    "qmk-8051-ak820/data/templates/keyboard/info.json": {
+      "size": 556,
+      "sha256": "3444e99a0cd4e50e8e063cbfb56faf0e117a8810e1e4d9d1fd0af5b99f9d00be"
+    },
+    "qmk-8051-ak820/dependencies/lufa.json": {
+      "size": 2078,
+      "sha256": "cbe85dbb86d927ebe33489267ac73072b63978a18dd1fe202e9181f11f581c9a"
+    },
+    "qmk-8051-ak820/drivers/eeprom/eeprom_driver.c": {
+      "size": 2486,
+      "sha256": "ce61006195d9c5274231f0ad8142d777a5517e32630f7ec7349d87764685788b"
+    },
+    "qmk-8051-ak820/drivers/eeprom/eeprom_driver.h": {
+      "size": 791,
+      "sha256": "c79d0993439313d62214118eca4dd1b4715507d7657439ad2e4d929473ecb23e"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.c": {
+      "size": 8860,
+      "sha256": "e7a0819030b7172c6b7590037d8c7c9de1eb3d1cbdbeeb38d0576fd7355294ad"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.h": {
+      "size": 1424,
+      "sha256": "6339680746820fb5a175f0d6368d32bbc2e5d5cb1ab768f15fb0cc5d93d71cf9"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_boot.c": {
+      "size": 1172,
+      "sha256": "b1e8d7625152c9ed6209c392c75a9cb87a228087898ce4264a6b8d833d5daa0f"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_flash.c": {
+      "size": 5067,
+      "sha256": "b5ef5524ff1206a7d49fc5e3aa3436b9feed9bba33c2a1062429f42c21c1b34b"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_macro.c": {
+      "size": 6812,
+      "sha256": "7b49e135a03eb059c01e3f6cde2227df04f7bcab27338776ff09b0ce5e561031"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_macro.h": {
+      "size": 545,
+      "sha256": "f0afa783b8ced80b48f11a5f759a8c35f920fe33b5fe0d4e89acee5476bb2e18"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_nvm.c": {
+      "size": 7326,
+      "sha256": "b2c121d4dd14880231b4a3b3a90ad71d2eb6b7b91fdc11021fd99c4995a81a63"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_nvm.h": {
+      "size": 2126,
+      "sha256": "e5696104cb9dd93d6a51ce89c2b0fae461018fcaa906440e824e4a31cbeb9438"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_rgb.c": {
+      "size": 12183,
+      "sha256": "810ac091fb9f0206ab6e6db86e6ab2f51a8003f647c64f35ebb8602db6d23415"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_startup.c": {
+      "size": 1478,
+      "sha256": "1da0df4d6fe95008493ee2dfb563cc077264fd8f3652667ce8f7a84883ba08f3"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_timer.c": {
+      "size": 1170,
+      "sha256": "69a2218dc73c70feb2622d12f4a6f4e1b4647cc5a0b4d059f9d9a51023f4b1f5"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/config.h": {
+      "size": 2010,
+      "sha256": "4ce39c7dec3be1356d26e3f7ae8fa0ebb535a10818d99ed70f527b2dc83b3145"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/info.json": {
+      "size": 14377,
+      "sha256": "4f951f956ce11ad3efc3c692669c1da833dd07875940a67055356ba6e625c5aa"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/keymaps/vial/config.h": {
+      "size": 39,
+      "sha256": "54421e7bf4962ffa31bd7f10bd7d350b4cd4ae04ebe61f14bfd178be648e2526"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/keymaps/vial/keymap.c": {
+      "size": 4698,
+      "sha256": "d3ce6aa3d17ed9450e3f9a20520cb49a8af7a1de90c8298e680fd3186097dcba"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/keymaps/vial/rules.mk": {
+      "size": 35,
+      "sha256": "209a5cf059306af5092121fe6f8f2c2d00b0fb51cdcdee7006554cd3764baa05"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/keymaps/vial/vial.json": {
+      "size": 2598,
+      "sha256": "080192880c40c102022fe6b75dc865b1d36638ffd4e6585cfd429eed3478c071"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/matrix.c": {
+      "size": 2316,
+      "sha256": "277fbf33128b606387e54526733b9a08dc4e604b19e795b23a23ea226b3101b0"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/rules.mk": {
+      "size": 723,
+      "sha256": "e802e4e37e46b33583cfd8c07dbf0b554b2cebcb28efa0395d48129bc47f91ab"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/tests/include/eeprom.h": {
+      "size": 601,
+      "sha256": "dce049c152ca46c640edb0948d7225b2b1dc8fc402a2710aa3943b89ba7031f7"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/tests/macro_powercut.c": {
+      "size": 11413,
+      "sha256": "ee94de8aaedee45de03dc82cfc80fb9107590238fb38bcde6de6c4ce57ed94a7"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/tests/nvm_powercut.c": {
+      "size": 7148,
+      "sha256": "961748bf79a3e6ef09446a4085bb8eb910484afcba96b32327b71ee91a98c3fd"
+    },
+    "qmk-8051-ak820/lib/ch555/ch555.h": {
+      "size": 77059,
+      "sha256": "d5ae2193f3fb4f92749bcde19b1216f752b05e1a4187f733efb202b7d02fa7b8"
+    },
+    "qmk-8051-ak820/lib/ch555/gpio.c": {
+      "size": 6914,
+      "sha256": "b41a4d8719015e57429332041fbad424c1d642043aea8698dd76b2ad2193385d"
+    },
+    "qmk-8051-ak820/lib/ch555/hal.c": {
+      "size": 10261,
+      "sha256": "75d633c84135e7607bb5d59f08f2de8c9bc91da9f91c359b00868f3dbc93f95f"
+    },
+    "qmk-8051-ak820/lib/ch555/hal.h": {
+      "size": 2705,
+      "sha256": "e16f49c70c4ebc709615768ab060181ba801dd487c307f544499554105e5616e"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Common/Architectures.h": {
+      "size": 2837,
+      "sha256": "20cd56152f9b5ab052462a5cbf00e99d49688d709dd19dd93b217ae26c3994b3"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Common/Common.h": {
+      "size": 12652,
+      "sha256": "096187c481661ae61a599605eebeb9c2086d76726cea4494531634aa504a42c4"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Class/Common/AudioClassCommon.h": {
+      "size": 45704,
+      "sha256": "2471292efc68b86a5c12f78cafbe72bfbd9db98aebd5d9cdddc656c9d85530b8"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Class/Common/CDCClassCommon.h": {
+      "size": 21041,
+      "sha256": "8af709ba99b2b5d54d3448922e609fb376aef1572e22d5ef0fa7107248e69673"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Class/Common/HIDClassCommon.h": {
+      "size": 37438,
+      "sha256": "93984216c27929687eb00349c708c516a1e21c9aaf0bb1a777a53ed403fd5014"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Class/Common/HIDParser.h": {
+      "size": 19110,
+      "sha256": "332e6447ab18ffc71116a4f6d3232684e0fc59f7b247ed9ce86715892984a62c"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Class/Common/HIDReportData.h": {
+      "size": 6605,
+      "sha256": "8887facdc7b85b69804aa20709075eb0472ba02d3290e9e45cfa5afe5d92c5e6"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Class/Common/MIDIClassCommon.h": {
+      "size": 17430,
+      "sha256": "e95ba0af8ed6f008f35bd8fd46efb041ab45ba658c0590e10b98d330072a5266"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Core/Events.h": {
+      "size": 19916,
+      "sha256": "d3b131927c399b52294e2fb8816b7514595bea076e9f43c439e0014507a43cdd"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Core/StdDescriptors.h": {
+      "size": 41159,
+      "sha256": "04de70083c58520e5e06a6d61904e7cb096143f3fb43060de2d9a102731b1990"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Core/USBController.h": {
+      "size": 5957,
+      "sha256": "bda07947e9551b37df498e5b3bbc461d14d6b6dbe3eeb17e5c4f4f1f52e21875"
+    },
+    "qmk-8051-ak820/lib/lufa/LUFA/Drivers/USB/Core/USBMode.h": {
+      "size": 10750,
+      "sha256": "4bf9d2fdda3592f478fc81a4bd5bab99187c6169aa972f3994c141669d117d5d"
+    },
+    "qmk-8051-ak820/lib/python/qmk/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/c_parse.py": {
+      "size": 11557,
+      "sha256": "c39a2b2d0526d58d6b5e1da393ef9371be9000dbfba5a658aa85824540301bd2"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/__init__.py": {
+      "size": 7274,
+      "sha256": "5dba53554f449ce6091079779fe27ba8d00b1d9764fd22d22729cb96024598e8"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/bux.py": {
+      "size": 3068,
+      "sha256": "0ad9e23c70ef4ff5e65e218c3500fb96e534c4c4e58aff1b0675300a4d345b89"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/c2json.py": {
+      "size": 2826,
+      "sha256": "f7a3d244d7dd28682b25cdec8cf8597adfb327cbd630c9eabe42d1e7feb7a405"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/cd.py": {
+      "size": 1711,
+      "sha256": "6f42edb902bf4688e6a14b97ce738a0578d277e7e4ad0570847f9ce197963e48"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/chibios/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/chibios/confmigrate.py": {
+      "size": 6989,
+      "sha256": "447ed3b8bb62a1344a4c5dd29a2c9999659473b8e01e8cbc683ce64112e7731c"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/clean.py": {
+      "size": 553,
+      "sha256": "39d538026decbeff3d037e42796d84084d6c237f96b6a27ec5a5e1c61a3bbb08"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/compile.py": {
+      "size": 3600,
+      "sha256": "8e1fbab55a9cd05a223700ed4883d80d436e0fc3ea215362c7dc531ce4be0e55"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/docs.py": {
+      "size": 1657,
+      "sha256": "be460d3ea1c60aaed41a39d5370e71776116256c306f5a6b46d7824cebd592b2"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/doctor/__init__.py": {
+      "size": 118,
+      "sha256": "31ecc0b90452eb13b99013cffc6786f0971b3f2ab2061618ac773ab82b3e4a93"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/doctor/check.py": {
+      "size": 5088,
+      "sha256": "da983bebe5f7267ab8ee93f6a3c9c0b4db330e92c1ab2db58941d7aba6e55da7"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/doctor/linux.py": {
+      "size": 5746,
+      "sha256": "841c36e37a7369da1fe7e5b9ab2a8013df4bd05bd4cedc91c4304af833265d69"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/doctor/macos.py": {
+      "size": 312,
+      "sha256": "491b2775b1002a61c97e59037c9fb0d6a40a84342ed458cab1363a6e86a3d86a"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/doctor/main.py": {
+      "size": 6785,
+      "sha256": "d0fa522ff77151ef895f19651aa87635ff47ce14b1f8531ac1733a180edd115c"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/doctor/windows.py": {
+      "size": 605,
+      "sha256": "fb3b12a7d2ec3b0b0b47e05720239458488c18feaf9574a359b6180ccd945ee7"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/find.py": {
+      "size": 1602,
+      "sha256": "f4ed52dd1d8e3c47ee1316af33b71c8199c73b0aa420e4f67a68cbe3250a4702"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/flash.py": {
+      "size": 5747,
+      "sha256": "9b7f008facfcd6d775d438374895b46b00c728e8ffd1a3f9603b4a027d9a62cc"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/format/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/format/c.py": {
+      "size": 4939,
+      "sha256": "76e678afe24c3371093fd08ad2fa63c6e4d7aec91e7e4908a7287879510f18e1"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/format/json.py": {
+      "size": 2478,
+      "sha256": "84e5845b8d6006742723a2b8fe17ddaeda1817c19aa5b67bf1925b998dfa6bb7"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/format/python.py": {
+      "size": 2536,
+      "sha256": "a772305076b4d659c99f25484575be4db9ea4a9593d841c388bc4c1bc78e70ee"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/format/text.py": {
+      "size": 1878,
+      "sha256": "af7283fa9e9f8f2018b639d907cb7f0c1abbda2b87cfcf416665bb42bf3be0e7"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/api.py": {
+      "size": 7939,
+      "sha256": "bd7151707b5fb55fbd5017176562a530c34efddd56a388d5562a641682b171ee"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/autocorrect_data.py": {
+      "size": 13442,
+      "sha256": "addfc3a16ffda2f2d317255555ef15eca4f2766f80c7fddec359b7a6966ca579"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/compilation_database.py": {
+      "size": 5227,
+      "sha256": "3d9ee572b040e42e0cb7ad2d486c3a01483d0df4798095232c85be57e8d084d2"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/config_h.py": {
+      "size": 9102,
+      "sha256": "aacf2a2ee800bd051f5273f02f6d0895e6cc18910a381b62d6396f89157c4804"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/develop_pr_list.py": {
+      "size": 5023,
+      "sha256": "9a3015a72ac4d15efd2e02fa31a799c179cafb053247d0942926c057cb091de7"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/dfu_header.py": {
+      "size": 2398,
+      "sha256": "4cec4ed1647e0426c433475a862df64d700e26e60f39efbba2e99782fae099fe"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/docs.py": {
+      "size": 1229,
+      "sha256": "4751bd510dc92789901c886b81916bdc19253919ff0b368fb566e3453d59f254"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/info_json.py": {
+      "size": 3675,
+      "sha256": "d30f845e9b49507714170739f385c6ca46504b6723bb497b19e773190b4b620f"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/keyboard_c.py": {
+      "size": 2687,
+      "sha256": "e862e1ac848dcf4dffda1af4ee6f2689dbd93941203b1a1847f7b9573c91768d"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/keyboard_h.py": {
+      "size": 4807,
+      "sha256": "0a382a94781cfda3fcd1c417e58cb0b721be0549ab3b9a1f9af263e60475c2e1"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/keycodes.py": {
+      "size": 5519,
+      "sha256": "d3e4dd5a0fa1ec78c6b7250c4b0dd1727ea45ab9905a06c12894d5280091f637"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/keycodes_tests.py": {
+      "size": 1644,
+      "sha256": "8dd0246a1084ff7ffa53648ce8f873d0199e69dc137f56b77c01abb665281307"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/make_dependencies.py": {
+      "size": 2554,
+      "sha256": "25ec71afae9eb8b7176f694aa156700d25b54f5b8097acd63c06397680a516fd"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/rgb_breathe_table.py": {
+      "size": 2787,
+      "sha256": "5753021745bcc608e89d4396b7f26218e75155f0fad3f8d57b9bff2da95a869e"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/rules_mk.py": {
+      "size": 4304,
+      "sha256": "69b56d703fe76112eb18e9dd75ce6f55bf1f988709ceba3f0c6a53da219a849e"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/generate/version_h.py": {
+      "size": 2135,
+      "sha256": "c4b2edac7b1e252ccb2bf89d2d9c8526d569b023479b6623f845391e4daeefeb"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/git/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/git/submodule.py": {
+      "size": 1850,
+      "sha256": "e91afa63644f2e33852e1405adc0d4b600ca323bc988a4c0c91d639faa6cff1c"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/hello.py": {
+      "size": 358,
+      "sha256": "a573b0eb8e78b9702fd553af1af4b423febb163a6edaff0d321caf34c206f759"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/import/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/import/kbfirmware.py": {
+      "size": 999,
+      "sha256": "b5236156ef7d80eef366fb093135eddee8227592ebc9d02e7bbbc9ef387534cc"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/import/keyboard.py": {
+      "size": 902,
+      "sha256": "9570bc010816a7c369954cee2da3d77f02d66a6dac423ce9141904557c0e9893"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/import/keymap.py": {
+      "size": 919,
+      "sha256": "7061b7bb9cce6e2b05526906f2ba85860d7744f47b7c05ee45a99f24bec1293a"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/info.py": {
+      "size": 9072,
+      "sha256": "032c158f8ac7f63c11666d04bb3b363a8393198bb68a8650e27f95951947d16e"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/json2c.py": {
+      "size": 1181,
+      "sha256": "2a6abcfece2b12edef903af5e9a524abb5eebae3a81268dcad6dc2d13d53b0ec"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/kle2json.py": {
+      "size": 2238,
+      "sha256": "0ba316c4aa39bd4b6c6a9ca7e0c73d315873e32b79ab5db44276b907b3101ee0"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/lint.py": {
+      "size": 7573,
+      "sha256": "51e9cc3b875b7dcf4e29a1a9c4337e2d9629c413a02fd372f3bc7585f008f30e"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/list/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/list/keyboards.py": {
+      "size": 505,
+      "sha256": "61526426a53f0a373f226f556492cc6755cf1c10884be26c1b41bb7f1fd90c12"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/list/keymaps.py": {
+      "size": 784,
+      "sha256": "3422b376494ad1c36ab6f35e5a8fa06c080989af89ca35cd9dff6557d6eff486"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/list/layouts.py": {
+      "size": 832,
+      "sha256": "14b0b287fb41d5ff7111e8b260bd106159a60469079ed43551f828bd2af828f4"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/mass_compile.py": {
+      "size": 4549,
+      "sha256": "e8e963e2f31d5e6bfe5f326923c4122c237c54415d97e4dd242260787e4c7da6"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/migrate.py": {
+      "size": 3347,
+      "sha256": "807829f9359174e824d46254910e616a6c6f745139a0498e4597c8f8300c589b"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/new/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/new/keyboard.py": {
+      "size": 8841,
+      "sha256": "ac19c57d80e2f7d7c03c3e548ee04c96a84f5ec4d5b7e3cac6ccd9f24adcc612"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/new/keymap.py": {
+      "size": 2770,
+      "sha256": "18122dee9a196dad64f7448a8d9a7278be83b8b922abf4f57e70f41ec1f11d2f"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/painter/__init__.py": {
+      "size": 55,
+      "sha256": "b467d415eb664e7b99fec7ba5e00aa5bbe7942fb5ca5d7523c5cbfa50a05a118"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/painter/convert_graphics.py": {
+      "size": 3989,
+      "sha256": "80baf5cfcf4c92eae4a98876b6b47c589ae23923a72cada4766f357e30523c2d"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/painter/make_font.py": {
+      "size": 4485,
+      "sha256": "112ecc5e820398e2fa37d1c1a073d40f0b4d9c06ed6fe59f1f7b6a91f1632bad"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/pytest.py": {
+      "size": 761,
+      "sha256": "b3616f4b3e15087af191963c424c59311c89eaf803370dd893daac222310d928"
+    },
+    "qmk-8051-ak820/lib/python/qmk/cli/via2json.py": {
+      "size": 5699,
+      "sha256": "4d0edab3722dbf8d9e91b63ccce53d2353a490d610df4c86fecdceaf605a4310"
+    },
+    "qmk-8051-ak820/lib/python/qmk/commands.py": {
+      "size": 7539,
+      "sha256": "c34491693149682e2b4f0ebbb7a9709cc496c91a4a1a59aacb70850473c9b479"
+    },
+    "qmk-8051-ak820/lib/python/qmk/comment_remover.py": {
+      "size": 538,
+      "sha256": "eff9378fef496650d8d805fbada19eb92ce31ca70d915eb67d7940f98901489c"
+    },
+    "qmk-8051-ak820/lib/python/qmk/constants.py": {
+      "size": 7994,
+      "sha256": "318b1f4a0b63783531da515715e4ae0506aa60af4bd49b523bb8b429eac463bf"
+    },
+    "qmk-8051-ak820/lib/python/qmk/converter.py": {
+      "size": 804,
+      "sha256": "87cbeb6e1509bbed13367b45c636e5a6319824979efe8053deb1d822ebd46d2c"
+    },
+    "qmk-8051-ak820/lib/python/qmk/datetime.py": {
+      "size": 894,
+      "sha256": "9926f37de245ee2bd6651fc306191ed0c3a8dcbdd886b6e0e985cb4b691d1e8a"
+    },
+    "qmk-8051-ak820/lib/python/qmk/decorators.py": {
+      "size": 2824,
+      "sha256": "b3f105e18d33afcd495ba27b83cb4407c1b975291deb1ebb9a6a98abd25f8b57"
+    },
+    "qmk-8051-ak820/lib/python/qmk/errors.py": {
+      "size": 321,
+      "sha256": "17813bb701b0bfe703039bf1b7d4387d6b59316e7c6138d0d20d5e1b985f5bc8"
+    },
+    "qmk-8051-ak820/lib/python/qmk/flashers.py": {
+      "size": 8672,
+      "sha256": "92fb7c6b337ae4430bd8525729b6d390e288447c4c883ab4a816535d4757970e"
+    },
+    "qmk-8051-ak820/lib/python/qmk/git.py": {
+      "size": 4598,
+      "sha256": "9eec87ae3439cca9e08168ab04ca96de44661b4e710ed87d69a59a16a45cb468"
+    },
+    "qmk-8051-ak820/lib/python/qmk/importers.py": {
+      "size": 6454,
+      "sha256": "7f5b0017fa679fc93ce9668ebd9628e683b68c81236f567472011db74113b9be"
+    },
+    "qmk-8051-ak820/lib/python/qmk/info.py": {
+      "size": 36734,
+      "sha256": "e07de14f0e38ca874b7e563e0234de8c8b811020078eda69461a2b70d84bcb63"
+    },
+    "qmk-8051-ak820/lib/python/qmk/json_encoders.py": {
+      "size": 6454,
+      "sha256": "3f7cbc562597ab9cb3a5a66301f325b9075cec259987264cc153976b5ad1f0b4"
+    },
+    "qmk-8051-ak820/lib/python/qmk/json_schema.py": {
+      "size": 4289,
+      "sha256": "4c1e6e955222b0b1220d6748a471cb12b832a7d9d5cf7b36e66b2039f674bfec"
+    },
+    "qmk-8051-ak820/lib/python/qmk/keyboard.py": {
+      "size": 9257,
+      "sha256": "d343a32d6d954b8cd4ca1204e5a8a0aaa8a69ae05e027475d2a112d835f6aa9c"
+    },
+    "qmk-8051-ak820/lib/python/qmk/keycodes.py": {
+      "size": 3018,
+      "sha256": "bdeda790c1f4571a76f79fc106023eb3598bd44dd7de1ddfd4d0f2c7e397b903"
+    },
+    "qmk-8051-ak820/lib/python/qmk/keymap.py": {
+      "size": 24245,
+      "sha256": "f20ab1f130dcd1aa86bbf435761d8f91755a4c9d0c9301cff8852293160162f4"
+    },
+    "qmk-8051-ak820/lib/python/qmk/makefile.py": {
+      "size": 1598,
+      "sha256": "a0d097b20567e31de16279e019acd6ed1c01007ba07c71a09d51370cac3b4763"
+    },
+    "qmk-8051-ak820/lib/python/qmk/math.py": {
+      "size": 1044,
+      "sha256": "0915b4f756e509922cf970c3445ff7820a065906cfd1845fe021fb70615ab84a"
+    },
+    "qmk-8051-ak820/lib/python/qmk/painter.py": {
+      "size": 10320,
+      "sha256": "6d1a60b9b7b171b456a95086ae7eefc64346e913976ebb69d4383b2e8deb7aaa"
+    },
+    "qmk-8051-ak820/lib/python/qmk/painter_qff.py": {
+      "size": 15560,
+      "sha256": "2d1fead0a085a06682e4c83af00496f28dc02d8adf023a1e71b8800e8632814b"
+    },
+    "qmk-8051-ak820/lib/python/qmk/painter_qgf.py": {
+      "size": 15743,
+      "sha256": "ca009d15275d9def25e13ddd0fe785df5bbc3a925c2f94173f8c0198a7bb602c"
+    },
+    "qmk-8051-ak820/lib/python/qmk/path.py": {
+      "size": 2929,
+      "sha256": "2b68f91ce1bf57f7f928981b1af014c38478adc728b2c16cd8a184eadea0c19f"
+    },
+    "qmk-8051-ak820/lib/python/qmk/search.py": {
+      "size": 5095,
+      "sha256": "5a9cff130afa10282c8f7b0f06946c8be49df15e3fb671be30aff57c9aa2dcbb"
+    },
+    "qmk-8051-ak820/lib/python/qmk/submodules.py": {
+      "size": 3406,
+      "sha256": "956ad4c211cb200c12040c207f7e1a8c7590a2d5b63144ab46697452860ec561"
+    },
+    "qmk-8051-ak820/lib/python/qmk/tests/__init__.py": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qmk-8051-ak820/lib/python/qmk/tests/attrdict.py": {
+      "size": 321,
+      "sha256": "8d4c324eacfc073dfd5fd8d47763085dd32c53a6778058417efa59bd26c88dfa"
+    },
+    "qmk-8051-ak820/lib/python/qmk/tests/test_cli_commands.py": {
+      "size": 12398,
+      "sha256": "7feb77654e5b9af5f154dfec5d7658559b64f2cecbf512f2efffe413d0e44f26"
+    },
+    "qmk-8051-ak820/lib/python/qmk/tests/test_qmk_errors.py": {
+      "size": 216,
+      "sha256": "28c5c6ac9eb5d790f6ff2bb349deef574b6fe973ea80b391bb5c8fcb8dd34f77"
+    },
+    "qmk-8051-ak820/lib/python/qmk/tests/test_qmk_keymap.py": {
+      "size": 1921,
+      "sha256": "42d5db6af3dd728939bde00de073e14391e970ac71896ab1415862266d266400"
+    },
+    "qmk-8051-ak820/lib/python/qmk/tests/test_qmk_path.py": {
+      "size": 363,
+      "sha256": "a66a08c1131e91b6b069764a9a744e76a5bc29d83c967db7f3034d8dcc3cd5d5"
+    },
+    "qmk-8051-ak820/paths.mk": {
+      "size": 694,
+      "sha256": "b46c0ca989defde2302e7726edc6ad4b141a5e622e1cb7b52e95e8a086da7d12"
+    },
+    "qmk-8051-ak820/platforms/atomic_util.h": {
+      "size": 1676,
+      "sha256": "5338c373b3ace8532ac95c55ad18fee4be44d61176a9ed13636b5e9f34e053d0"
+    },
+    "qmk-8051-ak820/platforms/avr/mcu_selection.mk": {
+      "size": 3798,
+      "sha256": "7932ac59b5be98edec61502bacfff9d73c590b70dc9714c3bc589992d8bba16a"
+    },
+    "qmk-8051-ak820/platforms/bootloader.h": {
+      "size": 785,
+      "sha256": "a47510e24f8f6626203a28b5dabb7c3ae4abc6b9cc12fd30015720ff43969728"
+    },
+    "qmk-8051-ak820/platforms/chibios/mcu_selection.mk": {
+      "size": 23682,
+      "sha256": "03e4ef5816af40e0d9c7a61d95bec045877fc87e38689eef500bdf0cf42cad03"
+    },
+    "qmk-8051-ak820/platforms/common.mk": {
+      "size": 813,
+      "sha256": "0b79039ef9c3af43191b65dc704061d53c52ce454bdea631d3839622612acdc2"
+    },
+    "qmk-8051-ak820/platforms/eeprom.h": {
+      "size": 3003,
+      "sha256": "e12f60dcf6aa10606687400df9295d870b87a3db7f16999dde2ea5f0d269aa4f"
+    },
+    "qmk-8051-ak820/platforms/gpio.h": {
+      "size": 813,
+      "sha256": "7797aa9dc6fa736dd28a54bc4caf1dd19c12c16037af15c5655f81371770ace4"
+    },
+    "qmk-8051-ak820/platforms/hardware_id.h": {
+      "size": 356,
+      "sha256": "7f7df22191a90e1c2eef5d6f7dc2cff52e1f90a04d92701b6d24068d1b468550"
+    },
+    "qmk-8051-ak820/platforms/mcs51/_pin_defs.h": {
+      "size": 4010,
+      "sha256": "9a1c1da0d60c48d7b1f8471306d10a36f58a955f7ee8d07dfb6d763821cf7bdc"
+    },
+    "qmk-8051-ak820/platforms/mcs51/_timer.h": {
+      "size": 1141,
+      "sha256": "53974a9eca667c1e149787e05e22f3d9577cddae73c5cb38da8344d1f5db8e7d"
+    },
+    "qmk-8051-ak820/platforms/mcs51/_wait.h": {
+      "size": 1795,
+      "sha256": "24b100172d6f5c50f43e38e4ea2642511b134b588726ee9fff6235ae9b36c2ce"
+    },
+    "qmk-8051-ak820/platforms/mcs51/atomic_util.h": {
+      "size": 915,
+      "sha256": "e77b0acaa85d5e184e97d64d06bc877717722e57c54073b89c802015eb638b34"
+    },
+    "qmk-8051-ak820/platforms/mcs51/bootloader.mk": {
+      "size": 1316,
+      "sha256": "610a91e473bfb978bda150ac2b6bf31df0e967d8ffd9031c313120bcf31866ec"
+    },
+    "qmk-8051-ak820/platforms/mcs51/gpio.h": {
+      "size": 1761,
+      "sha256": "73023d2d37560b2cb34ec4c24429479eccb1ea9804851e62571add056def4577"
+    },
+    "qmk-8051-ak820/platforms/mcs51/hardware_id.c": {
+      "size": 242,
+      "sha256": "dcec894bcd8388dfd2a3d13bff20b10d368d371da984c76a92fcf48f73d7e6f1"
+    },
+    "qmk-8051-ak820/platforms/mcs51/mcu_selection.mk": {
+      "size": 763,
+      "sha256": "ea347c847c22a313f92585c62741f030a3b6f0f6a73e682d61f2492c0b5d5a10"
+    },
+    "qmk-8051-ak820/platforms/mcs51/platform.c": {
+      "size": 781,
+      "sha256": "7bea47e3df4081e3131a63d8cec848d26ab3d1ac4db71cc1238ee28946bbf560"
+    },
+    "qmk-8051-ak820/platforms/mcs51/platform.mk": {
+      "size": 2133,
+      "sha256": "b817b6c0f37b8a0e4fcdef0a858e8d1ca3956c6cc4e0718c10bfd46019d5ef8c"
+    },
+    "qmk-8051-ak820/platforms/mcs51/platform_deps.h": {
+      "size": 752,
+      "sha256": "749b32c128883aca663b0c835d474a914ab6441a809e6771a564787dd28665e5"
+    },
+    "qmk-8051-ak820/platforms/mcs51/suspend.c": {
+      "size": 684,
+      "sha256": "aefa74731435465bf4b1533984fb01e15f8198f52a48451823803c8144a19eca"
+    },
+    "qmk-8051-ak820/platforms/pin_defs.h": {
+      "size": 854,
+      "sha256": "c469281b5d8122f4bf0502d8df1bcef3e47a32db3d5710102a84dbba4884aaee"
+    },
+    "qmk-8051-ak820/platforms/progmem.h": {
+      "size": 642,
+      "sha256": "c5917ad4d2a8f90174fe354a4bbcfab8b6c1235e6c5a6e96a3aceca2847b624d"
+    },
+    "qmk-8051-ak820/platforms/sdcc_dummy_macros.h": {
+      "size": 301,
+      "sha256": "bda11272ab9992eed7e16ce11d252daef539d92aca7b9618f44fa688d07829f5"
+    },
+    "qmk-8051-ak820/platforms/suspend.c": {
+      "size": 1182,
+      "sha256": "a6000bf87132b901a62c6e9ab829cc416f0999e20306d361c3a4f97759d05c28"
+    },
+    "qmk-8051-ak820/platforms/suspend.h": {
+      "size": 458,
+      "sha256": "b71964ac880e0d2285cf55b69670ac028e91ef5ec069936976274869a8ca7752"
+    },
+    "qmk-8051-ak820/platforms/synchronization_util.c": {
+      "size": 504,
+      "sha256": "91597856ab6419bcba821a01e9049652e56e81e7febf207cba5c2184abd614b4"
+    },
+    "qmk-8051-ak820/platforms/synchronization_util.h": {
+      "size": 2529,
+      "sha256": "bcc12742569b8d850fc43c853e946979ac00e3d5d77289b57d48e9bb2253c1f1"
+    },
+    "qmk-8051-ak820/platforms/timer.c": {
+      "size": 297,
+      "sha256": "47a8449c80bd0ce43c0dc6e97b05a5d5759673f39a2ae1dd78992ccc71713127"
+    },
+    "qmk-8051-ak820/platforms/timer.h": {
+      "size": 2846,
+      "sha256": "2b4a2c428a22cd4602ed58098fb4d4c5f845d7ee4173243134e169d30ba8f683"
+    },
+    "qmk-8051-ak820/platforms/wait.h": {
+      "size": 886,
+      "sha256": "ef0db7a4f3f1e8874a87b4eb8c9d6db431290d94d6cafa3968aee9ac3617972b"
+    },
+    "qmk-8051-ak820/quantum/action.c": {
+      "size": 40575,
+      "sha256": "59101d454d32b664a3435bce42633b9f3bb1531a108cc56696b7e771d3d9dacf"
+    },
+    "qmk-8051-ak820/quantum/action.h": {
+      "size": 4456,
+      "sha256": "48acc87685480fecb528d01bbbbff5964a0eab5bd351952cd765e0eb1dea3426"
+    },
+    "qmk-8051-ak820/quantum/action_code.h": {
+      "size": 9853,
+      "sha256": "e3d9e6c773064eccea4db3bd7889efc1cb8109fce8f45f6205462e9ab1a91bc3"
+    },
+    "qmk-8051-ak820/quantum/action_layer.c": {
+      "size": 14981,
+      "sha256": "e5d010f3e467954ca8ca80d35c04b13051bce2898fa5a3d350d57b708fb143fd"
+    },
+    "qmk-8051-ak820/quantum/action_layer.h": {
+      "size": 6092,
+      "sha256": "cddc92c27f57d602028967542404af1e5af510fb4fe87a1c2782a457b2d21b0a"
+    },
+    "qmk-8051-ak820/quantum/action_tapping.c": {
+      "size": 22945,
+      "sha256": "776ff1b6a81f3d156a7e874d9e7ee92102fdff8c6a5055acc94ef6edf607861f"
+    },
+    "qmk-8051-ak820/quantum/action_tapping.h": {
+      "size": 2244,
+      "sha256": "6b4499aaa777b924360eeb00071d389002c0287b97b3174841ea9d3fdff56d45"
+    },
+    "qmk-8051-ak820/quantum/action_util.c": {
+      "size": 14066,
+      "sha256": "4faa6188dc92ee48ce7b1c3b22cba4a1845d15b6fa0b3786c90cc116b184ca1c"
+    },
+    "qmk-8051-ak820/quantum/action_util.h": {
+      "size": 3851,
+      "sha256": "f3a5b103b924f2f0aabd2cb9f5a38d64c19381a2adca3b758f3414bf3395d3b3"
+    },
+    "qmk-8051-ak820/quantum/bitwise.c": {
+      "size": 2933,
+      "sha256": "c5da88292aae2d2133e3703fc208f614b38a46b3d8d70cd2de802c26c401d488"
+    },
+    "qmk-8051-ak820/quantum/bitwise.h": {
+      "size": 1058,
+      "sha256": "7d0e98f6ec3baeb94903ea5055eba80398609c1a3a1839835dc656216e5e4ccc"
+    },
+    "qmk-8051-ak820/quantum/bootmagic/bootmagic.h": {
+      "size": 779,
+      "sha256": "1848e7b5e88486e6d8b3411b6964242ef489f455b69c639901339ac0deec7f85"
+    },
+    "qmk-8051-ak820/quantum/bootmagic/bootmagic_lite.c": {
+      "size": 2162,
+      "sha256": "d773e0551beb969cc12778435911992b521ca6192ed3248ed393b4f34bfec837"
+    },
+    "qmk-8051-ak820/quantum/bootmagic/bootmagic_lite.h": {
+      "size": 857,
+      "sha256": "4e77470ac3c58506e02473a12a7a063c5d92656d7123661ca2bb18b95a1a46da"
+    },
+    "qmk-8051-ak820/quantum/bootmagic/magic.c": {
+      "size": 1637,
+      "sha256": "4bcde84d05f8c6ae1af9afcfbbf64de027a80c08e033387a392fcfc40ec5a699"
+    },
+    "qmk-8051-ak820/quantum/bootmagic/magic.h": {
+      "size": 707,
+      "sha256": "a6625e858ded0a2cc31aabbd656de836f8a32a5d96276b0ba87fb165d1a0cb83"
+    },
+    "qmk-8051-ak820/quantum/caps_word.c": {
+      "size": 3039,
+      "sha256": "068fb4393d867592dd9a945380f959ce950f6573be9ceab6406aea75fdec972e"
+    },
+    "qmk-8051-ak820/quantum/caps_word.h": {
+      "size": 1363,
+      "sha256": "1dea91c42c29c4d0f330097cea031cca4b67704f1c221bd8c29678c1ef11029b"
+    },
+    "qmk-8051-ak820/quantum/color.c": {
+      "size": 4310,
+      "sha256": "54fa3b45fcc7da5313332c00aa33ebc369307b5c9193d68e6cf2db237a2062f5"
+    },
+    "qmk-8051-ak820/quantum/color.h": {
+      "size": 3994,
+      "sha256": "61c32d0daad5b03e4583446fb866ba1ecc6598c2dffef41eea976e8338f38435"
+    },
+    "qmk-8051-ak820/quantum/command.h": {
+      "size": 3418,
+      "sha256": "b8f651cd4b78c88f6b0d27740ad3c756f67e616603ffbbae43d92f3b669a6691"
+    },
+    "qmk-8051-ak820/quantum/debounce.h": {
+      "size": 615,
+      "sha256": "b50c557da4b0de7f98a4ec60936d28c37726b4009451229689e5863373e93bc1"
+    },
+    "qmk-8051-ak820/quantum/debounce/sym_defer_g.c": {
+      "size": 2039,
+      "sha256": "d4552a565df2e24e15c5b3251eaea3d52c9a7d4321041d6b620a69dfbf086a71"
+    },
+    "qmk-8051-ak820/quantum/dynamic_keymap.c": {
+      "size": 26114,
+      "sha256": "6f35d614232037edb938bcc44399816ede6a080b7ded62f1e60fffabc3ad463b"
+    },
+    "qmk-8051-ak820/quantum/dynamic_keymap.h": {
+      "size": 4792,
+      "sha256": "91af568577132afae84c7f7f5e774e1ea6c38394091b1af0815223a392690101"
+    },
+    "qmk-8051-ak820/quantum/eeconfig.c": {
+      "size": 8331,
+      "sha256": "aa6c760dce37b2d15cbf6da10a838fee0fcfb80f3c54a2476f36d3f29a543bfa"
+    },
+    "qmk-8051-ak820/quantum/eeconfig.h": {
+      "size": 8011,
+      "sha256": "0f7d5343615f5342b21e36a73c2dd5c50772d41522c44d47471f7bb90628ff5c"
+    },
+    "qmk-8051-ak820/quantum/encoder.c": {
+      "size": 10422,
+      "sha256": "6c51c854c5e896a1b15ca6cbb2f8193d2b7e5c73816625928eff9a832ca1fd39"
+    },
+    "qmk-8051-ak820/quantum/encoder.h": {
+      "size": 2140,
+      "sha256": "b7e28fefb375c66c04c07fdefed04fb088c18a62f4d83773b3f2132343389791"
+    },
+    "qmk-8051-ak820/quantum/keyboard.c": {
+      "size": 19956,
+      "sha256": "2652eebac8c4a934ca559617c85f4e676371aab33ac7d4e27e45b3d2556ad3af"
+    },
+    "qmk-8051-ak820/quantum/keyboard.h": {
+      "size": 5936,
+      "sha256": "aaba84a37e2ab1f5e7743142ea5f8193a2c6fe1d8a5425531292148d0b0db034"
+    },
+    "qmk-8051-ak820/quantum/keycode.h": {
+      "size": 1601,
+      "sha256": "171b37e59f1a73a6eee9f398337bb6572afa02fc0a48b01160e9d6dbcc223518"
+    },
+    "qmk-8051-ak820/quantum/keycode_config.c": {
+      "size": 5901,
+      "sha256": "e493386d74fa813cad29b383623dde485f83b3a08a1e9c10e893d2d9abe1b525"
+    },
+    "qmk-8051-ak820/quantum/keycode_config.h": {
+      "size": 1640,
+      "sha256": "6b6bc79f75e5e05d61854508144a21e4246f01aa640f37609263417ba9d5dd38"
+    },
+    "qmk-8051-ak820/quantum/keycodes.h": {
+      "size": 50738,
+      "sha256": "f26a5d4048244cff357b707637c6dcc07f708b8bae8a5fb0f3da9d7cd20b488a"
+    },
+    "qmk-8051-ak820/quantum/keymap_common.c": {
+      "size": 13341,
+      "sha256": "5e66c31c7378d0c8d5d3d0b0a32f2bfe0b3629729bee7cd52120453ddf563ce5"
+    },
+    "qmk-8051-ak820/quantum/keymap_common.h": {
+      "size": 215,
+      "sha256": "0f2943153513c174c595b52c1fc39069c418bc0e6a425ff46f54fee511237212"
+    },
+    "qmk-8051-ak820/quantum/keymap_extras/keymap_us.h": {
+      "size": 2879,
+      "sha256": "503c7a355a01e68c6feb59f6e8f02fcae4d0200f917d0c9ed172de55a924426d"
+    },
+    "qmk-8051-ak820/quantum/keymap_introspection.c": {
+      "size": 3642,
+      "sha256": "5d74ef75cd0e03039f49a45e1b4e2c42852d131e1053f2bab9c9cef84e648f33"
+    },
+    "qmk-8051-ak820/quantum/keymap_introspection.h": {
+      "size": 2717,
+      "sha256": "e37a826918d75d4c839026c79d4f763d30e640a4daa7da3284697bfd740f3925"
+    },
+    "qmk-8051-ak820/quantum/led.c": {
+      "size": 5590,
+      "sha256": "9aabd9982b7b9ac81eb5d92cd6f2912a1ad8fe6f9521154e758c81df012b9cf0"
+    },
+    "qmk-8051-ak820/quantum/led.h": {
+      "size": 1571,
+      "sha256": "7a2ed22781ead39c95033f8f8f5583baa6ad38c1b5b57315f13a89de1a8698f4"
+    },
+    "qmk-8051-ak820/quantum/led_tables.c": {
+      "size": 2653,
+      "sha256": "550636874a6e60384cabc1dfea711a9e7c8c7f824b4cc935f36468cde0f6b51c"
+    },
+    "qmk-8051-ak820/quantum/led_tables.h": {
+      "size": 780,
+      "sha256": "fe217b388f1bec70f52ededd7f53bada9adafd0eb9b27a38feddf51b95ddbb39"
+    },
+    "qmk-8051-ak820/quantum/logging/debug.c": {
+      "size": 848,
+      "sha256": "4c6714445cfa43f2ec62efefdf5aa1798e4b5871605d76a82d6ccd2dfbdc109b"
+    },
+    "qmk-8051-ak820/quantum/logging/debug.h": {
+      "size": 5637,
+      "sha256": "f5614a7909f9f78e62c82e832e400d1306d38361053da882993da91f576e9f82"
+    },
+    "qmk-8051-ak820/quantum/logging/print.c": {
+      "size": 994,
+      "sha256": "59fa31950a729b8b0c4c655da137c26e30f9ad1592783ff158b92804404f09ea"
+    },
+    "qmk-8051-ak820/quantum/logging/print.h": {
+      "size": 6771,
+      "sha256": "6e0f622f75bccb01f3ce7d60019c01ab2f4725cadd7bdfe1d0997e0ce5d7c4d9"
+    },
+    "qmk-8051-ak820/quantum/logging/print.mk": {
+      "size": 450,
+      "sha256": "2f1cc64e6baae49d3e0d6678650249ec6ba663feb7d10e303978ba3f816db893"
+    },
+    "qmk-8051-ak820/quantum/logging/sendchar.c": {
+      "size": 825,
+      "sha256": "ad6ec7a2632c9417d8ca1848b84fdaf0e4cb364006a3ec2ae45b73f595facf02"
+    },
+    "qmk-8051-ak820/quantum/logging/sendchar.h": {
+      "size": 906,
+      "sha256": "5b59a22b60a41d4a066b29b31eacd8a6ce0a9ec82595060e0f2a83652fc81cd1"
+    },
+    "qmk-8051-ak820/quantum/main.c": {
+      "size": 1938,
+      "sha256": "672a91b779f0a46dee4be6d38771ebf6e4c2caef775a8029cf10814546f35972"
+    },
+    "qmk-8051-ak820/quantum/matrix.h": {
+      "size": 2407,
+      "sha256": "5b327bcbd74f145e8b6e7e7b1cf0ae0fe85c7b249398106c482e82ecb41dabc6"
+    },
+    "qmk-8051-ak820/quantum/modifiers.h": {
+      "size": 1808,
+      "sha256": "3bce36626836372e312b85f3d0f9f913f639e5c024dd4bda6b63f1ee1bd8ffb5"
+    },
+    "qmk-8051-ak820/quantum/mousekey.h": {
+      "size": 5617,
+      "sha256": "274f015b434ee1a2d38685bc11a233a56d6679a66d26c6c9bf27c07a14fc566a"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_auto_shift.h": {
+      "size": 1988,
+      "sha256": "e1c2c50518d5412f75a315688961c101c51160c6dc3c2292ce8c463534a1de80"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_caps_word.c": {
+      "size": 9651,
+      "sha256": "8d4959dd036ff199419eea08323e5ff9b6fd834c7522d965b41bfeaa98fef51c"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_caps_word.h": {
+      "size": 1301,
+      "sha256": "f27f9e1aa802e7c3ffedd6c0f0dd7bb92151f57878cf71fb06fdc45755e3342f"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_grave_esc.c": {
+      "size": 3171,
+      "sha256": "ba4769076694f1b7e7035f98f9561b835630f8b125f4ee5a24d483e3a543076f"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_grave_esc.h": {
+      "size": 810,
+      "sha256": "b8ba7d037a1a6fafbd03088ec2321e1eb28b8e864eac25923fcdbedd7a426ee2"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_repeat_key.c": {
+      "size": 3609,
+      "sha256": "c6cfa007e8ed185f2c8fa526ec50a42d4364ea73f54546bd6f881efde0bdb57a"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_repeat_key.h": {
+      "size": 2502,
+      "sha256": "7decf5ca5281a3083754a597b0cf11f51022c3fab21b52043536b30db65100f6"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_rgb.c": {
+      "size": 11455,
+      "sha256": "2ddc67492d8c8e80f01b433a0d8ca00c3343dabe8f87f4ede82b3fdd991561a0"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_rgb.h": {
+      "size": 816,
+      "sha256": "f3e1c8569fa16478591326f762c154165cf7b3f38226cd253bb7f5871571f6b0"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_tri_layer.c": {
+      "size": 684,
+      "sha256": "1f935b9f03393bbaa849394b367595a7f4360bb935d5160640ddcf1c7d70d142"
+    },
+    "qmk-8051-ak820/quantum/process_keycode/process_tri_layer.h": {
+      "size": 410,
+      "sha256": "1bbbf3f26cf4c958d500dc609fe60364b0b4e78b3d0ad05deff9cee201b63895"
+    },
+    "qmk-8051-ak820/quantum/programmable_button.h": {
+      "size": 2258,
+      "sha256": "3962499309b0e99057371ce569caedb7a3d4e8fe8744ed906214a152eaeb4e7b"
+    },
+    "qmk-8051-ak820/quantum/qmk_settings.h": {
+      "size": 7085,
+      "sha256": "336c1efe088f15905ebd316b9edea481ed760c70c13289b309e8625f37ee3bc1"
+    },
+    "qmk-8051-ak820/quantum/quantum.c": {
+      "size": 21639,
+      "sha256": "762cfe1a622156fe2ec9a8b614a28211a686e40e20cbcf26e4c7c05ac673203b"
+    },
+    "qmk-8051-ak820/quantum/quantum.h": {
+      "size": 5882,
+      "sha256": "176c7bbd49a19022617be4ab171a90857211a936b1f685084c2fc440c970ea7c"
+    },
+    "qmk-8051-ak820/quantum/quantum_keycodes.h": {
+      "size": 8323,
+      "sha256": "aee0f63e78752213736c7744e1ab8c506ade818efb32b2b0be9e4ad12ee7c3ee"
+    },
+    "qmk-8051-ak820/quantum/quantum_keycodes_legacy.h": {
+      "size": 2964,
+      "sha256": "c24d553dfb024de16944e5a844dc9951175217064718eafc33b2b69a0433a24b"
+    },
+    "qmk-8051-ak820/quantum/raw_hid.h": {
+      "size": 684,
+      "sha256": "2ee2cbbdce23f471db527f31387d112fa0c3674787265ec26c5f6c299177e19b"
+    },
+    "qmk-8051-ak820/quantum/repeat_key.c": {
+      "size": 11157,
+      "sha256": "5adcdf4644bf84481e49e8b659c58cb709a85682527478179b547eb63f8a76af"
+    },
+    "qmk-8051-ak820/quantum/repeat_key.h": {
+      "size": 3204,
+      "sha256": "0fc184d0c0df1f74d51585189c91f43ee32cad95724cb4850e48569d4fdabba0"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/alpha_mods_anim.h": {
+      "size": 889,
+      "sha256": "41e52c9100a56ea9c42eaca0c045aa88e9a373fa4d303131b2a196b508288f12"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/breathing_anim.h": {
+      "size": 748,
+      "sha256": "999731c7645a960541324cc083c4ffecbc8b8c4784e848b02989040b651ef4bf"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/colorband_pinwheel_sat_anim.h": {
+      "size": 545,
+      "sha256": "0891ce0e4aeec19c553d9aab5cd81830ef9d10cb5f824e238234b3847f67db02"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/colorband_pinwheel_val_anim.h": {
+      "size": 545,
+      "sha256": "416fa121c82bbef1add2ed3499a57944fae15749878ff678cab8f44220434790"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/colorband_sat_anim.h": {
+      "size": 531,
+      "sha256": "085e780bb5c46b95a9c59e7c79799f99478038ef3c2478fe08766ecd9c8e34e9"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/colorband_spiral_sat_anim.h": {
+      "size": 553,
+      "sha256": "f5cec3f34678e38d62d7f5d7362e9de4d94c3cfc53d1ab94e0c176486c887a89"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/colorband_spiral_val_anim.h": {
+      "size": 553,
+      "sha256": "27571c8c8436eb44e78a8d40024671927e9a13926c1a6da4cf500901f46426a6"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/colorband_val_anim.h": {
+      "size": 531,
+      "sha256": "23df7162ce2429a2e4da4ee9564b293894c468f596d4ff51cc122baa7dc2b3a2"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/cycle_all_anim.h": {
+      "size": 427,
+      "sha256": "046ea66e3df1987c21a4a6d8f85ba06651d1e6e9009833dfa150feb401de44f1"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/cycle_left_right_anim.h": {
+      "size": 502,
+      "sha256": "70556b35fb59a5c4d90628682e556021a274c5c60f9c0eb9cdd6c9fa6832ecc0"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/cycle_out_in_anim.h": {
+      "size": 499,
+      "sha256": "deae8b2bd7d38eb9b64f9a01f82fef9859efb17a9af0d2f27cb29e359864d0e6"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/cycle_out_in_dual_anim.h": {
+      "size": 623,
+      "sha256": "735f51caaad5431473144386bdd4cfcc2b525a6ab049399a518e40daac21c010"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/cycle_pinwheel_anim.h": {
+      "size": 497,
+      "sha256": "7ddc7f5103adf338f83f3c7f63cbad00b0c24a267ec49bc3257bbfb1793aca6a"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/cycle_spiral_anim.h": {
+      "size": 509,
+      "sha256": "5e4dcf11dbde53fd1b7d2a38ca0c7d18035c29fed356818355a8e0466c8e3db1"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/cycle_up_down_anim.h": {
+      "size": 481,
+      "sha256": "6079b6ba3c0be7d52411296725839fb1fefd28e05adc6c258940e57c846a85c3"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/digital_rain_anim.h": {
+      "size": 3777,
+      "sha256": "6b18767ff53edd162e5a2a9047f21088d0a03eaa937eba744f761749ef42577e"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/dual_beacon_anim.h": {
+      "size": 591,
+      "sha256": "7764d47912cd27870a1a7c33401b44f4b35d9fe3aa7ca986a28cdb6c0a82a844"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/gradient_left_right_anim.h": {
+      "size": 906,
+      "sha256": "d6d2b8dc381a514d336b2990a1456205357b792fc85664cc01f345fd965cc3e8"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/gradient_up_down_anim.h": {
+      "size": 890,
+      "sha256": "8afc9a4bf9c9cd9ebb419ad7a9d728bdc4030924695cb83fc7ae80bcb5042353"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/hue_breathing_anim.h": {
+      "size": 900,
+      "sha256": "658532452eb298579f93fca953683fe4d56d89d3903e300887e1ce55e1e6d43b"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/hue_pendulum_anim.h": {
+      "size": 762,
+      "sha256": "9df3c85f93ebbef0635b8ad4dda5759308dc2d4e54f37c299193958a6ebd26cf"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/hue_wave_anim.h": {
+      "size": 685,
+      "sha256": "6c6804f13f717083e28eea12e3710996e103bfda770fbe12f76f395d03c185b0"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/jellybean_raindrops_anim.h": {
+      "size": 1143,
+      "sha256": "370191ee48c6f043def77187f6ee197931d403a6d234f04e8c0ea6791883696e"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/pixel_flow_anim.h": {
+      "size": 1659,
+      "sha256": "edce637303c5435868032f7630861903405bf14bb5d80d6008a5cab03d22a2d8"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/pixel_fractal_anim.h": {
+      "size": 2394,
+      "sha256": "69f4a6a4581361393b0a6e2b518cc508e12e3bce550607e2ea98e32383497f1a"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/pixel_rain_anim.h": {
+      "size": 1143,
+      "sha256": "9c9438bec23e479f2e735bc92c50ee62878c03c75ce92e70fcb6af367e7517e7"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/rainbow_beacon_anim.h": {
+      "size": 620,
+      "sha256": "4e979e910715817736a16a0e038581a299aaa8c59305fea5e605deb70343a928"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/rainbow_moving_chevron_anim.h": {
+      "size": 603,
+      "sha256": "87a364bae67f517e7c7839ed27ef9adebb4dd98907c1c68845cee539a0c60d97"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/rainbow_pinwheels_anim.h": {
+      "size": 652,
+      "sha256": "8d5e59ca694e85d85f66bf4fd50bd18d7ccf5c7d47d7fbac0c23745374cdf0c8"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/raindrops_anim.h": {
+      "size": 1370,
+      "sha256": "334f49cda8ed38573a23a45ae7955308e6f16303c78728ff1bbc8e4061365640"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/rgb_matrix_effects.inc": {
+      "size": 1396,
+      "sha256": "c45099b0a6997a083030723ad77cfdb253b7d4190907c96ae6f2c3d85748cf24"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/solid_color_anim.h": {
+      "size": 501,
+      "sha256": "a3432c44da2f1be72c4d7eb1d9505667388fc04cf9741fbfecc2f8dfd3f8ad76"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/solid_reactive_anim.h": {
+      "size": 734,
+      "sha256": "29f8ee063bda9ae590076461fcbc06ee70476071aa8e34555553a6a47a28f057"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/solid_reactive_cross.h": {
+      "size": 1834,
+      "sha256": "a9ba618768494e37182c29fefba2fefa10765f5d06f94a7b1a41a5acb78eb3d8"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/solid_reactive_nexus.h": {
+      "size": 1778,
+      "sha256": "a39d2dc1d9bde7bb59f47b5831e83602ff5741faee81b652a5f91b623363fa66"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/solid_reactive_simple_anim.h": {
+      "size": 791,
+      "sha256": "6b3dc28512b8ae8d04241eb8efd11084e150da5ecba0306dd4229a767678ba99"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/solid_reactive_wide.h": {
+      "size": 1593,
+      "sha256": "db042d4c6e444871964a8446cc3f34c72901f79066af75a07444177f8ed6f12b"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/solid_splash_anim.h": {
+      "size": 1296,
+      "sha256": "680787c21e2e3deed3965dcd66ee6b3538ae28cde9dbb3da549113321e9f1120"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/splash_anim.h": {
+      "size": 1227,
+      "sha256": "3f39cda6fb44de21410ca6896d2f518a1c2ed5214be727b983d14cd9a18ff11a"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/typing_heatmap_anim.h": {
+      "size": 4656,
+      "sha256": "bf7ec618b99d9d1c75a7940599533a1d5507f3da625a284fad156a1775149c5a"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/animations/vialrgb_direct_anim.h": {
+      "size": 565,
+      "sha256": "524e500d101a3e2ca9ab31be171806dfed9816c9ac9ceda822c38f686ae15d80"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/post_config.h": {
+      "size": 1027,
+      "sha256": "b9a369b11f5e9ccc1b76986e072c61da2de40ed854837936c72f6f45a9f7d51d"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/rgb_matrix.h": {
+      "size": 11984,
+      "sha256": "a8bf9e85e8a74a8b4ce5da196294a77de2bc92a80651cae4c10b1260085527ae"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/rgb_matrix_drivers.c": {
+      "size": 15571,
+      "sha256": "441a616eb7a6ac152aafbf7636e7f1fd4c1f9edd230b5364bc58ed0af67606c1"
+    },
+    "qmk-8051-ak820/quantum/rgb_matrix/rgb_matrix_types.h": {
+      "size": 2603,
+      "sha256": "7389d0d2190c45c916e4089fe5951db4fb65729d8fd814406d905afcbd5da866"
+    },
+    "qmk-8051-ak820/quantum/send_string/send_string.c": {
+      "size": 11673,
+      "sha256": "cc4715117aa7bb6361547285e11adb3bf04b9349b9d6c064f84209303b0bc48f"
+    },
+    "qmk-8051-ak820/quantum/send_string/send_string.h": {
+      "size": 4649,
+      "sha256": "d2e962c81c6ebed1d66c5a55a25c76d522f04dd2e5fa79bb510450e1e0855c6f"
+    },
+    "qmk-8051-ak820/quantum/send_string/send_string_keycodes.h": {
+      "size": 13404,
+      "sha256": "1d898c5e1a19da61e6a1d777f3733d5131a6d89aa19632082bcf7992e0b99a17"
+    },
+    "qmk-8051-ak820/quantum/sequencer/sequencer.h": {
+      "size": 4435,
+      "sha256": "dbbfcf6fbcbf8760af0f783649f7e6a5c899aaa09d85c1c8bb7c771773d0f768"
+    },
+    "qmk-8051-ak820/quantum/sync_timer.c": {
+      "size": 2105,
+      "sha256": "a5e1577bff4cfc304d8bac3882a1d7e9af6ab312c0e92b9ab69636a8f90463ef"
+    },
+    "qmk-8051-ak820/quantum/sync_timer.h": {
+      "size": 1924,
+      "sha256": "c354b56dc4b09a44d433d7ccd84ce6e1a8ed1f99da81cbb37c89987e33136c38"
+    },
+    "qmk-8051-ak820/quantum/tri_layer.c": {
+      "size": 987,
+      "sha256": "50b9437177bf747ccced8c8f4da681ac35a4881c4c64c593dc5676fa41f6c7a8"
+    },
+    "qmk-8051-ak820/quantum/tri_layer.h": {
+      "size": 1195,
+      "sha256": "6a7a1bb62acd8a16315b3dccc99954288b3a894e4c9c253875b6805e7c399aa8"
+    },
+    "qmk-8051-ak820/quantum/util.h": {
+      "size": 1431,
+      "sha256": "50a05b20dee7407c67bb79e88b8e75120e344f881c6b4978ca41de6aed6a7d19"
+    },
+    "qmk-8051-ak820/quantum/via.c": {
+      "size": 25462,
+      "sha256": "0c2ac77f4364fb5d81f54783b398e4af6841127df7484aaa754bc06ee99a9550"
+    },
+    "qmk-8051-ak820/quantum/via.h": {
+      "size": 7782,
+      "sha256": "972b5c28e9f4a670c3c88a9f99e68d6e6af05657b5ca2ce141fef1e4c8cb611d"
+    },
+    "qmk-8051-ak820/quantum/vial.c": {
+      "size": 24943,
+      "sha256": "05d74130808107889c0eaa524700c66557becbe30092e4693a301132faa1aef0"
+    },
+    "qmk-8051-ak820/quantum/vial.h": {
+      "size": 5341,
+      "sha256": "10fc557775dbb5939f256d7c5b03de6e73f04dcbdd22c36d2969369b1c48132b"
+    },
+    "qmk-8051-ak820/quantum/vial_ensure_keycode.h": {
+      "size": 32320,
+      "sha256": "b165dbec2e15d6026c3e1b3772287fa789d64961a4ddb118b28b1ba63a1b075d"
+    },
+    "qmk-8051-ak820/quantum/vialrgb.c": {
+      "size": 6528,
+      "sha256": "8c8be6a870afc5a4ee01e4d70c94ae98f595a782575c1873bc1a660ae5e3e197"
+    },
+    "qmk-8051-ak820/quantum/vialrgb.h": {
+      "size": 934,
+      "sha256": "219acbfe7b0015d89ce75d0f6f7f62d04e80585f71f98e356daf7513d3e86b9b"
+    },
+    "qmk-8051-ak820/quantum/vialrgb_effects.inc": {
+      "size": 6865,
+      "sha256": "4bcd1426ce215d69891181c3a55202580fd47cecd5ba60140e641d55413e9ff8"
+    },
+    "qmk-8051-ak820/requirements-ak820-build.txt": {
+      "size": 439,
+      "sha256": "fd5e2d8288a1d99c1775d456898313c788070b70e411bb539b9219aea396d33c"
+    },
+    "qmk-8051-ak820/tests/ak820_bounded/emitted.py": {
+      "size": 3019,
+      "sha256": "2211ae06d60e60c0595ab89aa32916e7ddfcb903e6d5ab9000538fa19bf80735"
+    },
+    "qmk-8051-ak820/tests/ak820_bounded/run.py": {
+      "size": 6557,
+      "sha256": "8f09303806b3ed99dd58a13149a27a541d0bd338a23e2e2b11c3e5532abca67e"
+    },
+    "qmk-8051-ak820/tests/ak820_breathing/run.py": {
+      "size": 7912,
+      "sha256": "41117e06c1521633249d12d8af6c7fe80caa23497efd7de3b48b5f4e9d828d62"
+    },
+    "qmk-8051-ak820/tests/ak820_caps_word/harness.c": {
+      "size": 4938,
+      "sha256": "32a325477f55529b32bd56d283d7e7db4f8cb857b13f96f7c2781164498aabba"
+    },
+    "qmk-8051-ak820/tests/ak820_caps_word/run.py": {
+      "size": 3640,
+      "sha256": "22f024fe7314b5314816c9a95b8e5c91e36e099c874a2cb1c0a46ae8e88d2691"
+    },
+    "qmk-8051-ak820/tests/ak820_compiler/fixture.c": {
+      "size": 2076,
+      "sha256": "56eb7eafa4e822725bfa1f45378115041b80544aab1f571265a626a95dae9906"
+    },
+    "qmk-8051-ak820/tests/ak820_compiler/linked.py": {
+      "size": 3477,
+      "sha256": "1ff622a644522db74e8efe6f12010856f5dfa0734dd7dff4b9cf44d9f7ab3d84"
+    },
+    "qmk-8051-ak820/tests/ak820_compiler/run.py": {
+      "size": 2508,
+      "sha256": "ef2e78aba612dc6a085d784c5e6721e719aaeb4732bcc4e66a6787df88db35cf"
+    },
+    "qmk-8051-ak820/tests/ak820_compiler/test_build_version_selection.py": {
+      "size": 1324,
+      "sha256": "b3e27e7e4584ed07304720490d1df15889a93eba0db4af10ca96f632616790f3"
+    },
+    "qmk-8051-ak820/tests/ak820_definition/compression.py": {
+      "size": 4028,
+      "sha256": "b44fb299d45acb13a47798750f7212005f8e12db11b8a52d1c361a11d4c4213d"
+    },
+    "qmk-8051-ak820/tests/ak820_definition/layout_cpu.py": {
+      "size": 4161,
+      "sha256": "0909dcdf2cbc3b51c32a579fe60f6f0244cd9a3749923a934eb2f6eb99221919"
+    },
+    "qmk-8051-ak820/tests/ak820_definition/layout_host.py": {
+      "size": 5265,
+      "sha256": "28b5ca0514c175759e45fe321fb671f0d98ef1f8997a757c5c6f45c1cd2e5ba8"
+    },
+    "qmk-8051-ak820/tests/ak820_definition/run.py": {
+      "size": 7856,
+      "sha256": "9d0535ee9296a936134323cecf150c173fc3e38d72d989e5f1cb494361b7fa45"
+    },
+    "qmk-8051-ak820/tests/ak820_diagnostic/emitted.py": {
+      "size": 3490,
+      "sha256": "e3cad84d864cabcc93dc605f910152ff5d03f09165e80efc1b8a91a8e2000ce1"
+    },
+    "qmk-8051-ak820/tests/ak820_diagnostic/nvm_harness.c": {
+      "size": 5822,
+      "sha256": "4f6051df09c22a777f4b08697d336c41d720f08146dc4a9c871583e6dc98beb1"
+    },
+    "qmk-8051-ak820/tests/ak820_diagnostic/run.py": {
+      "size": 854,
+      "sha256": "23361c9d47f13b4363728bea5566c7a1e4b77591bc741fbb31664cb676bcfdd4"
+    },
+    "qmk-8051-ak820/tests/ak820_emitted/run.py": {
+      "size": 14219,
+      "sha256": "27aa969d76917a0a77bd0d9ef3deb94b74d20c16fca6dabc9979d074ded89eb9"
+    },
+    "qmk-8051-ak820/tests/ak820_features/run.py": {
+      "size": 20073,
+      "sha256": "d7338dfec05ddf99fe69d00861d4b412ef43f0c3ca7f2a40a4e10f4b614e4445"
+    },
+    "qmk-8051-ak820/tests/ak820_iap/fixtures/vial-v0.7.5-ref.json": {
+      "size": 446,
+      "sha256": "bc42c218057e34f866f7525313b74499fe3021a318d6ae374d574cda6162eb4a"
+    },
+    "qmk-8051-ak820/tests/ak820_iap/fixtures/vial-v0.7.5-util.py": {
+      "size": 8132,
+      "sha256": "729fddb4792774cfebc149d303a640f353d585c4cf133c0cec76d1fb5de52336"
+    },
+    "qmk-8051-ak820/tests/ak820_iap/run.py": {
+      "size": 30738,
+      "sha256": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b"
+    },
+    "qmk-8051-ak820/tests/ak820_inventory/test_inventory.py": {
+      "size": 4289,
+      "sha256": "b575a1d6f4662354e9d3bd397a5845e00107fa7ecda1d98113b9152e8ce3b8a5"
+    },
+    "qmk-8051-ak820/tests/ak820_irq/run.py": {
+      "size": 13938,
+      "sha256": "ced6b99ce3bd5493da349d72c678ed7bd3bf5621ec6bcc639ee25a7dc3acff02"
+    },
+    "qmk-8051-ak820/tests/ak820_keycode/code16_rc4.c": {
+      "size": 1612,
+      "sha256": "53a33ec4d398327b43835a45955427fb7cc7afdae7eab10bc10148c71622458f"
+    },
+    "qmk-8051-ak820/tests/ak820_keycode/run.py": {
+      "size": 8389,
+      "sha256": "8bf24f913ffa52c820a631941769ead6a6cde3f3ce7c385c7272a3bff9686814"
+    },
+    "qmk-8051-ak820/tests/ak820_keymap/harness.c": {
+      "size": 8616,
+      "sha256": "284a40f76f3300ba2bf321c32dd6c7db869d931d39de1327cb0c84dc06ecb699"
+    },
+    "qmk-8051-ak820/tests/ak820_keymap/run.py": {
+      "size": 2430,
+      "sha256": "4a0e20ca577e2fbc0ce9c26bf29492115577b6b20160492e9635c6d4929c967f"
+    },
+    "qmk-8051-ak820/tests/ak820_led_metadata/rc4-metadata.json": {
+      "size": 5140,
+      "sha256": "9c4917b65d1820139160cbbad0b8b150551a8f793e5d66f30d6e87484d1ef2f7"
+    },
+    "qmk-8051-ak820/tests/ak820_led_metadata/run.py": {
+      "size": 3058,
+      "sha256": "6e5eb3d261055da0c56a07a6e539ef4e88aaf687c90111fb7a0c85c0048c063b"
+    },
+    "qmk-8051-ak820/tests/ak820_macro_guard/harness.c": {
+      "size": 5676,
+      "sha256": "0400ccc656f888f5d014598998a955497c6fc78e75a3c942ab895a3cfb433910"
+    },
+    "qmk-8051-ak820/tests/ak820_macro_guard/run.py": {
+      "size": 2595,
+      "sha256": "71789c345cccffad8250830e2ef2bb5fb1260fac6de658a5e185a17546824203"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/buffers_harness.c": {
+      "size": 3468,
+      "sha256": "ddaf0745bac018e68196db8ed2449276458f8233d590b8c4202f0e918a763af6"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/callee.py": {
+      "size": 11169,
+      "sha256": "9eebdaa918914d258ab16bfede35c039525a93f93d93679958aaec89e9ed5b88"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/color_harness.c": {
+      "size": 957,
+      "sha256": "19b9af241500d51eab44c2d0b6a8269b8d740196675c15eeea18c081bbc96a95"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/emitted.py": {
+      "size": 4494,
+      "sha256": "30099e926c1c780b2f1eb47e0c8fcb82b5e6df19619fd428f591e44e1fa06ff3"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/final-results.json": {
+      "size": 33293,
+      "sha256": "2af628b1da269138a91acf723d8e07ef1323bd8ba117a8fb040ddf8b93afafec"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/fixtures/color_rc4.c": {
+      "size": 1645,
+      "sha256": "b1b6258f1b409d47a252fc34ded4a58a6403a96f22777a704cbb456447b3ec3b"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/fixtures/debounce_rc4.c": {
+      "size": 732,
+      "sha256": "be15060d96fc03cddcff90f45d86b51122d6c218e1cf103c5c4e5dd0d0ee8cbe"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/fixtures/keycode_decoder_rc4.c": {
+      "size": 7197,
+      "sha256": "0952776e1cd478ec0a58a66e1cd61fd9ccf4694da2bb59208ccb4b92c2c88c00"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/fixtures/macro_playback_rc4.c": {
+      "size": 4948,
+      "sha256": "76a34b809e4008258ca6348fa8ba2c1b1d84521afef73b96ecb0f761fa8f1d11"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/fixtures/report_rc4.c": {
+      "size": 1213,
+      "sha256": "88a9d8dfdbf5a9bc95e6443198a1365515089aa85016ac04aebf41be624e4a6f"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/harness.c": {
+      "size": 8214,
+      "sha256": "347a54c2f5f4616d4fe553cd9ff80ec95c103ffc4427852b0721fc979efc7f7b"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/machine-repetitions.json": {
+      "size": 140768,
+      "sha256": "3e88b4ae69e3c684062ba8732cf382928f7c50dde9620d0fd4cae22c424469e0"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/macro_harness.c": {
+      "size": 3465,
+      "sha256": "5da66671893e56411e31fa854a97e9aa2998b1d11f454382daa19e7dba891d12"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/measurements.json": {
+      "size": 126344,
+      "sha256": "ab7160bf13e2330d8cc9f26950936088f60fb009e5686c58554f3b37b7f26263"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/outline.py": {
+      "size": 10047,
+      "sha256": "baf1a52a4792f7280f940d928e4b88d58ee580b059ddadfb1335a095ba01dc0b"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/outline_unit.py": {
+      "size": 5361,
+      "sha256": "811e09f4d450ac0d58dfba54ae6de323cf7c4ae50caeac3496fd3f02b656ab18"
+    },
+    "qmk-8051-ak820/tests/ak820_optimization/run.py": {
+      "size": 5881,
+      "sha256": "ed2321e54d0bf325a5521cceda545755dbc2a840daf9267a66eabbbc67bef8f3"
+    },
+    "qmk-8051-ak820/tests/ak820_package/boot_harness.c": {
+      "size": 631,
+      "sha256": "464f39b1a78dca55408407cec170c9b3fa0976886aefc7b618eb63dca89c82c4"
+    },
+    "qmk-8051-ak820/tests/ak820_package/oem_fixture.py": {
+      "size": 1539,
+      "sha256": "59f812d2000648447ed584e9e3372a0545674081ddffedec405f33d05ec71362"
+    },
+    "qmk-8051-ak820/tests/ak820_package/startup_fixture.py": {
+      "size": 773,
+      "sha256": "3a3330b0011f1a3880bed75597fe51cdacef0cc9eae7be877d218965eca00cbe"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_bootloader.py": {
+      "size": 7870,
+      "sha256": "756702a0b11ac6a2796894e6ab08b288258a5a87598d3793e3945be9b11a612a"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_build_inputs.py": {
+      "size": 7347,
+      "sha256": "3791a3ee0befb87452fa26af98f1e0b53d610ecaa36a5d47480011455ed12fb2"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_bundle.py": {
+      "size": 1500,
+      "sha256": "4c3180cf3f215c2765811b12769bfee6078921490ad9e3cb5b0f7889a498ce12"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_diagnose.py": {
+      "size": 9608,
+      "sha256": "6b8ee33ebda13bd71608b679d9dc67d607d6cc4b9e5810249db95024a9ce6ca6"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_entropy_schema.py": {
+      "size": 4891,
+      "sha256": "185fa6f582320d2b33fc6e42cb534ec580098cc794db220a2d7d1ca066e0a697"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_flash_guards.py": {
+      "size": 11190,
+      "sha256": "8da491a52a1c5421c3bc0d749c3eadd9e994e0f32346a460f8827b8ecc29966f"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_legacy_trial_migration.py": {
+      "size": 3422,
+      "sha256": "338deb7d4d260f993127a25733dc99d877413fb13c3a0490a390307a01b9f2a5"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_native_import.py": {
+      "size": 3616,
+      "sha256": "2eaa1fb15f46236f23c31c47d604dc5e512ad4b9d78d09a10925fb7d05f2a1d3"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_preparation.py": {
+      "size": 9912,
+      "sha256": "b93113f3dc08d9f6772f550774a515f9fc0e15c90416a08b84b419704e92ec74"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_release_variants.py": {
+      "size": 1581,
+      "sha256": "a8d5945ee0c9df99f559415c7e7f8f91fdca28c67f3b801f9de33c1ff1e1d21e"
+    },
+    "qmk-8051-ak820/tests/ak820_package/test_trial_candidate.py": {
+      "size": 3940,
+      "sha256": "7756915066eae765d1910164a6e5213907741176cb038060515186608767bd36"
+    },
+    "qmk-8051-ak820/tests/ak820_recovery/harness.c": {
+      "size": 14700,
+      "sha256": "d6e3557f801d5604a77238978fd3f95bc7d7c3cdc1a78c4b9d029bc4f72b3b98"
+    },
+    "qmk-8051-ak820/tests/ak820_recovery/run.py": {
+      "size": 7807,
+      "sha256": "9c9d6f4bc6c3c3c895de8de54525529bd5180176b9c5ea518c220534238b18fd"
+    },
+    "qmk-8051-ak820/tests/ak820_rgb/emitted.py": {
+      "size": 3473,
+      "sha256": "03a569e53b35eead92da6d96f1c905fc825d153731c1cde97d1ededdf0042f1c"
+    },
+    "qmk-8051-ak820/tests/ak820_rgb/fn_bindings.py": {
+      "size": 3944,
+      "sha256": "7ae7c980e6d7615fbd472ee596835a8c7ee43fa476fd3264c95d90c1a0006a9e"
+    },
+    "qmk-8051-ak820/tests/ak820_rgb/harness.c": {
+      "size": 9937,
+      "sha256": "fc9a67357cf26484d8ea5456874edc265b2c8e102f458253356ec77b469bc2e7"
+    },
+    "qmk-8051-ak820/tests/ak820_rgb/run.py": {
+      "size": 2714,
+      "sha256": "433eac69eb95ffab522c19a864fd657f337d741d125f2166261d906358d55ce3"
+    },
+    "qmk-8051-ak820/tests/ak820_startup/run.py": {
+      "size": 15640,
+      "sha256": "f39fc4c4f732a11eb02fab458d7b29c33b429cc52f110de658b9f5d1e10ad64d"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/caps-word-boundary-negative.json": {
+      "size": 922,
+      "sha256": "38925a6b132085721ff668076599b00d1e65841893f7d34cbb9d051d264368a5"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/caps-word-boundary-results.json": {
+      "size": 1340,
+      "sha256": "ca926b18a445de21c9bfa1d5053d1ac4113303743679787d7ffb1a5edfc76a2b"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/harness.c": {
+      "size": 6499,
+      "sha256": "14ea3b9b2620e58e3ff9abcb163f9702c6fa8f97b3fed94ecad3c1a24ab702b7"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/host-results.json": {
+      "size": 1465,
+      "sha256": "6c08421fcf77d7de030c5c90695e41183e102ad14c3f432892940520952c7dab"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/measurements.json": {
+      "size": 5723,
+      "sha256": "a4cd0b7abc62e6fd4c2b88239ef445ef6a06ec26f84b76aa845567f02641206e"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/oneshot-only-characterization.json": {
+      "size": 5194,
+      "sha256": "d590f88587157d6ac1c877825f431c60af757c6800d690c42b42b403597ae60d"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/oneshot-only-measurements.json": {
+      "size": 2223,
+      "sha256": "f387b6ec6bb4022a5ffdace3d0764a1b4a9ee015109b9238a19534384d73fac0"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/oneshot_only.py": {
+      "size": 4906,
+      "sha256": "07789bb59a44570d86b6f9aa12fa56968bc3fb6476c3afd4df06a2f9e9343d92"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/active-baseline.json": {
+      "size": 146608,
+      "sha256": "ab5c976fdbd17de6c843d47a16c1a0b1acdd5a9ec91bfbb0ed09e6f951a9e580"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/active-common-tail.json": {
+      "size": 147805,
+      "sha256": "a2148963f80015980ac38700d736f8dc338c74000e728d4b9da1d294b13da91b"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/oneshot-only-baseline.json": {
+      "size": 186374,
+      "sha256": "4f26a290c1db8d5305b4b5a34eb2ebf42282aa9ef4a771880eda3a0023e08298"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/oneshot-only-oneshot-only.json": {
+      "size": 188802,
+      "sha256": "4c9e5a176b6f38fa6e0d9498bce9c779129955ddf8b8e156c16f54d3df425b3c"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/tap-os-baseline.json": {
+      "size": 146609,
+      "sha256": "5cea1814fda1b68be75301be7c70728c1dd605d1f38d02eaa3bf5934addaf4df"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/tap-os-common-tail.json": {
+      "size": 147806,
+      "sha256": "beb651c0e2e3c73d01ff42438d61903e1f639cac73882dc665566ab2b73428be"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/tap-os-common.json": {
+      "size": 145811,
+      "sha256": "43afcc308a1fa1a08dcb8cac9fca0c037f89aa4f69cdfdc22a02a431eab2282e"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/tap-os-td4-baseline-3.json": {
+      "size": 150479,
+      "sha256": "9610d31aeae0aff7c5ac25fdf32f085a299bb1b4c699321d2ac15733e8647b81"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/reports/tap-os-td4-tail.json": {
+      "size": 148049,
+      "sha256": "76c964abbdecbc672c6d18a0db8a0c1b553bc7ba6cc3cd7e2a7a50285f9a46c0"
+    },
+    "qmk-8051-ak820/tests/ak820_tap_state_experiment/run.py": {
+      "size": 4822,
+      "sha256": "695b7fd9ef52d4f2d62e756f6d9ce1d58d7d1a8322e67941068ff5f27db731ef"
+    },
+    "qmk-8051-ak820/tests/ak820_transport_retry/harness.c": {
+      "size": 6739,
+      "sha256": "d62c4360071d87293d1fb92fe73ef25dd6b5e170d904d8ecc19fbb7a3f4d2e8c"
+    },
+    "qmk-8051-ak820/tests/ak820_transport_retry/host.py": {
+      "size": 4094,
+      "sha256": "9c62ef0278bac8a778740ac5148cacfc9ef3a1822f438d1a1e41bc802b011640"
+    },
+    "qmk-8051-ak820/tests/ak820_transport_retry/run.py": {
+      "size": 6788,
+      "sha256": "e6535ee006da2fb672a527e71ee91cd365141ed910da5d6c6e881e1fe2720abb"
+    },
+    "qmk-8051-ak820/tests/ak820_tri_layer/measurements.json": {
+      "size": 1383,
+      "sha256": "0838963f7eb85221f056db25b510c2eb2678a94c3d429dcce15c0074b745cfb2"
+    },
+    "qmk-8051-ak820/tests/ak820_tri_layer/reports/feature-tests.json": {
+      "size": 24693,
+      "sha256": "92ada281bfbbadac8195db909b410b94f88fc0b6638609f6845e30504b9241ef"
+    },
+    "qmk-8051-ak820/tests/ak820_tri_layer/reports/tri-baseline-build.json": {
+      "size": 187839,
+      "sha256": "20901f7a29288011248c2c7b65106a1de6cb63791e611294c20f6504aaf4f87a"
+    },
+    "qmk-8051-ak820/tests/ak820_tri_layer/reports/tri-baseline-tests.json": {
+      "size": 12271,
+      "sha256": "dbd6a1a6a33a086fd633a18febc9c827a95efbc322ead1b3c647c2583802cc7d"
+    },
+    "qmk-8051-ak820/tests/ak820_tri_layer/reports/tri-fixed-build.json": {
+      "size": 186018,
+      "sha256": "a21a4540924a17e2de4bbf61f1582a655c22c69e2369055c514de8466c994afb"
+    },
+    "qmk-8051-ak820/tests/ak820_tri_layer/reports/tri-fixed-tests.json": {
+      "size": 12260,
+      "sha256": "67a99f55e3773df0ebe8867b240a2192379b5a41a7eb41b948e69ed80e9a6e20"
+    },
+    "qmk-8051-ak820/tests/ak820_tri_layer/reports/unlock-tests.json": {
+      "size": 8656,
+      "sha256": "242ef566c5e969834518390701f18cb3b8b94be3220abf9616b229a455f9fb30"
+    },
+    "qmk-8051-ak820/tests/ak820_tri_layer/run.py": {
+      "size": 10364,
+      "sha256": "a74de1f796ebd727bd807687ec5a1bac50e575d60a117d0362df467e0c33834b"
+    },
+    "qmk-8051-ak820/tests/ak820_unlock/run.py": {
+      "size": 8201,
+      "sha256": "16d554793c403935c568bfb990094a79d21e27b71b18c23f0cd00399b56ae61a"
+    },
+    "qmk-8051-ak820/tests/ak820_usb/ak820_usb_test_shim.h": {
+      "size": 1450,
+      "sha256": "f490a54767cf9dd3fb787f18af24e96991630c67f9ed3fb727683214d0235dc7"
+    },
+    "qmk-8051-ak820/tests/ak820_usb/run.py": {
+      "size": 2216,
+      "sha256": "839e4f2064ce9a4ca4c1c5f936c32a298eaebda2e925ba57fc57728d1c0f55ec"
+    },
+    "qmk-8051-ak820/tests/ak820_usb/test_usb.c": {
+      "size": 26510,
+      "sha256": "b25f3cbf7430db6d906abe76e1b3213cd9352ef2c1130541ee613c6dea8c87eb"
+    },
+    "qmk-8051-ak820/tmk_core/protocol.mk": {
+      "size": 2716,
+      "sha256": "a3d558f0d09c453affca9d72806d510eb22459cd684377de3eb6af6c1c5ce0af"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/ch555/ch555.mk": {
+      "size": 1552,
+      "sha256": "832e3a5aca47a02a0d1732cb53a1785b873ebd583548a4116d8395052c7af15a"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/ch555/ch555_ak820.c": {
+      "size": 5881,
+      "sha256": "1163574a4a5c64fa5a8e7272879372a660462cbd5d2f036ae6709dd144e31ffa"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/ch555/lufa_utils/LUFA/Drivers/USB/USB.h": {
+      "size": 2059,
+      "sha256": "81916d2f5ed1f8d76158c09e0984b36e0b8b49bac617927a7c46f07565a50ef8"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/ch555/usb.h": {
+      "size": 10245,
+      "sha256": "b09976147c962699db19087075eeaa21a3e01669241083669846d2922302714a"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/ch555/usb_ak820.c": {
+      "size": 27506,
+      "sha256": "3cb107ad30956f61b9f248cc14b168f9a515bea60f6bc6d602eb97f350e4951f"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/ch555/usb_ak820.h": {
+      "size": 894,
+      "sha256": "0c1c0cd436f9ea73a3c32ef82e40aefcf41c1c6f5ae7ee8dcc4c20066a37399e"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/ch555/usb_device.h": {
+      "size": 6789,
+      "sha256": "a99aaa4ad7b9fde094886915675207d966e2eb661677e4e0bacd47e52fcf0bf8"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/ch555/usb_util.c": {
+      "size": 1395,
+      "sha256": "0b6d4e4f394db629a7706340c655555cd96757632112d9a06e6bb1f0a423aecc"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/host.c": {
+      "size": 6736,
+      "sha256": "e8392d708749fa32b5b1fec3123ca1eb604ece1ef1c4b4ae5d18dace0d09b65c"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/host.h": {
+      "size": 1697,
+      "sha256": "26d6d405bb52f3c5cb7b64cac0ed589018ff55e3a25a43eb87d2141d1a202bb3"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/host_driver.h": {
+      "size": 1135,
+      "sha256": "460799c5477b2f85bf5a036041c3b5042a3786a60d1b02e80226aabf4534d35d"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/report.c": {
+      "size": 9839,
+      "sha256": "49864f87b34fa2eba6dfc80b783e0befe24cf9217ec8b0fd2e0f105652eaadd6"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/report.h": {
+      "size": 10838,
+      "sha256": "cdb85da5e6e27eba8065a238d191cad543d7760bf28b40185ac3593c3ff35526"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/usb_descriptor.c": {
+      "size": 48649,
+      "sha256": "a6b04cbc7ac5865708415d4867551c3ed8d7c33332a4430d43f02df18e4172cf"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/usb_descriptor.h": {
+      "size": 12095,
+      "sha256": "5bbd0d58b30bd906aaa2bb39f0aa2a9775ac540861c64fe074a5b1a1456a1e98"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/usb_descriptor_common.h": {
+      "size": 1257,
+      "sha256": "0279ddc79f57bc5b5eb251deb03f0a5b3df27bf38c75b9710d1f61c0507b087d"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/usb_device_state.c": {
+      "size": 2358,
+      "sha256": "3ff1e5929a33d979bfd179bd6359b5686ff717c00afd7e0feba446902610a2c3"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/usb_device_state.h": {
+      "size": 1687,
+      "sha256": "47f454466106c5d6ca57dca8ea2b0adb87a9afb151cc3203048c1f296f9513b7"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/usb_util.c": {
+      "size": 1098,
+      "sha256": "0a8d1353f6afe7fabf640e66cb2fbefb1e470890f03fd9410e4c7b70a74bb799"
+    },
+    "qmk-8051-ak820/tmk_core/protocol/usb_util.h": {
+      "size": 800,
+      "sha256": "361ed223844b4a1a8514fae9ed01f9f3b3eaf6c1b284f2ea13b6b89eb0392a03"
+    },
+    "qmk-8051-ak820/util/ak820-source-provenance.json": {
+      "size": 2513,
+      "sha256": "95403ba24d4d7f0a190e89855be57c49df99d03d17486ff434fab13db7b12b6e"
+    },
+    "qmk-8051-ak820/util/ak820_build_inputs.py": {
+      "size": 6880,
+      "sha256": "50a760c6b6efb2c8b8326df3909d1662b84ec298a8fbd55f996a0d34f0bb63b7"
+    },
+    "qmk-8051-ak820/util/ak820_ci_authorization.py": {
+      "size": 12833,
+      "sha256": "8c96bcb611035453f319cc176015ec3f2eaa38a8d4e4e2e28154318f386a2d3d"
+    },
+    "qmk-8051-ak820/util/ak820_dce.py": {
+      "size": 10895,
+      "sha256": "1555fdd3f061ccf7cff741a77453a36cc57e178228a589b5bd27059e8bd2a49f"
+    },
+    "qmk-8051-ak820/util/ak820_diagnose.py": {
+      "size": 13505,
+      "sha256": "2a3dd74d73d1b135107468d330818896a7158e16f4e4031b1c1757f14854dc0d"
+    },
+    "qmk-8051-ak820/util/ak820_linked_inventory.py": {
+      "size": 12213,
+      "sha256": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5"
+    },
+    "qmk-8051-ak820/util/ak820_outline_audit.py": {
+      "size": 14318,
+      "sha256": "6ee2e71d283f778f3a8e1afb8d5544c4b7d9d5c12bdb397048ad1fc1f39d1d8a"
+    },
+    "qmk-8051-ak820/util/ak820_release_manifest.py": {
+      "size": 2517,
+      "sha256": "a97a8b902b4bbf7cb7799109c00fa9e5d068d06417146e85736fc5cd04bbee30"
+    },
+    "qmk-8051-ak820/util/ak820_tool.py": {
+      "size": 22775,
+      "sha256": "9f7fcacc803be7c3e1bc18dcfc11f50b24960be9f1c48a3e6268fbacc1113f92"
+    },
+    "qmk-8051-ak820/util/build_ak820.py": {
+      "size": 12642,
+      "sha256": "3f7a34aeb8666b0c98878d96ddc3335b4033515943af333449082bc733e93202"
+    },
+    "qmk-8051-ak820/util/build_id.py": {
+      "size": 393,
+      "sha256": "a3021bb24f35448afe4b8a61cf5cb1dc1fb5907555ea23665165de16e7c1cd93"
+    },
+    "qmk-8051-ak820/util/check_ak820_bundle.py": {
+      "size": 3082,
+      "sha256": "5f2738fc6443fef5006cae58242f8341bca93b222de66b709db3356103e5027d"
+    },
+    "qmk-8051-ak820/util/check_ak820_release.py": {
+      "size": 7428,
+      "sha256": "24541b8ccedc1bd8ed069329ae087ad21cceb0a1e3046244291fa3c75f12edad"
+    },
+    "qmk-8051-ak820/util/check_ak820_usb_image.py": {
+      "size": 9920,
+      "sha256": "44238e48ff3d7ac67804a48da3fed064ced56935f8f3029987e1f4f5f14c331c"
+    },
+    "qmk-8051-ak820/util/del_bit_bank_area.py": {
+      "size": 1218,
+      "sha256": "8008d67ffcdba4e35426e0292041211d298f8d2942b25fdc8df66d04f6f84d3a"
+    },
+    "qmk-8051-ak820/util/native_macro_import.py": {
+      "size": 2499,
+      "sha256": "572f153de6ec9a71eefa8fd87c5ba2bd7da602619131e3ec66fa63d9a742b07f"
+    },
+    "qmk-8051-ak820/util/pack_ak820.py": {
+      "size": 23558,
+      "sha256": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+    },
+    "qmk-8051-ak820/util/prepare_ak820_trial.py": {
+      "size": 5745,
+      "sha256": "91458b9a14bad55f9bb9a056ec43f8daec0ffe996f21f4ffc15e9f6730aa9fc2"
+    },
+    "qmk-8051-ak820/util/udev/50-qmk.rules": {
+      "size": 3903,
+      "sha256": "7562201c4a1adc7f54ca09d74098dfa5c9cf6beda2a95cc508224c6dd2c3a279"
+    },
+    "qmk-8051-ak820/util/uf2conv.py": {
+      "size": 13011,
+      "sha256": "806fad864594810ff318d608faaf500c820c1af81934d99865a59309fa6b2338"
+    },
+    "qmk-8051-ak820/util/uf2families.json": {
+      "size": 4895,
+      "sha256": "d2742aba34755d6a2de7c8598a660ca05fa660b8361336511c920cba5faa6bf2"
+    },
+    "qmk-8051-ak820/util/vial_generate_definition.py": {
+      "size": 1784,
+      "sha256": "2a7e0996513d9e5f27abea984f07fbbafd23f073205893f1e3a2bdedf2ce9943"
+    },
+    "qmk-8051-ak820/util/vial_generate_keyboard_uid.py": {
+      "size": 226,
+      "sha256": "3d5dbaf5af0e0c09429204184c2cb733be13cd97c9018206babb91c75af3a1a0"
+    },
+    "qmk-8051-ak820/util/vial_generate_vfw.py": {
+      "size": 1250,
+      "sha256": "4ddaa5c7152e16270cd407515bb2d75eb4939f2c9e3c957304ea0c6a2cdd5367"
+    },
+    "tools/ak820_device_protocol.py": {
+      "size": 19409,
+      "sha256": "e108c591ad017f029f6fa97c6e76dcc85a842123d0b61270cf8d8a1406257921"
+    },
+    "tools/ak820_device_tests.py": {
+      "size": 8679,
+      "sha256": "ccd3c373536b06c0c9dc9c1788dd86304e68ccbadf88c200525680dd2786c31b"
+    },
+    "tools/build_ci_release.py": {
+      "size": 20973,
+      "sha256": "0246b827de8dabeb291910857c69aca7c1303799261bf18585143c2743115d3a"
+    },
+    "tools/build_release_bundle.py": {
+      "size": 12204,
+      "sha256": "46a839afbdda100cd57fd8e9c3f9a13f7e984c36c0ed72b054e0bc3ae2f96a91"
+    },
+    "tools/build_windows_installer.py": {
+      "size": 8190,
+      "sha256": "8fd2f9eb5c337da8fce82e58ab7efcd7a82be407136bfb253b82973c3288899d"
+    },
+    "tools/check_docs.py": {
+      "size": 1318,
+      "sha256": "796d715181a5af7a61e8e49d6877dafe34c96448de775c60ee05ef9b6901cf93"
+    },
+    "tools/ci_checks.py": {
+      "size": 2348,
+      "sha256": "d089800de5d19aaccb5e547c7c9ef7fea336c7da68581e5e93e274314b9fbbd6"
+    },
+    "tools/fixtures/sdcc_compile_probe.c": {
+      "size": 658,
+      "sha256": "3c40d32d37af567903f77830d5fbeeffcfd5f5f993ba25a4cc708b578a612769"
+    },
+    "tools/fixtures/sdcc_xram_overlap_absolute.c": {
+      "size": 377,
+      "sha256": "5a1ada92e0d8cbda3a4f8a19d32d7a9b1b33f849588edca27d3057d916a0cc2d"
+    },
+    "tools/fixtures/sdcc_xram_overlap_macro.c": {
+      "size": 374,
+      "sha256": "e8a50e31e77af41b41125c8f49cf30660a83a5f5ff44ed622cff8a2bb321c86c"
+    },
+    "tools/flash_reviewed_release_once.py": {
+      "size": 12993,
+      "sha256": "da0a01da7c3c944b37c2038004bdeffd189c0ef30ec167f9f671413ebabaf131"
+    },
+    "tools/install_lufa_dependency.py": {
+      "size": 12277,
+      "sha256": "b1c58592ba198818624ce65526d7fd440b8eb71df8de2fb5784f0a4ed0c9d5af"
+    },
+    "tools/install_sdcc44_toolchain.py": {
+      "size": 16899,
+      "sha256": "8d561e4d7f903500c920782d17d8d3e2f817a49a80c15b5f42894d89254f54e5"
+    },
+    "tools/install_sdcc46_toolchain.py": {
+      "size": 13999,
+      "sha256": "135280ca947af63aa2ce880d4bdcf5e325c648915fc6501fa81b7b02e696394f"
+    },
+    "tools/installer/70-ak820.rules": {
+      "size": 339,
+      "sha256": "f0b85bb730963057350a6a9cfe35e1f17e2859a5bfbcebfce9fccaa6534a3a52"
+    },
+    "tools/installer/ak820.py": {
+      "size": 49261,
+      "sha256": "313460af31e3165c797edb0c2d1d57e6bf6410d1074dde3d66cd0ef11b78193a"
+    },
+    "tools/installer/approved-release.json": {
+      "size": 154,
+      "sha256": "bd27d25936cd92cc1eb0da59af08932b08e818c583c4047dc5efcda433244256"
+    },
+    "tools/installer/gui.py": {
+      "size": 21389,
+      "sha256": "94c99aa505208fadb4eb3496c1c4bdb060a60dcd8304464869d268c665873a6f"
+    },
+    "tools/installer/i18n.py": {
+      "size": 21250,
+      "sha256": "94901c2826c7936410f9e799518c4a6ccdff7d1800f10784d03d81c53dc45dd5"
+    },
+    "tools/installer/requirements-build-windows.txt": {
+      "size": 235,
+      "sha256": "fe92377176d05e83a805899a51be8569cfc63768609bae64c543641f9d715bd5"
+    },
+    "tools/installer/requirements.txt": {
+      "size": 15,
+      "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
+    },
+    "tools/installer/settings_backup.py": {
+      "size": 28563,
+      "sha256": "82702346c22f608d6ad620e0a2939884173bbc3ea4f50052c397c253c2d68797"
+    },
+    "tools/installer/settings_workflow.py": {
+      "size": 11338,
+      "sha256": "ffa59acf7a6d1f90fa4e7056b577a0bef5d4553cbcc1aeab305fe0f15bee0b72"
+    },
+    "tools/installer/test_gui.py": {
+      "size": 3934,
+      "sha256": "9bf26e72bfa27e21b4a499aaa6883bec8d2a55a43f36cba744adfa3b03a41d64"
+    },
+    "tools/installer/test_i18n.py": {
+      "size": 6529,
+      "sha256": "1e422d64972d99dd5792301dfcbe84a1e4ae2c0333e734b10227309ff5f89e8f"
+    },
+    "tools/installer/test_installer.py": {
+      "size": 51160,
+      "sha256": "602ae552e4ffbaf1627f9b070b1a8f4aebaaf8d58fca8d1b9e8c4fd8d63ee216"
+    },
+    "tools/installer/test_prepared_update.py": {
+      "size": 14418,
+      "sha256": "56813aed0424fa0176acd73ba98672d2eee73ff6780c42d9301fb52e38752ae5"
+    },
+    "tools/installer/test_settings_backup.py": {
+      "size": 26179,
+      "sha256": "7b4d15037b929c3847a3e70b4db844b9ef2c60a078a2c708b3151f1459c7b2dc"
+    },
+    "tools/installer/test_settings_workflow.py": {
+      "size": 19046,
+      "sha256": "0ef33e010be8344fa9c377cac9c66e45d4f08f5a0897bc1ba135e735bfdec5ee"
+    },
+    "tools/release_version.py": {
+      "size": 1067,
+      "sha256": "e20077f96e055d9747877d1134f72820efb9f670d049b8c38d2379dff1d1880d"
+    },
+    "tools/requirements-ci.txt": {
+      "size": 84,
+      "sha256": "1432ca3a30006acbd16b7ec399ca1fa24f764fb80fe2616d1bfd4f597c37102e"
+    },
+    "tools/test_ak820_device_protocol.py": {
+      "size": 5771,
+      "sha256": "1173e65e5733d1eacddf568429aa81a2458ee887ff09ede3ef392527ab911c5c"
+    },
+    "tools/test_ak820_device_tests.py": {
+      "size": 15214,
+      "sha256": "ee6c3df51fc4e9c3b80061afb4310dc6eb6aa2c4916ee029e385c1c3a9841e55"
+    },
+    "tools/test_build_ci_release.py": {
+      "size": 16162,
+      "sha256": "d8b58d6bf4cef0eef8e0c8da8b20067ec5974616e3977fb0bde6cd53a1970ad2"
+    },
+    "tools/test_build_release_bundle.py": {
+      "size": 14005,
+      "sha256": "881315c789633a306e76d495f686c1dd30b2b40e1fc7f5ae9ec3dfee4008160b"
+    },
+    "tools/test_build_windows_installer.py": {
+      "size": 10434,
+      "sha256": "83d436763574a09cb226e80d0a1d6e76388985e95d84cb678729431579160740"
+    },
+    "tools/test_ci_authorization.py": {
+      "size": 12077,
+      "sha256": "cc795f9d568202d507594466a9e69a36962f470e3669b1e992d65549db43cafa"
+    },
+    "tools/test_ci_checks.py": {
+      "size": 1924,
+      "sha256": "61ebce5309a37bc80df622f591a7045ce055b01cb88ce2e2976d8b7c41bb55bf"
+    },
+    "tools/test_flash_reviewed_release_once.py": {
+      "size": 6208,
+      "sha256": "613ed2d09de25c87b883ad8199436d5290fc4275be438a1a6293a5620ccfe137"
+    },
+    "tools/test_install_lufa_dependency.py": {
+      "size": 5205,
+      "sha256": "abe8c21c116dc5847b105c62b1259d21a2d3d740f72a3433f1e5e89846ed59ed"
+    },
+    "tools/test_install_sdcc46_toolchain.py": {
+      "size": 6824,
+      "sha256": "41e42ed6b6b06341ecc14b625f5a166b4c7702a12b59f70e8a7e11ea08f69cb9"
+    },
+    "tools/test_keyboard.py": {
+      "size": 8913,
+      "sha256": "dfcc50de493af32352ff6b54d3827d125daa53da3c0a44b988805173d15a5cc9"
+    },
+    "tools/test_keyboard_runner.py": {
+      "size": 10238,
+      "sha256": "d0a3fc82063a1e656730f63d124eec07e2e58901b10bd42bf2e4e376884c855c"
+    },
+    "tools/test_release_version.py": {
+      "size": 964,
+      "sha256": "1d424901fde11cde94f9339a1939fa1a76f203d2169ca127501f552396ece124"
+    }
+  },
+  "settings_contract": {
+    "schema": 532482,
+    "layers": 6,
+    "encoder_assignments": 12,
+    "macros": 16,
+    "macro_capacity": 8192,
+    "allowed_transition": "same-image or legacy SDCC 4.6 to the exact pointer candidate; no downgrade",
+    "physical_validation": false
+  }
+}

@@ -1,0 +1,655 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 45.338,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/00.txt",
+      "log_sha256": "85ae7660b7b04f079dd3eb2e4d41f1cdcea1a3d60c2bf8270806376481201263",
+      "unit_tests": {
+        "run": 111,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.127,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/01.txt",
+      "log_sha256": "c0cb98a70693b463069afba413d352f8fdc8540f469b9f3860e3385ec8c426dd",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.138,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/02.txt",
+      "log_sha256": "c0f55d2c3c448df898dabfa0cbb749e9e24b790d6dc07204d92604cb875b0d00",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.157,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/03.txt",
+      "log_sha256": "98ca8d27d4a463097e39696a2025cc0f5dfc6bf1feeb51090c9a81d38769ae24",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.084,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/04.txt",
+      "log_sha256": "88a68e7ad360f3bbcff705ce11bf6c9420c8802094d1779c2a948a646d3d8b4e",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.059,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/05.txt",
+      "log_sha256": "55df81c03b1fc09a739803668e8b10b1a1cd87ac7e716666dddb1c968f87bb76",
+      "unit_tests": {
+        "run": 9,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.715,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/06.txt",
+      "log_sha256": "2353799a8546963d2dd06a1802ff6791054fccc334f03a93c8bb03a04a64b602",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.055,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/07.txt",
+      "log_sha256": "e586fc0f3bb2a05f4c80f07d1b4c6171e830592f6c7aaf70d4af3b0aa3ebd072",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.032,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/08.txt",
+      "log_sha256": "c839bf09def21d2c6eae61a910bb18bc3754d8b22349d46e8eff166b9c8109e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.683,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.523,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.331,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.196,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/12.txt",
+      "log_sha256": "aed1f8864c9289f67cc8ef8f084b5e6a2b55c97a3b722c7ac6f21132e6d52d56",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.264,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.414,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/14.txt",
+      "log_sha256": "2bbdfe9c2ca96f3d4b222582447b60df96ec149195f9a53584af1fb4f521447b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.892,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.375,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/16.txt",
+      "log_sha256": "ab78398099c1d788da902e043b115ff2f5097f44c7b9c8351b68aa793b0beb54",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820/.build/roadmap-pointer",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 6.073,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/17.txt",
+      "log_sha256": "9515a4f5ca26ce805b75aaf86b92fd5d21e90f530215c514943ae849a4c49827",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820/.build/roadmap-pointer",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 0.953,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/18.txt",
+      "log_sha256": "a36e1b5bf16f96d3b1ea56f2bb7943ab303e277bd5f327125fbba49bf9f393a6",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820/.build/roadmap-pointer",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.912,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/19.txt",
+      "log_sha256": "b41e007cceaa87fa56071ad444f061419114b16f418b2842ed73ef16007f6bcb",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820/.build/roadmap-pointer",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.373,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/20.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820/.build/roadmap-pointer",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.282,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/21.txt",
+      "log_sha256": "12be95a58469d92a0835f03156835fb96680bde4e1d0e5c211d63c3c3ea14a91",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/qmk-8051-ak820/.build/roadmap-pointer",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 1.187,
+      "log": "/workspace/scratch/664bab7a0eb4/ak820/host/runs/roadmap-final-logs-6usqwob7/22.txt",
+      "log_sha256": "32f4192cec613b3f8ce809f28b8f98b18be06179e9bdc9bf879bf81cf2fb764b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      },
+      "build_after": {
+        "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+        "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0"
+  },
+  "unit_tests": {
+    "run": 247,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+    "map": "34396b28441b0ab6902d811ebabc797f070df3d5ca674914913051ed33e6aaa2"
+  },
+  "build_unchanged": true
+}

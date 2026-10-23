@@ -2,76 +2,116 @@
 
 # Project status
 
-Updated 2026-10-23. SDCC 4.6 RC6 is installed. Physical typing was confirmed separately.
-The approved as-is console flash used package defaults. Previous settings
-were saved locally and were not restored.
+Updated 2026-10-23. The pointer candidate was reproduced locally with pinned
+SDCC 4.6.0 and passed the complete current offline regression run. The
+checked-in installer bundle still contains the earlier firmware. CI now builds
+its own firmware and passes that fresh bundle to Windows packaging.
+No firmware or settings writes were performed in this work.
 
-Three GitHub issue forms are defined for bug reports, feature requests, and
-flashing or recovery problems. Local YAML and documentation-link checks pass.
-This source change does not show that the forms are published on GitHub.
+## Source, build and installed image
 
-## Source and build
+| Measurement | Retained release control | Reproduced candidate |
+| --- | ---: | ---: |
+| Occupied CODE bytes | 38,100 | 38,069 |
+| Main / low CODE bytes | 36,292 / 1,808 | 36,261 / 1,808 |
+| XRAM bytes | 2,067 | 2,066 |
+| Initial SP / allocated stack capacity | 0x62 / 157 bytes | 0x62 / 157 bytes |
 
-Only ajazz/ak820:vial is supported. Foreign boards, unused platforms, the old
-desktop app, native research tools and previous releases were removed after
-external backup. SDCC and LUFA are pinned external dependencies.
-See [Build](BUILD.md) for setup on another computer.
+The source change affects only the private journal-header validator's XDATA
+pointer. Journal format, CRC, replay order, six layers and sixteen macros with
+8192 shared bytes are unchanged. The candidate saves 31 CODE bytes and one
+XRAM byte. The tested helper uses four stack bytes instead of six; this is not
+a bound for every runtime path or interrupt overlap. The delay-expression
+probe added three CODE bytes and was rejected. See the
+[bounded probe report](../audits/rc6/bounded-optimization-20261023.md) and
+[memory guide](RESOURCE-BUDGET.md).
 
-The production builder defaults to SDCC 4.6.0; 4.4.0 remains an explicit control.
-Fresh build: qmk-8051-ak820/.build/source-trim-production-sdcc46-20261023/.
-CODE: 38,100 bytes (36,292 main, 1,808 low); XRAM: 2,067; linker stack capacity:
-157 bytes. Free CODE: 2,405 bytes across two windows. The map also counts five
-reserved HOME addresses absent from IHX.
-IHX SHA256: f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e.
-It is byte-for-byte identical to the reviewed pre-cleanup image.
-All 465 inputs and 76 artifacts were independently checked.
+Exact application IHX hashes:
 
-Active source-installer bundle: releases/rc6.
-Manifest SHA256: f181619c824bd93778bffe0e842d15bb0917ed5af15f65bd294ec4c461773402.
-Source installer verify passes. This is not hardware approval.
-[Exact build review](../audits/rc6/source-trim-release-review-20261023.md).
+- Checked-in release and installed-image profile: `f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e`.
+- Reproduced candidate and CI target: `feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8`.
 
-The Windows package remains dist/AK820-sdcc46-breathing-20261023.zip,
-SHA256 a80338dafdc06f39534db53d4cf23eecdfa18383883549248fdea8f769035fa6.
-It contains the earlier reviewed host tools and has not been rebuilt after
-the packaging changes. No push or public download was made.
+The candidate has not been installed. Its IHX is an application, not a full
+flashable ROM. Local OEM recovery inputs are still needed to construct the
+complete update. The reviewed settings models now support same-image restore
+and the explicit legacy-to-candidate transition. Downgrades and unknown images
+are rejected. That transition has not been tested on a keyboard.
 
-## Validation and device
+## Current verification
 
-The identical earlier image passed 19 host/CPU suites and focused CPU checks.
-The general SDCC Boolean near-pointer fixture still fails two of sixteen
-cases on both compilers; no affected shape was found in reviewed retained
-paths. A compiler backport remains conditional future work.
+The [clean local run](../audits/rc6/ci-integration-20261023/qualification.json)
+passed all **23 suites**, including **257 unit tests with zero skips**, eight
+host C suites and six linked CPU suites. IHX and MAP hashes stayed unchanged.
+A separate discovery run passed all 109 host-tool unit tests; compiler version
+selection passed three tests. These counts overlap with the combined runner
+and are not added into a distinct-test total.
 
-After cleanup, seven Windows offline suites passed. Dependency fixtures
-passed seven LUFA and eight SDCC tests; version selection passed three tests
-and packaging passed twelve. The production host/CPU run finished with 17 suites passing initially; two
-invocation failures were closed by separate Linux reruns (19 device-adapter
-and 75 package tests). The original failed report remains unchanged.
+Syntax checks passed for 208 tracked Python files and one shell file.
+Actionlint passed. Ruff found no errors under the selected correctness rules
+for duplicate dictionary keys, tuple assertions and undefined names. Existing
+escape-sequence warnings in upstream QMK Python files are recorded separately.
+The local sanitizer run uses `ASAN_OPTIONS=detect_leaks=0`: address and undefined
+behavior checks ran where enabled, but memory leaks were not checked locally.
 
-Installed evidence: host/runs/20261023-as-is-flash/. Payload SHA256:
-a1b8beec9a2a675c955bac946339e31f1823e17cdfb60f4755796e550530c711.
-Full ROM SHA256: 56b2de776924c48bda6d08a2604edc8ab94f24e5ec7365f7b584c0fe7dd70fc5.
-One loader command sequence 1,2,3,4,5 completed. Full CODE, manifest, protected
-regions, initial NVM and clean storage/journal were verified after restart.
-Physical typing was confirmed separately.
+The initial import run failed a 20-second GUI test deadline and lacked LUFA.
+The GUI model now runs inside a child process with bounded termination and
+joined cleanup. A later run during edits is retained as a failure; the clean
+run above supersedes it. The exact required suite identities and CPU/IAP
+options are checked before CI can authorize a bundle.
 
-Read-only post-install suite passed: 498 key assignments, 12 encoder slots,
-16 macros with an 8192-byte view and 82 LED descriptors. Evidence:
-host/runs/20261023-sdcc46-installed-readonly/report.json. No settings writes
-were requested. Macro upload, durable RGB save, physical encoder/lighting
-behavior and power-cycle persistence were not tested on this image.
+A separate [read-only device run](../audits/rc6/ci-integration-20261023/readonly-summary.json)
+passed for the legacy firmware: 498 key assignments, 12 encoder assignments,
+16 macros through the 8192-byte view and 82 RGB descriptors were checked.
+Settings writes, durable RGB save and physical behavior were skipped.
+The Linux hidraw backend and udev access worked. The source setup now builds
+that backend explicitly without reusing a wheel built for another backend.
 
-## Remaining work
+The [evidence manifest](../audits/rc6/ci-integration-20261023/evidence-manifest.json)
+binds the retained local report and console logs. Full simulator transcripts
+for this run and private device captures remain outside Git. Earlier qualification with
+247 unit tests is retained in the
+[previous run](../audits/rc6/roadmap-qualification-20261023/final/report.json);
+it describes the pre-CI source snapshot, not the current host implementation.
 
-The firmware preservation protocol was cancelled. Its uncommitted code
-was archived outside the repository and removed. Local export and restoration
-will use existing Vial commands in one shared GUI/CLI installer module.
-Implementation is deferred; no freeze, token or import record is added to firmware.
-[Implementation plan](../audits/rc6/general-update-implementation-plan-20261023.md).
+## CI, packaging and issue forms
 
-Direct Control remains research-only and requires permission before removal.
-Further optimizations, indicators and the Windows helper stay in
-[Roadmap](ROADMAP.md). The tree passed independent review and the clean source commit is c1779a8a.
-Old local ancestry was archived and removed; Git pack size is 1.84 MiB.
-Merge/push remain pending. See [cleanup result](../audits/rc6/clean-history-result-20261023.md).
+Every branch push and pull request runs checks and builds. `dev` and untagged
+`main` produce artifacts. A new SemVer tag on a commit in `main` publishes only
+after Linux and Windows pass; prerelease tags are marked accordingly. Windows
+packaging consumes the firmware built by that Linux job. The publish gate
+checks that both packaged applications contain that same fresh bundle.
+See [CI and releases](CI.md) for the exact flow and review policy.
+
+Local policy and packing checks use the exact candidate and verified private
+OEM references. Only hashes and sanitized packing results enter Git; CI reuses
+that checked result for the reproduced program. A machine build attestation
+is distinct from independent review and never authorizes device access.
+
+The current source approval binds 21 host files. The checked-in legacy release
+manifest SHA256 is `de139a02195c777bda20994e85ebae207f98015723e80a415cdfcca7d36cb2ac`.
+Its [review record](../releases/rc6/reviews/independent-review.md) keeps the old
+firmware and the updated host code separate. Source `verify` passed without
+HID load or USB access. A new GitHub `dev` run is pending; no new Windows EXE,
+native Tk result or published firmware release is claimed here.
+
+Three GitHub Issue Forms are defined for bugs, features and flashing/recovery.
+YAML and documentation checks passed, and independent review closed the issue
+chooser link correction. The forms exclude V2, Pro and Max and request sanitized
+logs rather than OEM ROM or private backups. The forms are committed separately
+on local `main`; remote publication is pending Git authorization.
+
+## Retained device evidence and remaining work
+
+Earlier installation evidence records payload SHA256
+`a1b8beec9a2a675c955bac946339e31f1823e17cdfb60f4755796e550530c711` and full ROM
+SHA256 `56b2de776924c48bda6d08a2604edc8ab94f24e5ec7365f7b584c0fe7dd70fc5`.
+It verifies CODE, manifest, protected regions, initial NVM and a clean store
+after restart. Physical typing was confirmed separately. It does not prove
+this new host transition or cold power-loss persistence.
+
+Live settings writes, macro upload, saved RGB, physical encoder/lighting and
+power-loss acceptance remain open. C/W electrical mapping still needs evidence
+from OEM firmware before implementation. Persistent Direct palettes and the
+Windows language helper remain unfinished. Caps remapping and language-key
+implementation are deferred by the current request. [Roadmap](ROADMAP.md)
+keeps those tasks and the remaining bounded optimization research separate.

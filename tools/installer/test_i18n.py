@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch
 
 from i18n import (LanguageSession, STRINGS, detect_language, hold_seconds_remaining, localize_output,
-                  localize_prompt, normalize_language, text)
+                  localize_prompt, needs_unlock_dialog, normalize_language, progress_text, text)
 
 
 class LanguageSelectionTests(unittest.TestCase):
@@ -24,6 +24,39 @@ class LanguageSelectionTests(unittest.TestCase):
 
 
 class TranslationSessionTests(unittest.TestCase):
+    def test_new_progress_stages_have_physical_unlock_variants(self):
+        digest = 'ab' * 32
+        update_text, update_status = progress_text('unlock_wait',
+            {'purpose': 'update', 'sha256': digest, 'counter': 21}, 'en')
+        self.assertIn('displayed update', update_text)
+        self.assertIn(digest, update_text)
+        self.assertIn('3 more seconds', update_status)
+        restore_text, _ = progress_text('restore_unlock_wait',
+            {'purpose': 'restore', 'counter': 0}, 'ru')
+        self.assertIn('физическая разблокировка Vial', restore_text)
+        self.assertIn('макросов', restore_text)
+        self.assertTrue(needs_unlock_dialog('unlock_wait', {'purpose': 'update'}))
+        self.assertTrue(needs_unlock_dialog('restore_unlock_wait', {}))
+        self.assertFalse(needs_unlock_dialog('unlock_wait', {'sha256': digest, 'counter': 30}))
+
+    def test_legacy_unlock_progress_keeps_its_existing_text(self):
+        instruction, status = progress_text('unlock_wait', {'sha256': '1234', 'counter': 30}, 'en')
+        self.assertIn('Saved settings from before the encoder check', instruction)
+        self.assertEqual(status, 'Keep holding for 3 more seconds.')
+
+    def test_shared_operation_stages_render_for_both_languages(self):
+        for language in ('ru', 'en'):
+            with self.subTest(language=language):
+                for stage in ('backup', 'preflight', 'restoring', 'verifying', 'complete'):
+                    instruction, status = progress_text(stage, {}, language)
+                    self.assertTrue(instruction)
+                    self.assertEqual(instruction, status)
+
+    def test_new_flow_copy_scope_is_narrow_and_explains_unreadable_ram(self):
+        for language in ('ru', 'en'):
+            self.assertIn('RAM', text('backup_scope', language))
+            self.assertIn('/tmp/new-copy', text('backup_target', language, path='/tmp/new-copy'))
+
     def test_hold_countdown_uses_remaining_firmware_ticks(self):
         for ticks, seconds in ((30, 3), (20, 2), (1, 1), (0, 0)):
             with self.subTest(ticks=ticks):

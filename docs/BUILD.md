@@ -59,10 +59,13 @@ new stack/interrupt evidence. Build configurations must not run concurrently
 in the same source tree because Make uses shared generated files.
 
 Run [offline tests](TESTING.md), obtain independent review, then assemble a
-release from the repository root with `tools/build_release_bundle.py --build-dir .build/local-1
---review docs/REVIEW.md --oem-reference-dir /path/to/private-oem-references
+release from the repository root with `python3 tools/build_release_bundle.py --build-dir qmk-8051-ak820/.build/local-1
+--review /path/to/exact-candidate-review.md --oem-reference-dir /path/to/private-oem-references
 --toolchain toolchains/sdcc-4.6.0 --builder-source qmk-8051-ak820/util/build_ak820.py
 --output releases/rc6-new`.
+The review path is a placeholder for a new exact-build JSON review record.
+`docs/REVIEW.md` is a review index, not that record; the retained release review
+does not approve the development candidate.
 The example reference path must point to the user's own local exact pair. The
 review must bind the exact IHX, MAP, build report and host inputs. Assembly
 does not approve hardware operations. A changed source or host input
@@ -72,17 +75,30 @@ verification or Windows packaging.
 
 ## Windows installer applications
 
-The current checked output is `dist/AK820-sdcc46-breathing-20261023/`, with complete
-`AK820/` and `AK820-cli/` folders. Each needs its full directory; the EXE alone
-is insufficient. The apps include Python. Source wrappers require Python 3.10+.
+The checked Windows application folders and ZIP dated 2026-10-23 are historical
+artifacts. They predate the host settings feature. Build a fresh package from
+the reviewed release on native Windows using Python 3.12 and the pinned
+PyInstaller 6.16.0 requirements:
 
-Build command: `tools/build_windows_installer.py --output dist/AK820-sdcc46-breathing-20261023`.
-Build and package evidence: `host/runs/20261023-sdcc46-windows.json`.
-CLI help, offline verify and GUI self-test passed. The
-[independent artifact review](../audits/rc6/sdcc46-release-review-20261023.md)
-records the package checks. See [status](STATUS.md) for device results.
+```powershell
+py -3.12 -m venv .venv-windows-installer
+.venv-windows-installer\Scripts\python -m pip install -r tools\installer\requirements-build-windows.txt
+.venv-windows-installer\Scripts\python tools\test_build_windows_installer.py
+.venv-windows-installer\Scripts\python tools\build_windows_installer.py --output dist\AK820-Windows
+```
 
-Earlier GUI folders and `dist/AK820-RC6-Windows-20261023.zip` are superseded.
-Do not use them for this candidate. No current portable ZIP or public download
-has been published. The local ZIP is `dist/AK820-sdcc46-breathing-20261023.zip`.
-OEM ROMs and personal backups must stay out of app output.
+The command refuses to replace an existing output directory or ZIP. It builds
+both applications, checks every approved input's SHA256 inside each full
+PyInstaller directory, runs CLI help and offline release verification, then
+creates and destroys the Tk interface with `--self-test`. That last check is a
+native Tk UI smoke, not an interactive usability check. The output contains
+`AK820/`, `AK820-cli/`, `AK820.cmd`, `build-provenance.json`, and
+`smoke-report.json`; the sibling `dist/AK820-Windows.zip` contains those full
+paths. Review both JSON reports and the ZIP before distribution. The build does
+not enumerate USB, test a physical keyboard or flash firmware. OEM references,
+personal backups, and runtime sessions are excluded.
+GitHub Actions builds and checks every branch push and pull request. Version
+tags publish the reviewed Windows package after Linux and Windows checks pass.
+The Windows package uses firmware built by the same Linux CI run. Tags on
+commits in main publish both firmware and installer ZIPs. See
+[CI and releases](CI.md) for triggers, artifacts and the reproducible-build policy.

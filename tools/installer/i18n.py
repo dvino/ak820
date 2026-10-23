@@ -12,28 +12,48 @@ STRINGS = {
         "language_button": "English",
         "title": "AK820 — обновление прошивки",
         "instructions": (
-            "1. Выберите личную папку подготовленного обновления.\n"
+            "1. Выберите OEM-сессию восстановления и папку для новой копии настроек.\n"
             "2. Нажмите «Обновить прошивку». После проверки удерживайте Esc + левый Ctrl 3 секунды.\n"
-            "3. Это разрешит запись показанной прошивки. Программа сама запишет её и проверит результат.\n"
+            "3. Установщик сохранит настройки, запишет одну проверенную прошивку и восстановит настройки.\n"
+            "После перезапуска для восстановления макросов потребуется ещё одно физическое подтверждение.\n"
             "Подготовьте запасную клавиатуру и стабильное питание. Ничего не запускается автоматически."
         ),
         "logs_path": "Резервные копии и журналы: {path}",
         "ready": "Готово к выбору действия. Клавиатура ещё не проверялась.",
-        "update_folder": "Папка обновления:",
+        "update_folder": "Исходная сессия OEM-восстановления:",
+        "backup_output": "Папка для копии настроек:",
+        "restore_backup": "Копия настроек для восстановления:",
+        "choose_output_title": "Выберите папку для новой копии настроек",
+        "choose_backup_title": "Выберите папку резервной копии настроек",
+        "backup": "Сохранить настройки…",
+        "restore": "Восстановить настройки…",
+        "backup_scope": "Копия включает сохранённые настройки, которые можно прочитать и восстановить. Поля текущей RAM без способа чтения будут перечислены в отчёте.",
+        "backup_target": "Новая копия будет сохранена сюда: {path}",
+        "update_backup_target": "Свежая копия для обновления будет сохранена сюда: {path}",
         "choose_folder": "Выбрать папку…",
-        "choose_session_title": "Выберите личную папку обновления с images.json",
+        "choose_session_title": "Выберите исходную OEM-сессию восстановления с images.json и before-full-rom.bin",
+        "choose_prepared_update_title": "Выберите старую подготовленную папку обновления RC6",
         "oem_folder": "Свои файлы OEM (необязательно):",
         "choose_oem_title": "Выберите папку со своими stock-full.bin и native-installed.bin",
         "oem_note": "Файлы OEM не входят в комплект и не скачиваются. При установке из OEM программа читает полную личную копию с вашей клавиатуры.",
         "checking": "Выполняется проверка. Не отключайте клавиатуру.",
         "update": "Обновить прошивку",
         "cancel_wait": "Отменить ожидание",
+        "physical_unlock_title": "Физическое подтверждение",
+        "physical_unlock_update": "На подключённой клавиатуре удерживайте Esc + левый Ctrl 3 секунды, чтобы разрешить показанное обновление. Отмена ожидания остановит операцию до следующего изменения.",
+        "physical_unlock_restore": "Для восстановления защищённых настроек требуется новая физическая разблокировка Vial. На подключённой клавиатуре удерживайте Esc + левый Ctrl 3 секунды, чтобы разрешить восстановление макросов и защищённых клавиш.",
+        "backup_stage": "Чтение и проверка настроек перед сохранением копии…",
+        "preflight_stage": "Проверка устройства, копии и целевой прошивки…",
+        "restore_stage": "Восстановление сохранённых настроек…",
+        "verify_stage": "Проверка настроек после восстановления…",
+        "complete_stage": "Операция завершена; итог проверки приведён в журнале.",
         "other_actions": "Другие действия — установка из OEM и восстановление",
         "verify_package": "Проверить пакет без USB",
         "find_keyboard": "Найти клавиатуру",
         "backup_oem": "Сохранить резервную копию OEM",
         "install_oem": "Установить из OEM",
         "restore_oem": "Восстановить OEM…",
+        "legacy_update": "Старое обновление RC6 — только для расширенного сценария",
         "recover_title": "Выберите личную папку установки или восстановления",
         "prepare_prompt_title": "AK820 — подготовка",
         "confirm_write_title": "AK820 — подтверждение записи",
@@ -61,28 +81,48 @@ STRINGS = {
         "language_button": "Русский",
         "title": "AK820 firmware update",
         "instructions": (
-            "1. Choose your prepared update folder.\n"
-            "2. Click Update firmware. After the checks, hold Esc + left Ctrl for 3 seconds.\n"
-            "3. This confirms the displayed firmware. The installer flashes it once and verifies the result.\n"
+            "1. Choose an OEM recovery session and a folder for the new settings backup.\n"
+            "2. Click Update firmware. After checks, hold Esc + left Ctrl for 3 seconds.\n"
+            "3. The installer saves settings, flashes one approved firmware image, then restores the settings.\n"
+            "After restart, a second physical confirmation is needed to restore macros.\n"
             "Prepare a spare keyboard and stable power. Nothing starts automatically."
         ),
         "logs_path": "Backups and logs: {path}",
         "ready": "Ready. The keyboard has not been checked yet.",
-        "update_folder": "Update folder:",
+        "update_folder": "Original OEM recovery session:",
+        "backup_output": "Settings backup output folder:",
+        "restore_backup": "Settings backup to restore:",
+        "choose_output_title": "Choose a folder for a new settings backup",
+        "choose_backup_title": "Choose a settings backup folder",
+        "backup": "Back up settings…",
+        "restore": "Restore settings…",
+        "backup_scope": "The backup contains saved settings that can be read and restored. Current RAM fields with no read method will be listed in the report.",
+        "backup_target": "New backup will be saved here: {path}",
+        "update_backup_target": "Fresh backup for the update will be saved here: {path}",
         "choose_folder": "Choose folder…",
-        "choose_session_title": "Choose your prepared update folder containing images.json",
+        "choose_session_title": "Choose your original OEM recovery session containing images.json and before-full-rom.bin",
+        "choose_prepared_update_title": "Choose the legacy prepared RC6 update folder",
         "oem_folder": "Your OEM files (optional):",
         "choose_oem_title": "Choose the folder containing your stock-full.bin and native-installed.bin",
         "oem_note": "OEM files are not included or downloaded. OEM installation reads a full personal copy from your keyboard.",
         "checking": "Checking. Do not disconnect the keyboard.",
         "update": "Update firmware",
         "cancel_wait": "Cancel waiting",
+        "physical_unlock_title": "Physical confirmation",
+        "physical_unlock_update": "On the connected keyboard, hold Esc + left Ctrl for 3 seconds to authorize the displayed update. Cancelling this wait stops the operation before the next change.",
+        "physical_unlock_restore": "Restoring protected settings requires a fresh physical Vial unlock. On the connected keyboard, hold Esc + left Ctrl for 3 seconds to authorize restoring macros and protected keys.",
+        "backup_stage": "Reading and checking settings before saving the backup…",
+        "preflight_stage": "Checking the device, backup and target firmware…",
+        "restore_stage": "Restoring saved settings…",
+        "verify_stage": "Checking settings after restoration…",
+        "complete_stage": "Operation complete; the verification result is in the log.",
         "other_actions": "Other actions — OEM installation and recovery",
         "verify_package": "Verify package without USB",
         "find_keyboard": "Find keyboard",
         "backup_oem": "Save OEM backup",
         "install_oem": "Install from OEM",
         "restore_oem": "Restore OEM…",
+        "legacy_update": "Legacy RC6 update — advanced use only",
         "recover_title": "Choose your personal installation or recovery folder",
         "prepare_prompt_title": "AK820 — preparation",
         "confirm_write_title": "AK820 — write confirmation",
@@ -117,6 +157,47 @@ def normalize_language(language: str | None) -> str:
 def hold_seconds_remaining(counter: int) -> int:
     """Convert the firmware's remaining 100 ms ticks to whole seconds."""
     return max(0, (int(counter) + 9) // 10)
+
+
+def progress_text(stage: str, data: dict | None, language: str) -> tuple[str, str]:
+    """Render shared installer progress stages as GUI instruction and status."""
+    values = data if isinstance(data, dict) else {}
+    if stage in ("unlock_wait", "restore_unlock_wait"):
+        if stage == "unlock_wait" and values.get("purpose") not in ("update", "restore"):
+            instruction = text("prompt_update_unlock_hash", language,
+                               sha256=values.get("sha256", ""))
+            return instruction, text("hold_remaining", language,
+                                     seconds=hold_seconds_remaining(values.get("counter", 0)))
+        restoring = stage == "restore_unlock_wait" or values.get("purpose") == "restore"
+        instruction = text("physical_unlock_restore" if restoring else "physical_unlock_update", language)
+        digest = values.get("sha256")
+        if digest:
+            instruction += "\nSHA256: " + str(digest)
+        return instruction, text("hold_remaining", language,
+                                 seconds=hold_seconds_remaining(values.get("counter", 0)))
+    stage_keys = {
+        "backup": "backup_stage",
+        "preflight": "preflight_stage",
+        "loader_wait": "prompt_loader",
+        "loader_detected": "prompt_loader_detected",
+        "flashing": "prompt_flashing",
+        "restoring": "restore_stage",
+        "verifying": "verify_stage",
+        "complete": "complete_stage",
+    }
+    key = stage_keys.get(stage)
+    if key:
+        rendered = text(key, language)
+        return rendered, rendered
+    message = str(values.get("message", stage))
+    return message, message
+
+
+def needs_unlock_dialog(stage: str, data: dict | None) -> bool:
+    """Only the new backup/update/restore workflow uses the modal unlock dialog."""
+    values = data if isinstance(data, dict) else {}
+    return (stage == "restore_unlock_wait" or
+            (stage == "unlock_wait" and values.get("purpose") in ("update", "restore")))
 
 
 def detect_language(*, windows_language_id=None, system_locale=None, platform=None) -> str:

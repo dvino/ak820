@@ -139,7 +139,7 @@ def main(argv=None):
         binding = protocol.bind(args.release_dir, args.session, args.approval)
         report['binding'] = {k:v for k,v in binding.items() if k not in ('payload', 'backup', 'code', 'definition')}
         report['protocol_sha256'] = hashlib.sha256(Path(protocol.__file__).read_bytes()).hexdigest()
-        api = protocol.DeviceAPI(binding, output)
+        api = protocol.DeviceAPI(binding, output, allow_writes=args.allow_settings_write)
         report['usb_opened'] = True
         matrix = check_readonly(api, report)
         report['baseline_nvm_sha256'] = hashlib.sha256(api.baseline).hexdigest()

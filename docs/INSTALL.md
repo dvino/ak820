@@ -2,114 +2,64 @@
 
 # Installation and recovery
 
-Use the complete release with the wired AJAZZ AK820 / VS11K28A. The installer
-also checks the firmware already in the keyboard: the product name and USB ID
-alone are not enough to identify a supported version. It stops before erasing
-if the firmware is not supported. See [status](STATUS.md) for the checked build
-and what has been tested on a keyboard.
+Use the complete release with the wired AJAZZ AK820 / VS11K28A. The installer checks the firmware already in the keyboard; the product name and USB ID alone do not identify a supported build. It stops before erasing if the source is unsupported. See [status](STATUS.md) for evidence and device state.
 
-## Before installing
+## Package setup
 
-The Windows package is `dist/AK820-sdcc46-breathing-20261023.zip`.
-Extract the complete archive and run `AK820/AK820.exe`. Keep all extracted
-files together. See [status](STATUS.md) for verification results and supported
-update paths.
+For a Windows release, extract the complete archive and run `AK820/AK820.exe`. Keep all extracted files together. The source installer needs Python 3.10+; Windows firmware builds use WSL, but installing an already built image does not. Offline package verification:
 
-Have another keyboard or the operating system's on-screen keyboard ready. The
-AK820 cannot type while it is in its original loader. Close other keyboard
-configuration tools. Connect one supported AK820 and leave its cable connected
-until installation and checks finish.
+```sh
+./AK820.sh verify
+```
 
-Before it resets or erases anything, the installer reads all 65,536 bytes of
-the keyboard's ROM and saves an exact recovery copy for you. It carries settings
-over only when the new firmware can represent them. If a key assignment cannot
-be carried over, or a macro is too large, preparation stops instead of silently
-losing that data. A partial read may help diagnose a problem, but it is not a
-complete backup.
+```powershell
+.\AK820.cmd verify
+```
 
-The installer does not include the manufacturer's ROM images. It compares your
-backup with known loader, protected-area and firmware signatures, then makes
-private comparison files in your recovery folder. This identifies a supported
-firmware version; it does not prove that other keyboards with the same name or
-USB ID will work.
+The source bundle passed offline `verify` with no HID load or USB access. The currently checked Windows applications predate settings backup/restore; use the source installer for this feature. No updated Windows package is available.
 
-The recovery folder belongs to your keyboard. Keep a separate copy. Do not use
-another owner's backup and do not commit ROM captures or diagnostic archives
-containing personal settings to a public repository.
+## Linux source setup
 
-## Repairing the earlier RC6 candidate
+Install Python, its venv and development packages, GCC and libudev development
+files. On Debian or Ubuntu the build packages include `build-essential`,
+`python3-dev`, `python3-venv` and `libudev-dev`. Then run:
 
-This GUI repair path supports the earlier exact repair candidate only. It does
-not update the currently installed SDCC 4.6 image. The SDCC 4.6 installation
-used a separate reviewed one-off console runner.
+```sh
+./AK820.sh setup
+./AK820.sh udev --install
+```
 
-The GUI's `Обновить прошивку` action is a limited repair workflow
-for the exact candidate and personal session checked in this work. It is not
-a general updater for other keyboards or images. Its offline review and
-standalone build must pass before use; see [status](STATUS.md).
+Setup builds pinned hidapi from source with the Linux hidraw backend and
+bypasses cached wheels built with another backend. The udev command uses sudo
+only to install and apply the device rule; run the installer as the ordinary
+desktop user. Neither command resets the keyboard. In a restricted agent
+terminal, `no_new_privs` can prevent sudo even when passwordless sudo is
+configured; apply the udev command from the ordinary desktop terminal.
 
-Select the prepared personal session. The GUI reads and saves the current full
-ROM, checks it against the recorded fault state, and stops if it differs. It
-preserves the durable settings from before the failed encoder probe, including
-the original clockwise assignment, and discards that probe's pending journal.
-It shows the image hash and asks for explicit consent before writing.
+## Settings backup and supported update
 
-The integrated update workflow passed review and installation. Click Update,
-then make a fresh physical Esc + left Control hold for three seconds when asked.
-That hold confirms the displayed update. No typed `yes`, `ready`, Vial app or
-manual Bootloader action is required. The installer requests unlock, checks
-completion, enters the loader, flashes once and verifies the result. Cancellation
-is allowed before erase. If an operation fails, it stops without retry, reset or
-recovery. Physical typing and a power cycle are not part of these checks.
+Read [Settings backup and restore](SETTINGS-BACKUP.md) before running the new commands. They support only the exact SDCC 4.6 RC6 image identified there. Every operation needs a valid OEM recovery session because exact CODE reconstruction uses native bytes not shipped in the repository. Keep the OEM session and settings backup separately.
 
-The GUI starts in Russian only when the system language is Russian; otherwise
-it starts in English. The RU / EN button changes the interface language.
+The supported commands are:
 
-## Source-based command line
+```sh
+./AK820.sh backup --session OEM_DIR --output NEW_DIR
+./AK820.sh restore --session OEM_DIR --backup BACKUP_DIR
+./AK820.sh update --session OEM_DIR --backup-dir NEW_DIR
+```
 
-Python 3.10+ is needed for the source installer. Windows firmware compilation
-uses WSL, but installing an already built image does not.
+The equivalent Windows source commands use `AK820.cmd`. Backup reads the keyboard and publishes a new private folder. Restore saves the current target state before writing. Update saves settings, flashes one approved image, then restores and verifies. New write operations use a physical unlock dialog; they do not ask for typed `yes`. A second physical unlock is required after restart for restore. Errors stop the operation without a retry, rollback or reset.
 
-| Action | Linux | Windows |
-| --- | --- | --- |
-| Verify files without USB | `./AK820.sh verify` | `.\AK820.cmd verify` |
-| Install local host dependencies | `./AK820.sh setup` | `.\AK820.cmd setup` |
-| List device state without opening it | `./AK820.sh` | `.\AK820.cmd` |
-| Prepare backup and install permanently | `./AK820.sh install` | `.\AK820.cmd install` |
-| Explicit one-session trial | `./AK820.sh install --trial` | `.\AK820.cmd install --trial` |
-| Recover from an already visible loader | `./AK820.sh recover --session PATH` | `.\AK820.cmd recover --session PATH` |
+In the GUI, choose the OEM session and output or backup folder, then select Backup settings, Restore settings or Update firmware. For update, prepare a spare keyboard and stable power. When prompted, make a fresh Esc + left Control hold for three seconds. The installer shows the action being confirmed. Cancel before erase if the displayed operation is not intended.
 
-Put paths with spaces in quotes. During preparation, answer `y` to continue or
-press Enter to cancel. Before writing, the installer shows the selected image
-and recovery folder, then asks you to type the exact lowercase word `yes`. It
-asks for both approvals while the keyboard can still type. If you cancel, it
-does not reset or erase the keyboard.
+## OEM recovery
 
-Permanent mode keeps the marker that starts the application. Trial mode clears
-that marker during startup, so the next reset or unplug returns to the loader.
-Trial is only for a short test. A successful file transfer or checksum alone
-does not mean installation worked: the installer also checks that the keyboard
-is running, asks you to type, and reads back the application, protected areas
-and initial settings.
+The OEM recovery session contains the original native bytes required to reconstruct and validate the supported firmware. Use a valid session from a supported OEM keyboard; do not use another person's settings backup as a substitute. Keep recovery files private and make a separate copy. ROM captures and diagnostic files may contain personal settings; do not publish them.
 
-## Recovery
+For recovery from an already visible loader, use the source command `recover --session OEM_DIR`. Recovery does not restart a running application or retry an erase that failed. If the application is unresponsive and the loader cannot be reached, stop; software recovery has not been established for that condition.
 
-If the permanent application still responds, unlock Vial and choose its
-Bootloader action. This clears the application marker and restarts the keyboard
-in its original loader. Simply unplugging a permanent installation does not
-start recovery. Run `recover --session PATH` with your own complete recovery
-folder. The recovery command does not restart a running application or retry an
-erase that failed.
+## Existing install paths
 
-If the application is unresponsive and the loader cannot be reached, stop.
-Do not assume a software recovery action will work. Physical recovery access
-and cold boot behavior require separate hardware validation.
+The source installer retains the existing `install`, `install --trial` and `recover --session OEM_DIR` workflows. Their behavior and hardware verification state are described in [status](STATUS.md). Do not treat a successful transfer or checksum as proof of physical typing, settings persistence or power-cycle behavior.
 
-## Windows application
-
-The Windows GUI and command-line app were built locally as complete folders.
-Use all of `dist/AK820-sdcc46-breathing-20261023/AK820/` or
-`dist/AK820-sdcc46-breathing-20261023/AK820-cli/`; the EXE by itself is not enough.
-These apps do not need Python installed on the target PC. The source version
-still needs Python 3.10+. The [status page](STATUS.md) links to the local build
-and offline check results. There is no public download yet.
+The current feature work does not authorize or perform live device operations. Physical acceptance and public release remain separate steps; this offline source check does not approve either.

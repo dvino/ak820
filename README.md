@@ -14,11 +14,15 @@ Set up keys, layers, the encoder and macros in Vial. After that, the keyboard wo
 - Caps Word, Repeat, Alt Repeat, Grave Escape and Tri Layer.
 - 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
-- A source installer for supported firmware updates. Tap-hold, One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides are not supported by this profile.
+- The source installer can back up and restore supported settings locally and carry them through a supported firmware update. Tap-hold, One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides are not supported by this profile.
 
 ## Get started
 
 Start with the [installation and recovery guide](docs/INSTALL.md) before using the installer.
+
+Read [Settings backup](docs/SETTINGS-BACKUP.md) for the supported host-only
+backup and restore commands. The feature supports the exact reviewed
+SDCC 4.6 images listed there; the checked Windows binaries predate it.
 
 For the source installer, Python 3.10+ is required. Verify the complete bundle offline:
 
@@ -34,8 +38,12 @@ For the source installer, Python 3.10+ is required. Verify the complete bundle o
 
 Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lighting in Vial. Firmware builds use Linux/WSL, Python 3.11+ and the pinned SDCC 4.6.0 toolchain.
 
+Source builds produce a development candidate. The installer-verified release
+image is a separate artifact. See [Build](docs/BUILD.md) and [Status](docs/STATUS.md)
+for the current build and release state.
+
 ## Documentation and contributions
 
-[Documentation](docs/INDEX.md) · [Build](docs/BUILD.md) · [Development](docs/DEVELOPMENT.md) · [Testing](docs/TESTING.md) · [Contributing](CONTRIBUTING.md)
+[Documentation](docs/INDEX.md) · [CI and releases](docs/CI.md) · [Build](docs/BUILD.md) · [Development](docs/DEVELOPMENT.md) · [Testing](docs/TESTING.md) · [Contributing](CONTRIBUTING.md)
 
 English documentation is authoritative; Russian documents are translations. Preserve license notices when reusing the port. Original project code and contributions are GPL-3.0-only; third-party components retain their own licenses. See [licensing](docs/LICENSING.md) and the root [LICENSE](LICENSE).

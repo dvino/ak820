@@ -95,7 +95,8 @@ class DeviceTests(unittest.TestCase):
 
     def api(self, fault=None):
         raw = RawFixture(fault)
-        api = protocol.DeviceAPI({'definition': raw.definition}, self.output, lambda: raw)
+        api = protocol.DeviceAPI({'definition': raw.definition}, self.output, lambda: raw,
+                                 allow_writes=True)
         self.addCleanup(api.close)
         return api, raw
 

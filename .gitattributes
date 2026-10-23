@@ -1,3 +1,10 @@
 # Preserve exact reviewed source and release bytes on Linux and Windows.
 # Release manifests bind SHA256 of files, including their line endings.
 * -text
+
+# Keep verbatim compiler reports and run logs, including their formatting.
+# They are reviewed by recorded hashes rather than source whitespace rules.
+audits/rc6/bounded-evidence-20261023/** -whitespace
+audits/rc6/roadmap-qualification-20261023/** -whitespace
+audits/rc6/ci-integration-20261023/** -whitespace
+audits/rc6/archive-import-review-20261023/logs/** -whitespace

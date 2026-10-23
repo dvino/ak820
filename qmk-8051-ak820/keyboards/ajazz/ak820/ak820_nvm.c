@@ -55,7 +55,7 @@ static bool write_page(uint16_t address) {
     return true;
 }
 
-static bool journal_header_valid(uint8_t *header) {
+static bool journal_header_valid(uint8_t AK820_XDATA *header) {
     uint8_t i;
     if (header[0] != 0xA5u) return false;
     for (i = 1; i != 5; ++i) {

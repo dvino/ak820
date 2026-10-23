@@ -1,0 +1,41 @@
+{
+  "format": "ak820-device-tests-2",
+  "result": "PASS",
+  "checks": [
+    {
+      "name": "mapping_getters",
+      "status": "PASS",
+      "keys": 498,
+      "encoder_slots": 12
+    },
+    {
+      "name": "macro_getters",
+      "status": "PASS",
+      "count": 16,
+      "bytes": 8192
+    },
+    {
+      "name": "RGB_protocol_getters",
+      "status": "PASS",
+      "leds": 82
+    },
+    {
+      "name": "setting_writes",
+      "status": "SKIP",
+      "reason": "Not requested"
+    },
+    {
+      "name": "RGB_durable_save",
+      "status": "SKIP",
+      "reason": "Packed saved-config mode ABI oracle not implemented; no save sent"
+    }
+  ],
+  "restore_pending": null,
+  "usb_opened": true,
+  "physical_behavior_validated": false,
+  "baseline_nvm_sha256": "8aaceb8f6a8a9fe83e3a6fb1fb6f62051f2a9abab36963dead8764116343d707",
+  "runner_sha256": "ccd3c373536b06c0c9dc9c1788dd86304e68ccbadf88c200525680dd2786c31b",
+  "protocol_sha256": "e108c591ad017f029f6fa97c6e76dcc85a842123d0b61270cf8d8a1406257921",
+  "firmware_ihx_sha256": "f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e",
+  "writes_requested": false
+}

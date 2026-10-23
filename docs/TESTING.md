@@ -2,60 +2,139 @@
 
 # Testing
 
-Keep four kinds of evidence separate: source review, build/integrity checks,
-host/CPU execution, and physical keyboard behavior. None substitutes for another.
+Keep source review, build/integrity checks, host/CPU execution and physical
+keyboard behavior separate. None substitutes for another.
 
-## Offline checks
+## Current offline result
+
+The retained [qualification report](../audits/rc6/roadmap-qualification-20261023/final/report.json)
+records 23 passing suites, 247 unit tests with no skips, and unchanged IHX/MAP
+hashes throughout the run. Eight host C suites and six linked CPU suites passed;
+one suite checks public documentation. The image is the development candidate
+identified in [Status](STATUS.md), not a newly approved update package.
+
+| Unit suite | Tests passed |
+| --- | ---: |
+| Installer and GUI logic | 111 |
+| Release assembler | 12 |
+| Windows package recipe | 12 |
+| Combined runner | 10 |
+| Device test runner | 19 |
+| Device protocol | 9 |
+| Low-level package, including real SDCC checks | 67 |
+| Linked inventory parser | 7 |
+
+Settings tests use synthetic raw protocol responses and temporary files. They
+do not read private ROM captures or open a keyboard. The live feature remains
+limited to the exact release in [Settings backup](SETTINGS-BACKUP.md). Source
+`verify` passes without HID access. The [source/package review](../releases/rc6/reviews/independent-review.md)
+binds the approved release and host files; it does not bind the new development
+image or a Windows binary.
+
+The [evidence manifest](../audits/rc6/roadmap-qualification-20261023/manifest.json)
+keeps the failed initial attempt as well as the final run. The final run disables
+LeakSanitizer because process metadata is inaccessible in the sandbox. Address
+and undefined-behavior checks remain active in the C harnesses that use them;
+leak checking is excluded. Native Windows EXE/Tk acceptance, live settings
+writes and physical persistence remain unperformed. Live-runner skips listed
+below are separate from the zero-skip unit result.
+
+## Run the offline suite
 
 From the repository root:
 
 ```sh
 python tools/test_keyboard.py
 python -B -m unittest discover -s tools/installer -p 'test_*.py' -v
-python -B -m unittest discover -s tools -p 'test_build_release_bundle.py' -v
-python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p 'test_*.py' -v
+python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p 'test_*.py' -v
 ```
 
-The combined runner records each command, exit code and log hash under
-`host/runs/`; use `--host` on Linux/WSL and optionally `--build-dir` for linked
-CPU suites. It sends no device commands and never runs a flash test.
+The combined runner records each command, exit code, log hash, tool hashes and
+reported unit-test skips under `host/runs/`. It selects the local SDCC 4.6.0
+pair, or an explicit `--toolchain` installation. `AK820_SDCC_BIN` remains
+supported. The selected compiler and simulator reach all child suites.
+Inventory tests run by default; `--host` adds the bounded C checks, and
+`--build-dir` adds the bounded linked helper alongside the other CPU suites.
+No device commands or flash tests are run.
 
-Host C runners require GCC/Clang on Linux/WSL. From `qmk-8051-ak820/`, use
-`python tests/ak820_usb/run.py`, `python tests/ak820_keymap/run.py`,
-`python tests/ak820_caps_word/run.py` and `python tests/ak820_macro_guard/run.py`.
-Use the current [status](STATUS.md) and machine reports for additional regressions.
-Real SDCC checks need `AK820_SDCC_BIN` pointing at the pinned toolchain's `bin`.
+For qualification with installed tools and a fresh completed build:
 
-The checked Windows apps are in `dist/AK820-sdcc46-breathing-20261023/`.
-Build log: `host/runs/20261023-sdcc46-windows.json`. CLI help, offline verify,
-update help and GUI self-test passed. The
-[independent artifact review](../audits/rc6/physical-gui-artifact-review.md)
-records the checks of all 26 bound files per app. These are packaging checks;
-separate live results are in [status](STATUS.md). Earlier GUI folders and the
-old portable ZIP are superseded.
+```sh
+python tools/test_keyboard.py --host --require-toolchain \
+  --toolchain toolchains/sdcc-4.6.0 \
+  --build-dir qmk-8051-ak820/.build/local-1 \
+  --iap-fault-profile guarded-erase --output host/runs/qualification.json
+```
 
-Linked CPU runners accept the new build directory and pinned `s51`, for example:
+`--require-toolchain` rejects missing tools and fails the final result if a
+unit suite reports a skip. Without it, the ordinary offline command can run
+without a compiler and records any skips. Launch failures are recorded as
+failures. Initial, per-suite and final IHX/MAP hashes detect a transient image
+replacement even if the final files are restored.
+
+Host C runners require GCC/Clang on Linux/WSL. The report records supplied
+sanitizer environment settings. Use `ASAN_OPTIONS=detect_leaks=0` only when the
+sandbox prevents LeakSanitizer from inspecting processes, and record that
+limitation. For example, prefix the qualification command with that assignment
+in Bash. This was the environment used for the retained final run.
+
+Native Windows packaging commands are in [Build](BUILD.md). The twelve recipe
+tests simulate collected payloads and smoke failures. Only a real Windows run
+can produce the EXEs and exercise creation of the native Tk interface;
+interactive acceptance of its visible dialogs is a further check.
+
+## Reuse the retained firmware evidence
+
+The source archive contains controlled build reports, their referenced
+artifacts and relocated listings. No transient probe directory is needed to
+regenerate the pointer inventory. From the repository root:
+
+```sh
+python qmk-8051-ak820/util/ak820_linked_inventory.py \
+  --root audits/rc6/bounded-evidence-20261023/pointer \
+  --report audits/rc6/bounded-evidence-20261023/pointer/.build/bounded-probe/build-report.json \
+  --output /tmp/ak820-pointer-inventory.json
+python qmk-8051-ak820/tests/ak820_bounded/emitted.py \
+  --build-dir audits/rc6/bounded-evidence-20261023/pointer/.build/bounded-probe \
+  --s51 toolchains/sdcc-4.6.0/bin/s51 \
+  --output-dir host/runs/linked-header-1
+```
+
+The second command needs the pinned simulator; install it as described in
+[Build](BUILD.md). Use a fresh output directory. The retained reports preserve
+original paths as provenance; the evidence manifests locate their portable
+copies. The inventory checks all recorded artifact identities and instruction
+bytes but deliberately reports partial coverage. See its
+[limits and control command](../audits/rc6/linked-inventory-20261023.md).
+
+The bounded host test extracts production functions and checks 264,448 journal
+headers and 65,025 legal delay pairs. The linked test executes 2,304 header
+mutations and measures that helper's exercised stack. Valid macro playback
+covers all sixteen slots. Arbitrarily truncated encoded operands supplied
+directly to playback are outside this harness's complete published-stream
+contract; the inherited issue and separate storage-validation scope are
+recorded in the [probe report](../audits/rc6/bounded-optimization-20261023.md).
+
+Other linked runners accept a fresh build and the pinned simulator. From
+`qmk-8051-ak820/`, for example:
 
 ```sh
 python tests/ak820_features/run.py --build-dir .build/local-1 \
-  --s51 ../toolchains/sdcc-4.4.0/bin/s51 --output-dir .build/local-1-features
+  --s51 ../toolchains/sdcc-4.6.0/bin/s51 --output-dir .build/local-1-features
 python tests/ak820_irq/run.py --build-dir .build/local-1 \
-  --s51 ../toolchains/sdcc-4.4.0/bin/s51 \
+  --s51 ../toolchains/sdcc-4.6.0/bin/s51 \
   --stock-rom /path/to/private-oem-references/stock-full.bin \
   --output-dir .build/local-1-irq --main-sample-bytes 80
 ```
 
-The stock ROM argument must point to the owner's local OEM archive; release
-reference images are no longer stored in this checkout. These fixtures are
-used only by offline CPU tests and must not be added to release output.
-
-CPU fixtures execute linked instructions with modeled peripheral operations.
-They do not emulate VS11K28A USB/flash silicon or prove every stack path safe.
-Use a new output directory and match the image hash before reusing a report.
+The IRQ fixture needs a private OEM ROM that is absent from the source archive;
+it was not part of this final combined run. Do not add private reference images
+to a release. CPU fixtures model peripheral operations. They do not emulate
+VS11K28A USB/flash silicon or establish safety for every stack/interrupt path.
 
 ## Automatic checks without physical input
 
-The current test work needs no key presses, knob rotation, cable reconnect or
+The automatic test work needs no key presses, knob rotation, cable reconnect or
 manual unlock. Start with the offline runner:
 
 ```sh
@@ -105,9 +184,10 @@ authorization for those changes. The plan, individual PASS/FAIL/SKIP results,
 snapshots and request trace stay in the private output folder. These commands
 never flash the keyboard or ask for physical actions.
 
-The installed RC6 failed its encoder write at `target_write` despite a successful
-cold boot. Keep that case in the offline regressions. During this test work no
-new live commands or firmware writes are being run on that faulted keyboard.
+The earlier SDCC 4.4 RC6 candidate failed its encoder write at `target_write`
+despite a successful cold boot. This is a historical regression case, retained
+in the offline tests. Later SDCC 4.6 evidence is listed in [status](STATUS.md);
+it does not replace a new settings or power-loss acceptance test.
 
 ## Physical acceptance checklist
 
@@ -125,3 +205,9 @@ Keep cable and power stable while writing. Preserve the personal recovery folder
 
 Record the exact image SHA256, device variant, OS, steps and results. A failed
 step is a failure even when the loader checksum or another test passed.
+
+## Continuous integration
+
+Push and pull-request checks, native Windows packaging and version-tag releases
+are described in [CI and releases](CI.md). The workflow also runs the NVM and
+macro interrupted-write models. It performs no device operations.

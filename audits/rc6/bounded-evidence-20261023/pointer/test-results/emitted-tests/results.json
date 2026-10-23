@@ -1,0 +1,206 @@
+{
+  "linked_image_sha256": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+  "cpu": "uCsim C52",
+  "initial_sp": 98,
+  "stack_capacity_bytes": 157,
+  "limits": "CPU/ABI checks with supplied peripheral state; no physical USB/IAP/DMA/timing validation; stack peaks cover only exercised paths without IRQ overlap",
+  "tests": [
+    {
+      "name": "matrix_debounce_fn_release_and_key",
+      "pass": true,
+      "observations": {
+        "fn_down": [
+          2
+        ],
+        "fn_f1_down": [
+          148,
+          1
+        ],
+        "fn_up": [
+          0
+        ],
+        "f1_release": [
+          0,
+          0
+        ],
+        "a_down": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "a_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 151,
+      "tested_stack_bytes": 53
+    },
+    {
+      "name": "macro_extended_layer_and_recursion_guard",
+      "pass": true,
+      "macro_bytes": "010621526101072152010577ff6200000000000000000000000000000000",
+      "final_layer": [
+        0
+      ],
+      "final_report": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "peak_sp": 153,
+      "tested_stack_bytes": 55
+    },
+    {
+      "name": "rgb_solid_direct_suspend_resume",
+      "pass": true,
+      "observations": {
+        "solid": [
+          255,
+          18,
+          0,
+          0
+        ],
+        "before_sleep": [
+          255,
+          60,
+          30,
+          10
+        ],
+        "direct_0": [
+          255,
+          18,
+          18,
+          18
+        ],
+        "direct_1": [
+          255,
+          0,
+          0,
+          18
+        ],
+        "direct_2": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "direct_81": [
+          255,
+          0,
+          18,
+          0
+        ],
+        "resume_0": [
+          255,
+          18,
+          18,
+          18
+        ],
+        "resume_1": [
+          255,
+          0,
+          0,
+          18
+        ],
+        "resume_81": [
+          255,
+          0,
+          18,
+          0
+        ],
+        "sleep_immediate_nonzero_bytes": 0,
+        "sleep_rendered_nonzero_bytes": 0,
+        "sleep_usb_state": [
+          3
+        ],
+        "resume_usb_state": [
+          2
+        ]
+      },
+      "expected": {
+        "solid": [
+          255,
+          18,
+          0,
+          0
+        ],
+        "before_sleep": [
+          255,
+          60,
+          30,
+          10
+        ],
+        "direct_0": [
+          255,
+          18,
+          18,
+          18
+        ],
+        "direct_1": [
+          255,
+          0,
+          0,
+          18
+        ],
+        "direct_2": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "direct_81": [
+          255,
+          0,
+          18,
+          0
+        ],
+        "resume_0": [
+          255,
+          18,
+          18,
+          18
+        ],
+        "resume_1": [
+          255,
+          0,
+          0,
+          18
+        ],
+        "resume_81": [
+          255,
+          0,
+          18,
+          0
+        ],
+        "sleep_immediate_nonzero_bytes": 0,
+        "sleep_rendered_nonzero_bytes": 0,
+        "sleep_usb_state": [
+          3
+        ],
+        "resume_usb_state": [
+          2
+        ]
+      },
+      "peak_sp": 123,
+      "tested_stack_bytes": 25
+    }
+  ],
+  "pass": true
+}

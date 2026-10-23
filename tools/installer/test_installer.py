@@ -289,6 +289,40 @@ class OfflineTests(BaseCase):
         self.assertTrue(any(command[1:3] == ['-m', 'ensurepip'] for command in commands))
         self.assertTrue(any(command[1:4] == ['-m', 'pip', 'install'] for command in commands))
 
+    def test_linux_setup_builds_pinned_hidapi_from_source_with_hidraw_backend(self):
+        local = self.root / 'linux-venv'
+        python = local / 'bin/python'
+        python.parent.mkdir(parents=True)
+        python.write_bytes(b'existing interpreter')
+        inherited = {'PATH': '/test/bin', 'KEEP_ME': 'yes'}
+        with patch.object(app, 'VENV', local), patch.object(app.sys, 'platform', 'linux'), \
+             patch.dict(app.os.environ, inherited, clear=True), patch.object(app.subprocess, 'run') as run, \
+             contextlib.redirect_stdout(io.StringIO()) as output:
+            app.setup()
+        pip_call = next(call for call in run.call_args_list if call.args[0][1:3] == ['-m', 'pip'])
+        command = pip_call.args[0]
+        self.assertEqual(command[:7], [str(python), '-m', 'pip', 'install', '--disable-pip-version-check',
+                                           '--no-binary=hidapi', '--no-cache-dir'])
+        self.assertEqual(command[7:9], ['--force-reinstall', '-r'])
+        self.assertEqual(command[9], str(Path(app.__file__).with_name('requirements.txt')))
+        self.assertEqual(pip_call.kwargs['env']['HIDAPI_WITH_HIDRAW'], '1')
+        self.assertEqual(pip_call.kwargs['env']['HIDAPI_WITH_LIBUSB'], '0')
+        self.assertEqual(pip_call.kwargs['env']['KEEP_ME'], 'yes')
+        self.assertIn('libudev development files', output.getvalue())
+
+    def test_windows_setup_keeps_wheel_install_flow(self):
+        local = self.root / 'windows-venv'
+        python = local / 'bin/python'
+        python.parent.mkdir(parents=True)
+        python.write_bytes(b'existing interpreter')
+        with patch.object(app, 'VENV', local), patch.object(app.sys, 'platform', 'win32'), \
+             patch.object(app.subprocess, 'run') as run, contextlib.redirect_stdout(io.StringIO()):
+            app.setup()
+        pip_call = next(call for call in run.call_args_list if call.args[0][1:3] == ['-m', 'pip'])
+        self.assertEqual(pip_call.args[0], [str(python), '-m', 'pip', 'install', '--disable-pip-version-check',
+                                               '-r', str(Path(app.__file__).with_name('requirements.txt'))])
+        self.assertNotIn('env', pip_call.kwargs)
+
     def test_default_command_only_enumerates_no_device_or_feature(self):
         hid = FakeHid([descriptor('OEM_APP')])
         with patch.object(app, 'RUNS', self.root / 'runs'), patch.object(app, 'hid_module', return_value=hid), \

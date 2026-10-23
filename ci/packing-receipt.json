@@ -1,0 +1,128 @@
+{
+  "format": "ak820-ci-packing-receipt-1",
+  "hardware_validated": false,
+  "program": {
+    "ihx_sha256": "feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8",
+    "symbols_sha256": "7cbbde22a6a7ab08b4a6769cc8abf142298558754c97301d0d23636bd47cf471",
+    "schema": 532482
+  },
+  "host_files": {
+    "AK820.cmd": {
+      "size": 1149,
+      "sha256": "dddbfaad0da2f79d3353bd2238eae323db53b0a066736c7743e84a845b77aaa0"
+    },
+    "AK820.sh": {
+      "size": 515,
+      "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
+    },
+    "qmk-8051-ak820/util/ak820_ci_authorization.py": {
+      "size": 12833,
+      "sha256": "8c96bcb611035453f319cc176015ec3f2eaa38a8d4e4e2e28154318f386a2d3d"
+    },
+    "qmk-8051-ak820/util/ak820_diagnose.py": {
+      "size": 13505,
+      "sha256": "2a3dd74d73d1b135107468d330818896a7158e16f4e4031b1c1757f14854dc0d"
+    },
+    "qmk-8051-ak820/util/ak820_release_manifest.py": {
+      "size": 2517,
+      "sha256": "a97a8b902b4bbf7cb7799109c00fa9e5d068d06417146e85736fc5cd04bbee30"
+    },
+    "qmk-8051-ak820/util/ak820_tool.py": {
+      "size": 22775,
+      "sha256": "9f7fcacc803be7c3e1bc18dcfc11f50b24960be9f1c48a3e6268fbacc1113f92"
+    },
+    "qmk-8051-ak820/util/native_macro_import.py": {
+      "size": 2499,
+      "sha256": "572f153de6ec9a71eefa8fd87c5ba2bd7da602619131e3ec66fa63d9a742b07f"
+    },
+    "qmk-8051-ak820/util/pack_ak820.py": {
+      "size": 23558,
+      "sha256": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+    },
+    "qmk-8051-ak820/util/prepare_ak820_trial.py": {
+      "size": 5745,
+      "sha256": "91458b9a14bad55f9bb9a056ec43f8daec0ffe996f21f4ffc15e9f6730aa9fc2"
+    },
+    "tools/ak820_device_protocol.py": {
+      "size": 19409,
+      "sha256": "e108c591ad017f029f6fa97c6e76dcc85a842123d0b61270cf8d8a1406257921"
+    },
+    "tools/build_ci_release.py": {
+      "size": 20973,
+      "sha256": "0246b827de8dabeb291910857c69aca7c1303799261bf18585143c2743115d3a"
+    },
+    "tools/build_release_bundle.py": {
+      "size": 12204,
+      "sha256": "46a839afbdda100cd57fd8e9c3f9a13f7e984c36c0ed72b054e0bc3ae2f96a91"
+    },
+    "tools/build_windows_installer.py": {
+      "size": 8190,
+      "sha256": "8fd2f9eb5c337da8fce82e58ab7efcd7a82be407136bfb253b82973c3288899d"
+    },
+    "tools/installer/70-ak820.rules": {
+      "size": 339,
+      "sha256": "f0b85bb730963057350a6a9cfe35e1f17e2859a5bfbcebfce9fccaa6534a3a52"
+    },
+    "tools/installer/ak820.py": {
+      "size": 49261,
+      "sha256": "313460af31e3165c797edb0c2d1d57e6bf6410d1074dde3d66cd0ef11b78193a"
+    },
+    "tools/installer/gui.py": {
+      "size": 21389,
+      "sha256": "94c99aa505208fadb4eb3496c1c4bdb060a60dcd8304464869d268c665873a6f"
+    },
+    "tools/installer/i18n.py": {
+      "size": 21250,
+      "sha256": "94901c2826c7936410f9e799518c4a6ccdff7d1800f10784d03d81c53dc45dd5"
+    },
+    "tools/installer/requirements-build-windows.txt": {
+      "size": 235,
+      "sha256": "fe92377176d05e83a805899a51be8569cfc63768609bae64c543641f9d715bd5"
+    },
+    "tools/installer/requirements.txt": {
+      "size": 15,
+      "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
+    },
+    "tools/installer/settings_backup.py": {
+      "size": 28563,
+      "sha256": "82702346c22f608d6ad620e0a2939884173bbc3ea4f50052c397c253c2d68797"
+    },
+    "tools/installer/settings_workflow.py": {
+      "size": 11338,
+      "sha256": "ffa59acf7a6d1f90fa4e7056b577a0bef5d4553cbcc1aeab305fe0f15bee0b72"
+    }
+  },
+  "packing": {
+    "physical_usb_opened": false,
+    "hardware_validated": false,
+    "recovery_byte_equal": true,
+    "install_modes": [
+      "permanent",
+      "trial"
+    ],
+    "images": {
+      "ak820-vial-trial.bin": {
+        "trial": true,
+        "build_id": 532482,
+        "sha256": "f7093599f0d29441fc144ca0ef71b57545698a46a36fd0c3a083248df1a38def",
+        "size": 51136
+      },
+      "restore-native.bin": {
+        "size": 51136,
+        "sha256": "d7152819712470cf37a0c29d69b756edc4a51aca1d20c13e1fcf4b96f9638535",
+        "restores": "native application/settings from the original recovery backup"
+      }
+    },
+    "permanent": {
+      "trial": false,
+      "build_id": 532482,
+      "sha256": "6f2a45a98721f5adee8fce63e92d158ed0d3732da6c76a336525f05c73bd46a4",
+      "size": 51136
+    },
+    "reference_hashes": {
+      "stock": "1dc3e2f79bd03d0bdc4e7a0fc43241e6e89445799948990725ee644ec45c09d1",
+      "native": "d7152819712470cf37a0c29d69b756edc4a51aca1d20c13e1fcf4b96f9638535"
+    },
+    "level": "Prior local offline packing of this exact program with verified private OEM inputs; no device operations"
+  }
+}

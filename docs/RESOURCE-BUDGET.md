@@ -2,15 +2,23 @@
 
 # Memory and layer count
 
-The active profile has six layers. Four layers are an analysis option, not an
-installed configuration or a silent change to the current profile.
+The current profile keeps six layers, sixteen macros and 8192 bytes of shared macro storage. Four layers remain a controlled comparison, not a release setting. The private XDATA journal-header pointer is in source; its offline build is a development candidate and has not been promoted or installed. The exact settings-backup pin remains the stable release image.
 
-The controlled comparisons below use the pre-layout RC6 image `12260272…e114`.
-The final layout adds 20 CODE bytes; current totals are in [status](STATUS.md).
-Later erase-path and local optimization changes are separate from this old
-comparison. The status page distinguishes their source and built images.
+## Current measured builds
+
+The current source candidate is `feac6dae864e801b6177fb8c57a23a65c59b850c5dd3ce84dfb2abb853058cc8`. The stable release image remains `f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e`.
+
+| Image | CODE total | Main CODE window | Low CODE window | XRAM | Initial SP / allocated stack capacity |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Source candidate | 38,069 (36,261 main + 1,808 low) | 36,261 / 38,617 occupied; 2,356 addresses without IHX data | 1,808 / 1,888 occupied; 80 addresses without IHX data | 2,066 / 3,072 occupied; 1,006 free | 0x62 / 157 bytes |
+| Stable release | 38,100 (36,292 main + 1,808 low) | 36,292 / 38,617 occupied; 2,325 addresses without IHX data | 1,808 / 1,888 occupied; 80 addresses without IHX data | 2,067 / 3,072 occupied; 1,005 free | 0x62 / 157 bytes |
+
+Window unoccupied counts are address counts, not a guarantee of usable contiguous space. Five addresses, `0x302a..0x302e`, remain reserved in HOME and are included in the unoccupied main-window count; they are not free CODE. Stack capacity is the linker allocation limit, not proof that every runtime path uses at most that many bytes. The pointer change saves 31 CODE bytes and one XRAM byte versus the stable image. The rejected delay-expression probe added three CODE bytes and is not adopted. The build and bounded offline review are recorded in the [review](../audits/rc6/bounded-optimization-20261023.md) and [JSON report](../audits/rc6/bounded-optimization-20261023.json); retained evidence is in [its evidence directory](../audits/rc6/bounded-evidence-20261023/). The candidate has not been installed or promoted. See [Status](STATUS.md) for qualification state.
 
 ## Four versus six layers
+
+This controlled comparison uses the pre-layout RC6 baseline `12260272…e114`.
+It is separate from the current builds in the table above.
 
 Each matrix layer uses `16 × 8 × 2 = 256` bytes in emulated EEPROM. Each encoder
 layer uses `1 × 2 × 2 = 4` bytes. Removing two layers therefore frees **520 bytes
@@ -35,6 +43,10 @@ requires redesigning storage or reducing a genuinely large runtime feature;
 removing two layers alone does not provide that gain.
 
 ## RGB precision
+
+The full-versus-compact CIE comparison below also uses the pre-layout RC6
+baseline `12260272…e114`; it is a historical controlled comparison, separate
+from the current builds above.
 
 Masking color bytes without changing representation does not save space.
 The candidate compact CIE curve replaces 256 entries with 32 and keeps wire

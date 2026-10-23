@@ -1,0 +1,34 @@
+{
+  "docs": {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "tools/check_docs.py"
+    ],
+    "exit_code": 0,
+    "log": "audits/rc6/roadmap-qualification-20261023/supplementary/docs.txt",
+    "log_sha256": "c839bf09def21d2c6eae61a910bb18bc3754d8b22349d46e8eff166b9c8109e1"
+  },
+  "verify": {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "tools/installer/ak820.py",
+      "verify"
+    ],
+    "exit_code": 0,
+    "log": "audits/rc6/roadmap-qualification-20261023/supplementary/verify.txt",
+    "log_sha256": "5a71b022ab2f60255fd63914bc624a5195bbdeb362b9bff93ae8da50dd246294"
+  },
+  "diff-whitespace": {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "log": "audits/rc6/roadmap-qualification-20261023/supplementary/diff-whitespace.txt",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scope": "Tracked working-tree edits before staging new evidence. A later committed-diff check also covered added generated evidence; see whitespace-check.json."
+  }
+}

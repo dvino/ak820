@@ -1,10 +1,23 @@
 """GUI orchestration tests without a display or HID backend."""
 import unittest
 
-from gui import Controller, is_yes_confirmation
+from gui import (Controller, backup_args, backup_destination, is_yes_confirmation,
+                 restore_args, update_args)
 
 
 class ControllerTests(unittest.TestCase):
+    def test_new_workflow_commands_use_shared_cli_arguments(self):
+        self.assertEqual(backup_args('/tmp/oem-session', '/tmp/backup-1'),
+                         ['backup', '--session', '/tmp/oem-session', '--output', '/tmp/backup-1'])
+        self.assertEqual(restore_args('/tmp/oem-session', '/tmp/backup-1'),
+                         ['restore', '--session', '/tmp/oem-session', '--backup', '/tmp/backup-1'])
+        self.assertEqual(update_args('/tmp/oem-session', '/tmp/backup-2'),
+                         ['update', '--session', '/tmp/oem-session', '--backup-dir', '/tmp/backup-2'])
+
+    def test_backup_destination_is_a_new_named_child(self):
+        self.assertEqual(backup_destination('/tmp/backups', '20261023-010203-123456'),
+                         '/tmp/backups/ak820-settings-20261023-010203-123456')
+
     def test_highlight_yes_only_for_exact_backend_confirmation(self):
         self.assertTrue(is_yes_confirmation('Полное объяснение\nSHA256: 123\nВведите yes (Enter — отмена): '))
         self.assertTrue(is_yes_confirmation('Explanation\nSHA256: 123\nType yes (Enter to cancel): '))
