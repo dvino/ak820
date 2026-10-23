@@ -1,0 +1,62 @@
+name: Bug Report
+description: Report a problem with the supported AJAZZ AK820 firmware.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project supports the wired AJAZZ AK820 with the VS11K28A/CH555 controller and USB ID 320F:505B only. V2, Pro, and Max models are not supported.
+
+        Do not upload OEM ROMs, full-ROM dumps, recovery images, settings backups, or private sessions. Share sanitized logs and the version or report fields requested below.
+  - type: dropdown
+    id: keyboard-variant
+    attributes:
+      label: Keyboard variant
+      options:
+        - Wired AJAZZ AK820 (VS11K28A/CH555, USB 320F:505B)
+        - V2
+        - Pro
+        - Max
+        - Other or unknown
+    validations:
+      required: true
+  - type: input
+    id: firmware-version
+    attributes:
+      label: Firmware version
+      description: Enter the installed firmware version, commit, or image hash. If unknown, enter "unknown".
+      placeholder: "Example: 1.2.3 or SHA256"
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+      description: Include the OS version.
+      placeholder: "Example: Windows 11 24H2"
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Describe what you observed and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to reproduce
+      description: List the actions and settings that reproduce the problem.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs or report fields
+      description: Remove serial numbers, personal paths, tokens, and other private data. Do not attach ROMs, recovery images, settings backups, or private sessions.
+      render: shell

@@ -6,6 +6,10 @@ Updated 2026-10-23. SDCC 4.6 RC6 is installed. Physical typing was confirmed sep
 The approved as-is console flash used package defaults. Previous settings
 were saved locally and were not restored.
 
+Three GitHub issue forms are defined for bug reports, feature requests, and
+flashing or recovery problems. Local YAML and documentation-link checks pass.
+This source change does not show that the forms are published on GitHub.
+
 ## Source and build
 
 Only ajazz/ak820:vial is supported. Foreign boards, unused platforms, the old

@@ -7,6 +7,10 @@ Start with the [build](docs/BUILD.md), [development](docs/DEVELOPMENT.md) and
 variant and firmware hash, and give the steps that reproduce it. Say whether a
 result came from a model or from trying it on a keyboard.
 
+Choose an [issue form](https://github.com/dvino/ak820/issues/new/choose) for a bug, feature request, or
+flashing and recovery problem. The forms collect the details needed for each
+report and explain what private files must not be uploaded.
+
 Keep each change focused. If code changes how something works, update the
 English guide and its Russian translation with it. In a pull request, list the
 checks you ran and what you could not check. Changes to image packing, startup,

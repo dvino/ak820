@@ -1,0 +1,72 @@
+name: Flashing / Recovery
+description: Report an installation, loader, or recovery problem.
+title: "[Flashing / Recovery]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project supports the wired AJAZZ AK820 with the VS11K28A/CH555 controller and USB ID 320F:505B only. V2, Pro, and Max models are not supported.
+
+        Do not upload OEM ROMs, full-ROM dumps, recovery images, settings backups, or private sessions. Share sanitized logs and the requested version or report fields only. This form collects what happened; it does not ask for further device actions.
+  - type: dropdown
+    id: problem-stage
+    attributes:
+      label: Problem area
+      options:
+        - Installing an update
+        - Loader
+        - Recovery
+        - Other or unsure
+    validations:
+      required: true
+  - type: dropdown
+    id: keyboard-variant
+    attributes:
+      label: Keyboard variant
+      options:
+        - Wired AJAZZ AK820 (VS11K28A/CH555, USB 320F:505B)
+        - V2
+        - Pro
+        - Max
+        - Other or unknown
+    validations:
+      required: true
+  - type: input
+    id: firmware-version
+    attributes:
+      label: Firmware version or image hash
+      description: Enter the installed version, attempted image version, commit, or hash. If unknown, enter "unknown".
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+      description: Include the OS version.
+    validations:
+      required: true
+  - type: textarea
+    id: observed-state
+    attributes:
+      label: Current observed state
+      description: Describe what the keyboard and installer currently show. Do not take further action to answer.
+    validations:
+      required: true
+  - type: textarea
+    id: actions-taken
+    attributes:
+      label: Actions already taken
+      description: List only the steps already completed, in order. Do not retry, reset, enter a loader, or flash again for this report.
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: error-message
+    attributes:
+      label: Error message or sanitized logs
+      description: Remove serial numbers, personal paths, tokens, and other private data. Do not attach ROMs, recovery images, settings backups, or private sessions.
+      render: shell
+    validations:
+      required: true
