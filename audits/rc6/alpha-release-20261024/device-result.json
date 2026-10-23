@@ -1,0 +1,167 @@
+{
+  "format": "ak820-alpha-device-result-1",
+  "date": "2026-10-24",
+  "tag": "v0.6.0-alpha.1",
+  "source_commit": "bb6eca9303952cd0ac2d206650862b18983d2b54",
+  "firmware_source": "Downloaded GitHub Release asset, not local build",
+  "application_ihx_sha256": "45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d",
+  "packed_permanent_sha256": "5840ad705c66459f006e55661225afdcb4a11650aaefb59d9daf8d70798f3eba",
+  "flash_operations": 1,
+  "initial_update_result": {
+    "result": "STOPPED",
+    "stage": "Opening application after loader restart",
+    "error": "OSError: open failed",
+    "automatic_retry": false,
+    "settings_restored_in_initial_workflow": false,
+    "cause": "Not established; later sysfs/ACL showed application interfaces and user read/write access"
+  },
+  "read_only_before_flash": {
+    "result": "PASS",
+    "checks": [
+      {
+        "name": "mapping_getters",
+        "status": "PASS",
+        "keys": 498,
+        "encoder_slots": 12
+      },
+      {
+        "name": "macro_getters",
+        "status": "PASS",
+        "count": 16,
+        "bytes": 8192
+      },
+      {
+        "name": "RGB_protocol_getters",
+        "status": "PASS",
+        "leds": 82
+      },
+      {
+        "name": "setting_writes",
+        "status": "SKIP",
+        "reason": "Not requested"
+      },
+      {
+        "name": "RGB_durable_save",
+        "status": "SKIP",
+        "reason": "Packed saved-config mode ABI oracle not implemented; no save sent"
+      }
+    ],
+    "rom_sha256": "8396b62cba35e77270dfb336219ccd9ab2387b9093af30cd14e02d6f87976b1e",
+    "code_prefix_sha256": "6ff7b1653925da7dc12bdb6f7ef5fc1dc4319c5b931def50c68b9cf45c4054d7",
+    "private_report_sha256": "efde3841a43b49ca239ccf4ccd1a9aeeac835a4cdeef7ca9a84ef6f96f82c1f9",
+    "physical_behavior_validated_by_runner": false
+  },
+  "read_only_after_flash_before_restore": {
+    "result": "PASS",
+    "checks": [
+      {
+        "name": "mapping_getters",
+        "status": "PASS",
+        "keys": 498,
+        "encoder_slots": 12
+      },
+      {
+        "name": "macro_getters",
+        "status": "PASS",
+        "count": 16,
+        "bytes": 8192
+      },
+      {
+        "name": "RGB_protocol_getters",
+        "status": "PASS",
+        "leds": 82
+      },
+      {
+        "name": "setting_writes",
+        "status": "SKIP",
+        "reason": "Not requested"
+      },
+      {
+        "name": "RGB_durable_save",
+        "status": "SKIP",
+        "reason": "Packed saved-config mode ABI oracle not implemented; no save sent"
+      }
+    ],
+    "rom_sha256": "23fc874e8811391d2f9e885a317b03a7a155b14693b05d466e2f2ee9ab282b55",
+    "code_prefix_sha256": "cc5af6cc86724103fbc3e2c1815bf7a2235edc0ed85a932fd3e993cd6b4f7931",
+    "private_report_sha256": "1af24d071a08b85a651b2422e9c392af980edf9562150698be297c8229f97f23",
+    "physical_behavior_validated_by_runner": false
+  },
+  "standalone_guarded_restore": {
+    "result": {
+      "verified": true,
+      "rom_sha256": "49555de23d2a0093c17eceb299fd7f8fa94ad45c2dd25f2eb61ff28edaef35a4",
+      "nvm_sha256": "8aaceb8f6a8a9fe83e3a6fb1fb6f62051f2a9abab36963dead8764116343d707",
+      "keys": 498,
+      "encoders": 12,
+      "macros": 16,
+      "rgb_saved_bytes": 8,
+      "physical_behavior": "not tested",
+      "power_loss_persistence": "not tested",
+      "writes": 2
+    },
+    "fresh_target_backup": true,
+    "fresh_physical_unlock": true,
+    "reflash": false
+  },
+  "read_only_after_restore": {
+    "result": "PASS",
+    "checks": [
+      {
+        "name": "mapping_getters",
+        "status": "PASS",
+        "keys": 498,
+        "encoder_slots": 12
+      },
+      {
+        "name": "macro_getters",
+        "status": "PASS",
+        "count": 16,
+        "bytes": 8192
+      },
+      {
+        "name": "RGB_protocol_getters",
+        "status": "PASS",
+        "leds": 82
+      },
+      {
+        "name": "setting_writes",
+        "status": "SKIP",
+        "reason": "Not requested"
+      },
+      {
+        "name": "RGB_durable_save",
+        "status": "SKIP",
+        "reason": "Packed saved-config mode ABI oracle not implemented; no save sent"
+      }
+    ],
+    "rom_sha256": "49555de23d2a0093c17eceb299fd7f8fa94ad45c2dd25f2eb61ff28edaef35a4",
+    "code_prefix_sha256": "cc5af6cc86724103fbc3e2c1815bf7a2235edc0ed85a932fd3e993cd6b4f7931",
+    "private_report_sha256": "ef777a805138c56331927b7d3b3a85cd490ce1eecbf4a58153165225034a1ab0",
+    "physical_behavior_validated_by_runner": false
+  },
+  "manual_smoke": {
+    "result": "Reported working",
+    "scope": [
+      "typing",
+      "encoder both directions",
+      "Fn layer",
+      "C with Caps Lock",
+      "W with additional layer"
+    ],
+    "method": "Manual response to the listed checks; not instrumented per-key measurements",
+    "response": "работает"
+  },
+  "not_tested": [
+    "Power-cycle persistence",
+    "Every physical key",
+    "Precise tap-hold timing",
+    "IRQ overlap and electrical USB behavior",
+    "Native interactive Windows acceptance"
+  ],
+  "private_evidence": {
+    "update_events_sha256": "dd1406844da30c5cd7da04d7b08fd0d8955969e74ed11b9bcc6f895a38bdf6a3",
+    "restore_events_sha256": "db9b5bd1b049501cea5083438a7e4ca73d5cfb280bbacb275868b83a4b0e57f4",
+    "rom_settings_traces_published": false
+  }
+}

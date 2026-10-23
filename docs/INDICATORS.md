@@ -33,6 +33,7 @@ The linked CPU model checks host LED bits, production layer APIs, default and
 Tri Layer paths, USB state fixtures, RGB canaries and interrupt-bit restoration.
 A state fixture is not a physical USB reset or a test of visible lights.
 
-The physical C/W connections and visible behavior have not been verified.
-This is a source-derived firmware candidate, not evidence of installation.
+The GitHub alpha was installed and manual smoke checks reported C following
+Caps Lock and W following an additional layer. This does not measure electrical
+polarity, suspend timing or every lighting combination. See [Status](STATUS.md).
 The checked-in legacy installer firmware does not contain this implementation.

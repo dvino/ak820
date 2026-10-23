@@ -8,6 +8,8 @@ This project brings QMK and Vial to the **wired AJAZZ AK820 with a VS11K28A / CH
 
 Set up keys, layers, the encoder and macros in Vial. After that, the keyboard works without a desktop app running in the background. The port keeps the keyboard's original loader and stores settings in the keyboard.
 
+Test release: [v0.6.0-alpha.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.1). Read the release notes before installing.
+
 ## Hardware Compatibility
 
 | Model | Microcontroller | Support |
@@ -40,8 +42,8 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - Caps Word, Repeat, Alt Repeat, Grave Escape and Tri Layer.
 - 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
-- Development source adds compact [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md). The bundled legacy release still uses only their tap action.
-- Development source also enables [C/W indicator outputs](docs/INDICATORS.md); physical light behavior remains unverified.
+- Alpha includes compact [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md). The checked-in legacy bundle still uses only their tap action.
+- Alpha includes [C/W indicators](docs/INDICATORS.md): host Caps Lock and an active additional layer.
 - The source installer can back up and restore supported settings locally and carry them through a supported firmware update. One Shot, Mouse Keys, Tap Dance, Combos and Key Overrides remain unsupported.
 
 

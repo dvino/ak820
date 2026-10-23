@@ -13,7 +13,9 @@ CPU model, including an independent rerun. Main-checkout reproduction matched
 the same IHX. The [full local qualification](../audits/rc6/oem-indicators-qualification-20261024/qualification.json)
 passed all 26 suites and 258 unit tests with no skips and unchanged IHX/MAP.
 Local LeakSanitizer detection was disabled; ASan/UBSan checks remained active.
-New CI is pending; the retained result below applies to the earlier tap-hold-only image. See [indicators](INDICATORS.md)
+Dev CI and release CI passed for `v0.6.0-alpha.1`. The [release/device report](../audits/rc6/alpha-release-20261024/device-result.json)
+records exact live readback, verified settings restoration and manual smoke results.
+The retained result below applies to the earlier tap-hold-only image. See [indicators](INDICATORS.md)
 for state-fixture and physical-test limits.
 
 ## Retained tap-hold offline result

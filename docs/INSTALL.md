@@ -21,7 +21,8 @@ Windows CI packages include settings backup, restore and the supported update wo
 ## Use a release firmware bundle with the source installer
 
 Use a clean checkout of the selected release tag. Verify `firmware-bundle.zip`
-with its accompanying SHA256 file, then extract it. Copy the contents of
+with its accompanying SHA256 file, then extract it into a folder named
+`firmware-bundle`. Copy the contents of
 `firmware-bundle/` into `releases/rc6/` and copy its `approved-release.json` to
 `tools/installer/approved-release.json`. Run `./AK820.sh verify` before any
 device command. This selects the CI-built release rather than the legacy
@@ -74,3 +75,13 @@ For recovery from an already visible loader, use the source command `recover --s
 The source installer retains the existing `install`, `install --trial` and `recover --session OEM_DIR` workflows. Their behavior and hardware verification state are described in [status](STATUS.md). Do not treat a successful transfer or checksum as proof of physical typing, settings persistence or power-cycle behavior.
 
 Offline checks do not authorize device writes. Each update needs its own confirmation, a fresh backup and an exact image check. Alpha releases are test builds; the release notes and Status distinguish source, package checks and device results.
+
+## Known alpha stop
+
+During installation of `v0.6.0-alpha.1`, `open failed` occurred after restart.
+The installer stopped before settings restoration. The cause is not established.
+Do not repeat the flash. Preserve the log and backup; first check permissions,
+the exact running CODE and healthy storage through read-only diagnosis. Only
+after those checks pass may a separate normal settings restore proceed with
+a fresh target backup and physical confirmation. See [Status](STATUS.md) for
+the recorded operation.

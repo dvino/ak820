@@ -1,0 +1,24 @@
+{
+  "format": "ak820-github-alpha-asset-check-1",
+  "source_commit": "bb6eca9303952cd0ac2d206650862b18983d2b54",
+  "tag": "v0.6.0-alpha.1",
+  "assets": {
+    "firmware-bundle.zip": "a132a00d9209d67de752aa723d46fb7b7fd17f05f8bac00672ba74e967b55ed9",
+    "AK820-Windows.zip": "c8dae87596f6b2cb9df717962fa2e961ebe8dc11b87af29002cf7084f7883084"
+  },
+  "manifest_sha256": "014c303c877a735703a9d6f5428530afc639c5e438f036e147cc4a22c0f9f4d9",
+  "application_ihx_sha256": "45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d",
+  "windows_inputs_per_app": 36,
+  "windows_smoke": {
+    "cli_help": "passed",
+    "offline_verify": "passed",
+    "native_tk_ui_smoke": "passed",
+    "limits": [
+      "No USB enumeration or access was performed.",
+      "Native UI smoke creates and destroys Tk widgets; it does not verify manual interaction, display scaling, or accessibility.",
+      "No physical keyboard, USB protocol, firmware update, or settings persistence was tested."
+    ]
+  },
+  "physical_device_commands": 0,
+  "hardware_validated": false
+}

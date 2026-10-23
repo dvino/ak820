@@ -24,9 +24,10 @@ tap-hold candidate changes the 200 ms hold behavior and macro-owned primitive
 semantics; Caps Word behavior is described in [Mod-Tap and Layer-Tap](TAP-HOLD.md).
 The C/W source candidate follows the compact tap-hold profile and retains those
 settings capacities. Its exact OEM-based image was packed locally from an
-isolated source candidate. This candidate has not passed full CI or release
-approval and has not been installed on a keyboard. The earlier three programs
-remain public CI artifacts.
+isolated source candidate. It is now released and installed as `v0.6.0-alpha.1`.
+The live transition from the legacy profile verified settings restoration;
+see [Status](STATUS.md) for the post-restart open failure and separate guarded restore.
+The earlier three programs remain public CI artifacts.
 Sharing a schema alone never grants compatibility: the actual CODE hash and
 manifest must match one of the exact profile identities. The target snapshot
 must match the selected target before physical unlock or setters.
@@ -36,8 +37,8 @@ qualify CPU behavior, a complete release artifact or behavior on a keyboard.
 
 The checked-in installer bundle and CI package selection are separate from
 this profile allowlist; see the [CI policy](CI.md) for package selection.
-No transition to the compact tap-hold candidate has been performed on a
-keyboard. Unsupported firmware or settings stop the operation before erase;
+The legacy-to-alpha transition has been checked on a keyboard; the other
+profile transitions remain host-model checks. Unsupported firmware or settings stop the operation before erase;
 arbitrary build migration is not supported.
 
 Every command takes `--session OEM_DIR`. This is required because the installer reconstructs the exact CODE image using the original native bytes from a valid OEM recovery session; those bytes are not shipped in the repository. Existing valid OEM recovery data may be used. The update image is regenerated from the approved bundle. A settings backup is not a substitute for the OEM recovery session.
@@ -68,4 +69,4 @@ Restore is blocked before any erase or setting write when a keycode is unknown o
 
 ## Offline verification
 
-The earlier settings-only run passed eight offline suites (222 tests, two skips); its [run record](../audits/rc6/host-settings-offline-20261023.json) is historical evidence. The current full qualification record is in [status](STATUS.md) and [CI](CI.md). The four-profile transition test is an in-memory host model; it does not qualify CPU behavior or a built artifact. Read-only diagnosis passed on the installed legacy firmware. Settings writes, an update, either candidate's behavior and power-loss behavior were not tested on the device. The C/W candidate has not passed full CI or release approval. CI has built the native Windows packages and passed Tk startup checks; visible dialogs and interactive behavior remain untested.
+The earlier settings-only run passed eight offline suites (222 tests, two skips); its [run record](../audits/rc6/host-settings-offline-20261023.json) is historical evidence. The current full qualification record is in [status](STATUS.md) and [CI](CI.md). The four-profile transition test is an in-memory host model; it does not qualify CPU behavior or a built artifact. Alpha release CI passed. The downloaded image was installed once and checked through live readback. The update stopped after restart with an open error; a separately guarded restore then verified the saved settings. See [Status](STATUS.md) for that result and the manual smoke checks. Power-loss behavior remains untested. CI has built the native Windows packages and passed Tk startup checks; visible dialogs and interactive behavior remain untested.

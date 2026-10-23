@@ -2,13 +2,33 @@
 
 # Project status
 
-Updated 2026-10-24. Development source includes compact Mod-Tap/Layer-Tap
-and the new C/W indicator outputs. The indicator candidate builds with pinned
-SDCC 4.6.0: 40,477 populated CODE bytes, 22 trailing main-window bytes and one
-low-window byte free. All 26 local suites and 258 unit tests passed without
-skips; final package approval and CI for this new image are pending. The earlier tap-hold
-image passed Linux/Windows CI. The checked-in installer bundle still contains
-the legacy firmware. No firmware or settings writes were performed.
+Updated 2026-10-24. [v0.6.0-alpha.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.1)
+is published and installed from the downloaded GitHub release. Dev CI and all
+three release CI jobs passed. The build includes compact Mod-Tap/Layer-Tap and
+C/W outputs: 40,477 CODE bytes, 22 trailing main-window bytes and one low-window
+byte free. All 26 local suites and 258 unit tests passed without skips.
+The checked-in legacy installer bundle is older; use the selected release.
+
+## Alpha installation and checks
+
+The [retained report](../audits/rc6/alpha-release-20261024/device-result.json)
+records one flash of the downloaded release, exact CODE/full-manifest readback,
+a guarded settings restore and successful read-only checks before and after
+restore. The original update stopped with `OSError: open failed` immediately
+after the loader restart. It did not retry. Later access and the exact new
+firmware were verified before a separate restore with a fresh target backup
+and physical confirmation. The cause of the open failure is not established;
+a udev/ACL timing race is a hypothesis.
+
+Settings restoration verified 498 keys, 12 encoder assignments, 16 macro slots
+and eight saved RGB bytes. Only two setters were needed for the differences;
+this is not a write test of every assignment or macro slot. Manual smoke checks
+reported working typing, both encoder directions, Fn, C with Caps Lock and W
+with an additional layer. These are manual observations, not timing measurements.
+Power-cycle persistence and native interactive Windows acceptance remain open.
+The [asset check](../audits/rc6/alpha-release-20261024/asset-check.json) and
+[independent preflash review](../audits/rc6/alpha-release-20261024/independent-preflash-review.json)
+bind the actual release archives and source commit `bb6eca9`.
 
 ## Retained release and pointer-only comparison
 
@@ -54,7 +74,8 @@ records the source, ABI and test scope. Local [offline packing](../audits/rc6/oe
 verified trial/permanent images and byte-equal native recovery using private OEM
 inputs. No full ROM or private payload was added to Git. The [full local qualification](../audits/rc6/oem-indicators-qualification-20261024/qualification.json)
 passed all 26 suites and 258 unit tests with no skips and unchanged IHX/MAP.
-Final package review and CI are pending. The candidate is not installed.
+Independent package review and release CI passed. This image is installed as
+`v0.6.0-alpha.1`; the installation result and limits are recorded above.
 
 ## Retained tap-hold verification
 
@@ -157,14 +178,14 @@ It verifies CODE, manifest, protected regions, initial NVM and a clean store
 after restart. Physical typing was confirmed separately. It does not prove
 this new host transition or cold power-loss persistence.
 
-Live settings writes, macro upload, saved RGB, physical encoder/lighting and
-power-loss acceptance remain open. C/W outputs now use the OEM-derived source
-map; physical connections and visible behavior still need validation. Persistent Direct palette work is
+The alpha restore verified the saved settings and RGB bytes described above.
+Macro upload, exhaustive reversible remap writes and power-loss acceptance remain open. C/W outputs now use the OEM-derived source
+map; a manual smoke check reported both lights working. Exhaustive lighting checks remain open. Persistent Direct palette work is
 cancelled; the Windows language helper remains unfinished. Caps remapping and language-key
 implementation are deferred by the current request. [Roadmap](ROADMAP.md)
 keeps those tasks and the remaining bounded optimization research separate.
 
-Update, 2026-10-23: [Node.js 24 run 40009482255](https://github.com/dvino/ak820/actions/runs/40009482255) passed Linux and Windows; publication was skipped. Neither job log contains the Node.js 20 deprecation warning. Persistent Direct palette development was cancelled and removed from this branch. The stable schema remains `0x082002`; installer offline verification passes. The cancelled prototype is preserved separately as an unapproved experiment. Mod-Tap / Layer-Tap is the next selected input feature; Caps remains unchanged.
+Update, 2026-10-23: [Node.js 24 run 40009482255](https://github.com/dvino/ak820/actions/runs/40009482255) passed Linux and Windows; publication was skipped. Neither job log contains the Node.js 20 deprecation warning. Persistent Direct palette development was cancelled and removed from this branch. The stable schema remains `0x082002`; installer offline verification passes. The cancelled prototype is preserved separately as an unapproved experiment. Mod-Tap / Layer-Tap is now included in alpha; Caps remains unchanged.
 
 ## Additional archive and indicator analysis
 
@@ -175,5 +196,5 @@ files with the external private backup. No archive contents were added to Git.
 The latest [OEM data-flow analysis](../audits/rc6/oem-indicator-dataflow-review-20261024.md)
 connects a received report bit to staging slot 71, offset 1. State `0x0A79`
 controls slot 79, offset 1. These are source-derived indicator candidates;
-physical C/W connections remain unverified. The source implementation is enabled in the new candidate; it is not present
+manual C/W smoke checks passed after alpha installation. The implementation is enabled in alpha; it is not present
 in the earlier `586ac20` CI image.

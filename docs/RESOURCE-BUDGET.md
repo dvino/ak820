@@ -5,8 +5,8 @@
 The profile keeps six layers, sixteen macros and 8192 bytes of shared macro
 storage. Four layers remain a controlled comparison. Development source now
 includes compact tap-hold, C/W outputs and the journal-pointer correction. Settings restore
-requires exact reviewed image pairs, not just a matching schema. The candidate
-is not installed; qualification is recorded in [Status](STATUS.md).
+requires exact reviewed image pairs, not just a matching schema. The alpha is installed;
+qualification and device results are recorded in [Status](STATUS.md).
 
 ## Current measured builds
 
@@ -19,7 +19,7 @@ The current measured source candidate is `45f28e80cd9e269cb507d6fff47b43cea2766b
 
 Window unoccupied counts are address counts, not a guarantee of usable contiguous space. Five addresses, `0x302a..0x302e`, remain reserved in HOME and are included in the unoccupied main-window count; they are not free CODE. Stack capacity is the linker allocation limit, not proof that every runtime path uses at most that many bytes. The earlier pointer-only image saved 31 CODE bytes and one XRAM byte versus
 the stable image; that measurement is historical and does not describe the
-larger compact tap-hold candidate. The C/W addition costs 78 CODE bytes versus the tap-hold-only build. Its main window has 22 trailing bytes; the low window has one free byte. The rejected delay-expression probe added three CODE bytes and is not adopted. The historical pointer-only build and bounded offline review are recorded in the [review](../audits/rc6/bounded-optimization-20261023.md) and [JSON report](../audits/rc6/bounded-optimization-20261023.json); retained evidence is in [its evidence directory](../audits/rc6/bounded-evidence-20261023/). The candidate has not been installed or promoted. See [Status](STATUS.md) for qualification state.
+larger compact tap-hold candidate. The C/W addition costs 78 CODE bytes versus the tap-hold-only build. Its main window has 22 trailing bytes; the low window has one free byte. The rejected delay-expression probe added three CODE bytes and is not adopted. The historical pointer-only build and bounded offline review are recorded in the [review](../audits/rc6/bounded-optimization-20261023.md) and [JSON report](../audits/rc6/bounded-optimization-20261023.json); retained evidence is in [its evidence directory](../audits/rc6/bounded-evidence-20261023/). This image is installed as `v0.6.0-alpha.1`. See [Status](STATUS.md) for qualification state.
 
 ## Four versus six layers
 

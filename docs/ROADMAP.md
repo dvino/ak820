@@ -2,6 +2,17 @@
 
 # Roadmap
 
+## After alpha
+
+`v0.6.0-alpha.1` is published and installed; results are in [Status](STATUS.md).
+The next work is to diagnose and fix the post-restart `open failed` installer
+stop, verify power-cycle settings persistence, and perform native Windows
+interactive acceptance. Broaden physical Mod-Tap/Layer-Tap timing checks and
+reversible remap tests after that. Compact optional feature profiles, including
+a measured Combos implementation, remain future work; no size is promised.
+Caps remapping and the unfinished language helper remain deferred.
+
+
 Updated 2026-10-24. Completed work and exact image identities are in
 [Status](STATUS.md). The development source and installer release now differ;
 a successful source build does not promote the candidate into the installer.
@@ -33,7 +44,7 @@ a successful source build does not promote the candidate into the installer.
   call graph and execution profile are not claimed.
 - [x] Investigate Caps language switching and C/W indicators. Record source
   constraints and the event test plan. Caps remapping remains deferred. C/W
-  outputs are implemented in a source candidate; hardware behavior is unverified.
+  outputs are included in alpha; manual smoke checks reported both working.
 
 See the [bounded probes](../audits/rc6/bounded-optimization-20261023.md),
 [inventory](../audits/rc6/linked-inventory-20261023.md) and
