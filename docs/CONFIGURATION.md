@@ -6,9 +6,9 @@ Use a compatible Vial client with this firmware. Close the OEM configurator
 before connecting. The old `AK820-Vial-v2` OEM adapter uses a different protocol
 and is not the configuration interface for this QMK/Vial firmware.
 
-This guide describes the complete `full` profile planned for alpha.3. The
-published alpha.2 image does not include NKRO controls, modifier One Shot or
-Space Cadet.
+The published `v0.6.0-alpha.3` release uses the complete `full` profile. It
+includes selectable NKRO reports, modifier One Shot and the limited Space
+Cadet actions described below.
 
 Select a key in Vial's keyboard picture and choose an action. Vial sends keymap
 and lighting changes to the keyboard as you make them. Export the layout when
@@ -190,6 +190,3 @@ are available in the full profile. Their boundaries are listed in
 Settings tab are unavailable. A Vial control alone does not add firmware
 support. Before assigning an action, check that it is supported by the installed
 firmware.
-Other generic QMK/Vial options may also appear in the client without firmware
-support. Importing a layout cannot add missing firmware features. Before
-assigning an action, verify that it is supported by the installed firmware.

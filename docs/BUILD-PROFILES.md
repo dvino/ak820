@@ -3,10 +3,9 @@
 # Build profiles
 
 The configurator builds all eight combinations of the three optional features.
-The `full` profile is the alpha.3 candidate; the other seven remain development
-profiles. Source qualification and independent policy review are complete.
-The candidate is not published or hardware-tested, and release packaging still
-awaits native CI. See [Status](STATUS.md) for current release state.
+The published `v0.6.0-alpha.3` release uses the `full` profile. The other seven
+profiles remain for development and are not release-approved. See
+[Status](STATUS.md) for the published image and device evidence.
 
 ## Build a profile
 

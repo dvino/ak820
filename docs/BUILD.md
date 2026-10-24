@@ -58,10 +58,10 @@ file length or source size.
 
 Use the [profile configurator](BUILD-PROFILES.md) to build any of the eight
 feature combinations. It links the complete image, checks resource placement
-and runs offline regression gates against that image. The `full` profile is
-the alpha.3 candidate; source qualification and independent policy review are
-complete. The candidate is not published or hardware-tested and awaits native
-CI. The other seven profiles remain development-only.
+and runs offline regression gates against that image. The published
+`v0.6.0-alpha.3` release uses the `full` profile. The other seven profiles
+remain for development and are not release-approved. See [Status](STATUS.md)
+for evidence about the published image and device checks.
 
 The build uses the compact instruction outliner with a fixed opcode and module
 allowlist. `--no-outline` and `--no-callee-saves` provide comparison builds.

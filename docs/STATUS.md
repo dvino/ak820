@@ -17,7 +17,7 @@ run; it was not a failed firmware or installer test.
 The full image includes NKRO control, modifier One Shot and compact Space
 Cadet alongside the base functions. Its IHX SHA256 is
 `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`.
-It uses 40,043 CODE bytes, 2,631 XRAM bytes and 162 bytes of allocated stack.
+It uses 40,043 CODE bytes, 2,637 XRAM bytes and 162 bytes of allocated stack.
 There are 441 trailing main-window bytes and 16 low-window bytes.
 
 Exact-image analysis closes the main and three callback roots. The combined
@@ -28,7 +28,7 @@ in-service/RETI semantics; it does not assume two priority levels or prove
 physical VS11 timing. See the [release qualification](../audits/rc6/alpha3-release-20261024/review.md)
 and [safety manifest](../ci/release-safety.json).
 
-The final candidate passes all 15 distinct-source IRQ orders and all 256 LED
+The released image passes all 15 distinct-source IRQ orders and all 256 LED
 selector values in the CPU model. Startup memory and hostile pre-erase entry
 checks pass. Independent checks pass 30 analyzer, six startup and five IRQ
 unit tests. Settings checks pass 47 tests; a retained real alpha.2 backup passes
@@ -46,9 +46,9 @@ matrix from source `81cfc96` is [dated evidence](../audits/rc6/roadmap-max-20261
 not qualification of those profiles after the alpha.3 changes.
 
 The [roadmap archive acceptance](../audits/rc6/roadmap-acceptance-20261024/review.md)
-records the imported work. The [roadmap](ROADMAP.md) lists remaining release
-work and deferred features. No device commands were issued during alpha.3
-preparation.
+records the imported work. The [roadmap](ROADMAP.md) lists future profile work
+and deferred features. The offline qualification did not access a device;
+installation results are recorded below.
 
 ## Installed firmware
 

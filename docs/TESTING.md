@@ -2,11 +2,11 @@
 
 # Testing
 
-The published and installed alpha.2 passed its recorded CI suites. The alpha.3
-full source candidate has separate offline proof; it is not hardware-tested.
-Exact build and device evidence are in
+The published `v0.6.0-alpha.3` image passed the recorded CI suites and has
+limited device-check evidence. Exact build and device results are in
 [Status](STATUS.md). Host models and linked CPU execution do not prove physical
-keyboard behavior.
+keyboard behavior. Detailed feature checks and behavior after full power loss
+remain untested.
 
 ## Offline regression suite
 
@@ -39,8 +39,7 @@ For any of the eight configured profiles, use the dedicated [profile build
 command](BUILD-PROFILES.md). It runs the standard offline regression gates and
 the selected feature's host and linked-CPU suites against the exact image, and
 records results in that build directory. Profile results do not prove physical
-behavior or release eligibility. The whole-program stack bound, exact-image
-interrupt/nesting safety and installer transition remain unqualified; see the
+behavior or release eligibility. See the
 [qualification evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
 
 The automatic suite requires no key presses, encoder movement, cable reconnect
@@ -56,23 +55,23 @@ The live regression runner can check all 83 matrix assignments on six layers,
 encoder assignments in both directions on six layers, 16 macro slots and the
 8192-byte macro view, RGB settings and supported getters. Read-only results do
 not prove physical switches, scan timing, encoder signals, macro playback,
-lighting appearance or durable storage. The installed image's final backup
-read 498 key assignments, 12 encoder assignments, 16 macro slots, eight RGB
-bytes and eight empty Combo getters. Nonempty Combo writes and manual GUI use
-remain untested; see [Status](STATUS.md).
+lighting appearance or durable storage. The published image has been installed
+and its settings backup and restore path was checked; see [Status](STATUS.md)
+for the exact scope. Separate physical feature checks and power-loss durability
+remain untested.
 
 For later authorized read-only diagnosis, use a private session and a fresh
 output directory:
 
 ```sh
 python tools/ak820_device_tests.py --run \
-  --release-dir /path/to/extracted-alpha2-firmware-bundle \
-  --approval /path/to/exact-alpha2-approved-release.json \
-  --session /path/to/permanent-session-for-the-same-alpha2-image \
+  --release-dir /path/to/extracted-alpha3-firmware-bundle \
+  --approval /path/to/exact-alpha3-approved-release.json \
+  --session /path/to/permanent-session-for-the-same-alpha3-image \
   --output host/runs/post-flash-1
 ```
 
-The release directory and approval file must identify the exact alpha.2 image installed on the keyboard. The session must be a valid permanent installation/recovery session for that same image; an OEM-only backup or settings backup is not sufficient. Do not use the legacy `releases/rc6` directory with the current default approval for alpha.2. The plan and results remain in the private output directory. Setting-write checks need the runner's explicit write options and authorization. These tests do not flash the keyboard or perform physical actions.
+The release directory, approval file and session must identify the exact image being diagnosed. A fresh installation/recovery session is required; an OEM-only backup or settings backup is not sufficient. Do not use the legacy `releases/rc6` directory with an approval for a different image. The plan and results remain in the private output directory. Setting-write checks need the runner's explicit write options and authorization. These tests do not flash the keyboard or require physical actions.
 
 ## Physical acceptance
 

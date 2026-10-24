@@ -7,7 +7,7 @@ One Shot and the three compact Space Cadet actions. The application IHX SHA256
 is `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`.
 The permanent CODE identity is
 `01f0f7a979d8cfa8217b3bba333758ae3509cf7f3f8e35fbffb1ed034b808e5d`.
-The image uses 40,043 CODE bytes and 2,631 XRAM bytes. Allocated stack is 162
+The image uses 40,043 CODE bytes and 2,637 XRAM bytes. Allocated stack is 162
 bytes; 441 main-window and 16 low-window trailing bytes remain.
 
 ## Stack and interrupts
@@ -79,9 +79,30 @@ not a device write or a publication result.
 
 The [independent program review](program-review.md) approves this exact source,
 image, policy, receipt and offline evidence for commit and CI reproduction.
-All findings are closed. Native CI and public package acceptance are pending.
-No alpha.3 tag or installer is
-published by this report. Installed
-firmware remains alpha.2. Physical keys, encoder motion, USB timing, LED DMA,
-cold-start retention, electrical flash faults and manual GUI interaction have
-not been established for this image.
+All findings are closed. The three native jobs in
+[main CI](https://github.com/dvino/ak820/actions/runs/40076916540) passed for
+`b17d7c8`. The verified assets from that run were published as
+[v0.6.0-alpha.3](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.3).
+The duplicate tag run was cancelled after publication; it is not a failed test.
+[Publication metadata](publication.json) records all eight downloaded assets.
+[Public asset checks](published-assets-check.json) verify their checksums,
+official installer authorization, both GUI/CLI input sets and native architecture.
+The Linux CLI also passed help and offline verification.
+
+The [device result](device-result.json) records one successful installation from
+the published Linux package, exact CODE and manifest readback, two fresh physical
+confirmations and verified settings restoration. An earlier confirmation timeout
+performed no flash and stopped; another attempt was explicitly authorized.
+Typing was reported working. Individual physical feature and encoder cases,
+USB timing, LED DMA, cold-start retention, electrical flash faults and manual
+GUI interaction remain outside the verification performed here.
+
+
+## Documentation closeout
+
+Independent final review approves the published-state documentation, asset
+checker and recorded evidence. STATUS wording findings are closed in both
+languages, and the actual linked MEM confirms 2,637 XRAM bytes. Public guides
+separate the released image, installation results and untested physical cases.
+The downloaded-asset helper passes after the status commit and preserves the
+release's exact policy and image bindings. No blocking findings remain.

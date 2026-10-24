@@ -1,0 +1,56 @@
+{
+  "format": "ak820-alpha3-assets-check-1",
+  "status": "passed",
+  "source_commit": "b17d7c8b52ec7a234a742a64380e22354698030b",
+  "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
+  "checks": {
+    "asset_sha256_files": "passed",
+    "archive_paths_and_links": "passed",
+    "firmware_attestation": "passed",
+    "manifest_files": "passed",
+    "official_bundle_validation": "passed",
+    "windows_and_linux_collected_inputs": "passed",
+    "native_architecture": "passed",
+    "installation_instructions": "passed"
+  },
+  "assets": {
+    "firmware-bundle.zip": {
+      "path": "/home/danil/Documents/git/ak820/.build/alpha3-main-assets/firmware/firmware-bundle.zip",
+      "sha256": "3c8ac08db82141a00468bb0839b972d1bdb6ac16652ade89d5f65706448a4d97"
+    },
+    "AK820-Windows.zip": {
+      "path": "/home/danil/Documents/git/ak820/.build/alpha3-main-assets/windows/AK820-Windows.zip",
+      "sha256": "52b7bdf17246313b406386b97ffca9ef33f5f97d102c01d4d8311a60c3deb6b1"
+    },
+    "AK820-Linux-x86_64.tar.gz": {
+      "path": "/home/danil/Documents/git/ak820/.build/alpha3-main-assets/linux/AK820-Linux-x86_64.tar.gz",
+      "sha256": "095cb9a48f1a85d7748b2bdca275be299e18f29c3c2cfa23420d22e07271027c"
+    }
+  },
+  "installer_manifest_sha256": "83825e8ffc2ac4b855f55a6ac93c4c6112d87b6641ce8fbe9dc32b8043d2f8db",
+  "release_safety_proof_sha256": "fe6c25880d51e19274e153dc2fda681ec26e9ae1ccd09f71fb93133032d6cd6a",
+  "manifest_files": 13,
+  "host_files": 21,
+  "packages": {
+    "windows": {
+      "apps": [
+        "AK820",
+        "AK820-cli"
+      ],
+      "architecture": "PE AMD64"
+    },
+    "linux": {
+      "apps": [
+        "AK820",
+        "AK820-cli"
+      ],
+      "architecture": "ELF64 x86_64"
+    }
+  },
+  "linux_cli_smoke": "passed",
+  "install_instructions": [
+    "docs/INSTALL.md",
+    "docs/ru/INSTALL.md"
+  ],
+  "device_access": "none"
+}

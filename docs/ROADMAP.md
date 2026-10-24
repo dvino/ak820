@@ -6,13 +6,13 @@ The three implemented optional features—NKRO control, modifier One Shot and
 Space Cadet—are available in all eight combinations in development profiles.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
 The exact full image has reviewed stack, interrupt and settings-transition
-proofs. Publication still requires its committed program policy, native
-Windows/Linux builds and package acceptance. Other profiles remain development
-work. Current source, release and device results belong in [Status](STATUS.md).
+proofs and is published as alpha.3. Other profiles remain development work and
+need separate qualification before release. Current source, release and device
+results belong in [Status](STATUS.md).
 
 ## Deferred features
 
-The initial inventory contains 11 candidates. Three have bounded development
+The initial inventory contains 11 candidates. Three have bounded
 implementations; the other eight remain deferred. A Vial control or keycode is
 not evidence that a feature is enabled.
 
@@ -61,7 +61,7 @@ Do not count loader, settings or journal space as free CODE. See
 [qualification evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
 
 Development builds run regression gates and profile-specific host and linked
-CPU suites against the exact image. The full candidate additionally has a
+CPU suites against the exact image. The full image additionally has a
 reviewed control-stack and all-source interrupt allowance, under the documented
 MCS-51 architectural contract. Other profiles need their own evidence before
 packaging. Model tests do not establish physical behavior.
@@ -79,23 +79,16 @@ backup and migration plan.
 
 <a id="next-alpha-release"></a>
 
-## Remaining release work
+## Further profiles and releases
 
-The target for `v0.6.0-alpha.3` is the `full` profile: NKRO control, modifier
-One Shot and compact Space Cadet together with the base functions. The eight
-deferred candidates are outside this release.
-
-- Reproduce the reviewed full image and exact source inputs in CI.
-- Build standalone Windows and Linux x86_64 installers with SHA256 files and
-  English/Russian installation instructions.
-- Check the downloaded packages against the approved image before publishing
-  the prerelease. Record CI and package results in [Status](STATUS.md).
-
-For later images, regenerate stack, interrupt, settings and packing evidence
-when their inputs change. Qualify each selected feature identity separately;
-matching schemas or passing isolated tests do not make profiles interchangeable.
-Keep device acceptance separate from models and default tests offline or
-read-only. Any hardware write requires separate confirmation.
+The full alpha.3 release is complete; its results are in [Status](STATUS.md).
+Future work should qualify each newly selected feature identity separately.
+Regenerate stack, interrupt, settings and packing evidence when their inputs
+change. Matching schemas or passing isolated tests do not make profiles
+interchangeable. Keep Windows/Linux installers, checksums and both installation
+languages in subsequent releases. Keep device acceptance separate from models
+and default tests offline or read-only. Any hardware write requires separate
+confirmation.
 
 ## Other open work
 

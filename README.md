@@ -35,10 +35,10 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 ## Features
 
 - [Six editable layers](docs/CONFIGURATION.md#keys-layers-and-encoder), with separate clockwise and counterclockwise [encoder actions](docs/CONFIGURATION.md#keys-layers-and-encoder) on each layer.
-- [Standard keys, modifiers, media and system controls](docs/CONFIGURATION.md#key-actions). The alpha.3 full profile supports selectable 6KRO and NKRO reports; alpha.2 uses 6KRO.
+- [Standard keys, modifiers, media and system controls](docs/CONFIGURATION.md#key-actions), including selectable 6KRO and NKRO reports.
 - [Sixteen macro slots](docs/CONFIGURATION.md#macros) with 8192 bytes of shared storage; macros play on the keyboard without a desktop app running.
 - [**Caps Word**](docs/CONFIGURATION.md#caps-word) types a word in uppercase without holding Shift.
-- The alpha.3 full profile adds [**One Shot**](docs/CONFIGURATION.md#one-shot) for modifiers and [**Space Cadet**](docs/CONFIGURATION.md#space-cadet) tap actions for Shift keys.
+- [**One Shot**](docs/CONFIGURATION.md#one-shot) for modifiers and [**Space Cadet**](docs/CONFIGURATION.md#space-cadet) tap actions for Shift keys.
 - [**Repeat** and **Alt Repeat**](docs/CONFIGURATION.md#repeat-and-alt-repeat) repeat the last remembered key and modifiers or use its paired alternate, such as the opposite arrow.
 - [**Grave Escape**](docs/CONFIGURATION.md#grave-escape) combines Escape and the Grave key on one key, selected by held modifiers.
 - [**Tri Layer**](docs/CONFIGURATION.md#tri-layer) activates layer 3 while layers 1 and 2 are both active.

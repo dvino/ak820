@@ -22,7 +22,7 @@ difference.
 | Check pushes and publish a release | [CI and releases](CI.md) |
 | Change code and submit a contribution | [Development](DEVELOPMENT.md) |
 | Run offline tests and check a real keyboard | [Testing](TESTING.md) |
-| See what is built and what is device-tested | [Status](STATUS.md) |
+| See the published image and device checks | [Status](STATUS.md) |
 | See planned features | [Roadmap](ROADMAP.md) |
 
 This port is for the wired AJAZZ AK820 with a VS11K28A controller and USB

@@ -11,11 +11,10 @@ The workflow pins Node.js 24 actions by full commit hash: checkout 7.0.1, setup-
 ## Checks and build outputs
 
 The workflow builds the `full` profile through the configurator and runs its
-qualification suites. The alpha.3 source candidate and release policy are
-qualified; the current candidate remains pending native CI. CI must reproduce
-the exact approved source image before it can create release packages. The other
-seven profiles remain development-only. See [Build profiles](BUILD-PROFILES.md)
-and [Status](STATUS.md).
+qualification suites. The published `v0.6.0-alpha.3` release uses that profile.
+CI reproduced the approved image and built the release packages. The other seven
+profiles remain for development. See [Build profiles](BUILD-PROFILES.md) and
+[Status](STATUS.md).
 
 The Ubuntu 24.04 firmware job checks the syntax of tracked Python and shell
 files, validates GitHub Actions workflows with a hash-pinned actionlint, checks
@@ -82,11 +81,18 @@ program; it does not claim to repeat OEM-dependent packing in the cloud.
 
 ## Publish a release
 
-Use a new SemVer tag on a checked commit in `main`, for example `v0.6.0-alpha.3`.
-Only that tag starts publication, after all three build jobs pass. A tag on
+The normal automated path uses a new SemVer tag on a checked commit in `main`,
+for example `v0.6.0-alpha.3`. The tag starts publication after all three build
+jobs pass. A tag on
 a commit outside `main` cannot publish. `v0.6.0-rc.1` creates a prerelease;
-build metadata such as `+build.1` is accepted. A manual run only checks and
-builds. Ordinary branch pushes and pull requests do not publish.
+build metadata such as `+build.1` is accepted. A manual workflow run only checks
+and builds. Ordinary branch pushes and pull requests do not publish.
+
+For `v0.6.0-alpha.3`, the release was published from the three green native jobs
+for the same commit using the GitHub release API before the tag-triggered run
+was cancelled as a duplicate. The cancelled run did not report a test failure;
+it also did not complete as a passing tag run. This one-time publication path
+does not change the automated tag workflow described above.
 
 The release contains the public firmware bundle, Windows ZIP and Linux tarball,
 each with its SHA256 file. Only the publishing job receives `contents: write`;
