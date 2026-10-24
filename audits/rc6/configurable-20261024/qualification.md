@@ -8,9 +8,70 @@ This is development work; no profile is approved for release or installation.
 The published alpha.2 image and installed-firmware evidence are unchanged.
 No USB device was opened, reset or flashed.
 
-The source implementation has passed independent precommit review. Final
-integrated builds and exact-image offline qualification are still pending in
-this intermediate commit. Results will be added here after those runs finish.
+All three final profiles passed the complete configurator build flow from clean
+commit `5fcbe4aa143ca6c4fd877a8c26a35a8d5aa6cf31`. Source, tests and bilingual
+documentation passed independent review before implementation commits. The
+final documentation and evidence commit changes no compiled or test source.
+
+## Final complete-image measurements
+
+| Image | Main CODE | Low CODE | Total CODE | Main trailing bytes | Low trailing bytes | XRAM bytes | Initial SP | Stack capacity |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| Published alpha.2 control | 38,492 | 1,821 | 40,313 | 120 | 67 | 2,621 | `0x5f` | 160 |
+| `standard` | 38,010 | 1,804 | 39,814 | 602 | 84 | 2,612 | `0x5f` | 160 |
+| `nkro` | 38,162 | 1,804 | 39,966 | 450 | 84 | 2,617 | `0x60` | 159 |
+| `one-shot` | 38,607 | 1,872 | 40,479 | 5 | 16 | 2,622 | `0x5f` | 160 |
+
+XRAM capacity is 3,072 bytes. Main and low trailing space are different regions;
+small internal holes do not make their space interchangeable. The standard
+profile saves 499 CODE bytes and nine XRAM bytes against alpha.2, preserving its
+160-byte allocated stack. NKRO adds 152 CODE and five XRAM bytes to standard,
+and has one fewer allocated stack byte. One Shot adds 665 CODE and ten XRAM
+bytes. These measured complete-image differences do not predict combinations.
+No profile has a qualified runtime stack bound or margin.
+
+| Profile | Application IHX SHA256 |
+| --- | --- |
+| `standard` | `004bf2cbda40f9c90ab92e0ee6b6a29bc2098e39d5ee8bc6d0da5df638f2565a` |
+| `nkro` | `b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2` |
+| `one-shot` | `4784f3063d5fc0a5a30d683816ade5b6d4a6408e8a5e14cb68d3cefab7cc3184` |
+
+The [evidence index](final/profiles.json) binds the original build reports,
+configuration reports, application IHX, MAP, MEM, suite reports and retained
+logs. Original execution paths remain in those reports as provenance; each
+retained file has a relative path, size and SHA256 in the index. Raw simulator
+traces and intermediate ASM/RST files are omitted from this compact evidence;
+a fresh build regenerates them. The application IHX is not a complete
+flashable ROM.
+
+## Final regression results
+
+Each profile passed all 28 required base suites, including 270 unit tests with
+zero skips, host input/storage behavior and the eight complete-image CPU suites.
+The dedicated profile plan additionally passed:
+
+| Profile | Required additional suites |
+| --- | --- |
+| `standard` | Configurator gates: 13 tests. |
+| `nkro` | 13 gate tests; actual NKRO handler host test; two complete-image NKRO scenarios. |
+| `one-shot` | 13 gate tests; production OSM host interactions, 156 differential traces and negative controls; 15 complete-image OSM scenarios. |
+
+Every suite checks unchanged image identity before and after execution. The
+optional plan also binds the exact command, logs and test-source snapshot.
+All configuration reports retain `offline_tests_passed: true` and
+`release_approved: false`. Actual CLI negative checks confirm that packaging
+and the combined option stop without producing a package or rejected build
+directory; see
+[negative gates](final/negative-gates.json).
+
+The complete host tool discovery passes 133 tests. Two test fixtures were
+corrected after that wider run: a synthetic historical builder is recognized
+only within its concurrent-host-change unit test, and toolchain installer
+tests create their working directory in a fresh checkout. Independent review
+and focused reruns passed; production release checks were not weakened.
+ASan and UBSan remained enabled. Leak detection was disabled because the
+container restricts the process interfaces needed by LeakSanitizer.
+
 
 ## Retained optimizations
 
@@ -18,9 +79,9 @@ The [private-state changes](size-source.md) save 279 linked CODE bytes and nine
 XRAM bytes. The [expanded foreground outliner](../outline-input-20261024/README.md)
 saves a further 220 CODE bytes in its control build. Neither change removes
 layers, macros, Combos, Grave Escape or other previously enabled functionality.
-The measured intermediate default image uses 39,814 CODE bytes against 40,313
-in the original control, a 499-byte reduction. Final integrated profile
-measurements remain authoritative for the finished source.
+The final standard image is byte-identical to the outlined control. Its
+39,814 CODE bytes preserve the 499-byte reduction against the original control.
+The table above records the final integrated measurements.
 
 The complete outliner differential run checks 155 helpers and 1,608 replacement
 sites, using 16 CPU states per helper (2,480 cases). All pass. New selected
@@ -94,6 +155,14 @@ bypass, missing required optional-feature suites, and incomplete relocated
 listing coverage. The final focused gate suite passes 13 tests. Temporary host
 test fixtures were updated to reach the intended missing-approval branch;
 production installer checks were not relaxed.
+
+Final independent reinspection reproduced every profile identity and resource
+report, validated both exact suite contracts and their file hashes, and confirmed
+that package approval still refuses. The standard, NKRO and One Shot evidence
+is approved for offline development qualification within those limits. A
+separate final review verified all 178 indexed retained files by size and
+SHA256, matched the reports to the documentation, and approved this evidence
+and documentation commit without blockers.
 
 These are source, build, host and generic CPU model checks. Physical timing,
 actual interrupt routing/nesting, USB operation, flash behavior and device

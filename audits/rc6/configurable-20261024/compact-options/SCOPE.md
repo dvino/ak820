@@ -80,6 +80,6 @@ pass again. OSM production code is unchanged by this follow-up.
 
 These are pre-integration measurements. The final integrated source restores the
 private tapping source helper when One Shot is disabled. Final profile hashes,
-resource totals and full suite outcomes will be recorded after the final runs in
+resource totals and full suite outcomes are recorded in
 [qualification.md](../qualification.md). The One Shot helper remains externally
 visible only in the One Shot profile.

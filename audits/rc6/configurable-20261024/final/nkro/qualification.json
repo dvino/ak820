@@ -1,0 +1,785 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 47.039,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/00.txt",
+      "log_sha256": "624d45b1fe4d7dda348bae6a778de2f1f8652c9df338c719154e201a66e3fc56",
+      "unit_tests": {
+        "run": 132,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/01.txt",
+      "log_sha256": "6972c0cf61761401b1edf45bb74993776587ceeb8b4205fdfc1519492f4f583d",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.135,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/02.txt",
+      "log_sha256": "5312d84aad03c74e608a7d9294a9215cb99c8b08accd1923ecc1a8d9115775c4",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.136,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/03.txt",
+      "log_sha256": "79df89c1275396d97b472c355017fe5c3369eacc7d16c42ed8963bcd5a4391c3",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.08,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/04.txt",
+      "log_sha256": "220c7cf297111d7c9e66ada4456a894a53e80105d8e56656f5b8c4df511ff74b",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.049,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/05.txt",
+      "log_sha256": "770a5a7cfd5ed30408387c611037fc3fb16dc0c5873dba409dd6aae6c67d7bb1",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.624,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/06.txt",
+      "log_sha256": "6ea845c299847b7660145a6199c8397ed2dd4eee48be7a7b44f0320917d95849",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.048,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/07.txt",
+      "log_sha256": "21c7e48d0b1ec908feef784bbce1fa55f2c9a7acf76382fa7578754a78bd1ed8",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.032,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/08.txt",
+      "log_sha256": "0df67c8754c105cf663ed16d3558d481ac4362b37f51eefa98fb1d48a752ed0f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.605,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.514,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.29,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.157,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/12.txt",
+      "log_sha256": "aed1f8864c9289f67cc8ef8f084b5e6a2b55c97a3b722c7ac6f21132e6d52d56",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.261,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.619,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.862,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.069,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.208,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.295,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/18.txt",
+      "log_sha256": "ab78398099c1d788da902e043b115ff2f5097f44c7b9c8351b68aa793b0beb54",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 10.788,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/19.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.423,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/20.txt",
+      "log_sha256": "8da479a9d4677990ebcd82b48c36159f5c1f343ae915a77e38ab840778be008b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 0.863,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/21.txt",
+      "log_sha256": "8d509bf5b76d0179f519d4bc073960097849389dacd8727bd37e74cd399fb4fa",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.74,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/22.txt",
+      "log_sha256": "6c6b8467cdb7358b22a218b10e5dde1d28302cb1496127419eedc918f4e8045a",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.425,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.348,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/24.txt",
+      "log_sha256": "6a212f1b6fc0d95c4620a8e219565f14444cf5f6a67e8d72fbb6472af939cb72",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 0.844,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/25.txt",
+      "log_sha256": "cb2a7704bafce894bb195b9b10e3dd019104aaa0806e72e83c2de1ed87402083",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 4.359,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/26.txt",
+      "log_sha256": "adc4e04d0beb202c6b2b773f1986bfecede95510e89355ae89f42df66e6dc822",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 1.57,
+      "log": "/workspace/scratch/e88653b9160d/ak820/qmk-8051-ak820/.build/profile-nkro-final/qualification-logs-68l33hjv/27.txt",
+      "log_sha256": "0b4db7ec62d4ac8d4a664980bc8f719667ccb3cce2335f1a3c5ce834dc9225e2",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      },
+      "build_after": {
+        "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+        "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0"
+  },
+  "unit_tests": {
+    "run": 270,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+    "map": "a0ff99a04b3eec3db61e31e1352e2fb0c7afd2f2b5b7e52e84500a3786a461da"
+  },
+  "build_unchanged": true
+}

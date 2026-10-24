@@ -21,9 +21,11 @@ The previous release policy has not been replaced or extended.
 
 The configurable-build work also has [source optimizations](../audits/rc6/configurable-20261024/size-source.md).
 The private-state and outlining changes account for a 279-byte and 220-byte
-CODE saving respectively, 499 bytes together in the comparison build. Final
-standard-profile figures and savings remain subject to the linked-image
-qualification in the [profile qualification report](../audits/rc6/configurable-20261024/qualification.md).
+CODE saving respectively. The final standard profile uses 39,814 CODE and
+2,612 XRAM bytes: 499 and nine fewer than alpha.2. All three profiles passed
+28 base regression suites (270 unit tests without skips) and their additional
+profile tests. Exact sizes, hashes and limits are in the
+[profile qualification report](../audits/rc6/configurable-20261024/qualification.md).
 These development results are separate from published and installed alpha.2
 figures below; they are not a new release or device test.
 
