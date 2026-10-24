@@ -34,24 +34,26 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 
 ## Features
 
-- Six editable layers, with separate clockwise and counterclockwise encoder actions on each layer.
-- Standard keys, modifiers, media and system controls. The default report supports six distinct ordinary keys at once.
-- Sixteen macro slots with 8192 bytes of shared storage; macros play on the keyboard without a desktop app running.
-- **Caps Word** types a word in uppercase without holding Shift.
-- **Repeat** repeats the last remembered key and modifiers; **Alt Repeat** uses its paired alternate, such as the opposite arrow.
-- **Grave Escape** combines Escape and the Grave key on one key, selected by held modifiers.
-- **Tri Layer** activates layer 3 while layers 1 and 2 are both active.
+- [Six editable layers](docs/CONFIGURATION.md#keys-layers-and-encoder), with separate clockwise and counterclockwise [encoder actions](docs/CONFIGURATION.md#keys-layers-and-encoder) on each layer.
+- [Standard keys, modifiers, media and system controls](docs/CONFIGURATION.md#key-actions). The published alpha.2 report supports six distinct ordinary keys at once; NKRO mode switching is not available in that release.
+- [Sixteen macro slots](docs/CONFIGURATION.md#macros) with 8192 bytes of shared storage; macros play on the keyboard without a desktop app running.
+- [**Caps Word**](docs/CONFIGURATION.md#caps-word) types a word in uppercase without holding Shift.
+- [**Repeat** and **Alt Repeat**](docs/CONFIGURATION.md#repeat-and-alt-repeat) repeat the last remembered key and modifiers or use its paired alternate, such as the opposite arrow.
+- [**Grave Escape**](docs/CONFIGURATION.md#grave-escape) combines Escape and the Grave key on one key, selected by held modifiers.
+- [**Tri Layer**](docs/CONFIGURATION.md#tri-layer) activates layer 3 while layers 1 and 2 are both active.
 - Eight configurable [two-key Combos](docs/COMBOS.md): for example, J + K sends Escape or F + D sends Ctrl+C when pressed within 40 ms.
 - [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md): tap for a key, hold for a modifier or layer.
-- 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a separate fade on each pressed key.
+- [82 RGB LEDs](docs/CONFIGURATION.md#lighting) with solid color, breathing, color cycles, VialRGB Direct and a separate fade on each pressed key.
 - [C/W indicators](docs/INDICATORS.md): C follows Caps Lock; W shows an active additional layer.
-- Saved keymaps, macros and global lighting, physical Vial unlock, and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
+- Saved [keymaps, macros and global lighting](docs/CONFIGURATION.md), [physical Vial unlock](docs/CONFIGURATION.md#unlocking-vial), and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
 
 See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
-The published alpha.2 firmware does not include One Shot, Space Cadet or a
-user-facing NKRO mode switch. Development builds offer limited modifier One
-Shot, Space Cadet and NKRO control in selectable profiles; those images are
-not approved for installation. See [Build profiles](docs/BUILD-PROFILES.md).
+The published alpha.2 firmware does not include [One Shot](docs/CONFIGURATION.md#one-shot-development-profiles),
+[Space Cadet](docs/CONFIGURATION.md#space-cadet-development-profiles) or a user-facing NKRO mode
+switch. Development profiles offer limited modifier One Shot, Space Cadet and
+[NKRO control](docs/CONFIGURATION.md#key-actions); those images are not approved
+for installation. Space Cadet provides `SC_LSPO`, `SC_RSPC` and `SC_SENT`;
+its limits and assignment details are in [Build profiles](docs/BUILD-PROFILES.md).
 Mouse Keys, Tap Dance, Key Overrides and Auto Shift are not included.
 
 ## Disclaimer

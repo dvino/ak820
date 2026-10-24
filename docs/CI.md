@@ -12,11 +12,12 @@ The workflow pins Node.js 24 actions by full commit hash: checkout 7.0.1, setup-
 
 On this development branch the workflow stops at public bundle assembly: the
 packager rejects configured images. The checks before that gate still run.
-The workflow does not publish `standard`, `nkro` or `one-shot`. Configured
+The workflow does not publish any of the eight development profiles, including
+`full`. Configured
 images cannot enter the release bundle or installer until the whole-program
 stack bound, exact-image interrupt/nesting proof and installer transition are
 qualified. See [Build profiles](BUILD-PROFILES.md) and the
-[qualification report](../audits/rc6/configurable-20261024/qualification.md).
+[qualification report](../audits/rc6/roadmap-max-20261024/final/README.md).
 
 The Ubuntu 24.04 firmware job checks the syntax of tracked Python and shell
 files, validates GitHub Actions workflows with a hash-pinned actionlint, checks

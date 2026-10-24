@@ -15,6 +15,7 @@ English source of truth: [Documentation](../INDEX.md).
 | Макросы и эффекты RGB | [Настройка](CONFIGURATION.md) |
 | Сохранить или восстановить настройки | [Резервные копии](SETTINGS-BACKUP.md) |
 | Mod-Tap и Layer-Tap | [Mod-Tap и Layer-Tap](TAP-HOLD.md) |
+| Назначить One Shot, Space Cadet и управление NKRO в профилях разработки | [Профили сборки](BUILD-PROFILES.md) |
 | Индикаторы Caps Lock и слоя | [Индикаторы C и W](INDICATORS.md) |
 | Сборка закреплённым инструментарием | [Сборка](BUILD.md) |
 | Тестовые профили сборки и их ограничения | [Профили сборки](BUILD-PROFILES.md) |

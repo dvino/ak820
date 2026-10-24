@@ -15,6 +15,15 @@ all eight combinations of NKRO control, modifier One Shot and compact Space
 Cadet. Commands and limits are in [Build profiles](BUILD-PROFILES.md). Published
 and installed alpha.2 remains unchanged.
 
+The `ak820-roadmap-20261024-git.tar.gz` handoff was imported through `4f6fffb`.
+All 2,071 retained evidence checksums pass. The local full-profile rebuild
+reproduces IHX SHA256 `45681603a105334214919be0b8c32fc4ea94e8fc9d5a2003e98d673809d15a78`.
+The full recheck passed 28 base suites, 270 unit tests without skips and nine
+supplemental suites. The initial documentation-link failure is retained.
+Release packaging still refuses the image for the three reasons below; this
+acceptance does not publish alpha.3. See the [acceptance record](../audits/rc6/roadmap-acceptance-20261024/review.md)
+and [next release plan](ROADMAP.md#next-alpha-release).
+
 All eight profiles pass full linking and exact memory/configuration checks.
 The current standard image uses **39,115 CODE and 2,612 XRAM bytes**, saving
 699 CODE bytes from the starting development image and 1,198 from alpha.2.

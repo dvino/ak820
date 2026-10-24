@@ -85,6 +85,32 @@ backup and migration plan.
 - Keep device acceptance separate from host and linked-CPU models.
 - Keep default tests offline or read-only; hardware flashing needs separate confirmation.
 
+## Next alpha release
+
+The target for `v0.6.0-alpha.3` is the `full` profile: NKRO control, modifier
+One Shot and compact Space Cadet, together with the existing base features.
+`full` means these three implemented options; it does not include the eight
+deferred candidates above. The release is pending the following work, in order:
+
+1. Close the unresolved main and LED stack paths on the exact full image.
+   Include guarded Repeat, macro and Combo reentry, finite callback targets,
+   and the LED selector invariant; review static parameter and overlay safety.
+2. Establish the VS11/OEM interrupt entry, routing and priority contract.
+   Combine wrapper and nested-interrupt costs with the foreground bound and
+   report the remaining stack margin. Generic CPU tests alone are insufficient.
+3. Qualify backup, update and restore from alpha.2 to the exact full image.
+   Bind compatibility to the image and feature identity, preserve the physical
+   confirmation flow, and test cancellation and failure stops before packaging.
+4. Obtain independent review of code, documentation and exact-image evidence;
+   update the release policy and packing receipt, then reproduce the approved
+   image in CI. Keep packaging blocked until the checks above pass.
+5. Build standalone Windows and Linux x86_64 installers with SHA256 files and
+   English/Russian installation instructions. Check the downloaded packages
+   against the approved image before publishing the prerelease.
+
+Record source, build, model and device results separately in [Status](STATUS.md).
+Any device write during qualification requires separate confirmation.
+
 ## Other open work
 
 Physical Combo timing, nonempty Combo writes, cold-start retention, power-loss
