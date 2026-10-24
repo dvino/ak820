@@ -5,48 +5,57 @@
 The published and installed image remains `v0.6.0-alpha.3`. Its identity and
 release evidence are in [Status](STATUS.md). Current source is development work.
 
-## Previous development baseline
+## Current development profiles
 
-The previous 21 named profiles and 23 variants passed whole-image runtime proof from clean
-source `1187d4c`. The [runtime matrix](../audits/rc6/web-firmware-20261024/runtime-all/README.md)
-retains exact identities and proofs. `full`, `full-mac-pc`, `full-os-indicators` and `full-mac-pc-os-indicators`
-also passed the [complete regression suite](../audits/rc6/web-firmware-20261024/final/README.md).
-These measurements do not qualify the changed module-completion source. Current
-results are recorded in [Status](STATUS.md).
+All 24 named profiles and 26 variants pass exact-image foreground, startup and
+all enabled interrupt checks. Firmware inputs are frozen at `ac48c65`; the
+full-regression fixtures are frozen at `147508e`. Complete identities and
+qualification scopes are in the [final matrix](../audits/rc6/module-completion-20261024/final/README.md).
 
 | Build | CODE bytes | Main / low trailing free | XRAM | Stack bound / capacity | Margin |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `full` | 38,890 | 1,594 / 16 | 2,600 | 160 / 166 | 6 |
-| `full-auto-shift` | 39,503 | 981 / 16 | 2,617 | 160 / 166 | 6 |
-| `full-auto-shift-dynamic-macro --short-calls` | 40,391 | 93 / 16 | 2,703 | 160 / 165 | 5 |
-| `full-ctrl-gui` | 39,268 | 1,216 / 16 | 2,603 | 164 / 166 | 2 |
-| `full-dynamic-macro` | 40,012 | 472 / 16 | 2,686 | 160 / 165 | 5 |
-| `full-dynamic-macro-gui` | 40,247 | 237 / 16 | 2,689 | 164 / 165 | 1 |
-| `full-gui-lock` | 39,125 | 1,359 / 16 | 2,603 | 164 / 166 | 2 |
-| `full-leader` | 39,606 | 878 / 16 | 2,627 | 160 / 162 | 2 |
-| `full-mac-pc` | 39,177 | 1,231 / 92 | 2,603 | 164 / 166 | 2 |
-| `full-mac-pc-os-indicators` | 39,614 | 794 / 92 | 2,612 | 164 / 166 | 2 |
-| `full-mouse` | 39,740 | 744 / 16 | 2,630 | 160 / 166 | 6 |
-| `full-mouse-auto-shift` | 40,353 | 131 / 16 | 2,647 | 160 / 166 | 6 |
-| `full-mouse-auto-shift-gui --short-calls` | 40,359 | 125 / 16 | 2,650 | 164 / 166 | 2 |
-| `full-mouse-auto-shift --short-calls` | 40,132 | 352 / 16 | 2,647 | 160 / 166 | 6 |
-| `full-os-indicators` | 39,342 | 1,066 / 92 | 2,609 | 160 / 166 | 6 |
-| `full --short-calls` | 38,643 | 1,841 / 16 | 2,600 | 160 / 166 | 6 |
-| `nkro` | 38,183 | 2,233 / 84 | 2,587 | 161 / 162 | 1 |
-| `nkro-one-shot` | 38,776 | 1,708 / 16 | 2,597 | 160 / 162 | 2 |
-| `nkro-space-cadet` | 38,298 | 2,118 / 84 | 2,590 | 161 / 166 | 5 |
-| `one-shot` | 38,637 | 1,847 / 16 | 2,592 | 160 / 162 | 2 |
-| `one-shot-space-cadet` | 38,751 | 1,733 / 16 | 2,595 | 160 / 166 | 6 |
-| `space-cadet` | 38,159 | 2,257 / 84 | 2,585 | 161 / 166 | 5 |
-| `standard` | 38,044 | 2,372 / 84 | 2,582 | 161 / 162 | 1 |
+| `full` | 38447 | 2037 / 16 | 2555 | 162 / 167 | 5 |
+| `full-auto-shift` | 39055 | 1429 / 16 | 2572 | 162 / 166 | 4 |
+| `full-auto-shift-dynamic-macro-short` | 39902 | 582 / 16 | 2658 | 162 / 165 | 3 |
+| `full-ctrl-gui` | 38745 | 1739 / 16 | 2558 | 162 / 166 | 4 |
+| `full-dynamic-macro` | 39500 | 984 / 16 | 2641 | 162 / 165 | 3 |
+| `full-dynamic-macro-gui` | 39649 | 835 / 16 | 2644 | 162 / 165 | 3 |
+| `full-gui-lock` | 38602 | 1882 / 16 | 2558 | 162 / 166 | 4 |
+| `full-key-overrides-short` | 40464 | 20 / 16 | 2734 | 162 / 162 | 0 |
+| `full-leader` | 39117 | 1367 / 16 | 2582 | 162 / 163 | 1 |
+| `full-mac-pc` | 38654 | 1754 / 92 | 2558 | 162 / 166 | 4 |
+| `full-mac-pc-os-indicators` | 39091 | 1317 / 92 | 2567 | 162 / 166 | 4 |
+| `full-mouse` | 39297 | 1187 / 16 | 2585 | 162 / 167 | 5 |
+| `full-mouse-auto-shift` | 39905 | 579 / 16 | 2602 | 162 / 166 | 4 |
+| `full-mouse-auto-shift-gui-short` | 39818 | 666 / 16 | 2605 | 162 / 166 | 4 |
+| `full-mouse-auto-shift-short` | 39683 | 801 / 16 | 2602 | 162 / 166 | 4 |
+| `full-os-indicators` | 38899 | 1509 / 92 | 2564 | 162 / 167 | 5 |
+| `full-qmk-settings-short` | 40075 | 409 / 16 | 2640 | 162 / 166 | 4 |
+| `full-short` | 38220 | 2264 / 16 | 2555 | 162 / 167 | 5 |
+| `full-tap-dance-short` | 40173 | 311 / 16 | 2795 | 166 / 166 | 0 |
+| `nkro` | 37766 | 2650 / 84 | 2542 | 156 / 163 | 7 |
+| `nkro-one-shot` | 38327 | 2157 / 16 | 2552 | 162 / 163 | 1 |
+| `nkro-space-cadet` | 37878 | 2538 / 84 | 2545 | 156 / 167 | 11 |
+| `one-shot` | 38188 | 2296 / 16 | 2547 | 162 / 163 | 1 |
+| `one-shot-space-cadet` | 38308 | 2176 / 16 | 2550 | 162 / 167 | 5 |
+| `space-cadet` | 37739 | 2677 / 84 | 2540 | 156 / 167 | 11 |
+| `standard` | 37627 | 2789 / 84 | 2537 | 156 / 163 | 7 |
 
-Every total includes the persistent CRT frame and all three distinct IRQ
-sources. The minimum margin is one byte. Every changed image must pass again;
-a CPU-test peak alone is insufficient. See [runtime premises](RUNTIME-STACK.md).
+A `-short` suffix denotes verified short calls. The three extension profiles,
+`full-mouse-auto-shift-gui` and `full-auto-shift-dynamic-macro` require that
+option. The additional `full-short` and `full-mouse-auto-shift-short` rows show
+both forms of those profiles.
+
+The minimum stack margin is zero for Tap Dance and Key Overrides. Their
+bounds include the persistent CRT frame and all three distinct IRQ sources.
+Every changed image must pass again; a peak observed in CPU tests is not an
+upper bound. See [runtime premises](RUNTIME-STACK.md). The previous measurements
+at `1187d4c` remain in their [technical matrix](../audits/rc6/web-firmware-20261024/runtime-all/README.md).
+
 XRAM capacity is 3072 bytes, separate from 512 fixed DMA bytes. CODE windows
-are separate; low trailing space cannot be added to main. The two larger named
-profiles shown with `--short-calls` require it. Mouse Keys + Auto Shift + Dynamic
-Macros remains unsupported. No new source image is release-qualified.
+are separate; low trailing space cannot be added to main. No all-extension
+profile or Mouse Keys + Auto Shift + Dynamic Macros combination is offered.
+New development images have no release approval.
 
 ## Published image
 

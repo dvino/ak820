@@ -58,3 +58,12 @@ Independent inspection and negative controls accepted the change. NKRO passes
 7 cases and 44 checks on all four images; KO One Shot passes 15 cases and 61
 checks; the specialized KO suite retains all 13 cases, 59 checks and 80 sends.
 Only test fixtures changed. No firmware or runtime-proof input changed.
+
+## Final acceptance
+
+Independent final review approved the evidence and documentation with no
+blocking findings. All 26 row/archive bindings and four complete-regression
+archives were checked. Matrix and catalog hashes, profile coverage, compiler
+input freezes, source scopes, resource tables and permission flags agree.
+The complete acceptance record is [final-review.md](final-review.md).
+No physical or release approval is inferred from that review.

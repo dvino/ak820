@@ -2,7 +2,7 @@
 
 # Desktop development handoff
 
-This note connects the current AK820 firmware contracts to the planned desktop configurator. It is an implementation handoff, not a desktop release claim. The published firmware release remains [v0.6.0-alpha.3](../../docs/STATUS.md). The development capability catalog is still pending final qualification; source profile definitions do not make an image a qualified catalog entry.
+This note connects the current AK820 firmware contracts to the planned desktop configurator. It is an implementation handoff, not a desktop release claim. The published firmware release remains [v0.6.0-alpha.3](../../docs/STATUS.md). The [qualified development catalog](../../audits/rc6/module-completion-20261024/final/capability-catalog.json) contains the four fully checked images. Source profile definitions alone do not make an image a qualified catalog entry.
 
 ## Firmware and profile contract
 

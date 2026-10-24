@@ -51,40 +51,57 @@ model limits are in the qualification report.
 
 Only the exact alpha.3 full image satisfies the packaging gate, independent
 program policy and packing receipt. Other profiles and changed source are for
-development. The current development checkpoint is recorded below. Offline qualification did
+development. The current development matrix is recorded below. Offline qualification did
 not access a device; installation results are recorded separately.
 
 ## Current development source
 
-The source now defines **24 named profiles**. Three profiles independently add
-[Tap Dance](COMPACT-TAP-DANCE.md), [Key Overrides](COMPACT-KEY-OVERRIDES.md) and
-[runtime QMK Settings](QMK-SETTINGS.md) to `full`. There is no named build with
-all three extensions enabled together. Six layers, 16 Vial macro slots, 8192
-macro bytes and eight Combo slots remain available.
+All **24 named profiles and 26 linked variants** pass fresh whole-image stack
+and interrupt checks. Every image closes foreground calls, CRT startup and
+all USB, timer and LED interrupt roots, including all 15 distinct-source IRQ
+orders and 256 LED selector values. No required path is unknown.
+
+Three profiles independently add [Tap Dance](COMPACT-TAP-DANCE.md),
+[Key Overrides](COMPACT-KEY-OVERRIDES.md) and
+[runtime QMK Settings](QMK-SETTINGS.md) to `full`. Each retains six layers,
+16 Vial macro slots, 8192 macro bytes and eight Combo slots. These extensions
+are separate profile choices; there is no named all-three combination.
+
+| Profile | CODE bytes | XRAM bytes | Stack bound/capacity | Margin | Supplemental suites |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `full` | 38,447 | 2,555 | 162/167 | 5 | 21 |
+| `full-tap-dance --short-calls` | 40,173 | 2,795 | 166/166 | 0 | 23 |
+| `full-key-overrides --short-calls` | 40,464 | 2,734 | 162/162 | 0 | 23 |
+| `full-qmk-settings --short-calls` | 40,075 | 2,640 | 162/166 | 4 | 23 |
+
+Each of these four exact images passes **28 base suites and 276 unit tests
+without skips**. All 90 supplemental suites pass. Ordinary ASan, UBSan and
+LeakSanitizer settings remain enabled. The other 22 variants have fresh
+runtime proofs; their full functional regressions were not repeated.
+Tap Dance and Key Overrides have no calculated stack margin. Key Overrides
+has 20 trailing bytes in the main CODE window. Any change needs a new proof.
 
 The three extension profiles use schema `0x082003`; the other profiles retain
-`0x082002`. Typed commands, backup validation and explicit migration preserve
+`0x082002`. Typed commands, backup preflight and explicit migration preserve
 the existing keymap, encoder, Combo and macro regions. Stored extension data
-and enabled controls are separate. See [module storage](MODULE-STORAGE.md) and
-the [desktop handoff](../web/docs/FIRMWARE-HANDOFF.md).
+and enabled controls are separate. See [module storage](MODULE-STORAGE.md).
 
-Exact-image foreground, startup and all three interrupt checks pass for the
-current `full` and three extension builds. The bounds are 162/167 bytes for
-`full`, 166/166 for Tap Dance, 162/162 for Key Overrides and 162/166 for QMK
-Settings. The two zero-margin profiles require a new whole-image proof for
-any further change. Full regressions and the remaining profile matrix are
-being completed; previous-source results do not qualify these images.
-
-The first common regression exposed host/CPU fixture assumptions about the
-record pointer type, optional Vial counts, settings initialization and the
-outgoing report under Key Overrides. The fixture corrections and final
-results are retained in the [module work report](../audits/rc6/module-completion-20261024/README.md).
+Firmware inputs are frozen at `ac48c65`. Full qualification uses `147508e`;
+the two follow-up commits change host/CPU fixtures and audit records only.
+Complete raw builds for the four full regressions, runtime witnesses for all
+26 variants and exact hashes are in the [final matrix](../audits/rc6/module-completion-20261024/final/README.md).
+The [development catalog](../audits/rc6/module-completion-20261024/final/capability-catalog.json)
+contains those four fully checked images, their enabled controls and storage
+contracts. The [desktop handoff](../web/docs/FIRMWARE-HANDOFF.md) defines the
+next application work.
 
 The earlier [21-profile matrix](../audits/rc6/web-firmware-20261024/runtime-all/README.md)
 and [Leader matrix](../audits/rc6/leader-next-20261024/final/README.md) describe
-their own frozen source only. No device command or physical test was performed
-for this work. The published and installed alpha.3 image is unchanged; the
-new images have no release or installer-transition approval.
+their own source only. Review and fixture corrections are in the
+[module work report](../audits/rc6/module-completion-20261024/README.md).
+No device command or physical test was performed for this work. The published
+and installed alpha.3 image is unchanged; new images have no release or
+installer-transition approval.
 
 ## Installed firmware
 
