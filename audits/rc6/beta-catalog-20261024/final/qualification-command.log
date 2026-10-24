@@ -1,0 +1,787 @@
+QUALIFY work
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-4gozn4_3/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE leader-host
+RUN PROFILE leader-linked
+RUN PROFILE os-indicators-host
+RUN PROFILE os-indicators-linked
+RUN PROFILE dynamic-macro-host
+RUN PROFILE dynamic-macro-linked
+QUALIFY essential
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/essential/qualification-logs-a55wvbxj/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE os-indicators-host
+RUN PROFILE os-indicators-linked
+QUALIFY typing
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/typing/qualification-logs-enb_swgw/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE auto-shift-host
+RUN PROFILE auto-shift-linked
+RUN PROFILE os-indicators-host
+RUN PROFILE os-indicators-linked
+QUALIFY mouse
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse/qualification-logs-_trgwx8e/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE mouse-keys-host
+RUN PROFILE mouse-keys-linked
+RUN PROFILE os-indicators-host
+RUN PROFILE os-indicators-linked
+QUALIFY mouse-typing
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/mouse-typing/qualification-logs-4jazao05/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE mouse-keys-host
+RUN PROFILE mouse-keys-linked
+RUN PROFILE auto-shift-host
+RUN PROFILE auto-shift-linked
+RUN PROFILE os-indicators-host
+RUN PROFILE os-indicators-linked
+RUN PROFILE gui-lock-host
+RUN PROFILE gui-lock-linked
+QUALIFY system
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/system/qualification-logs-jgmnw_rm/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE os-indicators-host
+RUN PROFILE os-indicators-linked
+RUN PROFILE mac-pc-host
+RUN PROFILE mac-pc-linked
+RUN PROFILE gui-lock-host
+RUN PROFILE gui-lock-linked
+RUN PROFILE ctrl-gui-host
+RUN PROFILE ctrl-gui-flags
+RUN PROFILE ctrl-gui-linked
+QUALIFY tap-dance
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/tap-dance/qualification-logs-7rqbsu_7/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE tap-dance-host
+RUN PROFILE tap-dance-linked
+QUALIFY key-overrides
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/key-overrides/qualification-logs-owfzev7p/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE key-overrides-host
+RUN PROFILE key-overrides-linked
+QUALIFY settings
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tools/check_docs.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_usb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_keymap/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_caps_word/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_optimization/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_via_decode/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/run.py
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/tapping-host.json
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_features/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/ak820_features
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_unlock/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/ak820_unlock
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/ak820_tri_layer
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_iap/run.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/rgb
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/bounded
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/tapping
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/ak820_combo/emitted.py --build-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/combo
+PASS /workspace/scratch/cac31935062b/ak820/qmk-8051-ak820/.build/beta-final/settings/qualification-logs-ibzq1kix/27.txt
+RUN PROFILE gates
+RUN PROFILE firmware-matrix-gates
+RUN PROFILE catalog-bundle-gates
+RUN PROFILE settings-catalog-gates
+RUN PROFILE capability-catalog-gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE qmk-settings-host
+RUN PROFILE qmk-settings-linked
+{"catalog": "/workspace/scratch/cac31935062b/ak820/.build/ak820-beta-catalog-20261024/firmware-matrix.json", "archive": "/workspace/scratch/cac31935062b/ak820/.build/ak820-beta-catalog-20261024.zip", "profiles": 9, "release_approved": false, "installable": false}

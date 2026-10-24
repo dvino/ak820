@@ -34,29 +34,22 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 
 ## Features
 
-- [Six editable layers](docs/CONFIGURATION.md#keys-layers-and-encoder), with separate clockwise and counterclockwise [encoder actions](docs/CONFIGURATION.md#keys-layers-and-encoder) on each layer.
-- [Standard keys, modifiers, media and system controls](docs/CONFIGURATION.md#key-actions), including selectable 6KRO and NKRO reports.
-- [Sixteen macro slots](docs/CONFIGURATION.md#macros) with 8192 bytes of shared storage; macros play on the keyboard without a desktop app running.
-- [**Caps Word**](docs/CONFIGURATION.md#caps-word) types a word in uppercase without holding Shift.
-- [**One Shot**](docs/CONFIGURATION.md#one-shot) for modifiers and [**Space Cadet**](docs/CONFIGURATION.md#space-cadet) tap actions for Shift keys.
-- [**Repeat** and **Alt Repeat**](docs/CONFIGURATION.md#repeat-and-alt-repeat) repeat the last remembered key and modifiers or use its paired alternate, such as the opposite arrow.
-- [**Grave Escape**](docs/CONFIGURATION.md#grave-escape) combines Escape and the Grave key on one key, selected by held modifiers.
-- [**Tri Layer**](docs/CONFIGURATION.md#tri-layer) activates layer 3 while layers 1 and 2 are both active.
-- Eight configurable [two-key Combos](docs/COMBOS.md): for example, J + K sends Escape or F + D sends Ctrl+C when pressed within 40 ms.
-- [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md): tap for a key, hold for a modifier or layer.
-- [82 RGB LEDs](docs/CONFIGURATION.md#lighting) with solid color, breathing, color cycles, VialRGB Direct and a separate fade on each pressed key.
-- [C/W indicators](docs/INDICATORS.md): C follows Caps Lock; W shows an active additional layer.
-- Saved [keymaps, macros and global lighting](docs/CONFIGURATION.md), [physical Vial unlock](docs/CONFIGURATION.md#unlocking-vial), and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
+The supported firmware provides six editable layers, per-layer encoder actions,
+16 Vial macros, two-key Combos, media and system keys, NKRO reports, Caps Word,
+Repeat and Alt Repeat, Grave Escape, Tri Layer, Mod-Tap and Layer-Tap, and RGB
+lighting with VialRGB Direct. The **C** indicator follows Caps Lock; **W** shows
+an active layer above layer 0. The [feature catalog](docs/FEATURES.md) describes
+each function and its limits.
 
-See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
-One Shot is limited to modifiers, and Space Cadet provides `SC_LSPO`, `SC_RSPC`
-and `SC_SENT`. Compact Mouse Keys and Auto Shift can be enabled separately or together in
-development source profiles. GUI controls and compact Dynamic Macros are also
-available in selected development profiles; these features are not part of the
-published alpha.3 image.
-See [Mouse Keys](docs/COMPACT-MOUSE-KEYS.md) and [Auto Shift](docs/COMPACT_AUTOSHIFT.md).
-See [GUI controls](docs/GUI-CONTROL.md), [Dynamic Macros](docs/COMPACT-DYNAMIC-MACROS.md)
-and [Build profiles](docs/BUILD-PROFILES.md) for profile choices and behavior.
+Optional modules extend that base in nine named source profiles. The default
+`work` profile adds Leader, Dynamic Macros and OS indicator control. It excludes
+Mouse Keys and Mac/PC mapping. Other packages cover typing, mouse controls,
+system modifier mappings, Tap Dance, Key Overrides or QMK Settings; the
+[profile guide](docs/BUILD-PROFILES.md) explains each package and the
+[compatibility and size matrix](docs/MODULE-MATRIX.md) compares their features
+and resource use.
+
+The first [firmware beta](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1) provides nine fixed profiles and capability data for the [AK Configurator](https://github.com/dvino/ak-configurator) companion application. Use the [module matrix](docs/MODULE-MATRIX.md) to compare them. The beta release includes standalone Windows and Linux x86_64 installers for the exact `work` image; the other eight profiles remain catalog candidates. See [Status](docs/STATUS.md) for verification and hardware limits.
 
 ## Disclaimer
 
@@ -78,10 +71,12 @@ Download the Windows or Linux package from [Releases](https://github.com/dvino/a
 Read [Settings backup](docs/SETTINGS-BACKUP.md) for backup, restore and update
 instructions.
 
-Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lighting in Vial. To build from source, see [Build](docs/BUILD.md); firmware builds use Linux/WSL, Python 3.11+ and the pinned SDCC 4.6.0 toolchain.
+Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lighting in Vial. To build from source, see [Build](docs/BUILD.md); firmware builds use Linux/WSL, Python 3.11+ and the pinned SDCC 4.6.0 toolchain. Every development profile build requires the [stack and interrupt check](docs/RUNTIME-STACK.md) before its other regression checks.
 
 ## Documentation and contributions
 
 [Documentation](docs/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI and releases](docs/CI.md) · [Build](docs/BUILD.md) · [Development](docs/DEVELOPMENT.md) · [Testing](docs/TESTING.md) · [Contributing](CONTRIBUTING.md)
+
+The companion application is maintained in [AK Configurator](https://github.com/dvino/ak-configurator). The [firmware handoff](web/docs/FIRMWARE-HANDOFF.md) describes its firmware contracts.
 
 English documentation is authoritative; Russian documents are translations. Preserve license notices when reusing the port. Original project code and contributions are GPL-3.0-only; third-party components retain their own licenses. See [licensing](docs/LICENSING.md) and the root [LICENSE](LICENSE).

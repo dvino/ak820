@@ -496,7 +496,12 @@ static void test_halt_reset_and_diagnostics(void) {
         }
         vial_unlock_in_progress = 0;
         /* Unknown FD subcommands retain the existing fail-closed behavior. */
-        packet[1] = 2;
+        packet[1] =
+#ifdef AK820_OS_INDICATORS
+            3;
+#else
+            2;
+#endif
         raw_request(packet); ak820_usb_raw_task();
         assert(received == 1 && begins == 1 && flushes == 1 && ends == 1);
         assert(raw_state == (fault ? RAW_IDLE : RAW_TX_WAIT));
@@ -509,6 +514,10 @@ static void test_halt_reset_and_diagnostics(void) {
     assert(code_reads == 1 && raw_state == RAW_IDLE && !USB_EnumStatus);
     assert(!received && !begins && !flushes && !ends && (D0_EP3RES & MASK_UEP_X_RES) == UEP_X_RES_NAK);
 }
+
+#ifdef AK820_OS_INDICATORS
+#include "../ak820_os_indicators/host_tests.inc"
+#endif
 
 static void test_boot_feature(void) {
     fresh(); configure();
@@ -553,5 +562,8 @@ int main(void) {
     test_recovery_reply_policy();
     test_halt_reset_and_diagnostics();
     test_boot_feature();
+#ifdef AK820_OS_INDICATORS
+    test_os_indicators();
+#endif
     puts("PASS: production AK820 USB/descriptor sources: stale RX_LEN, ordered two-ACK SETUP, UTF-16 strings, EP0 segmentation, HID control, Raw32 ownership/reset, original-request recovery whitelist, persistence gate, read-only FD00/FD01 and EP0 AKBT diagnostics");
 }

@@ -6,9 +6,11 @@ Use a compatible Vial client with this firmware. Close the OEM configurator
 before connecting. The old `AK820-Vial-v2` OEM adapter uses a different protocol
 and is not the configuration interface for this QMK/Vial firmware.
 
-The published `v0.6.0-alpha.3` release uses the complete `full` profile. It
-includes selectable NKRO reports, modifier One Shot and the limited Space
-Cadet actions described below.
+The published `v0.6.0-alpha.3` release used the historical `full` profile. The
+current catalog contains nine curated profiles; all nine include NKRO control,
+modifier One Shot and limited Space Cadet actions. The desktop configurator
+defaults to `work`, which adds Leader, Dynamic Macros and OS indicators without
+Mouse Keys or Mac/PC mode. See [Build profiles](BUILD-PROFILES.md).
 
 Select a key in Vial's keyboard picture and choose an action. Vial sends keymap
 and lighting changes to the keyboard as you make them. Export the layout when
@@ -16,6 +18,9 @@ you want a separate backup; it is different from the ROM recovery copy made by
 the installer. See [Settings backup and restore](SETTINGS-BACKUP.md).
 
 ## Keys, layers and encoder
+
+The keymap has six layers, numbered 0–5.
+Assign keyboard actions to the encoder’s clockwise and counter-clockwise turns.
 
 The keyboard has six editable layers, numbered 0–5. A transparent key (`KC_TRNS`)
 uses the action on the next lower active layer. `KC_NO` blocks the key and sends
@@ -43,6 +48,8 @@ layer action: this firmware disables QMK tap timing.
 
 ### Tri Layer
 
+Layer 3 activates when both configured layer keys are held.
+
 Assign `TL_LOWR` and `TL_UPPR` to two keys. They hold layers 1 and 2; when both
 are held, the firmware also activates layer 3. Releasing either key removes
 its layer and derived layer 3. For example, place configuration actions on
@@ -56,12 +63,15 @@ ordinary key and can be assigned separately on each layer.
 
 ## Key actions
 
+Send actions such as volume, playback and track control to the computer.
+The keyboard can report multiple simultaneous keys using NKRO.
+
 Standard keyboard keys and modifiers send ordinary key presses. Consumer and
 system actions send media controls such as volume, play/pause or next track,
 and system controls such as sleep. The host must support the corresponding HID
 control for it to have an effect.
 
-The full profile supports both six-key rollover (6KRO) and NKRO reports. Assign
+Each current curated profile supports both six-key rollover (6KRO) and NKRO reports. Assign
 `NK_ON`, `NK_OFF` or `NK_TOGG` to switch the report mode until restart; after
 restart, the saved/default mode is used. Switching clears held keys and pending
 actions. No setting is written to flash. In 6KRO mode, holding more than six
@@ -70,6 +80,8 @@ signal. Two sources that produce the same keycode count as one key.
 
 ## Caps Word
 
+Caps Word keeps Shift active for letters and selected word characters.
+
 Assign `CW_TOGG` to a key to turn Caps Word on or off. It makes letters uppercase.
 Digits, Backspace, Delete and underscore continue the mode; minus is sent as
 underscore. Other ordinary keys, including punctuation, end it. The mode also
@@ -77,6 +89,9 @@ ends after five seconds without a key press. For example, type `user_name7` with
 Caps Word on, then press Space to turn the mode off as the next word begins.
 
 ## Repeat and Alt Repeat
+
+Repeat sends the last eligible key again.
+Alternate Repeat sends the opposite key for supported key pairs.
 
 Assign `QK_REPEAT_KEY` (the `QK_REP` alias) to repeat the last repeatable key.
 The firmware remembers the modifiers held with that key, so pressing `Ctrl+F`
@@ -92,53 +107,83 @@ If the last key has no defined alternate, Alt Repeat sends nothing.
 
 ## Grave Escape
 
+One key sends Grave or Escape according to the active modifier state.
+
 Assign `QK_GESC` to use one key for Escape and Grave.
 It sends Escape normally and Grave while Shift or GUI is held. The key released
 is the same one selected when it was pressed. For example, tap it for Escape or
 hold Shift and press it to send Shift+Grave. The resulting character depends
-on the host keyboard layout. Alt and Ctrl do not change the
-choice in this build.
+on the host keyboard layout. By default Alt and Ctrl do not change this choice.
+The `settings` profile can change the Grave Escape override flags through
+[QMK Settings](QMK-SETTINGS.md).
 
 ## Mod-Tap and Layer-Tap
 
+A quick press sends the tap key; holding activates its modifier or layer action.
+
 A short tap sends the tap key; holding activates its modifier or layer. The
-decision window is 200 ms, and pressing another key first selects hold. For
-example, assign Ctrl-Tap-Escape to a key: tap it for Escape or press it with
-another key to use Ctrl. See [Tap and hold](TAP-HOLD.md) for overlap and layer
-behavior.
+window defaults to 200 ms and QMK Settings can change it from 1 to 1000 ms.
+Pressing another key first selects hold. For example, assign Ctrl-Tap-Escape
+to a key: tap it for Escape or press it with another key to use Ctrl. See [Tap
+and hold](TAP-HOLD.md) for overlap and layer behavior.
 
 ## Space Cadet
 
-The full profile adds three limited key actions: assign `SC_LSPO` for left Shift while
-held and `(` when tapped, `SC_RSPC` for right Shift while held and `)` when
-tapped, or `SC_SENT` for right Shift while held and Enter when tapped. Parentheses
-use Shift+9 and Shift+0; the resulting characters depend on the host layout. These
-actions use the same 200 ms tap-hold decision as Mod-Tap. They are not the full
-QMK Space Cadet engine. Space Cadet keycodes cannot be used as Combo inputs. See
-[Build profiles](BUILD-PROFILES.md) for tested limits.
+Shift keys send a parenthesis or Enter when tapped and act as Shift when held.
+
+Assign `SC_LSPO` for left Shift with `(` on tap, `SC_RSPC` for right Shift with
+`)` on tap, or `SC_SENT` for right Shift with Enter on tap. Parentheses use
+Shift+9 and Shift+0; the resulting characters depend on the host layout. These
+actions use the same configurable tap-hold decision as Mod-Tap (200 ms by
+default). They are not the full QMK Space Cadet engine. Space Cadet keycodes
+cannot be used as Combo inputs. See [Build profiles](BUILD-PROFILES.md) for
+tested limits.
+
+### NKRO control
+
+Switch the keyboard report between 6KRO and NKRO for the current session.
+
+Assign `NK_ON`, `NK_OFF` or `NK_TOGG` to a physical key. Switching clears held
+keys and pending actions, and the selection is not saved across restart. This
+control is present in all nine current curated profiles.
 
 ## One Shot
 
-The full profile supports modifier One Shot only: assign an `OSM(...)` action in Vial, tap it,
-then tap a key to apply the modifier through that key's release. Holding OSM
-acts as a normal held modifier. Layer One Shot, timeout, locking and tap-toggle
-are not supported; see [Build profiles](BUILD-PROFILES.md) for interaction details.
+Tap a modifier key once, then tap a key to apply it to that keystroke.
+
+Assign an `OSM(...)` action to a physical matrix key or either encoder direction,
+tap and release it, then press a consuming matrix key or turn the encoder. The
+queued modifier remains active through the consuming action's release. Several
+queued OSM modifier sets combine. If another OSM is pressed while a consuming
+action is still held, it acts as a held modifier only and does not queue another
+set. Matrix keys and both encoder directions can set or consume One Shot.
+Virtually injected OSM events do not arm the One Shot queue. They retain the
+ordinary held-modifier fallback: macro down/up holds and releases the modifier;
+a macro tap does not leave it queued for the next key. Layer One Shot, timeout,
+locking and tap-toggle are not supported.
 
 ## Two-key Combos
 
-The firmware has eight configurable two-key Combo slots. A configured pair
-pressed within 40 ms sends one output instead of its two input keys. For
-example, set `J` + `K` to `Escape`, or `F` + `D` to `Ctrl+C`. Configure the
-pair and output using Vial's Combo controls. See [Two-key Combos](COMBOS.md) for
-supported inputs, outputs, timing, and backup behavior.
+Configure eight two-key combinations that send one key or modified key.
 
-The first key may be delayed for up to 40 ms while the firmware checks for its
-partner. At 40 ms, or when another key/event arrives first, it is sent normally.
+The firmware has eight configurable two-key Combo slots. A configured pair
+pressed within the selected interval sends one output instead of its two input
+keys. The interval defaults to 40 ms; QMK Settings can change it from 1 to
+1000 ms with the `settings` profile's QMK Settings module. For example, set `J` + `K` to
+`Escape`, or `F` + `D` to `Ctrl+C`. Configure the pair and output using Vial's
+Combo controls. See [Two-key Combos](COMBOS.md) for supported inputs, outputs,
+timing, and backup behavior.
+
+The first key may be delayed for up to the selected interval while the firmware
+checks for its partner. At the interval, or when another key/event arrives first,
+it is sent normally.
 Combos accept ordinary keyboard keys as inputs. Their output can be an ordinary
 key or a modifier combined with an ordinary key. Modifiers, layer actions,
 macros, encoder events and other special actions cannot be Combo inputs.
 
 ## Macros
+
+Store and edit 16 keyboard macros in Vial.
 
 There are 16 macro slots with 8192 bytes of shared storage. Record or edit
 macros in Vial's macro editor. A macro runs on the keyboard, so the Vial client
@@ -155,7 +200,7 @@ before replacing firmware or moving a layout.
 The dedicated **C** indicator follows the host's Caps Lock state. Caps Word
 does not turn it on by itself. **W** lights when any layer above layer 0 is
 active, including held, toggled or default layers. These indicators work
-independently of key lighting. See [C and W indicators](INDICATORS.md).
+independently of key lighting. See [C, W and OS indicators](INDICATORS.md) and [Mac/PC mode](MAC-PC.md).
 
 ## Unlocking Vial
 
@@ -164,6 +209,9 @@ for three seconds. This also releases keys the firmware still considers held.
 Release both keys after the unlock. Lock Vial again when finished configuring.
 
 ## Lighting
+
+Use the keyboard’s built-in RGB lighting effects.
+Adjust supported RGB settings through VialRGB; changes apply in RAM.
 
 Supported modes are solid color, breathing, color cycle, horizontal color
 cycle, VialRGB Direct and Solid Reactive Simple. Use Vial's lighting controls
@@ -183,10 +231,15 @@ mean that the firmware supports it.
 
 ## Limits
 
-Mouse Keys, Tap Dance, Key Overrides, Auto Shift and QMK Settings are not
-supported. NKRO control, modifier One Shot and the limited Space Cadet actions
-are available in the full profile. Their boundaries are listed in
+In published alpha.3, Mouse Keys, Tap Dance, Key Overrides, Auto Shift and
+runtime QMK Settings are unavailable. The historical `full` alpha.3 profile
+included NKRO control, modifier One Shot and limited Space Cadet actions. All
+nine current curated profiles include these three controls; their boundaries are listed in
 [Build profiles](BUILD-PROFILES.md). Timing and behavior options in the QMK
-Settings tab are unavailable. A Vial control alone does not add firmware
+Settings tab are unavailable in that release. A Vial control alone does not add firmware
 support. Before assigning an action, check that it is supported by the installed
 firmware.
+
+Development profiles provide separate compact [Tap Dance](COMPACT-TAP-DANCE.md),
+[Key Overrides](COMPACT-KEY-OVERRIDES.md) and [QMK Settings](QMK-SETTINGS.md)
+modules. Select a supported combination from [Build profiles](BUILD-PROFILES.md).

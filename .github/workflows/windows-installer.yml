@@ -61,9 +61,9 @@ jobs:
         run: python -B -m unittest discover -s tools -p 'test_*.py' -v
       - name: Check compiler version selection
         run: python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_compiler -p 'test_*.py' -v
-      - name: Build and qualify pinned full firmware application
+      - name: Build and qualify pinned work firmware application
         run: >-
-          python tools/configure_firmware.py build --profile full
+          python tools/configure_firmware.py build --profile work
           --toolchain toolchains/sdcc-4.6.0
           --qmk-bin qmk-8051-ak820/.venv/bin/qmk
           --python qmk-8051-ak820/.venv/bin/python
@@ -323,6 +323,14 @@ jobs:
                       if actual != hashlib.sha256(source.read_bytes()).hexdigest():
                           raise SystemExit(f'{app} Linux package does not contain fresh CI input: {name}')
           PY
+      - name: Install pinned external sources for catalog verification
+        run: python tools/install_lufa_dependency.py --fetch
+      - name: Prepare companion catalogs and installation guides
+        run: >-
+          python tools/build_beta_release_assets.py
+          --bundle dist/firmware/firmware-bundle
+          --output dist/catalog
+          --tag "${{ github.ref_name }}"
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -334,8 +342,13 @@ jobs:
             dist/windows/AK820-Windows.zip dist/windows/AK820-Windows.zip.sha256
             dist/linux/AK820-Linux-x86_64.tar.gz dist/linux/AK820-Linux-x86_64.tar.gz.sha256
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
+            dist/catalog/AK820-Beta1-Catalog.zip dist/catalog/AK820-Beta1-Catalog.zip.sha256
+            dist/catalog/firmware-matrix.json dist/catalog/capability-catalog.json
+            dist/catalog/module-descriptions.json dist/catalog/release-catalog.json
+            dist/catalog/release-manifest.json dist/catalog/SHA256SUMS
+            dist/catalog/INSTALL-en.md dist/catalog/INSTALL-ru.md
             --title "AK820 $RELEASE_TAG"
-            --notes-file ci/release-notes.md
+            --notes-file ci/beta1-release-notes.md
           )
           if [[ "$RELEASE_PRERELEASE" == true ]]; then
             gh release create "${args[@]}" --verify-tag --prerelease

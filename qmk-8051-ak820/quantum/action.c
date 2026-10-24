@@ -33,6 +33,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "debug.h"
 #include "quantum.h"
+#ifdef AK820_COMPACT_TAP_DANCE
+#    include "ak820_tap_dance.h"
+#endif
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+#    include "ak820_key_override.h"
+#endif
+#ifdef AK820_COMPACT_LEADER
+#    include "ak820_leader.h"
+#endif
 #ifdef AK820_COMPACT_DYNAMIC_MACRO
 #    include "ak820_dynamic_macro.h"
 #endif
@@ -93,6 +102,10 @@ void action_exec(keyevent_t event) {
 #endif
 #ifdef AK820_COMPACT_TAPPING
     if (!ak820_tapping_before(&event)) return;
+#    ifdef AK820_COMPACT_TAP_DANCE
+    ak820_tap_dance_task(event.time);
+    if (!ak820_tap_dance_before(&event)) return;
+#    endif
 #    ifdef AK820_COMPACT_AUTOSHIFT
     if (!ak820_autoshift_before(&event)) return;
 #    endif
@@ -178,6 +191,11 @@ if (QS_oneshot_timeout > 0) {
         dprintln();
     }
 #endif
+#endif
+#ifdef AK820_COMPACT_LEADER
+    /* Only idle ticks dispatch macros, after every use of event/record.
+     * Extended macros re-enter action_exec and overwrite SDCC static locals. */
+    if (IS_NOEVENT(event)) ak820_leader_task(event.time);
 #endif
 }
 
@@ -272,23 +290,23 @@ void process_hand_swap(keyevent_t *event) {
 #if !defined(NO_ACTION_LAYER) && !defined(STRICT_LAYER_RELEASE)
 bool disable_action_cache = false;
 
-void process_record_nocache(keyrecord_t *record) {
+void process_record_nocache(keyrecord_t AK820_RECORD_MEM *record) {
     disable_action_cache = true;
     process_record(record);
     disable_action_cache = false;
 }
 #else
-void process_record_nocache(keyrecord_t *record) {
+void process_record_nocache(keyrecord_t AK820_RECORD_MEM *record) {
     process_record(record);
 }
 #endif
 
 #ifndef __SDCC
-__attribute__((weak)) bool process_record_quantum(keyrecord_t *record) {
+__attribute__((weak)) bool process_record_quantum(keyrecord_t AK820_RECORD_MEM *record) {
     return true;
 }
 
-__attribute__((weak)) void post_process_record_quantum(keyrecord_t *record) {}
+__attribute__((weak)) void post_process_record_quantum(keyrecord_t AK820_RECORD_MEM *record) {}
 #endif
 
 #ifndef NO_ACTION_TAPPING
@@ -325,7 +343,13 @@ void process_record_tap_hint(keyrecord_t *record) {
  *
  * FIXME: Needs documentation.
  */
-void process_record(keyrecord_t *record) {
+void process_record(keyrecord_t AK820_RECORD_MEM *record_argument) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    /* All retained board callers own model-large XDATA records. */
+    keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
+#else
+    keyrecord_t *record = record_argument;
+#endif
     if (IS_NOEVENT(record->event)) {
         return;
     }
@@ -359,16 +383,18 @@ void process_record(keyrecord_t *record) {
 #ifdef AK820_COMPACT_DYNAMIC_MACRO
     ak820_dynamic_macro_source = false;
 #endif
+#if !defined(AK820_BOARD) || !defined(__SDCC_mcs51)
     post_process_record_quantum(record);
+#endif
 #ifdef AK820_COMPACT_ONESHOT
     ak820_oneshot_post(oneshot_source, oneshot_pressed);
 #endif
 }
 
-void process_record_handler(keyrecord_t *record_argument) {
+void process_record_handler(keyrecord_t AK820_RECORD_MEM *record_argument) {
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
-    /* All retained AK820 records are model-large XDATA objects. Keep the
-     * public generic-pointer ABI; only this private view is specialized. */
+    /* All retained AK820 records are model-large XDATA objects. The
+     * core declaration carries that address space on this target. */
     keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
 #else
     keyrecord_t *record = record_argument;
@@ -464,7 +490,7 @@ void register_mouse(uint8_t mouse_keycode, bool pressed) {
  *
  * FIXME: Needs documentation.
  */
-void process_action(keyrecord_t *record_argument, action_t action) {
+void process_action(keyrecord_t AK820_RECORD_MEM *record_argument, action_t action) {
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
     keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
 #else
@@ -1161,6 +1187,15 @@ void clear_keyboard_but_mods(void) {
 void clear_keyboard_but_mods_and_keys(void) {
 #ifdef AK820_COMPACT_TAPPING
     ak820_tapping_cancel();
+#    ifdef AK820_COMPACT_TAP_DANCE
+    ak820_tap_dance_cancel();
+#    endif
+#    ifdef AK820_COMPACT_KEY_OVERRIDE
+    ak820_key_override_cancel();
+#    endif
+#ifdef AK820_COMPACT_LEADER
+    ak820_leader_cancel();
+#endif
 #ifdef AK820_COMPACT_DYNAMIC_MACRO
     ak820_dynamic_macro_cancel();
 #endif

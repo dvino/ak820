@@ -1,0 +1,383 @@
+{
+  "iap_fault_profile": "guarded-erase",
+  "failure_model": "A6 erase no-op; any 9A reports success but only OR-programs bits",
+  "initial_encoder_cw": [
+    0,
+    169
+  ],
+  "desired_encoder_cw": [
+    0,
+    0
+  ],
+  "target_unchanged": true,
+  "journal_header_remains_committed": true,
+  "setter_acknowledged": false,
+  "first_failure_stage": 12,
+  "last_target_iap": [
+    166,
+    192,
+    192,
+    52544
+  ],
+  "target_9a_program_issued": false,
+  "cached_getter_response": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "getter_not_durable_evidence": true,
+  "boot_replay_failure_stage": 3,
+  "hardware_cause_confirmed": false,
+  "limitation": "Conditional CPU/peripheral-model reproduction; does not establish the physical controller failure cause.",
+  "name": "ineffective-erase-target-and-replay",
+  "passed": true,
+  "operations": [
+    {
+      "address": 61248,
+      "opcode": 166,
+      "value": 0,
+      "mode": 128,
+      "dptr": 1261,
+      "ie": 0,
+      "config": 8,
+      "accepted_without_effect": true
+    },
+    {
+      "address": 61184,
+      "opcode": 166,
+      "value": 0,
+      "mode": 128,
+      "dptr": 1261,
+      "ie": 0,
+      "config": 8,
+      "accepted_without_effect": true
+    },
+    {
+      "address": 61184,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    {
+      "address": 61248,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "16826471b3dda229d285cd26a9e14aaa2e7e98de478061e7b37270421b975b05"
+    },
+    {
+      "address": 61248,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "00a5003108fed4b47bafe5a728d7ad63a31fd392eec0f1b839eac7e558475fb0"
+    },
+    {
+      "address": 61248,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "329d46e99e9dc9ea5bdb2a344c4eb46836c64f6efa6e188ea431b0258057e80b"
+    },
+    {
+      "address": 61248,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "9c0dcd13447c6625b17b129e01f48ff69e405ae38f7e78a9da2403e585957829"
+    },
+    {
+      "address": 61248,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "fa33012c16a188ebc2ae8e772eadeecc9eb74816005c2a3740cacaa05accc834"
+    },
+    {
+      "address": 61248,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "31ccfdea08d9ff3e0eb18aab6231cab1248c4df648309b7399bc4a7495e37339"
+    },
+    {
+      "address": 61248,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "b5aca9c88b6ce6e877f124450c8fbf21fc6e13bd07413551f71c380e31505f0c"
+    },
+    {
+      "address": 61248,
+      "opcode": 154,
+      "value": 0,
+      "mode": 63,
+      "dptr": 1152,
+      "ie": 0,
+      "config": 8,
+      "data_sha256": "263f31c06cf2746a73da6006537c419fada939242d6c348bb963729be7545132"
+    },
+    {
+      "address": 52544,
+      "opcode": 166,
+      "value": 0,
+      "mode": 128,
+      "dptr": 1261,
+      "ie": 0,
+      "config": 8,
+      "accepted_without_effect": true
+    },
+    {
+      "address": 52544,
+      "opcode": 166,
+      "value": 0,
+      "mode": 128,
+      "dptr": 1261,
+      "ie": 0,
+      "config": 8,
+      "accepted_without_effect": true
+    }
+  ],
+  "status_reads": [
+    {
+      "pc": 14559,
+      "address": 61248,
+      "dptr": 1261,
+      "mode": 128,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14569,
+      "address": 61248,
+      "dptr": 1261,
+      "mode": 128,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14559,
+      "address": 61184,
+      "dptr": 1261,
+      "mode": 128,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14569,
+      "address": 61184,
+      "dptr": 1261,
+      "mode": 128,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61184,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61184,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14541,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14551,
+      "address": 61248,
+      "dptr": 1152,
+      "mode": 63,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14559,
+      "address": 52544,
+      "dptr": 1261,
+      "mode": 128,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14569,
+      "address": 52544,
+      "dptr": 1261,
+      "mode": 128,
+      "status": 192,
+      "post": true
+    },
+    {
+      "pc": 14559,
+      "address": 52544,
+      "dptr": 1261,
+      "mode": 128,
+      "status": 192,
+      "post": false
+    },
+    {
+      "pc": 14569,
+      "address": 52544,
+      "dptr": 1261,
+      "mode": 128,
+      "status": 192,
+      "post": true
+    }
+  ],
+  "peak_sp": 129,
+  "image_sha256": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced"
+}

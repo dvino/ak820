@@ -1,0 +1,558 @@
+{
+  "level": "uCsim C52 complete linked image; no physical USB/IRQ/flash evidence",
+  "ihx_sha256": "57196efa465e33bec62d7e0faed8080b417e33548bdda81f552220a8cde6fb28",
+  "tests": [
+    {
+      "name": "on-off-toggle-held-keys",
+      "pass": true,
+      "observations": {
+        "six_key": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "on": [
+          128,
+          0
+        ],
+        "old_owner_cancelled": [
+          0
+        ],
+        "accepted_release": [
+          128,
+          0
+        ],
+        "nkro_key": [
+          6,
+          0,
+          32,
+          0
+        ],
+        "nkro_clear": [
+          0,
+          0
+        ],
+        "release_clean": [
+          0,
+          0
+        ],
+        "six_again": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle_on": [
+          128,
+          0
+        ],
+        "toggle_release_no_change": [
+          128,
+          0
+        ],
+        "toggle_off": [
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "six_key": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "on": [
+          128,
+          0
+        ],
+        "old_owner_cancelled": [
+          0
+        ],
+        "accepted_release": [
+          128,
+          0
+        ],
+        "nkro_key": [
+          6,
+          0,
+          32,
+          0
+        ],
+        "nkro_clear": [
+          0,
+          0
+        ],
+        "release_clean": [
+          0,
+          0
+        ],
+        "six_again": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle_on": [
+          128,
+          0
+        ],
+        "toggle_release_no_change": [
+          128,
+          0
+        ],
+        "toggle_off": [
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": 3562,
+      "outgoing_pointer_checks": [
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ]
+      ],
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "mode-switch-cancels-tap-and-physical-modifier",
+      "pass": true,
+      "observations": {
+        "held_shift": [
+          2
+        ],
+        "cancelled": [
+          0
+        ],
+        "release_no_resurrection": [
+          0
+        ],
+        "new_tap": [
+          6,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "held_shift": [
+          2
+        ],
+        "cancelled": [
+          0
+        ],
+        "release_no_resurrection": [
+          0
+        ],
+        "new_tap": [
+          6,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": 3562,
+      "outgoing_pointer_checks": [
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ]
+      ],
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "mode-switch-cancels-osm-queued",
+      "pass": true,
+      "observations": {
+        "before": [
+          1
+        ],
+        "cancelled": [
+          0
+        ],
+        "queue_empty": [
+          0
+        ],
+        "consumer_empty": [
+          0
+        ],
+        "target_empty": [
+          255
+        ],
+        "releases": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "expected": {
+        "before": [
+          1
+        ],
+        "cancelled": [
+          0
+        ],
+        "queue_empty": [
+          0
+        ],
+        "consumer_empty": [
+          0
+        ],
+        "target_empty": [
+          255
+        ],
+        "releases": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "outgoing_report_address": 3562,
+      "outgoing_pointer_checks": [
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ]
+      ],
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "mode-switch-cancels-osm-held",
+      "pass": true,
+      "observations": {
+        "before": [
+          1
+        ],
+        "cancelled": [
+          0
+        ],
+        "queue_empty": [
+          0
+        ],
+        "consumer_empty": [
+          0
+        ],
+        "target_empty": [
+          255
+        ],
+        "releases": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "expected": {
+        "before": [
+          1
+        ],
+        "cancelled": [
+          0
+        ],
+        "queue_empty": [
+          0
+        ],
+        "consumer_empty": [
+          0
+        ],
+        "target_empty": [
+          255
+        ],
+        "releases": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "outgoing_report_address": 3562,
+      "outgoing_pointer_checks": [
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ]
+      ],
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "mode-switch-cancels-osm-consuming",
+      "pass": true,
+      "observations": {
+        "before": [
+          1
+        ],
+        "cancelled": [
+          0
+        ],
+        "queue_empty": [
+          0
+        ],
+        "consumer_empty": [
+          0
+        ],
+        "target_empty": [
+          255
+        ],
+        "releases": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "expected": {
+        "before": [
+          1
+        ],
+        "cancelled": [
+          0
+        ],
+        "queue_empty": [
+          0
+        ],
+        "consumer_empty": [
+          0
+        ],
+        "target_empty": [
+          255
+        ],
+        "releases": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "outgoing_report_address": 3562,
+      "outgoing_pointer_checks": [
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ]
+      ],
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "mode-switch-cancels-space-cadet-False",
+      "pass": true,
+      "observations": {
+        "before": [
+          0
+        ],
+        "cancelled": [
+          0
+        ],
+        "late_release": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "expected": {
+        "before": [
+          0
+        ],
+        "cancelled": [
+          0
+        ],
+        "late_release": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "outgoing_report_address": 3562,
+      "outgoing_pointer_checks": [
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ]
+      ],
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "mode-switch-cancels-space-cadet-True",
+      "pass": true,
+      "observations": {
+        "before": [
+          2
+        ],
+        "cancelled": [
+          0
+        ],
+        "late_release": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "expected": {
+        "before": [
+          2
+        ],
+        "cancelled": [
+          0
+        ],
+        "late_release": [
+          0
+        ],
+        "new_plain": [
+          6,
+          0,
+          16,
+          0
+        ]
+      },
+      "outgoing_report_address": 3562,
+      "outgoing_pointer_checks": [
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ],
+        [
+          234,
+          13
+        ]
+      ],
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "not-compiled"
+    }
+  ],
+  "hardware_validated": false,
+  "pass": true
+}

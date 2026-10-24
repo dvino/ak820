@@ -1,0 +1,247 @@
+{
+  "configuration": {
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "format": "ak820-build-configuration-1",
+    "make_options": {
+      "AK820_COMPACT_AUTOSHIFT": "no",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "yes",
+      "AK820_COMPACT_GUI_LOCK": "no",
+      "AK820_COMPACT_KEY_OVERRIDE": "no",
+      "AK820_COMPACT_LEADER": "yes",
+      "AK820_COMPACT_MOUSEKEY": "no",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "yes",
+      "AK820_COMPACT_TAP_DANCE": "no",
+      "AK820_MAC_PC": "no",
+      "AK820_NKRO_CONTROL": "yes",
+      "AK820_OS_INDICATORS": "yes",
+      "AK820_QMK_SETTINGS": "no"
+    },
+    "nvm_schema": 532482,
+    "optional_features": [
+      "nkro-control",
+      "one-shot",
+      "space-cadet",
+      "leader",
+      "dynamic-macros",
+      "os-indicators"
+    ],
+    "profile": "work",
+    "release_approved": false,
+    "runtime_qmk_settings": [],
+    "timing_ms": {
+      "combo": 40,
+      "dynamic_macro_phase": 10,
+      "leader": 300,
+      "os_indicator_lease": 3000,
+      "os_indicator_period": 4096,
+      "tap_hold": 200
+    }
+  },
+  "format": "ak820-configured-build-1",
+  "hardware_validated": false,
+  "identity": {
+    "build_report_sha256": "0a7df97b688929951cca0dfca951e0724c8213e3dee98c09a014499720f465e6",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "configuration_sha256": "7f606aa385dde6ab56f319c0b15936648f575ba1960091513335f9f33c0abc8d",
+    "ihx_sha256": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+    "map_sha256": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542",
+    "mem_sha256": "699d3770846756729e401fbde579f989fa52b44a35b15522c1f36a5ade6d7084",
+    "nvm_schema": 532482,
+    "profile": "work",
+    "source_manifest_sha256": "8b8fba01615d9c6f73ba031a1ce419a4b8049fdb6a07dee5890ce444fc7c01f8"
+  },
+  "offline_tests_passed": true,
+  "physical_device_commands": 0,
+  "profile_tests": {
+    "sha256": "3caf9814618a99d0d8199bf0633d8192fa0cee32027671f55390dd959ccc30f9",
+    "source_files_sha256": "361e610d0ebd062b6814ac06446337a47133d8a66cb2659ff2fc8f5be3e5aa9c",
+    "suites": [
+      "gates",
+      "firmware-matrix-gates",
+      "catalog-bundle-gates",
+      "settings-catalog-gates",
+      "capability-catalog-gates",
+      "outline-gates",
+      "short-call-gates",
+      "core-compact-host",
+      "core-compact-linked",
+      "emitted-linked",
+      "transport-linked",
+      "stack-gates",
+      "runtime-safety-gates",
+      "delay-abi",
+      "startup-gates",
+      "startup-stack",
+      "irq-gates",
+      "release-safety-gates",
+      "outline-integrity",
+      "vialrgb-linked",
+      "nkro-control-host",
+      "nkro-control-linked",
+      "one-shot-host",
+      "one-shot-linked",
+      "leader-host",
+      "leader-linked",
+      "os-indicators-host",
+      "os-indicators-linked",
+      "dynamic-macro-host",
+      "dynamic-macro-linked"
+    ]
+  },
+  "qualification": {
+    "sha256": "ae9ea35779bb1a850c243a37acac938282909eafcacd05b07a3935bd770c029d",
+    "suites": 28,
+    "unit_tests": {
+      "run": 291,
+      "skipped": 0
+    }
+  },
+  "release_approved": false,
+  "release_blockers": [
+    "No approved installer/settings transition for this feature identity.",
+    "No independent release approval for this image and source."
+  ],
+  "resources": {
+    "absolute_xram": [
+      {
+        "reserved_end_exclusive": 1024,
+        "start": 512,
+        "symbol": "_ak820_led_dma"
+      }
+    ],
+    "code_bytes": 40386,
+    "code_windows": [
+      {
+        "end_exclusive": 12288,
+        "highest_address": 12195,
+        "name": "low",
+        "occupied_bytes": 1796,
+        "start": 10400,
+        "trailing_free_bytes": 92
+      },
+      {
+        "end_exclusive": 50944,
+        "highest_address": 50921,
+        "name": "main",
+        "occupied_bytes": 38590,
+        "start": 12327,
+        "trailing_free_bytes": 22
+      }
+    ],
+    "internal_ram": {
+      "initial_sp": 90,
+      "runtime_stack_bound": 162,
+      "stack_capacity": 165,
+      "stack_margin": 3,
+      "stack_qualified": true,
+      "static_bytes": 91
+    },
+    "protected_windows_clear": true,
+    "xram": {
+      "bytes": 2676,
+      "capacity": 3072,
+      "end_inclusive": 3699,
+      "start": 1024
+    }
+  },
+  "runtime_analysis": {
+    "foreground_bound": 99,
+    "format": "ak820-runtime-safety-1",
+    "hardware_validated": false,
+    "identity": {
+      "build_report_sha256": "0a7df97b688929951cca0dfca951e0724c8213e3dee98c09a014499720f465e6",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "configuration_sha256": "7f606aa385dde6ab56f319c0b15936648f575ba1960091513335f9f33c0abc8d",
+      "ihx_sha256": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+      "map_sha256": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542",
+      "mem_sha256": "699d3770846756729e401fbde579f989fa52b44a35b15522c1f36a5ade6d7084",
+      "nvm_schema": 532482,
+      "profile": "work",
+      "source_manifest_sha256": "8b8fba01615d9c6f73ba031a1ce419a4b8049fdb6a07dee5890ce444fc7c01f8"
+    },
+    "irq_bound": 61,
+    "limits": [
+      "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+      "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+      "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+      "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+      "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+    ],
+    "logs": {
+      "irq": "367601c22628c2d15a093f6f3db8d0e90ca32564fc3ec977e53ead434452f2df",
+      "startup": "fa1743f216a9949302537072e6607c471fa265a588a8381b9ae91fd221072b21"
+    },
+    "main_entry_frame_bound": 2,
+    "passed": true,
+    "physical_device_commands": 0,
+    "pre_main_bound": 2,
+    "release_approved": false,
+    "reports": {
+      "foreground": {
+        "path": "runtime-stack.json",
+        "sha256": "fb2040576645d1d73fe51664933cb2ff534becf7f4b2aae258ab32f448ef6cd2"
+      },
+      "irq": {
+        "path": "runtime-safety/irq/results.json",
+        "sha256": "367601c22628c2d15a093f6f3db8d0e90ca32564fc3ec977e53ead434452f2df"
+      },
+      "startup": {
+        "path": "runtime-safety/startup.json",
+        "sha256": "ca391b329bc15710540279df741a91b3bacb797c4adb8c291d9192bd56171262"
+      }
+    },
+    "root_bounds": {
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2,
+      "_ak820_timer_irq": 2,
+      "_main": 99
+    },
+    "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+    "source_files": {
+      "qmk-8051-ak820/tests/ak820_emitted/run.py": "2ba1632814fc7ef528ded6b48f590e1593a5494d1208ee780b543af7116d304a",
+      "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+      "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+      "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+      "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5a3511b074901bb179ff133242a81880071de595091fb3c984899494360d27c1",
+      "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+      "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+      "qmk-8051-ak820/util/pack_ak820.py": "b97efc8b82e995144146c87d5bfd0f1086dab98aed9f530410eedc2258661b2b",
+      "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+      "tools/configure_firmware.py": "aa7f819e7a6ff3e63dcc817e83cb5c5d23a4df20dc8be935d2ee6a177188aced"
+    },
+    "stack_bound": 162,
+    "stack_capacity": 165,
+    "stack_margin": 3,
+    "unresolved_roots": [],
+    "whole_program_stack_qualified": true
+  },
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "short_calls": {
+    "algorithm": "foreground-short-transfers-v1",
+    "report": ".build/beta-final/work/short-calls.json",
+    "report_sha256": "4172afebb3ba90eb1f118062402ec262bcfd0fe9d52bf1e08c193d63d577f031",
+    "saved_bytes": 213,
+    "selected": 213
+  },
+  "source": {
+    "commit": "d9954acf5b853c5c6ccaaee08d2a81e44b9f619e",
+    "dirty": true
+  }
+}

@@ -1,0 +1,675 @@
+{
+  "result": "PASS",
+  "hardware_validated": false,
+  "level": "linked SDCC C52; simulated endpoint completion/reset/suspend",
+  "ihx_sha256": "2b0a66adbc0c72daba537b7235fa907f9e034610f3706ace969a9313c40d8e6c",
+  "map_sha256": "655ba79c11cd8c678cbd7d9b7bf1d5d07321041ed1c02cc65fa6b72c38131719",
+  "runner_sha256": "e6535ee006da2fb672a527e71ee91cd365141ed910da5d6c6e881e1fe2720abb",
+  "emitted_helper_sha256": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+  "within_release_code_windows": true,
+  "initial_sp": 89,
+  "stack_capacity": 166,
+  "tests": [
+    {
+      "name": "keyboard-release-after-timeout",
+      "pass": true,
+      "observations": [
+        {
+          "label": "busy_keeps_accepted_down",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "current_is_released",
+          "address": 3512,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "late_in_publishes_release",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "release_queued",
+          "address": 8705,
+          "expected": [
+            16
+          ],
+          "actual": [
+            16
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 101,
+      "tested_stack_bytes": 12,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "keyboard-latest-pending-wins",
+      "pass": true,
+      "observations": [
+        {
+          "label": "intermediate_not_published",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "latest_b_published",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 101,
+      "tested_stack_bytes": 12,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "consumer-release-after-timeout",
+      "pass": true,
+      "observations": [
+        {
+          "label": "busy_keeps_accepted_down",
+          "address": 4224,
+          "expected": [
+            4,
+            233,
+            0
+          ],
+          "actual": [
+            4,
+            233,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "late_in_publishes_release",
+          "address": 4224,
+          "expected": [
+            4,
+            0,
+            0
+          ],
+          "actual": [
+            4,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 100,
+      "tested_stack_bytes": 11,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "system-release-after-timeout",
+      "pass": true,
+      "observations": [
+        {
+          "label": "busy_keeps_accepted_down",
+          "address": 4224,
+          "expected": [
+            3,
+            129,
+            0
+          ],
+          "actual": [
+            3,
+            129,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "late_in_publishes_release",
+          "address": 4224,
+          "expected": [
+            3,
+            0,
+            0
+          ],
+          "actual": [
+            3,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 100,
+      "tested_stack_bytes": 11,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "shared-independent-pending-releases",
+      "pass": true,
+      "observations": [
+        {
+          "label": "both_releases_wait",
+          "address": 4224,
+          "expected": [
+            3,
+            129,
+            0
+          ],
+          "actual": [
+            3,
+            129,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "system_release",
+          "address": 4224,
+          "expected": [
+            3,
+            0,
+            0
+          ],
+          "actual": [
+            3,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "consumer_release_next",
+          "address": 4224,
+          "expected": [
+            4,
+            0,
+            0
+          ],
+          "actual": [
+            4,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 100,
+      "tested_stack_bytes": 11,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "consumer-latest-pending-wins",
+      "pass": true,
+      "observations": [
+        {
+          "label": "only_latest_usage_retried",
+          "address": 4224,
+          "expected": [
+            4,
+            234,
+            0
+          ],
+          "actual": [
+            4,
+            234,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 100,
+      "tested_stack_bytes": 11,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "nkro-release-after-timeout",
+      "pass": true,
+      "observations": [
+        {
+          "label": "busy_keeps_nkro_down",
+          "address": 4224,
+          "expected": [
+            6,
+            0,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            6,
+            0,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "nkro_release_retried",
+          "address": 4224,
+          "expected": [
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 101,
+      "tested_stack_bytes": 12,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "reset-discards-stale-pending",
+      "pass": true,
+      "observations": [
+        {
+          "label": "reset_guard_preserves_old_fifo",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "no_stale_publication",
+          "address": 8705,
+          "expected": [
+            18
+          ],
+          "actual": [
+            18
+          ],
+          "pass": true
+        },
+        {
+          "label": "cleanup_publishes_release",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "latest_cache_reset",
+          "address": 1595,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 103,
+      "tested_stack_bytes": 14,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "suspend-resume-discards-stale-pending",
+      "pass": true,
+      "observations": [
+        {
+          "label": "suspended_no_publication",
+          "address": 8705,
+          "expected": [
+            18
+          ],
+          "actual": [
+            18
+          ],
+          "pass": true
+        },
+        {
+          "label": "resume_waits_for_cleanup",
+          "address": 8705,
+          "expected": [
+            18
+          ],
+          "actual": [
+            18
+          ],
+          "pass": true
+        },
+        {
+          "label": "resume_clears_latest",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 103,
+      "tested_stack_bytes": 14,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "unconfigured-no-publication",
+      "pass": true,
+      "observations": [
+        {
+          "label": "not_configured",
+          "address": 8705,
+          "expected": [
+            18
+          ],
+          "actual": [
+            18
+          ],
+          "pass": true
+        },
+        {
+          "label": "configured_retries_latest",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 101,
+      "tested_stack_bytes": 12,
+      "fixture_auto_shift": "not-compiled"
+    }
+  ]
+}

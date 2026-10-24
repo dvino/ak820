@@ -33,6 +33,16 @@
 #ifdef AK820_BOARD
 #    include "ak820_macro.h"
 #    include "ak820_nvm.h"
+#    include "ak820_extensions.h"
+#    ifdef AK820_COMPACT_TAP_DANCE
+#        include "ak820_tap_dance.h"
+#    endif
+#    ifdef AK820_COMPACT_KEY_OVERRIDE
+#        include "ak820_key_override.h"
+#    endif
+#    ifdef AK820_QMK_SETTINGS
+#        include "ak820_settings.h"
+#    endif
 #    ifdef AK820_COMPACT_COMBO
 #        include "ak820_combo.h"
 #    endif
@@ -111,7 +121,11 @@ typedef uint16_t dynamic_buffer_size_t;
 #endif
 
 // Tap-dance
+#ifdef AK820_COMPACT_TAP_DANCE
+#define VIAL_TAP_DANCE_EEPROM_ADDR AK820_TAP_DANCE_ADDR
+#else
 #define VIAL_TAP_DANCE_EEPROM_ADDR (VIAL_QMK_SETTINGS_EEPROM_ADDR + VIAL_QMK_SETTINGS_SIZE)
+#endif
 
 #ifdef VIAL_TAP_DANCE_ENABLE
 #define VIAL_TAP_DANCE_SIZE (sizeof(vial_tap_dance_entry_t) * VIAL_TAP_DANCE_ENTRIES)
@@ -126,11 +140,15 @@ typedef uint16_t dynamic_buffer_size_t;
  * as version markers, while the wire representation keeps them zero. */
 #define AK820_COMBO_MARKER 0x0820
 #define AK820_COMBO_VERSION 1
-_Static_assert((VIAL_TAP_DANCE_EEPROM_ADDR + VIAL_TAP_DANCE_SIZE) == 0x658, "combo extension base");
+_Static_assert((VIAL_ENCODERS_EEPROM_ADDR + VIAL_ENCODERS_SIZE) == 0x658, "combo extension base");
 _Static_assert(VIAL_COMBO_ENTRIES == 8, "combo extension slot count");
 _Static_assert(sizeof(vial_combo_entry_t) == 10, "combo extension slot size");
 #endif
+#ifdef AK820_COMPACT_COMBO
+#define VIAL_COMBO_EEPROM_ADDR 0x658
+#else
 #define VIAL_COMBO_EEPROM_ADDR (VIAL_TAP_DANCE_EEPROM_ADDR + VIAL_TAP_DANCE_SIZE)
+#endif
 
 #ifdef VIAL_COMBO_ENABLE
 #define VIAL_COMBO_SIZE (sizeof(vial_combo_entry_t) * VIAL_COMBO_ENTRIES)
@@ -139,7 +157,11 @@ _Static_assert(sizeof(vial_combo_entry_t) == 10, "combo extension slot size");
 #endif
 
 // Key overrides
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+#define VIAL_KEY_OVERRIDE_EEPROM_ADDR AK820_KEY_OVERRIDE_ADDR
+#else
 #define VIAL_KEY_OVERRIDE_EEPROM_ADDR (VIAL_COMBO_EEPROM_ADDR + VIAL_COMBO_SIZE)
+#endif
 
 #ifdef VIAL_KEY_OVERRIDE_ENABLE
 #define VIAL_KEY_OVERRIDE_SIZE (sizeof(vial_key_override_entry_t) * VIAL_KEY_OVERRIDE_ENTRIES)
@@ -242,6 +264,23 @@ void dynamic_keymap_set_qmk_settings(uint16_t offset, uint8_t value) {
 #endif
 
 #ifdef VIAL_TAP_DANCE_ENABLE
+#ifdef AK820_COMPACT_TAP_DANCE
+int dynamic_keymap_get_tap_dance(uint8_t index, vial_tap_dance_entry_t *buffer) {
+    vial_tap_dance_entry_t AK820_STATE_MEM *entry = (vial_tap_dance_entry_t AK820_STATE_MEM *)buffer;
+    if (index >= AK820_EXTENSION_ENTRIES) return -1;
+    ak820_eeprom_read_block_xdata(entry, (const void *)(VIAL_TAP_DANCE_EEPROM_ADDR + AK820_EXTENSION_OFFSET(index)), sizeof(*entry));
+    if (!ak820_tap_dance_valid(entry)) memset(entry, 0, sizeof(*entry));
+    return 0;
+}
+int dynamic_keymap_set_tap_dance(uint8_t index, const vial_tap_dance_entry_t *buffer) {
+    const vial_tap_dance_entry_t AK820_STATE_MEM *entry = (const vial_tap_dance_entry_t AK820_STATE_MEM *)buffer;
+    if (index >= AK820_EXTENSION_ENTRIES || !ak820_tap_dance_valid(entry) || !ak820_nvm_ok()) return -1;
+    clear_keyboard();
+    ak820_eeprom_update_block_xdata(entry, (void *)(VIAL_TAP_DANCE_EEPROM_ADDR + AK820_EXTENSION_OFFSET(index)), sizeof(*entry));
+    ak820_nvm_flush();
+    return ak820_nvm_ok() ? 0 : -1;
+}
+#else
 int dynamic_keymap_get_tap_dance(uint8_t index, vial_tap_dance_entry_t *entry) {
     if (index >= VIAL_TAP_DANCE_ENTRIES)
         return -1;
@@ -261,6 +300,7 @@ int dynamic_keymap_set_tap_dance(uint8_t index, const vial_tap_dance_entry_t *en
 
     return 0;
 }
+#endif
 #endif
 
 #ifdef VIAL_COMBO_ENABLE
@@ -322,6 +362,23 @@ int dynamic_keymap_set_combo(uint8_t index, const vial_combo_entry_t *buffer) {
 #endif
 
 #ifdef VIAL_KEY_OVERRIDE_ENABLE
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+int dynamic_keymap_get_key_override(uint8_t index, vial_key_override_entry_t *buffer) {
+    vial_key_override_entry_t AK820_STATE_MEM *entry = (vial_key_override_entry_t AK820_STATE_MEM *)buffer;
+    if (index >= AK820_EXTENSION_ENTRIES) return -1;
+    ak820_eeprom_read_block_xdata(entry, (const void *)(VIAL_KEY_OVERRIDE_EEPROM_ADDR + AK820_EXTENSION_OFFSET(index)), sizeof(*entry));
+    if (!ak820_key_override_valid(entry)) memset(entry, 0, sizeof(*entry));
+    return 0;
+}
+int dynamic_keymap_set_key_override(uint8_t index, const vial_key_override_entry_t *buffer) {
+    const vial_key_override_entry_t AK820_STATE_MEM *entry = (const vial_key_override_entry_t AK820_STATE_MEM *)buffer;
+    if (index >= AK820_EXTENSION_ENTRIES || !ak820_key_override_valid(entry) || !ak820_nvm_ok()) return -1;
+    clear_keyboard();
+    ak820_eeprom_update_block_xdata(entry, (void *)(VIAL_KEY_OVERRIDE_EEPROM_ADDR + AK820_EXTENSION_OFFSET(index)), sizeof(*entry));
+    ak820_nvm_flush();
+    return ak820_nvm_ok() ? 0 : -1;
+}
+#else
 int dynamic_keymap_get_key_override(uint8_t index, vial_key_override_entry_t *entry) {
     if (index >= VIAL_KEY_OVERRIDE_ENTRIES)
         return -1;
@@ -341,6 +398,7 @@ int dynamic_keymap_set_key_override(uint8_t index, const vial_key_override_entry
 
     return 0;
 }
+#endif
 #endif
 
 void dynamic_keymap_reset(void) {
@@ -373,28 +431,33 @@ void dynamic_keymap_reset(void) {
 #endif // ENCODER_MAP_ENABLE
     }
 
+#ifdef AK820_QMK_SETTINGS
+    ak820_settings_reset();
+#endif
 #ifdef QMK_SETTINGS
     qmk_settings_reset();
 #endif
 
 #ifdef VIAL_TAP_DANCE_ENABLE
     vial_tap_dance_entry_t td = { KC_NO, KC_NO, KC_NO, KC_NO, TAPPING_TERM };
-    for (size_t i = 0; i < VIAL_TAP_DANCE_ENTRIES; ++i) {
+    for (reset_index_t i = 0; i < VIAL_TAP_DANCE_ENTRIES; ++i) {
         dynamic_keymap_set_tap_dance(i, &td);
     }
 #endif
 
 #ifdef VIAL_COMBO_ENABLE
     vial_combo_entry_t combo = { { 0 }, 0 };
-    for (size_t i = 0; i < VIAL_COMBO_ENTRIES; ++i)
+    for (reset_index_t i = 0; i < VIAL_COMBO_ENTRIES; ++i)
         dynamic_keymap_set_combo(i, &combo);
 #endif
 
 #ifdef VIAL_KEY_OVERRIDE_ENABLE
     vial_key_override_entry_t ko = { 0 };
+#ifndef AK820_COMPACT_KEY_OVERRIDE
     ko.layers = ~0;
     ko.options = vial_ko_option_activation_negative_mod_up | vial_ko_option_activation_required_mod_down | vial_ko_option_activation_trigger_down;
-    for (size_t i = 0; i < VIAL_KEY_OVERRIDE_ENTRIES; ++i)
+#endif
+    for (reset_index_t i = 0; i < VIAL_KEY_OVERRIDE_ENTRIES; ++i)
         dynamic_keymap_set_key_override(i, &ko);
 #endif
 

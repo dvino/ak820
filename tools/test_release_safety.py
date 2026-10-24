@@ -11,6 +11,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'qmk-8051-ak820/util'))
 import ak820_release_safety as gate
+from ak820_profiles import configuration
 
 
 class ReleaseSafetyTests(unittest.TestCase):
@@ -18,7 +19,7 @@ class ReleaseSafetyTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.configuration = {'profile': 'full', 'optional_features': gate.OPTIONAL, 'nvm_schema': 532482}
+        self.configuration = configuration('full')
         self.proof = {'format': 'ak820-release-safety-1', 'source_files': {}, 'witnesses': {}}
         for name in gate.REQUIRED_SOURCES:
             self.proof['source_files'][name] = self.write(name, ('synthetic ' + name).encode())
@@ -46,7 +47,7 @@ class ReleaseSafetyTests(unittest.TestCase):
                     'selector_cases': {'input_values_checked': 256, 'bounded_table_entries': 16},
                     'emitted_contracts': {'compiler_register_bank': 0, 'shared_helper_masked_init_calls': [1], 'nonoverlay_allocations': [1]}},
             'transition': {'format': 'ak820-settings-transition-1', 'passed': True, 'offline_only': True,
-                           'physical_device_commands': 0, 'target': {'ihx_sha256': ihx, 'schema': 532482, 'optional_features': gate.OPTIONAL},
+                           'physical_device_commands': 0, 'target': {'ihx_sha256': ihx, 'schema': 532482, 'optional_features': self.configuration['optional_features']},
                            'source_images': ['synthetic old image'], 'tests': [{'exit_code': 0}]}}
 
         transition = self.data['transition']
@@ -74,6 +75,27 @@ class ReleaseSafetyTests(unittest.TestCase):
         result = self.validate()
         self.assertEqual(result['stack_bound'], 93)
         self.assertEqual(result['stack_margin'], 69)
+
+    def test_positive_reviewed_work_configuration(self):
+        self.configuration.clear()
+        self.configuration.update(configuration('work'))
+        self.data['transition']['target']['optional_features'] = self.configuration['optional_features']
+        self.assertEqual(self.validate()['stack_bound'], 93)
+
+    def test_reject_unreviewed_profile(self):
+        self.report['configuration'] = configuration('work')
+        with self.assertRaisesRegex(ValueError, 'reviewed exact image'):
+            self.validate()
+
+    def test_reject_noncanonical_reviewed_configuration(self):
+        self.configuration['optional_features'] = []
+        with self.assertRaisesRegex(ValueError, 'selected profile'):
+            self.validate()
+
+    def test_reject_transition_for_other_feature_set(self):
+        self.data['transition']['target']['optional_features'] = configuration('work')['optional_features']
+        with self.assertRaisesRegex(ValueError, 'transition not qualified'):
+            self.validate()
 
     def test_reject_unresolved_root(self):
         self.data['stack']['roots']['_main']['unresolved'] = ['indirect call']

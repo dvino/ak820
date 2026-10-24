@@ -2,10 +2,12 @@
 
 # Two-key Combos
 
-The firmware supports eight configurable two-key Combos. Pressing two
-configured keys within 40 ms sends one key or modified key instead, for example
-J + K → Escape or F + D → Ctrl+C. See [Status](STATUS.md) for release and device
-state.
+Configure eight two-key combinations that send one key or modified key.
+
+Pressing two configured keys within the selected interval sends one key or
+modified key instead, for example J + K → Escape or F + D → Ctrl+C. The interval
+defaults to 40 ms; the QMK Settings module in the `settings` profile can change
+it from 1 to 1000 ms. See [Status](STATUS.md) for release and device state.
 
 ## Configure in Vial
 
@@ -22,22 +24,23 @@ quantum keycodes. Outputs cannot be macros, layer actions, Mod-Tap, Layer-Tap,
 Repeat, consumer or system keys, or reset. The Vial editor may display choices
 that this firmware does not support.
 
-The interval is fixed at 40 ms. Three-key and four-key Combos, and a separate
-interval for each slot, are not supported. Duplicate pairs are allowed; if a
+The interval defaults to 40 ms. In the `settings` profile, change it from 1 to
+1000 ms through QSID 2; all slots share the same interval. Three-key
+and four-key Combos are not supported. Duplicate pairs are allowed; if a
 pair appears in more than one slot, the lowest numbered slot takes priority.
 
 ## Key behavior
 
-The first input is held for up to 40 ms while the firmware waits for its pair.
-If the second key is pressed before 40 ms elapses, both input keys are suppressed
-and the configured output is sent. Releasing either input releases the output;
+The first input is held for up to the configured interval while the firmware
+waits for its pair. If the second key is pressed before that interval elapses,
+both input keys are suppressed and the configured output is sent. Releasing either input releases the output;
 the other input remains suppressed until it is released. A new Combo cannot
 start while either input from the active Combo is still held.
 
 If the second key is not pressed in time, or another key or event arrives first,
-the first key is sent as an ordinary key. At exactly 40 ms the pair no longer
-matches. Releasing the first key quickly still sends its press before its
-release. A Combo key is resolved on the active layer when it is pressed; a
+the first key is sent as an ordinary key. At exactly the configured interval
+the pair no longer matches. Releasing the first key quickly still sends its
+press before its release. A Combo key is resolved on the active layer when it is pressed; a
 layer change while it is waiting does not change that key. Other keys continue
 to work while the firmware waits.
 

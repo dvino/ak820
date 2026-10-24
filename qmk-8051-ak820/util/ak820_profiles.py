@@ -8,6 +8,7 @@ from __future__ import annotations
 
 FORMAT = 'ak820-build-configuration-1'
 SCHEMA = 0x082002
+EXTENSION_SCHEMA = 0x082003
 # Historical builders retained by the repository and published alpha.2. Their
 # ordinary release checks still verify the actual builder, source and image.
 LEGACY_BUILDERS = frozenset({
@@ -16,15 +17,48 @@ LEGACY_BUILDERS = frozenset({
     '4094ceba4c883b70355fb6fefa8a219cb18a0847bfbcb623c1e5833feaf276db',
 })
 SWITCHES = {
+    'tap-dance': 'AK820_COMPACT_TAP_DANCE',
+    'key-overrides': 'AK820_COMPACT_KEY_OVERRIDE',
+    'qmk-settings': 'AK820_QMK_SETTINGS',
+    'mac-pc': 'AK820_MAC_PC',
+    'os-indicators': 'AK820_OS_INDICATORS',
+    'leader': 'AK820_COMPACT_LEADER',
     'nkro-control': 'AK820_NKRO_CONTROL',
     'one-shot': 'AK820_COMPACT_ONESHOT',
     'space-cadet': 'AK820_COMPACT_SPACE_CADET',
     'mouse-keys': 'AK820_COMPACT_MOUSEKEY',
     'auto-shift': 'AK820_COMPACT_AUTOSHIFT',
     'gui-lock': 'AK820_COMPACT_GUI_LOCK',
+    'ctrl-gui-swap': 'AK820_COMPACT_CTRL_GUI_SWAP',
     'dynamic-macros': 'AK820_COMPACT_DYNAMIC_MACRO',
 }
+DEFAULT_PROFILE = 'work'
+# The desktop and release builder offer these broad, finite feature packages.
+# Historical names below remain usable to reproduce earlier development builds.
+RELEASE_PROFILES = (
+    'work', 'essential', 'typing', 'mouse', 'mouse-typing', 'system',
+    'tap-dance', 'key-overrides', 'settings',
+)
 PROFILES = {
+    'work': ('nkro-control', 'one-shot', 'space-cadet', 'leader',
+             'dynamic-macros', 'os-indicators'),
+    'essential': ('nkro-control', 'one-shot', 'space-cadet', 'os-indicators'),
+    'typing': ('nkro-control', 'one-shot', 'space-cadet', 'auto-shift', 'os-indicators'),
+    'mouse': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'os-indicators'),
+    'mouse-typing': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys',
+                     'auto-shift', 'gui-lock', 'os-indicators'),
+    'system': ('nkro-control', 'one-shot', 'space-cadet', 'gui-lock',
+               'ctrl-gui-swap', 'mac-pc', 'os-indicators'),
+    'tap-dance': ('nkro-control', 'one-shot', 'space-cadet', 'tap-dance'),
+    'key-overrides': ('nkro-control', 'one-shot', 'space-cadet', 'key-overrides'),
+    'settings': ('nkro-control', 'one-shot', 'space-cadet', 'qmk-settings'),
+    'full-tap-dance': ('nkro-control', 'one-shot', 'space-cadet', 'tap-dance'),
+    'full-key-overrides': ('nkro-control', 'one-shot', 'space-cadet', 'key-overrides'),
+    'full-qmk-settings': ('nkro-control', 'one-shot', 'space-cadet', 'qmk-settings'),
+    'full-mac-pc': ('nkro-control', 'one-shot', 'space-cadet', 'mac-pc'),
+    'full-mac-pc-os-indicators': ('nkro-control', 'one-shot', 'space-cadet', 'mac-pc', 'os-indicators'),
+    'full-os-indicators': ('nkro-control', 'one-shot', 'space-cadet', 'os-indicators'),
+    'full-leader': ('nkro-control', 'one-shot', 'space-cadet', 'leader'),
     'standard': (),
     'nkro': ('nkro-control',),
     'one-shot': ('one-shot',),
@@ -34,6 +68,7 @@ PROFILES = {
     'one-shot-space-cadet': ('one-shot', 'space-cadet'),
     'full': ('nkro-control', 'one-shot', 'space-cadet'),
     'full-gui-lock': ('nkro-control', 'one-shot', 'space-cadet', 'gui-lock'),
+    'full-ctrl-gui': ('nkro-control', 'one-shot', 'space-cadet', 'gui-lock', 'ctrl-gui-swap'),
     'full-dynamic-macro-gui': ('nkro-control', 'one-shot', 'space-cadet', 'dynamic-macros', 'gui-lock'),
     'full-mouse-auto-shift-gui': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'auto-shift', 'gui-lock'),
     'full-auto-shift-dynamic-macro': ('nkro-control', 'one-shot', 'space-cadet', 'auto-shift', 'dynamic-macros'),
@@ -50,11 +85,7 @@ BASE_FEATURES = (
     'rgb-effects', 'vialrgb-direct-ram',
 )
 DEFERRED = {
-    'qmk-settings': 'Requires a versioned saved extension and typed backup/restore; upstream layout moves Combos.',
-    'tap-dance': 'Dynamic entries, input ownership and complete-image cost are not qualified.',
-    'key-overrides': 'Modifier ownership, Repeat, Caps Word and macro interactions are not qualified.',
-    'magic': 'Modifier swaps and persistent Magic settings remain deferred; volatile GUI and NKRO controls are separate.',
-    'leader': 'Sequence length, timeout and supported output actions are not qualified.',
+    'magic': 'Additional swaps, Caps variants and persistent Magic settings are outside the bounded module contract; Ctrl/GUI and Alt/GUI swaps are session-only.',
 }
 
 
@@ -64,11 +95,15 @@ def configuration(name: str) -> dict:
     enabled = PROFILES[name]
     return {
         'format': FORMAT, 'profile': name, 'optional_features': list(enabled),
-        'base_features': list(BASE_FEATURES), 'nvm_schema': SCHEMA,
+        'base_features': list(BASE_FEATURES),
+        'nvm_schema': EXTENSION_SCHEMA if any(f in enabled for f in ('tap-dance', 'key-overrides', 'qmk-settings')) else SCHEMA,
         'make_options': {switch: 'yes' if feature in enabled else 'no'
                          for feature, switch in SWITCHES.items()},
-        'runtime_qmk_settings': [],
+        'runtime_qmk_settings': ([1, 2, 4, 7, 18, 19] if 'auto-shift' in enabled else [1, 2, 7, 18, 19]) if 'qmk-settings' in enabled else [],
         'timing_ms': {'combo': 40, 'tap_hold': 200,
+                      **({'os_indicator_lease': 3000, 'os_indicator_period': 4096}
+                         if 'os-indicators' in enabled else {}),
+                      **({'leader': 300} if 'leader' in enabled else {}),
                       **({'mouse_cursor': 20, 'mouse_wheel': 80} if 'mouse-keys' in enabled else {}),
                       **({'auto_shift': 175} if 'auto-shift' in enabled else {}),
                       **({'dynamic_macro_phase': 10} if 'dynamic-macros' in enabled else {})},
@@ -85,7 +120,7 @@ def select(features: list[str]) -> str:
     for name, enabled in PROFILES.items():
         if set(features) == set(enabled):
             return name
-    raise ValueError('This feature combination has no tested profile')
+    raise ValueError('This feature combination has no supported profile')
 
 
 def validate_configuration(value: dict) -> dict:

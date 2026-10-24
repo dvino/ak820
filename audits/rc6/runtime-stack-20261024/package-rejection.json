@@ -1,0 +1,19 @@
+{
+  "command": [
+    "python3",
+    "tools/configure_firmware.py",
+    "package",
+    "--build-dir",
+    "/workspace/scratch/628d2ba64df2/matrix-c/qmk-8051-ak820/.build/final-full",
+    "--toolchain",
+    "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0"
+  ],
+  "cwd": "/workspace/scratch/628d2ba64df2/matrix-c",
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "STOP: Release safety not approved: changed witness/source: qmk-8051-ak820/quantum/dynamic_keymap.c\n",
+  "expected_rejection": true,
+  "ihx_sha256": "c41b65b7b575fb0f7f353372f933ede0203cf90cc2833f1906cbbe7b860643a9",
+  "release_policy_sha256": "fe6c25880d51e19274e153dc2fda681ec26e9ae1ccd09f71fb93133032d6cd6a",
+  "physical_device_commands": 0
+}

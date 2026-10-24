@@ -11,10 +11,12 @@ from pathlib import Path
 import re
 
 import pack_ak820
+from ak820_profiles import validate_configuration
 
 ROOT = Path(__file__).resolve().parents[2]
 REQUIRED_SOURCES = frozenset((
     'qmk-8051-ak820/util/ak820_release_safety.py',
+    'qmk-8051-ak820/util/ak820_profiles.py',
     'qmk-8051-ak820/util/ak820_linked_inventory.py',
     'qmk-8051-ak820/util/pack_ak820.py',
     'qmk-8051-ak820/tests/ak820_stack/analyze.py',
@@ -27,7 +29,6 @@ REQUIRED_SOURCES = frozenset((
     'tools/installer/test_settings_backup.py', 'tools/installer/test_settings_workflow.py',
     'audits/rc6/alpha3-transition-20261024/verify_transition.py',
 ))
-OPTIONAL = ['nkro-control', 'one-shot', 'space-cadet']
 ROOT_NAMES = {'_main', '_ak820_timer_irq', '_USB_DeviceInterrupt', '_ak820_led_irq'}
 
 
@@ -84,9 +85,10 @@ def validate(report, root=ROOT):
     proof = load(manifest)
     require(proof.get('format') == 'ak820-release-safety-1', 'unknown witness manifest')
     configuration = report.get('configuration')
-    require(isinstance(configuration, dict) and configuration.get('profile') == 'full'
-            and configuration.get('optional_features') == OPTIONAL,
-            'only the reviewed full feature identity is eligible')
+    validate_configuration(configuration)
+    require(configuration == proof.get('program', {}).get('configuration'),
+            'configuration differs from the reviewed exact image')
+    optional = configuration['optional_features']
     sources = proof.get('source_files', {})
     require(isinstance(sources, dict) and REQUIRED_SOURCES <= sources.keys(), 'incomplete proof source snapshot')
     for name, record in sources.items():
@@ -162,7 +164,7 @@ def validate(report, root=ROOT):
     require(transition.get('format') == 'ak820-settings-transition-1' and transition.get('passed') is True
             and transition.get('offline_only') is True and transition.get('physical_device_commands') == 0
             and target.get('ihx_sha256') == ihx_hash and target.get('schema') == configuration.get('nvm_schema')
-            and target.get('optional_features') == OPTIONAL and transition.get('source_images')
+            and target.get('optional_features') == optional and transition.get('source_images')
             and transition.get('tests') and all(test.get('exit_code') == 0 for test in transition['tests']),
             'installer transition not qualified for this image/features')
     transition_sources = set()

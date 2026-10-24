@@ -27,15 +27,6 @@
 #include "util.h"
 #include <string.h>
 
-#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
-/* The retained AK820 callers pass actual_keyboard_report, a model-large
- * XDATA object. Keep the public generic-pointer ABI; narrow only the private
- * view used by these helpers. No CODE/IDATA report reaches this target. */
-#    define AK820_REPORT_MEM __xdata
-#else
-#    define AK820_REPORT_MEM
-#endif
-
 #ifdef AK820_BOARD
 uint16_t KEYCODE2CONSUMER(uint8_t key) {
     static const uint16_t usages[] = {
@@ -68,7 +59,7 @@ static int8_t cb_count = 0;
  *
  * FIXME: Needs doc
  */
-uint8_t has_anykey(report_keyboard_t* report_arg) {
+uint8_t has_anykey(report_keyboard_t AK820_REPORT_MEM* report_arg) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
     uint8_t  cnt = 0;
     uint8_t AK820_REPORT_MEM* p = keyboard_report->keys;
@@ -89,7 +80,7 @@ uint8_t has_anykey(report_keyboard_t* report_arg) {
  *
  * FIXME: Needs doc
  */
-uint8_t get_first_key(report_keyboard_t* report_arg) {
+uint8_t get_first_key(report_keyboard_t AK820_REPORT_MEM* report_arg) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
 #ifdef NKRO_ENABLE
     if (keyboard_protocol && keymap_config.nkro) {
@@ -118,7 +109,7 @@ uint8_t get_first_key(report_keyboard_t* report_arg) {
  * Returns true if the keyboard_report reports that the key is pressed, otherwise false
  * Note: The function doesn't support modifers currently, and it returns false for KC_NO
  */
-bool is_key_pressed(report_keyboard_t* report_arg, uint8_t key) {
+bool is_key_pressed(report_keyboard_t AK820_REPORT_MEM* report_arg, uint8_t key) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
     if (key == KC_NO) {
         return false;
@@ -144,7 +135,7 @@ bool is_key_pressed(report_keyboard_t* report_arg, uint8_t key) {
  *
  * FIXME: Needs doc
  */
-void add_key_byte(report_keyboard_t* report_arg, uint8_t code) {
+void add_key_byte(report_keyboard_t AK820_REPORT_MEM* report_arg, uint8_t code) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
 #ifdef RING_BUFFERED_6KRO_REPORT_ENABLE
     int8_t i     = cb_head;
@@ -212,7 +203,7 @@ void add_key_byte(report_keyboard_t* report_arg, uint8_t code) {
  *
  * FIXME: Needs doc
  */
-void del_key_byte(report_keyboard_t* report_arg, uint8_t code) {
+void del_key_byte(report_keyboard_t AK820_REPORT_MEM* report_arg, uint8_t code) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
 #ifdef RING_BUFFERED_6KRO_REPORT_ENABLE
     uint8_t i = cb_head;
@@ -253,7 +244,7 @@ void del_key_byte(report_keyboard_t* report_arg, uint8_t code) {
  *
  * FIXME: Needs doc
  */
-void add_key_bit(report_keyboard_t* report_arg, uint8_t code) {
+void add_key_bit(report_keyboard_t AK820_REPORT_MEM* report_arg, uint8_t code) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
     if ((code >> 3) < KEYBOARD_REPORT_BITS) {
         keyboard_report->nkro.bits[code >> 3] |= 1 << (code & 7);
@@ -266,7 +257,7 @@ void add_key_bit(report_keyboard_t* report_arg, uint8_t code) {
  *
  * FIXME: Needs doc
  */
-void del_key_bit(report_keyboard_t* report_arg, uint8_t code) {
+void del_key_bit(report_keyboard_t AK820_REPORT_MEM* report_arg, uint8_t code) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
     if ((code >> 3) < KEYBOARD_REPORT_BITS) {
         keyboard_report->nkro.bits[code >> 3] &= ~(1 << (code & 7));
@@ -280,7 +271,7 @@ void del_key_bit(report_keyboard_t* report_arg, uint8_t code) {
  *
  * FIXME: Needs doc
  */
-void add_key_to_report(report_keyboard_t* report_arg, uint8_t key) {
+void add_key_to_report(report_keyboard_t AK820_REPORT_MEM* report_arg, uint8_t key) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
 #ifdef NKRO_ENABLE
     if (keyboard_protocol && keymap_config.nkro) {
@@ -295,7 +286,7 @@ void add_key_to_report(report_keyboard_t* report_arg, uint8_t key) {
  *
  * FIXME: Needs doc
  */
-void del_key_from_report(report_keyboard_t* report_arg, uint8_t key) {
+void del_key_from_report(report_keyboard_t AK820_REPORT_MEM* report_arg, uint8_t key) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
 #ifdef NKRO_ENABLE
     if (keyboard_protocol && keymap_config.nkro) {
@@ -310,7 +301,7 @@ void del_key_from_report(report_keyboard_t* report_arg, uint8_t key) {
  *
  * FIXME: Needs doc
  */
-void clear_keys_from_report(report_keyboard_t* report_arg) {
+void clear_keys_from_report(report_keyboard_t AK820_REPORT_MEM* report_arg) {
     report_keyboard_t AK820_REPORT_MEM* keyboard_report = (report_keyboard_t AK820_REPORT_MEM*)report_arg;
     // not clear mods
 #ifdef NKRO_ENABLE

@@ -60,6 +60,15 @@ matching package, check its checksum, extract it and launch the application.
 
 ## Current work boundary
 
+Owner's runtime rule, 2026-10-24: close stack and interrupt checks in the same
+change as every new feature or profile. Use the exact linked image to bound
+foreground calls, startup and all enabled interrupt sources. The configured
+build must pass that check before its full regression suites. Unknown paths,
+an incomplete IRQ contract or a bound above stack capacity block completion.
+Retain machine evidence for that image; a previous profile's bound cannot
+qualify changed source. Keep physical validation separate from static and CPU
+model results.
+
 Owner's GUI update rule, 2026-10-23: the update stays inside the installer.
 After clicking Update, a fresh physical Esc + left Control hold for three
 seconds confirms the displayed update. The installer requests unlock, enters
@@ -94,3 +103,5 @@ authorized on 2026-10-23; it does not authorize flashing.
 - Authors cannot independently approve their own code. Independent review covers code, documentation and verification evidence; resolve findings and record closure before commit.
 - Update documentation alongside implementation. State separately what is known about source, built artifacts and installed firmware, and distinguish static checks, builds, host/CPU models, read-only device diagnosis and device behavior.
 - No agent may write to USB, enter bootloader, reset or flash the keyboard without the owner's explicit confirmation for that operation. Read-only diagnosis authorization does not grant flash authorization.
+
+Owner's release clarification, 2026-10-25: beta.1 provides the nine-profile firmware catalog for companion design, plus standalone Windows/Linux x86_64 installers that install the exact `work` image. The other eight profiles remain catalog candidates. Keep the installers until the companion is ready. Preserve exact image identities and state installation and hardware limits clearly. This does not authorize device writes.

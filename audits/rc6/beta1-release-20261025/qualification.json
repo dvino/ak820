@@ -1,0 +1,783 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 173.614,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/00.txt",
+      "log_sha256": "aafddc1c76590750aa5788fe4d964113462a70ac9f8bb76fa5fc22439191238f",
+      "unit_tests": {
+        "run": 153,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.375,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/01.txt",
+      "log_sha256": "1473ad509f4bca395fc266eb44c9a6ebe03172591a71ebea61bb0e20bee368a5",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.271,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/02.txt",
+      "log_sha256": "bba1c2a4705916ac0d7c6e212e5ac079e6b424a37e47bd2d23db01a076bec37d",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.287,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/03.txt",
+      "log_sha256": "5c5b58b4a28e3a6a63637d7146eaa2192358fad86814f7dc7d3b5b7ac6c299d2",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.897,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/04.txt",
+      "log_sha256": "61b515f1536e9e595dda8ada35917b4f8b3c1d7a3c3d569bb502d75882575a46",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.111,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/05.txt",
+      "log_sha256": "1607edbfae007ff56d6138df5d24d28abfe4b1ef27902563e1bb9ad258e5c4ec",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.518,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/06.txt",
+      "log_sha256": "6dd3bf1607c11cc6c87ae846231cdcc5d86339c0f7057d99d03c632607f245bd",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.102,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/07.txt",
+      "log_sha256": "e586fc0f3bb2a05f4c80f07d1b4c6171e830592f6c7aaf70d4af3b0aa3ebd072",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.129,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/08.txt",
+      "log_sha256": "17afcac5e47658a309fd265c70ee8a93efad8023eece5c4829da15b049afceaa",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.572,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.173,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.671,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.398,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/12.txt",
+      "log_sha256": "2ae1a06370222cfd4042b160f898fc26384944e4c8cc32ccb18fc13d4ad25459",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.539,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 9.405,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 15.736,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.148,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.459,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.776,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/18.txt",
+      "log_sha256": "5e6957a1eea658cb39448866736856adb87367db802d33ecde9ecace9920cbfd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 28.399,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/19.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 7.555,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/20.txt",
+      "log_sha256": "10642590ade01041b36c66732e1f0a06936454e6031dbe20a2b721c57c35b34f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 2.452,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/21.txt",
+      "log_sha256": "6be10c5a8c2a05d831438d18967fa5bcff6ecbba086d467aba42b9652faf2fc4",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 2.601,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/22.txt",
+      "log_sha256": "237207beba7ec7cb92c6c9db529323f5c7cb4ba9a45f7dd15609058b07c01694",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 89.09,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.754,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/24.txt",
+      "log_sha256": "9a39a971ef676deccff3bce4e6863e5d8899dd39f499175d7ad21044c0e28193",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 2.144,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/25.txt",
+      "log_sha256": "1622f529faf25a34c156e818d7cb283f25ab34c05b9b47e5198108446a19b8b0",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 15.68,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/26.txt",
+      "log_sha256": "26e5f24a8fe9b4a33cb12c084c1c4d955cfcc36df1bcd1991b7f87e3afca09f6",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820/qmk-8051-ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work",
+        "--s51",
+        "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 5.196,
+      "log": "/home/danil/Documents/git/ak820/qmk-8051-ak820/.build/beta-final/work/qualification-logs-d9zl2wld/27.txt",
+      "log_sha256": "406423a34b62d5acbd2a7bc1141884703cee23cc5819f448abf67e36d1c5151b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      },
+      "build_after": {
+        "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+        "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 291,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+    "map": "064ac921f225b7af1793c19de27d6811700dd8ab95ee108636a09383df671542"
+  },
+  "build_unchanged": true
+}

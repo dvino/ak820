@@ -66,3 +66,45 @@ AK820_COMPACT_GUI_LOCK ?= no
 ifeq ($(AK820_COMPACT_GUI_LOCK),yes)
     OPT_DEFS += -DAK820_COMPACT_GUI_LOCK
 endif
+
+# Volatile Ctrl/GUI report swap; independent of upstream persistent Magic.
+AK820_COMPACT_CTRL_GUI_SWAP ?= no
+ifeq ($(AK820_COMPACT_CTRL_GUI_SWAP),yes)
+    OPT_DEFS += -DAK820_COMPACT_CTRL_GUI_SWAP
+endif
+
+AK820_COMPACT_LEADER ?= no
+ifeq ($(AK820_COMPACT_LEADER),yes)
+    OPT_DEFS += -DAK820_COMPACT_LEADER
+    SRC += ak820_leader.c
+endif
+
+# Temporary host layout indication on the separate OS channel.
+AK820_OS_INDICATORS ?= no
+ifeq ($(AK820_OS_INDICATORS),yes)
+    OPT_DEFS += -DAK820_OS_INDICATORS
+    SRC += ak820_os_indicators.c
+endif
+
+# Session-only Mac/PC modifier mode; the OS indicator follows this mode.
+AK820_MAC_PC ?= no
+ifeq ($(AK820_MAC_PC),yes)
+    OPT_DEFS += -DAK820_MAC_PC
+endif
+
+# Schema-3 typed modules preserve all legacy keymap/Combo/macro addresses.
+AK820_COMPACT_TAP_DANCE ?= no
+ifeq ($(AK820_COMPACT_TAP_DANCE),yes)
+    OPT_DEFS += -DAK820_COMPACT_TAP_DANCE
+    SRC += ak820_tap_dance.c
+endif
+AK820_COMPACT_KEY_OVERRIDE ?= no
+ifeq ($(AK820_COMPACT_KEY_OVERRIDE),yes)
+    OPT_DEFS += -DAK820_COMPACT_KEY_OVERRIDE
+    SRC += ak820_key_override.c
+endif
+AK820_QMK_SETTINGS ?= no
+ifeq ($(AK820_QMK_SETTINGS),yes)
+    OPT_DEFS += -DAK820_QMK_SETTINGS
+    SRC += ak820_settings.c
+endif

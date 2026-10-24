@@ -619,6 +619,49 @@ class FullFeatureTests(unittest.TestCase):
             settings.plan_restore(saved, full)
 
 
+class WorkFeatureTests(FullFeatureTests):
+    def work_pair(self):
+        old, _, _, full = transition_profiles()
+        full['compatible_images'][full['ihx_sha256']]['features'] = sorted(settings.FULL_FEATURES)
+        full['compatible_images'][full['ihx_sha256']]['combos_version'] = 1
+        work = dict(old)
+        work['ihx_sha256'] = settings.WORK_IHX
+        work['code_sha256'] = settings._legacy_images()[settings.WORK_IHX]['code_sha256']
+        payload = bytearray(old['payload'])
+        payload[:p.CODE_END-p.APP_START] = b'W' * (p.CODE_END-p.APP_START)
+        work['code_sha256'] = p.digest(payload[:p.CODE_END-p.APP_START])
+        at = p.MANIFEST_START-p.APP_START
+        payload[at:at+48] = (p.MAGIC + b'\1\0\0\0' + p.BUILD_ID.to_bytes(4, 'little') +
+                             bytes.fromhex(work['code_sha256']))
+        work['payload'] = bytes(payload)
+        full['compatible_images'][work['ihx_sha256']] = {
+            'ihx_sha256': work['ihx_sha256'], 'code_sha256': work['code_sha256'],
+            'build_id': p.BUILD_ID, 'features': sorted(settings.WORK_FEATURES), 'combos_version': 1}
+        return full, work
+
+    def test_alpha3_to_work_preserves_mapping_and_both_encoder_directions(self):
+        full, work = self.work_pair()
+        nvm = base_nvm()
+        for direction, code in enumerate((0x7013, 0x7C1E)):
+            at = DeviceAPI.encoder_offset(0, direction)
+            nvm[at:at+2] = code.to_bytes(2, 'big')
+        api, _ = self.api(nvm, profile=full)
+        saved = settings.export_settings(api, self.root/'full-to-work', full)
+        plan = settings.plan_restore(saved, work)
+        self.assertEqual(plan['encoder_count'], 12)
+        target, _ = self.api(writes=True, profile=work)
+        settings.restore_settings(target, saved, work)
+        self.assertEqual(target.get_encoder(0, 0), 0x7013)
+        self.assertEqual(target.get_encoder(0, 1), 0x7C1E)
+
+    def test_work_to_alpha3_downgrade_is_blocked_before_writes(self):
+        full, work = self.work_pair()
+        api, _ = self.api(profile=work)
+        saved = settings.export_settings(api, self.root/'work-source', work)
+        with self.assertRaisesRegex(ValueError, 'downgrade'):
+            settings.plan_restore(saved, full)
+
+
 class ComboTests(unittest.TestCase):
     setUp = SettingsTests.setUp
     api = SettingsTests.api

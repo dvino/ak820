@@ -1,72 +1,69 @@
-# Independent alpha.3 program review, 2026-10-24
+# Independent work beta review, 2026-10-25
 
-The exact full-profile program and release preparation are approved for commit
-and CI reproduction. Native Windows and Linux package acceptance and publication
-remain pending. This review grants no permission to flash and makes no claim
-about physical device behavior. Installed firmware remains alpha.2.
+The exact `work` program and installer preparation are approved for commit and
+CI reproduction. Native Windows and Linux package acceptance and publication
+remain pending. This approval permits no device operation and makes no claim
+about physical behavior. Installed firmware remains alpha.3.
 
-The reviewed application IHX is
-`d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`;
-canonical symbols are
-`8c54e3a043fd636b4073aa16f328abcc53ca0f9c8430c80b5b2d664190805ce0`.
-All 608 policy source records and 21 host records match current file sizes and
-SHA256 hashes. All 384 retained evidence records match their hashes and sizes,
-including decompressed bytes where recorded. Policy SHA256 is
-`32092b9468e7474d77720e5989bbe8cf5b087f6a817cdc19719c5d278c7655ef`.
+The reviewed IHX is `652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880`. Canonical linked symbols are `934f49ebf4d4c01a64c775e2f7b6e9cd2d7f8ad8d3fad50167d1483dec3112d1`.
+All 686 policy source records and 25 host records match current sizes and
+SHA256 hashes. Policy SHA256 is `af0a34e599519482749358533d01b4624ebd11724421df5dbd52f6691687f34e`.
 
-The code changes preserve the fixed transport's null-driver checks and report
-handling while replacing mutable callback dispatch with direct calls. The
-private Repeat guard prevents recursive delivery without changing the repeat
-count exposed to the event pipeline. The LED selector masks its index to four
-bits. The independently reviewed stack, startup and IRQ checks bind the emitted
-program and their source contracts. Main contributes 93 control-stack bytes,
-CRT entry two, and all three wrappers and callbacks 61: 156 of the allocated
-162 bytes. All 15 distinct-source IRQ orders and all 256 selector values pass
-in the CPU model. This proof assumes valid memory access, bank-0 SDCC calls,
-private guard objects and MCS-51 in-service/RETI behavior. It does not establish
-physical VS11 routing or timing.
+The safety gate now accepts only the canonical configuration recorded with the
+reviewed exact image. It does not approve another profile by name or schema.
+The `work` application adds Leader, Dynamic Macros and OS indication to the
+previous full profile. Its stack allowance is 99 foreground bytes, two CRT entry
+bytes and 61 bytes for all enabled interrupt wrappers and callbacks: 162 of 165
+bytes. Startup, all 15 distinct-source IRQ orders and all 256 LED selector values
+are covered. These static and CPU results assume valid memory access, bank-0
+SDCC calls, private guard objects and MCS-51 in-service/RETI behavior. They do not
+establish physical VS11 timing.
 
-The complete retained qualification passes 28 base suites, 273 unit tests and
-zero skips, followed by 13 supplemental full-profile suites on the unchanged
-image. Its SHA256 is
-`cdc45835029716b8046fb0810ad9eff685401f27e2542434689fc9a38927ca8b`.
-The initial fixture failure remains recorded separately. Independent reruns
-passed 20 release-safety tests and 31 settings-backup tests. The package command
-also passed independently against current sources, exact images, pinned tools,
-base and supplemental contracts and their retained logs. This was verification
-of an existing build, not a fresh independent build.
+The current exact image passes 28 base suites with 291 unit tests and zero skips,
+and all 30 supplemental work suites. The first supplemental attempt stopped
+because the asset generator and its tests changed during qualification. Its
+logs and source snapshot are retained. Those two files do not affect the base
+suite inputs or firmware image. The base logs and image were revalidated, then
+the entire supplemental phase passed on the final source snapshot. The canonical
+package approval was independently rechecked. This used the retained exact
+build, not a fresh independent build. Base qualification SHA256 is `ae9ea35779bb1a850c243a37acac938282909eafcacd05b07a3935bd770c029d`;
+the final combined record is [current work qualification](../audits/rc6/beta1-release-20261025/current-work-qualification.json).
 
-Settings support is bound to both IHX and permanent CODE, rather than schema
-alone. FULL-only keycodes are accepted only for that target feature profile.
-The transition witness records 47 tests and a real retained alpha.2 backup
-preflight covering 498 keys, 12 encoder assignments and eight Combo slots.
-Fresh backups, fresh physical confirmation, cancellation before erase and
-stop-on-first-failure behavior remain. Volatile NKRO and pending One Shot state
-are not restored. Offline packing records both modes and byte-equal native
-recovery; private images are absent from the public receipt.
+The installer binds settings semantics to exact IHX and permanent CODE, including
+the work feature set. Independent reruns pass 52 settings tests, 24 safety-gate
+tests and eight catalog asset tests. The retained alpha.2 backup passes offline
+preflight for 498 keys, 12 encoder assignments and eight Combo slots. Forward
+alpha.3-to-work restore preserves both encoder directions; reverse downgrade
+is rejected before writes. Fresh backups, physical confirmation, cancellation
+before erase and stop-on-first-failure behavior remain required. Offline packing
+covers permanent and trial modes and byte-equal native recovery.
 
-English and Russian user documentation agrees with the candidate behavior and
-limits. Release notes describe user-visible additions only. The workflow builds
-and qualifies FULL, and still requires both native installer jobs and checksum
-checks before publication. Current bytes were compared directly because the
-candidate is uncommitted; final CI must reproduce these committed inputs and
-pass its committed-HEAD checks.
+Both contract modules and the Linux builder and dependency pins are included in
+the host manifest. Public catalog promotion requires CI reproduced authorization,
+current policy and source closure, exact work identities and safe regular-file
+paths. Only work is promoted; eight profiles remain candidates. The publication
+workflow requires both native package jobs, verifies packaged CI inputs and uses
+an explicit asset file list. Pinned external LUFA inputs are fetched before the
+catalog policy check in a clean publication checkout.
+
+English and Russian installation instructions agree with the exact work image,
+archive names and catalog limits. Review findings and closure are recorded in
+[the audit review](../audits/rc6/beta1-release-20261025/review.md).
 
 Physical keys, encoder rotation, USB timing, LED DMA, cold-start retention,
 electrical flash faults, power-loss recovery and interactive GUI acceptance
-remain untested for this image. Detailed review findings and closure are in
-[audit review](../audits/rc6/alpha3-release-20261024/program-review.md).
+remain untested for beta.1. Native package acceptance must pass before publication.
 
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "status": "passed",
   "hardware_validated": false,
-  "policy_sha256": "32092b9468e7474d77720e5989bbe8cf5b087f6a817cdc19719c5d278c7655ef",
+  "policy_sha256": "af0a34e599519482749358533d01b4624ebd11724421df5dbd52f6691687f34e",
   "program": {
-    "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
-    "symbols_sha256": "8c54e3a043fd636b4073aa16f328abcc53ca0f9c8430c80b5b2d664190805ce0"
+    "ihx_sha256": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+    "symbols_sha256": "934f49ebf4d4c01a64c775e2f7b6e9cd2d7f8ad8d3fad50167d1483dec3112d1"
   },
-  "qualification_sha256": "cdc45835029716b8046fb0810ad9eff685401f27e2542434689fc9a38927ca8b"
+  "qualification_sha256": "ae9ea35779bb1a850c243a37acac938282909eafcacd05b07a3935bd770c029d"
 }
 ```

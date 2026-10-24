@@ -1,0 +1,318 @@
+{"modules": 70, "functions": 653, "retained": 432, "removed_count": 221}
+{"image": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/ajazz_ak820_vial.ihx", "code_bytes": 40132, "highest_address": "0xc59f", "hardware_validated": false}
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/00.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/01.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/02.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/03.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/04.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/05.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/06.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/07.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tools/check_docs.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/08.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_usb/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/09.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_keymap/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/10.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_caps_word/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/11.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/12.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/13.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_optimization/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/14.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_rgb/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/15.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_via_decode/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/16.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_combo/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/17.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_bounded/run.py
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/18.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/tapping-host.json
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/19.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_features/run.py --build-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/ak820_features
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/20.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_unlock/run.py --build-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/ak820_unlock
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/21.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/ak820_tri_layer
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/22.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_iap/run.py --build-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/23.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/rgb
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/24.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/bounded
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/25.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/tapping
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/26.txt
+RUN /workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_combo/emitted.py --build-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short --s51 /workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/combo
+PASS /workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-short/qualification-logs-q07t87eo/27.txt
+RUN PROFILE gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE runtime-safety-gates
+RUN PROFILE delay-abi
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+RUN PROFILE nkro-control-host
+RUN PROFILE nkro-control-linked
+RUN PROFILE one-shot-host
+RUN PROFILE one-shot-linked
+RUN PROFILE mouse-keys-host
+RUN PROFILE mouse-keys-linked
+RUN PROFILE auto-shift-host
+RUN PROFILE auto-shift-linked
+{
+  "format": "ak820-configured-build-1",
+  "configuration": {
+    "format": "ak820-build-configuration-1",
+    "profile": "full-mouse-auto-shift",
+    "optional_features": [
+      "nkro-control",
+      "one-shot",
+      "space-cadet",
+      "mouse-keys",
+      "auto-shift"
+    ],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "nvm_schema": 532482,
+    "make_options": {
+      "AK820_COMPACT_LEADER": "no",
+      "AK820_NKRO_CONTROL": "yes",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "yes",
+      "AK820_COMPACT_MOUSEKEY": "yes",
+      "AK820_COMPACT_AUTOSHIFT": "yes",
+      "AK820_COMPACT_GUI_LOCK": "no",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "no"
+    },
+    "runtime_qmk_settings": [],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200,
+      "mouse_cursor": 20,
+      "mouse_wheel": 80,
+      "auto_shift": 175
+    },
+    "release_approved": false
+  },
+  "identity": {
+    "profile": "full-mouse-auto-shift",
+    "configuration_sha256": "82888be521680685516b11cfcc4792d6a8f27fac59c46e3572e8177449fe8555",
+    "ihx_sha256": "fdd8acb1be1bb769b68094f5dc80d08ce2509bf2f9292ae15aec316ce973eebd",
+    "map_sha256": "1dd2e65f595b6cb5f8db70bcfab69796cc47b94308f47f46cd7582cd467e1077",
+    "mem_sha256": "c020dd0a097677ab18e4252ba22d9e6576e90a14159ad86987c0a9c0821c9771",
+    "build_report_sha256": "4cc5864b2f1faa235057fa3c166d1e57b85b0a9d040043b72f16fb62d6ebcfdf",
+    "source_manifest_sha256": "7c1d2dc69e394a588b7996dfd8bd6fcd8501326f3073530c3a6463217662108e",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "nvm_schema": 532482
+  },
+  "short_calls": {
+    "algorithm": "foreground-short-transfers-v1",
+    "report": ".build/final-full-mouse-auto-shift-short/short-calls.json",
+    "report_sha256": "9bf1eff0696b5f5c4ff0e7cb8c93dc37a86fe4624b870114d6443c7a14fdb846",
+    "selected": 221,
+    "saved_bytes": 221
+  },
+  "resources": {
+    "code_bytes": 40132,
+    "code_windows": [
+      {
+        "name": "low",
+        "start": 10400,
+        "end_exclusive": 12288,
+        "occupied_bytes": 1872,
+        "highest_address": 12271,
+        "trailing_free_bytes": 16
+      },
+      {
+        "name": "main",
+        "start": 12327,
+        "end_exclusive": 50944,
+        "occupied_bytes": 38260,
+        "highest_address": 50591,
+        "trailing_free_bytes": 352
+      }
+    ],
+    "xram": {
+      "start": 1024,
+      "end_inclusive": 3670,
+      "bytes": 2647,
+      "capacity": 3072
+    },
+    "internal_ram": {
+      "static_bytes": 90,
+      "initial_sp": 89,
+      "stack_capacity": 166,
+      "runtime_stack_bound": 160,
+      "stack_margin": 6,
+      "stack_qualified": true
+    },
+    "protected_windows_clear": true,
+    "absolute_xram": [
+      {
+        "symbol": "_ak820_led_dma",
+        "start": 512,
+        "reserved_end_exclusive": 1024
+      }
+    ]
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "offline_tests_passed": true,
+  "release_approved": false,
+  "release_blockers": [
+    "No approved installer/settings transition for this feature identity.",
+    "No independent release approval for this image and source."
+  ],
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "source": {
+    "commit": "d04290b799b1921a55f020ee3cfe041199fae244",
+    "dirty": false
+  },
+  "runtime_analysis": {
+    "format": "ak820-runtime-safety-1",
+    "passed": true,
+    "identity": {
+      "profile": "full-mouse-auto-shift",
+      "configuration_sha256": "82888be521680685516b11cfcc4792d6a8f27fac59c46e3572e8177449fe8555",
+      "ihx_sha256": "fdd8acb1be1bb769b68094f5dc80d08ce2509bf2f9292ae15aec316ce973eebd",
+      "map_sha256": "1dd2e65f595b6cb5f8db70bcfab69796cc47b94308f47f46cd7582cd467e1077",
+      "mem_sha256": "c020dd0a097677ab18e4252ba22d9e6576e90a14159ad86987c0a9c0821c9771",
+      "build_report_sha256": "4cc5864b2f1faa235057fa3c166d1e57b85b0a9d040043b72f16fb62d6ebcfdf",
+      "source_manifest_sha256": "7c1d2dc69e394a588b7996dfd8bd6fcd8501326f3073530c3a6463217662108e",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "nvm_schema": 532482
+    },
+    "source_files": {
+      "tools/configure_firmware.py": "be94fccb1072ba3ab80c42ed8f76e90ccfcca61548e1c972c6a496b6c4317d13",
+      "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+      "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+      "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+      "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+      "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+      "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+      "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+      "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+      "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+    },
+    "root_bounds": {
+      "_main": 97,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2
+    },
+    "unresolved_roots": [],
+    "foreground_bound": 97,
+    "main_entry_frame_bound": 2,
+    "pre_main_bound": 2,
+    "irq_bound": 61,
+    "stack_bound": 160,
+    "stack_capacity": 166,
+    "stack_margin": 6,
+    "whole_program_stack_qualified": true,
+    "release_approved": false,
+    "hardware_validated": false,
+    "physical_device_commands": 0,
+    "limits": [
+      "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+      "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+      "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+      "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+      "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+    ],
+    "reports": {
+      "foreground": {
+        "path": "runtime-stack.json",
+        "sha256": "b3b18894f28eb95acf67eca30a6009391052dbef72f4cc1a68fabbda59db8069"
+      },
+      "startup": {
+        "path": "runtime-safety/startup.json",
+        "sha256": "906a3ee4a1f7de4373811298f9301f242237ac642c54e2c23fc30cb2d1030db9"
+      },
+      "irq": {
+        "path": "runtime-safety/irq/results.json",
+        "sha256": "931d03124bbe7b4f595e7ae6b04464809c7087fbde780e1bd3acbfbe9855eadd"
+      }
+    },
+    "logs": {
+      "startup": "7f4b135c7581977524593a9d4320325d76a44b658c6db82345b309de0b2c58f0",
+      "irq": "931d03124bbe7b4f595e7ae6b04464809c7087fbde780e1bd3acbfbe9855eadd"
+    },
+    "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+  },
+  "qualification": {
+    "sha256": "3e81b11e9f690cedaf6d21e830b8dd1ed46e54194828908c46b541ff1364e484",
+    "suites": 28,
+    "unit_tests": {
+      "run": 273,
+      "skipped": 0
+    }
+  },
+  "profile_tests": {
+    "sha256": "018986adb9f10710d6020f6517c219162bb3182a9dcb612c94f2eb797d7a1281",
+    "suites": [
+      "gates",
+      "outline-gates",
+      "short-call-gates",
+      "core-compact-host",
+      "core-compact-linked",
+      "emitted-linked",
+      "transport-linked",
+      "stack-gates",
+      "runtime-safety-gates",
+      "delay-abi",
+      "startup-gates",
+      "startup-stack",
+      "irq-gates",
+      "release-safety-gates",
+      "outline-integrity",
+      "vialrgb-linked",
+      "nkro-control-host",
+      "nkro-control-linked",
+      "one-shot-host",
+      "one-shot-linked",
+      "mouse-keys-host",
+      "mouse-keys-linked",
+      "auto-shift-host",
+      "auto-shift-linked"
+    ],
+    "source_files_sha256": "8e6ae44cca8ae2b43f810575c857c554a4167221d66f7bf5ac99d0473d974839"
+  }
+}

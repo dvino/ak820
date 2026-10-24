@@ -2,8 +2,8 @@
   "format": "ak820-ci-packing-receipt-1",
   "hardware_validated": false,
   "program": {
-    "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
-    "symbols_sha256": "8c54e3a043fd636b4073aa16f328abcc53ca0f9c8430c80b5b2d664190805ce0",
+    "ihx_sha256": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+    "symbols_sha256": "934f49ebf4d4c01a64c775e2f7b6e9cd2d7f8ad8d3fad50167d1483dec3112d1",
     "schema": 532482
   },
   "host_files": {
@@ -23,9 +23,17 @@
       "size": 13505,
       "sha256": "2a3dd74d73d1b135107468d330818896a7158e16f4e4031b1c1757f14854dc0d"
     },
+    "qmk-8051-ak820/util/ak820_extension_settings.py": {
+      "size": 4191,
+      "sha256": "89bd2be1774ee3d3cdd7d53d023ff93d9498d184673b378dd979887c6ca21339"
+    },
+    "qmk-8051-ak820/util/ak820_profiles.py": {
+      "size": 7864,
+      "sha256": "f763251ef138f42773b79f9cf74eccee8b7498f3ef862914f04e68f822983a2f"
+    },
     "qmk-8051-ak820/util/ak820_release_manifest.py": {
-      "size": 2517,
-      "sha256": "a97a8b902b4bbf7cb7799109c00fa9e5d068d06417146e85736fc5cd04bbee30"
+      "size": 2701,
+      "sha256": "ce88a92cf70129648fffa0063227e1db513e1f91900bc1065d56551971faa40b"
     },
     "qmk-8051-ak820/util/ak820_tool.py": {
       "size": 22775,
@@ -36,20 +44,24 @@
       "sha256": "572f153de6ec9a71eefa8fd87c5ba2bd7da602619131e3ec66fa63d9a742b07f"
     },
     "qmk-8051-ak820/util/pack_ak820.py": {
-      "size": 23558,
-      "sha256": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+      "size": 24994,
+      "sha256": "b97efc8b82e995144146c87d5bfd0f1086dab98aed9f530410eedc2258661b2b"
     },
     "qmk-8051-ak820/util/prepare_ak820_trial.py": {
       "size": 5745,
       "sha256": "91458b9a14bad55f9bb9a056ec43f8daec0ffe996f21f4ffc15e9f6730aa9fc2"
     },
     "tools/ak820_device_protocol.py": {
-      "size": 22064,
-      "sha256": "d60ef46fdbff3277df52924753b5a6070ea33eac24c0081dc6388da8d771aba2"
+      "size": 28081,
+      "sha256": "6fc381c0ffb0553f238afc531a3a9a81fee19ec78b623959befb4a4f80584d5a"
     },
     "tools/build_ci_release.py": {
       "size": 21540,
       "sha256": "3931f1a6939fe5d00ce726b41c92cbb68a3c19b2df2834ebd96283e9220a3acf"
+    },
+    "tools/build_linux_installer.py": {
+      "size": 7823,
+      "sha256": "8865cf30731c905ffb15933e28428ccc0ca34d1509f1e2da6a705e4d7fc28f97"
     },
     "tools/build_release_bundle.py": {
       "size": 12554,
@@ -75,6 +87,10 @@
       "size": 21250,
       "sha256": "94901c2826c7936410f9e799518c4a6ccdff7d1800f10784d03d81c53dc45dd5"
     },
+    "tools/installer/requirements-build-linux.txt": {
+      "size": 451,
+      "sha256": "34661fb47f32cc9c7151b7e22f91ddb416edd3bdacdff6cf3bf1693d3825993e"
+    },
     "tools/installer/requirements-build-windows.txt": {
       "size": 235,
       "sha256": "fe92377176d05e83a805899a51be8569cfc63768609bae64c543641f9d715bd5"
@@ -84,8 +100,8 @@
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
     },
     "tools/installer/settings_backup.py": {
-      "size": 32906,
-      "sha256": "0da58ad3f4867576e1ab3ff2daf750b73973642cc3305bdc2f1cb4424dce503e"
+      "size": 45837,
+      "sha256": "4146f7f4ec48c4bbee84f792381a73e6c4dcc774813dafe67ad70852fb8b9185"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11413,
@@ -104,7 +120,7 @@
       "ak820-vial-trial.bin": {
         "trial": true,
         "build_id": 532482,
-        "sha256": "5a8bdbed77bc98c7e9c51a081b9a04cfabb7b2a279911cb9ac8bc3a6cb1fdd8b",
+        "sha256": "417916264f33bd10e30d0b7ab9ef741d6c455df39accbf0dd243d9413fa57c56",
         "size": 51136
       },
       "restore-native.bin": {
@@ -116,13 +132,13 @@
     "permanent": {
       "trial": false,
       "build_id": 532482,
-      "sha256": "1f699404a8538e9b577aabcb6446f4ec9fe9d4c7c6bbb4116810412759365716",
+      "sha256": "906540052d4deba89eddfd617315299fee05299e24bc33027b2d857603f7701c",
       "size": 51136
     },
     "reference_hashes": {
       "stock": "1dc3e2f79bd03d0bdc4e7a0fc43241e6e89445799948990725ee644ec45c09d1",
       "native": "d7152819712470cf37a0c29d69b756edc4a51aca1d20c13e1fcf4b96f9638535"
     },
-    "level": "Offline full-profile packing using private OEM references; no device operation"
+    "level": "Offline exact work-profile packing using private OEM references; no device operation"
   }
 }

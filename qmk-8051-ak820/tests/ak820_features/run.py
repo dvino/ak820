@@ -18,7 +18,13 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("ak820_unlock", ROOT / "tests/ak820_unlock/run.py")
 unlock = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(unlock)
-emitted, run_case = unlock.emitted, unlock.run_case
+emitted = unlock.emitted
+
+
+def run_case(fw, name, setup, checks):
+    # Reports describe what the host receives; ownership assertions keep their
+    # explicit internal symbols even when Key Override projects outgoing data.
+    return unlock.run_case(fw, name, setup, checks, outgoing_reports=True)
 
 
 def rows(*keys):

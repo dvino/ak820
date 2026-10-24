@@ -1,0 +1,51 @@
+{
+  "pass": true,
+  "hardware_validated": false,
+  "tests": [
+    {
+      "name": "positions",
+      "pass": true,
+      "summary": "PASS: 33554432 position/layer/unlock cases, exact lookup calls and values",
+      "fixture_sha256": "70e2ba6ceab5c6cc5e4b016e4f836b3db32b1ea299c2c6920fe831ce51da0d0e"
+    },
+    {
+      "name": "rgb-release",
+      "pass": true,
+      "summary": "PASS: 33554432 RGB code/modifier/edge cases, exact action and consume behavior",
+      "fixture_sha256": "b5f16c8dd6374fb6b65563933a31607a6f1479b9c61651db13f03dd147597ccb"
+    },
+    {
+      "name": "rgb-press",
+      "pass": true,
+      "summary": "PASS: 33554432 RGB code/modifier/edge cases, exact action and consume behavior",
+      "fixture_sha256": "b5f16c8dd6374fb6b65563933a31607a6f1479b9c61651db13f03dd147597ccb"
+    },
+    {
+      "name": "repeat-standard",
+      "pass": true,
+      "summary": "PASS: 67108864 Repeat code/modifier/edge/callback cases, exact callback and result",
+      "fixture_sha256": "d50212d759841fe39136036a72d0d59d5571022dcb4a3fa2aa9e615bd0a3ee25"
+    },
+    {
+      "name": "repeat-one-shot",
+      "pass": true,
+      "summary": "PASS: 67108864 Repeat code/modifier/edge/callback cases, exact callback and result",
+      "fixture_sha256": "d50212d759841fe39136036a72d0d59d5571022dcb4a3fa2aa9e615bd0a3ee25"
+    }
+  ],
+  "limits": "Host production-function differential against 38ad013; no target ABI or device timing proof.",
+  "source_sha256": {
+    "quantum/keymap_common.c": "1a3e4697eb0ae2e0a88ac49e920869339cfb8719e70b37990bca58c5c7ebbe6e",
+    "quantum/process_keycode/process_rgb.c": "3ca28f22eddb6197acdb2a7824660e1a02bf26d1f4fa00d96a846d0b216bf863",
+    "quantum/process_keycode/process_repeat_key.c": "7f962ae07388a296b69d3fef8fab61dec265ea0231cd0f8f9417947b40a1936b",
+    "quantum/keymap_common.h": "0286c9ff76149f8e32de9735b045beb3812c736b37bced398bafcbc28240dab5",
+    "quantum/keycodes.h": "f26a5d4048244cff357b707637c6dcc07f708b8bae8a5fb0f3da9d7cd20b488a",
+    "quantum/quantum_keycodes.h": "aee0f63e78752213736c7744e1ab8c506ade818efb32b2b0be9e4ad12ee7c3ee",
+    "quantum/keymap_extras/keymap_us.h": "503c7a355a01e68c6feb59f6e8f02fcae4d0200f917d0c9ed172de55a924426d",
+    "quantum/sequencer/sequencer.h": "dbbfcf6fbcbf8760af0f783649f7e6a5c899aaa09d85c1c8bb7c771773d0f768",
+    "tests/ak820_core_compact/fixtures/keymap_38ad013.c": "4cd42481b19cdb2b58bf79a24d152308a9302f8a7e00326e98b9351805715656",
+    "tests/ak820_core_compact/fixtures/rgb_38ad013.c": "17cb306ab7e8387b8a45f9bf044cbd0213122cff670ecc865e57b3b1018b8805",
+    "tests/ak820_core_compact/fixtures/repeat_38ad013.c": "0322eadec3c5b34c8273e3eaa92d5930526bd42a555f32506e0c16b34091664c",
+    "tests/ak820_core_compact/run.py": "961cfe0c22462c5ff10570e4eb1a65e766a59c4a1dbf8d1a92edc358771e5038"
+  }
+}

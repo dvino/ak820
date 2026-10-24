@@ -24,11 +24,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "qmk_settings.h"
 #include <string.h>
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+#    include "ak820_key_override.h"
+#endif
 
 extern keymap_config_t keymap_config;
 
 static uint8_t real_mods = 0;
 static uint8_t weak_mods = 0;
+#ifdef AK820_MAC_PC
+#    include "ak820_mac_pc.h"
+#    if defined(__SDCC_mcs51)
+__bit ak820_mac_mode;
+#    else
+bool ak820_mac_mode;
+#    endif
+#endif
+#if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP) || defined(AK820_MAC_PC)
 #ifdef AK820_COMPACT_GUI_LOCK
 /* Session-only output mask: keep every physical and generated owner intact.
  * Re-enabling GUI immediately exposes any GUI modifier still held. */
@@ -37,13 +49,43 @@ static __bit gui_disabled;
 #    else
 static bool gui_disabled;
 #    endif
+#endif
+#    if defined(AK820_COMPACT_CTRL_GUI_SWAP)
+#        if defined(__SDCC_mcs51)
+static __bit ctrl_gui_swapped;
+#        else
+static bool ctrl_gui_swapped;
+#        endif
+#    endif
 bool ak820_gui_process(uint16_t code, bool pressed) {
+#    if defined(AK820_MAC_PC)
+    if (code == QK_MAGIC_SWAP_ALT_GUI || code == QK_MAGIC_UNSWAP_ALT_GUI || code == QK_MAGIC_TOGGLE_ALT_GUI) {
+        if (pressed) {
+            ak820_mac_mode = code == QK_MAGIC_TOGGLE_ALT_GUI ? !ak820_mac_mode : code == QK_MAGIC_SWAP_ALT_GUI;
+            send_keyboard_report();
+        }
+        return false;
+    }
+#    endif
+#    if defined(AK820_COMPACT_CTRL_GUI_SWAP)
+    if (code == QK_MAGIC_SWAP_CTL_GUI || code == QK_MAGIC_UNSWAP_CTL_GUI || code == QK_MAGIC_TOGGLE_CTL_GUI) {
+        if (pressed) {
+            ctrl_gui_swapped = code == QK_MAGIC_TOGGLE_CTL_GUI ? !ctrl_gui_swapped : code == QK_MAGIC_SWAP_CTL_GUI;
+            send_keyboard_report();
+        }
+        return false;
+    }
+#    endif
+#    if defined(AK820_COMPACT_GUI_LOCK)
     if (code < QK_MAGIC_GUI_ON || code > QK_MAGIC_TOGGLE_GUI) return true;
     if (pressed) {
         gui_disabled = code == QK_MAGIC_TOGGLE_GUI ? !gui_disabled : code == QK_MAGIC_GUI_OFF;
         send_keyboard_report();
     }
     return false;
+#    else
+    return true;
+#    endif
 }
 #endif
 #ifdef AK820_COMPACT_TAPPING
@@ -412,12 +454,58 @@ void send_keyboard_report(void) {
     keyboard_report->mods |= weak_override_mods;
 #endif
 
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+    ak820_key_override_sync(keyboard_report->mods, get_highest_layer(layer_state | default_layer_state));
+    keyboard_report->mods = ak820_key_override_mods(keyboard_report->mods);
+#endif
+#ifdef AK820_MAC_PC
+    /* Transform only the final aggregate; every owner keeps physical bits. */
+    if (ak820_mac_mode) {
+        uint8_t mods = keyboard_report->mods;
+        keyboard_report->mods = (mods & 0x33) | ((mods & 0x44) << 1) | ((mods & 0x88) >> 1);
+    }
+#endif
+#ifdef AK820_COMPACT_CTRL_GUI_SWAP
+    if (ctrl_gui_swapped) {
+        uint8_t mods = keyboard_report->mods;
+        keyboard_report->mods = (mods & 0x66) | ((mods & 0x11) << 3) | ((mods & 0x88) >> 3);
+    }
+#endif
 #ifdef AK820_COMPACT_GUI_LOCK
     if (gui_disabled) keyboard_report->mods &= ~(MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI));
 #endif
 
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+    /* Projection owns no shared references. Macros/other physical keys may
+     * hold the same usage; releasing the override cannot remove them. */
+    static report_keyboard_t projected;
+    uint8_t AK820_STATE_MEM *out = (uint8_t AK820_STATE_MEM *)&projected;
+    const uint8_t AK820_STATE_MEM *base = (const uint8_t AK820_STATE_MEM *)keyboard_report;
+    for (uint8_t i = 0; i < sizeof(projected); ++i) out[i] = base[i];
+    uint8_t overlay_key = ak820_key_override_key();
+    if (overlay_key) {
+#    ifdef NKRO_ENABLE
+        if (keyboard_protocol && keymap_config.nkro) {
+            projected.nkro.bits[overlay_key >> 3] |= 1u << (overlay_key & 7);
+        } else
+#    endif
+        {
+            uint8_t empty = 255;
+            for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; ++i) {
+                if (projected.keys[i] == overlay_key) goto projected_ready;
+                if (!projected.keys[i]) empty = i;
+            }
+            if (empty != 255) projected.keys[empty] = overlay_key;
+            else for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; ++i) projected.keys[i] = 1;
+        }
+    }
+projected_ready: ;
+#    define AK820_REPORT_OUT (&projected)
+#else
+#    define AK820_REPORT_OUT keyboard_report
+#endif
 #ifdef PROTOCOL_VUSB
-    host_keyboard_send(keyboard_report);
+    host_keyboard_send(AK820_REPORT_OUT);
 #else
     static report_keyboard_t last_report;
 
@@ -427,10 +515,10 @@ void send_keyboard_report(void) {
     bool changed = false;
 #    if defined(__SDCC_mcs51)
     uint8_t __xdata *dest = (uint8_t __xdata *)&last_report;
-    const uint8_t __xdata *src = (const uint8_t __xdata *)keyboard_report;
+    const uint8_t __xdata *src = (const uint8_t __xdata *)AK820_REPORT_OUT;
 #    else
     uint8_t *dest = (uint8_t *)&last_report;
-    const uint8_t *src = (const uint8_t *)keyboard_report;
+    const uint8_t *src = (const uint8_t *)AK820_REPORT_OUT;
 #    endif
     for (uint8_t i = 0; i < sizeof(report_keyboard_t); ++i) {
         if (dest[i] != src[i]) {
@@ -438,14 +526,15 @@ void send_keyboard_report(void) {
             changed = true;
         }
     }
-    if (changed) host_keyboard_send(keyboard_report);
+    if (changed) host_keyboard_send(AK820_REPORT_OUT);
 #else
-    if (memcmp(keyboard_report, &last_report, sizeof(report_keyboard_t)) != 0) {
-        memcpy(&last_report, keyboard_report, sizeof(report_keyboard_t));
-        host_keyboard_send(keyboard_report);
+    if (memcmp(AK820_REPORT_OUT, &last_report, sizeof(report_keyboard_t)) != 0) {
+        memcpy(&last_report, AK820_REPORT_OUT, sizeof(report_keyboard_t));
+        host_keyboard_send(AK820_REPORT_OUT);
     }
 #endif
 #endif
+#undef AK820_REPORT_OUT
 }
 
 /** \brief Get mods

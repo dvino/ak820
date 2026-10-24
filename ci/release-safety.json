@@ -1,15 +1,18 @@
 {
   "format": "ak820-release-safety-1",
   "program": {
-    "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
-    "symbols_sha256": "8c54e3a043fd636b4073aa16f328abcc53ca0f9c8430c80b5b2d664190805ce0",
+    "ihx_sha256": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+    "symbols_sha256": "934f49ebf4d4c01a64c775e2f7b6e9cd2d7f8ad8d3fad50167d1483dec3112d1",
     "configuration": {
       "format": "ak820-build-configuration-1",
-      "profile": "full",
+      "profile": "work",
       "optional_features": [
         "nkro-control",
         "one-shot",
-        "space-cadet"
+        "space-cadet",
+        "leader",
+        "dynamic-macros",
+        "os-indicators"
       ],
       "base_features": [
         "six-layers",
@@ -29,14 +32,29 @@
       ],
       "nvm_schema": 532482,
       "make_options": {
+        "AK820_COMPACT_TAP_DANCE": "no",
+        "AK820_COMPACT_KEY_OVERRIDE": "no",
+        "AK820_QMK_SETTINGS": "no",
+        "AK820_MAC_PC": "no",
+        "AK820_OS_INDICATORS": "yes",
+        "AK820_COMPACT_LEADER": "yes",
         "AK820_NKRO_CONTROL": "yes",
         "AK820_COMPACT_ONESHOT": "yes",
-        "AK820_COMPACT_SPACE_CADET": "yes"
+        "AK820_COMPACT_SPACE_CADET": "yes",
+        "AK820_COMPACT_MOUSEKEY": "no",
+        "AK820_COMPACT_AUTOSHIFT": "no",
+        "AK820_COMPACT_GUI_LOCK": "no",
+        "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+        "AK820_COMPACT_DYNAMIC_MACRO": "yes"
       },
       "runtime_qmk_settings": [],
       "timing_ms": {
         "combo": 40,
-        "tap_hold": 200
+        "tap_hold": 200,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "leader": 300,
+        "dynamic_macro_phase": 10
       },
       "release_approved": false
     }
@@ -47,20 +65,20 @@
       "sha256": "44c3602ea7e7f9ca0b924ed1663b942442a8f2e50005586d08b11d211b231165"
     },
     "qmk-8051-ak820/quantum/dynamic_keymap.c": {
-      "size": 29057,
-      "sha256": "0e1ecf2fda3eba840b2d6b9a4ddaad51db2b39bb77d83d7c30bf4fc2969e849a"
+      "size": 32158,
+      "sha256": "e3681a5ee9e30745c18f1982247ce1749213e989f3036089a8428178d8a88afb"
     },
     "qmk-8051-ak820/quantum/repeat_key.c": {
-      "size": 11560,
-      "sha256": "1defd6a954ab8ee524fbb65edb5b21285fc0432bf6532216331c1077c94e01cd"
+      "size": 11628,
+      "sha256": "d477f09b3598d13a91ceed6fde314e5c43d7f3f3af3f43fc7a808ceb2b6645f2"
     },
     "qmk-8051-ak820/tests/ak820_irq/run.py": {
-      "size": 19387,
-      "sha256": "fe79021d947d4757bfff44d803a52abc1fead6dc748cfe4c1f24c4d46175156e"
+      "size": 22565,
+      "sha256": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4"
     },
     "qmk-8051-ak820/tests/ak820_stack/analyze.py": {
-      "size": 41894,
-      "sha256": "03151925526c41ad8890191d9ce54beb5e9764fc71e1a070927f4e18deedd183"
+      "size": 49347,
+      "sha256": "5a3511b074901bb179ff133242a81880071de595091fb3c984899494360d27c1"
     },
     "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": {
       "size": 5047,
@@ -70,29 +88,33 @@
       "size": 12213,
       "sha256": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5"
     },
+    "qmk-8051-ak820/util/ak820_profiles.py": {
+      "size": 7864,
+      "sha256": "f763251ef138f42773b79f9cf74eccee8b7498f3ef862914f04e68f822983a2f"
+    },
     "qmk-8051-ak820/util/ak820_release_safety.py": {
-      "size": 11221,
-      "sha256": "2cb40fafa08ece40cdd15ffc3a258ee71776d422e64f6bdf063aea2b6c03026a"
+      "size": 11274,
+      "sha256": "7e292c3a0f19d9a126abb646c04d1acec8a1a83b5341869401fb90ee9dd06cf6"
     },
     "qmk-8051-ak820/util/pack_ak820.py": {
-      "size": 23558,
-      "sha256": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+      "size": 24994,
+      "sha256": "b97efc8b82e995144146c87d5bfd0f1086dab98aed9f530410eedc2258661b2b"
     },
     "tools/ak820_device_protocol.py": {
-      "size": 22064,
-      "sha256": "d60ef46fdbff3277df52924753b5a6070ea33eac24c0081dc6388da8d771aba2"
+      "size": 28081,
+      "sha256": "6fc381c0ffb0553f238afc531a3a9a81fee19ec78b623959befb4a4f80584d5a"
     },
     "tools/installer/settings_backup.py": {
-      "size": 32906,
-      "sha256": "0da58ad3f4867576e1ab3ff2daf750b73973642cc3305bdc2f1cb4424dce503e"
+      "size": 45837,
+      "sha256": "4146f7f4ec48c4bbee84f792381a73e6c4dcc774813dafe67ad70852fb8b9185"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11413,
       "sha256": "677d93b42a8e58baf903bf6d2ae64ee40a4f8a97f4a001f6cfa530537728d4b1"
     },
     "tools/installer/test_settings_backup.py": {
-      "size": 35241,
-      "sha256": "1d29625faba9d6d86e18d973e5182f23b8ac4edcea522f33ca43cc6018743a3f"
+      "size": 37491,
+      "sha256": "ccbc0790c9e63b91951a253c91e50748f328669abb39f6fd2ee1cc318ae88e1f"
     },
     "tools/installer/test_settings_workflow.py": {
       "size": 21245,
@@ -101,24 +123,24 @@
   },
   "witnesses": {
     "stack": {
-      "path": "audits/rc6/alpha3-release-20261024/stack.json",
-      "size": 321949,
-      "sha256": "baa42a0447bac9f870b56ac72c023943f713f02f67296d547488744b760efe48"
+      "path": "audits/rc6/beta1-release-20261025/stack.json",
+      "size": 320070,
+      "sha256": "fb2040576645d1d73fe51664933cb2ff534becf7f4b2aae258ab32f448ef6cd2"
     },
     "startup": {
-      "path": "audits/rc6/alpha3-release-20261024/startup.json",
-      "size": 9217,
-      "sha256": "10b14fe2d34c34c802f203135090b15878e3fb994784ad41c38140a6251ed6c3"
+      "path": "audits/rc6/beta1-release-20261025/startup.json",
+      "size": 9503,
+      "sha256": "ca391b329bc15710540279df741a91b3bacb797c4adb8c291d9192bd56171262"
     },
     "irq": {
-      "path": "audits/rc6/alpha3-irq-20261024/final/results.json",
-      "size": 45661,
-      "sha256": "1d57dd20e1e8e4d0f0ff743012b0da1ac2f9687f1d03e943f89f37e42841eb76"
+      "path": "audits/rc6/beta1-release-20261025/irq.json",
+      "size": 47840,
+      "sha256": "367601c22628c2d15a093f6f3db8d0e90ca32564fc3ec977e53ead434452f2df"
     },
     "transition": {
-      "path": "audits/rc6/alpha3-transition-20261024/transition.json",
-      "size": 2408,
-      "sha256": "47b0506a02e69bf03e4e0fc46d8011317c76c5d672eb664e2a8a4a7123cced41"
+      "path": "audits/rc6/beta1-release-20261025/transition.json",
+      "size": 2620,
+      "sha256": "c922557eaeb92bf3e55fa9a806ee4702df67c2eab976423f140be4d2fe279d7d"
     }
   }
 }

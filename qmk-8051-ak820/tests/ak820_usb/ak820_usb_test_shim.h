@@ -42,3 +42,11 @@ uint8_t test_read_code(uint16_t address);
 void wait_ms(uint16_t value);
 void wait_us(uint16_t value);
 void raw_hid_receive(uint8_t *data, uint8_t length);
+
+#ifdef AK820_OS_INDICATORS
+extern uint8_t ak820_led_dma[512];
+extern volatile uint8_t IE_PWM_I2C;
+typedef uint8_t layer_state_t;
+extern layer_state_t layer_state, default_layer_state;
+uint32_t timer_read32(void);
+#endif

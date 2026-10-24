@@ -1,0 +1,60 @@
+{
+  "actual_alpha2_preflight": {
+    "backup_manifest_sha256": "577f245480f9be0502805906e9662914dfa0cd0f9893ce785bf088d2df62886d",
+    "combo_count": 8,
+    "encoder_count": 12,
+    "key_count": 498,
+    "passed": true,
+    "result_path": "audits/rc6/beta1-release-20261025/alpha2-preflight.json",
+    "result_sha256": "5d6c577f14c824686e86caa1020b2fe46b846164e1067a65390c1e8e3b7219cc"
+  },
+  "format": "ak820-settings-transition-1",
+  "offline_only": true,
+  "passed": true,
+  "physical_device_commands": 0,
+  "scope": "Actual retained alpha.2 backup preflight and host wire models including alpha.3-to-work and downgrade rejection. No live device test.",
+  "source_identities": [
+    {
+      "code_sha256": "d787703f62f96d7204bf25c566eac39f66b8c8c3f711ce152d7ff1eded9716da",
+      "ihx_sha256": "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f",
+      "schema": 532482
+    }
+  ],
+  "source_images": [
+    "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f"
+  ],
+  "target": {
+    "code_sha256": "a7ad972f47acff20f3492ed846f5c6ca0825d43de263f26cc9328069a27cdd10",
+    "ihx_sha256": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+    "optional_features": [
+      "nkro-control",
+      "one-shot",
+      "space-cadet",
+      "leader",
+      "dynamic-macros",
+      "os-indicators"
+    ],
+    "schema": 532482
+  },
+  "tests": [
+    {
+      "command": "/usr/bin/python3 -B -m unittest discover -s tools/installer -p 'test_settings*.py' -v",
+      "exit_code": 0,
+      "log_path": "audits/rc6/beta1-release-20261025/settings-tests.log",
+      "log_sha256": "586bef62f2933eaaaeda18ffdebc0242008b88aa79a4540bf7485b0be6fe8d7f",
+      "source_files": {
+        "audits/rc6/alpha3-transition-20261024/verify_transition.py": "44c3602ea7e7f9ca0b924ed1663b942442a8f2e50005586d08b11d211b231165",
+        "qmk-8051-ak820/util/pack_ak820.py": "b97efc8b82e995144146c87d5bfd0f1086dab98aed9f530410eedc2258661b2b",
+        "tools/ak820_device_protocol.py": "6fc381c0ffb0553f238afc531a3a9a81fee19ec78b623959befb4a4f80584d5a",
+        "tools/installer/settings_backup.py": "4146f7f4ec48c4bbee84f792381a73e6c4dcc774813dafe67ad70852fb8b9185",
+        "tools/installer/settings_workflow.py": "677d93b42a8e58baf903bf6d2ae64ee40a4f8a97f4a001f6cfa530537728d4b1",
+        "tools/installer/test_settings_backup.py": "ccbc0790c9e63b91951a253c91e50748f328669abb39f6fd2ee1cc318ae88e1f",
+        "tools/installer/test_settings_workflow.py": "76c560d1dde379657ecd5c32f6ddacea3f0b618f5cceeca27263080e15bdf675"
+      },
+      "unit_tests": {
+        "run": 52,
+        "skipped": 0
+      }
+    }
+  ]
+}

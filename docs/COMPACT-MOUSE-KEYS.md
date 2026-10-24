@@ -2,7 +2,10 @@
 
 # Compact Mouse Keys
 
-`AK820_COMPACT_MOUSEKEY=yes` enables the compact AK820 implementation and
+Move the pointer, scroll or hold mouse buttons with keyboard keys.
+
+The `mouse` and `mouse-typing` packages include the compact AK820 implementation
+and
 `MOUSEKEY_ENABLE`. It uses the existing HID mouse report and shared USB endpoint.
 Map these keycodes in Vial when using a firmware build that includes the option:
 

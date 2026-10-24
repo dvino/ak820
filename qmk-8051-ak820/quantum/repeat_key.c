@@ -66,7 +66,7 @@ void set_last_mods(uint8_t mods) {
     last_mods = mods;
 }
 
-void set_last_record(uint16_t keycode, keyrecord_t* record) {
+void set_last_record(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record) {
     last_record         = *record;
     last_record.keycode = keycode;
     last_repeat_count   = 0;
@@ -85,7 +85,7 @@ int8_t get_repeat_key_count(void) {
     return processing_repeat_count;
 }
 
-static void repeat_invoke(const keyevent_t* event, bool alternate) {
+static void repeat_invoke(const keyevent_t AK820_RECORD_MEM *event, bool alternate) {
     // It is possible (e.g. in rolled presses) that the last key changes while
     // the Repeat Key is pressed. To prevent stuck keys, it is important to
     // remember separately what key record was processed on press so that the
@@ -145,7 +145,7 @@ static void repeat_invoke(const keyevent_t* event, bool alternate) {
     }
 }
 
-void repeat_key_invoke(const keyevent_t* event) {
+void repeat_key_invoke(const keyevent_t AK820_RECORD_MEM *event) {
     repeat_invoke(event, false);
 }
 
@@ -280,7 +280,7 @@ uint16_t get_alt_repeat_key_keycode(void) {
     return KC_NO; // No alternate key found.
 }
 
-void alt_repeat_key_invoke(const keyevent_t* event) {
+void alt_repeat_key_invoke(const keyevent_t AK820_RECORD_MEM *event) {
     // Share ownership with Repeat so overlapping mappings cannot strand keys.
     repeat_invoke(event, true);
 }

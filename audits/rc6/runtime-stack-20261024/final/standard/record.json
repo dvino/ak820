@@ -1,0 +1,166 @@
+{
+  "profile": "standard",
+  "optional_features": [],
+  "short_calls": false,
+  "identity": {
+    "build_report_sha256": "554d8fbf429dfb584514bc2fad46e968f274d4c5f1ca5671c2f3a64b4b7210dd",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "configuration_sha256": "9c29b9eca3ad7d583f7ba54f4756266ac3e882adfcd8b14e819649abe16551ca",
+    "ihx_sha256": "d51cdf141eac4dd1fe7aa5c98c87ffc0fb1a70d931c50e12b9f84cd8467745c4",
+    "map_sha256": "8ffd4c3221b29ec34a1dde59bc99020cbef8584de247c5697980da2512df4768",
+    "mem_sha256": "dc48bfbae88c5e7d65ceb5cea5513ac13b88e1289864c74fe4eeaf6a3ac6d8e2",
+    "nvm_schema": 532482,
+    "profile": "standard",
+    "source_manifest_sha256": "e795aa6e20a1ab52afb857800bee81b68968d2b84ea2654e3ad9afc4bb3ddd38"
+  },
+  "source": {
+    "commit": "39b6e227dd72302b9945cb73531f0b2493028591",
+    "dirty": false
+  },
+  "resources": {
+    "absolute_xram": [
+      {
+        "reserved_end_exclusive": 1024,
+        "start": 512,
+        "symbol": "_ak820_led_dma"
+      }
+    ],
+    "code_bytes": 38077,
+    "code_windows": [
+      {
+        "end_exclusive": 12288,
+        "highest_address": 12203,
+        "name": "low",
+        "occupied_bytes": 1804,
+        "start": 10400,
+        "trailing_free_bytes": 84
+      },
+      {
+        "end_exclusive": 50944,
+        "highest_address": 48604,
+        "name": "main",
+        "occupied_bytes": 36273,
+        "start": 12327,
+        "trailing_free_bytes": 2339
+      }
+    ],
+    "internal_ram": {
+      "initial_sp": 93,
+      "runtime_stack_bound": 161,
+      "stack_capacity": 162,
+      "stack_margin": 1,
+      "stack_qualified": true,
+      "static_bytes": 94
+    },
+    "protected_windows_clear": true,
+    "xram": {
+      "bytes": 2589,
+      "capacity": 3072,
+      "end_inclusive": 3612,
+      "start": 1024
+    }
+  },
+  "base_suites": 28,
+  "base_unit_tests": {
+    "run": 273,
+    "skipped": 0
+  },
+  "profile_suites": [
+    "gates",
+    "outline-gates",
+    "short-call-gates",
+    "core-compact-host",
+    "core-compact-linked",
+    "emitted-linked",
+    "transport-linked",
+    "stack-gates",
+    "runtime-safety-gates",
+    "delay-abi",
+    "startup-gates",
+    "startup-stack",
+    "irq-gates",
+    "release-safety-gates",
+    "outline-integrity",
+    "vialrgb-linked"
+  ],
+  "offline_tests_passed": true,
+  "release_approved": false,
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "runtime": {
+    "foreground_bound": 98,
+    "format": "ak820-runtime-safety-1",
+    "hardware_validated": false,
+    "identity": {
+      "build_report_sha256": "554d8fbf429dfb584514bc2fad46e968f274d4c5f1ca5671c2f3a64b4b7210dd",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "configuration_sha256": "9c29b9eca3ad7d583f7ba54f4756266ac3e882adfcd8b14e819649abe16551ca",
+      "ihx_sha256": "d51cdf141eac4dd1fe7aa5c98c87ffc0fb1a70d931c50e12b9f84cd8467745c4",
+      "map_sha256": "8ffd4c3221b29ec34a1dde59bc99020cbef8584de247c5697980da2512df4768",
+      "mem_sha256": "dc48bfbae88c5e7d65ceb5cea5513ac13b88e1289864c74fe4eeaf6a3ac6d8e2",
+      "nvm_schema": 532482,
+      "profile": "standard",
+      "source_manifest_sha256": "e795aa6e20a1ab52afb857800bee81b68968d2b84ea2654e3ad9afc4bb3ddd38"
+    },
+    "irq_bound": 61,
+    "limits": [
+      "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+      "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+      "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+      "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+      "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+    ],
+    "logs": {
+      "irq": "9dfcfaf07796ceb05c63b2b6f6716f9ecd9d17d74d01cc52fc688ce345401b6f",
+      "startup": "5826fded7c2b9019ede300d3d9f7d76c4b7e068995fa0915bc328784b3a6469e"
+    },
+    "main_entry_frame_bound": 2,
+    "passed": true,
+    "physical_device_commands": 0,
+    "pre_main_bound": 2,
+    "release_approved": false,
+    "reports": {
+      "foreground": {
+        "path": "runtime-stack.json",
+        "sha256": "48c3401f7afbdd69ebd780e833fcaf7927a6a34a799d25aa88b6f0520ad3ce10"
+      },
+      "irq": {
+        "path": "runtime-safety/irq/results.json",
+        "sha256": "9dfcfaf07796ceb05c63b2b6f6716f9ecd9d17d74d01cc52fc688ce345401b6f"
+      },
+      "startup": {
+        "path": "runtime-safety/startup.json",
+        "sha256": "ffa6d2c91b47c111078e543277c820208b290502f63eb14e4ee7405982a0af52"
+      }
+    },
+    "root_bounds": {
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2,
+      "_ak820_timer_irq": 2,
+      "_main": 98
+    },
+    "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+    "source_files": {
+      "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+      "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+      "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+      "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+      "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+      "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+      "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+      "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+      "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+      "tools/configure_firmware.py": "772336c301183f02da882bd29871b73fa5200589732d250325caaf230abe80e8"
+    },
+    "stack_bound": 161,
+    "stack_capacity": 162,
+    "stack_margin": 1,
+    "unresolved_roots": [],
+    "whole_program_stack_qualified": true
+  },
+  "raw_build": {
+    "path": "raw-build.tar.xz",
+    "bytes": 2306840,
+    "sha256": "f4c965164260de17c4f0bcfa10406003ac1517b526dffbfdcd961b7b06e56c3c"
+  }
+}

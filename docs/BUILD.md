@@ -31,7 +31,9 @@ python3 -m venv .venv
 
 For a control build with SDCC 4.4, install it with
 `python3 tools/install_sdcc44_toolchain.py` from the repository root, then use
-`--sdcc-version 4.4.0 --toolchain ../toolchains/sdcc-4.4.0` in the QMK directory.
+`--sdcc-version 4.4.0 --toolchain ../toolchains/sdcc-4.4.0 --profile standard`
+in the QMK directory. This explicitly selects a historical control profile;
+the curated default `work` enables short calls, which require SDCC 4.6.0.
 Keep each compiler local and out of Git.
 
 Use a fresh build directory. The builder rejects an existing directory and
@@ -56,9 +58,13 @@ file length or source size.
 
 ## Feature profiles
 
-Use the [profile configurator](BUILD-PROFILES.md) to build a development
-profile. It links the complete image, checks resource placement and runs offline
-regression gates against that image. The published alpha.3 image remains fixed
+Use the [profile guide](BUILD-PROFILES.md) to choose one of nine curated
+packages. `work` is the default; curated packages use short calls automatically
+with the pinned SDCC 4.6.0 compiler. The low-level command above links the image
+and records its inputs. `tools/configure_firmware.py build` additionally checks
+resource placement, proves stack and interrupt bounds, and runs the full offline
+regression suites against that image. See
+the [module matrix](MODULE-MATRIX.md) for package compatibility and measured size. The published alpha.3 image remains fixed
 to its reviewed source identity. All current profile sources have changed since
 that release; these builds are not release-qualified or flashing recommendations.
 

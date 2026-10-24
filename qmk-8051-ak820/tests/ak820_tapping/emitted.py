@@ -12,8 +12,12 @@ class Trace:
         self.fw,self.name=fw,name;self.commands=fw.initialize();self.expected=[];self.event_index=0;self.width=8;self.extra_address=None;self.macro_fixtures=[]
         # Observe every production keyboard send, including the immediate tap
         # pulse which has already disappeared when action_exec returns.
-        addr=fw.address('_actual_keyboard_report')
-        self.commands += ['timer add event','timer add macro',f'break {fw.address("_host_keyboard_send"):#x}',f'commands 1 "echo @@HID; dump xram {addr:#x} {addr+7:#x} 16; fill xram 0x2201 0x2203 0x12; run"']
+        projected=[n for n in fw.symbols if n.startswith('_send_keyboard_report_projected_')]
+        if len(projected)>1:raise ValueError('Ambiguous outgoing report projection')
+        self.report_symbol=projected[0] if projected else '_actual_keyboard_report'
+        addr=self.report_address=fw.address(self.report_symbol)
+        # Observe after host_keyboard_send assigns the outgoing NKRO report ID.
+        self.commands += ['timer add event','timer add macro',f'break {fw.address("_ak820_host_send_keyboard"):#x}',f'commands 1 "echo @@HID; dump xram {addr:#x} {addr+7:#x} 16; echo @@HIDPTR; dump sfr 0x82 0x83 16; fill xram 0x2201 0x2203 0x12; run"']
         self.commands += [linked.memory('rom',0xc740,[0]*256)]
         for layer in range(1,6):self.commands += [linked.memory('rom',0xc740+layer*256,[0,1]*128)]
     def capture_extra(self):
@@ -39,7 +43,7 @@ class Trace:
     def tick(self,time):
         self.commands += ['fill xram 0x2201 0x2203 0x12']+self.fw.write('_action_exec_PARM_1',[0,0,time&255,time>>8,0,0])+['timer set event 0','timer start event']+self.fw.call('_action_exec')+['timer stop event',f'echo @@EVENT-{self.event_index}','timer get event'];self.event_index+=1
     def check(self,label,report=None,layer=None):
-        for suffix,symbol,value in [('report','_actual_keyboard_report',report),('layer','_layer_state',None if layer is None else [layer])]:
+        for suffix,symbol,value in [('report',self.report_symbol,report),('layer','_layer_state',None if layer is None else [layer])]:
             if value is not None:
                 tag=label+'_'+suffix;self.commands+=self.fw.dump_symbol(tag,symbol,len(value));self.expected.append((tag,symbol,value))
     def run(self):
@@ -47,8 +51,10 @@ class Trace:
         checks=[{'label':tag,'actual':self.fw.extract(log,tag,self.fw.address(sym),len(value)),'expected':value} for tag,sym,value in self.expected]
         hid=[]
         for section in log.split('@@HID\n')[1:]:
-            try:hid.append(self.fw.extract('@@packet\n'+section,'packet',self.fw.address('_actual_keyboard_report'),self.width))
+            try:hid.append(self.fw.extract('@@packet\n'+section,'packet',self.report_address,self.width))
             except ValueError:pass
+        pointers=[self.fw.extract('@@pointer\n'+section,'pointer',0x82,2) for section in log.split('@@HIDPTR\n')[1:]]
+        pointer_ok=len(pointers)==len(hid) and all(p==[self.report_address&255,self.report_address>>8] for p in pointers)
         extra=[]
         if self.extra_address is not None:
             for section in log.split('@@EXTRA\n')[1:]:
@@ -57,7 +63,7 @@ class Trace:
         macro_clocks=[int(n) for n in re.findall(r'timer #\d+\("macro"\).*?\((\d+) clks\)',log)]
         event_clocks=[int(n) for n in re.findall(r'timer #\d+\("event"\).*?\((\d+) clks\)',log)]
         clocks=re.findall(r'Total time since last reset=.*?\((\d+) clks\)',log)
-        return dict(name=self.name,pass_=all(c['actual']==c['expected'] for c in checks),checks=checks,hid_send_trace=hid,extra_callback_trace=extra,macro_fixtures=self.macro_fixtures,macro_clock_samples=macro_clocks,event_clock_samples=event_clocks,max_event_clocks=max(event_clocks,default=0),simulated_clocks=int(clocks[-1]) if clocks else None,**stack)
+        return dict(name=self.name,pass_=pointer_ok and all(c['actual']==c['expected'] for c in checks),checks=checks,hid_send_trace=hid,outgoing_report_address=self.report_address,outgoing_pointer_checks=pointers,extra_callback_trace=extra,macro_fixtures=self.macro_fixtures,macro_clock_samples=macro_clocks,event_clock_samples=event_clocks,max_event_clocks=max(event_clocks,default=0),simulated_clocks=int(clocks[-1]) if clocks else None,**stack)
 
 def vial(fw,command):
     return [linked.memory('xram',fw.address('_raw_buffer'),[0xfe,command]+[0]*30)]+fw.write('_vial_handle_cmd_PARM_2',[32])+fw.call('_vial_handle_cmd',fw.address('_raw_buffer'))
@@ -133,7 +139,7 @@ def cases(fw):
     t.map((0,3),0x5240);t.event((0,3),1,110);t.event((0,3),0,111);t.check('default-away',layer=4)
     t.map((0,3),0x5241);t.event((0,3),1,112);t.event((0,3),0,113);t.event((0,1),1,114);t.event((0,1),0,115);t.event((0,0),0,116);t.check('explicit-adjust-survives',layer=8)
     t.event((0,2),1,117);t.check('to-replaces-persistent',layer=16);out.append(t.run())
-    t=Trace(fw,'nkro-seven-owners');t.width=32;t.commands=[c.replace(f'{fw.address("_actual_keyboard_report")+7:#x} 16;',f'{fw.address("_actual_keyboard_report")+31:#x} 16;') for c in t.commands];t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1])
+    t=Trace(fw,'nkro-seven-owners');t.width=32;t.commands=[c.replace(f'{t.report_address+7:#x} 16;',f'{t.report_address+31:#x} 16;') for c in t.commands];t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1])
     for i in range(8):t.map((i//4,i%4),4+max(0,i-1));t.event((i//4,i%4),1,100+i)
     # Shared NKRO report: id6, modifier byte, then usages4..10 bitmap.
     t.check('bitmap', [6,0,240,7]+[0]*28);t.event((0,0),0,120);t.check('duplicate', [6,0,240,7]+[0]*28);t.event((0,1),0,121);t.check('last-owner', [6,0,224,7]+[0]*28);out.append(t.run())

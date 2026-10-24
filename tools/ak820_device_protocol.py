@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / 'qmk-8051-ak820/util'))
 import pack_ak820 as pack
 import ak820_diagnose as diag
 import ak820_tool as transport
+import ak820_extension_settings as extensions
 
 
 def require(ok, message):
@@ -137,21 +138,43 @@ class DeviceAPI:
                 require(1 <= count <= 27 and address <= 65536-count and zero_tail(5), 'Malformed FD00 read')
             else: require(zero_tail(2), 'Malformed FD01 status request')
         elif command == 254:
-            require(sub in (0, 1, 2, 3, 4, 13), 'Unknown FE Vial command')
+            require(sub in (0, 1, 2, 3, 4, 9, 10, 11, 12, 13), 'Unknown FE Vial command')
             if sub in (0, 1): require(zero_tail(2), 'Malformed Vial metadata request')
             elif sub == 2: require(packet[4:6] == bytes(2) and zero_tail(6), 'Malformed Vial definition page request')
             elif sub == 3: require(packet[2] < 6 and packet[3] == 0 and zero_tail(4), 'Malformed encoder getter')
+            elif sub in (9, 10, 11, 12):
+                self._require_extension_schema()
+                qsid = int.from_bytes(packet[2:4], 'little')
+                if sub == 9:
+                    require(zero_tail(4), 'Malformed settings query')
+                elif sub == 12:
+                    write = True
+                    require(zero_tail(2), 'Malformed settings reset')
+                else:
+                    require(qsid in extensions.FIELDS, 'Unknown settings ID')
+                    width = extensions.FIELDS[qsid][1]
+                    if sub == 10:
+                        require(zero_tail(4), 'Malformed settings getter')
+                    else:
+                        write = True
+                        extensions.field_value(qsid, int.from_bytes(packet[4:4+width], 'little'))
+                        require(zero_tail(4+width), 'Malformed settings setter')
             elif sub == 13:
-                require(packet[2] in (0, 3, 4), 'Unknown Combo operation')
+                require(packet[2] in (0, 1, 2, 3, 4, 5, 6), 'Unknown dynamic operation')
+                if packet[2] in (1, 2, 5, 6):
+                    self._require_extension_schema()
                 if packet[2] == 0:
                     require(zero_tail(3), 'Malformed Combo count request')
                 else:
                     require(packet[3] < 8, 'Invalid Combo index')
-                    if packet[2] == 3:
+                    if packet[2] in (1, 3, 5):
                         require(zero_tail(4), 'Malformed Combo getter')
                     else:
                         write = True
-                        self.validate_combo(packet[4:14])
+                        if packet[2] == 4:
+                            self.validate_combo(packet[4:14])
+                        else:
+                            extensions.validate_entry('tap_dance' if packet[2] == 2 else 'key_overrides', packet[4:14])
                         require(zero_tail(14), 'Malformed Combo setter')
             else:
                 write = True
@@ -160,6 +183,12 @@ class DeviceAPI:
             raise ValueError('Forbidden command')
         if write:
             require(self.allow_writes, 'Writes are disabled for this DeviceAPI instance')
+
+    def _require_extension_schema(self):
+        payload = self.binding.get('payload', b'')
+        offset = pack.NVM_START - pack.APP_START + 37
+        require(int.from_bytes(payload[offset:offset+3], 'little') == extensions.SCHEMA,
+                'Typed extensions require a schema03 bound image')
 
     def _require_writes(self):
         require(self.allow_writes, 'Writes are disabled for this DeviceAPI instance')
@@ -228,7 +257,7 @@ class DeviceAPI:
         (self.output / 'current-nvm-journal.bin').write_bytes(region)
         require(not any(region[pack.NVM_END-pack.NVM_START+64:]), 'Dirty journal header')
         nvm = region[:pack.NVM_END-pack.NVM_START]
-        pack.validate_nvm(nvm)
+        pack.validate_nvm(nvm, int.from_bytes(nvm[37:40], 'little'))
         require(self.read_code(pack.NVM_START, len(nvm)) == nvm, 'Unstable NVM')
         self.status()
         return nvm
@@ -309,10 +338,14 @@ class DeviceAPI:
         data = cls.validate_combo(data)
         return data[:4] + cls.COMBO_MARKER + data[8:]
 
-    def combo_count(self):
+    def dynamic_entry_counts(self):
         reply = self.exchange(self.packet(254, 13, 0))
-        require(reply == bytes((0, 8, 0)) + bytes(28) + b'\x01', 'Combo capabilities differ')
-        return 8
+        require(reply[0] in (0,8) and reply[1] == 8 and reply[2] in (0,8)
+                and reply[3:] == bytes(28) + b'\x01', 'Dynamic capabilities differ')
+        return tuple(reply[:3])
+
+    def combo_count(self):
+        return self.dynamic_entry_counts()[1]
 
     def get_combo(self, index):
         require(type(index) is int and 0 <= index < 8, 'Invalid Combo index')
@@ -334,6 +367,85 @@ class DeviceAPI:
         offset = self.COMBO_OFFSET + 10*index
         expected[offset:offset+10] = self.stored_combo(data)
         require(self.read_nvm() == bytes(expected), 'Combo durable settings or neighboring bytes differ')
+        return True
+
+    def get_extension(self, kind, index):
+        extensions.slot_offset(kind, index)
+        op = 1 if kind == 'tap_dance' else 5
+        packet = self.packet(254, 13, op, index)
+        reply = self.exchange(packet)
+        require(reply[0] == 0 and reply[11:] == packet[11:], 'Extension getter ACK mismatch')
+        return extensions.validate_entry(kind, reply[1:11])
+
+    def set_extension(self, kind, index, data):
+        self._require_writes()
+        offset = extensions.slot_offset(kind, index)
+        extensions.validate_entry(kind, data)
+        before = self.read_nvm()
+        require(int.from_bytes(before[37:40], 'little') == extensions.SCHEMA, 'Extension schema differs')
+        packet = self.packet(254, 13, 2 if kind == 'tap_dance' else 6, index, *data)
+        require(self.exchange(packet) == b'\0' + packet[1:], 'Extension setter ACK mismatch')
+        self.status()
+        require(self.get_extension(kind, index) == data, 'Extension getter readback differs')
+        expected = bytearray(before)
+        expected[offset:offset+10] = data
+        require(self.read_nvm() == bytes(expected), 'Extension durable readback or neighboring bytes differ')
+        return True
+
+    def settings_query(self, greater_than=0):
+        require(type(greater_than) is int and 0 <= greater_than <= 65535, 'Invalid settings query ID')
+        reply = self.exchange(self.packet(254, 9, greater_than & 255, greater_than >> 8))
+        ids = [int.from_bytes(reply[i:i+2], 'little') for i in range(0,32,2)]
+        values = [i for i in ids if i != 65535]
+        require(ids == values + [65535]*(16-len(values)) and values == sorted(set(values))
+                and all(i in extensions.FIELDS and i > greater_than for i in values), 'Invalid settings capabilities')
+        return values
+
+    def get_setting(self, qsid):
+        require(type(qsid) is int and qsid in extensions.FIELDS, 'Unknown settings ID')
+        reply = self.exchange(self.packet(254, 10, qsid & 255, qsid >> 8))
+        require(reply[0] == 0, 'Settings getter failed')
+        width = extensions.FIELDS[qsid][1]
+        value = int.from_bytes(reply[1:1+width], 'little')
+        extensions.field_value(qsid, value)
+        return value
+
+    def set_setting(self, qsid, value):
+        self._require_writes()
+        data = extensions.field_value(qsid, value)
+        before = self.read_nvm()
+        values = extensions.decode_settings(before[0x6A8:0x6C0])
+        if values[str(qsid)] == value:
+            require(self.get_setting(qsid) == value, 'Settings no-op getter differs')
+            require(self.read_nvm() == before, 'Settings no-op durable readback differs')
+            return True
+        values[str(qsid)] = value
+        packet = self.packet(254, 11, qsid & 255, qsid >> 8, *data)
+        require(self.exchange(packet) == b'\0' + packet[1:], 'Settings setter ACK mismatch')
+        self.status()
+        require(self.get_setting(qsid) == value, 'Settings getter readback differs')
+        expected = bytearray(before)
+        expected[0x6A8:0x6C0] = extensions.settings_record(values)
+        require(self.read_nvm() == bytes(expected), 'Settings durable readback or neighboring bytes differ')
+        return True
+
+    def reset_settings(self):
+        self._require_writes()
+        before = self.read_nvm()
+        values = extensions.from_nvm(before)['qmk_settings']
+        if values == extensions.decode_settings(extensions.settings_record()):
+            for qsid in self.settings_query():
+                require(self.get_setting(qsid) == extensions.FIELDS[qsid][4], 'Settings no-op reset getter differs')
+            require(self.read_nvm() == before, 'Settings no-op reset durable readback differs')
+            return True
+        packet = self.packet(254, 12)
+        require(self.exchange(packet) == b'\0' + packet[1:], 'Settings reset ACK mismatch')
+        self.status()
+        for qsid in self.settings_query():
+            require(self.get_setting(qsid) == extensions.FIELDS[qsid][4], 'Settings reset getter differs')
+        expected = bytearray(before)
+        expected[0x6A8:0x6C0] = extensions.settings_record()
+        require(self.read_nvm() == bytes(expected), 'Settings reset durable readback differs')
         return True
 
     def macros(self):

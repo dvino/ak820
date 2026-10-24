@@ -309,6 +309,98 @@ class StackTests(unittest.TestCase):
         del missing[0x313]
         self.assertIsNone(m.Analyzer(rows,missing).guarded_rom_callback_dispatch(0))
 
+    def test_compact_callback_guards_getter_and_rom_provenance(self):
+        raw = bytes.fromhex(
+            'ed24e0ff70051204008054ef24f5403eed24dffe900123f0'
+            '120200e5825422600790012374016ef0900123e075f002a4'
+            '2400f5827403120220fda3e493fec006c005120230120240')
+        rows = {}
+        def add(base, data):
+            offset = 0
+            while offset < len(data):
+                size = m.OPCODE_LENGTHS[data[offset]]
+                rows[base+offset] = data[offset:offset+size]
+                offset += size
+        add(0,raw)
+        # The guard's default and the toggle's continuation are real exits.
+        add(0x4e,b'\x22'); add(0x5f,b'\x22')
+        add(len(raw), b'\xd0\x05\xd0\x06\x22')
+        for base, body in ((0x200,'c007900500e0ff900501120210d00722'),
+                           (0x210,'e042078f8222'),
+                           (0x220,'35f0f583e49322'),(0x230,'8d828e8322'),
+                           (0x240,'e473'),(0x400,'c0e0d0e022')):
+            add(base,bytes.fromhex(body))
+        code = {pc+i:value for pc,row in rows.items() for i,value in enumerate(row)}
+        code.update({0x300+i:value for i,value in enumerate(b'\x00\x04'*10)})
+        analyzer = m.Analyzer(rows,code,{0x123})
+        self.assertIsNone(m.Analyzer(rows,code).compact_rom_callback_dispatch(0))
+        relocated = {pc:(b'\x90\x01\x24' if row == b'\x90\x01\x23' else row)
+                     for pc,row in rows.items()}
+        self.assertIsNone(m.Analyzer(relocated,code,{0x123}).compact_rom_callback_dispatch(0))
+        proof = analyzer.compact_rom_callback_dispatch(0)
+        self.assertIsNotNone(proof)
+        self.assertEqual(proof['rom_slots'],list(range(0x300,0x314,2)))
+        self.assertEqual(proof['getter_peak'],3)
+        self.assertEqual(analyzer.bound(0)['bound'],5)
+        # Structural opcodes and register identities are part of the proof. Changed helper
+        # bodies, memory writes and register clobbers must not grant targets.
+        for address in (0,2,3,4,6,12,14,17,19,21,25,28,32,35,37,40,
+                        42,45,47,49,51,54,57,60,61,62,63,64,66,68,71):
+            with self.subTest(address=address):
+                mutated = bytearray(raw); mutated[address] ^= 1
+                changed = {pc:bytes(mutated[pc:pc+len(row)])
+                           for pc,row in rows.items() if pc < len(raw)}
+                try:
+                    candidate = m.Analyzer({**rows,**changed},
+                        {**code,**{i:v for i,v in enumerate(mutated)}},{0x123})
+                    self.assertIsNone(candidate.compact_rom_callback_dispatch(0))
+                except ValueError:
+                    pass
+        for address, row in ((0x205,b'\xf0'),(0x206,b'\xfe'),
+                             (0x210,b'\xf0'),(0x220,b'\x25\xf0'),
+                             (0x230,b'\x8e\x82'),(0x240,b'\x04')):
+            with self.subTest(helper=address):
+                self.assertIsNone(m.Analyzer({**rows,address:row},code,{0x123})
+                                  .compact_rom_callback_dispatch(0))
+        # The table's actual bytes select the analyzed target; target numbers
+        # are never inferred from a symbol name or neighboring code.
+        deeper = dict(rows)
+        deeper[0x500] = b'\xc0\xe0'
+        deeper[0x502] = b'\xc0\xe0'
+        deeper[0x504] = b'\xd0\xe0'
+        deeper[0x506] = b'\xd0\xe0'
+        deeper[0x508] = b'\x22'
+        changed_code = {**code,0x300:0,0x301:5}
+        changed = m.Analyzer(deeper,changed_code,{0x123})
+        self.assertEqual(changed.bound(0)['bound'],6)
+        self.assertIn(0x500,changed.guarded_callback_transfers[0]['targets'])
+        missing = dict(code); del missing[0x313]
+        self.assertIsNone(m.Analyzer(rows,missing,{0x123}).compact_rom_callback_dispatch(0))
+        self.assertIsNone(m.Analyzer(rows,code,{0x123}).bound(0x241)['bound'])
+
+    def test_compact_spill_requires_unique_one_byte_xseg_allocation(self):
+        with tempfile.TemporaryDirectory() as folder:
+            build = Path(folder)
+            (build/'dce').mkdir()
+            (build/'ajazz_ak820_vial.ihx').write_text(':0100000022DD\n:00000001FF\n')
+            (build/'ajazz_ak820_vial.map').write_text('C:  00000000 _main\n')
+            listing = build/'dce/process_rgb.rst'
+            allocation = ('  1 .area XSEG (XDATA)\n'
+                          '  000123 2 _process_rgb_action_10000_277:\n'
+                          '  000123 3 .ds 1\n')
+            listing.write_text(allocation)
+            identity = m.load(build)[3]
+            self.assertEqual(identity['compact_callback_spills'][0x123]['symbol'],
+                             '_process_rgb_action_10000_277')
+            for changed in (allocation.replace('XSEG','XABS'),
+                            allocation.replace('.ds 1','.ds 2'),
+                            allocation.replace('000123 3','000124 3'),
+                            allocation+allocation,
+                            allocation.replace('_process_rgb_action_','_other_action_')):
+                with self.subTest(allocation=changed):
+                    listing.write_text(changed)
+                    self.assertEqual(m.load(build)[3]['compact_callback_spills'],{})
+
     def test_exact_listing_and_ihx_rejections(self):
         with tempfile.TemporaryDirectory() as folder:
             build = Path(folder)

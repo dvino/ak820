@@ -13,8 +13,9 @@ a quick press sends Space, and holding it activates layer 1. Set the actions
 for the desired layer in Vial. Keep a way to return to layer 0 when editing
 other layers.
 
-The decision takes 200 ms. Releasing the key before 200 ms sends one tap.
-Holding it until 200 ms activates the hold. Pressing another key before then
+The default decision window is 200 ms; QMK Settings can change it from 1 to
+1000 ms. Releasing the key before the selected time sends one tap. Holding it
+until that time activates the hold. Pressing another key before then
 also activates the hold first, so a rolling press that overlaps the next key
 acts as a chord. Releasing another key alone does not activate the hold. Each
 new press starts a fresh decision; a second press does not repeat the tap key

@@ -19,7 +19,9 @@ from pathlib import Path
 
 from ak820_dce import optimize
 from ak820_outline_audit import outline_assembled
+import ak820_shortcalls as shortcalls
 from ak820_build_inputs import FORMAT as INPUT_FORMAT, collect_inputs, input_snapshot
+from ak820_profiles import DEFAULT_PROFILE, PROFILES, RELEASE_PROFILES, configuration
 
 
 # Audited C functions only: SDCC emits their register-preserving prologues and
@@ -29,6 +31,7 @@ AK820_CALLEE_SAVES = (
     'timer_read', 'timer_read32', 'ak820_nvm_ok', 'get_mods', 'get_weak_mods',
     'matrix_get_row', 'readPin', 'eeprom_read_byte', 'eeprom_update_byte',
     'ak820_flash_read', 'mDelaymS',
+    'get_repeat_key_count',
 )
 
 
@@ -89,6 +92,8 @@ def main():
                    help='Required compiler version (default: %(default)s; 4.4.0 remains available as a control)')
     p.add_argument('--qmk-bin', type=Path, help='QMK executable from its virtual environment')
     p.add_argument('--build-dir', type=Path, default=Path('.build/ak820'))
+    p.add_argument('--profile', choices=tuple(PROFILES), default=DEFAULT_PROFILE,
+                   help='Explicit development feature set; this does not approve an installer')
     p.add_argument('--code-start', type=integer, default=0x3027)
     p.add_argument('--code-end', type=integer, default=0xc700)
     p.add_argument('--low-code-start', type=integer, default=0x28a0)
@@ -96,11 +101,20 @@ def main():
     p.add_argument('--xram-start', type=integer, default=0x0400)
     p.add_argument('--xram-end', type=integer, default=0x1000)
     p.add_argument('--root', action='append', default=[])
-    p.add_argument('--build-id', type=integer, default=0x082002, help='Stable Vial EEPROM schema identifier')
+    p.add_argument('--build-id', type=integer, default=None, help='Stable Vial EEPROM schema identifier')
     p.add_argument('--extra-flags', default='--opt-code-size', help='Additional compiler flags; board config owns feature flags')
+    p.add_argument('--short-calls', action=argparse.BooleanOptionalAction, default=None,
+                   help='Verified foreground ACALL/AJMP relaxation; enabled by default for curated profiles')
     p.add_argument('--no-outline', action='store_true', help='Disable AK820 exact instruction outlining for comparison builds')
     p.add_argument('--no-callee-saves', action='store_true', help='Disable the audited AK820 callee-saves list for comparison builds')
     args = p.parse_args()
+    selected = configuration(args.profile)
+    if args.short_calls is None:
+        args.short_calls = args.profile in RELEASE_PROFILES
+    if args.build_id is None:
+        args.build_id = selected['nvm_schema']
+    if args.short_calls and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
+        raise ValueError('Short calls require the AK820 target and pinned SDCC 4.6.0')
     if args.keyboard == 'ajazz/ak820':
         # These calls originate in the preserved OEM loader and are inserted
         # by the image packer, so application ASM cannot express their edges.
@@ -118,6 +132,9 @@ def main():
         raise ValueError('Build directory must be beneath source root')
     build.mkdir(parents=True)
     env = os.environ.copy()
+    # Do not inherit Make's -e or command-line overrides from a parent build.
+    for name in ('MAKEFLAGS', 'MFLAGS', 'GNUMAKEFLAGS', 'MAKEOVERRIDES'):
+        env.pop(name, None)
     extra_paths = []
     if args.toolchain:
         extra_paths.append(str(args.toolchain.resolve()/'bin'))
@@ -137,13 +154,14 @@ def main():
     inputs_before = input_snapshot(root, toolchain)
     commands = []
 
-    def run(label, argv, timeout=300):
+    def run(label, argv, timeout=300, allow_page_errors=False):
         log = build/(label+'.log')
         with log.open('w') as f:
             proc = subprocess.run(argv,cwd=root,env=env,stdout=f,stderr=subprocess.STDOUT,timeout=timeout)
         commands.append({'label':label,'argv':argv,'exit_code':proc.returncode,'log':log.relative_to(root).as_posix(),'log_sha256':sha(log)})
-        if proc.returncode:
+        if proc.returncode and not (allow_page_errors and shortcalls.page_errors_only(log.read_text())):
             raise RuntimeError(label+' failed; see '+str(log))
+        return proc.returncode
 
     target = args.keyboard.replace('/','_')+'_'+args.keymap
     relative_build = str(build.relative_to(root))
@@ -156,7 +174,8 @@ def main():
         raise ValueError('QMK CLI unavailable')
     run('compile',['make','-r','-R','-f','builddefs/build_keyboard.mk','sdcc-objects',
         'KEYBOARD='+args.keyboard,'KEYMAP='+args.keymap,'QMK_BIN='+qmk,'SILENT=false','COLOR=false',
-        'SKIP_GIT=yes','SKIP_VERSION=yes','BUILD_DIR='+relative_build,'EXTRAFLAGS='+compile_flags,'-j'+str(args.jobs)])
+        'SKIP_GIT=yes','SKIP_VERSION=yes','BUILD_DIR='+relative_build,'EXTRAFLAGS='+compile_flags,
+        *(name+'='+value for name,value in selected['make_options'].items()), '-j'+str(args.jobs)])
     obj = build/('obj_'+target)
     expected = (obj/'obj.txt').read_text().split()
     if not expected or any(not name.endswith('.rel') or not (root/name).is_file() for name in expected):
@@ -180,19 +199,37 @@ def main():
     assemble_tree(dce_input, 'assemble-input-' if apply_outlining else 'assemble-')
     outlining = None
     if apply_outlining:
-        outlining = outline_assembled(dce_input, dce, max_helpers=40, min_saving=12)
+        outlining = outline_assembled(dce_input, dce, max_helpers=200, min_saving=1)
         assemble_tree(dce, 'assemble-outlined-')
-    objects = sorted(str(path) for path in dce.rglob('*.rel'))
     ihx = build/(target+'.ihx')
     extra_link = []
     windows = [(args.code_start,args.code_end)]
     if args.keyboard == 'ajazz/ak820':
         extra_link.append('-Wl-bAK820LOW='+hex(args.low_code_start))
         windows.append((args.low_code_start,args.low_code_end))
-    run('link',[sdcc,'-mmcs51','--model-large','--iram-size','0x100',
-        '--xram-loc',hex(args.xram_start),'--xram-size',hex(args.xram_end-args.xram_start),
-        '--code-loc',hex(args.code_start),'--code-size',hex(args.code_end),
-        '--opt-code-size',*extra_link,*objects,'-o',str(ihx)])
+    def link_command(tree, image, code_end):
+        return [sdcc,'-mmcs51','--model-large','--iram-size','0x100',
+            '--xram-loc',hex(args.xram_start),'--xram-size',hex(args.xram_end-args.xram_start),
+            '--code-loc',hex(args.code_start),'--code-size',hex(code_end),
+            '--opt-code-size',*(['-Wl-j'] if args.short_calls else []),*extra_link,
+            *sorted(str(path) for path in tree.rglob('*.rel')),
+            '-o',str(image)]
+
+    short_plan = None
+    short_input = build/'shortcalls-input'
+    if args.short_calls:
+        # Final consumers keep their established dce path. Only this immutable
+        # post-outline preimage is used to construct every diagnostic iteration.
+        dce.rename(short_input)
+        def diagnostic_link(tree, image, label, allow_page_errors):
+            assemble_tree(tree, label+'-assemble-')
+            return run(label, link_command(tree,image,0x10000), allow_page_errors=allow_page_errors)
+        short_plan = shortcalls.prepare(short_input, build/'shortcalls', diagnostic_link)
+        shortcalls.write_tree(short_input, dce, short_plan['candidates'])
+        assemble_tree(dce, 'assemble-shortcalls-final-')
+    # Diagnostic images are never accepted firmware. Repeat the link with the
+    # original strict memory limits and independently validate its final bytes.
+    run('link',link_command(dce,ihx,args.code_end))
     data = ihex_data(ihx)
     invalid = [a for a in data if not any(lo<=a<hi for lo,hi in windows)]
     if invalid:
@@ -203,6 +240,10 @@ def main():
         raise ValueError('XRAM allocation outside permitted interval')
     if 'ERROR' in memory or 'No room' in memory:
         raise ValueError('Memory allocation failure')
+    short_result = None
+    if short_plan is not None:
+        short_result = shortcalls.finish(short_input,dce,build/'shortcalls/baseline.ihx',
+            ihx,short_plan,build/'short-calls.json')
     # This output is intentionally not padded to a device update payload.
     binary = ihx.with_suffix('.bin')
     binary.write_bytes(bytes(data.get(a,0xff) for a in range(min(data),max(data)+1)))
@@ -210,14 +251,30 @@ def main():
                  obj/'obj.txt',obj/'cflags.txt',obj/'ldflags.txt',obj/'src/version.h',obj/'src/info_config.h']
     if outlining is not None:
         artifacts.append(dce/'outlining.json')
+    # Absolute XDATA declarations are not represented by ordinary linker
+    # area lengths. Preserve compiler ASM for the profile resource checker.
+    if short_result is not None:
+        artifacts.append(build/'short-calls.json')
+        artifacts.append(ihx.with_suffix('.noi'))
+        artifacts.extend(sorted(dce.rglob('*.asm')))
+        artifacts.extend(sorted(dce.rglob('*.rel')))
+    artifacts.extend(asm_paths)
+    artifacts.extend(sorted(dce.rglob('*.rst')))
     source_records, dependency_evidence = collect_inputs(root, toolchain, build, expected, inputs_before)
     artifacts.extend(dependency_evidence)
     report = {
+        'configuration': selected,
         'keyboard':args.keyboard,'keymap':args.keymap,'compiler_version':version.strip(),
         'build_id':args.build_id,'skip_version':True,
         'compiler_sha256':sha(Path(sdcc)), 'assembler_sha256':sha(Path(assembler)),
         'builder_sha256':sha(Path(__file__)), 'dce_sha256':sha(root/'util/ak820_dce.py'),
         'outliner_sha256':sha(root/'util/ak820_outline_audit.py'),
+        'shortcalls_sha256':sha(root/'util/ak820_shortcalls.py'),
+        'short_calls': None if short_result is None else {
+            'algorithm':short_result['algorithm'], 'report':(build/'short-calls.json').relative_to(root).as_posix(),
+            'report_sha256':sha(build/'short-calls.json'), 'selected':len(short_plan['candidates']),
+            'saved_bytes':short_result['saved_bytes'],
+        },
         'audited_callee_saves':list(callee_saves),
         'compiler_extra_flags':compile_flags,
         'outlining': None if outlining is None else {

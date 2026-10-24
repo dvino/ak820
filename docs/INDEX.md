@@ -16,16 +16,26 @@ difference.
 | Save or restore settings | [Settings backup](SETTINGS-BACKUP.md) |
 | Understand Mod-Tap and Layer-Tap behavior | [Mod-Tap and Layer-Tap](TAP-HOLD.md) |
 | Use One Shot, Space Cadet and NKRO controls | [Configuration](CONFIGURATION.md) |
-| Use GUI lock controls | [GUI controls](GUI-CONTROL.md) |
+| Use GUI lock and volatile Ctrl/GUI swap controls | [GUI controls](GUI-CONTROL.md) |
 | Record and play compact Dynamic Macros | [Dynamic Macros](COMPACT-DYNAMIC-MACROS.md) |
-| Understand Caps Lock and layer indicators | [C and W indicators](INDICATORS.md) |
+| Select a Vial macro with a Leader prefix | [Compact Leader](COMPACT-LEADER.md) |
+| Understand Caps Lock, layer and OS indicators | [C, W and OS indicators](INDICATORS.md) |
+| Switch Alt and GUI for Mac/PC use | [Mac/PC mode](MAC-PC.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |
-| Build a development profile and check its limits | [Build profiles](BUILD-PROFILES.md) |
+| Choose a profile package and build it | [Build profiles](BUILD-PROFILES.md) |
+| Compare feature compatibility and image size | [Module matrix](MODULE-MATRIX.md) |
+| Read short descriptions and feature limits | [Feature catalog](FEATURES.md) |
 | Check pushes and publish a release | [CI and releases](CI.md) |
 | Change code and submit a contribution | [Development](DEVELOPMENT.md) |
 | Run offline tests and check a real keyboard | [Testing](TESTING.md) |
 | See the published image and device checks | [Status](STATUS.md) |
 | See planned features | [Roadmap](ROADMAP.md) |
+| Develop the web and desktop configurator | [Requirements and plan](../web/README.md) |
+| Assign tap, hold and double-tap actions | [Compact Tap Dance](COMPACT-TAP-DANCE.md) |
+| Replace a key under selected modifiers | [Compact Key Overrides](COMPACT-KEY-OVERRIDES.md) |
+| Change supported timings and Grave Escape options | [QMK Settings](QMK-SETTINGS.md) |
+| Integrate module storage and backups | [Module storage](MODULE-STORAGE.md) |
+| Identify exact development image capabilities | [Development catalog](DEVELOPMENT-CATALOG.md) |
 
 This port is for the wired AJAZZ AK820 with a VS11K28A controller and USB
 `320F:505B`. AK820 V2, Pro and Max use different hardware.

@@ -23,6 +23,10 @@ defines = ['AK820_BOARD', 'AK820_USB_HOST_TEST', 'QMK_MCU_CH555',
            'MANUFACTURER='+json.dumps(info['manufacturer']),
            'PRODUCT='+json.dumps(info['keyboard_name']),
            'SERIAL_NUMBER="vial:f64c2b3c"']
+if '--os-indicators' in sys.argv:
+    defines.append('AK820_OS_INDICATORS')
+if '--mac-pc' in sys.argv:
+    defines.append('AK820_MAC_PC')
 if '--without-mouse' in sys.argv:
     defines = [item for item in defines if item not in ('MOUSE_ENABLE','MOUSE_SHARED_EP')]
 with tempfile.TemporaryDirectory(prefix='ak820-usb-') as temp:

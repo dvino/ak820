@@ -1,0 +1,27 @@
+{
+  "backup_manifest_sha256": "577f245480f9be0502805906e9662914dfa0cd0f9893ce785bf088d2df62886d",
+  "combo_count": 8,
+  "device_commands": 0,
+  "encoder_count": 12,
+  "format": "ak820-offline-transition-preflight-1",
+  "key_count": 498,
+  "limitations": [
+    "Direct HSV palette: no getter; not exported or restored.",
+    "Hidden current RGB mode while off and current RGB flags: no getter; only saved NVM values are preserved.",
+    "Unused matrix slots and reserved NVM bytes: captured as evidence, not imported.",
+    "Animation phase, reactive ages, held keys and macro execution position: not exported.",
+    "No firmware freeze: repeated stable reads do not guarantee an atomic snapshot.",
+    "Vial UID identifies a model, not a unique physical keyboard; connect only one supported device.",
+    "Runtime NKRO mode and pending One Shot modifiers are volatile; not restored."
+  ],
+  "nvm_schema": 532482,
+  "result": "PASS",
+  "source_identity": [
+    "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f",
+    "d787703f62f96d7204bf25c566eac39f66b8c8c3f711ce152d7ff1eded9716da"
+  ],
+  "target_identity": [
+    "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+    "a7ad972f47acff20f3492ed846f5c6ca0825d43de263f26cc9328069a27cdd10"
+  ]
+}

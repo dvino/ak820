@@ -1,0 +1,135 @@
+{
+  "flashing_authorized": false,
+  "format": "ak820-development-capability-catalog-1",
+  "hardware_validated": false,
+  "images": [
+    {
+      "build_identity": {
+        "build_report_sha256": "3d98389f09d6af3d75e1ae263c92b5682dbfceadeeb3b222b69e012775aa6ece",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "92a4ab8b62d8792bbd7f0a5004548e1ef95d4be938604caa3a968a0f34b609d3",
+        "ihx_sha256": "9e049f97a4ed6335f71b90a49e486b9be44b3e2e953d342358a2473889e03470",
+        "map_sha256": "35d852ec1ad4c7b587da161cdcdc74b37b480b142ca13ecdbe8befa86167c721",
+        "mem_sha256": "2243c77365dbda850f0ad6d3bfb1d4b6ee42de7116f600514c34b1017e4fedd7",
+        "nvm_schema": 532482,
+        "profile": "full-mac-pc-os-indicators",
+        "source_manifest_sha256": "03d2ad22b8eb378f0f068696baa889b6554d7c73dd043bb87b4f096c3054b31c"
+      },
+      "code_identity": {
+        "algorithm": "sha256-code-windows-zero-v1",
+        "covered_bytes": 40505,
+        "fill_byte": 0,
+        "ranges": [
+          {
+            "end_exclusive": 12288,
+            "start": 10400
+          },
+          {
+            "end_exclusive": 50944,
+            "start": 12327
+          }
+        ],
+        "sha256": "633cca4626bdf9a60efd255d7c28404a7fd6718bf4bebd977c6fca82516009c9"
+      },
+      "compatible_transitions": [],
+      "evidence_sha256": {
+        "base_suites": "4632a5617b6fb4b656fcbbc881af82129f5b3acbf472c0a8d5f259586f06a8d0",
+        "configuration": "ad1b11524a3423a0ed7b3ee1c624165479dafba5009aadd78e757d188e820156",
+        "runtime": "0548564441664b8eebdc2ae2fde7ed409fa8c5a714c127b50107422f3de2760e",
+        "supplemental_suites": "bd6df822f8fb8f7a794dda1ddcb47a9c586d8385105f1643dfa8415644afbff0"
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "eight-two-key-combos",
+        "encoder-map",
+        "grave-escape",
+        "mac-pc",
+        "media-keys",
+        "nkro-control",
+        "nkro-reports",
+        "one-shot",
+        "os-indicators",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "space-cadet",
+        "tri-layer",
+        "vialrgb-direct-ram"
+      ],
+      "fixed_limits": {
+        "combos": 8,
+        "encoders": 1,
+        "layers": 6,
+        "macro_bytes": 8192,
+        "macros": 16,
+        "rgb_leds": 82,
+        "rgb_maximum_brightness": 160
+      },
+      "flashing_authorized": false,
+      "hardware_validated": false,
+      "model": "ajazz/ak820",
+      "profile": "full-mac-pc-os-indicators",
+      "project_verified": true,
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39614,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12195,
+            "name": "low",
+            "occupied_bytes": 1796,
+            "start": 10400,
+            "trailing_free_bytes": 92
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50149,
+            "name": "main",
+            "occupied_bytes": 37818,
+            "start": 12327,
+            "trailing_free_bytes": 794
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 89,
+          "runtime_stack_bound": 164,
+          "stack_capacity": 166,
+          "stack_margin": 2,
+          "stack_qualified": true,
+          "static_bytes": 90
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2612,
+          "capacity": 3072,
+          "end_inclusive": 3635,
+          "start": 1024
+        }
+      },
+      "runtime_qmk_settings": [],
+      "settings_schema": 532482,
+      "settings_writes_authorized": false,
+      "status": "development",
+      "timing_ms": {
+        "combo": 40,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "tap_hold": 200
+      }
+    }
+  ],
+  "release_approved": false,
+  "settings_writes_authorized": false,
+  "status": "development-only"
+}

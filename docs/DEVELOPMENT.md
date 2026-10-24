@@ -22,6 +22,11 @@ changes to behavior, commands, formats, sizes, addresses, APIs or limits. Keep
 README and [Status](STATUS.md) current; put future work in [Roadmap](ROADMAP.md).
 Regenerate affected machine reports and compare their values with the artifacts.
 
+Every new feature or profile must close exact-image stack and IRQ bounds across
+startup, foreground and interrupt paths before other regression suites run. An
+unknown bound or overflow fails the build. The [runtime stack guide](RUNTIME-STACK.md)
+describes the check and its limits.
+
 Keep source, built application, release package and installed firmware distinct.
 Report host/CPU checks, builds and device checks separately. A pass at one level
 does not prove another. Do not send device commands during offline checks.

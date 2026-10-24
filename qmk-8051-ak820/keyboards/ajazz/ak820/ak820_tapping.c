@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "quantum.h"
 #include "ak820_tapping.h"
+#ifdef AK820_QMK_SETTINGS
+#    include "ak820_settings.h"
+#    define AK820_TAPPING_TERM ak820_settings_tapping_term()
+#else
+#    define AK820_TAPPING_TERM 200
+#endif
 #include "encoder.h"
 #ifdef VIAL_ENABLE
 #    include "vial.h"
@@ -64,7 +70,7 @@ bool ak820_tapping_before(const keyevent_t AK820_STATE_MEM *event) {
         return false;
     }
 #endif
-    if (pending != NONE && ((uint16_t)(event->time - pending_time) >= 200 ||
+    if (pending != NONE && ((uint16_t)(event->time - pending_time) >= AK820_TAPPING_TERM ||
         (IS_EVENT(*event) && event->pressed && (id == NONE || id != pending)))) commit_pending();
     if (IS_NOEVENT(*event) || id == NONE) return true;
     if ((source_state[id] & SOURCE_BLOCKED)) {
@@ -146,6 +152,14 @@ bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
 #ifdef AK820_COMPACT_GUI_LOCK
     /* Output controls must not consume a queued modifier or mark held OSM used. */
     if (code >= QK_MAGIC_GUI_ON && code <= QK_MAGIC_TOGGLE_GUI) return true;
+#endif
+#ifdef AK820_COMPACT_CTRL_GUI_SWAP
+    /* Session Ctrl/GUI controls also leave queued and held OSM ownership alone. */
+    if (code == QK_MAGIC_SWAP_CTL_GUI || code == QK_MAGIC_UNSWAP_CTL_GUI || code == QK_MAGIC_TOGGLE_CTL_GUI) return true;
+#endif
+#ifdef AK820_MAC_PC
+    /* Changing the output mapping is not the key that consumes One Shot. */
+    if (code == QK_MAGIC_SWAP_ALT_GUI || code == QK_MAGIC_UNSWAP_ALT_GUI || code == QK_MAGIC_TOGGLE_ALT_GUI) return true;
 #endif
     if ((code >> 8) == 0x52 && ((uint8_t)code & 0xe0) == 0xa0) {
         mods = code & 15;

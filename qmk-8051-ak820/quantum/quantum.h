@@ -235,9 +235,9 @@ void set_single_persistent_default_layer(uint8_t default_layer);
 #define IS_LAYER_ON_STATE(state, layer) layer_state_cmp(state, layer)
 #define IS_LAYER_OFF_STATE(state, layer) !layer_state_cmp(state, layer)
 
-uint16_t get_record_keycode(keyrecord_t *record, bool update_layer_cache);
+uint16_t get_record_keycode(keyrecord_t AK820_RECORD_MEM *record, bool update_layer_cache);
 uint16_t get_event_keycode(keyevent_t event, bool update_layer_cache);
-bool     pre_process_record_quantum(keyrecord_t *record);
+bool     pre_process_record_quantum(keyrecord_t AK820_RECORD_MEM *record);
 bool     pre_process_record_kb(uint16_t keycode, keyrecord_t *record);
 bool     pre_process_record_user(uint16_t keycode, keyrecord_t *record);
 bool     process_action_kb(keyrecord_t *record);
@@ -245,7 +245,7 @@ bool     process_record_kb(uint16_t keycode, keyrecord_t *record);
 bool     process_record_user(uint16_t keycode, keyrecord_t *record);
 void     post_process_record_kb(uint16_t keycode, keyrecord_t *record);
 void     post_process_record_user(uint16_t keycode, keyrecord_t *record);
-bool     process_record_quantum_helper(uint16_t keycode, keyrecord_t *record);
+bool     process_record_quantum_helper(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record);
 
 void reset_keyboard(void);
 void soft_reset_keyboard(void);

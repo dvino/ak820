@@ -8,6 +8,8 @@ typedef struct { uint8_t row, col; } keypos_t;
 typedef struct { keypos_t key; uint16_t time; bool pressed; uint8_t type; } keyevent_t;
 typedef struct { uint8_t count; bool interrupted; } tap_t;
 typedef struct { keyevent_t event; tap_t tap; } keyrecord_t;
+/* Host pointers have no SDCC address-space qualifier; action.h is stubbed here. */
+#define AK820_RECORD_MEM
 #define TAPPING_TERM 200
 #define QUICK_TAP_TERM 0
 #define HOLD_ON_OTHER_KEY_PRESS

@@ -2,7 +2,7 @@
 
 # Project status
 
-Updated 2026-10-24. [v0.6.0-alpha.3](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.3)
+Updated 2026-10-25. [v0.6.0-alpha.3](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.3)
 is published and installed. The release contains standalone Windows and Linux
 x86_64 installers, SHA256 files, the firmware bundle and separate English and
 Russian installation instructions. All three [native CI jobs](https://github.com/dvino/ak820/actions/runs/40076916540)
@@ -11,6 +11,10 @@ GUI/CLI input and offline CLI verification; see the [publication record](../audi
 and [asset checks](../audits/rc6/alpha3-release-20261024/published-assets-check.json).
 The duplicate tag run was cancelled after publication from that successful main
 run; it was not a failed firmware or installer test.
+
+## Companion-design beta
+
+`v0.6.0-beta.1` is being prepared as the nine-profile firmware baseline for companion design. The work source bundle is approved; native Windows/Linux package acceptance and publication are pending. The beta release is the first installable firmware baseline for the companion and includes standalone Windows and Linux x86_64 installers with SHA256 files and bilingual installation instructions. The installers target the exact `work` image (`652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880`, 40,386 CODE bytes, 2,676 XRAM bytes; stack bound 162/165). The other eight profiles remain catalog candidates and are not included in the installers. Beta firmware has not been tested on hardware. The installed alpha.3 firmware remains unchanged. The [acceptance record](../audits/rc6/beta1-release-20261025/acceptance.md) records the source integration, exact assets and independent review.
 
 ## Alpha.3 source and image
 
@@ -26,7 +30,7 @@ three interrupt wrappers and callbacks: 156 bytes, leaving six. The proof uses
 bank-0 SDCC calls, valid memory accesses, private guard objects and MCS-51
 in-service/RETI semantics; it does not assume two priority levels or prove
 physical VS11 timing. See the [release qualification](../audits/rc6/alpha3-release-20261024/review.md)
-and [safety manifest](../ci/release-safety.json).
+and [alpha.3 safety manifest](https://github.com/dvino/ak820/blob/v0.6.0-alpha.3/ci/release-safety.json).
 
 The released image passes all 15 distinct-source IRQ orders and all 256 LED
 selector values in the CPU model. Startup memory and hostile pre-erase entry
@@ -39,34 +43,46 @@ All 13 supplemental full-profile suites pass on the same unchanged image.
 Detailed source hashes, review closure, initial fixture failure and remaining
 model limits are in the qualification report.
 
-Only the exact alpha.3 full image satisfies the packaging gate, independent
-program policy and packing receipt. Other profiles and changed source are for
-development. The current matrix is recorded below. Offline qualification did
-not access a device; installation results are recorded separately.
+The alpha.3 full image satisfied its packaging gate, independent program policy and packing receipt. That evidence applies only to alpha.3. Beta profile qualification is recorded below; it does not include physical device validation.
 
 ## Current development source
 
-All 16 named profiles passed 18 build variants from frozen source `55acbb0`.
-Each image passed 28 base suites and 273 base unit tests with zero skips, plus
-14–24 supplemental suites for its selected features. These results belong to
-the frozen source. Cleanup later changed the configurator test fixture path;
-firmware source and retained image bytes are unchanged.
+The desktop catalog contains nine curated profiles. `work` is the default and
+adds Leader, Dynamic Macros and companion-controlled OS indication to the
+common functions. Mac/PC, Mouse Keys and Auto Shift are not enabled in `work`.
+All 14 existing optional modules are covered across the catalog.  The [module matrix](MODULE-MATRIX.md) contains exact feature
+membership and linked sizes; [build profiles](BUILD-PROFILES.md) explains each
+package.
 
-Compact Mouse Keys and Auto Shift are joined by volatile GUI controls and
-two temporary Dynamic Macro slots. Six layers, 16 Vial macros, 8192 macro bytes,
-eight Combos and schema `0x082002` remain unchanged. The previous eleven-profile
-matrix belongs to source `06b8f0f` and is historical.
+At source freeze `7125bee`, all nine exact images passed linked memory inspection, foreground/startup/interrupt
+stack proof and full offline qualification. Each passes 28 base suites with
+286 unit tests and zero skips, plus 26–33 profile suites. Across the catalog
+this is 252 base and 255 supplemental suite executions; repeated shared tests
+are not counted as distinct tests. Runtime proof precedes the regressions for
+each image. The [verification summary](../audits/rc6/beta-catalog-20261024/summary.json)
+and [technical report](../audits/rc6/beta-catalog-20261024/README.md) bind the
+actual images, measurements, logs and review closure.
 
-A whole-program stack bound for these images remains unproved. The normal
-package command rejected the changed `full` image because its source differs
-from the reviewed release witness. No physical test or device command was
-performed in this work. The published and installed firmware remains the exact
-alpha.3 image above. Measurements, hashes, raw logs and independent review are
-in the [technical report](../audits/rc6/compact-runtime-20261024/README.md).
+`work` uses 40,386 CODE and 2,676 XRAM bytes; 22 main-window and 92 low-window
+bytes remain. Its control-stack bound is 162 of 165 bytes, leaving three.
+`tap-dance` is 166 of 166 and `key-overrides` is 162 of 162: both pass the
+current bound with zero margin. Any code change requires a new exact-image
+check; these results do not establish physical timing or power-loss behavior.
+Results from the older 24-profile/26-variant matrix do not qualify these images.
 
-Integration checks and archive size are recorded in the [acceptance report](../audits/rc6/compact-runtime-20261024/acceptance.md).
+The common feature counts remain six layers, 16 Vial macro slots, 8192 shared
+macro bytes and eight two-key Combo slots. `tap-dance`, `key-overrides` and
+`settings` use schema `0x082003`; the other six use `0x082002`. Stored extension
+capacity does not enable an absent module. See [module storage](MODULE-STORAGE.md).
 
-Repository cleanup and retained evidence are recorded in the [cleanup report](../audits/rc6/cleanup-20261024.md).
+The machine catalog and bilingual popup descriptions are prepared for desktop
+integration. Exact packed settings identities require the validated local OEM
+reference during packaging. Cross-image restore is disabled unless the trusted
+catalog explicitly lists that exact source/target pair. The candidate catalog and ZIP record exact linked images; beta release approval and installer evidence are recorded in the beta acceptance record.
+The [desktop handoff](../web/docs/FIRMWARE-HANDOFF.md) describes these contracts.
+
+The previous [module completion evidence](../audits/rc6/module-completion-20261024/final/README.md)
+remains tied to its recorded inputs. No device commands or physical tests have been performed for the new catalog. Installed alpha.3 remains unchanged.
 
 ## Installed firmware
 

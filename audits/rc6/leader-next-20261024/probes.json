@@ -1,0 +1,1369 @@
+{
+  "format": "ak820-development-probes-1",
+  "baseline": "348b45e",
+  "experiments": [
+    {
+      "experiment": "report-abi",
+      "source": {
+        "commit": "348b45e4966973fc78ea35e23d5436da5537afaa",
+        "dirty": true
+      },
+      "identity": {
+        "build_report_sha256": "1a84d4db5b653ae88616f797e5efb7c9fd7c1a8adb3b77216630ecf50f340148",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "219dcc0f7b79bfc7ad88810e4661ca01be24a232935580602cdf1502a107cb59",
+        "ihx_sha256": "898bfa2fc1bfc02562820611a7b652017bbfabf9d67a3b02d60f3d48e337c114",
+        "map_sha256": "f7551bfb6fc67e3db865cb67bb181ce2bab617e80400759148e43b337417d8e9",
+        "mem_sha256": "61ec95bb6e243dd88b1cd7ec080b982f1b3b64bc69bc534c14e4bead2f8d4ada",
+        "nvm_schema": 532482,
+        "profile": "full",
+        "source_manifest_sha256": "078ea3f60e950d4fa12e09114abeaaa12068bc3554aa54f6181375afe20bfae2"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38890,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49349,
+            "name": "main",
+            "occupied_bytes": 37018,
+            "start": 12327,
+            "trailing_free_bytes": 1594
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 89,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 166,
+          "stack_margin": 6,
+          "stack_qualified": true,
+          "static_bytes": 90
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2600,
+          "capacity": 3072,
+          "end_inclusive": 3623,
+          "start": 1024
+        }
+      },
+      "runtime": {
+        "foreground_bound": 97,
+        "format": "ak820-runtime-safety-1",
+        "hardware_validated": false,
+        "identity": {
+          "build_report_sha256": "1a84d4db5b653ae88616f797e5efb7c9fd7c1a8adb3b77216630ecf50f340148",
+          "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+          "configuration_sha256": "219dcc0f7b79bfc7ad88810e4661ca01be24a232935580602cdf1502a107cb59",
+          "ihx_sha256": "898bfa2fc1bfc02562820611a7b652017bbfabf9d67a3b02d60f3d48e337c114",
+          "map_sha256": "f7551bfb6fc67e3db865cb67bb181ce2bab617e80400759148e43b337417d8e9",
+          "mem_sha256": "61ec95bb6e243dd88b1cd7ec080b982f1b3b64bc69bc534c14e4bead2f8d4ada",
+          "nvm_schema": 532482,
+          "profile": "full",
+          "source_manifest_sha256": "078ea3f60e950d4fa12e09114abeaaa12068bc3554aa54f6181375afe20bfae2"
+        },
+        "irq_bound": 61,
+        "limits": [
+          "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+          "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+          "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+          "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+          "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+        ],
+        "logs": {
+          "irq": "af456161e5422d1358ce76e84f244ceb61709c7e05cab8d3ab9c6c5e5e7ae91c",
+          "startup": "7f4b135c7581977524593a9d4320325d76a44b658c6db82345b309de0b2c58f0"
+        },
+        "main_entry_frame_bound": 2,
+        "passed": true,
+        "physical_device_commands": 0,
+        "pre_main_bound": 2,
+        "release_approved": false,
+        "reports": {
+          "foreground": {
+            "path": "runtime-stack.json",
+            "sha256": "8a74db9ea1d4a63e4cf14be9fb7c44086b29a7e95f5f9612fead19623fd79893"
+          },
+          "irq": {
+            "path": "runtime-safety/irq/results.json",
+            "sha256": "af456161e5422d1358ce76e84f244ceb61709c7e05cab8d3ab9c6c5e5e7ae91c"
+          },
+          "startup": {
+            "path": "runtime-safety/startup.json",
+            "sha256": "73d82e913a55748b5761a318c8d7031da9175c7a11a54b06296b849b3ac11b7d"
+          }
+        },
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": 97
+        },
+        "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+        "source_files": {
+          "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+          "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+          "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+          "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+          "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+          "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+          "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+          "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+          "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+          "tools/configure_firmware.py": "772336c301183f02da882bd29871b73fa5200589732d250325caaf230abe80e8"
+        },
+        "stack_bound": 160,
+        "stack_capacity": 166,
+        "stack_margin": 6,
+        "unresolved_roots": [],
+        "whole_program_stack_qualified": true
+      },
+      "files": {
+        "build-report.json": {
+          "sha256": "1a84d4db5b653ae88616f797e5efb7c9fd7c1a8adb3b77216630ecf50f340148",
+          "bytes": 227972
+        },
+        "configuration-report.json": {
+          "sha256": "332c4a7fa8d9e7dc5d433fd7821569b210f09e131aa62785f6df9b7bb3839100",
+          "bytes": 7111
+        },
+        "runtime-stack.json": {
+          "sha256": "8a74db9ea1d4a63e4cf14be9fb7c44086b29a7e95f5f9612fead19623fd79893",
+          "bytes": 303808
+        },
+        "runtime-safety/summary.json": {
+          "sha256": "26bb9c8b360726fb32409de570182f330d7dc1044fb57238c3f39b7f2ca6360f",
+          "bytes": 3683
+        },
+        "runtime-safety/startup.json": {
+          "sha256": "73d82e913a55748b5761a318c8d7031da9175c7a11a54b06296b849b3ac11b7d",
+          "bytes": 9195
+        },
+        "runtime-safety/irq/results.json": {
+          "sha256": "af456161e5422d1358ce76e84f244ceb61709c7e05cab8d3ab9c6c5e5e7ae91c",
+          "bytes": 47427
+        },
+        "qualification.json": {
+          "sha256": "846ac896f1658adbd425c381e6624b03cc84aea77a8ea0d7bd3eb15503b98c2f",
+          "bytes": 31912
+        },
+        "rgb-escalated.json": {
+          "sha256": "3b37975e287886b204e9532717f9a9a0039ddd81980a064d637a57db5918ed69",
+          "bytes": 1104
+        },
+        "ajazz_ak820_vial.ihx": {
+          "sha256": "898bfa2fc1bfc02562820611a7b652017bbfabf9d67a3b02d60f3d48e337c114",
+          "bytes": 93212
+        },
+        "ajazz_ak820_vial.map": {
+          "sha256": "f7551bfb6fc67e3db865cb67bb181ce2bab617e80400759148e43b337417d8e9",
+          "bytes": 97302
+        },
+        "ajazz_ak820_vial.mem": {
+          "sha256": "61ec95bb6e243dd88b1cd7ec080b982f1b3b64bc69bc534c14e4bead2f8d4ada",
+          "bytes": 1163
+        },
+        "initial-failure-0.txt": {
+          "sha256": "082cdc995a50a2431ad09cc16f90cd02f1579bf2a056d0dbae7aff66a8a2676b",
+          "bytes": 609
+        },
+        "rgb-unrestricted.txt": {
+          "sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+          "bytes": 226
+        }
+      },
+      "accepted": true,
+      "physical_device_commands": 0,
+      "qualification_note": "Initial base run27/28 passed; unchanged RGB host suite passed with all sanitizers outside restricted /proc. Leak-disabled supplementary run is excluded from acceptance evidence."
+    },
+    {
+      "experiment": "shortcall-rebuild",
+      "source": {
+        "commit": "348b45e4966973fc78ea35e23d5436da5537afaa",
+        "dirty": true
+      },
+      "identity": {
+        "build_report_sha256": "8b943a4b87b9500266162ea44d19df0342c426ffcc63eafc1ee602a826d3bdc1",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "bcd0b4dce06e2c0ae1e316f27a60346582d4e2726b3da1c45b4725af8980ae0f",
+        "ihx_sha256": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map_sha256": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6",
+        "mem_sha256": "433518bc2bf18931a7ceb93ea6d474fc08e6ed20ed0b4e0d8b42dc8ea9312925",
+        "nvm_schema": 532482,
+        "profile": "full-auto-shift-dynamic-macro",
+        "source_manifest_sha256": "1470ba89b32770b7236f06c090c1723846f6a0898151878ccc5b83318dc71723"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 40424,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50883,
+            "name": "main",
+            "occupied_bytes": 38552,
+            "start": 12327,
+            "trailing_free_bytes": 60
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 90,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 165,
+          "stack_margin": 5,
+          "stack_qualified": true,
+          "static_bytes": 91
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2710,
+          "capacity": 3072,
+          "end_inclusive": 3733,
+          "start": 1024
+        }
+      },
+      "runtime": {
+        "foreground_bound": 97,
+        "format": "ak820-runtime-safety-1",
+        "hardware_validated": false,
+        "identity": {
+          "build_report_sha256": "8b943a4b87b9500266162ea44d19df0342c426ffcc63eafc1ee602a826d3bdc1",
+          "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+          "configuration_sha256": "bcd0b4dce06e2c0ae1e316f27a60346582d4e2726b3da1c45b4725af8980ae0f",
+          "ihx_sha256": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+          "map_sha256": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6",
+          "mem_sha256": "433518bc2bf18931a7ceb93ea6d474fc08e6ed20ed0b4e0d8b42dc8ea9312925",
+          "nvm_schema": 532482,
+          "profile": "full-auto-shift-dynamic-macro",
+          "source_manifest_sha256": "1470ba89b32770b7236f06c090c1723846f6a0898151878ccc5b83318dc71723"
+        },
+        "irq_bound": 61,
+        "limits": [
+          "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+          "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+          "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+          "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+          "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+        ],
+        "logs": {
+          "irq": "77f607bec67934b931ad41ce0176d640fb75c1bfd6928e0164b8bed2df72af43",
+          "startup": "75bbf6b7d753ca6683ad549639054ecc4794058893f7a112f55691c54739fe5c"
+        },
+        "main_entry_frame_bound": 2,
+        "passed": true,
+        "physical_device_commands": 0,
+        "pre_main_bound": 2,
+        "release_approved": false,
+        "reports": {
+          "foreground": {
+            "path": "runtime-stack.json",
+            "sha256": "4f8299aae48dadf1f8652d4d7311a5cc42db0f9d71c5406e36793ea1bf77023c"
+          },
+          "irq": {
+            "path": "runtime-safety/irq/results.json",
+            "sha256": "77f607bec67934b931ad41ce0176d640fb75c1bfd6928e0164b8bed2df72af43"
+          },
+          "startup": {
+            "path": "runtime-safety/startup.json",
+            "sha256": "af56e1de0595def453d6ec210641419ba4ecf817a386e7526a0a8fcadde55054"
+          }
+        },
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": 97
+        },
+        "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+        "source_files": {
+          "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+          "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+          "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+          "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+          "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+          "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+          "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+          "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+          "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+          "tools/configure_firmware.py": "772336c301183f02da882bd29871b73fa5200589732d250325caaf230abe80e8"
+        },
+        "stack_bound": 160,
+        "stack_capacity": 165,
+        "stack_margin": 5,
+        "unresolved_roots": [],
+        "whole_program_stack_qualified": true
+      },
+      "files": {
+        "build-report.json": {
+          "sha256": "8b943a4b87b9500266162ea44d19df0342c426ffcc63eafc1ee602a826d3bdc1",
+          "bytes": 486323
+        },
+        "configuration-report.json": {
+          "sha256": "72123c6eb24f7c4c0ae2e38c41167ccccc1110ce355a60079268d59f529ce806",
+          "bytes": 8546
+        },
+        "runtime-stack.json": {
+          "sha256": "4f8299aae48dadf1f8652d4d7311a5cc42db0f9d71c5406e36793ea1bf77023c",
+          "bytes": 319139
+        },
+        "runtime-safety/summary.json": {
+          "sha256": "9a61459d33cef7f77e6cde197f45b3f75476b2769ca40da50825a8ab1a4bf504",
+          "bytes": 3708
+        },
+        "runtime-safety/startup.json": {
+          "sha256": "af56e1de0595def453d6ec210641419ba4ecf817a386e7526a0a8fcadde55054",
+          "bytes": 9406
+        },
+        "runtime-safety/irq/results.json": {
+          "sha256": "77f607bec67934b931ad41ce0176d640fb75c1bfd6928e0164b8bed2df72af43",
+          "bytes": 47559
+        },
+        "qualification.json": {
+          "sha256": "a47b7716523b90df8b8e2aba375c5882761eee54123ba35553996b5c0803cde9",
+          "bytes": 32614
+        },
+        "profile-tests/results.json": {
+          "sha256": "eec591073b36b182fcafb6d00bad22e2b6c0971a795677ac795a24e3a9cfd188",
+          "bytes": 73605
+        },
+        "ajazz_ak820_vial.ihx": {
+          "sha256": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+          "bytes": 96892
+        },
+        "ajazz_ak820_vial.map": {
+          "sha256": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6",
+          "bytes": 99217
+        },
+        "ajazz_ak820_vial.mem": {
+          "sha256": "433518bc2bf18931a7ceb93ea6d474fc08e6ed20ed0b4e0d8b42dc8ea9312925",
+          "bytes": 1163
+        }
+      },
+      "accepted": true,
+      "physical_device_commands": 0,
+      "unchanged_prior_ihx_sha256": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233"
+    },
+    {
+      "experiment": "rejected-handler",
+      "source": {
+        "commit": "348b45e4966973fc78ea35e23d5436da5537afaa",
+        "dirty": true
+      },
+      "identity": {
+        "build_report_sha256": "65ecee5f87edee43c3dbae04fd3a2522f472acadeb89bd0a3c52fb7a656f6ec9",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "219dcc0f7b79bfc7ad88810e4661ca01be24a232935580602cdf1502a107cb59",
+        "ihx_sha256": "1574149210639ac1b9220ddec6d546bd4fb153fe045115c4a7883e95903c446b",
+        "map_sha256": "f28bd9e9775579e81b3938e250dd8ae11bc42b8d3c15e89d3336fe957890c784",
+        "mem_sha256": "915dfe3fc34e94327e18e3db7e04e984ec93c8f98dadace54d0db3db70a525d5",
+        "nvm_schema": 532482,
+        "profile": "full",
+        "source_manifest_sha256": "dbd34fc907f2b3559d0a15d0e4738314e88bde2eed30871388da8f92681199b2"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38914,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49373,
+            "name": "main",
+            "occupied_bytes": 37042,
+            "start": 12327,
+            "trailing_free_bytes": 1570
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 89,
+          "runtime_stack_bound": 163,
+          "stack_capacity": 166,
+          "stack_margin": 3,
+          "stack_qualified": true,
+          "static_bytes": 90
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2599,
+          "capacity": 3072,
+          "end_inclusive": 3622,
+          "start": 1024
+        }
+      },
+      "runtime": {
+        "foreground_bound": 100,
+        "format": "ak820-runtime-safety-1",
+        "hardware_validated": false,
+        "identity": {
+          "build_report_sha256": "65ecee5f87edee43c3dbae04fd3a2522f472acadeb89bd0a3c52fb7a656f6ec9",
+          "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+          "configuration_sha256": "219dcc0f7b79bfc7ad88810e4661ca01be24a232935580602cdf1502a107cb59",
+          "ihx_sha256": "1574149210639ac1b9220ddec6d546bd4fb153fe045115c4a7883e95903c446b",
+          "map_sha256": "f28bd9e9775579e81b3938e250dd8ae11bc42b8d3c15e89d3336fe957890c784",
+          "mem_sha256": "915dfe3fc34e94327e18e3db7e04e984ec93c8f98dadace54d0db3db70a525d5",
+          "nvm_schema": 532482,
+          "profile": "full",
+          "source_manifest_sha256": "dbd34fc907f2b3559d0a15d0e4738314e88bde2eed30871388da8f92681199b2"
+        },
+        "irq_bound": 61,
+        "limits": [
+          "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+          "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+          "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+          "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+          "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+        ],
+        "logs": {
+          "irq": "de94f8093938cad3c8ce4c07e20f343c486e3fc54ff72094391ec5d6791c408a",
+          "startup": "7f4b135c7581977524593a9d4320325d76a44b658c6db82345b309de0b2c58f0"
+        },
+        "main_entry_frame_bound": 2,
+        "passed": true,
+        "physical_device_commands": 0,
+        "pre_main_bound": 2,
+        "release_approved": false,
+        "reports": {
+          "foreground": {
+            "path": "runtime-stack.json",
+            "sha256": "847454f1d783a9c800df8abaca5136b5319a73bf3f093efb0cd5645c6f698010"
+          },
+          "irq": {
+            "path": "runtime-safety/irq/results.json",
+            "sha256": "de94f8093938cad3c8ce4c07e20f343c486e3fc54ff72094391ec5d6791c408a"
+          },
+          "startup": {
+            "path": "runtime-safety/startup.json",
+            "sha256": "3310e5e792a295a42d499bf9a4c4155b4bb7183e3cbc96e7eabd81b4eec56c6c"
+          }
+        },
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": 100
+        },
+        "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+        "source_files": {
+          "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+          "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+          "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+          "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+          "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+          "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+          "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+          "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+          "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+          "tools/configure_firmware.py": "772336c301183f02da882bd29871b73fa5200589732d250325caaf230abe80e8"
+        },
+        "stack_bound": 163,
+        "stack_capacity": 166,
+        "stack_margin": 3,
+        "unresolved_roots": [],
+        "whole_program_stack_qualified": true
+      },
+      "files": {
+        "build-report.json": {
+          "sha256": "65ecee5f87edee43c3dbae04fd3a2522f472acadeb89bd0a3c52fb7a656f6ec9",
+          "bytes": 229875
+        },
+        "configuration-report.json": {
+          "sha256": "1319157729826f98932808de55f2f6be645c7c5d60cf65f58042997fa32dd2de",
+          "bytes": 7113
+        },
+        "runtime-stack.json": {
+          "sha256": "847454f1d783a9c800df8abaca5136b5319a73bf3f093efb0cd5645c6f698010",
+          "bytes": 303992
+        },
+        "runtime-safety/summary.json": {
+          "sha256": "c3b131e68c6e4b2df2d2a74b823d91f6707acd3f31d3c1dd86adc82dfdf3dbc9",
+          "bytes": 3685
+        },
+        "runtime-safety/startup.json": {
+          "sha256": "3310e5e792a295a42d499bf9a4c4155b4bb7183e3cbc96e7eabd81b4eec56c6c",
+          "bytes": 9197
+        },
+        "runtime-safety/irq/results.json": {
+          "sha256": "de94f8093938cad3c8ce4c07e20f343c486e3fc54ff72094391ec5d6791c408a",
+          "bytes": 47427
+        },
+        "ajazz_ak820_vial.ihx": {
+          "sha256": "1574149210639ac1b9220ddec6d546bd4fb153fe045115c4a7883e95903c446b",
+          "bytes": 93272
+        },
+        "ajazz_ak820_vial.map": {
+          "sha256": "f28bd9e9775579e81b3938e250dd8ae11bc42b8d3c15e89d3336fe957890c784",
+          "bytes": 97508
+        },
+        "ajazz_ak820_vial.mem": {
+          "sha256": "915dfe3fc34e94327e18e3db7e04e984ec93c8f98dadace54d0db3db70a525d5",
+          "bytes": 1163
+        }
+      },
+      "accepted": false,
+      "physical_device_commands": 0,
+      "rejection": "Versus report ABI candidate, adds24 CODE bytes and3 stack bytes; remaining regression stopped."
+    },
+    {
+      "experiment": "integrated-leader",
+      "source": {
+        "commit": "63485ecb8de3d18ff68148183b1f8fe068ab14fb",
+        "dirty": true
+      },
+      "identity": {
+        "build_report_sha256": "416824cbbf5fc1740e7d5d8248dac1609293486c5e8527beda0b62f1d4844392",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "45ff60da11bfa4e4c0ba8df1b7627f7faa7c52a921e078dcc57e905ce7713c48",
+        "ihx_sha256": "c9764ed8044836270c467a56d5d36162d4d810e864b67ebd7ab7abd4b3c39471",
+        "map_sha256": "aa9918c0a6cdf3f0c3c98e765fa9e5e1900b734ac4592a7d8f775be26fb5f929",
+        "mem_sha256": "a86e6646ac5f4924dfafe45d4b90620ce46dcc8302d3321c53a2946487550b52",
+        "nvm_schema": 532482,
+        "profile": "full-leader",
+        "source_manifest_sha256": "51dd4d5701cdc458c9f2760b2f6b2404bc53c4e05962967a5c3306d063995144"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39606,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50065,
+            "name": "main",
+            "occupied_bytes": 37734,
+            "start": 12327,
+            "trailing_free_bytes": 878
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 93,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 162,
+          "stack_margin": 2,
+          "stack_qualified": true,
+          "static_bytes": 94
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2627,
+          "capacity": 3072,
+          "end_inclusive": 3650,
+          "start": 1024
+        }
+      },
+      "runtime": {
+        "foreground_bound": 97,
+        "format": "ak820-runtime-safety-1",
+        "hardware_validated": false,
+        "identity": {
+          "build_report_sha256": "416824cbbf5fc1740e7d5d8248dac1609293486c5e8527beda0b62f1d4844392",
+          "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+          "configuration_sha256": "45ff60da11bfa4e4c0ba8df1b7627f7faa7c52a921e078dcc57e905ce7713c48",
+          "ihx_sha256": "c9764ed8044836270c467a56d5d36162d4d810e864b67ebd7ab7abd4b3c39471",
+          "map_sha256": "aa9918c0a6cdf3f0c3c98e765fa9e5e1900b734ac4592a7d8f775be26fb5f929",
+          "mem_sha256": "a86e6646ac5f4924dfafe45d4b90620ce46dcc8302d3321c53a2946487550b52",
+          "nvm_schema": 532482,
+          "profile": "full-leader",
+          "source_manifest_sha256": "51dd4d5701cdc458c9f2760b2f6b2404bc53c4e05962967a5c3306d063995144"
+        },
+        "irq_bound": 61,
+        "limits": [
+          "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+          "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+          "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+          "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+          "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+        ],
+        "logs": {
+          "irq": "d037952b6acc545ef4d51e1ddb34c2a0784af3963b7ec707c0745d42fb168762",
+          "startup": "5826fded7c2b9019ede300d3d9f7d76c4b7e068995fa0915bc328784b3a6469e"
+        },
+        "main_entry_frame_bound": 2,
+        "passed": true,
+        "physical_device_commands": 0,
+        "pre_main_bound": 2,
+        "release_approved": false,
+        "reports": {
+          "foreground": {
+            "path": "runtime-stack.json",
+            "sha256": "3e028f0cc64187e42ca186f03bd27a116119736c27da3a000c1a0d855233f838"
+          },
+          "irq": {
+            "path": "runtime-safety/irq/results.json",
+            "sha256": "d037952b6acc545ef4d51e1ddb34c2a0784af3963b7ec707c0745d42fb168762"
+          },
+          "startup": {
+            "path": "runtime-safety/startup.json",
+            "sha256": "bdc2c680098ec684047fff9bacdc48c3fbb1b9154aa75defbfd35e02443cbc7f"
+          }
+        },
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": 97
+        },
+        "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+        "source_files": {
+          "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+          "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+          "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+          "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+          "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+          "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+          "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+          "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+          "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+          "tools/configure_firmware.py": "be94fccb1072ba3ab80c42ed8f76e90ccfcca61548e1c972c6a496b6c4317d13"
+        },
+        "stack_bound": 160,
+        "stack_capacity": 162,
+        "stack_margin": 2,
+        "unresolved_roots": [],
+        "whole_program_stack_qualified": true
+      },
+      "files": {
+        "ajazz_ak820_vial.ihx": {
+          "sha256": "c9764ed8044836270c467a56d5d36162d4d810e864b67ebd7ab7abd4b3c39471",
+          "bytes": 94932
+        },
+        "ajazz_ak820_vial.map": {
+          "sha256": "aa9918c0a6cdf3f0c3c98e765fa9e5e1900b734ac4592a7d8f775be26fb5f929",
+          "bytes": 98109
+        },
+        "ajazz_ak820_vial.mem": {
+          "sha256": "a86e6646ac5f4924dfafe45d4b90620ce46dcc8302d3321c53a2946487550b52",
+          "bytes": 1205
+        },
+        "build-report.json": {
+          "sha256": "416824cbbf5fc1740e7d5d8248dac1609293486c5e8527beda0b62f1d4844392",
+          "bytes": 232984
+        },
+        "configuration-report.json": {
+          "sha256": "b71fe434c60cee3d3de792e9a5fa0aaf0cf4341f31f036fe67b6149171db80e5",
+          "bytes": 8151
+        },
+        "profile-tests/ak820_nkro_control/mode-switch-cancels-osm-consuming.log": {
+          "sha256": "c9d2ae3ebe733240ab994acf7a4e968082b280b647378a03be49df16fee46871",
+          "bytes": 46863
+        },
+        "profile-tests/ak820_nkro_control/mode-switch-cancels-osm-held.log": {
+          "sha256": "f3f14eae93cdd2a1030b659ff1298378d587dcc6c9b12444560ba56ef2f00336",
+          "bytes": 42968
+        },
+        "profile-tests/ak820_nkro_control/mode-switch-cancels-osm-queued.log": {
+          "sha256": "c5f77af4b6da6f88cd42979091afe68d0f02985c3ac8acebc9cdf7ec678496e0",
+          "bytes": 44912
+        },
+        "profile-tests/ak820_nkro_control/mode-switch-cancels-space-cadet-False.log": {
+          "sha256": "81294e380bd32555ea2683dd7f426687a5d8d78429a32a55f347d4aaf2c88742",
+          "bytes": 42705
+        },
+        "profile-tests/ak820_nkro_control/mode-switch-cancels-space-cadet-True.log": {
+          "sha256": "f00e851229147bc94bd01dd7c2710efebfbc5a446a5b247fd4805e954834c865",
+          "bytes": 44640
+        },
+        "profile-tests/ak820_nkro_control/mode-switch-cancels-tap-and-physical-modifier.log": {
+          "sha256": "b627e3c566d9b08d867b055cb3c17bfb8bb87d4ccd8c81b2b04a44d8663d2949",
+          "bytes": 46699
+        },
+        "profile-tests/ak820_nkro_control/on-off-toggle-held-keys.log": {
+          "sha256": "a9656b9a1b8e08c4a566e6866c6be1aac744cf9add9cf18d4e33e7fcef030c09",
+          "bytes": 55293
+        },
+        "profile-tests/ak820_nkro_control/results.json": {
+          "sha256": "411d3df48342394964025aeaf21564772f82adc6d3da0f11c99b70d95985ff90",
+          "bytes": 7219
+        },
+        "profile-tests/ak820_oneshot/busy-osm-holds-without-rearming.log": {
+          "sha256": "8a8525805c0fe0d4cf93b682988d05e50afb9d6272a7f16582072b11abf4843b",
+          "bytes": 48646
+        },
+        "profile-tests/ak820_oneshot/caps-word-and-osm-owners.log": {
+          "sha256": "7abc5e0b2908af04de96f148fa487c9dc06044dfeecf375a79047a2cbaa7d68e",
+          "bytes": 43148
+        },
+        "profile-tests/ak820_oneshot/combo-output-consumes-osm.log": {
+          "sha256": "b875687703d6acaa8872bbb8df3a525a240f2f75d991139d32f97cccf0cb9222",
+          "bytes": 47687
+        },
+        "profile-tests/ak820_oneshot/held-chord-does-not-arm.log": {
+          "sha256": "a471df1dc4ee5612e52d4b15b4531c4529eaea6c8584f2e2bddbbaff917c7b71",
+          "bytes": 44391
+        },
+        "profile-tests/ak820_oneshot/osm-mask-1.log": {
+          "sha256": "72ef209ddbb1cc1a9b9af2557f54d4ecdb024ff6d3c8b18d61401fff6f197398",
+          "bytes": 46547
+        },
+        "profile-tests/ak820_oneshot/osm-mask-15.log": {
+          "sha256": "b55169cec5fd2af4ec772f28752f9e802b596ec8bcadf6661c766e91ca4489b7",
+          "bytes": 46537
+        },
+        "profile-tests/ak820_oneshot/osm-mask-17.log": {
+          "sha256": "a34be6f5b4f87c632bd2fc9492c0970c2e73a53b092bc971067d495784f2994b",
+          "bytes": 46547
+        },
+        "profile-tests/ak820_oneshot/osm-mask-18.log": {
+          "sha256": "e21551ffd4ef792eeb2099dc736d46886997f85977c29e7782ffebfcf1e13f47",
+          "bytes": 46548
+        },
+        "profile-tests/ak820_oneshot/osm-mask-2.log": {
+          "sha256": "7787d37b60da07ecc5ea804dfb3905f5b4e152037f7e150a599fc3a811687c18",
+          "bytes": 46546
+        },
+        "profile-tests/ak820_oneshot/osm-mask-31.log": {
+          "sha256": "d56fb84b914e0d8895ce6ac20b4f222526c78f9e22abf8f91c39a8b2eb6a20e7",
+          "bytes": 46548
+        },
+        "profile-tests/ak820_oneshot/physical-owner-survives-consumption.log": {
+          "sha256": "58606cc48d1e30f3ec96d4fe3c2cbc70c914bb20a50cb15bc320a9d5251d11cb",
+          "bytes": 46346
+        },
+        "profile-tests/ak820_oneshot/repeat-retains-consumed-modifier.log": {
+          "sha256": "73af1f2ab5da3e0600b4339584890f5c236b5333eed7b20564315623e59971cd",
+          "bytes": 46575
+        },
+        "profile-tests/ak820_oneshot/results.json": {
+          "sha256": "68941ec4775ac27997e001cdea5b16743eb2070b7c8c0f0b427438668f59b0f9",
+          "bytes": 14792
+        },
+        "profile-tests/ak820_oneshot/unlock-cancels-queued-and-held-state.log": {
+          "sha256": "3771871bf30ced35898f62f7025ec3e721d702a84d3062b72295f246b9552949",
+          "bytes": 43304
+        },
+        "profile-tests/ak820_oneshot/unlock-consumer.log": {
+          "sha256": "6b412a77ae03f30ec7f211a5af5e96b13c312f6cf3e42483c7bc06c8d68b5748",
+          "bytes": 47276
+        },
+        "profile-tests/ak820_oneshot/unlock-held-osm.log": {
+          "sha256": "03808496c3533650d0ec073de0f584807cfc4a2630150350ce83e03978a3c54e",
+          "bytes": 43387
+        },
+        "profile-tests/core-compact/event-copy.log": {
+          "sha256": "1f6b99b5dc07737703d2ca1a3b415171743206405aabf12bf9f74b27bae9f144",
+          "bytes": 377575
+        },
+        "profile-tests/core-compact/results.json": {
+          "sha256": "ed5afabc018429105c8aa994c79afd59a24b0d3fcc5af0fa8f0813b5ac011990",
+          "bytes": 1316
+        },
+        "profile-tests/core-compact-host.json": {
+          "sha256": "aa217c12756f9feb3ab8a51532c4b3d0bfbeefe57b69b6a17a6a9a71bd36c29e",
+          "bytes": 2790
+        },
+        "profile-tests/core-compact-host.log": {
+          "sha256": "fef9e2eb4db58148baa9eb18393430a6362a567e89af2bbda76026d45f0e6425",
+          "bytes": 467
+        },
+        "profile-tests/core-compact-linked.log": {
+          "sha256": "ed5afabc018429105c8aa994c79afd59a24b0d3fcc5af0fa8f0813b5ac011990",
+          "bytes": 1316
+        },
+        "profile-tests/delay-abi/cpu.log": {
+          "sha256": "d7dc55a32c29ba4f9328a0d9789ecc7dad35985e9c29f125830fdd8aa0322b9d",
+          "bytes": 45895
+        },
+        "profile-tests/delay-abi/results.json": {
+          "sha256": "ef251d2fd5b5720c9b6f0e5ed7031d13cc6961c4ff39ec054a4347cf9be6f0c0",
+          "bytes": 1319
+        },
+        "profile-tests/delay-abi.log": {
+          "sha256": "ea667566704a615ffd0cf5d166466747aa62b93a4e744d4bb32536c1a23a96e0",
+          "bytes": 92
+        },
+        "profile-tests/emitted/macro-action.log": {
+          "sha256": "52f6272d241c74fa4eaf0c5b190f95727f14714b049aab11bb7190e64456a358",
+          "bytes": 39331
+        },
+        "profile-tests/emitted/matrix-fn.log": {
+          "sha256": "b1fd9ecc0e95daaa2bce946ad49f88f8d3d55aa701ba9bee2ed689ebeb991cfa",
+          "bytes": 46397
+        },
+        "profile-tests/emitted/results.json": {
+          "sha256": "c7bf4aa5abb4d63a1258a44961db46707ab2b9f1918411b72d50a473e8a6f6d5",
+          "bytes": 3782
+        },
+        "profile-tests/emitted/rgb-solid-direct-suspend-resume.log": {
+          "sha256": "d53fd1b73fb2a2049039f2f5ee6e89844153085af3011475da56e12945fa7c9a",
+          "bytes": 92519
+        },
+        "profile-tests/emitted-linked.log": {
+          "sha256": "c7bf4aa5abb4d63a1258a44961db46707ab2b9f1918411b72d50a473e8a6f6d5",
+          "bytes": 3782
+        },
+        "profile-tests/gates.log": {
+          "sha256": "b4b2cca952f352962086979055f171d4369d9337dda18e76a0faa7d73d3d0160",
+          "bytes": 156
+        },
+        "profile-tests/irq-gates.log": {
+          "sha256": "3e8357f2186bdd230050a0c605287cd9c997071ccf517dee8154f5426eff14c9",
+          "bytes": 109
+        },
+        "profile-tests/leader/leader-clear-held.log": {
+          "sha256": "af5ee6ce78932073526c84ccc1dd058b126b9906f2a033360af25d473c60c3d6",
+          "bytes": 110335
+        },
+        "profile-tests/leader/leader-encoder-excluded.log": {
+          "sha256": "d46e0c1c884f245ce521d957b95690d613ff6b40eae48d9707674bb401df65d2",
+          "bytes": 106716
+        },
+        "profile-tests/leader/leader-extended-macro-tail-no-clobber.log": {
+          "sha256": "718a9701740d1325af5084834dc829cfc082f56d5f2f409fbf017ec0abda3501",
+          "bytes": 115969
+        },
+        "profile-tests/leader/leader-nonempty-macro-oneshot.log": {
+          "sha256": "48762c8c921ef8e5e2371ba95bda6d9605473ec47c7b4e6a3de17a6f73019385",
+          "bytes": 118381
+        },
+        "profile-tests/leader/leader-oneshot-retained.log": {
+          "sha256": "7a6bcc97d4e8c034cb968131ee9120bbd25c81bcc2b0f75b9d1f513349f7e8a9",
+          "bytes": 114384
+        },
+        "profile-tests/leader/leader-pending-busy.log": {
+          "sha256": "74dbc74a42e85126fab6142acdcffc890c4ef160868f35730cc33c647cc03da0",
+          "bytes": 113187
+        },
+        "profile-tests/leader/leader-preheld-release.log": {
+          "sha256": "93083fa2c2262c16896463188403a3e2e9e8f8d066d3aa09b7c6b04f330ddf04",
+          "bytes": 108860
+        },
+        "profile-tests/leader/leader-selector-0.log": {
+          "sha256": "4bdb530eb190130445b71925d9bfe59351eee05aa626f5503a857245af212a25",
+          "bytes": 109956
+        },
+        "profile-tests/leader/leader-selector-1.log": {
+          "sha256": "7820826224cf2d0b105d7bb5c89bb785b2f232cf83b5416780846ae26df9d81a",
+          "bytes": 109958
+        },
+        "profile-tests/leader/leader-selector-10.log": {
+          "sha256": "2a1698bcd6d027a33efb706da51807dd378479380bfced5ee0a97d9ad9459f57",
+          "bytes": 109957
+        },
+        "profile-tests/leader/leader-selector-11.log": {
+          "sha256": "a3f93fb5e527a10df5ef8261d826f2e8d9b9f5449159291f9b2674195c6c6724",
+          "bytes": 109887
+        },
+        "profile-tests/leader/leader-selector-12.log": {
+          "sha256": "65040b6112bae628567feb055e7735ea8c989367d824eb75f7fb0e4a5fa5af39",
+          "bytes": 109958
+        },
+        "profile-tests/leader/leader-selector-13.log": {
+          "sha256": "78d4452d7d07243f5b887f199fccffacc0123a258ce3fe1a53a7ea5b65f85247",
+          "bytes": 109958
+        },
+        "profile-tests/leader/leader-selector-14.log": {
+          "sha256": "18b532489582daeae62fa852dcb6d4475f534377efa142572a570d8e27725b74",
+          "bytes": 109955
+        },
+        "profile-tests/leader/leader-selector-15.log": {
+          "sha256": "0171b69283d6e28b361e82590d32856c67beb40e6269553434e96eedf5f058d8",
+          "bytes": 109956
+        },
+        "profile-tests/leader/leader-selector-2.log": {
+          "sha256": "f56c9dbc5fffa1edaad72a72ca08fff13aa9c4b860ac34f53ac0c685596b6ea6",
+          "bytes": 109886
+        },
+        "profile-tests/leader/leader-selector-3.log": {
+          "sha256": "dc1ac38d022f95529a67d80b62897be2ea52451b84eaa8e7df65e68d9d76e445",
+          "bytes": 109885
+        },
+        "profile-tests/leader/leader-selector-4.log": {
+          "sha256": "18ae7ba9bb149c43c04299595c336a09278824abd03d00d6e090fd518da76462",
+          "bytes": 109956
+        },
+        "profile-tests/leader/leader-selector-5.log": {
+          "sha256": "aeaf6b70b6568fd7885b4bae340da348aec16df818898904c3e6b3932bc88930",
+          "bytes": 109954
+        },
+        "profile-tests/leader/leader-selector-6.log": {
+          "sha256": "75bc2f21f44d37d1f2c9e330a3ee2c75198af9f88a60defaf44ac13fbd666971",
+          "bytes": 109886
+        },
+        "profile-tests/leader/leader-selector-7.log": {
+          "sha256": "66a3246b7628079002f98478221f753589b3374de5fac45b61e0d04ab1a6bb4d",
+          "bytes": 109885
+        },
+        "profile-tests/leader/leader-selector-8.log": {
+          "sha256": "c5c04ef0279b30281cb2726cb11d649b9d9d70fe378d639749ce3f09ae464b45",
+          "bytes": 109954
+        },
+        "profile-tests/leader/leader-selector-9.log": {
+          "sha256": "17ab33c779d85804846647ee196aba531242796fa428428d4c0477fb833a708c",
+          "bytes": 109957
+        },
+        "profile-tests/leader/leader-timeout.log": {
+          "sha256": "2c50e77acaf3698d5eb0409f83b6242bc086a1e683bf2dddf3ebc4e91b9374ba",
+          "bytes": 108898
+        },
+        "profile-tests/leader/leader-unknown-basic-consumed.log": {
+          "sha256": "c322a9a3c1ea91fae4a6cfddbd37b0786d132e7a3787f7936c2ae3ca059b79e1",
+          "bytes": 108979
+        },
+        "profile-tests/leader/leader-wrap.log": {
+          "sha256": "16f2637ffda0bdace3860827624159e112ae4bc072756f91f664f3e48a54b066",
+          "bytes": 107522
+        },
+        "profile-tests/leader/results.json": {
+          "sha256": "6d250af0914db55bfd8635864fe756351f9e27257b1a97f447c1e0be02c315f5",
+          "bytes": 33587
+        },
+        "profile-tests/leader-host.json": {
+          "sha256": "b9efd7ac122ac7287b09b56d6f105e5a05a968f7c91a499d35cdcd4e793b596a",
+          "bytes": 117
+        },
+        "profile-tests/leader-host.log": {
+          "sha256": "f6d89173b4e3a04311ddba667a887ac0fe70f84f4e591bd7ac3abbd0464c8e19",
+          "bytes": 142
+        },
+        "profile-tests/leader-linked.log": {
+          "sha256": "5fe2c4a174bc6bf9d0cff05f2de18a6c9bc5edd7e09812628817f1feb934e5ef",
+          "bytes": 42
+        },
+        "profile-tests/nkro-control-host.log": {
+          "sha256": "829d3b1e2d6bf64306b2af937f8696704d2cc5ab9149c1284d1a3d9ce7234861",
+          "bytes": 121
+        },
+        "profile-tests/nkro-control-linked.log": {
+          "sha256": "411d3df48342394964025aeaf21564772f82adc6d3da0f11c99b70d95985ff90",
+          "bytes": 7219
+        },
+        "profile-tests/one-shot-host.json": {
+          "sha256": "9a074b8603be5d19db8f64ca695c78d19dd2921ef2af560ba151f5856e2a2ce7",
+          "bytes": 7849
+        },
+        "profile-tests/one-shot-host.log": {
+          "sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+          "bytes": 174
+        },
+        "profile-tests/one-shot-linked.log": {
+          "sha256": "68941ec4775ac27997e001cdea5b16743eb2070b7c8c0f0b427438668f59b0f9",
+          "bytes": 14792
+        },
+        "profile-tests/outline-gates.log": {
+          "sha256": "7bcb7925239f5f0eafee1aa66a81c3cb715065c7bac81bbaad62eaa37b5b0884",
+          "bytes": 112
+        },
+        "profile-tests/outline-integrity/results.json": {
+          "sha256": "354eb65cb01be7e3eded960be30c6c692879c71b71431df20ef0ca2adb14b472",
+          "bytes": 554
+        },
+        "profile-tests/outline-integrity.log": {
+          "sha256": "354eb65cb01be7e3eded960be30c6c692879c71b71431df20ef0ca2adb14b472",
+          "bytes": 554
+        },
+        "profile-tests/release-safety-gates.log": {
+          "sha256": "65a3963d8acd1ccc5be5c130d9b793942b39371dd5007bb19944c493f595250b",
+          "bytes": 119
+        },
+        "profile-tests/results.json": {
+          "sha256": "841f349d00a8c704d12f2528d676df916c7f5e27dc2484ed29ad4b95f4dd566b",
+          "bytes": 68499
+        },
+        "profile-tests/runtime-safety-gates.log": {
+          "sha256": "603db52fd0016ca5cdcf83b2588160ae92bde08c66ba4c61dfc8a2a74cdb95c9",
+          "bytes": 107
+        },
+        "profile-tests/short-call-gates.log": {
+          "sha256": "780e1be02e283f51db370cc6a71badcafa8591f5264eb3c2c6ae2de697f50859",
+          "bytes": 117
+        },
+        "profile-tests/stack-gates.log": {
+          "sha256": "a27df23a7531ba286c2066d6bc8ee664f5135ce6c63e5be329c0498b808a1103",
+          "bytes": 131
+        },
+        "profile-tests/startup-gates.log": {
+          "sha256": "c6b9b1f09add0403cc07e90bfdf272129b1ddfa2f8f7675ea8218862f2516371",
+          "bytes": 104
+        },
+        "profile-tests/startup-stack.json": {
+          "sha256": "bdc2c680098ec684047fff9bacdc48c3fbb1b9154aa75defbfd35e02443cbc7f",
+          "bytes": 9295
+        },
+        "profile-tests/startup-stack.log": {
+          "sha256": "5826fded7c2b9019ede300d3d9f7d76c4b7e068995fa0915bc328784b3a6469e",
+          "bytes": 501
+        },
+        "profile-tests/transport/consumer-latest-pending-wins.log": {
+          "sha256": "876e7a2e5101802d2f1ebafb421a45e6d65b4b787131d4fec924fe086ed7e3a7",
+          "bytes": 37741
+        },
+        "profile-tests/transport/consumer-release-after-timeout.log": {
+          "sha256": "df7e035ad97b07bbe2ae386e3ad04c48cc25656ec6d0b3213bc24cfc3daea95a",
+          "bytes": 37691
+        },
+        "profile-tests/transport/keyboard-latest-pending-wins.log": {
+          "sha256": "038232f57f0e7975c71a1bbaa561e10045cb93105c59c1a426d1bb0d78283bbf",
+          "bytes": 38606
+        },
+        "profile-tests/transport/keyboard-release-after-timeout.log": {
+          "sha256": "fe261a247753e9ccd895b8b0e03b3f0b06c71c38d9de7747400bd579b49460e7",
+          "bytes": 37970
+        },
+        "profile-tests/transport/nkro-release-after-timeout.log": {
+          "sha256": "94b099c07341e2a246da9d963c21f4585ab84890817d93f69c07720a1419029d",
+          "bytes": 38032
+        },
+        "profile-tests/transport/reset-discards-stale-pending.log": {
+          "sha256": "6f52312c8e05172aa61130c2022c0760dea1ee5b4aa653916bede1eda073a1f9",
+          "bytes": 38759
+        },
+        "profile-tests/transport/results.json": {
+          "sha256": "fdecc010fa6f730e0e6e2a3e1ed049aecba29eb76fb8b1901463d81720c526b8",
+          "bytes": 12537
+        },
+        "profile-tests/transport/shared-independent-pending-releases.log": {
+          "sha256": "f8098f60c68cc560bfcc80624b971d3d6c1e315a715a3f05ac5f3d837ba7863f",
+          "bytes": 40329
+        },
+        "profile-tests/transport/suspend-resume-discards-stale-pending.log": {
+          "sha256": "1a3097a26b4d9ad03493ef921ddbf663abdc38def8327a979620adfd59b2bb84",
+          "bytes": 39423
+        },
+        "profile-tests/transport/system-release-after-timeout.log": {
+          "sha256": "32e985265192f21baaad3bdcd254757247efbd61d0ac9c3d29ae81e9ef29642b",
+          "bytes": 37689
+        },
+        "profile-tests/transport/unconfigured-no-publication.log": {
+          "sha256": "5a476934f46646182b887cdfc00e3db2ba2caa101e0d69740ba18e9ec114ed06",
+          "bytes": 37807
+        },
+        "profile-tests/transport-linked.log": {
+          "sha256": "f8cfafcc8ee783ba7fa84fea2cf0eab87b0e062c3f1bed9a8781f9ebcc3e6e1c",
+          "bytes": 211
+        },
+        "profile-tests/vialrgb/results.json": {
+          "sha256": "b2c55b17c701d20c920e6ef5bc9066dcf553dbeaf341e880ca48378477ed60e8",
+          "bytes": 555
+        },
+        "profile-tests/vialrgb/vialrgb-mode-boundaries.log": {
+          "sha256": "5e4165a68827120ed7b9bfb349362e5208acbd4372031fc53cee5711077a81b8",
+          "bytes": 1342579
+        },
+        "profile-tests/vialrgb-linked.log": {
+          "sha256": "b2c55b17c701d20c920e6ef5bc9066dcf553dbeaf341e880ca48378477ed60e8",
+          "bytes": 555
+        },
+        "qualification-command.log": {
+          "sha256": "f786c2aca6833f60506f04de9d7e0b30e4ac1a3048acc56d99c3a49bf9dec7fc",
+          "bytes": 18609
+        },
+        "qualification.json": {
+          "sha256": "6d0879036780032f478e3e0fe8f6e2f910c881ff5d84bd02c5df57744670d20f",
+          "bytes": 32336
+        },
+        "raw-build.tar.xz": {
+          "sha256": "7e8244d4f3b5a1219cf971686540e95ee7b33e7b5f4770f30145ae493c428718",
+          "bytes": 1995316
+        },
+        "runtime-safety/irq/led-timer-usb.log": {
+          "sha256": "c951a03f7e5327c70c3e81406d6bccff308fc6bfb763885a5480cc52e9fe2246",
+          "bytes": 56362
+        },
+        "runtime-safety/irq/led-timer.log": {
+          "sha256": "40a0f39d31f41b437e0e4df12bef2636145a3b48913f698276aac39604b93d85",
+          "bytes": 52854
+        },
+        "runtime-safety/irq/led-usb-timer.log": {
+          "sha256": "254a428ca8c32879f35edb3afc0ef3b64b87d35a67eabb5a3d8541361717d4dd",
+          "bytes": 56361
+        },
+        "runtime-safety/irq/led-usb.log": {
+          "sha256": "818c7aa6b2cc3e9886ad2ab4c7c3c7a331fe7390a56a2026b0dbdeb9ae0e83e1",
+          "bytes": 53438
+        },
+        "runtime-safety/irq/led.log": {
+          "sha256": "f1c8e2915badd6705053d229329d4752f089f017214cd2ea7daec8889ba8c671",
+          "bytes": 49929
+        },
+        "runtime-safety/irq/results.json": {
+          "sha256": "d037952b6acc545ef4d51e1ddb34c2a0784af3963b7ec707c0745d42fb168762",
+          "bytes": 47427
+        },
+        "runtime-safety/irq/selector-256.log": {
+          "sha256": "e8e957e85621486037f67ba58a1b7240581693c731083af6c687c7d19db04c0f",
+          "bytes": 411631
+        },
+        "runtime-safety/irq/timer-led-usb.log": {
+          "sha256": "8c0d81f4079755aad2f3f78263de087976ed4b7f4e211cc6eb7a2922985ac681",
+          "bytes": 56362
+        },
+        "runtime-safety/irq/timer-led.log": {
+          "sha256": "edf4e180e9bc602795225aa41525bf63047c27f05a324e770978c09fbb7f2451",
+          "bytes": 52853
+        },
+        "runtime-safety/irq/timer-usb-led.log": {
+          "sha256": "61a68246b16cd1e042f88acdd86a79338e5a1e54be5328b977c2c495b1f630ee",
+          "bytes": 56362
+        },
+        "runtime-safety/irq/timer-usb.log": {
+          "sha256": "d85ac4e28abe15283dc1139dca847d8817ee14b83556994411b27701c3a10845",
+          "bytes": 53436
+        },
+        "runtime-safety/irq/timer.log": {
+          "sha256": "084b434fec0465e08e69f096edb4ccba5d08f81eff5ade8c57abd3088110eb3b",
+          "bytes": 49928
+        },
+        "runtime-safety/irq/usb-led-timer.log": {
+          "sha256": "87d64b733fc22ec1be3308bae99f9da30711201e01464d18aad04a22c51b86be",
+          "bytes": 56361
+        },
+        "runtime-safety/irq/usb-led.log": {
+          "sha256": "70bf89ce9beae7f772dd699038bff3ea7b210a427bfd8032bf2d7ec65a6972ad",
+          "bytes": 53437
+        },
+        "runtime-safety/irq/usb-timer-led.log": {
+          "sha256": "3bd04d2ff3c3ba8451673f4eaf0058e9289d5cd7d999ba50bf32a549af020a98",
+          "bytes": 56363
+        },
+        "runtime-safety/irq/usb-timer.log": {
+          "sha256": "813f766835f5b2461fd5fe9c6e97fcc35897be3ad6787fe2898c4c8be78a924c",
+          "bytes": 53438
+        },
+        "runtime-safety/irq/usb.log": {
+          "sha256": "bb5c0ba07b1d78fe37e8e8fd74463c79544703bc0de27837fbec9966ff798b09",
+          "bytes": 50513
+        },
+        "runtime-safety/irq.log": {
+          "sha256": "d037952b6acc545ef4d51e1ddb34c2a0784af3963b7ec707c0745d42fb168762",
+          "bytes": 47427
+        },
+        "runtime-safety/startup.json": {
+          "sha256": "bdc2c680098ec684047fff9bacdc48c3fbb1b9154aa75defbfd35e02443cbc7f",
+          "bytes": 9295
+        },
+        "runtime-safety/startup.log": {
+          "sha256": "5826fded7c2b9019ede300d3d9f7d76c4b7e068995fa0915bc328784b3a6469e",
+          "bytes": 501
+        },
+        "runtime-safety/summary.json": {
+          "sha256": "093e04ae6b1390fafee4dde282ebdd2859b147158bff6b18529741d75bdbc1c9",
+          "bytes": 3690
+        },
+        "runtime-stack.json": {
+          "sha256": "3e028f0cc64187e42ca186f03bd27a116119736c27da3a000c1a0d855233f838",
+          "bytes": 310223
+        },
+        "runtime-stack.log": {
+          "sha256": "b8465a06fabc85d39dd5ade9630b03da78499ac2e1de70a5edc4c43ac4381802",
+          "bytes": 449
+        }
+      },
+      "accepted": true,
+      "physical_device_commands": 0,
+      "qualification_note": "Integrated pre-freeze candidate: runtime gate first; 28/28 base suites,273 unit tests,0 skips;22/22 supplemental;26/26 linked Leader cases. Normal sanitizer configuration retained with no external overrides; existing bounded-fixture leak-check exception is unchanged. Final 20-variant matrix will use clean frozen source."
+    },
+    {
+      "experiment": "leader-isolated",
+      "source": {
+        "commit": "348b45e4966973fc78ea35e23d5436da5537afaa",
+        "dirty": true
+      },
+      "identity": {
+        "build_report_sha256": "015a413ccf9e21a83fe4875b864a6fe10e433eb06a48467ff168514ca7edd9c6",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "45ff60da11bfa4e4c0ba8df1b7627f7faa7c52a921e078dcc57e905ce7713c48",
+        "ihx_sha256": "86862f566bb3b2bccc04ea006116caece3c4f2aaa97002dbbbc2afcf935d2430",
+        "map_sha256": "475d49438dbdcfddefd9cc802a5da31f287c04920c519a083452b820f14504f9",
+        "mem_sha256": "fd2736c4979053a01d2fece97530f91d5faa32695cf4789b295d46eb34a199c3",
+        "nvm_schema": 532482,
+        "profile": "full-leader",
+        "source_manifest_sha256": "575e7e52806874a870ec1363c80e07285e29601752ad8434e60d7f52fa3931da"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39640,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50099,
+            "name": "main",
+            "occupied_bytes": 37768,
+            "start": 12327,
+            "trailing_free_bytes": 844
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 93,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 162,
+          "stack_margin": 2,
+          "stack_qualified": true,
+          "static_bytes": 94
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2634,
+          "capacity": 3072,
+          "end_inclusive": 3657,
+          "start": 1024
+        }
+      },
+      "runtime": {
+        "foreground_bound": 97,
+        "format": "ak820-runtime-safety-1",
+        "hardware_validated": false,
+        "identity": {
+          "build_report_sha256": "015a413ccf9e21a83fe4875b864a6fe10e433eb06a48467ff168514ca7edd9c6",
+          "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+          "configuration_sha256": "45ff60da11bfa4e4c0ba8df1b7627f7faa7c52a921e078dcc57e905ce7713c48",
+          "ihx_sha256": "86862f566bb3b2bccc04ea006116caece3c4f2aaa97002dbbbc2afcf935d2430",
+          "map_sha256": "475d49438dbdcfddefd9cc802a5da31f287c04920c519a083452b820f14504f9",
+          "mem_sha256": "fd2736c4979053a01d2fece97530f91d5faa32695cf4789b295d46eb34a199c3",
+          "nvm_schema": 532482,
+          "profile": "full-leader",
+          "source_manifest_sha256": "575e7e52806874a870ec1363c80e07285e29601752ad8434e60d7f52fa3931da"
+        },
+        "irq_bound": 61,
+        "limits": [
+          "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+          "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+          "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+          "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+          "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+        ],
+        "logs": {
+          "irq": "b562071d79b26536fcc567f80d5307a513e7de5b19278d7555ad77730edc7fb7",
+          "startup": "5826fded7c2b9019ede300d3d9f7d76c4b7e068995fa0915bc328784b3a6469e"
+        },
+        "main_entry_frame_bound": 2,
+        "passed": true,
+        "physical_device_commands": 0,
+        "pre_main_bound": 2,
+        "release_approved": false,
+        "reports": {
+          "foreground": {
+            "path": "runtime-stack.json",
+            "sha256": "d9ae94f763814af6d88f1a44cf893d9d3e2b9ecd7eab02f6740575b01b870edf"
+          },
+          "irq": {
+            "path": "runtime-safety/irq/results.json",
+            "sha256": "b562071d79b26536fcc567f80d5307a513e7de5b19278d7555ad77730edc7fb7"
+          },
+          "startup": {
+            "path": "runtime-safety/startup.json",
+            "sha256": "d608658c571dc821b11e5942dc52ef650e89f4407376196d7c670a25a6013690"
+          }
+        },
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": 97
+        },
+        "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+        "source_files": {
+          "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+          "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+          "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+          "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+          "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+          "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+          "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+          "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+          "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+          "tools/configure_firmware.py": "be94fccb1072ba3ab80c42ed8f76e90ccfcca61548e1c972c6a496b6c4317d13"
+        },
+        "stack_bound": 160,
+        "stack_capacity": 162,
+        "stack_margin": 2,
+        "unresolved_roots": [],
+        "whole_program_stack_qualified": true
+      },
+      "files": {
+        "configuration-report.json": {
+          "sha256": "6208e5df8764d2ea3271ef750df4b6cba7dcd55c93c200d0c153264a54cddb2a",
+          "bytes": 7205
+        },
+        "documentation-initial.txt": {
+          "sha256": "77bcd1643de80c07f1b06310a71bbc0aaee21e56d953f6d939f7bee6c7fde163",
+          "bytes": 90
+        },
+        "profile-tests/leader/results.json": {
+          "sha256": "02c9de3c70f68932a9354cc1cf665026fb5a734ca72b57e96db53c74eae95bce",
+          "bytes": 33587
+        },
+        "profile-tests/results.json": {
+          "sha256": "6a1d21df7342cac48c46ae62866eb1835be30c798a00962bf68152fda4fd382e",
+          "bytes": 68388
+        },
+        "qualification.json": {
+          "sha256": "6eb6a21f7c9c91859d121c033912c52d3533338acbc061914446c4fd3b267c5f",
+          "bytes": 32178
+        }
+      },
+      "accepted": false,
+      "physical_device_commands": 0,
+      "qualification_note": "Historical isolated candidate. Sole base failure: missing guide translation/link;22/22 supplemental and26/26 linked cases pass. Superseded by fully passing integrated Leader candidate; initial failure retained."
+    }
+  ],
+  "release_approved": false,
+  "hardware_validated": false
+}

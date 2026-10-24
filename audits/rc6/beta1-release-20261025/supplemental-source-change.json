@@ -1,0 +1,15 @@
+{
+  "format": "ak820-beta1-supplemental-source-change-1",
+  "changed_files": {
+    "tools/build_beta_release_assets.py": {
+      "before": "f2e64e7db6a077e0a901644b64c7ca5b585133f98881e36b94fb7239c82ffb93",
+      "after": "c0080058ebd722d805f2b108f3594cadc450734cdac37870aac877444ab79fc6"
+    },
+    "tools/test_build_beta_release_assets.py": {
+      "before": "bcf3e8ddee5b0510f538c6bc8887c75ffee74486fc6ac2fb8a994de4c45c2aa3",
+      "after": "58ea871e562a3865b128144a0607a4166739650d45b2807ec312efd18a6955a0"
+    }
+  },
+  "reason": "Asset path-safety corrections were completed while supplemental qualification was running. Base suite inputs and firmware image did not change. Supplemental phase must be rerun against final source snapshot.",
+  "base_suite_input_changes": false
+}

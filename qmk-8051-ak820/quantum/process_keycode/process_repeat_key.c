@@ -23,7 +23,7 @@ __attribute__((weak)) bool remember_last_key_user(uint16_t keycode, keyrecord_t*
     return true;
 }
 
-static bool remember_last_key(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
+static bool remember_last_key(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record, uint8_t* remembered_mods) {
     /* Layer/modifier controls are not repeatable actions. Include LM and DF,
      * too: replaying LM from a Repeat key would create an unowned held layer. */
 #ifdef AK820_BOARD
@@ -77,7 +77,7 @@ static bool remember_last_key(uint16_t keycode, keyrecord_t* record, uint8_t* re
     return remember_last_key_user(keycode, record, remembered_mods);
 }
 
-bool process_last_key(uint16_t keycode, keyrecord_t* record) {
+bool process_last_key(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record) {
     if (get_repeat_key_count()) {
         return true;
     }
@@ -97,7 +97,7 @@ bool process_last_key(uint16_t keycode, keyrecord_t* record) {
     return true;
 }
 
-bool process_repeat_key(uint16_t keycode, keyrecord_t* record) {
+bool process_repeat_key(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record) {
     if (get_repeat_key_count()) {
         return true;
     }

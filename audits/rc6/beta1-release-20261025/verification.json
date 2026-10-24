@@ -1,0 +1,49 @@
+{
+  "format": "ak820-beta1-acceptance-1",
+  "status": "native-packaging-pending",
+  "physical_device_commands": 0,
+  "hardware_validated": false,
+  "handoff_check": {
+    "path": "handoff-check.json",
+    "sha256": "34be1c3dc94eae88a79db1fea6cc5ed33a87f10d29a469b49b8d4e5b81343ac8",
+    "passed": true
+  },
+  "all_nine_retained_evidence": {
+    "path": "evidence-recheck.json",
+    "sha256": "a70086e07f8d7656531007070e5b5223046a8e82a3115a1de0dee023e95e044d",
+    "passed": true
+  },
+  "settings_tests": {
+    "run": 52,
+    "skipped": 0,
+    "passed": true,
+    "log": "settings-tests.log"
+  },
+  "host_tests": {
+    "run": 230,
+    "skipped": 0,
+    "passed": true
+  },
+  "documentation": {
+    "public_documents": 69,
+    "active_markdown": 83,
+    "passed": true
+  },
+  "workflow_actionlint": {
+    "version": "1.7.12",
+    "passed": true
+  },
+  "work_qualification": {
+    "passed": true,
+    "base_suites": 28,
+    "base_unit_tests": 291,
+    "skipped": 0,
+    "supplemental_suites": 30,
+    "source_change_stop": "Preserved initial30 passing suite executions; gate stopped on two changed asset-tool files. All30 supplemental suites rerun on final snapshot; base inputs unchanged.",
+    "record": "current-work-qualification.json",
+    "evidence": "current-evidence-index.json"
+  },
+  "installation_profile": "work",
+  "catalog_profile_count": 9,
+  "release_policy_sha256": "af0a34e599519482749358533d01b4624ebd11724421df5dbd52f6691687f34e"
+}

@@ -1,0 +1,120 @@
+{
+  "scope": {
+    "active_markdown_files": 83,
+    "unique_external_markdown_links": 12,
+    "method": "tools/audit_documentation.py active_markdown() list, then unique HTTP(S) Markdown destinations; web open/search and read-only GitHub connector checks",
+    "confirmed_broken": 0,
+    "unreachable_or_unverified": 2
+  },
+  "links": [
+    {
+      "url": "https://github.com/dvino/ak820/releases",
+      "source_docs": [
+        "README.md",
+        "docs/INSTALL.md",
+        "docs/ru/INSTALL.md",
+        "docs/ru/README.md"
+      ],
+      "status": "resolved",
+      "observed_result": "GitHub API lookup of v0.6.0-alpha.3 returned a published release with this HTML release URL; GitHub HTML open was DisabledError."
+    },
+    {
+      "url": "https://docs.qmk.fm/features/mouse_keys",
+      "source_docs": [
+        "docs/COMPACT-MOUSE-KEYS.md",
+        "docs/ru/COMPACT-MOUSE-KEYS.md"
+      ],
+      "status": "resolved",
+      "observed_result": "Opened current QMK Firmware Mouse keys documentation (turn3view1)."
+    },
+    {
+      "url": "https://docs.qmk.fm/features/auto_shift",
+      "source_docs": [
+        "docs/COMPACT_AUTOSHIFT.md",
+        "docs/ru/COMPACT_AUTOSHIFT.md"
+      ],
+      "status": "resolved",
+      "observed_result": "Opened current QMK Firmware Auto Shift documentation (turn3view0)."
+    },
+    {
+      "url": "https://www.gnu.org/licenses/gpl-faq.html#v2v3Compatibility",
+      "source_docs": [
+        "docs/LICENSING.md",
+        "docs/ru/LICENSING.md"
+      ],
+      "status": "unreachable_unverified",
+      "observed_result": "Direct open timed out, but GNU search result turn4search0 contains the GPL FAQ, its v2/v3 compatibility question and matching fragment; exact URL route remains not directly confirmed."
+    },
+    {
+      "url": "https://sdcc.sourceforge.net/doc/sdccman.pdf",
+      "source_docs": [
+        "docs/RUNTIME-STACK.md",
+        "docs/ru/RUNTIME-STACK.md"
+      ],
+      "status": "resolved",
+      "observed_result": "Opened the SDCC Compiler User Guide PDF, 134 pages (turn3view2)."
+    },
+    {
+      "url": "https://bitsavers.trailing-edge.com/components/intel/8051/MCS-51_Users_Manual_Feb94.pdf",
+      "source_docs": [
+        "docs/RUNTIME-STACK.md",
+        "docs/ru/RUNTIME-STACK.md"
+      ],
+      "status": "resolved",
+      "observed_result": "Direct PDF fetch was rejected because the file is 15,073,500 bytes; directory listing turn4search1 shows the exact filename and 14M size."
+    },
+    {
+      "url": "https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.3",
+      "source_docs": [
+        "docs/STATUS.md",
+        "docs/ru/STATUS.md"
+      ],
+      "status": "resolved",
+      "observed_result": "GitHub API release lookup returned release tag v0.6.0-alpha.3 and this exact html_url; HTML open was DisabledError."
+    },
+    {
+      "url": "https://github.com/dvino/ak820/actions/runs/40076916540",
+      "source_docs": [
+        "docs/STATUS.md",
+        "docs/ru/STATUS.md"
+      ],
+      "status": "resolved",
+      "observed_result": "GitHub API returned workflow run ID 40076916540 with matching html_url; run completed successfully. HTML open was DisabledError."
+    },
+    {
+      "url": "https://github.com/dvino/ak820/issues/new/choose",
+      "source_docs": [
+        "docs/ru/CONTRIBUTING.md"
+      ],
+      "status": "unreachable_unverified",
+      "observed_result": "GitHub web open is DisabledError. GitHub API confirmed the public repository exists; API did not independently validate this UI route."
+    },
+    {
+      "url": "https://github.com/ergohaven/entropy/tree/5b222b5d6349fb351f53b36c66169095b3039fc1",
+      "source_docs": [
+        "web/docs/REVIEW.md",
+        "web/docs/ru/REVIEW.md"
+      ],
+      "status": "resolved",
+      "observed_result": "GitHub API confirmed the referenced commit and returned the repository root contents at that commit; GitHub HTML open was DisabledError."
+    },
+    {
+      "url": "https://github.com/Tymon3310/pipette-desktop/tree/99914fd07cef3bbf9bbf76c06ce0db79069b8c98",
+      "source_docs": [
+        "web/docs/REVIEW.md",
+        "web/docs/ru/REVIEW.md"
+      ],
+      "status": "resolved",
+      "observed_result": "GitHub API confirmed the referenced commit and returned the repository root contents at that commit; GitHub HTML open was DisabledError."
+    },
+    {
+      "url": "https://github.com/tcyeee/vialite/tree/6a3c61c8f34adb08f0e11e4294245890f3371fd8",
+      "source_docs": [
+        "web/docs/REVIEW.md",
+        "web/docs/ru/REVIEW.md"
+      ],
+      "status": "resolved",
+      "observed_result": "GitHub API confirmed the referenced commit and returned the repository root contents at that commit; GitHub HTML open was DisabledError."
+    }
+  ]
+}

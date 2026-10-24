@@ -22,6 +22,9 @@
 #include "vial.h"
 #include "vialrgb.h"
 #include "keyboards/ajazz/ak820/ak820_nvm.h"
+#ifdef AK820_OS_INDICATORS
+#    include "keyboards/ajazz/ak820/ak820_os_indicators.h"
+#endif
 
 #ifndef AK820_USB_HOST_TEST
 #    define EP_RESPONSE(ep) (*((volatile uint8_t __xdata *)(0x2200u + (ep))))
@@ -106,6 +109,9 @@ static void raw_complete(void) {
 
 static void endpoints_reset(void) {
     uint8_t i;
+#ifdef AK820_OS_INDICATORS
+    ak820_os_indicator_mode = AK820_OS_NORMAL;
+#endif
     /* Match native SIE configuration: IN on EP1/2/3, automatic DATA toggles. */
     D0_EP_MOD = bUX_DEV_EN;
     D0_EP1RES = bUEP_X_AUTO_TOG | UEP_X_RES_NAK;
@@ -452,6 +458,9 @@ void USB_DeviceInterrupt(void) {
             }
             ACK_TRANSFER();
         } else if (USB_IF & bUX_IF_SUSPEND) {
+#ifdef AK820_OS_INDICATORS
+            ak820_os_indicator_mode = AK820_OS_NORMAL;
+#endif
             if (USB_IF & bUX_SUSPEND) USB_SleepStatus |= 2;
             else {
                 USB_SleepStatus &= ~2;
@@ -646,6 +655,39 @@ void ak820_usb_raw_task(void) {
         raw_buffer[20] = USB_SleepStatus;
         raw_buffer[21] = raw_state;
         ak820_usb_send(RAW_IN_EPNUM, raw_buffer, RAW_EPSIZE);
+#ifdef AK820_OS_INDICATORS
+    } else if (raw_buffer[0] == 0xfd && raw_buffer[1] == 2) {
+        /* FD02 v1: temporary OS override, outside every NVM transaction.
+         * Request: version, GET=0/SET=1, mode, zero padding. GET mode is 0.
+         * Status: OK=0, malformed=1, unavailable=2. No request is retried. */
+        length = 1;
+        if (raw_buffer[2] == 1 && raw_buffer[3] <= 1 && raw_buffer[4] <= AK820_OS_BREATHE &&
+            (raw_buffer[3] || !raw_buffer[4])) {
+            for (i = 5; i < RAW_EPSIZE && !raw_buffer[i]; ++i) {}
+            if (i == RAW_EPSIZE) {
+                saved_ea = EA;
+                EA = 0;
+                /* Reset may cancel the request before main reaches here.
+                 * Recheck ownership and publish timestamp+mode atomically. */
+                if (raw_state == RAW_WORK && USB_EnumStatus && D0UsbConfig &&
+                    !(USB_SleepStatus & 2) && !vial_unlock_in_progress) {
+                    if (raw_buffer[3]) ak820_os_indicator_set(raw_buffer[4]);
+                    length = 0;
+                } else length = 2;
+                EA = saved_ea;
+            }
+        }
+        for (i = 2; i < RAW_EPSIZE; ++i) raw_buffer[i] = 0;
+        raw_buffer[2] = 1;
+        raw_buffer[3] = length;
+        raw_buffer[4] = ak820_os_indicator_get();
+        raw_buffer[5] = 0xa8;
+        raw_buffer[6] = (uint8_t)AK820_OS_INDICATOR_LEASE_MS;
+        raw_buffer[7] = (uint8_t)(AK820_OS_INDICATOR_LEASE_MS >> 8);
+        raw_buffer[8] = (uint8_t)AK820_OS_INDICATOR_PERIOD_MS;
+        raw_buffer[9] = (uint8_t)(AK820_OS_INDICATOR_PERIOD_MS >> 8);
+        ak820_usb_send(RAW_IN_EPNUM, raw_buffer, RAW_EPSIZE);
+#endif
     } else {
         raw_reply_without_nvm = raw_request_is_nonpersistent();
         ak820_nvm_begin();

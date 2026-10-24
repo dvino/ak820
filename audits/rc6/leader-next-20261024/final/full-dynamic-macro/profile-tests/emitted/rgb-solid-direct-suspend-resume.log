@@ -1,0 +1,1790 @@
+uCsim 0.9.9, Copyright (C) 1997 Daniel Drotos.
+uCsim comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+This is free software, and you are welcome to redistribute it
+under certain conditions; type `show c' for details.
+exec "/workspace/scratch/1875e97a7527/matrix-c/qmk-8051-ak820/.build/final-full-dynamic-macro/profile-tests/emitted/rgb-solid-direct-suspend-resume.sim"
+run 0x3077 0x9bfa
+Simulation started, PC=0x003077
+Loading from /workspace/scratch/1875e97a7527/matrix-c/qmk-8051-ak820/.build/final-full-dynamic-macro/ajazz_ak820_vial.ihx
+40012 words read from /workspace/scratch/1875e97a7527/matrix-c/qmk-8051-ak820/.build/final-full-dynamic-macro/ajazz_ak820_vial.ihx
+
+Stop at 0x009bfa: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 00 00 00 00 00
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 00 00 00 00 00
+   DPTR= 0x0c63 @DPTR= 0x00   0 .
+0x9bfa    12 5d 83 LCALL  0x5d83                                     
+F 0x009bfa
+Simulated 238404 ticks (2.156e-02 sec)
+Host usage: 0.001777 sec, rate=12.129987
+fill rom 0xc700 0xef7f 0
+fill xram 0x200 0x3ff 0
+set memory rom 0xc740 0x0 0x29 0x0 0x35 0x0 0x2b 0x0 0x39 0x0 0xe1 0x0 0xe0 0x0 0x0 0x0 0x0 0x0 0x3a 0x0 0x1e 0x0 0x14 0x0 0x4 0x0 0x0 0x0 0xe3 0x0 0x0 0x0 0x0
+0xc740    00       NOP                                               
+0xc741    29       ADD    A,R1                                       
+0xc742    00       NOP                                               
+0xc743    35 00    ADDC   A,0x00 <R0>                                
+0xc745    2b       ADD    A,R3                                       
+0xc746    00       NOP                                               
+0xc747    39       ADDC   A,R1                                       
+0xc748    00       NOP                                               
+0xc749    e1 00    AJMP   0xc700                                     
+0xc74b    e0       MOVX   A,@DPTR                                    
+0xc74c    00       NOP                                               
+0xc74d    00       NOP                                               
+0xc74e    00       NOP                                               
+0xc74f    00       NOP                                               
+0xc750    00       NOP                                               
+0xc751    3a       ADDC   A,R2                                       
+0xc752    00       NOP                                               
+0xc753    1e       DEC    R6                                         
+0xc754    00       NOP                                               
+0xc755    14       DEC    A                                          
+0xc756    00       NOP                                               
+0xc757    04       INC    A                                          
+0xc758    00       NOP                                               
+0xc759    00       NOP                                               
+0xc75a    00       NOP                                               
+0xc75b    e3       MOVX   A,@R1                                      
+0xc75c    00       NOP                                               
+0xc75d    00       NOP                                               
+0xc75e    00       NOP                                               
+0xc75f    00       NOP                                               
+0xc760    00       NOP                                               
+set memory rom 0xc760 0x0 0x3b 0x0 0x1f 0x0 0x1a 0x0 0x16 0x0 0x1d 0x0 0xe2 0x0 0x0 0x0 0x0 0x0 0x3c 0x0 0x20 0x0 0x8 0x0 0x7 0x0 0x1b 0x0 0x0 0x0 0x0 0x0 0x0
+0xc760    00       NOP                                               
+0xc761    3b       ADDC   A,R3                                       
+0xc762    00       NOP                                               
+0xc763    1f       DEC    R7                                         
+0xc764    00       NOP                                               
+0xc765    1a       DEC    R2                                         
+0xc766    00       NOP                                               
+0xc767    16       DEC    @R0                                        
+0xc768    00       NOP                                               
+0xc769    1d       DEC    R5                                         
+0xc76a    00       NOP                                               
+0xc76b    e2       MOVX   A,@R0                                      
+0xc76c    00       NOP                                               
+0xc76d    00       NOP                                               
+0xc76e    00       NOP                                               
+0xc76f    00       NOP                                               
+0xc770    00       NOP                                               
+0xc771    3c       ADDC   A,R4                                       
+0xc772    00       NOP                                               
+0xc773    20 00 08 JB     0x00,0xc77e                                
+0xc776    00       NOP                                               
+0xc777    07       INC    @R1                                        
+0xc778    00       NOP                                               
+0xc779    1b       DEC    R3                                         
+0xc77a    00       NOP                                               
+0xc77b    00       NOP                                               
+0xc77c    00       NOP                                               
+0xc77d    00       NOP                                               
+0xc77e    00       NOP                                               
+0xc77f    00       NOP                                               
+0xc780    00       NOP                                               
+set memory rom 0xc780 0x0 0x3d 0x0 0x21 0x0 0x15 0x0 0x9 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x3e 0x0 0x22 0x0 0x17 0x0 0xa 0x0 0x19 0x0 0x2c 0x0 0x0 0x0 0x0
+0xc780    00       NOP                                               
+0xc781    3d       ADDC   A,R5                                       
+0xc782    00       NOP                                               
+0xc783    21 00    AJMP   0xc100                                     
+0xc785    15 00    DEC    0x00 <R0>                                  
+0xc787    09       INC    R1                                         
+0xc788    00       NOP                                               
+0xc789    06       INC    @R0                                        
+0xc78a    00       NOP                                               
+0xc78b    00       NOP                                               
+0xc78c    00       NOP                                               
+0xc78d    00       NOP                                               
+0xc78e    00       NOP                                               
+0xc78f    00       NOP                                               
+0xc790    00       NOP                                               
+0xc791    3e       ADDC   A,R6                                       
+0xc792    00       NOP                                               
+0xc793    22       RET                                               
+0xc794    00       NOP                                               
+0xc795    17       DEC    @R1                                        
+0xc796    00       NOP                                               
+0xc797    0a       INC    R2                                         
+0xc798    00       NOP                                               
+0xc799    19       DEC    R1                                         
+0xc79a    00       NOP                                               
+0xc79b    2c       ADD    A,R4                                       
+0xc79c    00       NOP                                               
+0xc79d    00       NOP                                               
+0xc79e    00       NOP                                               
+0xc79f    00       NOP                                               
+0xc7a0    00       NOP                                               
+set memory rom 0xc7a0 0x0 0x3f 0x0 0x23 0x0 0x1c 0x0 0xb 0x0 0x5 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x40 0x0 0x24 0x0 0x18 0x0 0xd 0x0 0x11 0x0 0x0 0x0 0x0 0x0 0x0
+0xc7a0    00       NOP                                               
+0xc7a1    3f       ADDC   A,R7                                       
+0xc7a2    00       NOP                                               
+0xc7a3    23       RL     A                                          
+0xc7a4    00       NOP                                               
+0xc7a5    1c       DEC    R4                                         
+0xc7a6    00       NOP                                               
+0xc7a7    0b       INC    R3                                         
+0xc7a8    00       NOP                                               
+0xc7a9    05 00    INC    0x00 <R0>                                  
+0xc7ab    00       NOP                                               
+0xc7ac    00       NOP                                               
+0xc7ad    00       NOP                                               
+0xc7ae    00       NOP                                               
+0xc7af    00       NOP                                               
+0xc7b0    00       NOP                                               
+0xc7b1    40 00    JC     0xc7b3                                     
+0xc7b3    24 00    ADD    A,#0x00                                    
+0xc7b5    18       DEC    R0                                         
+0xc7b6    00       NOP                                               
+0xc7b7    0d       INC    R5                                         
+0xc7b8    00       NOP                                               
+0xc7b9    11 00    ACALL  0xc000                                     
+0xc7bb    00       NOP                                               
+0xc7bc    00       NOP                                               
+0xc7bd    00       NOP                                               
+0xc7be    00       NOP                                               
+0xc7bf    00       NOP                                               
+0xc7c0    00       NOP                                               
+set memory rom 0xc7c0 0x0 0x41 0x0 0x25 0x0 0xc 0x0 0xe 0x0 0x10 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x42 0x0 0x26 0x0 0x12 0x0 0xf 0x0 0x36 0x0 0xe6 0x0 0x0 0x0 0x0
+0xc7c0    00       NOP                                               
+0xc7c1    41 00    AJMP   0xc200                                     
+0xc7c3    25 00    ADD    A,0x00 <R0>                                
+0xc7c5    0c       INC    R4                                         
+0xc7c6    00       NOP                                               
+0xc7c7    0e       INC    R6                                         
+0xc7c8    00       NOP                                               
+0xc7c9    10 00 00 JBC    0x00,0xc7cc                                
+0xc7cc    00       NOP                                               
+0xc7cd    00       NOP                                               
+0xc7ce    00       NOP                                               
+0xc7cf    00       NOP                                               
+0xc7d0    00       NOP                                               
+0xc7d1    42 00    ORL    0x00 <R0>,A                                
+0xc7d3    26       ADD    A,@R0                                      
+0xc7d4    00       NOP                                               
+0xc7d5    12 00 0f LCALL  0x000f                                     
+0xc7d8    00       NOP                                               
+0xc7d9    36       ADDC   A,@R0                                      
+0xc7da    00       NOP                                               
+0xc7db    e6       MOV    A,@R0                                      
+0xc7dc    00       NOP                                               
+0xc7dd    00       NOP                                               
+0xc7de    00       NOP                                               
+0xc7df    00       NOP                                               
+0xc7e0    00       NOP                                               
+set memory rom 0xc7e0 0x0 0x43 0x0 0x27 0x0 0x13 0x0 0x33 0x0 0x37 0x52 0x21 0x0 0x0 0x0 0x0 0x0 0x44 0x0 0x2d 0x0 0x2f 0x0 0x34 0x0 0x38 0x0 0xe4 0x0 0x0 0x0 0x0
+0xc7e0    00       NOP                                               
+0xc7e1    43 00 27 ORL    0x00 <R0>,#0x27                            
+0xc7e4    00       NOP                                               
+0xc7e5    13       RRC    A                                          
+0xc7e6    00       NOP                                               
+0xc7e7    33       RLC    A                                          
+0xc7e8    00       NOP                                               
+0xc7e9    37       ADDC   A,@R1                                      
+0xc7ea    52 21    ANL    0x21,A                                     
+0xc7ec    00       NOP                                               
+0xc7ed    00       NOP                                               
+0xc7ee    00       NOP                                               
+0xc7ef    00       NOP                                               
+0xc7f0    00       NOP                                               
+0xc7f1    44 00    ORL    A,#0x00                                    
+0xc7f3    2d       ADD    A,R5                                       
+0xc7f4    00       NOP                                               
+0xc7f5    2f       ADD    A,R7                                       
+0xc7f6    00       NOP                                               
+0xc7f7    34 00    ADDC   A,#0x00                                    
+0xc7f9    38       ADDC   A,R0                                       
+0xc7fa    00       NOP                                               
+0xc7fb    e4       CLR    A                                          
+0xc7fc    00       NOP                                               
+0xc7fd    00       NOP                                               
+0xc7fe    00       NOP                                               
+0xc7ff    00       NOP                                               
+0xc800    00       NOP                                               
+set memory rom 0xc800 0x0 0x45 0x0 0x2e 0x0 0x30 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xae 0x0 0x2a 0x0 0x31 0x0 0x28 0x0 0xe5 0x0 0x50 0x0 0x0 0x0 0x0
+0xc800    00       NOP                                               
+0xc801    45 00    ORL    A,0x00 <R0>                                
+0xc803    2e       ADD    A,R6                                       
+0xc804    00       NOP                                               
+0xc805    30 00 00 JNB    0x00,0xc808                                
+0xc808    00       NOP                                               
+0xc809    00       NOP                                               
+0xc80a    00       NOP                                               
+0xc80b    00       NOP                                               
+0xc80c    00       NOP                                               
+0xc80d    00       NOP                                               
+0xc80e    00       NOP                                               
+0xc80f    00       NOP                                               
+0xc810    00       NOP                                               
+0xc811    ae 00    MOV    R6,0x00 <R0>                               
+0xc813    2a       ADD    A,R2                                       
+0xc814    00       NOP                                               
+0xc815    31 00    ACALL  0xc900                                     
+0xc817    28       ADD    A,R0                                       
+0xc818    00       NOP                                               
+0xc819    e5 00    MOV    A,0x00 <R0>                                
+0xc81b    50 00    JNC    0xc81d                                     
+0xc81d    00       NOP                                               
+0xc81e    00       NOP                                               
+0xc81f    00       NOP                                               
+0xc820    00       NOP                                               
+set memory rom 0xc820 0x0 0x0 0x0 0x0 0x0 0x4c 0x0 0x4e 0x0 0x52 0x0 0x51 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x4a 0x0 0x4b 0x0 0x4d 0x0 0x0 0x0 0x4f 0x0 0x0 0x0 0x0
+0xc820    00       NOP                                               
+0xc821    00       NOP                                               
+0xc822    00       NOP                                               
+0xc823    00       NOP                                               
+0xc824    00       NOP                                               
+0xc825    4c       ORL    A,R4                                       
+0xc826    00       NOP                                               
+0xc827    4e       ORL    A,R6                                       
+0xc828    00       NOP                                               
+0xc829    52 00    ANL    0x00 <R0>,A                                
+0xc82b    51 00    ACALL  0xca00                                     
+0xc82d    00       NOP                                               
+0xc82e    00       NOP                                               
+0xc82f    00       NOP                                               
+0xc830    00       NOP                                               
+0xc831    00       NOP                                               
+0xc832    00       NOP                                               
+0xc833    4a       ORL    A,R2                                       
+0xc834    00       NOP                                               
+0xc835    4b       ORL    A,R3                                       
+0xc836    00       NOP                                               
+0xc837    4d       ORL    A,R5                                       
+0xc838    00       NOP                                               
+0xc839    00       NOP                                               
+0xc83a    00       NOP                                               
+0xc83b    4f       ORL    A,R7                                       
+0xc83c    00       NOP                                               
+0xc83d    00       NOP                                               
+0xc83e    00       NOP                                               
+0xc83f    00       NOP                                               
+0xc840    00       NOP                                               
+set memory rom 0xc840 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0xb3 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x1 0x0 0x0 0x0 0x0
+0xc840    00       NOP                                               
+0xc841    01 00    AJMP   0xc800                                     
+0xc843    01 00    AJMP   0xc800                                     
+0xc845    01 00    AJMP   0xc800                                     
+0xc847    01 00    AJMP   0xc800                                     
+0xc849    01 00    AJMP   0xc800                                     
+0xc84b    01 00    AJMP   0xc800                                     
+0xc84d    00       NOP                                               
+0xc84e    00       NOP                                               
+0xc84f    00       NOP                                               
+0xc850    00       NOP                                               
+0xc851    b3       CPL    C                                          
+0xc852    00       NOP                                               
+0xc853    01 00    AJMP   0xc800                                     
+0xc855    01 00    AJMP   0xc800                                     
+0xc857    01 00    AJMP   0xc800                                     
+0xc859    00       NOP                                               
+0xc85a    00       NOP                                               
+0xc85b    01 00    AJMP   0xc800                                     
+0xc85d    00       NOP                                               
+0xc85e    00       NOP                                               
+0xc85f    00       NOP                                               
+0xc860    00       NOP                                               
+set memory rom 0xc860 0x0 0xb5 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0xb2 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0x0
+0xc860    00       NOP                                               
+0xc861    b5 00 01 CJNE   A,0x00 <R0>,0xc865                         
+0xc864    00       NOP                                               
+0xc865    01 00    AJMP   0xc800                                     
+0xc867    01 00    AJMP   0xc800                                     
+0xc869    01 00    AJMP   0xc800                                     
+0xc86b    01 00    AJMP   0xc800                                     
+0xc86d    00       NOP                                               
+0xc86e    00       NOP                                               
+0xc86f    00       NOP                                               
+0xc870    00       NOP                                               
+0xc871    b2 00    CPL    0x00                                       
+0xc873    01 00    AJMP   0xc800                                     
+0xc875    01 00    AJMP   0xc800                                     
+0xc877    01 00    AJMP   0xc800                                     
+0xc879    01 00    AJMP   0xc800                                     
+0xc87b    00       NOP                                               
+0xc87c    00       NOP                                               
+0xc87d    00       NOP                                               
+0xc87e    00       NOP                                               
+0xc87f    00       NOP                                               
+0xc880    00       NOP                                               
+set memory rom 0xc880 0x0 0xaf 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xac 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0
+0xc880    00       NOP                                               
+0xc881    af 00    MOV    R7,0x00 <R0>                               
+0xc883    01 00    AJMP   0xc800                                     
+0xc885    01 00    AJMP   0xc800                                     
+0xc887    01 00    AJMP   0xc800                                     
+0xc889    01 00    AJMP   0xc800                                     
+0xc88b    00       NOP                                               
+0xc88c    00       NOP                                               
+0xc88d    00       NOP                                               
+0xc88e    00       NOP                                               
+0xc88f    00       NOP                                               
+0xc890    00       NOP                                               
+0xc891    ac 00    MOV    R4,0x00 <R0>                               
+0xc893    01 00    AJMP   0xc800                                     
+0xc895    01 00    AJMP   0xc800                                     
+0xc897    01 00    AJMP   0xc800                                     
+0xc899    01 00    AJMP   0xc800                                     
+0xc89b    01 00    AJMP   0xc800                                     
+0xc89d    00       NOP                                               
+0xc89e    00       NOP                                               
+0xc89f    00       NOP                                               
+0xc8a0    00       NOP                                               
+set memory rom 0xc8a0 0x0 0xab 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xae 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0x0
+0xc8a0    00       NOP                                               
+0xc8a1    ab 00    MOV    R3,0x00 <R0>                               
+0xc8a3    01 00    AJMP   0xc800                                     
+0xc8a5    01 00    AJMP   0xc800                                     
+0xc8a7    01 00    AJMP   0xc800                                     
+0xc8a9    01 00    AJMP   0xc800                                     
+0xc8ab    00       NOP                                               
+0xc8ac    00       NOP                                               
+0xc8ad    00       NOP                                               
+0xc8ae    00       NOP                                               
+0xc8af    00       NOP                                               
+0xc8b0    00       NOP                                               
+0xc8b1    ae 00    MOV    R6,0x00 <R0>                               
+0xc8b3    01 00    AJMP   0xc800                                     
+0xc8b5    01 00    AJMP   0xc800                                     
+0xc8b7    01 00    AJMP   0xc800                                     
+0xc8b9    01 00    AJMP   0xc800                                     
+0xc8bb    00       NOP                                               
+0xc8bc    00       NOP                                               
+0xc8bd    00       NOP                                               
+0xc8be    00       NOP                                               
+0xc8bf    00       NOP                                               
+0xc8c0    00       NOP                                               
+set memory rom 0xc8c0 0x0 0xad 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xa8 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0
+0xc8c0    00       NOP                                               
+0xc8c1    ad 00    MOV    R5,0x00 <R0>                               
+0xc8c3    01 00    AJMP   0xc800                                     
+0xc8c5    01 00    AJMP   0xc800                                     
+0xc8c7    01 00    AJMP   0xc800                                     
+0xc8c9    01 00    AJMP   0xc800                                     
+0xc8cb    00       NOP                                               
+0xc8cc    00       NOP                                               
+0xc8cd    00       NOP                                               
+0xc8ce    00       NOP                                               
+0xc8cf    00       NOP                                               
+0xc8d0    00       NOP                                               
+0xc8d1    a8 00    MOV    R0,0x00 <R0>                               
+0xc8d3    01 00    AJMP   0xc800                                     
+0xc8d5    01 00    AJMP   0xc800                                     
+0xc8d7    01 00    AJMP   0xc800                                     
+0xc8d9    01 00    AJMP   0xc800                                     
+0xc8db    01 00    AJMP   0xc800                                     
+0xc8dd    00       NOP                                               
+0xc8de    00       NOP                                               
+0xc8df    00       NOP                                               
+0xc8e0    00       NOP                                               
+set memory rom 0xc8e0 0x0 0xaa 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0xa9 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0
+0xc8e0    00       NOP                                               
+0xc8e1    aa 00    MOV    R2,0x00 <R0>                               
+0xc8e3    01 00    AJMP   0xc800                                     
+0xc8e5    01 00    AJMP   0xc800                                     
+0xc8e7    01 00    AJMP   0xc800                                     
+0xc8e9    01 00    AJMP   0xc800                                     
+0xc8eb    01 00    AJMP   0xc800                                     
+0xc8ed    00       NOP                                               
+0xc8ee    00       NOP                                               
+0xc8ef    00       NOP                                               
+0xc8f0    00       NOP                                               
+0xc8f1    a9 00    MOV    R1,0x00 <R0>                               
+0xc8f3    01 00    AJMP   0xc800                                     
+0xc8f5    01 00    AJMP   0xc800                                     
+0xc8f7    01 00    AJMP   0xc800                                     
+0xc8f9    01 00    AJMP   0xc800                                     
+0xc8fb    01 00    AJMP   0xc800                                     
+0xc8fd    00       NOP                                               
+0xc8fe    00       NOP                                               
+0xc8ff    00       NOP                                               
+0xc900    00       NOP                                               
+set memory rom 0xc900 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xa8 0x0 0x1 0x0 0x1 0x0 0x1 0x0 0x1 0x78 0x2a 0x0 0x0 0x0 0x0
+0xc900    00       NOP                                               
+0xc901    01 00    AJMP   0xc800                                     
+0xc903    01 00    AJMP   0xc800                                     
+0xc905    01 00    AJMP   0xc800                                     
+0xc907    00       NOP                                               
+0xc908    00       NOP                                               
+0xc909    00       NOP                                               
+0xc90a    00       NOP                                               
+0xc90b    00       NOP                                               
+0xc90c    00       NOP                                               
+0xc90d    00       NOP                                               
+0xc90e    00       NOP                                               
+0xc90f    00       NOP                                               
+0xc910    00       NOP                                               
+0xc911    a8 00    MOV    R0,0x00 <R0>                               
+0xc913    01 00    AJMP   0xc800                                     
+0xc915    01 00    AJMP   0xc800                                     
+0xc917    01 00    AJMP   0xc800                                     
+0xc919    01 78    AJMP   0xc878                                     
+0xc91b    2a       ADD    A,R2                                       
+0xc91c    00       NOP                                               
+0xc91d    00       NOP                                               
+0xc91e    00       NOP                                               
+0xc91f    00       NOP                                               
+0xc920    00       NOP                                               
+set memory rom 0xc920 0x0 0x0 0x0 0x0 0x78 0x20 0x78 0x23 0x78 0x27 0x78 0x28 0x0 0x0 0x0 0x0 0x0 0x0 0x78 0x21 0x78 0x22 0x78 0x24 0x0 0x0 0x78 0x29 0x0 0x0 0x0 0x0
+0xc920    00       NOP                                               
+0xc921    00       NOP                                               
+0xc922    00       NOP                                               
+0xc923    00       NOP                                               
+0xc924    78 20    MOV    R0,#0x20                                   
+0xc926    78 23    MOV    R0,#0x23                                   
+0xc928    78 27    MOV    R0,#0x27                                   
+0xc92a    78 28    MOV    R0,#0x28                                   
+0xc92c    00       NOP                                               
+0xc92d    00       NOP                                               
+0xc92e    00       NOP                                               
+0xc92f    00       NOP                                               
+0xc930    00       NOP                                               
+0xc931    00       NOP                                               
+0xc932    78 21    MOV    R0,#0x21                                   
+0xc934    78 22    MOV    R0,#0x22                                   
+0xc936    78 24    MOV    R0,#0x24                                   
+0xc938    00       NOP                                               
+0xc939    00       NOP                                               
+0xc93a    78 29    MOV    R0,#0x29                                   
+0xc93c    00       NOP                                               
+0xc93d    00       NOP                                               
+0xc93e    00       NOP                                               
+0xc93f    00       NOP                                               
+0xc940    00       NOP                                               
+set memory sfr 0x82 0x6 0xe
+0x82                      06 0e 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x6f 0xb8 0x2 0x27 0x0
+0x2600    12 6f b8 LCALL  0x6fb8                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 00 00 00 06 0e
+@R0 00 .  ACC= 0x0e  14 .  B= 0x00
+@R1 00 .  PSW= 0x01 CY=0 AC=0 OV=0 P=1
+SP 0x5c -> 30 73 00 00 00 00 00 00
+   DPTR= 0x0836 @DPTR= 0x0e  14 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 732 ticks (6.619e-05 sec)
+Host usage: 0.000017 sec, rate=3.910110
+set memory xram 0x7c2 0x1
+0x07c2                      01 00 ..
+set memory xram 0x7c1 0x1
+0x07c1                      01 01 ..
+fill xram 0x2201 0x2203 0x12
+set memory xram 0x701 0x5 0x0 0xff 0x50 0x60 0xff 0x0 0x0
+0x0701                      05 00 ff 50 60 ff 00 00 ...P`...
+0x0709                      00                      .
+set memory xram 0x68f 0x64 0x0 0x0 0x0
+0x068f                      64 00 00 00 00 d....
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 e2 00 00 08 08
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x08   8 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 167940 ticks (1.519e-02 sec)
+Host usage: 0.001404 sec, rate=10.815554
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 26 00 00 10 10
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x10  16 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.000965 sec, rate=12.265621
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 26 01 00 18 18
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x18  24 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.000995 sec, rate=11.895272
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 4a 00 00 20 20
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x20  32  
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.001059 sec, rate=11.174914
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 4a 01 00 28 28
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x28  40 (
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.001089 sec, rate=10.869054
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 6e 00 00 30 30
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x30  48 0
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.001196 sec, rate=9.894154
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 6e 01 00 38 38
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x38  56 8
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.000961 sec, rate=12.317362
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 d2 00 00 40 40
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x40  64 @
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.001146 sec, rate=10.328541
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 ee 01 00 48 48
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x48  72 H
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.001189 sec, rate=9.953673
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 b6 01 00 50 50
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x50  80 P
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 130884 ticks (1.183e-02 sec)
+Host usage: 0.000975 sec, rate=12.139635
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 f6 01 00 52 52
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x52  82 R
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34476 ticks (3.117e-03 sec)
+Host usage: 0.000262 sec, rate=11.897491
+echo @@solid
+@@solid
+dump xram 0x200 0x203 16
+0x0200                      ff 12 00 00 ....
+set memory xram 0xcdf 0x0 0x0 0x50 0xaa 0xff 0x50 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x55 0xff 0x50
+0x0cdf                      00 00 50 aa ff 50 00 00 ..P..P..
+0x0ce7                      00 00 00 00 00 00 00 00 ........
+0x0cef                      00 00 00 00 00 00 00 00 ........
+0x0cf7                      00 00 00 00 00 00 00 00 ........
+0x0cff                      00 00 00 00 00 00 00 00 ........
+0x0d07                      00 00 00 00 00 00 00 00 ........
+0x0d0f                      00 00 00 00 00 00 00 00 ........
+0x0d17                      00 00 00 00 00 00 00 00 ........
+0x0d1f                      00 00 00 00 00 00 00 00 ........
+0x0d27                      00 00 00 00 00 00 00 00 ........
+0x0d2f                      00 00 00 00 00 00 00 00 ........
+0x0d37                      00 00 00 00 00 00 00 00 ........
+0x0d3f                      00 00 00 00 00 00 00 00 ........
+0x0d47                      00 00 00 00 00 00 00 00 ........
+0x0d4f                      00 00 00 00 00 00 00 00 ........
+0x0d57                      00 00 00 00 00 00 00 00 ........
+0x0d5f                      00 00 00 00 00 00 00 00 ........
+0x0d67                      00 00 00 00 00 00 00 00 ........
+0x0d6f                      00 00 00 00 00 00 00 00 ........
+0x0d77                      00 00 00 00 00 00 00 00 ........
+0x0d7f                      00 00 00 00 00 00 00 00 ........
+0x0d87                      00 00 00 00 00 00 00 00 ........
+0x0d8f                      00 00 00 00 00 00 00 00 ........
+0x0d97                      00 00 00 00 00 00 00 00 ........
+0x0d9f                      00 00 00 00 00 00 00 00 ........
+0x0da7                      00 00 00 00 00 00 00 00 ........
+0x0daf                      00 00 00 00 00 00 00 00 ........
+0x0db7                      00 00 00 00 00 00 00 00 ........
+0x0dbf                      00 00 00 00 00 00 00 00 ........
+0x0dc7                      00 00 00 00 00 00 00 00 ........
+0x0dcf                      00 00 00 55 ff 50 00    ...U.P.
+set memory sfr 0x82 0x5 0x0
+0x82                      05 00 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x58 0xa6 0x2 0x27 0x0
+0x2600    12 58 a6 LCALL  0x58a6                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 12 00 f6 16 07 00 00
+@R0 00 .  ACC= 0x15  21 .  B= 0x14
+@R1 00 .  PSW= 0x41 CY=0 AC=1 OV=0 P=1
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x0701 @DPTR= 0x15  21 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 16092 ticks (1.455e-03 sec)
+Host usage: 0.000140 sec, rate=10.397002
+set memory xram 0x68f 0xc8 0x0 0x0 0x0
+0x068f                      c8 00 00 00 60 ....`
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 e2 00 00 08 08
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x08   8 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 172968 ticks (1.564e-02 sec)
+Host usage: 0.001347 sec, rate=11.610569
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 26 00 00 10 10
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x10  16 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000984 sec, rate=12.230766
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 26 01 00 18 18
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x18  24 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000979 sec, rate=12.293320
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 4a 00 00 20 20
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x20  32  
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.001007 sec, rate=11.949899
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 4a 01 00 28 28
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x28  40 (
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000970 sec, rate=12.405105
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 6e 00 00 30 30
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x30  48 0
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000978 sec, rate=12.305308
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 6e 01 00 38 38
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x38  56 8
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.001047 sec, rate=11.492799
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 d2 00 00 40 40
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x40  64 @
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000974 sec, rate=12.353493
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 ee 01 00 48 48
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x48  72 H
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000977 sec, rate=12.317319
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 b6 01 00 50 50
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x50  80 P
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000985 sec, rate=12.218924
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 00 12 f6 01 00 52 52
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 ff .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x52  82 R
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 37836 ticks (3.421e-03 sec)
+Host usage: 0.000373 sec, rate=9.169108
+echo @@direct_0
+@@direct_0
+dump xram 0x200 0x203 16
+0x0200                      ff 12 12 12 ....
+echo @@direct_1
+@@direct_1
+dump xram 0x220 0x223 16
+0x0220                      ff 00 00 12 ....
+echo @@direct_2
+@@direct_2
+dump xram 0x240 0x243 16
+0x0240                      00 00 00 00 ....
+echo @@direct_81
+@@direct_81
+dump xram 0x3f4 0x3f7 16
+0x03f4                      ff 00 12 00 ....
+set memory xram 0x76e 0x3c
+0x076e                      3c 12 <.
+set memory xram 0x76f 0x1e
+0x076f                      1e 00 ..
+set memory xram 0x770 0xa
+0x0770                      0a 51 .Q
+set memory sfr 0x82 0x0 0x0
+0x82                      00 00 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x54 0x37 0x2 0x27 0x0
+0x2600    12 54 37 LCALL  0x5437                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 00 03
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x0203 @DPTR= 0x0a  10 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 3072 ticks (2.778e-04 sec)
+Host usage: 0.000029 sec, rate=9.628797
+echo @@before_sleep
+@@before_sleep
+dump xram 0x200 0x203 16
+0x0200                      ff 3c 1e 0a .<..
+echo @@bounds_before
+@@bounds_before
+dump xram 0x200 0x3ff 16
+0x0200                      ff 3c 1e 0a 00 00 00 00 00 00 00 00 00 00 00 00 .<..............
+0x0210                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0220                      ff 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0230                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0240                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0250                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0260                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0270                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0280                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0290                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02a0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02b0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02c0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02d0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02e0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02f0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0300                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0310                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0320                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0330                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0340                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0350                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0360                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0370                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0380                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0390                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03a0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03b0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03c0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03d0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03e0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03f0                      00 00 00 00 ff 00 12 00 00 00 00 00 00 00 00 00 ................
+set memory sfr 0x82 0xff 0xff
+0x82                      ff ff 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x54 0x37 0x2 0x27 0x0
+0x2600    12 54 37 LCALL  0x5437                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 ff ff
+@R0 00 .  ACC= 0xff 255 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x0772 @DPTR= 0xff 255 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 504 ticks (4.557e-05 sec)
+Host usage: 0.000028 sec, rate=1.633732
+set memory sfr 0x82 0x0 0x80
+0x82                      00 80 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x54 0x37 0x2 0x27 0x0
+0x2600    12 54 37 LCALL  0x5437                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 00 80
+@R0 00 .  ACC= 0x80 128 .  B= 0x00
+@R1 00 .  PSW= 0x01 CY=0 AC=0 OV=0 P=1
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x0772 @DPTR= 0x80 128 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 504 ticks (4.557e-05 sec)
+Host usage: 0.000005 sec, rate=9.102222
+set memory sfr 0x82 0x52 0x0
+0x82                      52 00 00 R..
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x54 0x37 0x2 0x27 0x0
+0x2600    12 54 37 LCALL  0x5437                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 52 00
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x0772 @DPTR= 0x00   0 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 600 ticks (5.425e-05 sec)
+Host usage: 0.000005 sec, rate=10.835979
+set memory sfr 0x82 0xff 0x0
+0x82                      ff 00 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x54 0x37 0x2 0x27 0x0
+0x2600    12 54 37 LCALL  0x5437                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 ff 00
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x0772 @DPTR= 0x00   0 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 600 ticks (5.425e-05 sec)
+Host usage: 0.000006 sec, rate=9.102222
+set memory sfr 0x82 0x0 0x1
+0x82                      00 01 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x54 0x37 0x2 0x27 0x0
+0x2600    12 54 37 LCALL  0x5437                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 00 01
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x0772 @DPTR= 0x01   1 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 600 ticks (5.425e-05 sec)
+Host usage: 0.000007 sec, rate=7.846743
+set memory sfr 0x82 0xff 0x7f
+0x82                      ff 7f 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x54 0x37 0x2 0x27 0x0
+0x2600    12 54 37 LCALL  0x5437                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 ff 7f
+@R0 00 .  ACC= 0x7f 127 .  B= 0x00
+@R1 00 .  PSW= 0x01 CY=0 AC=0 OV=0 P=1
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x0772 @DPTR= 0x7f 127 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 600 ticks (5.425e-05 sec)
+Host usage: 0.000008 sec, rate=6.692810
+set memory sfr 0x82 0x52 0x0
+0x82                      52 00 00 R..
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x33 0x82 0x2 0x27 0x0
+0x2600    12 33 82 LCALL  0x3382                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 ff 52
+@R0 00 .  ACC= 0x52  82 R  B= 0x00
+@R1 00 .  PSW= 0x01 CY=0 AC=0 OV=0 P=1
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x041d @DPTR= 0x52  82 R
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 216 ticks (1.953e-05 sec)
+Host usage: 0.000002 sec, rate=9.102222
+set memory sfr 0x82 0xff 0x0
+0x82                      ff 00 00 ...
+set memory sfr 0xf0 0x0
+0xf0 B:                   0b00000000 0x00 '.'   0
+0xf1                      00    .
+set memory rom 0x2600 0x12 0x33 0x82 0x2 0x27 0x0
+0x2600    12 33 82 LCALL  0x3382                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 3c 1e 02 00 00 ff ff
+@R0 00 .  ACC= 0xff 255 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 0a
+   DPTR= 0x041d @DPTR= 0xff 255 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 216 ticks (1.953e-05 sec)
+Host usage: 0.000002 sec, rate=9.102222
+echo @@bounds_after
+@@bounds_after
+dump xram 0x200 0x3ff 16
+0x0200                      ff 3c 1e 0a 00 00 00 00 00 00 00 00 00 00 00 00 .<..............
+0x0210                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0220                      ff 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0230                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0240                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0250                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0260                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0270                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0280                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0290                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02a0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02b0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02c0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02d0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02e0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02f0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0300                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0310                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0320                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0330                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0340                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0350                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0360                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0370                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0380                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0390                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03a0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03b0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03c0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03d0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03e0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03f0                      00 00 00 00 ff 00 12 00 00 00 00 00 00 00 00 00 ................
+set memory xram 0x7c3 0x2
+0x07c3                      02 00 ..
+set memory rom 0x2600 0x12 0x4e 0xa6 0x2 0x27 0x0
+0x2600    12 4e a6 LCALL  0x4ea6                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 f6 01 00 01 00
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x0700 @DPTR= 0x00   0 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 230412 ticks (2.083e-02 sec)
+Host usage: 0.002027 sec, rate=10.278274
+echo @@sleep_immediate
+@@sleep_immediate
+dump xram 0x200 0x3ff 16
+0x0200                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0210                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0220                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0230                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0240                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0250                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0260                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0270                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0280                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0290                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02a0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02b0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02c0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02d0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02e0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02f0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0300                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0310                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0320                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0330                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0340                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0350                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0360                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0370                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0380                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0390                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03a0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03b0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03c0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03d0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03e0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03f0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+set memory xram 0x68f 0x2c 0x1 0x0 0x0
+0x068f                      2c 01 00 00 c4 ,....
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 e2 00 00 08 08
+@R0 00 .  ACC= 0x00   0 .  B= 0x01
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x08   8 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 70836 ticks (6.405e-03 sec)
+Host usage: 0.000857 sec, rate=7.472937
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 26 00 00 10 10
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x10  16 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000259 sec, rate=11.880663
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 26 01 00 18 18
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x18  24 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000386 sec, rate=7.969364
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 4a 00 00 20 20
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x20  32  
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000417 sec, rate=7.377015
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 4a 01 00 28 28
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x28  40 (
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000308 sec, rate=9.986378
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 6e 00 00 30 30
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x30  48 0
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000260 sec, rate=11.826214
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 6e 01 00 38 38
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x38  56 8
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000258 sec, rate=11.924584
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 d2 00 00 40 40
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x40  64 @
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000273 sec, rate=11.268472
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 ee 01 00 48 48
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x48  72 H
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000330 sec, rate=9.322543
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 b6 01 00 50 50
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x50  80 P
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 34020 ticks (3.076e-03 sec)
+Host usage: 0.000285 sec, rate=10.796987
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 f6 01 00 52 52
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x52  82 R
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 10260 ticks (9.277e-04 sec)
+Host usage: 0.000079 sec, rate=11.720482
+echo @@sleep_rendered
+@@sleep_rendered
+dump xram 0x200 0x3ff 16
+0x0200                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0210                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0220                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0230                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0240                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0250                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0260                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0270                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0280                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0290                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02a0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02b0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02c0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02d0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02e0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x02f0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0300                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0310                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0320                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0330                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0340                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0350                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0360                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0370                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0380                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x0390                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03a0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03b0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03c0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03d0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03e0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+0x03f0                      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+echo @@sleep_usb_state
+@@sleep_usb_state
+dump xram 0xe12 0xe12 16
+0x0e12                      03 .
+set memory xram 0x7c3 0x0
+0x07c3                      00 00 ..
+set memory rom 0x2600 0x12 0x4e 0xa6 0x2 0x27 0x0
+0x2600    12 4e a6 LCALL  0x4ea6                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 f6 16 07 00 00
+@R0 00 .  ACC= 0x00   0 .  B= 0x01
+@R1 00 .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x0700 @DPTR= 0x00   0 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 17496 ticks (1.582e-03 sec)
+Host usage: 0.000126 sec, rate=12.543516
+set memory xram 0x68f 0x90 0x1 0x0 0x0
+0x068f                      90 01 00 00 28 ....(
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 e2 00 00 08 08
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x08   8 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 172968 ticks (1.564e-02 sec)
+Host usage: 0.001365 sec, rate=11.458466
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 26 00 00 10 10
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x10  16 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.001085 sec, rate=11.091271
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 26 01 00 18 18
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x18  24 .
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000969 sec, rate=12.420367
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 4a 00 00 20 20
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x20  32  
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.001096 sec, rate=10.980286
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 4a 01 00 28 28
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x28  40 (
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000965 sec, rate=12.472541
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 6e 00 00 30 30
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x30  48 0
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.001164 sec, rate=10.339282
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 6e 01 00 38 38
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x38  56 8
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.001053 sec, rate=11.427750
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 d2 00 00 40 40
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x40  64 @
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000969 sec, rate=12.417312
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 ee 01 00 48 48
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x48  72 H
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000972 sec, rate=12.380764
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     00 00 00 b6 01 00 50 50
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 00 .  PSW= 0x80 CY=1 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x50  80 P
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 133092 ticks (1.203e-02 sec)
+Host usage: 0.000961 sec, rate=12.525155
+set memory rom 0x2600 0x12 0x55 0x45 0x2 0x27 0x0
+0x2600    12 55 45 LCALL  0x5545                                     
+0x2603    02 27 00 LJMP   0x2700                                     
+0x2606    ff       MOV    R7,A                                       
+run 0x2600 0x2700
+Simulation started, PC=0x002600
+
+Stop at 0x002700: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     ff 00 12 f6 01 00 52 52
+@R0 00 .  ACC= 0x00   0 .  B= 0x00
+@R1 ff .  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x5c -> 30 73 00 07 7e 00 0b 00
+   DPTR= 0x077a @DPTR= 0x52  82 R
+0x2700    ff       MOV    R7,A                                       
+F 0x002700
+Simulated 37836 ticks (3.421e-03 sec)
+Host usage: 0.000310 sec, rate=11.029710
+echo @@resume_0
+@@resume_0
+dump xram 0x200 0x203 16
+0x0200                      ff 12 12 12 ....
+echo @@resume_1
+@@resume_1
+dump xram 0x220 0x223 16
+0x0220                      ff 00 00 12 ....
+echo @@resume_81
+@@resume_81
+dump xram 0x3f4 0x3f7 16
+0x03f4                      ff 00 12 00 ....
+echo @@resume_usb_state
+@@resume_usb_state
+dump xram 0xe12 0xe12 16
+0x0e12                      02 .
+state
+CPU state= OK PC= 0x002700 frequency= 11059200 HZ
+Operation since last reset= 786186 vclks
+Inst= 251340 Fetch= 437762 Read= 190270 Write= 158154
+Total time since last reset= 0.460698784724558 sec (5094960 clks)
+Time in isr = 0.000000000000000 sec (0 clks) 0.00%
+Time in idle= 0.000000000000000 sec (0 clks) 0.00%
+Most value of stack pointer= 0x000068
+Simulation: stopped
+Runtime: 0.078447 sec
+quit
+

@@ -8,9 +8,15 @@ product name and USB ID `320F:505B` alone do not confirm compatibility. The firs
 installation creates an OEM recovery session; keep it and later settings
 backups in separate private copies.
 
+## Companion-design beta
+
+[v0.6.0-beta.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1) supplies linked firmware images and catalogs for companion development. Download `AK820-Beta1-Catalog.zip` and its `.sha256` file. Check the SHA256 before extracting: use `sha256sum -c AK820-Beta1-Catalog.zip.sha256` on Linux, or `Get-FileHash` and compare it with the checksum file on Windows. Extract with `unzip` or Windows **Extract All**. The archive contains data and IHX applications; it has no application to launch. The separate JSON assets provide the selection matrix, exact-image capabilities and bilingual descriptions. Read the [firmware handoff](../web/docs/FIRMWARE-HANDOFF.md) before integrating them.
+
+The beta release includes standalone Windows and Linux x86_64 installers for the `work` profile. Follow the download, checksum and install steps below using the beta release assets. The installers install the exact `work` image with IHX SHA256 `652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880`; the other eight profiles are catalog candidates and are not installed. Beta firmware has not been tested on physical hardware.
+
 ## Download and check a release package
 
-Open [Releases](https://github.com/dvino/ak820/releases) and download the
+Open [beta.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1) and download the
 package and matching `.sha256` file for the operating system:
 
 - Windows: `AK820-Windows.zip` and `AK820-Windows.zip.sha256`.

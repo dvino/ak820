@@ -2,94 +2,62 @@
 
 # Roadmap
 
-## AK Configurator
+The source registry defines nine curated profile packages that cover all 14
+optional modules. The default `work` package includes Leader, Dynamic Macros
+and OS indicator control; it excludes Mouse Keys and Mac/PC mapping. The
+packages are fixed combinations, not independent toggles. Older profile names
+remain available in the low-level CLI for reproducing earlier builds. New
+source images have their own qualification records. Installed alpha.3 remains unchanged; beta installers are now part of the companion baseline. See [Status](STATUS.md), [Build profiles](BUILD-PROFILES.md) and the
+[module matrix](MODULE-MATRIX.md).
 
-The AK Configurator is being developed in the separate [dvino/ak-configurator](https://github.com/dvino/ak-configurator) repository. The planned shared core is native Rust, with a parallel WebAssembly build for the browser. Entropy is the selected starting point; Pipette remains an optional fallback if Entropy cannot meet a requirement. See the configurator [requirements](https://github.com/dvino/ak-configurator/blob/main/docs/REQUIREMENTS.md) and [plan](https://github.com/dvino/ak-configurator/blob/main/docs/PLAN.md). This repository continues to hold the AK820 firmware.
+## Configurator
 
-NKRO control, modifier One Shot and Space Cadet are available in the `full`
-profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls
-and Dynamic Macros in supported combinations. These profiles are source development builds;
-they do not inherit the published alpha.3 qualification.
-Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
-The published and installed alpha.3 image is the exact full image described in
-[Status](STATUS.md). Source changes since that release, including feature-profile
-changes, are development work and are not approved for packaging or installation.
+The companion application is developed in the separate [AK Configurator](https://github.com/dvino/ak-configurator) repository. Its imported Entropy source still needs adaptation for AK820. The firmware catalogs and protocol contracts in this repository provide the integration baseline.
 
-## Deferred features
+New module development is paused for the beta. Firmware work now covers the
+existing profiles, defects, documentation and application contracts.
 
-The initial inventory contains 11 candidates. Bounded implementations now
-cover NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift, GUI lock and
-Dynamic Macros. A Vial control or keycode alone does not show that a feature is
-enabled.
+The next product phase is the browser and desktop configurator. The client
+should use an exact-image catalog, distinguish reserved storage from enabled
+controls, and show only commands supported by the installed profile. Present
+the nine curated packages as whole choices, with `work` as the default when
+selecting a project package. Backup and restore must use the typed module
+storage contract and reject settings the target image cannot represent. See
+the [requirements](../web/docs/REQUIREMENTS.md),
+[implementation plan](../web/docs/PLAN.md), and
+[development catalog](DEVELOPMENT-CATALOG.md).
 
-| Candidate | Open work |
-| --- | --- |
-| Tap Dance | The upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
-| Key Overrides | The upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
-| QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Magic modifier swaps | GUI lock is available separately; modifier swaps and persistent settings remain open. |
-| Leader | Bound sequence length, timeout and supported outputs. |
+## Module limits and future work
 
-The available implementations are intentionally limited. NKRO control
-adds only `NK_ON`, `NK_OFF` and `NK_TOGG`; One Shot handles modifier combinations
-without layer form, timeout or locking; Space Cadet handles `SC_LSPO`, `SC_RSPC`
-and `SC_SENT` through compact tap-hold. See [Build profiles](BUILD-PROFILES.md)
-for exact behavior and tested interactions.
-GUI lock controls are described in [GUI controls](GUI-CONTROL.md). Compact
-Dynamic Macros provide two volatile slots of 16 completed taps; see the
-[user guide](COMPACT-DYNAMIC-MACROS.md) for exclusions and playback behavior.
+The modules have bounded behavior. Tap Dance has eight entries, four basic or
+modified-basic outputs per entry, one pending decision and at most two presses
+per gesture; resolved holds can overlap. Key Overrides has eight rows and
+captures one physical trigger at a time. QMK Settings exposes QSID 1, 2, 7, 18
+and 19 in the `settings` package. QSID 4 remains reserved for a future package
+that combines QMK Settings and Auto Shift. Its settings record is versioned,
+typed, 24 bytes and protected by CRC; backup and migration are supported. The
+individual guides document rejected inputs and limits.
 
-## Runtime settings and saved data
+Other Magic actions remain future work. Current GUI controls and modifier
+swaps are temporary. Caps variants and persistent Magic settings are outside
+the current module contract. Any extension needs defined user behavior,
+storage and migration rules where applicable, and exact-image resource and
+runtime qualification before release consideration.
 
-`QMK_SETTINGS = no` in alpha.3 and configured development profiles. Vial
-keymap, macro and lighting settings do not imply support for QMK Settings.
-Only expose a setting when an enabled handler consumes it and changes behavior.
+## Storage and compatibility
 
-The upstream QMK Settings structure is 36 bytes before other dynamic feature
-data. Enabling the upstream flag alone moves the fixed Combo layout at `0x658`
-and is incompatible. The reviewed compatible plan places a versioned record in
-the measured 328-byte gap from `0x6a8` to `0x7ef`, preserving existing Combo
-offsets. A new versioned saved record and migration still need implementation.
-Define defaults, reset, typed backup and restore, then measure the complete linked image. See the
-[QMK Settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md).
-The upstream structure size alone is not the feature's total resource cost.
+Profiles that enable Tap Dance, Key Overrides or QMK Settings use schema
+`0x082003`; other profiles retain `0x082002`. Both schemas preserve six layers,
+16 macros with 8,192 bytes of macro storage, eight Combos and the fixed Combo
+offset at `0x658`. Extension records use reserved space described in
+[module storage](MODULE-STORAGE.md). Do not enable upstream QMK Settings
+storage; it moves the fixed Combo layout.
 
-## Resource and compatibility evidence
-
-Every supported feature combination must be measured as a complete linked
-image. Track both CODE windows, XRAM, internal RAM and stack placement. Shared
-code, dead-code removal and outlining make individual probe costs non-additive.
-Do not count loader, settings or journal space as free CODE. See
-[Resource budget](RESOURCE-BUDGET.md) and the current
-[qualification evidence](../audits/rc6/compact-runtime-20261024/final/README.md).
-
-Development builds run regression gates and profile-specific host and linked
-CPU suites against the exact image. The exact published alpha.3 image has reviewed stack, interrupt and
-settings-transition evidence. Source changes since that image need their own
-evidence before packaging. Model tests do not establish physical behavior.
-
-## Further code-size analysis
-
-Review code reachable in each selected build: action and event handling, USB,
-descriptors, Vial, macros, lighting, settings and build-time transforms. Compare
-proposals against the complete current image, including interactions with
-optional modules. Preserve behavior, interrupt safety, ABI and storage checks.
-Keep rejected experiments out of production builds and retain their evidence
-in technical reports. Do not reduce layers, macro capacity or existing
-functionality to make a new option appear to fit. Storage changes need their own
-backup and migration plan.
+Resource use depends on the complete linked image. The [module matrix](MODULE-MATRIX.md)
+records each package's measurements; [Status](STATUS.md) records current
+qualification and release state. A source profile does not establish physical
+behavior or release approval.
 
 ## Later releases
 
-The alpha.3 release is published and installed. Compact Mouse Keys and Auto Shift
-are available in development source profiles only, separately and together; the current changed profiles
-have no release qualification. Any later release needs a fresh exact-image
-review, platform builds, package acceptance and separate device authorization.
-See [Status](STATUS.md) for the published image and current development source.
-
-## Other open work
-
-Physical Combo timing, nonempty Combo writes, cold-start retention, power-loss
-behavior and manual Windows/Linux GUI acceptance remain open. VialRGB Direct
-remains RAM-only. Persistent palettes are outside this stage until their
-storage and migration design is separately agreed.
+The installed alpha.3 image remains unchanged. Future profile releases require independent review, exact-image qualification and matching installer evidence before publication.
