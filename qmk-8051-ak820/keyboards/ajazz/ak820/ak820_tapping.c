@@ -25,7 +25,12 @@ static uint8_t source_state[SOURCES];
 static uint8_t pending = NONE;
 static uint16_t pending_time, pending_code;
 
-static uint8_t source(keypos_t key) {
+#ifndef AK820_COMPACT_ONESHOT
+/* Keep the existing private ABI when no external One Shot caller exists. */
+#define ak820_tapping_source source
+static
+#endif
+uint8_t ak820_tapping_source(keypos_t key) {
     if (key.row < MATRIX_ROWS && key.col < MATRIX_COLS) return key.row * MATRIX_COLS + key.col;
     if (key.col < NUM_ENCODERS) {
         if (key.row == KEYLOC_ENCODER_CW) return MATRIX_ROWS * MATRIX_COLS + key.col;
@@ -52,7 +57,7 @@ static void commit_pending(void) {
     hold(pending_code, true);
 }
 bool ak820_tapping_before(const keyevent_t AK820_STATE_MEM *event) {
-    uint8_t id = source(event->key);
+    uint8_t id = ak820_tapping_source(event->key);
 #ifdef VIAL_ENABLE
     if (vial_unlock_in_progress) {
         if (IS_EVENT(*event) && id != NONE && !event->pressed) source_state[id] &= ~SOURCE_BLOCKED;
@@ -75,7 +80,7 @@ bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
     uint8_t id, kind;
     uint16_t code;
     if (IS_NOEVENT(record->event)) return true;
-    id = source(record->event.key);
+    id = ak820_tapping_source(record->event.key);
     if (id == NONE) return true;
     code = record->keycode;
     kind = code >> 8;
@@ -110,3 +115,46 @@ void ak820_tapping_cancel(void) {
         source_state[i] = (state & SOURCE_BLOCKED) | ((state & SOURCE_ACTIVE) << 1);
     }
 }
+
+#ifdef AK820_COMPACT_ONESHOT
+/* One queued modifier set and one consuming source. While a consuming key
+ * remains down, a new OSM works as a held modifier but cannot arm again. */
+#define SOURCE_ONESHOT 8
+#define SOURCE_ONESHOT_USED 16
+uint8_t ak820_oneshot_mods, ak820_oneshot_consumed;
+uint8_t ak820_oneshot_target = NONE;
+bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
+    uint8_t mods;
+    if (id == NONE || get_repeat_key_count()) return true;
+    if ((code >> 8) == 0x52 && ((uint8_t)code & 0xe0) == 0xa0) {
+        mods = code & 15;
+        if (code & 16) mods <<= 4;
+        if (pressed) {
+            source_state[id] |= SOURCE_ONESHOT;
+            source_state[id] &= ~SOURCE_ONESHOT_USED;
+            if (ak820_oneshot_target != NONE) source_state[id] |= SOURCE_ONESHOT_USED;
+            register_mods(mods);
+        } else if (source_state[id] & SOURCE_ONESHOT) {
+            if (!(source_state[id] & SOURCE_ONESHOT_USED)) {
+                add_owned_mods(mods & ~ak820_oneshot_mods);
+                ak820_oneshot_mods |= mods;
+            }
+            unregister_mods(mods);
+            source_state[id] &= ~(SOURCE_ONESHOT | SOURCE_ONESHOT_USED);
+        }
+        return false;
+    }
+    if (pressed && code > KC_TRANSPARENT &&
+        !(code >= KC_LCTL && code <= KC_RGUI) &&
+        !(code >= QK_TO && code <= QK_LAYER_TAP_TOGGLE_MAX)) {
+        for (uint8_t i = 0; i < SOURCES; ++i)
+            if (source_state[i] & SOURCE_ONESHOT) source_state[i] |= SOURCE_ONESHOT_USED;
+        if (ak820_oneshot_mods) {
+            ak820_oneshot_consumed = ak820_oneshot_mods;
+            ak820_oneshot_target = id;
+            ak820_oneshot_mods = 0;
+        }
+    }
+    return true;
+}
+#endif

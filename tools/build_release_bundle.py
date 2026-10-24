@@ -34,6 +34,7 @@ import ak820_diagnose as diagnostic
 import pack_ak820 as packer
 from prepare_ak820_trial import write_trial
 from ak820_build_inputs import validate_inputs
+from ak820_profiles import require_release_qualification
 from ak820_release_manifest import MANIFEST_FORMAT, RELEASE, host_manifest, read_review_record
 
 
@@ -128,6 +129,7 @@ def assemble(build: Path, review: Path, output: Path, oem_reference_dir: Path,
         raise ValueError("An independent review file is required")
     report_path = build / "build-report.json"
     report = json.loads(report_path.read_text(encoding="utf-8"))
+    require_release_qualification(report)
     if report.get("keyboard") != "ajazz/ak820" or report.get("keymap") != "vial":
         raise ValueError("Wrong build target")
     if report.get("build_id") != packer.BUILD_ID or report.get("hardware_validated") is not False:

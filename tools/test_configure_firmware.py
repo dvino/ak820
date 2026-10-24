@@ -1,0 +1,165 @@
+"""Negative controls for profile selection, protected memory and approval."""
+from __future__ import annotations
+
+import copy
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import configure_firmware as config
+
+
+class ProfileTests(unittest.TestCase):
+    def test_exact_named_combinations_and_no_inherited_switches(self):
+        for name, features in config.profiles.PROFILES.items():
+            self.assertEqual(config.profiles.select(list(features)), name)
+            value = config.profiles.configuration(name)
+            self.assertEqual(set(value['make_options']), set(config.profiles.SWITCHES.values()))
+            self.assertFalse(value['release_approved'])
+
+    def test_unknown_duplicate_and_unimplemented_choices_fail(self):
+        for features in (['one-shot', 'one-shot'], ['mouse-keys'], ['QMK_SETTINGS=yes'], ['no-combos']):
+            with self.assertRaises(ValueError):
+                config.profiles.select(features)
+        with self.assertRaisesRegex(ValueError, 'combination'):
+            config.profiles.select(['nkro-control', 'one-shot'])
+        for value in (None, {}, {'profile': 'unknown'}, {'profile': 'standard', 'release_approved': True}):
+            with self.assertRaises(ValueError):
+                config.profiles.validate_configuration(value)
+
+    def test_same_schema_does_not_approve_a_different_feature_set(self):
+        legacy = {'build_id': config.profiles.SCHEMA,
+                  'builder_sha256': next(iter(config.profiles.LEGACY_BUILDERS))}
+        config.profiles.require_release_qualification(legacy)
+        for name in config.profiles.PROFILES:
+            report = {**legacy, 'configuration': config.profiles.configuration(name)}
+            with self.assertRaisesRegex(ValueError, 'not approved'):
+                config.profiles.require_release_qualification(report)
+
+    def test_deleting_configuration_does_not_make_a_current_build_legacy(self):
+        import build_release_bundle
+        import build_ci_release
+        for report in ({'builder_sha256': config.sha(config.QMK / 'util/build_ak820.py')},
+                       {'builder_sha256': next(iter(config.profiles.LEGACY_BUILDERS)),
+                        'sources': [{'origin': 'source', 'path': 'util/ak820_profiles.py'}]}, {}):
+            for guard in (build_release_bundle.require_release_qualification,
+                          build_ci_release.require_release_qualification):
+                with self.assertRaisesRegex(ValueError, 'not legacy provenance'):
+                    guard(report)
+
+    def test_caller_supplied_stack_numbers_cannot_approve_packaging(self):
+        forged = {'release_approved': True, 'stack_bound': 1, 'stack_margin': 159}
+        with self.assertRaisesRegex(ValueError, 'No profile is approved'):
+            config.require_release_approval(forged)
+
+    def test_rejection_survives_python_optimization(self):
+        code = ('import sys; sys.path.insert(0, sys.argv[1]); '
+                'import configure_firmware as c; c.require_release_approval({"release_approved": True})')
+        result = subprocess.run([sys.executable, '-O', '-c', code, str(HERE)], capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('No profile is approved', result.stderr)
+
+    def test_profile_suite_contract_rejects_omitted_duplicate_and_wrong_image(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            build = Path(temporary)
+            (build / 'profile-tests').mkdir()
+            toolchain = build / 'toolchain'
+            identity = {'ihx_sha256': 'image', 'profile': 'one-shot'}
+            rows = []
+            for name, cwd, command in config.profile_test_plan('one-shot', build, toolchain):
+                log = build / 'profile-tests' / (name + '.log')
+                log.write_text('Ran 10 tests in 0.1s\n\nOK\n')
+                rows.append({'id': name, 'cwd': str(cwd), 'command': command, 'exit_code': 0,
+                             'build_before': identity, 'build_after': identity, 'log_sha256': config.sha(log)})
+            report = {'format': 'ak820-profile-tests-1', 'profile': 'one-shot', 'identity': identity,
+                      'passed': True, 'hardware_validated': False, 'physical_device_commands': 0,
+                      'source_files': {'fixture': 'source'}, 'tests': rows}
+            with patch.object(config, 'test_source_snapshot', return_value={'fixture': 'source'}):
+                config.validate_profile_tests(report, 'one-shot', identity, build, toolchain)
+                bad = copy.deepcopy(report); bad['tests'].pop()
+                with self.assertRaisesRegex(ValueError, 'omitted or duplicated'):
+                    config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
+                bad = copy.deepcopy(report); bad['tests'][-1] = bad['tests'][0]
+                with self.assertRaisesRegex(ValueError, 'identity, arguments'):
+                    config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
+                bad = copy.deepcopy(report); bad['tests'][-1]['build_after'] = {'ihx_sha256': 'different'}
+                with self.assertRaisesRegex(ValueError, 'identity, arguments'):
+                    config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
+                bad = copy.deepcopy(report); bad['tests'][1]['command'].remove('--oneshot')
+                with self.assertRaisesRegex(ValueError, 'identity, arguments'):
+                    config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
+
+    def test_duplicate_json_and_fake_success_are_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'report.json'
+            for content in ('{"passed":false,"passed":true}', '{"bound":NaN}'):
+                path.write_text(content)
+                with self.assertRaises(ValueError):
+                    config.load_json(path)
+
+    def test_deleted_extra_or_duplicate_relocated_listing_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            build = root / 'build'
+            (build / 'dce').mkdir(parents=True)
+            listing = build / 'dce/fixture.rst'
+            listing.write_text('  003027 22 [24] 1 ret\n')
+            record = {'path': 'build/dce/fixture.rst', 'sha256': config.sha(listing),
+                      'size': listing.stat().st_size}
+            report = {'artifacts': [record]}
+            with patch.object(config, 'QMK', root):
+                self.assertEqual(config.retained_static_symbols(report, build, {0x3027: 0x22}), {})
+                with self.assertRaisesRegex(ValueError, 'listing'):
+                    config.retained_static_symbols({'artifacts': [record, record]}, build, {0x3027: 0x22})
+                extra = build / 'dce/extra.rst'
+                extra.write_text('')
+                with self.assertRaisesRegex(ValueError, 'listing'):
+                    config.retained_static_symbols(report, build, {0x3027: 0x22})
+                extra.unlink()
+                listing.unlink()
+                with self.assertRaisesRegex(ValueError, 'listing'):
+                    config.retained_static_symbols(report, build, {0x3027: 0x22})
+
+
+class MemoryTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        fixture = config.ROOT / 'audits/rc6/combos-20261024/candidate'
+        cls.memory = (fixture / 'ajazz_ak820_vial.mem').read_text()
+        cls.symbols = config.linked_symbols(fixture / 'ajazz_ak820_vial.map')
+        # Only occupied addresses matter for memory membership, not contents.
+        cls.code = {0x28a0: 0, 0x2fff: 0, 0x3027: 0, 0xc6ff: 0}
+
+    def test_both_windows_are_independent_and_capacity_is_not_a_bound(self):
+        result = config.memory_report(self.code, self.symbols, self.memory)
+        self.assertEqual([row['trailing_free_bytes'] for row in result['code_windows']], [0, 0])
+        self.assertIsNone(result['internal_ram']['runtime_stack_bound'])
+        self.assertIsNone(result['internal_ram']['stack_margin'])
+        self.assertFalse(result['internal_ram']['stack_qualified'])
+
+    def test_protected_byte_cannot_be_hidden_by_total_size(self):
+        for address in (0x289f, 0x3000, 0x3026, 0xc700, 0xef00, 0xf000):
+            with self.subTest(address=address), self.assertRaisesRegex(ValueError, 'protected'):
+                config.memory_report({**self.code, address: 0}, self.symbols, self.memory)
+
+    def test_stack_map_mismatch_static_overlap_and_paged_data_fail(self):
+        for change in ({'s_SSEG': 0x50}, {'l_SSEG': 1}, {'l_PSEG': 1}, {'l_ISEG': 1},
+                       {'s_OSEG': 250, 'l_OSEG': 8}, {'_ak820_led_dma': 0x400}):
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                config.memory_report(self.code, {**self.symbols, **change}, self.memory)
+
+    def test_grid_corruption_fails(self):
+        for memory in (self.memory.replace('0xf0:', '0xe0:'),
+                       self.memory.replace('|S|S|S|S|', '|x|S|S|S|', 1)):
+            with self.assertRaises(ValueError):
+                config.memory_report(self.code, self.symbols, memory)
+
+
+if __name__ == '__main__':
+    unittest.main()

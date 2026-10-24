@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+import shutil
 import types
 import unittest
 from unittest import mock
@@ -222,9 +223,25 @@ class DeviceTests(unittest.TestCase):
                 opened.assert_not_called()
 
     def test_real_bind_missing_approval_stops_before_session_or_open(self):
+        # Reach the missing-approval gate with a self-consistent host fixture.
+        # The retained release deliberately pins historical host bytes, so a
+        # development edit may otherwise fail at that earlier gate instead.
+        from ak820_release_manifest import host_manifest, read_review_record
+        release = self.output / 'release'
+        shutil.copytree(runner.ROOT / 'releases/rc6', release)
+        manifest_path = release / 'installer-release.json'
+        manifest = json.loads(manifest_path.read_text())
+        manifest['host_files'] = host_manifest(runner.ROOT)
+        review_path = release / 'reviews/independent-review.md'
+        review = read_review_record(review_path.read_text())
+        review['host_files'] = manifest['host_files']
+        review_path.write_text('# Isolated missing-approval fixture\n\n```json\n' + json.dumps(review) + '\n```\n')
+        manifest['files']['reviews/independent-review.md'] = {
+            'size': review_path.stat().st_size, 'sha256': protocol.pack.digest(review_path.read_bytes())}
+        manifest_path.write_text(json.dumps(manifest))
         with mock.patch.object(protocol.transport,'session_image') as session, mock.patch.object(protocol.transport,'select_application') as opened:
             with self.assertRaisesRegex(ValueError, 'approval is missing'):
-                protocol.bind(runner.ROOT/'releases/rc6',self.output/'missing',self.output/'no-approval.json')
+                protocol.bind(release,self.output/'missing',self.output/'no-approval.json')
         session.assert_not_called(); opened.assert_not_called()
 
     def test_RGB_RAM_bad_readback_stops_without_restore(self):

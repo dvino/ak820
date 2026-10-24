@@ -17,6 +17,7 @@ English source of truth: [Documentation](../INDEX.md).
 | Mod-Tap и Layer-Tap | [Mod-Tap и Layer-Tap](TAP-HOLD.md) |
 | Индикаторы Caps Lock и слоя | [Индикаторы C и W](INDICATORS.md) |
 | Сборка закреплённым инструментарием | [Сборка](BUILD.md) |
+| Тестовые профили сборки и их ограничения | [Профили сборки](BUILD-PROFILES.md) |
 | Проверки push и выпуск релизов | [CI и выпуски](CI.md) |
 | Изменения кода и участие | [Разработка](DEVELOPMENT.md) |
 | Офлайн-проверки и устройство | [Проверки](TESTING.md) |

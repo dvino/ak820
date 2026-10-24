@@ -221,6 +221,7 @@ class AssemblyPreflightTests(unittest.TestCase):
                                   ('ajazz_ak820_vial.mem', b'fresh mem')):
                 (build / name).write_bytes(payload)
             report = {'keyboard': 'ajazz/ak820', 'keymap': 'vial', 'build_id': 532482,
+                      'builder_sha256': '166dff0bb41a7a029b8f3c1c8cd57976368e63714458ee26b8fabcf1eb6564a6',
                       'hardware_validated': False, 'artifacts': [
                           {'path': f'.build/ci/ajazz_ak820_vial.{ext}', 'sha256': sha(payload),
                            'size': len(payload)} for ext, payload in

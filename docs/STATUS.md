@@ -10,11 +10,22 @@ for package selection, checksums and launch commands.
 
 ## Source and built image
 
-The development branch starts the configurable-build stage with
-[source optimizations](../audits/rc6/configurable-20261024/size-source.md).
-The first control comparison saves 279 CODE bytes and nine XRAM bytes without
-removing features. This development result is separate from the published and
-installed alpha.2 figures below; it is not a new release or device test.
+The development branch now has `standard`, `nkro` and `one-shot` configurable
+development profiles. Their commands, behavior and limits are in
+[Build profiles](BUILD-PROFILES.md). The profile builds run offline regression
+tests on their exact linked image, but no profile is approved for installation
+or release. A reviewed whole-program stack bound, exact-image interrupt and
+nesting proof, and installer transition for the new feature identity are still
+missing. The existing release workflow stops at bundle assembly on these profiles.
+The previous release policy has not been replaced or extended.
+
+The configurable-build work also has [source optimizations](../audits/rc6/configurable-20261024/size-source.md).
+The private-state and outlining changes account for a 279-byte and 220-byte
+CODE saving respectively, 499 bytes together in the comparison build. Final
+standard-profile figures and savings remain subject to the linked-image
+qualification in the [profile qualification report](../audits/rc6/configurable-20261024/qualification.md).
+These development results are separate from published and installed alpha.2
+figures below; they are not a new release or device test.
 
 The Combo work was imported from `ak820-combos-20261024-git.zip`, based on
 `4b83bb9`, through `d361501`. Release integration adds reviewed settings

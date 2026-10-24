@@ -25,6 +25,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import ak820_diagnose as diagnostic
 import ak820_ci_authorization as authorization
 import build_release_bundle as release
+from ak820_profiles import require_release_qualification
 from ak820_release_manifest import RELEASE, MANIFEST_FORMAT, host_manifest
 
 PUBLIC_FILES = (
@@ -224,6 +225,7 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
     report_path = build_dir / 'build-report.json'
     ihx, mapfile, mem = (build_dir / f'ajazz_ak820_vial.{ext}' for ext in ('ihx', 'map', 'mem'))
     report = load_json(report_path)
+    require_release_qualification(report)
     if report.get('keyboard') != 'ajazz/ak820' or report.get('keymap') != 'vial':
         raise ValueError('Wrong firmware build target')
     if report.get('build_id') != release.packer.BUILD_ID or report.get('hardware_validated') is not False:

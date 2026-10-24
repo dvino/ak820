@@ -17,6 +17,7 @@ difference.
 | Understand Mod-Tap and Layer-Tap behavior | [Mod-Tap and Layer-Tap](TAP-HOLD.md) |
 | Understand Caps Lock and layer indicators | [C and W indicators](INDICATORS.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |
+| Build a development profile and check its limits | [Build profiles](BUILD-PROFILES.md) |
 | Check pushes and publish a release | [CI and releases](CI.md) |
 | Change code and submit a contribution | [Development](DEVELOPMENT.md) |
 | Run offline tests and check a real keyboard | [Testing](TESTING.md) |

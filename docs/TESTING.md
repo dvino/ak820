@@ -34,6 +34,14 @@ build; consult the generated report. IRQ/device fixtures may require private
 OEM references. CPU fixtures model peripheral operations and do not emulate
 VS11K28A USB or flash silicon. A tested stack peak is not a global bound.
 
+For `standard`, `nkro` or `one-shot`, use the dedicated [profile build
+command](BUILD-PROFILES.md). It runs the required offline suites against the
+exact linked image and records the result in that build directory. Profile
+results do not prove physical behavior or release eligibility. In particular,
+there is no reviewed whole-program stack bound, exact-image interrupt/nesting
+proof or approved installer transition yet; see the
+[qualification report](../audits/rc6/configurable-20261024/qualification.md).
+
 The automatic suite requires no key presses, encoder movement, cable reconnect
 or manual Vial unlock. It does not write to the keyboard. Live protocol tests
 are a separate later procedure. Their default plan is read-only; setting writes

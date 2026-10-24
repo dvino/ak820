@@ -48,8 +48,11 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - Saved keymaps, macros and global lighting, physical Vial unlock, and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
 
 See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
-One Shot, Mouse Keys, Tap Dance, Key Overrides, Auto Shift and a user-facing
-NKRO mode switch are not supported.
+The published alpha.2 firmware does not include One Shot or a user-facing
+NKRO mode switch. Development builds offer limited modifier One Shot and NKRO
+control in separate profiles; they are not approved for installation. See
+[Build profiles](docs/BUILD-PROFILES.md). Mouse Keys, Tap Dance, Key Overrides
+and Auto Shift are not included.
 
 ## Disclaimer
 

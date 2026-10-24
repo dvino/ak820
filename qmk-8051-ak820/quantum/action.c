@@ -306,7 +306,16 @@ void process_record(keyrecord_t *record) {
         return;
     }
 
+#ifdef AK820_COMPACT_ONESHOT
+    uint8_t oneshot_source = ak820_tapping_source(record->event.key);
+    bool oneshot_pressed = record->event.pressed;
+    record->keycode = get_record_keycode(record, true);
+    if (!ak820_oneshot_process(record->keycode, oneshot_source, oneshot_pressed)) return;
+#endif
     if (!process_record_quantum(record)) {
+#ifdef AK820_COMPACT_ONESHOT
+        ak820_oneshot_post(oneshot_source, oneshot_pressed);
+#endif
 #ifndef NO_ACTION_ONESHOT
         if (is_oneshot_layer_active() && record->event.pressed && keymap_config.oneshot_enable) {
             clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
@@ -317,6 +326,9 @@ void process_record(keyrecord_t *record) {
 
     process_record_handler(record);
     post_process_record_quantum(record);
+#ifdef AK820_COMPACT_ONESHOT
+    ak820_oneshot_post(oneshot_source, oneshot_pressed);
+#endif
 }
 
 void process_record_handler(keyrecord_t *record) {
@@ -1093,6 +1105,9 @@ void clear_keyboard_but_mods(void) {
 void clear_keyboard_but_mods_and_keys(void) {
 #ifdef AK820_COMPACT_TAPPING
     ak820_tapping_cancel();
+#ifdef AK820_COMPACT_ONESHOT
+    ak820_oneshot_cancel();
+#endif
 #    ifdef AK820_COMPACT_COMBO
     ak820_combo_cancel();
 #    endif

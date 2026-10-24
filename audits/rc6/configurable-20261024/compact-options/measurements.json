@@ -1,0 +1,57 @@
+{
+  "schema": "ak820-compact-options-study-1",
+  "dependencies": [
+    "size-retained.patch",
+    "outline-input.patch"
+  ],
+  "profiles": [
+    {
+      "profile": "nkro",
+      "build_dir": "qmk-8051-ak820/.build/compact-nkro-static-review",
+      "compiler_flags": "--opt-code-size -DAK820_NKRO_CONTROL --callee-saves timer_read,timer_read32,ak820_nvm_ok,get_mods,get_weak_mods,matrix_get_row,readPin,eeprom_read_byte,eeprom_update_byte,ak820_flash_read,mDelaymS",
+      "code_bytes": 39966,
+      "main_bytes": 38162,
+      "low_bytes": 1804,
+      "highest_address": "0xc53d",
+      "ihx_sha256": "b31f3eaef084569a9c48a372edc057dfb45508ba6a29e29dcfb0dda3e737e8a2",
+      "build_report_sha256": "9dee514ccca645c51179b69c996243e6dd71010bad858b317dd16a575d636c2f",
+      "linked_tests": 2,
+      "linked_pass": true,
+      "allocated_stack_bytes": 159,
+      "xram": "0x0400   0x0e38    2617     3072   ",
+      "max_tested_stack_bytes": 40,
+      "hardware_validated": false,
+      "handler_linkage": "static; proof in exact relocated listing",
+      "linked_evidence": "nkro-static-review-linked/results.json"
+    },
+    {
+      "profile": "one-shot",
+      "build_dir": "qmk-8051-ak820/.build/compact-osm-low-module",
+      "compiler_flags": "--opt-code-size -DAK820_COMPACT_ONESHOT --callee-saves timer_read,timer_read32,ak820_nvm_ok,get_mods,get_weak_mods,matrix_get_row,readPin,eeprom_read_byte,eeprom_update_byte,ak820_flash_read,mDelaymS",
+      "code_bytes": 40479,
+      "main_bytes": 38607,
+      "low_bytes": 1872,
+      "highest_address": "0xc6fa",
+      "ihx_sha256": "4784f3063d5fc0a5a30d683816ade5b6d4a6408e8a5e14cb68d3cefab7cc3184",
+      "build_report_sha256": "40286d0436d3bb4b7d7f2d7ce9082725f8a6b8a3002456ee34b65c9f85c80a6d",
+      "linked_tests": 13,
+      "linked_pass": true,
+      "allocated_stack_bytes": 160,
+      "xram": "0x0400   0x0e3d    2622     3072   ",
+      "max_tested_stack_bytes": 44,
+      "hardware_validated": false
+    }
+  ],
+  "full_profile": {
+    "pass": false,
+    "reason": "complete production link exceeds main CODE window",
+    "invalid_interval": "0xc700..0xc792"
+  },
+  "scope": "Offline source/host/linked generic C52 only; no USB or physical device operations",
+  "review_closure": {
+    "host": "osm-review-host.log",
+    "linked_unlock": "osm-review-linked/results.json",
+    "additional_cases": "queued overlapping modifiers, modifier/layer controls, MT/LT tap and hold, held/consumed cleanup",
+    "osm_production_code_changed": false
+  }
+}

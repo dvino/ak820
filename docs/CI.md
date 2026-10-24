@@ -10,6 +10,14 @@ The workflow pins Node.js 24 actions by full commit hash: checkout 7.0.1, setup-
 
 ## Checks and build outputs
 
+On this development branch the workflow stops at public bundle assembly: the
+packager rejects configured images. The checks before that gate still run.
+The workflow does not publish `standard`, `nkro` or `one-shot`. Configured
+images cannot enter the release bundle or installer until the whole-program
+stack bound, exact-image interrupt/nesting proof and installer transition are
+qualified. See [Build profiles](BUILD-PROFILES.md) and the
+[qualification report](../audits/rc6/configurable-20261024/qualification.md).
+
 The Ubuntu 24.04 firmware job checks the syntax of tracked Python and shell
 files, validates GitHub Actions workflows with a hash-pinned actionlint, checks
 project Python for undefined names with pinned Ruff, and runs all host tool unit tests.
@@ -18,7 +26,8 @@ builds the application, then runs host C and linked CPU regressions. Storage
 harnesses model interrupted journal and macro writes. These checks cannot
 prove physical USB, lighting or flash durability.
 
-After the tests pass, Linux assembles a fresh public firmware bundle from that
+For an approved release commit, after the tests pass Linux assembles a fresh
+public firmware bundle from that
 run's IHX, MAP, MEM and build report. The Windows package job downloads that
 bundle, checks its commit identity and replaces the checkout's old release
 inputs before building both installer applications. Its smoke checks include
@@ -31,8 +40,10 @@ The native Linux package job runs on Ubuntu 22.04 x86_64 (glibc 2.35). It builds
 hidraw import, CLI help and offline verification, and a Tk startup under Xvfb.
 These checks do not open USB or test live keyboard behavior.
 
-Every branch push, including `dev` and untagged `main`, produces build artifacts
-without publishing a release. The outputs include:
+On commits that satisfy the release policy, branch pushes produce build
+artifacts without publishing a release. This development branch retains its
+application and test evidence, but bundle and installer jobs cannot complete.
+The outputs of a qualified release build include:
 
 - The standalone public firmware bundle, with SHA256 and build evidence.
 - The complete Windows portable ZIP, with SHA256.

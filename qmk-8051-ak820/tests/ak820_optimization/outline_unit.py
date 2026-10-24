@@ -52,6 +52,15 @@ class OutliningGates(unittest.TestCase):
                                 ('anl','ar0,#0x1f'),('clr','c'),('movc','a,@a+dptr'),('mov','dptr,#(_var+0x1)')]:
             self.assertTrue(outline.allowed(opcode,operands))
 
+    def test_input_and_board_scope(self):
+        for module in ("ak820_tapping.asm", "ak820_combo.asm"):
+            self.assertTrue(outline.eligible_module(module, "foreground"))
+        self.assertTrue(outline.eligible_module("ak820_board.asm", "ak820_rgb_set_color"))
+        for function in ("ak820_led_irq", "ak820_board_init", "ak820_clock_init", "ak820_matrix_snapshot"):
+            self.assertFalse(outline.eligible_module("ak820_board.asm", function))
+        self.assertFalse(outline.eligible_module("ak820_timer.asm", "ak820_timer_irq"))
+        self.assertFalse(outline.eligible_module("protocol/ch555/usb_ak820.asm", "USB_DeviceInterrupt"))
+
     def test_label_boundaries(self):
         body=BODY[:2]+['00101$:']+BODY[2:]+['00102$:']+BODY[:2]+['00103$:']+BODY[2:]
         self.source('labels.asm',body)

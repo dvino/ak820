@@ -57,8 +57,11 @@ system actions send media controls such as volume, play/pause or next track,
 and system controls such as sleep. The host must support the corresponding HID
 control for it to have an effect.
 
-The default keymap setting uses six-key rollover (6KRO). NKRO reporting code
-is present, but this firmware does not provide a supported key to switch modes.
+The published alpha.2 firmware uses six-key rollover (6KRO). NKRO reporting
+code is present, but alpha.2 does not provide a supported key to switch modes.
+Development builds can select the separate `nkro` profile, which adds limited
+volatile controls described in [Build profiles](BUILD-PROFILES.md). That
+profile is not approved for installation.
 When more than six distinct ordinary keys are held, the 6KRO report replaces
 all six key slots with the HID ErrorRollOver signal. Releasing keys until six or
 fewer remain clears that signal and reports the surviving keys. Two sources
@@ -162,9 +165,11 @@ mean that the firmware supports it.
 
 ## Limits
 
-This firmware does not support One Shot actions, Mouse Keys, Tap Dance, Key
-Overrides, Auto Shift or QMK Settings. Timing and behavior options in the
-QMK Settings tab are unavailable in this build. Other generic QMK/Vial options may also appear in the
-client without firmware support. Importing a layout cannot add missing firmware
-features. When an action is important, verify that it is included here or in a
-linked guide before assigning it.
+The published alpha.2 firmware does not support One Shot actions, Mouse Keys,
+Tap Dance, Key Overrides, Auto Shift or QMK Settings. A separate development
+profile provides limited modifier One Shot behavior; its boundaries are listed
+in [Build profiles](BUILD-PROFILES.md), and it is not approved for installation.
+Timing and behavior options in the QMK Settings tab are unavailable in alpha.2.
+Other generic QMK/Vial options may also appear in the client without firmware
+support. Importing a layout cannot add missing firmware features. Before
+assigning an action, verify that it is supported by the installed firmware.

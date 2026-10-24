@@ -30,6 +30,13 @@ FOREGROUND_MODULES = {
     "protocol/report.asm": None,
     "protocol/host.asm": None,
     "keyboards/ajazz/ak820/ak820_rgb.asm": None,
+    # Foreground action engines; USB/timer/LED IRQ closures cannot reach them.
+    "ak820_tapping.asm": None,
+    "ak820_combo.asm": None,
+    "ak820_board.asm": frozenset({
+        "ak820_set_slot_rgb", "ak820_rgb_init", "ak820_rgb_set_color",
+        "ak820_rgb_set_color_all", "ak820_rgb_flush",
+    }),
     "ak820_nvm.asm": None,
     "eeprom_driver.asm": None,
     "protocol/ch555/usb_ak820.asm": frozenset({

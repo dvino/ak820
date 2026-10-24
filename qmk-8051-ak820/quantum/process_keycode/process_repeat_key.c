@@ -38,7 +38,7 @@ static bool remember_last_key(uint16_t keycode, keyrecord_t* record, uint8_t* re
 #ifndef NO_ALT_REPEAT_KEY
         || keycode == QK_ALT_REPEAT_KEY
 #endif
-#ifndef NO_ACTION_ONESHOT
+#if !defined(NO_ACTION_ONESHOT) || defined(AK820_COMPACT_ONESHOT)
         || (keycode >= QK_ONE_SHOT_LAYER && keycode <= QK_ONE_SHOT_LAYER_MAX)
         || (keycode >= QK_ONE_SHOT_MOD && keycode <= QK_ONE_SHOT_MOD_MAX)
 #endif

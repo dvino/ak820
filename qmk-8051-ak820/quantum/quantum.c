@@ -334,6 +334,19 @@ bool process_record_quantum(keyrecord_t *record) {
 /* Core keycode function, hands off handling to other functions,
     then processes internal quantum keycodes, and then processes
     ACTIONs.                                                      */
+#ifdef AK820_NKRO_CONTROL
+/* Switching reports first releases the old protocol. clear_keyboard also
+ * cancels deferred owners so releases cannot revive a previous report. */
+static bool process_ak820_nkro(uint16_t keycode, keyrecord_t *record) {
+    if (keycode < QK_MAGIC_NKRO_ON || keycode > QK_MAGIC_TOGGLE_NKRO) return true;
+    if (record->event.pressed) {
+        clear_keyboard();
+        keymap_config.nkro = keycode == QK_MAGIC_TOGGLE_NKRO ? !keymap_config.nkro : keycode == QK_MAGIC_NKRO_ON;
+    }
+    return false;
+}
+#endif
+
 bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record) {
     // This is how you use actions here
     // if (keycode == QK_LEADER) {
@@ -370,6 +383,9 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record) {
 #endif
 
     if (!(
+#ifdef AK820_NKRO_CONTROL
+            process_ak820_nkro(keycode, record) &&
+#endif
 #if defined(KEY_LOCK_ENABLE)
             // Must run first to be able to mask key_up events.
             process_key_lock(&keycode, record) &&

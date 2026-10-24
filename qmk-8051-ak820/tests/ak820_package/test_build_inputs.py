@@ -30,7 +30,7 @@ class BuildInputTests(unittest.TestCase):
             'requirements-ak820-build.txt': '',
             'util/build_id.py': '', 'util/vial_generate_definition.py': '',
             'util/ak820_dce.py': '', 'util/build_ak820.py': '', 'util/ak820_build_inputs.py': '',
-            'util/ak820_outline_audit.py': '',
+            'util/ak820_outline_audit.py': '', 'util/ak820_profiles.py': '',
             'quantum/effects.inc': 'EFFECT(test)\n',
         }.items():
             path = self.source / name

@@ -1,0 +1,862 @@
+{
+  "input": ".build/outline-input-board-real/dce/reachability.json",
+  "input_sha256": "85f9d3eba0a3599e1bd5cc823b37873ca44374dc2438e1448d94b9c69bd845a4",
+  "roots": [
+    "ak820_board.asm:_ak820_led_irq",
+    "ak820_timer.asm:_ak820_timer_irq",
+    "protocol/ch555/usb_ak820.asm:_USB_DeviceInterrupt"
+  ],
+  "irq_transitive_functions": [
+    "ak820_board.asm:_ak820_led_irq",
+    "ak820_timer.asm:_ak820_timer_irq",
+    "ak820_timer.asm:_timer_reload",
+    "protocol/ch555/usb_ak820.asm:_USB_DeviceInterrupt",
+    "protocol/ch555/usb_ak820.asm:_control_in",
+    "protocol/ch555/usb_ak820.asm:_control_next",
+    "protocol/ch555/usb_ak820.asm:_control_out",
+    "protocol/ch555/usb_ak820.asm:_control_setup",
+    "protocol/ch555/usb_ak820.asm:_control_stall",
+    "protocol/ch555/usb_ak820.asm:_descriptor_select",
+    "protocol/ch555/usb_ak820.asm:_endpoints_reset",
+    "protocol/ch555/usb_ak820.asm:_raw_abort",
+    "protocol/ch555/usb_ak820.asm:_raw_complete"
+  ],
+  "new_scope_selected_sites": [
+    {
+      "module": "ak820_combo.asm",
+      "function": "input",
+      "line": 645,
+      "address": 14
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "output",
+      "line": 695,
+      "address": 62
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 754,
+      "address": 130
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 877,
+      "address": 299
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_tick",
+      "line": 1051,
+      "address": 502
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1105,
+      "address": 549
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "hold",
+      "line": 691,
+      "address": 73
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "commit_pending",
+      "line": 785,
+      "address": 198
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 817,
+      "address": 230
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 966,
+      "address": 440
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1076,
+      "address": 570
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1442,
+      "address": 1029
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 759,
+      "address": 135
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 790,
+      "address": 174
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 903,
+      "address": 356
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 1020,
+      "address": 509
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 943,
+      "address": 367
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1451,
+      "address": 1041
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 829,
+      "address": 246
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 835,
+      "address": 255
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1102,
+      "address": 604
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1108,
+      "address": 613
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 801,
+      "address": 189
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_tick",
+      "line": 1057,
+      "address": 510
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1116,
+      "address": 563
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1387,
+      "address": 952
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "output",
+      "line": 707,
+      "address": 78
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 882,
+      "address": 304
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1137,
+      "address": 588
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1145,
+      "address": 600
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1274,
+      "address": 778
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "commit_pending",
+      "line": 793,
+      "address": 209
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 948,
+      "address": 412
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1290,
+      "address": 870
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1297,
+      "address": 882
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "input",
+      "line": 640,
+      "address": 7
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "output",
+      "line": 689,
+      "address": 55
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 748,
+      "address": 123
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_tick",
+      "line": 1036,
+      "address": 480
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1099,
+      "address": 542
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "hold",
+      "line": 685,
+      "address": 66
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 811,
+      "address": 223
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1070,
+      "address": 563
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1195,
+      "address": 736
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1228,
+      "address": 782
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 772,
+      "address": 152
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 814,
+      "address": 204
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 872,
+      "address": 292
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1111,
+      "address": 556
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1128,
+      "address": 647
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "input",
+      "line": 637,
+      "address": 0
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "output",
+      "line": 686,
+      "address": 48
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 745,
+      "address": 116
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_tick",
+      "line": 1033,
+      "address": 473
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1096,
+      "address": 535
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "hold",
+      "line": 682,
+      "address": 59
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 808,
+      "address": 216
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1067,
+      "address": 556
+    },
+    {
+      "module": "ak820_board.asm",
+      "function": "ak820_rgb_set_color_all",
+      "line": 1285,
+      "address": 765
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 799,
+      "address": 185
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 841,
+      "address": 238
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1280,
+      "address": 788
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1323,
+      "address": 853
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1329,
+      "address": 863
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1383,
+      "address": 946
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 993,
+      "address": 474
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 1011,
+      "address": 500
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 1045,
+      "address": 546
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1087,
+      "address": 582
+    },
+    {
+      "module": "ak820_board.asm",
+      "function": "ak820_set_slot_rgb",
+      "line": 1124,
+      "address": 593
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 933,
+      "address": 352
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 966,
+      "address": 409
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 978,
+      "address": 425
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 859,
+      "address": 293
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 872,
+      "address": 312
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 882,
+      "address": 327
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 887,
+      "address": 336
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 977,
+      "address": 452
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1184,
+      "address": 721
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1277,
+      "address": 851
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 994,
+      "address": 445
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_cancel",
+      "line": 1341,
+      "address": 927
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_cancel",
+      "line": 1353,
+      "address": 944
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1125,
+      "address": 573
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 1001,
+      "address": 486
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1175,
+      "address": 709
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1250,
+      "address": 806
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1271,
+      "address": 844
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1393,
+      "address": 960
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 794,
+      "address": 180
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 907,
+      "address": 362
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1434,
+      "address": 1018
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 858,
+      "address": 268
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 938,
+      "address": 398
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1269,
+      "address": 773
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 943,
+      "address": 407
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 788,
+      "address": 170
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "hold",
+      "line": 696,
+      "address": 78
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 822,
+      "address": 235
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1095,
+      "address": 593
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 996,
+      "address": 449
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1200,
+      "address": 676
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 913,
+      "address": 370
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1082,
+      "address": 577
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 854,
+      "address": 288
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 867,
+      "address": 307
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 972,
+      "address": 447
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 989,
+      "address": 440
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1164,
+      "address": 697
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 825,
+      "address": 242
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1098,
+      "address": 600
+    },
+    {
+      "module": "ak820_board.asm",
+      "function": "ak820_set_slot_rgb",
+      "line": 1130,
+      "address": 601
+    },
+    {
+      "module": "ak820_board.asm",
+      "function": "ak820_set_slot_rgb",
+      "line": 1143,
+      "address": 617
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1316,
+      "address": 841
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1376,
+      "address": 934
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1221,
+      "address": 771
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1241,
+      "address": 794
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 983,
+      "address": 432
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 933,
+      "address": 393
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_reload",
+      "line": 954,
+      "address": 386
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "input",
+      "line": 671,
+      "address": 43
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "output",
+      "line": 730,
+      "address": 111
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_valid",
+      "line": 827,
+      "address": 221
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1211,
+      "address": 688
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "commit_pending",
+      "line": 774,
+      "address": 180
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "commit_pending",
+      "line": 779,
+      "address": 189
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_before",
+      "line": 1024,
+      "address": 515
+    },
+    {
+      "module": "ak820_board.asm",
+      "function": "ak820_rgb_set_color",
+      "line": 1208,
+      "address": 668
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "commit_pending",
+      "line": 763,
+      "address": 163
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_process",
+      "line": 1215,
+      "address": 762
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "ak820_tapping_cancel",
+      "line": 1325,
+      "address": 906
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_tick",
+      "line": 1041,
+      "address": 484
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1154,
+      "address": 611
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1181,
+      "address": 647
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1231,
+      "address": 718
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1247,
+      "address": 741
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1349,
+      "address": 890
+    },
+    {
+      "module": "ak820_combo.asm",
+      "function": "ak820_combo_process",
+      "line": 1414,
+      "address": 987
+    },
+    {
+      "module": "ak820_tapping.asm",
+      "function": "source",
+      "line": 639,
+      "address": 20
+    }
+  ],
+  "new_scope_irq_reachable": false,
+  "limitations": "Conservative retained assembler symbol graph; LED IRQ local numeric calls remain in same excluded function. No hardware or interrupt timing proof."
+}

@@ -54,6 +54,17 @@ Free bytes in these windows are not interchangeable. NVM and macro storage are
 not spare executable CODE. Measure linked occupied bytes rather than binary
 file length or source size.
 
+## Development profiles
+
+To select the `standard`, `nkro` or `one-shot` development profile, use the
+[profile configurator](BUILD-PROFILES.md). It links the complete image, checks
+resource placement and runs offline tests against that image. The combined
+NKRO and One Shot profile is rejected. These development images are not approved
+for installation or release: the whole-program stack bound, exact-image
+interrupt/nesting proof and installer transition are still open. The existing release packagers reject configured development images.
+Release assembly commands below apply only to an independently approved image;
+they stop on these development profiles.
+
 The default exact instruction outlining and audited callee-save list have
 comparison switches `--no-outline` and `--no-callee-saves`. The released alpha.2 profile uses the normal audited outlining configuration.
 Summary savings from individual probes are non-additive and do not predict complete

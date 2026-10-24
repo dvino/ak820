@@ -20,6 +20,7 @@ from pathlib import Path
 from ak820_dce import optimize
 from ak820_outline_audit import outline_assembled
 from ak820_build_inputs import FORMAT as INPUT_FORMAT, collect_inputs, input_snapshot
+from ak820_profiles import PROFILES, configuration
 
 
 # Audited C functions only: SDCC emits their register-preserving prologues and
@@ -89,6 +90,8 @@ def main():
                    help='Required compiler version (default: %(default)s; 4.4.0 remains available as a control)')
     p.add_argument('--qmk-bin', type=Path, help='QMK executable from its virtual environment')
     p.add_argument('--build-dir', type=Path, default=Path('.build/ak820'))
+    p.add_argument('--profile', choices=tuple(PROFILES), default='standard',
+                   help='Explicit development feature set; this does not approve an installer')
     p.add_argument('--code-start', type=integer, default=0x3027)
     p.add_argument('--code-end', type=integer, default=0xc700)
     p.add_argument('--low-code-start', type=integer, default=0x28a0)
@@ -101,6 +104,7 @@ def main():
     p.add_argument('--no-outline', action='store_true', help='Disable AK820 exact instruction outlining for comparison builds')
     p.add_argument('--no-callee-saves', action='store_true', help='Disable the audited AK820 callee-saves list for comparison builds')
     args = p.parse_args()
+    selected = configuration(args.profile)
     if args.keyboard == 'ajazz/ak820':
         # These calls originate in the preserved OEM loader and are inserted
         # by the image packer, so application ASM cannot express their edges.
@@ -118,6 +122,9 @@ def main():
         raise ValueError('Build directory must be beneath source root')
     build.mkdir(parents=True)
     env = os.environ.copy()
+    # Do not inherit Make's -e or command-line overrides from a parent build.
+    for name in ('MAKEFLAGS', 'MFLAGS', 'GNUMAKEFLAGS', 'MAKEOVERRIDES'):
+        env.pop(name, None)
     extra_paths = []
     if args.toolchain:
         extra_paths.append(str(args.toolchain.resolve()/'bin'))
@@ -156,7 +163,8 @@ def main():
         raise ValueError('QMK CLI unavailable')
     run('compile',['make','-r','-R','-f','builddefs/build_keyboard.mk','sdcc-objects',
         'KEYBOARD='+args.keyboard,'KEYMAP='+args.keymap,'QMK_BIN='+qmk,'SILENT=false','COLOR=false',
-        'SKIP_GIT=yes','SKIP_VERSION=yes','BUILD_DIR='+relative_build,'EXTRAFLAGS='+compile_flags,'-j'+str(args.jobs)])
+        'SKIP_GIT=yes','SKIP_VERSION=yes','BUILD_DIR='+relative_build,'EXTRAFLAGS='+compile_flags,
+        *(name+'='+value for name,value in selected['make_options'].items()), '-j'+str(args.jobs)])
     obj = build/('obj_'+target)
     expected = (obj/'obj.txt').read_text().split()
     if not expected or any(not name.endswith('.rel') or not (root/name).is_file() for name in expected):
@@ -210,9 +218,14 @@ def main():
                  obj/'obj.txt',obj/'cflags.txt',obj/'ldflags.txt',obj/'src/version.h',obj/'src/info_config.h']
     if outlining is not None:
         artifacts.append(dce/'outlining.json')
+    # Absolute XDATA declarations are not represented by ordinary linker
+    # area lengths. Preserve compiler ASM for the profile resource checker.
+    artifacts.extend(asm_paths)
+    artifacts.extend(sorted(dce.rglob('*.rst')))
     source_records, dependency_evidence = collect_inputs(root, toolchain, build, expected, inputs_before)
     artifacts.extend(dependency_evidence)
     report = {
+        'configuration': selected,
         'keyboard':args.keyboard,'keymap':args.keymap,'compiler_version':version.strip(),
         'build_id':args.build_id,'skip_version':True,
         'compiler_sha256':sha(Path(sdcc)), 'assembler_sha256':sha(Path(assembler)),

@@ -116,6 +116,43 @@ int main(int argc,char **argv) {
   printf("F %u %u\n",get_mods()|get_weak_mods(),layer_state);return 0;
  }
 
+
+#ifdef AK820_COMPACT_ONESHOT
+ /* Every encoded modifier, including the right-hand group, uses owners. */
+ for(unsigned mask=0;mask<32;mask++) {
+  reset();assign(0,0x52a0|mask);assign(1,KC_A);assign(2,KC_B);
+  unsigned mods=(mask&16)?((mask&15)<<4):mask;
+  event(0,1,10);event(0,0,20);assert(get_mods()==mods);
+  event(1,1,30);event(2,1,40);event(1,0,50);assert(!get_mods()&&key_refs[KC_B]);event(2,0,60);clean();
+ }
+ /* Queued masks combine; a repeated bit acquires no duplicate owner. */
+ reset();assign(0,0x52a2);assign(1,0x52a3);assign(2,KC_A);event(0,1,1);event(0,0,2);event(1,1,3);event(1,0,4);assert(get_mods()==3);event(0,1,5);event(0,0,6);assert(get_mods()==3);event(2,1,7);event(2,0,8);clean();
+ /* Modifier and layer controls leave the queue armed for a letter. */
+ reset();assign(0,0x52a2);assign(1,KC_LCTL);assign(2,0x5221);assign(3,KC_A);event(0,1,1);event(0,0,2);event(1,1,3);event(1,0,4);event(2,1,5);event(2,0,6);assert(get_mods()==2&&!layer_state);event(3,1,7);assert(get_mods()==2);event(3,0,8);clean();
+ /* MT/LT taps consume the queue through their resolved basic key. Holds
+  * leave it armed until an actual key arrives and keep their own owners. */
+ for(unsigned lt=0;lt<2;lt++) {
+  reset();assign(0,0x52a2);assign(1,lt?0x4104:0x2104);assign(2,KC_B);event(0,1,1);event(0,0,2);event(1,1,10);event(1,0,20);assert(!get_mods()&&!layer_state);bool emitted_shift_a=false;for(unsigned i=0;i<log_count;i++)if(log_reports[i][0]==2&&log_reports[i][2]==KC_A)emitted_shift_a=true;assert(emitted_shift_a);clean();
+  reset();assign(0,0x52a2);assign(1,lt?0x4104:0x2104);assign(2,KC_B);event(0,1,1);event(0,0,2);event(1,1,10);tick(210);assert(get_mods()==(lt?2:3));assert(layer_state==(lt?2:0));event(2,1,220);event(2,0,230);assert(get_mods()==(lt?0:1));assert(layer_state==(lt?2:0));event(1,0,240);clean();
+ }
+ /* Clear/unlock cleanup blocks late physical releases and cannot arm. */
+ reset();assign(0,0x52a2);assign(1,KC_A);event(0,1,10);clear_keyboard();event(0,0,20);assert(!get_mods());event(1,1,30);assert(!get_mods());event(1,0,40);clean();
+ reset();assign(0,0x52a2);assign(1,KC_A);event(0,1,10);event(0,0,20);event(1,1,30);clear_keyboard();event(1,0,40);assert(!get_mods());event(1,1,50);assert(!get_mods());event(1,0,60);clean();
+ /* Encoder directions use distinct accepted source identities. */
+ for(unsigned dir=0;dir<2;dir++) {reset();enc[0][dir]=0x52a2;assign(1,KC_A);encoder(dir,1,10);encoder(dir,0,20);assert(get_mods()==2);event(1,1,30);event(1,0,40);clean();}
+ /* Busy fallback persists if the consuming key is released first. */
+ reset();assign(0,0x52a2);assign(1,KC_A);assign(2,0x52a1);event(0,1,1);event(0,0,2);event(1,1,3);event(2,1,4);event(1,0,5);assert(get_mods()==1);event(2,0,6);assert(!get_mods());event(1,1,7);assert(!get_mods());event(1,0,8);clean();
+ /* A held OSM is ordinary held state and must not arm after a chord. */
+ reset();assign(0,0x52a2);assign(1,KC_A);event(0,1,10);event(1,1,20);event(1,0,30);event(0,0,40);clean();
+ /* A physical owner survives consumption of the matching One Shot. */
+ reset();assign(0,0x52a2);assign(1,KC_A);assign(2,KC_LSFT);event(2,1,1);event(0,1,10);event(0,0,20);event(1,1,30);event(1,0,40);assert(get_mods()==2);event(2,0,50);clean();
+ /* While a consuming key is down a new OSM holds but does not arm. */
+ reset();assign(0,0x52a2);assign(1,KC_A);assign(2,0x52a1);assign(3,KC_B);event(0,1,1);event(0,0,2);event(1,1,3);event(2,1,4);assert(get_mods()==3);event(2,0,5);assert(get_mods()==2);event(1,0,6);event(3,1,7);assert(!get_mods());event(3,0,8);clean();
+ reset();assign(0,0x52a2);assign(1,KC_A);event(0,1,10);event(0,0,20);clear_keyboard();event(1,1,30);assert(!get_mods());event(1,0,40);clean();
+ reset();assign(0,0x52a2);assign(1,KC_A);assign(2,QK_REPEAT_KEY);event(0,1,10);event(0,0,20);event(1,1,30);event(1,0,40);event(2,1,50);assert(get_mods()==0&&get_weak_mods()==2&&key_refs[KC_A]);event(2,0,60);clean();
+ reset();assign(0,0x52a2);assign(1,KC_A);caps_word_on();event(0,1,10);event(0,0,20);event(1,1,30);assert(get_mods()==2&&get_weak_mods()==2);event(1,0,40);caps_word_off();clean();
+ reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,0x52a2);assign(1,KC_A);assign(2,KC_B);event(0,1,1);event(0,0,2);event(1,1,10);event(2,1,20);assert(get_mods()==2&&key_refs[KC_C]);event(1,0,30);event(2,0,40);clean();
+#endif
  for(unsigned mask=0;mask<32;mask++) {
   reset();assign(0,0x2004|(mask<<8));event(0,1,100);assert(!get_mods());tick(299);assert(!get_mods());tick(300);assert(get_mods()==((mask&16)?((mask&15)<<4):mask));event(0,0,301);clean();
   reset();assign(0,0x2004|(mask<<8));event(0,1,100);event(0,0,299);assert(log_count==2&&log_reports[0][2]==4&&!log_reports[1][2]);clean();
