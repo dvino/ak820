@@ -10,6 +10,10 @@ difference.
 | --- | --- |
 | Install firmware, keep a backup, recover | [Installation](INSTALL.md) |
 | Remap keys, layers, encoder and lighting | [Configuration](CONFIGURATION.md) |
+| Set up two-key shortcuts | [Combos](COMBOS.md) |
+| Use Caps Word, Repeat, Grave Escape and Tri Layer | [Key actions](CONFIGURATION.md) |
+| Set up macros and RGB effects | [Configuration](CONFIGURATION.md) |
+| Save or restore settings | [Settings backup](SETTINGS-BACKUP.md) |
 | Understand Mod-Tap and Layer-Tap behavior | [Mod-Tap and Layer-Tap](TAP-HOLD.md) |
 | Understand Caps Lock and layer indicators | [C and W indicators](INDICATORS.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |

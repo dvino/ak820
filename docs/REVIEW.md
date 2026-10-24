@@ -2,27 +2,20 @@
 
 # Independent reviews
 
-Updated 2026-10-23. Review is specific to the source and artifact it names.
-The development candidate and installer release are different images.
-This page indexes evidence; it is not a machine-readable release approval.
+Updated 2026-10-24. This page indexes review evidence. It is not a release
+approval record. The published and installed image is `v0.6.0-alpha.2`; exact
+identity and verification state are in [Status](STATUS.md).
 
-| Work | Review and limits |
+| Scope | Review evidence |
 | --- | --- |
-| Windows packaging | [Source review](../audits/rc6/windows-package-source-review-20261023.md): both application trees, exact file identities, synthetic packaging/smoke failures and manual-only workflow. Native Windows execution remains pending. |
-| Compiler selection and regression reports | [Runner review](../audits/rc6/regression-runner-review-20261023.md): selected tools reach all suites, skips and launch failures stay visible, images are checked throughout the run. |
-| Private XDATA journal pointer | [Bounded review](../audits/rc6/bounded-optimization-review-20261023.md): source/ABI, host and linked helper checks, controlled size delta and portable evidence. No release promotion or hardware approval. |
-| Inventory, integration and current documents | [Completion review](../audits/rc6/roadmap-completion-review-20261023.md): independent code checks, exact inventory reproduction, finding closure and final documentation/evidence result. |
-| Host settings protocol and workflow | [Protocol](../audits/rc6/host-settings-protocol-review-20261023.md), [backup/restore core](../audits/rc6/host-settings-core-review-20261023.md) and [installer workflow](../audits/rc6/host-settings-workflow-review-20261023.md): synthetic/offline checks, exact-image limits and failure stops. |
-| Installer release binding | [Exact review record](../releases/rc6/reviews/independent-review.md): approved release IHX/MAP/build report and 19 current host files. This record does not approve the pointer candidate or a newly built EXE. |
+| Published alpha.2 artifacts | [Published artifact review](../audits/rc6/alpha2-release-20261024/published-artifact-review.md) checks downloaded packages, source and packaged inputs. [Asset check](../audits/rc6/alpha2-release-20261024/asset-check.json) records archive verification. |
+| Installed alpha.2 | [Installation review](../audits/rc6/alpha2-release-20261024/installation-review.md) and [device result](../audits/rc6/alpha2-release-20261024/device-result.json) bind the installed image and read-only final settings check. |
+| Build and qualification | Tag CI run [40060505913](https://github.com/dvino/ak820/actions/runs/40060505913) passed four jobs. Firmware qualification passed 28 suites and 270 unit tests with zero skips. |
+| Earlier development work | Reviews and qualifications for earlier images remain in their dated reports and Git history. Their approvals and hashes do not apply to alpha.2. |
 
-The [current status](STATUS.md) names the exact firmware identities and evidence
-levels. The [qualification manifest](../audits/rc6/roadmap-qualification-20261023/manifest.json)
-retains initial failures and final results. Unit, host and CPU passes do not
-prove physical USB/flash behavior, Windows input, power-loss durability or a
-bound for every stack path. Prior release reviews remain in Git history and
-artifact-specific reports; their image hashes must not be reused for a new build.
-
-A future release needs a new independently reviewed record bound to its exact
-IHX, MAP, build report and host inputs. Building or reviewing source does not
-change the installer approval file. Publication and device writes remain
-separate operations with their own authorization requirements.
+The current evidence does not establish physical Combo timing, nonempty Combo
+write/restore, power-cycle retention, power-loss behavior, manual GUI acceptance
+or a worst-case stack bound. Host and linked CPU results do not prove device
+behavior. Any future release review must bind its exact IHX, MAP, build report,
+host inputs and packages. A source review does not approve a new package or
+device operation.

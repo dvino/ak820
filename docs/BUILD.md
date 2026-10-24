@@ -14,8 +14,9 @@ python3 tools/install_lufa_dependency.py --fetch
 Both installers check pinned archive hashes. For offline installation, pass
 `--archive /path/to/archive` instead of downloading. The default LUFA command
 without options only checks the local dependency. The SDCC installer on Windows
-uses Ubuntu WSL. The source installer needs Python 3.10+ and its own requirements.
-Create the firmware build environment:
+uses Ubuntu WSL. End users should use the published standalone package, which
+includes Python and hidapi. For source-based installer use, see the separate
+setup below. Create the firmware build environment:
 
 ```sh
 cd qmk-8051-ak820
@@ -54,33 +55,108 @@ not spare executable CODE. Measure linked occupied bytes rather than binary
 file length or source size.
 
 The default exact instruction outlining and audited callee-save list have
-comparison switches `--no-outline` and `--no-callee-saves`. The Combo candidate
-uses the normal audited outlining configuration; summary savings from individual
-probes are non-additive and do not predict complete linked-image size. ABI changes require
-new stack/interrupt evidence. Build configurations must not run concurrently
-in the same source tree because Make uses shared generated files.
+comparison switches `--no-outline` and `--no-callee-saves`. The released alpha.2 profile uses the normal audited outlining configuration.
+Summary savings from individual probes are non-additive and do not predict complete
+linked-image size. ABI changes require new stack and interrupt evidence. Do not
+run build configurations concurrently in one source tree because Make uses shared
+generated files.
 
-Run [offline tests](TESTING.md), obtain independent review, then assemble a
-release from the repository root with `python3 tools/build_release_bundle.py --build-dir qmk-8051-ak820/.build/local-1
---review /path/to/exact-candidate-review.md --oem-reference-dir /path/to/private-oem-references
---toolchain toolchains/sdcc-4.6.0 --builder-source qmk-8051-ak820/util/build_ak820.py
---output releases/rc6-new`.
-The review path is a placeholder for a new exact-build JSON review record.
-`docs/REVIEW.md` is a review index, not that record; the retained release review
-does not approve the development candidate.
-The example reference path must point to the user's own local exact pair. The
-review must bind the exact IHX, MAP, build report and host inputs. Assembly
-does not approve hardware operations. A changed source or host input
-invalidates previous evidence. After review, integrate the fresh bundle under
+Run [offline tests](TESTING.md), then assemble a new release bundle from the
+repository root after independent review. The review record must be a JSON file
+bound to the exact IHX, MAP, build report and host inputs. The following is a
+command template; replace the review and private reference paths with local
+files and use a fresh output directory:
+
+```sh
+python3 tools/build_release_bundle.py \
+  --build-dir qmk-8051-ak820/.build/local-1 \
+  --review /path/to/exact-candidate-review.json \
+  --oem-reference-dir /path/to/private-oem-references \
+  --toolchain toolchains/sdcc-4.6.0 \
+  --builder-source qmk-8051-ak820/util/build_ak820.py \
+  --output releases/rc6-new
+```
+
+`docs/REVIEW.md` indexes review evidence; it is not the exact-build approval
+record. Bundle assembly does not authorize device operations. A changed source
+or host input invalidates earlier evidence. Integrate the reviewed bundle under
 `releases/rc6`, the installer's fixed bundle location, before running installer
-verification or Windows packaging.
+verification or packaging either platform.
+
+## Select a published firmware bundle for source use
+
+A source checkout retains an older `releases/rc6` bundle. Building the firmware
+or running `setup` does not replace it. To use the source installer for a
+published release, start with a clean checkout of that release tag and download
+`firmware-bundle.zip` plus its SHA256 file from the same release. Check the
+checksum before extraction, using the method in [Install](INSTALL.md) with the
+firmware bundle's filenames.
+
+Extract the ZIP into a new `firmware-bundle` directory. Its `firmware`, `reports`
+and other files are directly inside that directory. Copy its full contents into
+`releases/rc6`, then copy `firmware-bundle/approved-release.json` to
+`tools/installer/approved-release.json`. Keep the bundle complete; do not mix
+files from different releases. Run the source launcher's `verify` below before
+using any device command. The approved manifest checks the selected files
+against that exact release and host source.
+
+## Source installer setup
+
+Run the commands in this section from the repository root.
+
+This Python environment is separate from the QMK firmware build environment
+above. The source launcher needs Python 3.10 or newer. On Ubuntu/Debian install
+its system dependencies, then let the launcher create `.venv-ak820-installer`
+and install the pinned `hidapi==0.15.0` requirement:
+
+```sh
+sudo apt-get install build-essential python3-dev python3-venv python3-tk libudev-dev
+./AK820.sh setup
+./AK820.sh udev --install
+./AK820.sh verify
+.venv-ak820-installer/bin/python tools/installer/gui.py
+```
+
+The udev command installs the project's device-access rule and reloads udev.
+For source use on Windows, install Python 3.10 or newer, then run from
+PowerShell in the repository root:
+
+```powershell
+.\AK820.cmd setup
+.\AK820.cmd verify
+.\.venv-ak820-installer\Scripts\python.exe tools\installer\gui.py
+```
+
+These commands prepare and start the installer interface; `verify` checks the
+release files offline. They do not flash a keyboard. Standalone Windows and
+Linux packages are preferred for end users and need no Python setup.
+
+## Native Linux installer
+
+Build the standalone package on Ubuntu 22.04 x86_64 with Python 3.12,
+`python3-dev`, `python3-tk`, `libudev-dev`, `libusb-1.0-0-dev`,
+`build-essential`, `xvfb` and `xauth`. Install the pinned requirements with the
+hidraw backend, then run the packaging regression and builder from the
+repository root:
+
+```sh
+HIDAPI_WITH_HIDRAW=1 HIDAPI_WITH_LIBUSB=0 \
+  python3 -m pip install --no-binary=hidapi -r tools/installer/requirements-build-linux.txt
+python3 -B -m unittest discover -s tools -p test_build_linux_installer.py
+python3 tools/build_linux_installer.py --output dist/AK820-Linux-x86_64
+(cd dist && sha256sum AK820-Linux-x86_64.tar.gz > AK820-Linux-x86_64.tar.gz.sha256)
+```
+
+The builder refuses an existing output or work directory. It creates GUI and CLI
+applications, verifies their approved inputs, checks frozen hidraw, CLI help,
+offline verification and Tk startup under Xvfb, then writes the tarball. These
+smokes do not open USB or check live keyboard behavior. See [CI and releases](CI.md)
+for how the release workflow supplies fresh firmware and publishes artifacts.
 
 ## Windows installer applications
 
-The checked Windows application folders and ZIP dated 2026-10-23 are historical
-artifacts. They predate the host settings feature. Build a fresh package from
-the reviewed release on native Windows using Python 3.12 and the pinned
-PyInstaller 6.16.0 requirements:
+For a new Windows package, build from the reviewed release on native Windows
+using Python 3.12 and the pinned PyInstaller 6.16.0 requirements:
 
 ```powershell
 py -3.12 -m venv .venv-windows-installer
@@ -99,8 +175,8 @@ native Tk UI smoke, not an interactive usability check. The output contains
 paths. Review both JSON reports and the ZIP before distribution. The build does
 not enumerate USB, test a physical keyboard or flash firmware. OEM references,
 personal backups, and runtime sessions are excluded.
-GitHub Actions builds and checks every branch push and pull request. Version
-tags publish the reviewed Windows package after Linux and Windows checks pass.
-The Windows package uses firmware built by the same Linux CI run. Tags on
-commits in main publish both firmware and installer ZIPs. See
+GitHub Actions builds and checks every branch push and pull request. Version tags publish the reviewed Windows and Linux packages after the firmware,
+Windows and Linux checks pass. Both packages use firmware built by the same Linux
+CI run. Tags on commits in main publish the firmware bundle, Windows ZIP and
+Linux tarball. See
 [CI and releases](CI.md) for triggers, artifacts and the reproducible-build policy.

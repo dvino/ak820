@@ -34,16 +34,22 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 
 ## Features
 
-- Six layers, with separate clockwise and counterclockwise encoder actions on each layer.
-- Standard keys, modifiers, media and system controls, plus NKRO (sending more than six keys at once).
-- Sixteen macro slots with 8192 bytes of shared storage.
-- Caps Word, Repeat, Alt Repeat, Grave Escape and Tri Layer.
-- Eight configurable [two-key Combos](docs/COMBOS.md), with a fixed 40 ms term.
-- 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
-- Persistent keymaps, macros and global lighting; physical Vial unlock.
-- Compact [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md), plus [C/W indicators](docs/INDICATORS.md) for host Caps Lock and an active additional layer.
-- Settings backup and restore for supported keymaps, macros, lighting and Combo entries; see [backup and restore](docs/SETTINGS-BACKUP.md). One Shot, Mouse Keys, Tap Dance and Key Overrides remain unsupported.
+- Six editable layers, with separate clockwise and counterclockwise encoder actions on each layer.
+- Standard keys, modifiers, media and system controls. The default report supports six distinct ordinary keys at once.
+- Sixteen macro slots with 8192 bytes of shared storage; macros play on the keyboard without a desktop app running.
+- **Caps Word** types a word in uppercase without holding Shift.
+- **Repeat** repeats the last remembered key and modifiers; **Alt Repeat** uses its paired alternate, such as the opposite arrow.
+- **Grave Escape** combines Escape and the Grave key on one key, selected by held modifiers.
+- **Tri Layer** activates layer 3 while layers 1 and 2 are both active.
+- Eight configurable [two-key Combos](docs/COMBOS.md): for example, J + K sends Escape or F + D sends Ctrl+C when pressed within 40 ms.
+- [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md): tap for a key, hold for a modifier or layer.
+- 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a separate fade on each pressed key.
+- [C/W indicators](docs/INDICATORS.md): C follows Caps Lock; W shows an active additional layer.
+- Saved keymaps, macros and global lighting, physical Vial unlock, and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
 
+See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
+One Shot, Mouse Keys, Tap Dance, Key Overrides, Auto Shift and a user-facing
+NKRO mode switch are not supported.
 
 ## Disclaimer
 

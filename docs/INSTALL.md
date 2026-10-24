@@ -4,8 +4,9 @@
 
 Use these packages only with the wired AJAZZ AK820 that has a VS11K28A
 controller and matching PCB revision. V2, Pro and Max are not supported. The
-product name and USB ID `320F:505B` alone do not confirm compatibility. Keep a
-valid OEM recovery session and a separate settings backup.
+product name and USB ID `320F:505B` alone do not confirm compatibility. The first
+installation creates an OEM recovery session; keep it and later settings
+backups in separate private copies.
 
 ## Download and check a release package
 
@@ -63,6 +64,25 @@ rule from a desktop terminal:
 
 This command uses `sudo` only to install and apply the rule. Run the GUI as the
 ordinary desktop user; do not launch it with `sudo`.
+
+## First installation from OEM firmware
+
+If the keyboard still runs its original OEM firmware, an earlier recovery
+session is not required. Close the OEM configurator and connect only one
+supported keyboard. Prepare alternate input and stable power.
+
+In the GUI, open **Other actions — OEM installation and recovery** and choose
+**Install from OEM**. Confirm reading the complete original ROM. The installer
+checks that copy, prepares the update and shows its image before requesting
+write confirmation. Follow the installer prompts, including the typing check
+after restart. Stop on any error; do not repeat the write blindly.
+
+Keep the complete session folder shown in the log. Its `permanent-session`
+subfolder contains `images.json`, `before-full-rom.bin` and `restore-native.bin`;
+select that subfolder as the OEM recovery session for future updates and
+recovery. These personal files are created from the keyboard, not downloaded
+with the release. **Save OEM backup** in the same panel saves a recovery session
+without installing firmware.
 
 ## Back up settings and update firmware
 

@@ -2,17 +2,17 @@
 
 # Further code-space options
 
-The current plan is to qualify the existing fixes on SDCC 4.6 and prepare a
-new firmware release. Further optimization implementation is deferred.
-The [deep analysis](../audits/rc6/optimization-deep-analysis-20261023.md),
-[current linked inventory](../audits/rc6/optimization-deep-local-20261023.md)
-and [release-source research](../audits/rc6/optimization-deep-sdcc-research-20261023.md)
-record the future experiments and rejected leads. Current sizes and release
-gates are in [status](STATUS.md).
+The published and installed `v0.6.0-alpha.2` includes eight two-key Combos.
+Current sizes are in [Resource budget](RESOURCE-BUDGET.md); source, artifact and
+device evidence are in [Status](STATUS.md).
 
-The best future bounded probes are the private journal-header pointer,
-macro-delay arithmetic, event-pointer provenance and one shared protocol
-operation. Their gains are unmeasured. Short-call rewriting cannot proceed
-after the incomplete fixture run and linker crash without closing its tests.
-Another kilobyte was a planning reserve, not a proved requirement or promised
-saving. Preserve six layers, sixteen macros and supported behavior.
+The [next stage](ROADMAP.md) includes further analysis of the active code and
+compact optional features. First measure the complete linked image and identify
+the constrained resource. Then compare a bounded change against a fixed control, including
+behavior, both CODE windows, XRAM and stack. A probe or source-level estimate
+is not a complete-image result.
+
+The dated [optimization study](../audits/rc6/optimization-deep-analysis-20261023.md)
+contains earlier experiments and rejected ideas. Its measurements apply to
+those historical controls only. Short-call rewriting and compiler changes need
+new correctness evidence before they can be considered.

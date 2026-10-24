@@ -2,13 +2,15 @@
 
 # Settings backup and restore
 
-The source installer can save supported settings to a private folder, restore
+The installer can save supported settings to a private folder, restore
 them, or carry them through a supported firmware update. It uses existing Vial
 commands; the firmware does not need a separate backup protocol.
 
 ## Supported firmware and migration
 
-The installer accepts only exact firmware builds listed in [Status](STATUS.md).
+The installer accepts five exact reviewed image profiles. Their IHX and CODE
+hashes are listed in the [profile record](../audits/rc6/alpha2-release-20261024/settings-profiles.json);
+[Status](STATUS.md) identifies the current release and installed image.
 It checks both the application and firmware already in the keyboard before
 writing. Same-build restore and approved forward migrations are supported;
 downgrades and unknown builds are rejected.
@@ -57,6 +59,11 @@ A backup includes 498 key assignments across six layers, 12 encoder
 assignments, 16 macros, layout options and supported RGB settings. Combo-enabled
 firmware also saves all eight Combo slots. The installer checks the saved files
 before completing the backup.
+
+Connect only one supported keyboard. Its Vial identifier identifies the model,
+not a unique unit. Reads do not freeze the firmware: keep configuration tools
+closed and do not change settings during a backup. Repeated reads check for
+changes but cannot guarantee an atomic snapshot. A mismatch stops the operation.
 
 The backup does not include the Direct RGB palette, temporary lighting state,
 animation position, held keys or a running macro's position. One Shot, Mouse

@@ -1,39 +1,17 @@
-Русский перевод: [Индикаторы](ru/INDICATORS.md).
+Русский перевод: [Индикаторы C и W](ru/INDICATORS.md).
 
 # C and W indicators
 
-The development firmware enables two dedicated indicator outputs:
+The keyboard has two small indicators that show keyboard state:
 
-- **C** follows the host's Caps Lock LED report. Pressing Caps does not change
-  the light directly; the host supplies its actual state. Caps Word does not
-  turn it on by itself.
-- **W** shows that a layer above layer 0 is active. Held, toggled and default
-  layers count, including Lower/Upper/Adjust. Returning to layer 0 turns it off.
-  It does not show Windows-key lock.
+- **C** shows the Caps Lock state reported by the computer. It follows the
+  computer's state, so pressing Caps changes the indicator when the computer
+  reports the change. Caps Word is a separate feature and does not turn C on.
+- **W** lights when a layer above layer 0 is active. For example, holding a
+  Layer-Tap key assigned to layer 1 lights W; releasing it turns W off if no
+  other higher layer is active. W shows layer state, not Windows-key lock.
 
-The indicators work independently of the key lighting mode, brightness and
-on/off setting. Unconfigured USB and USB suspend make both outputs dark.
-The next main-loop task recomputes them after configuration or resume.
-No settings are saved for these outputs and Caps keeps its existing mapping.
-
-## Implementation and checks
-
-The selected outputs come from the [OEM data-flow trace](../audits/rc6/oem-indicator-dataflow-review-20261024.md):
-slot 71, component 1 for the Caps report bit, and slot 79, component 1 for the
-second state output. The development firmware gives that second output the
-project's additional-layer meaning. These slots are excluded from the 82-key
-RGB map. Other components of those slots are preserved.
-
-The update runs in the main loop. It preserves the previous scan-interrupt
-enable bit while writing the two dedicated slots; USB interrupts remain enabled.
-It uses no persistent storage. The candidate adds 78 populated CODE bytes and
-leaves XRAM unchanged. [Status](STATUS.md) records the exact build and checks.
-
-The linked CPU model checks host LED bits, production layer APIs, default and
-Tri Layer paths, USB state fixtures, RGB canaries and interrupt-bit restoration.
-A state fixture is not a physical USB reset or a test of visible lights.
-
-The GitHub alpha was installed and manual smoke checks reported C following
-Caps Lock and W following an additional layer. This does not measure electrical
-polarity, suspend timing or every lighting combination. See [Status](STATUS.md).
-The checked-in legacy installer firmware does not contain this implementation.
+No Vial setting is needed. The indicators work independently of the keyboard
+lighting settings. They are dark before USB is configured and while the
+computer has suspended the keyboard; they update again after the keyboard
+resumes. For installation and verification details, see [Status](STATUS.md).
