@@ -10,6 +10,12 @@ for package selection, checksums and launch commands.
 
 ## Source and built image
 
+The development branch starts the configurable-build stage with
+[source optimizations](../audits/rc6/configurable-20261024/size-source.md).
+The first control comparison saves 279 CODE bytes and nine XRAM bytes without
+removing features. This development result is separate from the published and
+installed alpha.2 figures below; it is not a new release or device test.
+
 The Combo work was imported from `ak820-combos-20261024-git.zip`, based on
 `4b83bb9`, through `d361501`. Release integration adds reviewed settings
 preservation and native Linux packaging. The application uses 40,313 CODE

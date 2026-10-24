@@ -13,9 +13,18 @@
 #include "ak820_macro.h"
 #endif
 
+#if defined(__SDCC_mcs51)
+#    define AK820_FLAG __bit
+#else
+#    define AK820_FLAG bool
+#endif
+
 static uint8_t page_data[AK820_FLASH_PAGE];
-static uint16_t cached_page;
-static bool page_valid, page_dirty, storage_failed;
+/* All cache callers validate offsets before selecting one of 160 pages.
+ * Keep journal decoding 16-bit so malformed stored page numbers still fail. */
+_Static_assert(AK820_NVM_SIZE / AK820_FLASH_PAGE < 256u, "cache page index must fit in a byte");
+static uint8_t cached_page;
+static AK820_FLAG page_valid, page_dirty, storage_failed;
 static uint8_t batch_depth;
 static uint8_t first_failure_stage;
 
@@ -160,7 +169,7 @@ void ak820_nvm_end(void) {
     if (!batch_depth) ak820_nvm_flush();
 }
 
-static bool load_page(uint16_t page) {
+static bool load_page(uint8_t page) {
     uint8_t i;
     if (page_valid && cached_page == page) return !storage_failed;
     ak820_nvm_flush();
@@ -260,7 +269,7 @@ void ak820_eeprom_update_block_xdata(const void AK820_XDATA *buf, void *addr, si
 }
 
 void eeprom_driver_erase(void) {
-    uint16_t page;
+    uint8_t page;
     uint8_t i;
     ak820_nvm_flush();
     for (page = 0; page != AK820_NVM_SIZE / AK820_FLASH_PAGE && !storage_failed; ++page) {

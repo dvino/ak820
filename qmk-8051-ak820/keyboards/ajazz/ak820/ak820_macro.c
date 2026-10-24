@@ -26,10 +26,16 @@ typedef struct {
     uint8_t arguments; /*0=text,1/2=nonzero operands,3=opcode after prefix1 */
 } macro_parse_t;
 
+#if defined(__SDCC_mcs51)
+#    define AK820_FLAG __bit
+#else
+#    define AK820_FLAG bool
+#endif
+
 static macro_parse_t parsed;
 static uint16_t covered;
 static uint16_t used_length;
-static bool uploading;
+static AK820_FLAG uploading;
 
 static uint8_t macro_byte(uint16_t offset) {
     return eeprom_read_byte((const uint8_t *)(uintptr_t)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + offset));

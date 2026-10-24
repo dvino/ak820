@@ -32,11 +32,22 @@ class Firmware:
         }
         # Linker maps omit static symbols. Relocated listings retain their
         # current names and addresses; no generated temporary suffix is pinned.
+        self.symbol_spaces, self.symbol_sizes = {}, {}
         for listing in sorted((build / "dce").rglob("*.rst")):
-            for address, name in re.findall(
-                r"^\s*([0-9A-F]{6})\s+\d+\s+(_[\w$]+):", listing.read_text(), re.M
-            ):
-                self.symbols.setdefault(name, int(address, 16))
+            area, pending = "", None
+            for line in listing.read_text().splitlines():
+                section = re.search(r"\.area\s+(\w+)", line)
+                if section:
+                    area, pending = section[1], None
+                label = re.match(r"^\s*([0-9A-F]{6})\s+\d+\s+(_[\w$]+):", line)
+                if label:
+                    address, pending = int(label[1], 16), label[2]
+                    self.symbols.setdefault(pending, address)
+                    self.symbol_spaces[pending] = "bits" if area == "BSEG" else "xram"
+                allocation = re.search(r"\s\.ds\s+(\d+)\s*$", line)
+                if allocation and pending:
+                    self.symbol_sizes[pending] = int(allocation[1])
+                    pending = None
         self.code = {}
         for line in self.image.read_text().splitlines():
             record = bytes.fromhex(line[1:])
@@ -60,7 +71,17 @@ class Firmware:
         return self.symbols[name]
 
     def write(self, name: str, data) -> list[str]:
-        return [memory("xram", self.address(name), data)]
+        return [memory(self.symbol_space(name), self.address(name), data)]
+
+    def symbol_space(self, name: str) -> str:
+        return self.symbol_spaces.get(name, "xram")
+
+    def write_scalar(self, name: str, value: int) -> list[str]:
+        """Write one complete scalar using its actual linked allocation width."""
+        width = self.symbol_sizes[name]
+        if width not in (1, 2, 4):
+            raise ValueError(f"Not a supported scalar allocation: {name}: {width}")
+        return self.write(name, value.to_bytes(width, "little"))
 
     def call(self, name: str, argument: int | None = None) -> list[str]:
         address = self.address(name)
@@ -98,7 +119,7 @@ class Firmware:
         return [f"echo @@{label}", f"dump {space} {address:#x} {address + count - 1:#x} 16"]
 
     def dump_symbol(self, label: str, name: str, count: int) -> list[str]:
-        return self.dump(label, "xram", self.address(name), count)
+        return self.dump(label, self.symbol_space(name), self.address(name), count)
 
     @staticmethod
     def extract(log: str, label: str, address: int, count: int) -> list[int]:
@@ -106,7 +127,7 @@ class Firmware:
             raise ValueError(f"Simulator observation missing: {label}")
         tail = log.rsplit("@@" + label, 1)[1]
         values = {}
-        for row, data in re.findall(r"^0x([0-9a-f]+)\s+((?:[0-9a-f]{2}\s+)+)", tail, re.M):
+        for row, data in re.findall(r"^0x([0-9a-f]+)\s+((?:[0-9a-f]{1,2}\s+)+)", tail, re.M):
             for offset, value in enumerate(data.split()):
                 values[int(row, 16) + offset] = int(value, 16)
             if all(address + index in values for index in range(count)):

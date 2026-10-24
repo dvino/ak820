@@ -26,9 +26,10 @@ cases = []
 for failed in (0, 1):
     commands = [f"run {fw.address('__sdcc_gsinit_startup'):#x} {fw.address('_main'):#x}"]
     nv = [failed, 1, 1, 7, 0x12, 0, 12 if failed else 0]
+    commands += fw.write_scalar("_cached_page", nv[4] | (nv[5] << 8))
     for name, values in (
         ("_storage_failed", [nv[0]]), ("_page_valid", [nv[1]]), ("_page_dirty", [nv[2]]),
-        ("_batch_depth", [nv[3]]), ("_cached_page", nv[4:6]), ("_first_failure_stage", [nv[6]]),
+        ("_batch_depth", [nv[3]]), ("_first_failure_stage", [nv[6]]),
         ("_ak820_flash_diagnostic", [1, 0x9a, 0x40, 0x42, 0x80, 0xc7]),
         ("_vial_unlocked", [0]), ("_vial_unlock_in_progress", [1]),
         ("_USB_EnumStatus", [1]), ("_D0UsbConfig", [1]), ("_USB_SleepStatus", [0]),

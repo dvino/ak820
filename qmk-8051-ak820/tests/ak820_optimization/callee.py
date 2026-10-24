@@ -45,13 +45,13 @@ def snapshot(log: str, label: str, address: int, count: int) -> list[int]:
     tail = log.rsplit(marker, 1)[1].split("\necho @@", 1)[0]
     result = bytearray()
     # Single-SFR dumps use a named bit-decoded row, unlike ordinary memory.
-    for match in re.finditer(r"^0x([0-9a-f]+)\s+(?:(?:\w+):\s+0b[01]+\s+0x([0-9a-f]{2})|((?:[0-9a-f]{2}\s+)+))", tail, re.M):
+    for match in re.finditer(r"^0x([0-9a-f]+)\s+(?:(?:\w+):\s+0b[01]+\s+0x([0-9a-f]{2})|((?:[0-9a-f]{1,2}\s+)+))", tail, re.M):
         row = int(match[1], 16)
         if row != address + len(result):
             if result:
                 raise ValueError("Discontinuous observation: " + label)
             continue
-        values = bytes.fromhex(match[2] or match[3])[:16]
+        values = bytes(int(value, 16) for value in (match[2] or match[3]).split())[:16]
         result.extend(values[:count - len(result)])
         if len(result) == count:
             return list(result)
@@ -100,18 +100,18 @@ def function_cases(fw: Firmware, function: str):
             yield str(offset), setup, offset, [value if offset < 0x2800 else 0], []
         for offset in range(64):
             value = (offset * 19 + 3) & 255
-            setup = (fw.write("_page_valid", [1]) + fw.write("_cached_page", [4, 0]) +
+            setup = (fw.write("_page_valid", [1]) + fw.write_scalar("_cached_page", 4) +
                      [memory("xram", fw.address("_page_data") + offset, [value])])
             yield f"cached-{offset}", setup, 256 + offset, [value], []
     elif function == "eeprom_update_byte":
         for value in range(256):
             offset, old = value & 63, value ^ (0 if value & 1 else 0xA5)
             setup = (fw.write("_storage_failed", [0]) + fw.write("_page_valid", [1]) + fw.write("_page_dirty", [0]) +
-                     fw.write("_cached_page", [0, 0]) + fw.write("_batch_depth", [1]) +
+                     fw.write_scalar("_cached_page", 0) + fw.write("_batch_depth", [1]) +
                      fw.write("_eeprom_update_byte_PARM_2", [value]) +
                      [memory("xram", fw.address("_page_data") + offset, [old])])
             expected = [("xram", fw.address("_page_data") + offset, [value]),
-                        ("xram", fw.address("_page_dirty"), [int(old != value)])]
+                        (fw.symbol_space("_page_dirty"), fw.address("_page_dirty"), [int(old != value)])]
             yield f"cached-{value}", setup, offset, None, expected
         for offset in (0, 63, 64, 0x27FF):
             setup = (fw.write("_storage_failed", [0]) + fw.write("_page_valid", [0]) + fw.write("_page_dirty", [0]) +
@@ -124,7 +124,7 @@ def function_cases(fw: Firmware, function: str):
             setup = (fw.write("_storage_failed", [failed]) + fw.write("_page_valid", [0]) + fw.write("_page_dirty", [0]) +
                      fw.write("_batch_depth", [batch]) + fw.write("_eeprom_update_byte_PARM_2", [0xA5]) +
                      [memory("rom", 0xC700, [0]), memory("sfr", 0x86, [0])])
-            yield name, setup, offset, None, [("xram", fw.address("_storage_failed"), [1])]
+            yield name, setup, offset, None, [(fw.symbol_space("_storage_failed"), fw.address("_storage_failed"), [1])]
     elif function == "mDelaymS":
         for delay in (0, 1, 2, 3, 16):
             yield str(delay), [], delay, None, []

@@ -22,9 +22,15 @@
 rgb_config_t rgb_matrix_config;
 extern HSV g_direct_mode_colors[RGB_MATRIX_LED_COUNT];
 
-static bool suspended;
-static bool dirty;
-static bool rendering;
+#if defined(__SDCC_mcs51)
+#    define AK820_FLAG __bit
+#else
+#    define AK820_FLAG bool
+#endif
+
+static AK820_FLAG suspended;
+static AK820_FLAG dirty;
+static AK820_FLAG rendering;
 static uint16_t changed_at;
 static uint16_t frame_at;
 static uint16_t phase;

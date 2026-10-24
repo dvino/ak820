@@ -1,0 +1,86 @@
+[
+  {
+    "build": "size-control2",
+    "decision": "control",
+    "code": 40313,
+    "main": 38492,
+    "low": 1821,
+    "highest": "0xc687",
+    "xram": 2621,
+    "initial_sp": 95,
+    "stack_capacity": 160,
+    "ihx_sha256": "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f"
+  },
+  {
+    "build": "size-bitflags",
+    "decision": "retained",
+    "code": 40195,
+    "main": 38391,
+    "low": 1804,
+    "highest": "0xc622",
+    "xram": 2614,
+    "initial_sp": 96,
+    "stack_capacity": 159,
+    "ihx_sha256": "696398ccff9bc0216726cc94beb21fa1735360393bd383be55ab8c6c5bab602a"
+  },
+  {
+    "build": "size-pagebyte",
+    "decision": "retained stable",
+    "code": 40034,
+    "main": 38230,
+    "low": 1804,
+    "highest": "0xc581",
+    "xram": 2612,
+    "initial_sp": 95,
+    "stack_capacity": 160,
+    "ihx_sha256": "34a91e0153f588d5a9db9837cfa9d83d2c8ddcaa8bbf6532c4ae5c038f95a105"
+  },
+  {
+    "build": "size-keycode",
+    "decision": "rejected: only 8 bytes with added call/stack cost",
+    "code": 40026,
+    "main": 38222,
+    "low": 1804,
+    "highest": "0xc579",
+    "xram": 2618,
+    "initial_sp": 93,
+    "stack_capacity": 162,
+    "ihx_sha256": "ee7d7d18e2f102bf26bbd50d132a8f8ca8d6a50129662cb787c8a8a1ef0798b4"
+  },
+  {
+    "build": "size-rgb-fields",
+    "decision": "rejected: 18 bytes larger",
+    "code": 40052,
+    "main": 38248,
+    "low": 1804,
+    "highest": "0xc593",
+    "xram": 2612,
+    "initial_sp": 95,
+    "stack_capacity": 160,
+    "ihx_sha256": "71d6f8c2b0cff0ab45495c145c953433a20958ee12eecb87a60cad6f7af7596f"
+  },
+  {
+    "build": "size-color-fields",
+    "decision": "rejected: only 4 bytes",
+    "code": 40030,
+    "main": 38226,
+    "low": 1804,
+    "highest": "0xc57d",
+    "xram": 2612,
+    "initial_sp": 95,
+    "stack_capacity": 160,
+    "ihx_sha256": "ef368a9c545f065c2ec38fce724742000a90d1a25ceae7b111f1e74a48353050"
+  },
+  {
+    "build": "size-protocol-bits",
+    "decision": "optional: 24 bytes, one stack byte cost",
+    "code": 40010,
+    "main": 38206,
+    "low": 1804,
+    "highest": "0xc569",
+    "xram": 2610,
+    "initial_sp": 96,
+    "stack_capacity": 159,
+    "ihx_sha256": "53f6bcd5a9db40111684c49eb92141b8f1581f23cf54e8ae25142b40aba1fa84"
+  }
+]

@@ -38,7 +38,7 @@ def main():
         observations.append((label, 0x200, [value, 0, 0, 0]))
     # A valid page under an explicit batch exercises the actual EEPROM adapters
     # and backend without pretending the CPU model implements flash programming.
-    commands += fw.write("_page_valid", [1]) + fw.write("_cached_page", [0, 0]) + fw.write("_batch_depth", [1])
+    commands += fw.write("_page_valid", [1]) + fw.write_scalar("_cached_page", 0) + fw.write("_batch_depth", [1])
     values = {low | (high << 16) for low in range(256) for high in (0, 0xA55A, 0xFFFF)}
     values.update((1 << bit) | low for bit in range(16, 32) for low in (0, 0x80, 0xFF))
     for value in sorted(values):

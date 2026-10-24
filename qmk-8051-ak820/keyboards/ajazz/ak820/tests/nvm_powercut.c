@@ -161,6 +161,43 @@ int main(void) {
     operations = 0;
     eeprom_write_block(cross, (void *)(uintptr_t)(AK820_NVM_SIZE - 5), 6);
     require(!ak820_nvm_ok() && operations == 0, "out-of-bounds request rejected before mutation");
+    // Every valid page can become the cache, including page 159. Diagnostic
+    // high bytes stay zero; a repeated unchanged byte does not write flash.
+    init_fixture();
+    for (i = 0; i < AK820_NVM_SIZE / AK820_FLASH_PAGE; ++i) {
+        uint16_t address = i * AK820_FLASH_PAGE + 63;
+        uint8_t value = flash_image[AK820_NVM_BASE + address];
+        uint8_t diagnostic[7], observed;
+        eeprom_write_block(&value, (void *)(uintptr_t)address, 1);
+        eeprom_read_block(&observed, (void *)(uintptr_t)address, 1);
+        ak820_nvm_diagnostic(diagnostic);
+        require(ak820_nvm_ok() && diagnostic[1] && diagnostic[4] == i && !diagnostic[5], "all cache page indices and diagnostic width");
+        require(observed == value && !operations, "all-page unchanged writes and cached reads");
+    }
+    eeprom_driver_erase();
+    require(ak820_nvm_ok(), "complete byte-indexed erase");
+    for (i = 0; i < AK820_NVM_SIZE; ++i)
+        require(!flash_image[AK820_NVM_BASE + i], "erase reaches every byte through page 159");
+    require(!memcmp(flash_image, original, AK820_NVM_BASE), "all-page erase preserves code and loader");
+    require(!memcmp(flash_image + AK820_NVM_WRITE_END, original + AK820_NVM_WRITE_END,
+                    sizeof(flash_image) - AK820_NVM_WRITE_END), "all-page erase preserves protected tail");
+    // Stored journal page numbers remain 16-bit. No high byte may be dropped
+    // before checking the valid range, and rejection never mutates flash.
+    for (i = 0; i < 3; ++i) {
+        const uint16_t bad_pages[] = {160, 256, 65535};
+        uint8_t *header;
+        unsigned j;
+        init_fixture();
+        header = flash_image + AK820_JOURNAL_HEADER;
+        header[0] = 0xa5;
+        header[1] = (uint8_t)bad_pages[i];
+        header[2] = (uint8_t)(bad_pages[i] >> 8);
+        header[3] = header[4] = 0;
+        for (j = 1; j < 5; ++j) header[j + 4] = (uint8_t)~header[j];
+        eeprom_driver_init();
+        ak820_nvm_diagnostic(readback);
+        require(!ak820_nvm_ok() && readback[6] == AK820_NVM_FAULT_RECOVERY_PAGE && !operations, "full-width malformed journal page rejection");
+    }
     printf("PASS: %lu power-cut cases plus persistence, batching, retry, bounds, cross-page checks\n", cases);
     return 0;
 }

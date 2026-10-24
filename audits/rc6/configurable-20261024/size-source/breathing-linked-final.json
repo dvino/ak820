@@ -1,0 +1,922 @@
+{
+  "cpu": "uCsim C52",
+  "linked_image_sha256": "53f6bcd5a9db40111684c49eb92141b8f1581f23cf54e8ae25142b40aba1fa84",
+  "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+  "linked_metadata_sha256": {
+    "ajazz_ak820_vial.map": "1c32911ac38229480c5fa90a883f0d605e5e9a4cd1b5c7503205e58273f83580",
+    "ajazz_ak820_vial.mem": "ac4dc826f490db0cce7ba1618705f0b9132828c248e949d497088ff3ba7c80c0",
+    "dce/.build/size-protocol-bits/obj_ajazz_ak820_vial/src/default_keyboard.rst": "b3137b8ff25a469529378c8192c3a25d345aa5fc7fd85f5b5188d4f4692f1c39",
+    "dce/ak820_board.rst": "ebaf33afd3036e861048c1e757829ecf7aa6b3fcdde2feb7ca87dd2b76a13bdf",
+    "dce/ak820_boot.rst": "5d70b9e8219c309c0d5b94f184da5f6fe24a0e33c2ab9dd6ecaec38d8fdacf63",
+    "dce/ak820_combo.rst": "3c57e3c5e1792609eaee63e066b4964095290a462ac65b177e6abe6a8f49c453",
+    "dce/ak820_flash.rst": "a0743c163eba23375926d7b1fa5c83f76c02c6aa171a73ea92d79186e4846839",
+    "dce/ak820_indicators.rst": "5a045e716fd02e0bc65559704be07d7580cea8849ac98bc8e351a467008a40c2",
+    "dce/ak820_macro.rst": "ab288834ae8dd11d6e0b703939f9e4866ab15111fd08ceaa4b8fa96743e5312e",
+    "dce/ak820_nvm.rst": "d74227c87a37d61c67c380000c690a794d194976fb765717cb0ede3a4a297404",
+    "dce/ak820_startup.rst": "f55c58fdb4326496e8dfb00c39f63e34b389ffa884e2097d09fe271249bf81f5",
+    "dce/ak820_tapping.rst": "41b5026a37e9e273fdbed715381b24fcf1126628d885521ee09d66ae8429c14e",
+    "dce/ak820_timer.rst": "44dcd74c0a98c220548a467a295f80394bc29a1e2e5bb7ce99ecb4f6643ab3a1",
+    "dce/ch555_ak820.rst": "416c8887f5a7dd27e23c2ec67bdb1009c122ab13c1837f78f935488736cf1248",
+    "dce/eeprom_driver.rst": "49d276dd01ce3b868f952fb12c1c3ad449e60e1029216bed4921a5fba8bd0f18",
+    "dce/keyboards/ajazz/ak820/ak820_rgb.rst": "67b2ca2c22ccf3e7b85fee824fd2cf542107ac1c28fa10d1b14ce17fb79475bb",
+    "dce/lib/ch555/gpio.rst": "ab9c8e4bf6a9d42cb9e9fc2ce17098fc3d190a37e24037ba578b8c9f31671454",
+    "dce/lib/ch555/hal.rst": "ab79883b9015d2a654c1295668ba64ddbb40ee586a90ea7dda762734e65d7568",
+    "dce/matrix.rst": "d2b71d78bd868e3b2ce463d2a0b3ac19b4cd7e3e2a0866122cf1aea21c7a94d9",
+    "dce/platforms/mcs51/hardware_id.rst": "977f43408e07f627280c5293956833c458ccb7801b945564d5c64e54fa6fd123",
+    "dce/platforms/mcs51/platform.rst": "8465b1054b982a46ffa01851d83f521f60a3596d294aa29a81fcc928f9282e97",
+    "dce/platforms/mcs51/suspend.rst": "47712dcb9d006d6b075dabacf5c2599d00b184cf96d3aee4c7244cdc3e65c040",
+    "dce/platforms/suspend.rst": "bb57dbe6c0d7dd34d237595f2b30a405ed227c4bd2dc8f14d22290289cda8343",
+    "dce/platforms/synchronization_util.rst": "7974f27add743054b551446984c25115173d2bb2cb278d089d6ae10783e2956f",
+    "dce/platforms/timer.rst": "4aa50972477a412963ee511527d45155d5e393a220fd7dfdb5c36a42b2117bde",
+    "dce/protocol/ch555/usb_ak820.rst": "6263853bdbebc60666dafea1897e38550e13144195e705fc0399a383bf42f762",
+    "dce/protocol/ch555/usb_util.rst": "d7c487e93f96af0eeec251d29306ee8f2be7214b1a1d50183eb0d929f954953a",
+    "dce/protocol/host.rst": "0861c3210c6c9b7ce74971bba0e71c1b9eb59d4c8bbc9ea2a07319fd3c418328",
+    "dce/protocol/report.rst": "34994ed8bbe56aa2b99e89b38512c1d37cac4ff93390d9811819fa15857ee944",
+    "dce/protocol/usb_device_state.rst": "bcb9e5e418db10c912b4ff3877bb98356fc534f5d96da220a2434a390ba12e29",
+    "dce/protocol/usb_util.rst": "5ca00fade5868faae218d1ceadc4a7b2327efa4bf35bdba4495f5541c0244983",
+    "dce/quantum/action.rst": "b1ff935b9a1886d3a6262b42f350da24c45afa3817daa1500abbfa920ee06477",
+    "dce/quantum/action_layer.rst": "d83f16aac530d1251107c712292fedd268417f5a8811e2a52f7072297f37c03a",
+    "dce/quantum/action_tapping.rst": "1046c13b4a6440a3478be680d80e2c3a2c865a68cf788a70bf0f4f42b930564c",
+    "dce/quantum/action_util.rst": "206f0ec82e3d0cdfe745b62a219946d1ee87f1fcfd83a78643194afb377844f8",
+    "dce/quantum/bitwise.rst": "c1d53b8916f438f12099795a939165e45022fc9cf47c0fb42b706874bbda0aff",
+    "dce/quantum/bootmagic/bootmagic_lite.rst": "ef7a07c40c96db52604ce5646c001380928e51604e7f4e854248f089a348f453",
+    "dce/quantum/bootmagic/magic.rst": "a77d2c7f47a7c9b65454a3e91380de44bb1c61f00cf8c926a3f3fc801760a79d",
+    "dce/quantum/caps_word.rst": "d6189311d0f6b63b69e202ab135273e8cd6e3a943bcff67f85e00e9a08684fb4",
+    "dce/quantum/color.rst": "8c7c0f44cecf5c5a8d4176f136b9837f0a25b1aae6f1bad99c56641a4b41a98b",
+    "dce/quantum/debounce/sym_defer_g.rst": "4e50f4d9f2751d2f287246ecca7a42048274462ce43c1f00d0855d3ba0d9dca5",
+    "dce/quantum/dynamic_keymap.rst": "19f500c360504a711259263bedf86360a11b5b220aced2c67f191400e8a883f3",
+    "dce/quantum/eeconfig.rst": "ec00c40d66b86fe0867c5aa975d49f09e68269d4fb452513ed6634ff1489973e",
+    "dce/quantum/encoder.rst": "d9d9029f1df46b94d5b2ee0bf354d9664ca42ada12cbd0b14b242505692a8672",
+    "dce/quantum/keyboard.rst": "47f48276b0f6cad0dd9e119a665d09a2a8f05a46aa2276641065bcc680619cd9",
+    "dce/quantum/keycode_config.rst": "c23655b69622af099e7d52b258dff79d92f1e4c7c31225f9d0af4621a9fb8744",
+    "dce/quantum/keymap_common.rst": "7b9d66c8945d44748a68ba0ad42acd7bd1d7dffa127f47fd691022f7bd5eb5e2",
+    "dce/quantum/keymap_introspection.rst": "1d77c5819ed160f654e7be0d98516e09cbd8314fee744c33bc846ae45da0034f",
+    "dce/quantum/led.rst": "0a79f29399f65e4b8487405b7c9b73bd4586a998fd8fa47df1ecab9f75cc6f17",
+    "dce/quantum/led_tables.rst": "3bf45fad571716c6a75c30e70c0d6ec7cd3fad57388cb77b45ab4f15dd4163b9",
+    "dce/quantum/logging/debug.rst": "155441252b65ee4a4f44333a4765bf35e1019615bd0d0b9956c1d1883ac9151d",
+    "dce/quantum/logging/print.rst": "00f08254c8f4d9baa3323bde1a04fb2e883b1e577a72291eb1cc13c55b4304c8",
+    "dce/quantum/logging/sendchar.rst": "c495cdf92e968cf284844c9c838abe65aa4a6694f0dfcc9d5b26a9a4bba7dfbb",
+    "dce/quantum/main.rst": "0d0de142670f691e09d9a640483a1fc2814a5ffd732d26172b1f414c5b8fbab9",
+    "dce/quantum/process_keycode/process_caps_word.rst": "04d35f5f64123e90d2a3eac123dfca799c57e2b592952c8cd562942f1989430e",
+    "dce/quantum/process_keycode/process_grave_esc.rst": "6d1ec2cba68f815bdaf7f917687e7ad72f2c39ab5f62263af94d7c005f8cfb7e",
+    "dce/quantum/process_keycode/process_repeat_key.rst": "0a3894410b3b0edd211a9f42cd01a7b4990e981b2de3201f82386c865943cb4b",
+    "dce/quantum/process_keycode/process_rgb.rst": "0d800449d018630493104d7e5fedb74273010d3f0333c602225a0b5f63685fb7",
+    "dce/quantum/process_keycode/process_tri_layer.rst": "cb8cd100af1779123a52f2656711a9f4e0b39c207d9a5d5457a8993ab833a8aa",
+    "dce/quantum/quantum.rst": "b4c847a762832a147db8466e2aefd4e85505e8fef51166260535e9c27bc96ad5",
+    "dce/quantum/repeat_key.rst": "f2769b56dbb2c5e0dba0349754eb5ba1735a7429c1c600e67cb88dd7e2af562f",
+    "dce/quantum/rgb_matrix/rgb_matrix_drivers.rst": "d06e82be6083c02778a4f29889fa4ad86b4205479bf4fd2fb3f63f7f9a924bae",
+    "dce/quantum/send_string/send_string.rst": "bd70d4f59f7b87c3172f572b1f881988f3b626f04b8e68e1abe34b4ba40bab65",
+    "dce/quantum/sync_timer.rst": "3bb290b4e9f034019b8c00db8f9abbeb645c6bdc90a5e0cf8ebffcea198152f6",
+    "dce/quantum/tri_layer.rst": "e42085c262bfde200cd366953685eacaef76affad4d63d71b15722003de3d3c2",
+    "dce/quantum/via.rst": "b7289047a5089384744dc917740986c362910642b319c8b1d4aa6325d727ce86",
+    "dce/quantum/vial.rst": "c41b97924467773d7dae37bcc821d36e5d580c17134b20ef9ebd7c55db309161",
+    "dce/quantum/vialrgb.rst": "5c17c4f193230e124bb0b5ed27cf280242348e4ff450c86f64a19c5cb3020fe8",
+    "dce/usb_descriptor.rst": "776d30b4e70e2a93f26440de4483dcdf66de4ce795d7c1ab45addd4bbee7de61"
+  },
+  "source_sha256": {
+    "tests/ak820_breathing/run.py": "41117e06c1521633249d12d8af6c7fe80caa23497efd7de3b48b5f4e9d828d62",
+    "tests/ak820_emitted/run.py": "d0407d8954d9b52e7f9b2f0f8dda441a473e9eac50a4a0f1a8bfcc8c3de177f1",
+    "keyboards/ajazz/ak820/ak820_rgb.c": "2aad1438922e808c3ffd9d264ba81fd25056d37b57243805eefeba0e575bc28a",
+    "quantum/color.c": "54fa3b45fcc7da5313332c00aa33ebc369307b5c9193d68e6cf2db237a2062f5",
+    "quantum/led_tables.c": "550636874a6e60384cabc1dfea711a9e7c8c7f824b4cc935f36468cde0f6b51c"
+  },
+  "initial_sp": 96,
+  "stack_capacity_bytes": 159,
+  "limits": "Offline CPU/ABI and simulated DMA memory only; no physical timing, smoothness, DMA transfer, USB or storage validation. Stack peaks cover exercised paths without IRQ overlap. Full-CIE/no-CIE variants are not compiled or tested by this runner.",
+  "tests": [
+    {
+      "name": "linked_helper_all_supported_values",
+      "pass": true,
+      "value_range": [
+        0,
+        160
+      ],
+      "max_full_curve_error": 1,
+      "values": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        5,
+        5,
+        5,
+        5,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        7,
+        7,
+        7,
+        7,
+        8,
+        8,
+        8,
+        8,
+        9,
+        9,
+        9,
+        10,
+        10,
+        10,
+        11,
+        11,
+        12,
+        12,
+        12,
+        13,
+        13,
+        13,
+        14,
+        14,
+        15,
+        15,
+        15,
+        16,
+        16,
+        16,
+        17,
+        17,
+        18,
+        18,
+        19,
+        19,
+        20,
+        20,
+        21,
+        21,
+        22,
+        22,
+        23,
+        23,
+        24,
+        24,
+        25,
+        25,
+        26,
+        26,
+        27,
+        27,
+        28,
+        28,
+        29,
+        29,
+        30,
+        30,
+        31,
+        32,
+        33,
+        33,
+        34,
+        35,
+        36,
+        36,
+        37,
+        37,
+        38,
+        39,
+        39,
+        40,
+        41,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        80
+      ],
+      "peak_sp": 102,
+      "tested_stack_bytes": 6
+    },
+    {
+      "name": "linked_renderer_82_led_frames_and_eight_led_tasks",
+      "pass": true,
+      "frames": [
+        {
+          "phase": 0,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 0,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 0,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 0,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 0,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 0,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 0,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 0,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 0,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 0,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 1,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 1,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 1,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 1,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 1,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 63,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 78,
+          "dma_record": [
+            255,
+            17,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 63,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 78,
+          "dma_record": [
+            255,
+            0,
+            17,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 63,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 78,
+          "dma_record": [
+            255,
+            0,
+            0,
+            17
+          ],
+          "pass": true
+        },
+        {
+          "phase": 63,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 78,
+          "dma_record": [
+            255,
+            16,
+            17,
+            8
+          ],
+          "pass": true
+        },
+        {
+          "phase": 63,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 78,
+          "dma_record": [
+            255,
+            17,
+            17,
+            17
+          ],
+          "pass": true
+        },
+        {
+          "phase": 64,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 80,
+          "dma_record": [
+            255,
+            18,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 64,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 80,
+          "dma_record": [
+            255,
+            0,
+            18,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 64,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 80,
+          "dma_record": [
+            255,
+            0,
+            0,
+            18
+          ],
+          "pass": true
+        },
+        {
+          "phase": 64,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 80,
+          "dma_record": [
+            255,
+            17,
+            18,
+            8
+          ],
+          "pass": true
+        },
+        {
+          "phase": 64,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 80,
+          "dma_record": [
+            255,
+            18,
+            18,
+            18
+          ],
+          "pass": true
+        },
+        {
+          "phase": 95,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 134,
+          "dma_record": [
+            255,
+            53,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 95,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 134,
+          "dma_record": [
+            255,
+            0,
+            53,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 95,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 134,
+          "dma_record": [
+            255,
+            0,
+            0,
+            53
+          ],
+          "pass": true
+        },
+        {
+          "phase": 95,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 134,
+          "dma_record": [
+            255,
+            52,
+            53,
+            26
+          ],
+          "pass": true
+        },
+        {
+          "phase": 95,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 134,
+          "dma_record": [
+            255,
+            53,
+            53,
+            53
+          ],
+          "pass": true
+        },
+        {
+          "phase": 127,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            77,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 127,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            0,
+            77,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 127,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            0,
+            0,
+            77
+          ],
+          "pass": true
+        },
+        {
+          "phase": 127,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            76,
+            77,
+            38
+          ],
+          "pass": true
+        },
+        {
+          "phase": 127,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            77,
+            77,
+            77
+          ],
+          "pass": true
+        },
+        {
+          "phase": 128,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 159,
+          "dma_record": [
+            255,
+            78,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 128,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 159,
+          "dma_record": [
+            255,
+            0,
+            78,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 128,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 159,
+          "dma_record": [
+            255,
+            0,
+            0,
+            78
+          ],
+          "pass": true
+        },
+        {
+          "phase": 128,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 159,
+          "dma_record": [
+            255,
+            77,
+            78,
+            38
+          ],
+          "pass": true
+        },
+        {
+          "phase": 128,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 159,
+          "dma_record": [
+            255,
+            78,
+            78,
+            78
+          ],
+          "pass": true
+        },
+        {
+          "phase": 129,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            77,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 129,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            0,
+            77,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 129,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            0,
+            0,
+            77
+          ],
+          "pass": true
+        },
+        {
+          "phase": 129,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            76,
+            77,
+            38
+          ],
+          "pass": true
+        },
+        {
+          "phase": 129,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 158,
+          "dma_record": [
+            255,
+            77,
+            77,
+            77
+          ],
+          "pass": true
+        },
+        {
+          "phase": 191,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 81,
+          "dma_record": [
+            255,
+            18,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 191,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 81,
+          "dma_record": [
+            255,
+            0,
+            18,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 191,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 81,
+          "dma_record": [
+            255,
+            0,
+            0,
+            18
+          ],
+          "pass": true
+        },
+        {
+          "phase": 191,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 81,
+          "dma_record": [
+            255,
+            17,
+            18,
+            8
+          ],
+          "pass": true
+        },
+        {
+          "phase": 191,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 81,
+          "dma_record": [
+            255,
+            18,
+            18,
+            18
+          ],
+          "pass": true
+        },
+        {
+          "phase": 255,
+          "hue": 0,
+          "saturation": 255,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 255,
+          "hue": 85,
+          "saturation": 255,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 255,
+          "hue": 170,
+          "saturation": 255,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 255,
+          "hue": 43,
+          "saturation": 128,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "phase": 255,
+          "hue": 0,
+          "saturation": 0,
+          "raw_v": 1,
+          "dma_record": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "max_full_curve_channel_error": 1,
+      "peak_sp": 113,
+      "tested_stack_bytes": 17
+    }
+  ],
+  "pass": true
+}
