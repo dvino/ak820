@@ -1,0 +1,17 @@
+fill xram 0 0xffff 0xa5
+run 0x30a5 0x3108
+echo @@cleared
+dump xram 0x400 0xdcf 16
+echo @@initialized
+dump xram 0xdd0 0xe4c 16
+echo @@before_app
+dump xram 0x3e0 0x3ff 16
+echo @@after_app
+dump xram 0xe4d 0xe6c 16
+echo @@usb_fifo
+dump xram 0x1000 0x101f 16
+run 0x3108 0x9a41
+echo @@at_main_initialized
+dump xram 0xdd0 0xe4c 16
+state
+quit

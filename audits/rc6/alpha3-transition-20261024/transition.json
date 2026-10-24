@@ -1,0 +1,53 @@
+{
+  "actual_alpha2_preflight": {
+    "backup_manifest_sha256": "79c59b616d216b5f291f15ea8f6307c59f9fa5955444d25db0b57bae0ef4de8e",
+    "combo_count": 8,
+    "encoder_count": 12,
+    "key_count": 498,
+    "passed": true,
+    "result_path": "audits/rc6/alpha3-transition-20261024/alpha2-preflight.json",
+    "result_sha256": "62fee6a9a9821af6d97b87311b0ba89c45d9b01d19441540544012809e5fe4cd"
+  },
+  "format": "ak820-settings-transition-1",
+  "offline_only": true,
+  "passed": true,
+  "physical_device_commands": 0,
+  "source_identities": [
+    {
+      "code_sha256": "d787703f62f96d7204bf25c566eac39f66b8c8c3f711ce152d7ff1eded9716da",
+      "ihx_sha256": "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f",
+      "schema": 532482
+    }
+  ],
+  "source_images": [
+    "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f"
+  ],
+  "status": "current-candidate-pending-independent-review-and-source-freeze",
+  "target": {
+    "code_sha256": "01f0f7a979d8cfa8217b3bba333758ae3509cf7f3f8e35fbffb1ed034b808e5d",
+    "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
+    "optional_features": [
+      "nkro-control",
+      "one-shot",
+      "space-cadet"
+    ],
+    "schema": 532482
+  },
+  "tests": [
+    {
+      "command": "python3 -m unittest discover -s tools/installer -p 'test_settings*.py'",
+      "exit_code": 0,
+      "log_path": "audits/rc6/alpha3-transition-20261024/current-tests.log",
+      "log_sha256": "d3f062e35c351e8a77858efc895ea738cd48df6f137471d4c08d7ddfebea141a",
+      "source_files": {
+        "audits/rc6/alpha3-transition-20261024/verify_transition.py": "44c3602ea7e7f9ca0b924ed1663b942442a8f2e50005586d08b11d211b231165",
+        "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+        "tools/ak820_device_protocol.py": "d60ef46fdbff3277df52924753b5a6070ea33eac24c0081dc6388da8d771aba2",
+        "tools/installer/settings_backup.py": "0da58ad3f4867576e1ab3ff2daf750b73973642cc3305bdc2f1cb4424dce503e",
+        "tools/installer/settings_workflow.py": "677d93b42a8e58baf903bf6d2ae64ee40a4f8a97f4a001f6cfa530537728d4b1",
+        "tools/installer/test_settings_backup.py": "1d29625faba9d6d86e18d973e5182f23b8ac4edcea522f33ca43cc6018743a3f",
+        "tools/installer/test_settings_workflow.py": "76c560d1dde379657ecd5c32f6ddacea3f0b618f5cceeca27263080e15bdf675"
+      }
+    }
+  ]
+}

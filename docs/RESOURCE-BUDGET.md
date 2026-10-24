@@ -2,12 +2,11 @@
 
 # Memory and layer count
 
-The released and installed `v0.6.0-alpha.2` application uses 40,313 CODE bytes
-(38,492 main and 1,821 low), 2,621 XRAM bytes and 160 bytes of allocated stack
-capacity. It leaves 120 bytes in the main CODE window and 67 in the low window.
-The image hash and source are in [Status](STATUS.md).
+The published and installed `v0.6.0-alpha.2` image remains unchanged. The
+alpha.3 `full` candidate uses 40,043 CODE bytes and is source-qualified; it has
+not been published or installed. See [Status](STATUS.md) for exact image identity.
 
-| Resource | alpha.2 |
+| Resource | alpha.2 published |
 | --- | ---: |
 | Main CODE end | `0xc687` |
 | CODE windows | `[0x28a0,0x3000)` and `[0x3027,0xc700)` |
@@ -28,14 +27,13 @@ layers. Details of the old comparison and RGB measurements remain in the dated
 [technical study](../audits/rc6/optimization-deep-analysis-20261023.md); they do
 not describe the current release image.
 
-Every development profile is measured as a complete linked image, including
-both CODE windows, XRAM, internal RAM and allocated stack capacity. The exact
-profile measurements and image identities are in the dated
-[qualification evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
-Probe savings are non-additive and cannot predict another combination.
+The alpha.3 full candidate is measured as a complete linked image, including
+both CODE windows and RAM. Main-path use is 93 stack bytes, CRT use is 2 bytes,
+and the three IRQ paths use 61 bytes together. Total use is 156 of 162 bytes,
+leaving 6 bytes. These figures apply only to the exact qualified image; they
+do not establish behavior on physical hardware.
 
-Allocated stack capacity is a placement result, not a whole-program runtime
-bound. Exact-image interrupt and nesting safety also remain unqualified, so no
-configured profile is approved for installation or release. The published
-alpha.2 image and its figures above are unchanged. See [Build profiles](BUILD-PROFILES.md)
-for the eight development options and their limits.
+The published alpha.2 image and its figures above are unchanged. The full
+candidate has source proof and independent policy review, but publication waits
+for native CI. No device behavior is claimed. See [Build profiles](BUILD-PROFILES.md)
+for the eight options and their limits.

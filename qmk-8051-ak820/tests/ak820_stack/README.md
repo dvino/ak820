@@ -19,23 +19,59 @@ paths; malformed inputs fail before producing a new report.
 
 Direct calls add the two-byte return address. Tail jumps retain the current
 frame. PUSH, POP and constant INC/DEC SP are tracked. Every branch outcome is
-explored. Recursion, inconsistent loop heights, unbalanced returns, other SP
-writes and unknown indirect transfers prevent an upper bound.
+explored. Unproved recursion, inconsistent loop heights, unbalanced returns, other SP
+writes and unknown indirect transfers prevent an upper bound. There is no
+arbitrary call-depth limit; cyclic contexts fail closed.
 
-Two exact SDCC switch idioms are supported: a range-checked adjacent SJMP
+Exact SDCC switch idioms include: a range-checked adjacent SJMP
 table, and a range-checked pair of low/high target-byte tables. The complete
 guard and dispatch sequence must match. The table bytes come from the IHX.
 An isolated indirect jump never acquires targets merely because a table
 follows it. Tests include changed guards, destinations, table lengths and
 offsets that must fail closed.
 
+Register-index tables also accept a complete ADD #-count carry guard with
+either branch polarity. The same register supplies the guarded index and both
+ROM-byte lookups, or the index multiplied by three selects adjacent three-byte case slots.
+The recognizer rejects intervening instructions, changed index registers,
+wrapped offsets, incomplete tables and entry at an unguarded indirect jump.
+A complete pair of unsigned 16-bit comparisons can also bound a normalized
+split-table index. Small straight-line ROM getters can establish equal A/Rn
+values before the guard, or return a masked accumulator for an SJMP table.
+Only the documented instruction subsets are accepted. Candidate reads do not
+claim instruction boundaries until actual traversal reaches them.
+
+A masked bit table accepts ANL A,#mask, a saved register, multiplication by
+three and adjacent CLR bit/RET slots. All 256 possible input bytes are checked,
+including byte arithmetic wrap. Hardware-register ranges are not inferred.
+
 A bounded value tracker also follows straight-line const-ROM pointer loads,
 register moves and LCALL/RET thunks. Loaded bytes retain their ROM addresses;
 call return bytes have separate provenance. Only a proven adjacent ROM-byte
-pair above an actual call frame can select a callback. Its pushed pointer is
+pair can select a callback. The pair must be pushed above a real call frame
+for a RET thunk, or loaded into DPTR with a zero accumulator for a tail jump. Its pushed pointer is
 consumed by RET and its original call frame stays live during the callback.
 Unknown values or instructions stop this recognizer. This uses the normal
 SDCC bank-0 ABI and does not prove all dynamic callback tables.
+
+A separate ROM callback recognizer checks the complete unsigned 16-bit range
+comparisons, normalization, optional XOR, local spill/reload, multiplication by
+two and const-ROM pointer getter. Both guarded exits and every selected table
+slot are analyzed. Helper bodies and saved registers are included in the bound.
+Tests change guards, register identities, XOR, spills and helper targets.
+
+Private bool guards can close a recursive path. The report records the private
+object, source hash and exact read/write sites. After C line splicing and
+comment/literal stripping, every identifier use must be one of four complete
+statements: the private bool declaration, early-return guard, true setter and
+false reset. Each must occur once. Address taking, parentheses around an escape,
+macro arguments and any other use fail closed. An exact immediate nonzero write
+establishes an owned state; an unproved reference discards it. Only the complete
+MOV DPTR/MOVX/JZ/RET sequence can use that state for an early return. Calls carry
+the state in their analysis context, and callees must preserve incoming owned
+states. A changed guard, zero setter, wrong cell or callee clear fails closed.
+This relies on valid C memory accesses and the normal compiler object layout;
+it does not establish safety against arbitrary RAM aliasing or corruption.
 
 `bound` excludes the root's entry return frame. It is a control-stack bound
 under valid memory accesses and the normal instruction semantics. A null bound
@@ -48,3 +84,6 @@ safety, ABI preservation, startup, OEM wrappers, peripheral behavior and IRQ
 nesting need separate evidence. No USB device is opened. The concrete first
 analysis and remaining work are in
 [the runtime report](../../../audits/rc6/runtime-stack-20261024/report.md).
+
+The FULL alpha3 image analysis and remaining blockers are recorded in
+[the alpha3 report](../../../audits/rc6/alpha3-stack-20261024/report.md).

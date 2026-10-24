@@ -1,5 +1,24 @@
 # AK820 startup regression
 
+## Control stack before main
+
+```sh
+python3 tests/ak820_startup/stack_contract.py \
+  --build-dir .build/candidate --output .build/candidate/startup-stack.json
+python3 -B -m unittest discover -s tests/ak820_startup -p 'test_stack_contract.py'
+```
+
+The checker starts at the linked CRT stack-pointer reset and treats entry to
+`main` as a proof boundary. It explores the preceding control paths and reports
+an upper bound on all stack frames live at that boundary. That allowance must
+be added to the separate main-body and interrupt bounds. It rejects alternate
+main entries, unknown transfers, early interrupt-enable writes and changed
+stack placement. A helper that tail-jumps to the main call keeps its outer
+frame in the allowance. This check does not replace the packed-entry and CRT
+memory tests below.
+
+## Startup and memory
+
 The runner checks the **linked SDCC instructions** used by the AK820 startup and
 the trial entry created by the production packer. It does not build firmware,
 open HID, execute a flash operation or modify a reference image.

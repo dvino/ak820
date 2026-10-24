@@ -570,6 +570,55 @@ class SettingsTests(unittest.TestCase):
             settings.verify_restore(api, saved, candidate)
 
 
+class FullFeatureTests(unittest.TestCase):
+    setUp = SettingsTests.setUp
+    api = SettingsTests.api
+
+    def full(self):
+        old, _, _, full = transition_profiles()
+        full['compatible_images'][full['ihx_sha256']]['features'] = sorted(settings.FULL_FEATURES)
+        full['compatible_images'][full['ihx_sha256']]['combos_version'] = 1
+        return old, full
+
+    def test_exact_optional_keycode_domain(self):
+        for code in (0x7011, 0x7012, 0x7013, 0x7C1A, 0x7C1B, 0x7C1E):
+            self.assertFalse(settings.keycode_supported(code))
+            self.assertTrue(settings.keycode_supported(code, features=settings.FULL_FEATURES))
+        for code in (0x7010, 0x7014, 0x7C18, 0x7C19, 0x7C1C, 0x7C1D, 0x5280, 0x7C5A):
+            self.assertFalse(settings.keycode_supported(code, features=settings.FULL_FEATURES))
+        with self.assertRaisesRegex(ValueError, 'Unknown settings feature'):
+            settings.keycode_supported(4, features=['future'])
+
+    def test_full_matrix_encoder_assignments_roundtrip(self):
+        _, full = self.full()
+        nvm = base_nvm()
+        codes = (0x52A2, 0x7011, 0x7012, 0x7013, 0x7C1A, 0x7C1B, 0x7C1E)
+        for index, code in enumerate(codes):
+            at = DeviceAPI.key_offset(0, settings.PHYSICAL[index])
+            nvm[at:at+2] = code.to_bytes(2, 'big')
+        for direction, code in enumerate((0x7013, 0x7C1E)):
+            at = DeviceAPI.encoder_offset(0, direction)
+            nvm[at:at+2] = code.to_bytes(2, 'big')
+        api, _ = self.api(nvm, profile=full)
+        saved = settings.export_settings(api, self.root/'full', full)
+        target, raw = self.api(writes=True, profile=full)
+        settings.restore_settings(target, saved, full)
+        for index, code in enumerate(codes):
+            self.assertEqual(target.get_key(0, settings.PHYSICAL[index]), code)
+        self.assertEqual(target.get_encoder(0, 0), 0x7013)
+        self.assertEqual(target.get_encoder(0, 1), 0x7C1E)
+
+    def test_alpha2_backup_can_move_to_full(self):
+        old, full = self.full()
+        old['compatible_images'][old['ihx_sha256']]['combos_version'] = 1
+        api, _ = self.api(profile=old)
+        saved = settings.export_settings(api, self.root/'alpha2-full', old)
+        self.assertEqual(settings.plan_restore(saved, full)['combo_entries'], [bytes(10).hex()]*8)
+        full['compatible_images'][full['ihx_sha256']]['features'] = ['future']
+        with self.assertRaisesRegex(ValueError, 'Unknown settings feature'):
+            settings.plan_restore(saved, full)
+
+
 class ComboTests(unittest.TestCase):
     setUp = SettingsTests.setUp
     api = SettingsTests.api

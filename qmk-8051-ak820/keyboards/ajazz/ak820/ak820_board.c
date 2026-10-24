@@ -224,6 +224,8 @@ void ak820_led_irq(void) __naked {
         anl 0xf1, a
         ret
 00011$:
+        ; The selector has sixteen entries even if the peripheral sets high bits.
+        anl a, #0x0f
         mov r7, a
         add a, r7
         add a, r7

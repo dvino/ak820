@@ -15,7 +15,7 @@ difference.
 | Set up macros and RGB effects | [Configuration](CONFIGURATION.md) |
 | Save or restore settings | [Settings backup](SETTINGS-BACKUP.md) |
 | Understand Mod-Tap and Layer-Tap behavior | [Mod-Tap and Layer-Tap](TAP-HOLD.md) |
-| Assign One Shot, Space Cadet and NKRO controls in development profiles | [Build profiles](BUILD-PROFILES.md) |
+| Use One Shot, Space Cadet and NKRO controls | [Configuration](CONFIGURATION.md) |
 | Understand Caps Lock and layer indicators | [C and W indicators](INDICATORS.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |
 | Build a development profile and check its limits | [Build profiles](BUILD-PROFILES.md) |

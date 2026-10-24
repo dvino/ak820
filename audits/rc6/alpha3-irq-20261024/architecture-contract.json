@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-24",
+  "status": "architectural proof contract; physical VS11 acceptance remains separate",
+  "architecture_assumptions": [
+    "MCS51 hardware interrupt entry pushes a two-byte return PC and marks the interrupt priority in service.",
+    "An active interrupt cannot be preempted by an interrupt of equal or lower priority; fixed-priority active sources cannot reenter before RETI.",
+    "RETI clears the in-service state; ordinary RET does not.",
+    "VS11K28A executes the checked OEM wrapper opcodes with these MCS51 semantics."
+  ],
+  "primary_source": {
+    "author": "Intel",
+    "title": "MCS-51 Microcontroller Family User Manual, February 1994",
+    "url": "https://bitsavers.trailing-edge.com/components/intel/8051/MCS-51_Users_Manual_Feb94.pdf",
+    "printed_pages": [
+      "3-24",
+      "3-25",
+      "2-65"
+    ],
+    "claims": "Equal-or-higher in-service blocking, hardware-generated LCALL and RETI behavior."
+  },
+  "reasoning": [
+    "Exact OEM wrappers use standard register saves, bank0, indirect callback calls, and RETI; these bytes support treating MCS51 interrupt semantics as an explicit target architecture contract, rather than inferring an exact VS11 priority count.",
+    "With three enabled sources, fixed priority settings and no early RETI, each active source occurs at most once. Every active chain is an ordered nonempty subset of the three sources.",
+    "There are 3+6+6=15 such chains. Summing every per-source maximum covers every chain even when distinct maxima are unreachable together.",
+    "Adding each callback bound to17 accounts for its hardware PC frame, thirteen OEM saved registers and OEM callback call.",
+    "CPU injections at callback entry verify preservation for all15 orders; the static sum bounds arbitrary nesting phases."
+  ],
+  "source_and_image_checks": [
+    "Native variant/protected region validation and exact OEM wrapper instructions.",
+    "Shared stack analyzer validates listing/IHX bytes and rejects unresolved callback control flow.",
+    "Reachable callback instructions cannot write IP/IP_EX or execute RETI.",
+    "Linked instructions cannot select another register bank or enable sources outside Timer0/USB/LED.",
+    "Shared helper foreground calls are confined to linear initialization with EA or USB interrupt disabled.",
+    "Timer/USB allocations cannot use OSEG or overlap another allocation in the same address space.",
+    "LED selector mask is checked structurally and all256 source-byte values execute with expected native-valid and bounded abnormal behavior."
+  ],
+  "remaining_limits": [
+    "Architectural compatibility is an assumption; no physical VS11 interrupt acceptance or timing test was performed.",
+    "Global main-path stack bound and CRT entry frame must be combined separately.",
+    "Live USB ACK effects and hardware frames are explicitly supplied in the CPU model.",
+    "Foreground/IRQ protocol state concurrency still depends on its explicit synchronization, beyond allocation non-overlap."
+  ]
+}

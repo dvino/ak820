@@ -61,18 +61,13 @@ jobs:
         run: python -B -m unittest discover -s tools -p 'test_*.py' -v
       - name: Check compiler version selection
         run: python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_compiler -p 'test_*.py' -v
-      - name: Build pinned firmware application
-        working-directory: qmk-8051-ak820
+      - name: Build and qualify pinned full firmware application
         run: >-
-          .venv/bin/python util/build_ak820.py --sdcc-version 4.6.0
-          --toolchain ../toolchains/sdcc-4.6.0 --qmk-bin .venv/bin/qmk
-          --build-dir .build/ci
-      - name: Run installer, host, and linked CPU regressions
-        run: >-
-          python tools/test_keyboard.py --host
-          --build-dir qmk-8051-ak820/.build/ci --require-toolchain
-          --toolchain toolchains/sdcc-4.6.0 --iap-fault-profile guarded-erase
-          --output host/runs/ci.json
+          python tools/configure_firmware.py build --profile full
+          --toolchain toolchains/sdcc-4.6.0
+          --qmk-bin qmk-8051-ak820/.venv/bin/qmk
+          --python qmk-8051-ak820/.venv/bin/python
+          --build-dir qmk-8051-ak820/.build/ci
       - name: Run NVM host power-loss model
         working-directory: qmk-8051-ak820
         run: |
@@ -82,7 +77,7 @@ jobs:
             keyboards/ajazz/ak820/tests/nvm_powercut.c \
             keyboards/ajazz/ak820/ak820_nvm.c \
             -o "$RUNNER_TEMP/nvm-powercut"
-          "$RUNNER_TEMP/nvm-powercut" | tee ../host/runs/ci-nvm-powercut.log
+          "$RUNNER_TEMP/nvm-powercut" | tee .build/ci/nvm-powercut.log
       - name: Run macro storage host power-loss model
         working-directory: qmk-8051-ak820
         run: |
@@ -94,12 +89,12 @@ jobs:
             keyboards/ajazz/ak820/ak820_macro.c \
             keyboards/ajazz/ak820/ak820_nvm.c \
             -o "$RUNNER_TEMP/macro-powercut"
-          "$RUNNER_TEMP/macro-powercut" | tee ../host/runs/ci-macro-powercut.log
+          "$RUNNER_TEMP/macro-powercut" | tee .build/ci/macro-powercut.log
       - name: Assemble public bundle from this CI build
         run: >-
           python tools/build_ci_release.py
           --build-dir "$GITHUB_WORKSPACE/qmk-8051-ak820/.build/ci"
-          --qualification host/runs/ci.json
+          --qualification qmk-8051-ak820/.build/ci/qualification.json
           --policy ci/release-policy.json
           --program-review ci/program-review.md
           --packing-receipt ci/packing-receipt.json
@@ -111,14 +106,18 @@ jobs:
         with:
           name: ak820-linked-application-not-flashable
           path: |
-            host/runs/ci.json
+            qmk-8051-ak820/.build/ci/qualification.json
+            qmk-8051-ak820/.build/ci/configuration-report.json
+            qmk-8051-ak820/.build/ci/runtime-stack.json
+            qmk-8051-ak820/.build/ci/runtime-stack.log
+            qmk-8051-ak820/.build/ci/profile-tests/**
             qmk-8051-ak820/.build/ci/ajazz_ak820_vial.ihx
             qmk-8051-ak820/.build/ci/ajazz_ak820_vial.map
             qmk-8051-ak820/.build/ci/ajazz_ak820_vial.mem
             qmk-8051-ak820/.build/ci/build-report.json
-            host/runs/ci-logs-*/**
-            host/runs/ci-nvm-powercut.log
-            host/runs/ci-macro-powercut.log
+            qmk-8051-ak820/.build/ci/qualification-logs-*/**
+            qmk-8051-ak820/.build/ci/nvm-powercut.log
+            qmk-8051-ak820/.build/ci/macro-powercut.log
           if-no-files-found: warn
           retention-days: 30
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

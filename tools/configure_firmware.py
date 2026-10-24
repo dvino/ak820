@@ -288,10 +288,31 @@ def validate_tests(path, identity):
     return {'sha256': sha(path), 'suites': len(tests), 'unit_tests': report['unit_tests']}
 
 
-def require_release_approval(report):
-    # No reviewed global stack proof exists yet. Do not accept a caller-edited
-    # boolean or supplied scalar bound as a substitute for that proof.
-    raise ValueError('No profile is approved for packaging: ' + '; '.join(RELEASE_BLOCKERS))
+def require_release_approval(report, build_report=None, build=None, toolchain=None):
+    # A scalar bound or caller-edited boolean cannot replace committed,
+    # independently reviewed witnesses for this exact compiled program.
+    require(isinstance(build_report, dict) and isinstance(report.get('identity'), dict),
+            'No profile is approved for packaging without exact build and safety evidence')
+    from ak820_release_safety import validate
+    proof = validate(build_report)
+    require(all(report['identity'].get(extension + '_sha256') == expected
+                for extension, expected in proof['build_identity'].items()),
+            'Safety build differs from inspected image, MAP or MEM')
+    require(report['configuration'] == build_report.get('configuration'), 'Safety profile differs from inspected image')
+    require(report['resources']['internal_ram']['stack_capacity'] == proof['stack_capacity'],
+            'Safety stack capacity differs from linked placement')
+    require(build is not None and toolchain is not None, 'Missing exact-image regression directory')
+    configured = load_json(build / 'configuration-report.json')
+    require(configured.get('identity') == report['identity'] and configured.get('offline_tests_passed') is True,
+            'Configuration has no complete exact-image offline pass')
+    qualification = validate_tests(build / 'qualification.json', report['identity'])
+    validate_profile_tests(load_json(build / 'profile-tests/results.json'),
+                           report['configuration']['profile'], report['identity'], build, toolchain)
+    report['resources']['internal_ram'].update(runtime_stack_bound=proof['stack_bound'],
+        stack_margin=proof['stack_margin'], stack_qualified=True)
+    report.update(release_approved=True, release_blockers=[], release_safety=proof,
+                  offline_tests_passed=True, qualification=qualification)
+    return proof
 
 
 def run_runtime_analysis(build, identity):
@@ -329,6 +350,14 @@ def profile_test_plan(name, build, toolchain):
         ('outline-gates', QMK, [sys.executable, 'tests/ak820_optimization/outline_unit.py']),
         ('stack-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
                             '-s', 'tests/ak820_stack', '-p', 'test_*.py']),
+        ('startup-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                               '-s', 'tests/ak820_startup', '-p', 'test_stack_contract.py']),
+        ('startup-stack', QMK, [sys.executable, 'tests/ak820_startup/stack_contract.py',
+                               '--build-dir', str(build), '--output', str(output / 'startup-stack.json')]),
+        ('irq-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                           '-s', 'tests/ak820_irq', '-p', 'test_*.py']),
+        ('release-safety-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                      '-s', 'tools', '-p', 'test_release_safety.py']),
         ('outline-integrity', QMK, [sys.executable, 'tests/ak820_optimization/outline_integrity.py',
                                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
                                    '--output-dir', str(output / 'outline-integrity')]),
@@ -476,7 +505,7 @@ def main(argv=None):
     else:
         result = inspect(directory, toolchain)
         if args.command == 'package':
-            require_release_approval(result)
+            require_release_approval(result, load_json(directory / 'build-report.json'), directory, toolchain)
     print(json.dumps(result, indent=2))
     return 0
 

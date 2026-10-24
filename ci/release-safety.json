@@ -1,0 +1,124 @@
+{
+  "format": "ak820-release-safety-1",
+  "program": {
+    "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
+    "symbols_sha256": "8c54e3a043fd636b4073aa16f328abcc53ca0f9c8430c80b5b2d664190805ce0",
+    "configuration": {
+      "format": "ak820-build-configuration-1",
+      "profile": "full",
+      "optional_features": [
+        "nkro-control",
+        "one-shot",
+        "space-cadet"
+      ],
+      "base_features": [
+        "six-layers",
+        "sixteen-vial-macros",
+        "eight-two-key-combos",
+        "compact-tap-hold",
+        "encoder-map",
+        "media-keys",
+        "nkro-reports",
+        "caps-word",
+        "repeat",
+        "alternate-repeat",
+        "grave-escape",
+        "tri-layer",
+        "rgb-effects",
+        "vialrgb-direct-ram"
+      ],
+      "nvm_schema": 532482,
+      "make_options": {
+        "AK820_NKRO_CONTROL": "yes",
+        "AK820_COMPACT_ONESHOT": "yes",
+        "AK820_COMPACT_SPACE_CADET": "yes"
+      },
+      "runtime_qmk_settings": [],
+      "timing_ms": {
+        "combo": 40,
+        "tap_hold": 200
+      },
+      "release_approved": false
+    }
+  },
+  "source_files": {
+    "audits/rc6/alpha3-transition-20261024/verify_transition.py": {
+      "size": 1866,
+      "sha256": "44c3602ea7e7f9ca0b924ed1663b942442a8f2e50005586d08b11d211b231165"
+    },
+    "qmk-8051-ak820/quantum/dynamic_keymap.c": {
+      "size": 29057,
+      "sha256": "0e1ecf2fda3eba840b2d6b9a4ddaad51db2b39bb77d83d7c30bf4fc2969e849a"
+    },
+    "qmk-8051-ak820/quantum/repeat_key.c": {
+      "size": 11560,
+      "sha256": "1defd6a954ab8ee524fbb65edb5b21285fc0432bf6532216331c1077c94e01cd"
+    },
+    "qmk-8051-ak820/tests/ak820_irq/run.py": {
+      "size": 19387,
+      "sha256": "fe79021d947d4757bfff44d803a52abc1fead6dc748cfe4c1f24c4d46175156e"
+    },
+    "qmk-8051-ak820/tests/ak820_stack/analyze.py": {
+      "size": 41894,
+      "sha256": "03151925526c41ad8890191d9ce54beb5e9764fc71e1a070927f4e18deedd183"
+    },
+    "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": {
+      "size": 5047,
+      "sha256": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed"
+    },
+    "qmk-8051-ak820/util/ak820_linked_inventory.py": {
+      "size": 12213,
+      "sha256": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5"
+    },
+    "qmk-8051-ak820/util/ak820_release_safety.py": {
+      "size": 11221,
+      "sha256": "2cb40fafa08ece40cdd15ffc3a258ee71776d422e64f6bdf063aea2b6c03026a"
+    },
+    "qmk-8051-ak820/util/pack_ak820.py": {
+      "size": 23558,
+      "sha256": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+    },
+    "tools/ak820_device_protocol.py": {
+      "size": 22064,
+      "sha256": "d60ef46fdbff3277df52924753b5a6070ea33eac24c0081dc6388da8d771aba2"
+    },
+    "tools/installer/settings_backup.py": {
+      "size": 32906,
+      "sha256": "0da58ad3f4867576e1ab3ff2daf750b73973642cc3305bdc2f1cb4424dce503e"
+    },
+    "tools/installer/settings_workflow.py": {
+      "size": 11413,
+      "sha256": "677d93b42a8e58baf903bf6d2ae64ee40a4f8a97f4a001f6cfa530537728d4b1"
+    },
+    "tools/installer/test_settings_backup.py": {
+      "size": 35241,
+      "sha256": "1d29625faba9d6d86e18d973e5182f23b8ac4edcea522f33ca43cc6018743a3f"
+    },
+    "tools/installer/test_settings_workflow.py": {
+      "size": 21245,
+      "sha256": "76c560d1dde379657ecd5c32f6ddacea3f0b618f5cceeca27263080e15bdf675"
+    }
+  },
+  "witnesses": {
+    "stack": {
+      "path": "audits/rc6/alpha3-release-20261024/stack.json",
+      "size": 321949,
+      "sha256": "baa42a0447bac9f870b56ac72c023943f713f02f67296d547488744b760efe48"
+    },
+    "startup": {
+      "path": "audits/rc6/alpha3-release-20261024/startup.json",
+      "size": 9217,
+      "sha256": "10b14fe2d34c34c802f203135090b15878e3fb994784ad41c38140a6251ed6c3"
+    },
+    "irq": {
+      "path": "audits/rc6/alpha3-irq-20261024/final/results.json",
+      "size": 45661,
+      "sha256": "1d57dd20e1e8e4d0f0ff743012b0da1ac2f9687f1d03e943f89f37e42841eb76"
+    },
+    "transition": {
+      "path": "audits/rc6/alpha3-transition-20261024/transition.json",
+      "size": 2408,
+      "sha256": "47b0506a02e69bf03e4e0fc46d8011317c76c5d672eb664e2a8a4a7123cced41"
+    }
+  }
+}

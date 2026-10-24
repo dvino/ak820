@@ -58,6 +58,9 @@ def validate_review(review: Path, ihx: Path, mapfile: Path, report: Path) -> dic
                 "build_report_sha256": sha(report)}
     if record.get("build") != expected:
         raise ValueError("Independent review belongs to a different build")
+    if 'configuration' in json.loads(report.read_text()):
+        if record.get('release_safety_manifest_sha256') != sha(ROOT / 'ci/release-safety.json'):
+            raise ValueError('Independent review belongs to different release safety evidence')
     if record.get("host_files") != host_manifest(ROOT):
         raise ValueError("Independent review belongs to different host code")
     return record['host_files']

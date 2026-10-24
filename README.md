@@ -35,9 +35,10 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 ## Features
 
 - [Six editable layers](docs/CONFIGURATION.md#keys-layers-and-encoder), with separate clockwise and counterclockwise [encoder actions](docs/CONFIGURATION.md#keys-layers-and-encoder) on each layer.
-- [Standard keys, modifiers, media and system controls](docs/CONFIGURATION.md#key-actions). The published alpha.2 report supports six distinct ordinary keys at once; NKRO mode switching is not available in that release.
+- [Standard keys, modifiers, media and system controls](docs/CONFIGURATION.md#key-actions). The alpha.3 full profile supports selectable 6KRO and NKRO reports; alpha.2 uses 6KRO.
 - [Sixteen macro slots](docs/CONFIGURATION.md#macros) with 8192 bytes of shared storage; macros play on the keyboard without a desktop app running.
 - [**Caps Word**](docs/CONFIGURATION.md#caps-word) types a word in uppercase without holding Shift.
+- The alpha.3 full profile adds [**One Shot**](docs/CONFIGURATION.md#one-shot) for modifiers and [**Space Cadet**](docs/CONFIGURATION.md#space-cadet) tap actions for Shift keys.
 - [**Repeat** and **Alt Repeat**](docs/CONFIGURATION.md#repeat-and-alt-repeat) repeat the last remembered key and modifiers or use its paired alternate, such as the opposite arrow.
 - [**Grave Escape**](docs/CONFIGURATION.md#grave-escape) combines Escape and the Grave key on one key, selected by held modifiers.
 - [**Tri Layer**](docs/CONFIGURATION.md#tri-layer) activates layer 3 while layers 1 and 2 are both active.
@@ -48,13 +49,8 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - Saved [keymaps, macros and global lighting](docs/CONFIGURATION.md), [physical Vial unlock](docs/CONFIGURATION.md#unlocking-vial), and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
 
 See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
-The published alpha.2 firmware does not include [One Shot](docs/CONFIGURATION.md#one-shot-development-profiles),
-[Space Cadet](docs/CONFIGURATION.md#space-cadet-development-profiles) or a user-facing NKRO mode
-switch. Development profiles offer limited modifier One Shot, Space Cadet and
-[NKRO control](docs/CONFIGURATION.md#key-actions); those images are not approved
-for installation. Space Cadet provides `SC_LSPO`, `SC_RSPC` and `SC_SENT`;
-its limits and assignment details are in [Build profiles](docs/BUILD-PROFILES.md).
-Mouse Keys, Tap Dance, Key Overrides and Auto Shift are not included.
+One Shot is limited to modifiers, and Space Cadet provides `SC_LSPO`, `SC_RSPC`
+and `SC_SENT`. Mouse Keys, Tap Dance, Key Overrides and Auto Shift are not included.
 
 ## Disclaimer
 

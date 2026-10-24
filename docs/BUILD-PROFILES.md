@@ -2,12 +2,11 @@
 
 # Build profiles
 
-The configurator builds and checks development images. All eight combinations
-of the three implemented optional features can be selected. No configured
-profile is approved for installation or release. Packaging remains blocked
-until a whole-program stack bound, exact-image interrupt and nesting safety,
-and the installer transition are qualified. See the [roadmap](ROADMAP.md) and
-[qualification report](../audits/rc6/roadmap-max-20261024/final/README.md).
+The configurator builds all eight combinations of the three optional features.
+The `full` profile is the alpha.3 candidate; the other seven remain development
+profiles. Source qualification and independent policy review are complete.
+The candidate is not published or hardware-tested, and release packaging still
+awaits native CI. See [Status](STATUS.md) for current release state.
 
 ## Build a profile
 
@@ -48,9 +47,9 @@ To inspect a completed build again, run:
 python tools/configure_firmware.py inspect --build-dir qmk-8051-ak820/.build/new --toolchain toolchains/sdcc-4.6.0
 ```
 
-`inspect` rechecks resource placement and image identity. `package` always
-stops: no configured profile is approved for release, regardless of a
-successful development build.
+`inspect` rechecks resource placement and image identity. `package` permits only the complete qualified `full` profile when its source
+proof and independent policy review match. The other seven profiles remain
+blocked from packaging.
 
 ## Profiles
 
@@ -94,14 +93,15 @@ include the full upstream Space Cadet engine. Tested edge cases and limits are
 recorded in the [Space Cadet report](../audits/rc6/roadmap-max-20261024/space-cadet.md).
 
 The exact linked image determines resource use. Measure each profile from its
-build report; feature costs are not additive. The configurator checks resource
-placement but does not establish a qualified runtime stack allowance.
+build report; feature costs are not additive. For `full`, release evidence bounds main-path stack use at 93 bytes, CRT at
+2 bytes and all three IRQ paths at 61 bytes. Total use is 156 of 162 bytes,
+with 6 bytes remaining. See [Status](STATUS.md) for evidence links and limits.
 
 ## Deferred feature inventory
 
-Three of the 11 candidates have bounded implementations in development
-profiles. The other eight remain deferred. A client control alone does not
-establish firmware support.
+Three of the 11 candidates have bounded implementations; the `full` profile
+selects all three. The other eight remain deferred. A Vial control alone does not establish
+firmware support.
 
 | Deferred candidate | Open work |
 | --- | --- |

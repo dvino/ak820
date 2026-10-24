@@ -1,0 +1,12 @@
+{
+  "finding": "Short direct transfers omitted from emitted shared-helper and linear-init checks.",
+  "resolution": "Shared direct_target decodes LJMP/LCALL and all AJMP/ACALL forms using the post-instruction page; masked_helper_calls checks every decoded reference; linear_init_pcs rejects AJMP/LJMP and all other supported branches.",
+  "regression_evidence": "Five unit tests pass, including all16 short-transfer helper-mask bypass mutations, all8 AJMP initialization-skip mutations and target decoding across a 2KiB page boundary.",
+  "exploratory_image_ihx_sha256": "5ccf9f0506177dab32c7fd6c80c697f6fb0bfbf17af5102a8f900ab08c4f9cca",
+  "runner_sha256": "fe79021d947d4757bfff44d803a52abc1fead6dc748cfe4c1f24c4d46175156e",
+  "exploratory_suite_pass": true,
+  "cpu_orderings": 15,
+  "selector_inputs": 256,
+  "irq_bound": 61,
+  "scope": "Offline exploratory FULL-mask image; final release image must rerun this checker."
+}

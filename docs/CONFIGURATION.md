@@ -6,6 +6,10 @@ Use a compatible Vial client with this firmware. Close the OEM configurator
 before connecting. The old `AK820-Vial-v2` OEM adapter uses a different protocol
 and is not the configuration interface for this QMK/Vial firmware.
 
+This guide describes the complete `full` profile planned for alpha.3. The
+published alpha.2 image does not include NKRO controls, modifier One Shot or
+Space Cadet.
+
 Select a key in Vial's keyboard picture and choose an action. Vial sends keymap
 and lighting changes to the keyboard as you make them. Export the layout when
 you want a separate backup; it is different from the ROM recovery copy made by
@@ -57,15 +61,12 @@ system actions send media controls such as volume, play/pause or next track,
 and system controls such as sleep. The host must support the corresponding HID
 control for it to have an effect.
 
-The published alpha.2 firmware uses six-key rollover (6KRO). NKRO reporting
-code is present, but alpha.2 does not provide a supported key to switch modes.
-Development profiles can select NKRO control, which adds limited volatile
-controls described in [Build profiles](BUILD-PROFILES.md). These profiles are
-not approved for installation.
-When more than six distinct ordinary keys are held, the 6KRO report replaces
-all six key slots with the HID ErrorRollOver signal. Releasing keys until six or
-fewer remain clears that signal and reports the surviving keys. Two sources
-that produce the same keycode count as one distinct key.
+The full profile supports both six-key rollover (6KRO) and NKRO reports. Assign
+`NK_ON`, `NK_OFF` or `NK_TOGG` to switch the report mode until restart; after
+restart, the saved/default mode is used. Switching clears held keys and pending
+actions. No setting is written to flash. In 6KRO mode, holding more than six
+distinct ordinary keys replaces all six key slots with the HID ErrorRollOver
+signal. Two sources that produce the same keycode count as one key.
 
 ## Caps Word
 
@@ -106,26 +107,22 @@ example, assign Ctrl-Tap-Escape to a key: tap it for Escape or press it with
 another key to use Ctrl. See [Tap and hold](TAP-HOLD.md) for overlap and layer
 behavior.
 
-## Space Cadet (development profiles)
+## Space Cadet
 
-The published alpha.2 firmware does not include Space Cadet. Development
-profiles add three limited key actions: assign `SC_LSPO` for left Shift while
+The full profile adds three limited key actions: assign `SC_LSPO` for left Shift while
 held and `(` when tapped, `SC_RSPC` for right Shift while held and `)` when
 tapped, or `SC_SENT` for right Shift while held and Enter when tapped. Parentheses
 use Shift+9 and Shift+0; the resulting characters depend on the host layout. These
 actions use the same 200 ms tap-hold decision as Mod-Tap. They are not the full
-QMK Space Cadet engine, and these development images are not approved for
-installation. Space Cadet keycodes cannot be used as Combo inputs. See
+QMK Space Cadet engine. Space Cadet keycodes cannot be used as Combo inputs. See
 [Build profiles](BUILD-PROFILES.md) for tested limits.
 
-## One Shot (development profiles)
+## One Shot
 
-The published alpha.2 firmware does not include One Shot. Development profiles
-support modifier One Shot only: assign an `OSM(...)` action in Vial, tap it,
+The full profile supports modifier One Shot only: assign an `OSM(...)` action in Vial, tap it,
 then tap a key to apply the modifier through that key's release. Holding OSM
 acts as a normal held modifier. Layer One Shot, timeout, locking and tap-toggle
-are not supported. These development images are not approved for installation;
-see [Build profiles](BUILD-PROFILES.md) for interaction details.
+are not supported; see [Build profiles](BUILD-PROFILES.md) for interaction details.
 
 ## Two-key Combos
 
@@ -186,12 +183,13 @@ mean that the firmware supports it.
 
 ## Limits
 
-The published alpha.2 firmware does not support One Shot, Space Cadet, Mouse
-Keys, Tap Dance, Key Overrides, Auto Shift, QMK Settings or a user-facing NKRO
-mode switch. Development profiles provide limited modifier One Shot, Space
-Cadet and NKRO controls; they are not approved for installation. Their
-boundaries are listed in [Build profiles](BUILD-PROFILES.md).
-Timing and behavior options in the QMK Settings tab are unavailable in alpha.2.
+Mouse Keys, Tap Dance, Key Overrides, Auto Shift and QMK Settings are not
+supported. NKRO control, modifier One Shot and the limited Space Cadet actions
+are available in the full profile. Their boundaries are listed in
+[Build profiles](BUILD-PROFILES.md). Timing and behavior options in the QMK
+Settings tab are unavailable. A Vial control alone does not add firmware
+support. Before assigning an action, check that it is supported by the installed
+firmware.
 Other generic QMK/Vial options may also appear in the client without firmware
 support. Importing a layout cannot add missing firmware features. Before
 assigning an action, verify that it is supported by the installed firmware.

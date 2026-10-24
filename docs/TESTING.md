@@ -2,8 +2,9 @@
 
 # Testing
 
-The released and installed `v0.6.0-alpha.2` passed 28 suites and 270 unit
-tests with no skips in tag CI. Exact build and device evidence are in
+The published and installed alpha.2 passed its recorded CI suites. The alpha.3
+full source candidate has separate offline proof; it is not hardware-tested.
+Exact build and device evidence are in
 [Status](STATUS.md). Host models and linked CPU execution do not prove physical
 keyboard behavior.
 

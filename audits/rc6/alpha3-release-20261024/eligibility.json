@@ -1,0 +1,123 @@
+{
+  "format": "ak820-configured-build-1",
+  "configuration": {
+    "format": "ak820-build-configuration-1",
+    "profile": "full",
+    "optional_features": [
+      "nkro-control",
+      "one-shot",
+      "space-cadet"
+    ],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "nvm_schema": 532482,
+    "make_options": {
+      "AK820_NKRO_CONTROL": "yes",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "yes"
+    },
+    "runtime_qmk_settings": [],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200
+    },
+    "release_approved": false
+  },
+  "identity": {
+    "profile": "full",
+    "configuration_sha256": "b7f59c39ad1c9816bea1287d6a061f6aaac1659aacbc6e2ec5ba0d518746a304",
+    "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
+    "map_sha256": "3da5afcc79a572be72a13d7acf41f96f9cb616319b9c9b56c6283b4dae7df52e",
+    "mem_sha256": "acaf768e80ee942829cacdd4cb5b0ed9b729484acba92c642d45abbad23c05ff",
+    "build_report_sha256": "a3e4de4d7a85cf73848e80b9ff4fc3a0cad6448f8be5ce0ce5afe8913289df70",
+    "source_manifest_sha256": "c46bcac05370ef819346dcf6153658c53bc827ac4615596446d4b11f08bb27c4",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "nvm_schema": 532482
+  },
+  "resources": {
+    "code_bytes": 40043,
+    "code_windows": [
+      {
+        "name": "low",
+        "start": 10400,
+        "end_exclusive": 12288,
+        "occupied_bytes": 1872,
+        "highest_address": 12271,
+        "trailing_free_bytes": 16
+      },
+      {
+        "name": "main",
+        "start": 12327,
+        "end_exclusive": 50944,
+        "occupied_bytes": 38171,
+        "highest_address": 50502,
+        "trailing_free_bytes": 441
+      }
+    ],
+    "xram": {
+      "start": 1024,
+      "end_inclusive": 3660,
+      "bytes": 2637,
+      "capacity": 3072
+    },
+    "internal_ram": {
+      "static_bytes": 94,
+      "initial_sp": 93,
+      "stack_capacity": 162,
+      "runtime_stack_bound": 156,
+      "stack_margin": 6,
+      "stack_qualified": true
+    },
+    "protected_windows_clear": true,
+    "absolute_xram": [
+      {
+        "symbol": "_ak820_led_dma",
+        "start": 512,
+        "reserved_end_exclusive": 1024
+      }
+    ]
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "offline_tests_passed": true,
+  "release_approved": true,
+  "release_blockers": [],
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "release_safety": {
+    "manifest_sha256": "fe6c25880d51e19274e153dc2fda681ec26e9ae1ccd09f71fb93133032d6cd6a",
+    "foreground_bound": 93,
+    "main_entry_frame_bound": 2,
+    "irq_bound": 61,
+    "stack_bound": 156,
+    "stack_capacity": 162,
+    "stack_margin": 6,
+    "build_identity": {
+      "ihx": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
+      "map": "3da5afcc79a572be72a13d7acf41f96f9cb616319b9c9b56c6283b4dae7df52e",
+      "mem": "acaf768e80ee942829cacdd4cb5b0ed9b729484acba92c642d45abbad23c05ff"
+    },
+    "scope": "Reviewed control-stack/IRQ/transition proof under the documented MCS-51 architectural contract; no physical validation."
+  },
+  "qualification": {
+    "sha256": "cdc45835029716b8046fb0810ad9eff685401f27e2542434689fc9a38927ca8b",
+    "suites": 28,
+    "unit_tests": {
+      "run": 273,
+      "skipped": 0
+    }
+  }
+}

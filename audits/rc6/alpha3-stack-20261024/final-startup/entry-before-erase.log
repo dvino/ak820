@@ -1,0 +1,161 @@
+uCsim 0.9.9, Copyright (C) 1997 Daniel Drotos.
+uCsim comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+This is free software, and you are welcome to redistribute it
+under certain conditions; type `show c' for details.
+exec "/home/danil/Documents/git/ak820/audits/rc6/alpha3-stack-20261024/final-startup/entry-before-erase.sim"
+set memory rom 0x2800 0x75 0xa8 0x0 0x75 0xe8 0x0 0x75 0xd0 0x0 0x75 0x81 0x20 0x53 0xa2 0xfa 0x75 0xa1 0x55 0x75 0xa1 0xaa 0x53 0xb1 0xfd 0xe4 0xf5 0xa1 0x7f 0xc0 0x7e 0x27 0x12 0x28 0x30 0x2 0x28 0x88 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xa2 0xaf 0x92 0x3 0xc2 0xaf 0xef 0x54 0xc0 0xff 0xc3 0xee 0x94 0xf0 0x40 0x9 0xee 0x94 0xf4 0x50 0x4 0x7c 0x4 0x80 0x2 0x7c 0x8 0x75 0xa1 0x55 0x75 0xa1 0xaa 0xec 0x42 0xb1 0x8e 0x85 0x8f 0x84 0x75 0x8f 0x80 0xe4 0xf5 0x8e 0xe5 0x86 0x30 0xe6 0x10 0x75 0x86 0xa6 0xe5 0x86 0x30 0xe1 0x4 0x7d 0x2 0x80 0x6 0xe4 0xfd 0x80 0x2 0x7d 0x1 0x75 0xa1 0x55 0x75 0xa1 0xaa 0xec 0xf4 0x52 0xb1 0xa2 0x3 0x92 0xaf 0xcf 0xed 0xcf 0x22 0x0 0x90 0x27 0xc0 0x7f 0x40 0xe4 0x93 0x70 0x6 0xa3 0xdf 0xf9 0x2 0x30 0x27 0x80 0xfe 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+0x2800    75 a8 00 MOV    0xa8 <IE>,#0x00                            
+0x2803    75 e8 00 MOV    0xe8,#0x00                                 
+0x2806    75 d0 00 MOV    0xd0 <PSW>,#0x00                           
+0x2809    75 81 20 MOV    0x81 <SP>,#0x20                            
+0x280c    53 a2 fa ANL    0xa2,#0xfa                                 
+0x280f    75 a1 55 MOV    0xa1,#0x55                                 
+0x2812    75 a1 aa MOV    0xa1,#0xaa                                 
+0x2815    53 b1 fd ANL    0xb1,#0xfd                                 
+0x2818    e4       CLR    A                                          
+0x2819    f5 a1    MOV    0xa1,A                                     
+0x281b    7f c0    MOV    R7,#0xc0                                   
+0x281d    7e 27    MOV    R6,#0x27                                   
+0x281f    12 28 30 LCALL  0x2830                                     
+0x2822    02 28 88 LJMP   0x2888                                     
+0x2825    00       NOP                                               
+0x2826    00       NOP                                               
+0x2827    00       NOP                                               
+0x2828    00       NOP                                               
+0x2829    00       NOP                                               
+0x282a    00       NOP                                               
+0x282b    00       NOP                                               
+0x282c    00       NOP                                               
+0x282d    00       NOP                                               
+0x282e    00       NOP                                               
+0x282f    00       NOP                                               
+0x2830    a2 af    MOV    C,0xaf0xa8 <IE>.7                          
+0x2832    92 03    MOV    0x03,C                                     
+0x2834    c2 af    CLR    0xaf0xa8 <IE>.7                            
+0x2836    ef       MOV    A,R7                                       
+0x2837    54 c0    ANL    A,#0xc0                                    
+0x2839    ff       MOV    R7,A                                       
+0x283a    c3       CLR    C                                          
+0x283b    ee       MOV    A,R6                                       
+0x283c    94 f0    SUBB   A,#0xf0                                    
+0x283e    40 09    JC     0x2849                                     
+0x2840    ee       MOV    A,R6                                       
+0x2841    94 f4    SUBB   A,#0xf4                                    
+0x2843    50 04    JNC    0x2849                                     
+0x2845    7c 04    MOV    R4,#0x04                                   
+0x2847    80 02    SJMP   0x284b                                     
+0x2849    7c 08    MOV    R4,#0x08                                   
+0x284b    75 a1 55 MOV    0xa1,#0x55                                 
+0x284e    75 a1 aa MOV    0xa1,#0xaa                                 
+0x2851    ec       MOV    A,R4                                       
+0x2852    42 b1    ORL    0xb1,A                                     
+0x2854    8e 85    MOV    0x85,R6                                    
+0x2856    8f 84    MOV    0x84,R7                                    
+0x2858    75 8f 80 MOV    0x8f,#0x80                                 
+0x285b    e4       CLR    A                                          
+0x285c    f5 8e    MOV    0x8e,A                                     
+0x285e    e5 86    MOV    A,0x86                                     
+0x2860    30 e6 10 JNB    0xe60xe0 <ACC>.6,0x2873                    
+0x2863    75 86 a6 MOV    0x86,#0xa6                                 
+0x2866    e5 86    MOV    A,0x86                                     
+0x2868    30 e1 04 JNB    0xe10xe0 <ACC>.1,0x286f                    
+0x286b    7d 02    MOV    R5,#0x02                                   
+0x286d    80 06    SJMP   0x2875                                     
+0x286f    e4       CLR    A                                          
+0x2870    fd       MOV    R5,A                                       
+0x2871    80 02    SJMP   0x2875                                     
+0x2873    7d 01    MOV    R5,#0x01                                   
+0x2875    75 a1 55 MOV    0xa1,#0x55                                 
+0x2878    75 a1 aa MOV    0xa1,#0xaa                                 
+0x287b    ec       MOV    A,R4                                       
+0x287c    f4       CPL    A                                          
+0x287d    52 b1    ANL    0xb1,A                                     
+0x287f    a2 03    MOV    C,0x03                                     
+0x2881    92 af    MOV    0xaf0xa8 <IE>.7,C                          
+0x2883    cf       XCH    A,R7                                       
+0x2884    ed       MOV    A,R5                                       
+0x2885    cf       XCH    A,R7                                       
+0x2886    22       RET                                               
+0x2887    00       NOP                                               
+0x2888    90 27 c0 MOV    DPTR,#0x27c0                               
+0x288b    7f 40    MOV    R7,#0x40                                   
+0x288d    e4       CLR    A                                          
+0x288e    93       MOVC   A,@A+DPTR                                  
+0x288f    70 06    JNZ    0x2897                                     
+0x2891    a3       INC    DPTR                                       
+0x2892    df f9    DJNZ   R7,0x288d                                  
+0x2894    02 30 27 LJMP   0x3027                                     
+0x2897    80 fe    SJMP   0x2897                                     
+0x2899    00       NOP                                               
+0x289a    00       NOP                                               
+0x289b    00       NOP                                               
+0x289c    00       NOP                                               
+0x289d    00       NOP                                               
+0x289e    00       NOP                                               
+0x289f    00       NOP                                               
+0x28a0    7f 00    MOV    R7,#0x00                                   
+set memory sfr 0xa8 0xff
+0xa8 IE:                  0b11111111 0xff '.' 255 ( -1)
+0xa9                      00    .
+set memory sfr 0xe8 0xff
+0xe8                      ff 00 ..
+set memory sfr 0xd0 0x18
+0xd0 PSW:                 0b00011000 0x18 '.'  24
+0xd1                      00    .
+set memory sfr 0x81 0xf0
+0x81 SP:                  0b11110000 0xf0 '.' 240 (-16)
+0x82                      00    .
+set memory sfr 0xa2 0xd
+0xa2                      0d 00 ..
+run 0x2800 0x2830
+Simulation started, PC=0x002800
+Loading from /home/danil/Documents/git/ak820/qmk-8051-ak820/.build/alpha3-release/ajazz_ak820_vial.ihx
+40043 words read from /home/danil/Documents/git/ak820/qmk-8051-ak820/.build/alpha3-release/ajazz_ak820_vial.ihx
+
+Stop at 0x002830: (104) Breakpoint
+     R0 R1 R2 R3 R4 R5 R6 R7
+     41 58 fc c9 8b bc 27 c0
+@R0 76 v  ACC= 0x00   0 .  B= 0x00
+@R1 73 s  PSW= 0x00 CY=0 AC=0 OV=0 P=0
+SP 0x22 -> 28 22 43 31 94 d0 c9 03
+   DPTR= 0x0000 @DPTR= 0x83 131 .
+0x2830    a2 af    MOV    C,0xaf0xa8 <IE>.7                          
+F 0x002830
+Simulated 264 ticks (2.387e-05 sec)
+Host usage: 0.000032 sec, rate=0.747197
+echo @@ie
+@@ie
+dump sfr 0xa8 0xa8 16
+0xa8 IE:                  0b00000000 0x00 '.'   0
+echo @@ie_ex
+@@ie_ex
+dump sfr 0xe8 0xe8 16
+0xe8                      00 .
+echo @@psw
+@@psw
+dump sfr 0xd0 0xd0 16
+0xd0 PSW:                 0b00000000 0x00 '.'   0
+echo @@sp
+@@sp
+dump sfr 0x81 0x81 16
+0x81 SP:                  0b00100010 0x22 '"'  34
+echo @@xbus
+@@xbus
+dump sfr 0xa2 0xa2 16
+0xa2                      08 .
+echo @@erase_args
+@@erase_args
+dump iram 0x6 0x7 16
+0x06                      27 c0 '.
+state
+CPU state= OK PC= 0x002830 frequency= 11059200 HZ
+Operation since last reset= 47 vclks
+Inst= 14 Fetch= 34 Read= 2 Write= 11
+Total time since last reset= 0.000023871527778 sec (264 clks)
+Time in isr = 0.000000000000000 sec (0 clks) 0.00%
+Time in idle= 0.000000000000000 sec (0 clks) 0.00%
+Most value of stack pointer= 0x0000f0
+Simulation: stopped
+Runtime: 0.093445 sec
+quit
+

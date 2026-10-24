@@ -32,6 +32,9 @@ static int8_t last_repeat_count = 0;
 // The repeat_count, but set to 0 outside of repeat_key_invoke() so that it is
 // nonzero only while a repeated key is being processed.
 static int8_t processing_repeat_count = 0;
+#ifdef AK820_BOARD
+static bool ak820_repeat_invoking;
+#endif
 /* A single Repeat action may be held at a time. Keep its owner independently
  * of last_record, which other physical key presses continue to update. */
 static keyrecord_t registered_record;
@@ -90,6 +93,9 @@ static void repeat_invoke(const keyevent_t* event, bool alternate) {
     // Since this function calls process_record(), it may recursively call
     // itself. We return early if `processing_repeat_count` is nonzero to
     // prevent infinite recursion.
+#ifdef AK820_BOARD
+    if (ak820_repeat_invoking) return;
+#endif
     if (processing_repeat_count) {
         return;
     }
@@ -120,7 +126,13 @@ static void repeat_invoke(const keyevent_t* event, bool alternate) {
     // Generate a keyrecord and plumb it into the event pipeline.
     registered_record.event = *event;
     processing_repeat_count = registered_repeat_count;
+#ifdef AK820_BOARD
+    ak820_repeat_invoking = true;
+#endif
     process_record(&registered_record);
+#ifdef AK820_BOARD
+    ak820_repeat_invoking = false;
+#endif
     processing_repeat_count = 0;
 
     // On release, restore the mods state.

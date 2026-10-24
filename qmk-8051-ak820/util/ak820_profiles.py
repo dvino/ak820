@@ -86,13 +86,14 @@ def require_release_qualification(report: dict) -> None:
     """Keep new development profiles out of both existing release builders.
 
     Historical reports predate profile selection and retain their exact-image
-    release policy. No configured profile has the required global stack proof
-    or installer transition yet; a JSON boolean cannot supply that evidence.
+    release policy. Configured images require the committed exact-image safety
+    witnesses as well as the caller's existing build/review checks.
     """
     if 'configuration' in report:
         validate_configuration(report['configuration'])
-        raise ValueError('Configured development profiles are not approved for release; '
-                         'whole-program stack and exact-image settings qualification are missing')
+        from ak820_release_safety import validate
+        validate(report)
+        return
     if report.get('builder_sha256') not in LEGACY_BUILDERS or any(
             row.get('origin') == 'source' and row.get('path', '').replace('\\', '/') == 'util/ak820_profiles.py'
             for row in report.get('sources', [])):

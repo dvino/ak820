@@ -24,6 +24,8 @@ The host ASan/UBSan test includes the production USB implementation and
 verbatim backend/host bodies, with MMIO, timer and unrelated QMK hooks replaced
 by fixtures. It checks 136 endpoint/state/length/EA combinations, independent
 pending reports, accepted-versus-desired ownership and reset/suspend cleanup.
+It also checks that a null driver blocks startup publication, while the fixed
+AK820 transport dispatches directly when the driver marker is nonnull.
 Repeated calls while busy must make zero `wait_us`/`wait_ms` calls, and the
 atomic publication wrapper must preserve both initial EA values.
 

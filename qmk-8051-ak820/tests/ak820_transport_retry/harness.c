@@ -25,6 +25,7 @@ void wait_us(uint16_t value) { (void)value; ++waits_us; }
 void wait_ms(uint16_t value) { (void)value; ++waits_ms; }
 void host_set_driver(const host_driver_t *value) { driver = value; }
 void ak820_clock_init(void) {}
+void ak820_update_indicators(void) {}
 void usb_device_state_init(void) { usb_device_state = USB_DEVICE_STATE_INIT; }
 void usb_device_state_set_configuration(bool configured, uint8_t number) {
     (void)number; usb_device_state = configured ? USB_DEVICE_STATE_CONFIGURED : USB_DEVICE_STATE_INIT;
@@ -175,7 +176,23 @@ static void reset_and_suspend(void) {
     assert(!(pending_reports & PENDING_KEYBOARD));
 }
 
+static void fixed_dispatch_and_startup(void) {
+    host_driver_t empty_driver = {0};
+    initialize();
+    driver = NULL;
+    host_system_send(0x81);
+    assert(!pending_reports && last_system_usage == 0x81);
+    assert(EP_RESPONSE(SHARED_IN_EPNUM) != (bUEP_X_AUTO_TOG | UEP_X_RES_ACK));
+    /* The fixed AK820 transport uses the driver only as an initialized marker.
+     * A nonnull empty callback table must still reach its direct transport. */
+    driver = &empty_driver;
+    host_system_send(0x82);
+    assert(test_mmio[0x1080] == REPORT_ID_SYSTEM && test_mmio[0x1081] == 0x82);
+    assert(!pending_reports);
+}
+
 int main(void) {
+    fixed_dispatch_and_startup();
     keyboard_latest();
     independent_shared();
     retry_guards();

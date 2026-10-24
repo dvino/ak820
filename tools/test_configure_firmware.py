@@ -128,6 +128,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn('--oneshot', commands['one-shot-host'])
         self.assertIn('--space-cadet', commands['one-shot-host'])
         for required in ('outline-gates', 'stack-gates', 'outline-integrity', 'vialrgb-linked',
+                         'startup-gates', 'startup-stack', 'irq-gates', 'release-safety-gates',
                          'nkro-control-linked', 'one-shot-linked'):
             self.assertIn(required, commands)
 

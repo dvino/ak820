@@ -71,6 +71,13 @@ static void send_extra(report_extra_t *report) {
 #endif
 }
 
+/* This port has one transport. Direct entry points keep report dispatch out of
+ * mutable RAM callback tables; the generic driver still marks initialization. */
+uint8_t ak820_host_keyboard_leds(void) { return keyboard_leds(); }
+void ak820_host_send_keyboard(report_keyboard_t *report) { send_keyboard(report); }
+void ak820_host_send_mouse(report_mouse_t *report) { send_mouse(report); }
+void ak820_host_send_extra(report_extra_t *report) { send_extra(report); }
+
 host_driver_t ch555_usb_stack_driver = {keyboard_leds, send_keyboard, send_mouse, send_extra};
 
 void raw_hid_send(uint8_t *data, uint8_t length) {

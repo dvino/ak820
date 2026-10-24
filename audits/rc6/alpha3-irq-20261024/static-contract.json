@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-24",
+  "scope": "read-only static OEM and source inspection; no build, CPU execution or device access",
+  "oem_sha256": "1dc3e2f79bd03d0bdc4e7a0fc43241e6e89445799948990725ee644ec45c09d1",
+  "oem_size": 65536,
+  "wrappers": [
+    {
+      "callback": "timer",
+      "ordinal": 1,
+      "wrapper_address": "0x18a4",
+      "stub_address": "0x3003",
+      "wrapper_bytes": 76,
+      "wrapper_sha256": "f921c9a3adfd6426385f74d38b426a20384399af3f50239081fbdfaa6faf7604",
+      "saved_stack_bytes": 13,
+      "call_return_bytes": 2,
+      "hardware_return_frame_bytes_assumed": 2,
+      "wrapper_and_hardware_stack_bytes_conditional": 17
+    },
+    {
+      "callback": "usb",
+      "ordinal": 7,
+      "wrapper_address": "0x1a6c",
+      "stub_address": "0x3015",
+      "wrapper_bytes": 76,
+      "wrapper_sha256": "f4032f22e88be0585c01997aa639d4a5053148023c61373b2ee61b2fbdde7787",
+      "saved_stack_bytes": 13,
+      "call_return_bytes": 2,
+      "hardware_return_frame_bytes_assumed": 2,
+      "wrapper_and_hardware_stack_bytes_conditional": 17
+    },
+    {
+      "callback": "led",
+      "ordinal": 10,
+      "wrapper_address": "0x1b50",
+      "stub_address": "0x301e",
+      "wrapper_bytes": 76,
+      "wrapper_sha256": "6a8dc9d11b317c78a9f0e7291210738370bc0d454dc76399842914d4327d12b4",
+      "saved_stack_bytes": 13,
+      "call_return_bytes": 2,
+      "hardware_return_frame_bytes_assumed": 2,
+      "wrapper_and_hardware_stack_bytes_conditional": 17
+    }
+  ],
+  "proved": [
+    "Used OEM wrappers save ACC/B/DPH/DPL/PSW and bank0 R0..R7; set PSW=0; call helper 0x0DC4; restore and RETI.",
+    "Helper 0x0DC4: MOV DPH,R2; MOV DPL,R1; CLR A; JMP @A+DPTR.",
+    "Packer startup clears IE/IE_EX but does not normalize IP/IP_EX.",
+    "Timer translation unit and USB IRQ helper scope use pragma nooverlay; LED IRQ is naked assembly without C helpers."
+  ],
+  "not_proved": [
+    "VS11K28A vector routing, priorities, maximum nesting or active-source non-reentry.",
+    "Complete interrupt/foreground static storage disjointness in final linked image.",
+    "Whole-program stack maximum or physical interrupt timing."
+  ],
+  "rejected_shortcuts": [
+    "CH555 header priority comments do not establish VS11 silicon behavior.",
+    "Clearing EA at callback entry leaves OEM prologue interruptible; restoring EA before return leaves OEM epilogue interruptible.",
+    "Normalizing IP/IP_EX makes non-nesting conditional on unverified VS11 priority semantics."
+  ],
+  "next_contract": "Superseded by architecture-contract.json: explicit MCS51 in-service/RETI semantics permit a conservative all-distinct-source bound without assuming a two-level priority controller.",
+  "web_search": {
+    "queries": [
+      "VS11K28A interrupt datasheet",
+      "VS11K28A \u4e2d\u65ad \u4f18\u5148\u7ea7"
+    ],
+    "result": "No applicable manufacturer manual returned; generic or unrelated controller descriptions excluded."
+  },
+  "source_sha256": {
+    "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.c": "744928cdba773200642dfc358192ee7a874c166a36af06f16e64b5957aa1aa76",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_timer.c": "69a2218dc73c70feb2622d12f4a6f4e1b4647cc5a0b4d059f9d9a51023f4b1f5",
+    "qmk-8051-ak820/tmk_core/protocol/ch555/usb_ak820.c": "76967281462e40957a7fb0676998d96a48360a4a13a220646d9cd8fc00d1f93e",
+    "qmk-8051-ak820/tests/ak820_irq/run.py": "ced6b99ce3bd5493da349d72c678ed7bd3bf5621ec6bcc639ee25a7dc3acff02"
+  }
+}

@@ -54,15 +54,14 @@ Free bytes in these windows are not interchangeable. NVM and macro storage are
 not spare executable CODE. Measure linked occupied bytes rather than binary
 file length or source size.
 
-## Development profiles
+## Feature profiles
 
-To select any of the eight development profiles, use the [profile
-configurator](BUILD-PROFILES.md). It links the complete image, checks resource
-placement and runs offline regression gates plus the selected feature suites
-against that image. No configured profile is approved for installation or
-release: the whole-program stack bound, exact-image interrupt/nesting safety
-and installer transition remain open. Packaging stops for every configured
-profile.
+Use the [profile configurator](BUILD-PROFILES.md) to build any of the eight
+feature combinations. It links the complete image, checks resource placement
+and runs offline regression gates against that image. The `full` profile is
+the alpha.3 candidate; source qualification and independent policy review are
+complete. The candidate is not published or hardware-tested and awaits native
+CI. The other seven profiles remain development-only.
 
 The build uses the compact instruction outliner with a fixed opcode and module
 allowlist. `--no-outline` and `--no-callee-saves` provide comparison builds.

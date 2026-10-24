@@ -4,7 +4,7 @@
 The C52 CPU does not implement VS11K28A interrupt routing or peripherals.
 Calls below supply the two-byte hardware return frame with LCALL, then run
 the unchanged OEM prologue/epilogue and linked application callback. USB
-ACK side effects and a nested higher-priority IRQ are supplied explicitly.
+ACK side effects and all distinct-source IRQ orderings are supplied explicitly.
 This proves neither electrical IRQ timing nor whole-program stack bounds.
 """
 from __future__ import annotations
@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import itertools
 from pathlib import Path
 import re
 import sys
@@ -32,98 +33,51 @@ IRQ = {'timer': (1, '_ak820_timer_irq'), 'usb': (7, '_USB_DeviceInterrupt'),
 ROW = re.compile(r'^\s*([0-9A-F]{6})\s+((?:[0-9A-F]{2}\s+)+)\[\s*\d+\]\s+\d+\s+(.+)$')
 
 
-def linked_instructions(fw):
-    """Read relocated instructions, comparing every listed byte to the IHX."""
-    result = {}
-    for filename in ('ak820_timer.rst', 'ak820_board.rst', 'protocol/ch555/usb_ak820.rst'):
-        for row in (fw.build / 'dce' / filename).read_text().splitlines():
-            found = ROW.match(row)
-            if not found:
-                continue
-            address, raw, assembly = int(found[1], 16), bytes.fromhex(found[2]), found[3]
-            assert raw == bytes(fw.code.get(address + i, -1) for i in range(len(raw))), (filename, address)
-            assembly = assembly.split(';', 1)[0].strip().lower()
-            result[address] = (raw, assembly)
-    return result
+def direct_target(pc, raw):
+    """Decode LJMP/LCALL and page-relative AJMP/ACALL using post-PC page."""
+    if raw[0] in (0x02, 0x12):
+        return int.from_bytes(raw[1:3], 'big')
+    if raw[0] & 0x1F in (0x01, 0x11):
+        return ((pc + 2) & 0xF800) | ((raw[0] & 0xE0) << 3) | raw[1]
+    return None
 
 
-def callback_bound(instructions, entry):
-    """Explore every direct branch, balanced PUSH/POP and call in an IRQ.
+def direct_references(instructions, target):
+    return [pc for pc, raw in instructions.items() if direct_target(pc, raw) == target]
 
-    Two known indirect tables are checked structurally: SDCC's consecutive
-    SJMP dispatch and the LED selector's sixteen CLR bit / RET entries. The
-    bound assumes execution enters a valid table entry, as the source index
-    checks require. Unsupported SP writes, dispatch or recursion fail closed.
-    """
-    memo, active = {}, set()
 
-    def bound(start):
-        if start in memo:
-            return memo[start]
-        assert start not in active, f'Recursive IRQ call at {start:#x}'
-        active.add(start)
-        work, seen, heights, maximum, returns = [(start, 0)], set(), {}, 0, 0
-        while work:
-            pc, height = work.pop()
-            if (pc, height) in seen:
-                continue
-            assert height >= 0, f'Stack underflow at {pc:#x}'
-            assert pc not in heights or heights[pc] == height, f'Unbalanced stack loop at {pc:#x}'
-            heights[pc] = height
-            seen.add((pc, height))
-            assert pc in instructions, f'IRQ escaped checked instructions at {pc:#x}'
-            raw, assembly = instructions[pc]
-            opcode, following = raw[0], pc + len(raw)
-            mnemonic = assembly.split()[0]
-            operands = assembly[len(mnemonic):].strip()
-            first = operands.split(',', 1)[0].strip()
-            assert not (first in ('sp', '_sp', '0x81') and mnemonic in
-                        ('mov', 'inc', 'dec', 'add', 'anl', 'orl', 'xrl', 'pop')), assembly
-            maximum = max(maximum, height)
-            if opcode in (0x22, 0x32):
-                assert opcode == 0x22 and height == 0, f'Unbalanced/non-RET callback at {pc:#x}'
-                returns += 1
-                continue
-            if opcode == 0xC0:  # PUSH direct
-                height += 1
-                maximum = max(maximum, height)
-            elif opcode == 0xD0:  # POP direct
-                height -= 1
-            elif opcode == 0x12 or opcode & 0x1F == 0x11:  # LCALL / ACALL
-                target = int.from_bytes(raw[1:3], 'big') if opcode == 0x12 else \
-                    (following & 0xF800) | ((opcode & 0xE0) << 3) | raw[1]
-                maximum = max(maximum, height + 2 + bound(target))
-            elif opcode == 0x02 or opcode & 0x1F == 0x01:  # LJMP / AJMP
-                target = int.from_bytes(raw[1:3], 'big') if opcode == 0x02 else \
-                    (following & 0xF800) | ((opcode & 0xE0) << 3) | raw[1]
-                work.append((target, height))
-                continue
-            elif opcode == 0x73:  # JMP @A+DPTR: checked adjacent dispatch table.
-                targets, at = [], following
-                while at in instructions and instructions[at][0][0] == 0x80:
-                    targets.append(at)
-                    at += 2
-                if not targets:
-                    for i in range(16):
-                        at = following + i * 3
-                        assert instructions.get(at, (b'',))[0][:1] == b'\xc2', f'Unknown indirect IRQ dispatch {pc:#x}'
-                        assert instructions.get(at + 2, (b'',))[0] == b'\x22'
-                        targets.append(at)
-                work.extend((target, height) for target in targets)
-                continue
-            elif opcode in (0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0xD5) or \
-                    0xB4 <= opcode <= 0xBF or 0xD8 <= opcode <= 0xDF:
-                delta = raw[-1] if raw[-1] < 128 else raw[-1] - 256
-                work.append((following + delta, height))
-                if opcode == 0x80:
-                    continue
-            work.append((following, height))
-        assert returns, f'IRQ callback has no balanced return at {start:#x}'
-        active.remove(start)
-        memo[start] = maximum
-        return maximum
+def masked_helper_calls(instructions, target, irq_pcs, reached, clear, enable):
+    outside = [pc for pc in direct_references(instructions, target) if pc not in irq_pcs]
+    assert target in reached, (target, 'helper absent from initialization')
+    assert all(pc in reached and clear < pc < enable for pc in outside), (target, outside)
+    return outside
 
-    return bound(entry)
+
+def linear_init_pcs(analyzer, init, entry):
+    at, linear = entry, []
+    while True:
+        raw = analyzer.instruction(at)
+        assert raw is not None and len(linear) < 512, (init, at)
+        linear.append(at)
+        if raw[0] == 0x22:
+            return linear
+        jump = raw[0] == 0x02 or raw[0] & 0x1F == 0x01
+        assert not jump and raw[0] not in (0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x73, 0x80, 0xD5) and not (0xB4 <= raw[0] <= 0xBF or 0xD8 <= raw[0] <= 0xDF), (init, at, 'nonlinear initialization')
+        at += len(raw)
+
+
+def reject_priority_write(raw, pc):
+    """Decode direct/bit destinations, independent of assembler symbol names."""
+    op = raw[0]
+    direct = None
+    if op in (0x05, 0x15, 0x42, 0x43, 0x52, 0x53, 0x62, 0x63,
+              0x75, 0x86, 0x87, 0xC5, 0xD0, 0xD5, 0xF5) or 0x88 <= op <= 0x8F:
+        direct = raw[1]
+    elif op == 0x85:
+        direct = raw[2]
+    bit = raw[1] if op in (0x10, 0x92, 0xB2, 0xC2, 0xD2) else None
+    assert direct not in (0xB8, 0xE9), f'IRQ priority write at {pc:#x}'
+    assert bit is None or bit & 0xF8 != 0xB8, f'IRQ priority bit write at {pc:#x}'
 
 
 def wrapper_bytes(stock, ordinal):
@@ -138,7 +92,8 @@ def wrapper_bytes(stock, ordinal):
     return address, raw
 
 
-def cpu_case(fw, stock, name, reserve, nested=None):
+def cpu_case(fw, stock, order, reserve):
+    """Inject each distinct source at callback entry, then unwind real wrappers."""
     console = iap.Console(fw.simulator, fw.image)
     try:
         console.command(fw.initialize())
@@ -147,8 +102,6 @@ def cpu_case(fw, stock, name, reserve, nested=None):
             address, raw = wrapper_bytes(stock, ordinal)
             console.command([emitted.memory('rom', address, raw),
                              emitted.memory('rom', 0x3000 + ordinal * 3, packer.ljmp(fw.address(symbol)))])
-        # CRT and support initialization are complete. Reserve a representative
-        # main stack frame without claiming that it is the global worst case.
         stack_start = fw.initial_sp + reserve
         assert stack_start < 0xE0
         registers = bytes((0x30 + i) & 255 for i in range(32))
@@ -159,55 +112,174 @@ def cpu_case(fw, stock, name, reserve, nested=None):
                          emitted.memory('sfr', 0xD0, [0xD0]),
                          emitted.memory('sfr', 0xE0, [0xA5]),
                          emitted.memory('sfr', 0xF0, [0x5A]),
-                         emitted.memory('sfr', 0xA6, [0x1E])])
-        if name == 'usb':
-            # SET_CONFIGURATION reaches the largest static USB call depth.
-            console.command([emitted.memory('xram', 0x1000, [0, 9, 1, 0, 0, 0, 0, 0]),
-                             emitted.memory('xram', 0x220F, [0x38]),
-                             emitted.memory('xram', 0x223D, [0x20]),
-                             'break xram w 0x220f'])
-        ordinal, _ = IRQ[name]
-        wrapper, _ = wrapper_bytes(stock, ordinal)
-        console.command(emitted.memory('rom', 0x2600, [0x12, wrapper >> 8, wrapper & 255, 0x02, 0x27, 0]))
-        console.command('break 0x2700')
-        if nested:
-            # A synthetic higher-priority interrupt is injected exactly when
-            # the USB callback enters endpoints_reset with its maximum frame.
-            stop = fw.address('_endpoints_reset')
-            console.command(f'run 0x2600 {stop:#x}')
-            before_sp = console.read('sfr', 0x81, 1)[0]
-            before_registers = console.read('iram', 0, 32)
-            before_sfr = {address: console.read('sfr', address, 1) for address in (0x82, 0x83, 0xD0, 0xE0, 0xF0)}
-            inner, _ = wrapper_bytes(stock, IRQ[nested][0])
-            console.command(emitted.memory('rom', 0x2610, [0x12, inner >> 8, inner & 255,
-                                                          0x02, stop >> 8, stop & 255]))
-            console.command(f'run 0x2610 {stop:#x}')
-            assert console.read('sfr', 0x81, 1) == [before_sp]
-            assert console.read('iram', 0, 32) == before_registers
-            assert all(console.read('sfr', address, 1) == value for address, value in before_sfr.items())
-            result = console.command('run')
-        else:
-            result = console.command('run 0x2600 0x2700')
-        if name == 'usb':
-            assert "Event `write' at xram[0x220f]" in result, result
-            # Explicitly model the documented ACK_TRANSFER side effect.
-            console.command(emitted.memory('xram', 0x223D, [0]))
-            result = console.command('run')
-        assert '0x2700' in result, result
-        assert console.read('sfr', 0x81, 1) == [stack_start]
-        assert console.read('iram', 0, 32) == list(registers)
+                         emitted.memory('sfr', 0xA6, [0x1E]),
+                         emitted.memory('xram', 0x1000, [0, 9, 1, 0, 0, 0, 0, 0]),
+                         emitted.memory('xram', 0x220F, [0x38]),
+                         emitted.memory('xram', 0x223D, [0x20]),
+                         'break xram w 0x220f'])
+
+        def snapshot():
+            return (console.read('iram', 0, 8),
+                    {a: console.read('sfr', a, 1) for a in (0x81, 0x82, 0x83, 0xD0, 0xE0, 0xF0)})
+
+        def run_to(start, stop):
+            result = console.command(f'run {start:#x} {stop:#x}')
+            while "Event `write' at xram[0x220f]" in result:
+                console.command(emitted.memory('xram', 0x223D, [0]))
+                result = console.command('run')
+            assert f'0x{stop:04x}' in result.lower(), result
+
+        def invoke(depth):
+            name = order[depth]
+            before = snapshot()
+            wrapper, _ = wrapper_bytes(stock, IRQ[name][0])
+            stub, trap = 0x2600 + depth * 16, 0x2700 + depth * 16
+            console.command(emitted.memory('rom', stub, [0x12, wrapper >> 8, wrapper & 255,
+                                                         0x02, trap >> 8, trap & 255]))
+            entry = fw.address(IRQ[name][1])
+            run_to(stub, entry)
+            if depth + 1 < len(order):
+                invoke(depth + 1)
+            run_to(entry, trap)
+            assert snapshot() == before, (order, depth, 'register/frame preservation')
+
+        invoke(0)
         assert console.read('iram', fw.initial_sp + 1, reserve) == [0xA7] * reserve
-        assert console.read('sfr', 0x82, 2) == [0x34, 0x12]
-        assert console.read('sfr', 0xD0, 1) == [0xD0]
-        assert console.read('sfr', 0xE0, 1) == [0xA5]
-        assert console.read('sfr', 0xF0, 1) == [0x5A]
         state = console.command('state')
         peak = int(re.findall(r'Most value of stack pointer=\s+0x([0-9a-f]+)', state)[-1], 16)
-        return {'irq': name, 'nested_irq': nested, 'reserved_main_bytes': reserve,
+        return {'irq_order': list(order), 'reserved_main_bytes': reserve,
                 'peak_sp': peak, 'irq_stack_bytes': peak - stack_start,
                 'canary_and_registers_preserved': True}
     finally:
-        (fw.output / f'{name}-{nested or "single"}.log').write_text(console.log)
+        (fw.output / ('-'.join(order) + '.log')).write_text(console.log)
+        console.close()
+
+
+def emitted_contracts(fw, analyzer, callback_reports):
+    irq_pcs = set().union(*(set(r['reachable']) for r in callback_reports.values()))
+    def destination(raw):
+        op = raw[0]
+        if op in (5, 0x15, 0x42, 0x43, 0x52, 0x53, 0x62, 0x63, 0x75,
+                  0x86, 0x87, 0xC5, 0xD0, 0xD5, 0xF5) or 0x88 <= op <= 0x8F:
+            return raw[1]
+        return raw[2] if op == 0x85 else None
+    enabled, restored_masks = [], []
+    for pc, raw in analyzer.instructions.items():
+        direct = destination(raw)
+        bit = raw[1] if raw[0] in (0x10, 0x92, 0xB2, 0xC2, 0xD2) else None
+        # Bank0 is the compiler ABI. Other banks may contain DSEG objects.
+        assert direct != 0xD0 and bit not in (0xD3, 0xD4), f'Register bank change {pc:#x}'
+        if bit is not None and bit & 0xF8 in (0xA8, 0xE8) and raw[0] in (0x92, 0xB2, 0xD2):
+            assert bit in (0xA9, 0xAE, 0xAF, 0xE9, 0xED), f'Unexpected enabled source {pc:#x}'
+            enabled.append({'pc': pc, 'bit': bit})
+        if direct in (0xA8, 0xE8):
+            # Only two foreground save/restore sites write IE as a byte.
+            assert raw == bytes((0xF5, 0xA8)), f'Unknown source-mask write {pc:#x}'
+            assert pc not in irq_pcs, f'IRQ mask byte write {pc:#x}'
+            load = analyzer.instruction(pc - 4)
+            assert load and load[0] == 0x90 and analyzer.instruction(pc - 1) == b'\xe0', ('unknown IE restore', pc)
+            address = int.from_bytes(load[1:], 'big')
+            names = [name for name, at in fw.symbols.items() if at == address and
+                     (name.startswith('_flash_operation_previous_ie_') or name.startswith('_bootloader_jump_saved_ie_'))]
+            assert len(names) == 1, ('unrecognized saved IE cell', pc, address)
+            uses = []
+            for listing in (fw.build / 'dce').rglob('*.rst'):
+                uses.extend(row.split(';', 1)[0] for row in listing.read_text().splitlines() if names[0] in row.split(';', 1)[0])
+            # One private allocation and exactly two direct DPTR accesses: no
+            # compiler-emitted address escape, parameter passing or other use.
+            assert len(uses) == 3 and sum('mov' in row and 'dptr,#' + names[0] in row for row in uses) == 2, ('saved IE escapes', names, uses)
+            saves = [at for at, row in analyzer.instructions.items() if row == load and
+                     analyzer.instruction(at + 3) == bytes((0xE5, 0xA8)) and
+                     analyzer.instruction(at + 5) == b'\xf0']
+            assert len(saves) == 1 and saves[0] < pc, ('IE save provenance', names, saves)
+            restored_masks.append({'restore_pc': pc, 'save_pc': saves[0], 'saved_byte': names[0], 'address': address})
+    sharing = []
+    for init, bit, helpers in (('_timer_init', 0xAF, ('_timer_reload',)),
+                              ('_USB_Device_Init', 0xE9, ('_endpoints_reset', '_raw_abort'))):
+        report = analyzer.bound(fw.address(init))
+        assert report['bound'] is not None, (init, report['unresolved'])
+        reached = set(report['reachable'])
+        # Initialization roots must execute their mask and calls in order.
+        linear = linear_init_pcs(analyzer, init, fw.address(init))
+        clears = [pc for pc in linear if analyzer.instruction(pc) == bytes((0xC2, bit))]
+        sets = [pc for pc in linear if analyzer.instruction(pc) == bytes((0xD2, bit))]
+        assert len(clears) == len(sets) == 1, (init, clears, sets)
+        for helper in helpers:
+            target = fw.address(helper)
+            outside = masked_helper_calls(analyzer.instructions, target, irq_pcs, reached, clears[0], sets[0])
+            sharing.append({'helper': helper, 'foreground_calls': outside,
+                            'disabled_bit': bit, 'clear_pc': clears[0], 'enable_pc': sets[0]})
+    modules = ('ak820_timer.rst', 'protocol/ch555/usb_ak820.rst', 'ak820_board.rst')
+    allocations = []
+    for path in sorted((fw.build / 'dce').rglob('*.rst')):
+        module = str(path.relative_to(fw.build / 'dce'))
+        area = ''
+        for row in path.read_text().splitlines():
+            section = re.search(r'\.area\s+(\w+)', row)
+            if section:
+                area = section[1]
+            allocation = re.match(r'^\s*([0-9A-F]{6})\s+\d+\s+\.ds\s+(\d+)', row)
+            if allocation and int(allocation[2]):
+                assert module not in modules[:2] or area != 'OSEG', f'IRQ module overlay allocation: {module}'
+                if area in ('DSEG', 'OSEG', 'XSEG', 'BSEG'):
+                    allocations.append({'module': module, 'area': area,
+                                        'address': int(allocation[1], 16), 'size': int(allocation[2])})
+    irq_storage = [a for a in allocations if a['module'] in modules[:2] or (a['module'] == 'ak820_board.rst' and a['area'] == 'XSEG')]
+    for own in irq_storage:
+        for other in allocations:
+            if own is other:
+                continue
+            direct = {'DSEG', 'OSEG', 'BSEG'}
+            same_space = own['area'] == other['area'] or {own['area'], other['area']} <= direct
+            if same_space:
+                left, right = own, other
+                if (own['area'] == 'BSEG') != (other['area'] == 'BSEG'):
+                    def byte_range(item):
+                        start, end = item['address'], item['address'] + item['size']
+                        return (0x20 + start // 8, 0x20 + (end + 7) // 8) if item['area'] == 'BSEG' else (start, end)
+                    a, b = byte_range(left), byte_range(right)
+                else:
+                    a, b = (left['address'], left['address'] + left['size']), (right['address'], right['address'] + right['size'])
+                assert a[1] <= b[0] or b[1] <= a[0], ('IRQ storage overlap', own, other)
+    return {'compiler_register_bank': 0, 'source_enable_sites': enabled, 'saved_ie_restores': restored_masks,
+            'shared_helper_masked_init_calls': sharing, 'nonoverlay_allocations': irq_storage,
+            'limits': ['Nooverlay storage and masked shared helper calls are checked; foreground/ISR protocol state still uses its explicit concurrency protocol.']}
+
+
+def selector_cases(fw, analyzer):
+    masks = [pc for pc in analyzer.instructions if analyzer.masked_bit_dispatch(pc) is not None]
+    assert len(masks) == 1, masks
+    mask = masks[0]
+    assert analyzer.instruction(mask) == bytes((0x54, 15))
+    # Native selector prelude: MOV A,LED_COLUMN; JBC ACC.4,masked arm.
+    entries = [pc for pc, raw in analyzer.instructions.items()
+               if raw == bytes((0xE5, 0xA6)) and analyzer.instruction(pc + 2)
+               and analyzer.instruction(pc + 2)[:2] == bytes((0x10, 0xE4))
+               and pc + 5 + analyzer.instruction(pc + 2)[2] == mask]
+    assert len(entries) == 1, entries
+    entry = entries[0]
+    console = iap.Console(fw.simulator, fw.image)
+    try:
+        console.command(fw.initialize())
+        for value in range(256):
+            console.command([emitted.memory('sfr', 0xA6, [value]),
+                             emitted.memory('sfr', 0x80, [255]),
+                             emitted.memory('sfr', 0xB0, [255]),
+                             emitted.memory('sfr', 0xF1, [255]),
+                             emitted.memory('rom', 0x2600, [0x12, entry >> 8, entry & 255, 2, 0x27, 0]),
+                             'run 0x2600 0x2700'])
+            actual = [console.read('sfr', a, 1)[0] for a in (0x80, 0xB0, 0xF1)]
+            expected = [255, 255, 255]
+            if value & 16:
+                index = value & 15
+                expected[index // 8] &= ~(1 << (index % 8))
+            else:
+                expected[2] = (~((value & 1) + 1) - 1) & 255
+            assert actual == expected, (value, actual, expected)
+        return {'input_values_checked': 256, 'valid_native_values_unchanged': '0x10..0x1f',
+                'entry': entry, 'mask': mask, 'bounded_table_entries': 16}
+    finally:
+        (fw.output / 'selector-256.log').write_text(console.log)
         console.close()
 
 
@@ -222,20 +294,33 @@ def main():
     args = parser.parse_args()
     fw = emitted.Firmware(args.build_dir.resolve(), args.s51.resolve(), args.output_dir.resolve())
     stock = args.stock_rom.read_bytes()
-    assert len(stock) == 65536 and packer.digest(stock) == packer.STOCK_SHA
-    instructions = linked_instructions(fw)
-    bounds = {name: 17 + callback_bound(instructions, fw.address(symbol))
-              for name, (_, symbol) in IRQ.items()}
-    pair = sum(sorted(bounds.values())[-2:])
-    if not 0 < args.main_sample_bytes or args.main_sample_bytes + pair > fw.stack_capacity:
+    assert len(stock) == 65536
+    packer.validate_native(stock)
+    spec = importlib.util.spec_from_file_location('irq_stack_analysis', HERE.parent / 'ak820_stack/analyze.py')
+    stack = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(stack)
+    instructions, _, code, provenance = stack.load(fw.build)
+    analyzer = stack.Analyzer(instructions, code)
+    callback_reports = {name: analyzer.bound(fw.address(symbol)) for name, (_, symbol) in IRQ.items()}
+    for name, report in callback_reports.items():
+        assert report['bound'] is not None, (name, report['unresolved'])
+        for pc in report['reachable']:
+            raw = analyzer.instruction(pc)
+            reject_priority_write(raw, pc)
+            assert raw[0] != 0x32, f'Early RETI in callback at {pc:#x}'
+    bounds = {name: 17 + report['bound'] for name, report in callback_reports.items()}
+    orders = [order for length in range(1, 4) for order in itertools.permutations(IRQ, length)]
+    total = sum(bounds.values())
+    if not 0 < args.main_sample_bytes or args.main_sample_bytes + total > fw.stack_capacity:
         raise ValueError('Representative main frame plus nested IRQ exceeds the linked stack capacity')
     for ordinal, _ in IRQ.values():
         wrapper_bytes(stock, ordinal)
-    cases = [cpu_case(fw, stock, name, args.main_sample_bytes) for name in IRQ]
-    cases += [cpu_case(fw, stock, 'usb', args.main_sample_bytes, nested=name) for name in ('timer', 'led')]
+    contracts = emitted_contracts(fw, analyzer, callback_reports)
+    cases = [cpu_case(fw, stock, order, args.main_sample_bytes) for order in orders]
     for case in cases:
-        expected = bounds[case['irq']] + (bounds[case['nested_irq']] if case['nested_irq'] else 0)
+        expected = sum(bounds[name] for name in case['irq_order'])
         assert case['irq_stack_bytes'] <= expected, (case, bounds)
+    selector = selector_cases(fw, analyzer)
     result = {'pass': True, 'scope': 'linked CPU instructions and explicit peripheral/interrupt model',
               'linked_image_sha256': packer.digest(fw.image.read_bytes()),
               'linked_map_sha256': packer.digest((fw.build / 'ajazz_ak820_vial.map').read_bytes()),
@@ -243,16 +328,19 @@ def main():
               'runner_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               'initial_sp': fw.initial_sp, 'stack_capacity': fw.stack_capacity,
               'wrapper_bytes_on_stack': 17, 'irq_bounds': bounds,
-              'two_priority_level_irq_bound': pair,
-              'sample_main_plus_nested_irq_bytes': args.main_sample_bytes + pair,
-              'sample_remaining_bytes': fw.stack_capacity - args.main_sample_bytes - pair,
-              'cpu_cases': cases,
+              'callback_static_reports': callback_reports,
+              'stack_analyzer_sha256': hashlib.sha256((HERE.parent / 'ak820_stack/analyze.py').read_bytes()).hexdigest(),
+              'all_distinct_source_irq_bound': total,
+              'ordered_nests': [{'irq_order': list(order), 'stack_bound': sum(bounds[n] for n in order)} for order in orders],
+              'sample_main_plus_nested_irq_bytes': args.main_sample_bytes + total,
+              'sample_remaining_bytes': fw.stack_capacity - args.main_sample_bytes - total,
+              'cpu_cases': cases, 'selector_cases': selector, 'emitted_contracts': contracts,
               'limits': ['Main stack reservation is an observed-scenario example, not a whole-program bound.',
-                         'Indirect dispatch bounds assume valid DPTR/index values selecting a checked table entry.',
-                         'Two nested priority levels follow the CH555 header contract; VS11 silicon IRQ routing is not modeled.',
-                         'Boot entry does not normalize IP/IP_EX; both priority orderings remain possible.',
+                         'Indirect dispatch bounds use the shared analyzer complete guarded or masked table idioms.',
+                         'MCS51 in-service/RETI semantics are an explicit target architectural assumption; no priority-level count is assumed.',
+                         'Boot entry does not normalize IP/IP_EX; all 15 distinct-source ordered nests are bounded and exercised.',
                          'USB ACK side effect and nested hardware return frames are supplied by the fixture.',
-                         'No physical USB, flash, LED DMA, interrupt timing or whole-program reentrancy proof.']}
+                         'No physical USB, flash, LED DMA or interrupt timing test; shared protocol-state synchronization remains separate.']}
     (fw.output / 'results.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))
 

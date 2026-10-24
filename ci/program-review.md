@@ -1,97 +1,72 @@
-# Independent Combo program review — 2026-10-24
+# Independent alpha.3 program review, 2026-10-24
 
-The exact Combo program, settings backup/restore changes, release workflow,
-packing receipt and final policy are approved for CI reproduction and the next
-alpha release. This approval covers offline release preparation. Public CI and
-its generated packages must still pass their normal validation gates. It grants
-no permission to flash and does not establish a new installed image.
+The exact full-profile program and release preparation are approved for commit
+and CI reproduction. Native Windows and Linux package acceptance and publication
+remain pending. This review grants no permission to flash and makes no claim
+about physical device behavior. Installed firmware remains alpha.2.
 
-The implementation, policy, packing receipt and qualification were authored
-separately from this review. All 627 policy source records and 21 host records
-were checked against current sizes and SHA256 hashes. Policy SHA256 is
-`e4ae796fe635b87c4a2375eeab73c5b6ebff88c98eef8b8a3d9fc3e9099faba1`.
-The fresh build reproduces IHX
-`a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f`
-and canonical packing symbols
-`7dcabc5f511cb17eae298bc53faf7da5cd8a34b627123e42089cda520cf93c74`.
-All 470 build source/toolchain records and 79 artifact records were checked.
-The nine retained legacy bundle records and installer approval also match;
-that bundle retains its earlier firmware.
+The reviewed application IHX is
+`d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`;
+canonical symbols are
+`8c54e3a043fd636b4073aa16f328abcc53ca0f9c8430c80b5b2d664190805ce0`.
+All 608 policy source records and 21 host records match current file sizes and
+SHA256 hashes. All 384 retained evidence records match their hashes and sizes,
+including decompressed bytes where recorded. Policy SHA256 is
+`32092b9468e7474d77720e5989bbe8cf5b087f6a817cdc19719c5d278c7655ef`.
 
-Firmware qualification before the later Linux host integration passed all 28 required suites, 265 unit tests and zero
-skips with unchanged IHX/MAP and zero physical device commands. Its full suite
-contract and all 28 saved log hashes were independently checked. Qualification
-SHA256 is `c5f7b57572aab136a81c172d7357d8aa0bf6b936f44687b8e6cb6e960fc50027`.
-An independent targeted rerun passed five Combo settings tests, eleven protocol
-tests and eleven CI authorization tests. Extra retained logs were hash-checked:
-111 tool tests, eleven authorization tests, three compiler tests, 10,944 NVM
-power-cut model cases and 25,088 macro upload power-cut model cases passed.
-ASan and UBSan were enabled for the power-cut models; LeakSanitizer was disabled.
-These models do not establish electrical flash behavior.
+The code changes preserve the fixed transport's null-driver checks and report
+handling while replacing mutable callback dispatch with direct calls. The
+private Repeat guard prevents recursive delivery without changing the repeat
+count exposed to the event pipeline. The LED selector masks its index to four
+bits. The independently reviewed stack, startup and IRQ checks bind the emitted
+program and their source contracts. Main contributes 93 control-stack bytes,
+CRT entry two, and all three wrappers and callbacks 61: 156 of the allocated
+162 bytes. All 15 distinct-source IRQ orders and all 256 selector values pass
+in the CPU model. This proof assumes valid memory access, bank-0 SDCC calls,
+private guard objects and MCS-51 in-service/RETI behavior. It does not establish
+physical VS11 routing or timing.
 
-The fifth exact settings profile binds the candidate's packed CODE. Candidate
-backups carry all eight Combo entries. Legacy backups omit that section and
-cannot clear a nonempty target. Explicit empty candidate entries clear slots.
-Unknown markers, unsupported records and bad readbacks stop the operation.
-Typed setters verify ACK, status, logical readback and complete durable NVM.
-Failure tests cover timeout, bad ACK, storage fault, getter mismatch and
-neighbor corruption, with no later command. Saved production preflights accept
-retained legacy and alpha.1 backups into fresh target defaults; they are not
-fresh current-device backups. Offline packing records permanent/trial images
-and byte-equal native recovery without opening USB.
+The complete retained qualification passes 28 base suites, 273 unit tests and
+zero skips, followed by 13 supplemental full-profile suites on the unchanged
+image. Its SHA256 is
+`cdc45835029716b8046fb0810ad9eff685401f27e2542434689fc9a38927ca8b`.
+The initial fixture failure remains recorded separately. Independent reruns
+passed 20 release-safety tests and 31 settings-backup tests. The package command
+also passed independently against current sources, exact images, pinned tools,
+base and supplemental contracts and their retained logs. This was verification
+of an existing build, not a fresh independent build.
 
-The installer retains a fresh physical hold for the displayed update and a
-second guarded hold for settings restoration. Exact images, fresh backups,
-cancellation before erase, one flash and failure stops remain. Documentation
-and translations agree with this behavior. Public release notes contain only
-user-visible changes and limits, and the release workflow reads that file.
-All findings and closure are recorded in
-`audits/rc6/combos-alpha-release-review-20261024.md`.
+Settings support is bound to both IHX and permanent CODE, rather than schema
+alone. FULL-only keycodes are accepted only for that target feature profile.
+The transition witness records 47 tests and a real retained alpha.2 backup
+preflight covering 498 keys, 12 encoder assignments and eight Combo slots.
+Fresh backups, fresh physical confirmation, cancellation before erase and
+stop-on-first-failure behavior remain. Volatile NKRO and pending One Shot state
+are not restored. Offline packing records both modes and byte-equal native
+recovery; private images are absent from the public receipt.
 
-Physical Combo behavior, interactive GUI acceptance, physical unlock, USB
-latency, arbitrary IRQ overlap, electrical IAP, power-loss recovery and
-cold-start retention remain untested for this image. Published release CI and
-fresh package acceptance remain pending. Installed firmware remains alpha.1.
-Private OEM inputs and images remain outside Git.
+English and Russian user documentation agrees with the candidate behavior and
+limits. Release notes describe user-visible additions only. The workflow builds
+and qualifies FULL, and still requires both native installer jobs and checksum
+checks before publication. Current bytes were compared directly because the
+candidate is uncommitted; final CI must reproduce these committed inputs and
+pass its committed-HEAD checks.
 
-## Linux installer addition
-
-The native Linux x86_64 builder, pinned requirements, runtime paths, workflow
-and bilingual release installation instructions are approved for commit and
-CI. The final policy includes the new builder and tests. Firmware is unchanged;
-the earlier 28-suite qualification remains firmware evidence, not a full test
-of the later host changes. CI will rerun the complete qualification.
-
-Nine packaging tests and four runtime path tests passed independently. The
-frozen preparation regression also passed independently. The retained six
-Linux integration logs were checked against recorded sizes and hashes. They
-record 130 full installer tests before the final path fixes, 120 tool tests,
-nine packaging tests, four runtime-path tests, one frozen preparation test and
-syntax checks. A separate final complete workflow run reports sixteen tests
-passing; its output is retained in the work session rather than a hashed file.
-
-Review found and closed two frozen resource path errors: the udev rule lookup
-and settings source pins now use explicit collected paths under the frozen
-application root. Regression fixtures use nonexistent virtual module paths and
-mock permission commands; they never install rules or access hardware. Frozen
-Linux logs use XDG state storage; the Windows log path is unchanged.
-
-The builder requires native x86_64 glibc 2.35 and does not bypass that guard on
-the local glibc 2.39 host. It validates executable modes, internal tar links,
-collected approved files, the frozen hidraw import and CLI/Tk smoke results.
-The publication gate requires both native package jobs, checks sidecar hashes,
-and checks each Linux/Windows application's exact fresh firmware and approval.
-Native Ubuntu 22.04 collection and runtime smoke remain pending. Release is
-approved only after those CI gates pass; local fixtures do not establish a
-working native package. Installation guides match both archive layouts and
-cover checksums, extraction, launch and Linux permissions. No hardware operation
-is authorized by this addition.
+Physical keys, encoder rotation, USB timing, LED DMA, cold-start retention,
+electrical flash faults, power-loss recovery and interactive GUI acceptance
+remain untested for this image. Detailed review findings and closure are in
+[audit review](../audits/rc6/alpha3-release-20261024/program-review.md).
 
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "status": "passed",
   "hardware_validated": false,
-  "policy_sha256": "e4ae796fe635b87c4a2375eeab73c5b6ebff88c98eef8b8a3d9fc3e9099faba1"
+  "policy_sha256": "32092b9468e7474d77720e5989bbe8cf5b087f6a817cdc19719c5d278c7655ef",
+  "program": {
+    "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
+    "symbols_sha256": "8c54e3a043fd636b4073aa16f328abcc53ca0f9c8430c80b5b2d664190805ce0"
+  },
+  "qualification_sha256": "cdc45835029716b8046fb0810ad9eff685401f27e2542434689fc9a38927ca8b"
 }
 ```

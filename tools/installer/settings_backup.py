@@ -35,6 +35,9 @@ SUPPORTED_IMAGES = (
 )
 CANDIDATE_IHX = 'a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f'
 SUPPORTED_IMAGES += ((CANDIDATE_IHX, 'd787703f62f96d7204bf25c566eac39f66b8c8c3f711ce152d7ff1eded9716da'),)
+FULL_IHX = 'd505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18'
+SUPPORTED_IMAGES += ((FULL_IHX, '01f0f7a979d8cfa8217b3bba333758ae3509cf7f3f8e35fbffb1ed034b808e5d'),)
+FULL_FEATURES = frozenset(('nkro-control', 'one-shot', 'space-cadet'))
 UID = '0470ff9001b915d3'
 DEVICE = {'vid': 0x320F, 'pid': 0x505B, 'vial_uid': UID}
 # Pinned enum in rgb_matrix.h / vialrgb_effects.inc for this exact image.
@@ -97,7 +100,8 @@ def load_profile(bundle, native_backup):
     require((ihx_sha256, code_sha256) in SUPPORTED_IMAGES,
             'Firmware CODE does not match a reviewed settings profile')
     images = {ihx: {'ihx_sha256': ihx, 'code_sha256': code, 'build_id': pack.BUILD_ID,
-                    'combos_version': 1 if ihx == CANDIDATE_IHX else None}
+                    'combos_version': 1 if ihx in (CANDIDATE_IHX, FULL_IHX) else None,
+                    'features': sorted(FULL_FEATURES) if ihx == FULL_IHX else []}
               for ihx, code in SUPPORTED_IMAGES}
     return {'payload': payload, 'backup': native_backup, 'native_backup': native_backup,
             'definition': definition, 'code': code,
@@ -368,7 +372,7 @@ def validate_backup(path, profile, expected_identity=None):
             'rom': rom, 'nvm': nvm, 'source_identity': (source_ihx, source_code)}
 
 
-def keycode_supported(code):
+def keycode_supported(code, *, features=()):
     """Conservative current-build allowlist, including documented tap fallbacks.
 
     quantum/keymap_common.c, quantum.c, process_rgb.c and enabled key processors
@@ -376,6 +380,11 @@ def keycode_supported(code):
     """
     if type(code) is not int or not 0 <= code <= 65535:
         return False
+    require(set(features) <= FULL_FEATURES, 'Unknown settings feature profile')
+    if 'nkro-control' in features and code in (0x7011, 0x7012, 0x7013):
+        return True
+    if 'space-cadet' in features and code in (0x7C1A, 0x7C1B, 0x7C1E):
+        return True
     basic = lambda value: value in (0, 1) or 4 <= value <= 0xC2 or 0xE0 <= value <= 0xE7
     if code < 256:
         return basic(code)
@@ -418,6 +427,8 @@ def plan_restore(backup, profile, target_nvm=None):
     settings, nvm = backup['settings'], backup['nvm']
     target_identity = (profile['ihx_sha256'], profile['code_sha256'])
     images = list(_profile_images(profile).values())
+    target_features = _profile_images(profile)[profile['ihx_sha256']].get('features', ())
+    require(set(target_features) <= FULL_FEATURES, 'Unknown settings feature profile')
     source_rank = next(i for i, image in enumerate(images)
                        if (image['ihx_sha256'], image['code_sha256']) == backup['source_identity'])
     target_rank = next(i for i, image in enumerate(images)
@@ -436,7 +447,7 @@ def plan_restore(backup, profile, target_nvm=None):
     else:
         require('combos' not in settings, 'Target firmware does not support Combos')
     for item in settings['keys'] + settings['encoders']:
-        if not keycode_supported(item['keycode']):
+        if not keycode_supported(item['keycode'], features=target_features):
             blockers.append('Unsupported keycode ' + hex(item['keycode']) + ': ' + str(item))
     raw = nvm[24:32]
     if RGB_MODES[raw[0] >> 2] == 1:
@@ -463,12 +474,13 @@ def plan_restore(backup, profile, target_nvm=None):
                 value = int.from_bytes(operands, 'little')
                 if len(operands) == 2 and value > 0xFF00:
                     value = (value & 255) << 8  # firmware's encoded low-zero keycode
-                if not keycode_supported(value):
+                if not keycode_supported(value, features=target_features):
                     blockers.append(f'Unsupported keycode in macro {number}: {value:#06x}')
     require(not blockers, 'Settings cannot be restored before any erase/write:\n' + '\n'.join(blockers))
     return {'combo_entries': combo_entries, 'key_count': 498, 'encoder_count': 12, 'macro_chunks': chunks,
             'rgb_saved_mode': rgb_wire(raw, selected=True), 'rgb_effective_mode': rgb_wire(raw),
-            'limitations': list(LIMITATIONS), 'requires_physical_unlock': True}
+            'limitations': list(LIMITATIONS) + (['Runtime NKRO mode and pending One Shot modifiers are volatile; not restored.']
+                if target_features else []), 'requires_physical_unlock': True}
 
 
 def recheck_source(api, backup, profile):

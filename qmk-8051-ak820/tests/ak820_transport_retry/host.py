@@ -27,7 +27,7 @@ def main():
     (output / "backend.inc").write_text(re.sub(r"^\s*#\s*include[^\n]*", "", backend.read_text(), flags=re.M))
     host = root / "tmk_core/protocol/host.c"
     (output / "host-extra.inc").write_text("\n".join(recovery.function(host.read_text(), signature) for signature in (
-        "void host_system_send", "void host_consumer_send", "uint16_t host_last_system_usage", "uint16_t host_last_consumer_usage")))
+        "static void host_extra_send", "void host_system_send", "void host_consumer_send", "uint16_t host_last_system_usage", "uint16_t host_last_consumer_usage")))
     info = json.loads((root / "keyboards/ajazz/ak820/info.json").read_text())
     includes = [output, ROOT / "tests/ak820_usb", *[root / item for item in (
         ".", "tmk_core", "tmk_core/protocol", "tmk_core/protocol/ch555", "tmk_core/protocol/ch555/lufa_utils",

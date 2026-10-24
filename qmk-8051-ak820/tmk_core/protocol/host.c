@@ -42,6 +42,10 @@ extern keymap_config_t keymap_config;
 
 #ifdef AK820_BOARD
 static host_driver_t __xdata *driver;
+extern uint8_t ak820_host_keyboard_leds(void);
+extern void ak820_host_send_keyboard(report_keyboard_t *report);
+extern void ak820_host_send_mouse(report_mouse_t *report);
+extern void ak820_host_send_extra(report_extra_t *report);
 #else
 static host_driver_t *driver;
 #endif
@@ -72,7 +76,11 @@ uint8_t host_keyboard_leds(void) {
     if (!is_keyboard_master()) return split_led_state;
 #endif
     if (!driver) return 0;
+#ifdef AK820_BOARD
+    return ak820_host_keyboard_leds();
+#else
     return (*driver->keyboard_leds)();
+#endif
 }
 
 led_t host_keyboard_led_state(void) {
@@ -107,7 +115,11 @@ void host_keyboard_send(report_keyboard_t *report) {
         report->report_id = REPORT_ID_KEYBOARD;
 #endif
     }
+#ifdef AK820_BOARD
+    ak820_host_send_keyboard(report);
+#else
     (*driver->send_keyboard)(report);
+#endif
 
     if (debug_keyboard) {
         dprint("keyboard_report: ");
@@ -135,7 +147,11 @@ void host_mouse_send(report_mouse_t *report) {
     report->boot_x = (report->x > 127) ? 127 : ((report->x < -127) ? -127 : report->x);
     report->boot_y = (report->y > 127) ? 127 : ((report->y < -127) ? -127 : report->y);
 #endif
+#ifdef AK820_BOARD
+    ak820_host_send_mouse(report);
+#else
     (*driver->send_mouse)(report);
+#endif
 }
 
 static void host_extra_send(uint8_t report_id, uint16_t usage) {
@@ -144,7 +160,11 @@ static void host_extra_send(uint8_t report_id, uint16_t usage) {
         .report_id = report_id,
         .usage = usage,
     };
+#ifdef AK820_BOARD
+    ak820_host_send_extra(&report);
+#else
     (*driver->send_extra)(&report);
+#endif
 }
 
 void host_system_send(uint16_t usage) {

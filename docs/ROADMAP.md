@@ -5,10 +5,10 @@
 The three implemented optional features—NKRO control, modifier One Shot and
 Space Cadet—are available in all eight combinations in development profiles.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
-No configured profile is approved for installation or release until the
-global stack bound, exact-image interrupt and nesting safety, and installer
-transition are qualified. Current release and installed-device results belong
-in [Status](STATUS.md).
+The exact full image has reviewed stack, interrupt and settings-transition
+proofs. Publication still requires its committed program policy, native
+Windows/Linux builds and package acceptance. Other profiles remain development
+work. Current source, release and device results belong in [Status](STATUS.md).
 
 ## Deferred features
 
@@ -61,10 +61,10 @@ Do not count loader, settings or journal space as free CODE. See
 [qualification evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
 
 Development builds run regression gates and profile-specific host and linked
-CPU suites against the exact image. Those checks do not establish physical
-behavior, a whole-program stack bound or exact-image interrupt/nesting safety.
-The configurator remains closed to packaging until all release gates, including
-the installer transition, are qualified.
+CPU suites against the exact image. The full candidate additionally has a
+reviewed control-stack and all-source interrupt allowance, under the documented
+MCS-51 architectural contract. Other profiles need their own evidence before
+packaging. Model tests do not establish physical behavior.
 
 ## Further code-size analysis
 
@@ -77,39 +77,25 @@ in technical reports. Do not reduce layers, macro capacity or existing
 functionality to make a new option appear to fit. Storage changes need their own
 backup and migration plan.
 
-## Completion of this stage
+<a id="next-alpha-release"></a>
 
-- Keep the eight documented profiles in sync with the configurator and exact-image reports.
-- Qualify the global stack bound, interrupt/nesting safety and installer transition before packaging any profile.
-- Bind any future package and settings backup compatibility to the exact selected image and feature set.
-- Keep device acceptance separate from host and linked-CPU models.
-- Keep default tests offline or read-only; hardware flashing needs separate confirmation.
-
-## Next alpha release
+## Remaining release work
 
 The target for `v0.6.0-alpha.3` is the `full` profile: NKRO control, modifier
-One Shot and compact Space Cadet, together with the existing base features.
-`full` means these three implemented options; it does not include the eight
-deferred candidates above. The release is pending the following work, in order:
+One Shot and compact Space Cadet together with the base functions. The eight
+deferred candidates are outside this release.
 
-1. Close the unresolved main and LED stack paths on the exact full image.
-   Include guarded Repeat, macro and Combo reentry, finite callback targets,
-   and the LED selector invariant; review static parameter and overlay safety.
-2. Establish the VS11/OEM interrupt entry, routing and priority contract.
-   Combine wrapper and nested-interrupt costs with the foreground bound and
-   report the remaining stack margin. Generic CPU tests alone are insufficient.
-3. Qualify backup, update and restore from alpha.2 to the exact full image.
-   Bind compatibility to the image and feature identity, preserve the physical
-   confirmation flow, and test cancellation and failure stops before packaging.
-4. Obtain independent review of code, documentation and exact-image evidence;
-   update the release policy and packing receipt, then reproduce the approved
-   image in CI. Keep packaging blocked until the checks above pass.
-5. Build standalone Windows and Linux x86_64 installers with SHA256 files and
-   English/Russian installation instructions. Check the downloaded packages
-   against the approved image before publishing the prerelease.
+- Reproduce the reviewed full image and exact source inputs in CI.
+- Build standalone Windows and Linux x86_64 installers with SHA256 files and
+  English/Russian installation instructions.
+- Check the downloaded packages against the approved image before publishing
+  the prerelease. Record CI and package results in [Status](STATUS.md).
 
-Record source, build, model and device results separately in [Status](STATUS.md).
-Any device write during qualification requires separate confirmation.
+For later images, regenerate stack, interrupt, settings and packing evidence
+when their inputs change. Qualify each selected feature identity separately;
+matching schemas or passing isolated tests do not make profiles interchangeable.
+Keep device acceptance separate from models and default tests offline or
+read-only. Any hardware write requires separate confirmation.
 
 ## Other open work
 

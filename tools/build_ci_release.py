@@ -164,6 +164,14 @@ def _validate_policy_sources(policy: dict, report: dict) -> None:
         '.github/workflows/windows-installer.yml', 'tools/ci_checks.py',
         'tools/test_keyboard.py', 'tools/build_ci_release.py',
     }
+    if 'configuration' in report:
+        # The independent policy must bind the safety review itself, including
+        # its pinned witnesses. An uncommitted replacement is not a new review.
+        safety_name = 'ci/release-safety.json'
+        safety = load_json(ROOT / safety_name)
+        required.add(safety_name)
+        required.update(safety.get('source_files', {}))
+        required.update(record['path'] for record in safety.get('witnesses', {}).values())
     if not required <= declared.keys():
         raise ValueError('Program policy omits required source or CI files')
 

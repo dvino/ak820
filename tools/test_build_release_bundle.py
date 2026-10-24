@@ -19,6 +19,7 @@ class ReviewBindingTests(unittest.TestCase):
         self.files = [root / name for name in ("app.ihx", "app.map", "build.json")]
         for index, path in enumerate(self.files):
             path.write_bytes(bytes([index]))
+        self.files[2].write_text("{}\n", encoding="utf-8")
         self.review = root / "review.md"
         self.record = {
             "format": "ak820-offline-review-2", "release": "rc6", "status": "passed",

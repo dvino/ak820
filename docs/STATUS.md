@@ -2,97 +2,50 @@
 
 # Project status
 
-Updated 2026-10-24. [v0.6.0-alpha.2](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.2)
-is published from commit `4772c433057bde5c9ccc4f2f3f904f1dcb326c17`.
-It includes eight two-key Combos and settings backup/restore for their eight
-slots. Windows and Linux x86_64 installers are available. See [Install](INSTALL.md)
-for package selection, checksums and launch commands.
+Updated 2026-10-24. The published and installed release is still
+[v0.6.0-alpha.2](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.2).
+Its Windows and Linux x86_64 packages are described in [Install](INSTALL.md).
+Alpha.3 is being prepared from the `full` profile; publication and native
+installer acceptance are pending.
 
-## Source and built image
+## Alpha.3 source and image
 
-Development continued from `dev` commit `48ce5fa`. The configurator now offers
-all eight combinations of NKRO control, modifier One Shot and compact Space
-Cadet. Commands and limits are in [Build profiles](BUILD-PROFILES.md). Published
-and installed alpha.2 remains unchanged.
+The full candidate includes NKRO control, modifier One Shot and compact Space
+Cadet alongside the base functions. Its IHX SHA256 is
+`d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`.
+It uses 40,043 CODE bytes, 2,631 XRAM bytes and 162 bytes of allocated stack.
+There are 441 trailing main-window bytes and 16 low-window bytes.
 
-The `ak820-roadmap-20261024-git.tar.gz` handoff was imported through `4f6fffb`.
-All 2,071 retained evidence checksums pass. The local full-profile rebuild
-reproduces IHX SHA256 `45681603a105334214919be0b8c32fc4ea94e8fc9d5a2003e98d673809d15a78`.
-The full recheck passed 28 base suites, 270 unit tests without skips and nine
-supplemental suites. The initial documentation-link failure is retained.
-Release packaging still refuses the image for the three reasons below; this
-acceptance does not publish alpha.3. See the [acceptance record](../audits/rc6/roadmap-acceptance-20261024/review.md)
-and [next release plan](ROADMAP.md#next-alpha-release).
+Exact-image analysis closes the main and three callback roots. The combined
+control-stack allowance is 93 bytes for main, two for CRT entry and 61 for all
+three interrupt wrappers and callbacks: 156 bytes, leaving six. The proof uses
+bank-0 SDCC calls, valid memory accesses, private guard objects and MCS-51
+in-service/RETI semantics; it does not assume two priority levels or prove
+physical VS11 timing. See the [release qualification](../audits/rc6/alpha3-release-20261024/review.md)
+and [safety manifest](../ci/release-safety.json).
 
-All eight profiles pass full linking and exact memory/configuration checks.
-The current standard image uses **39,115 CODE and 2,612 XRAM bytes**, saving
-699 CODE bytes from the starting development image and 1,198 from alpha.2.
-The full profile with all three optional features uses **40,018 CODE and 2,630
-XRAM bytes**; it leaves 466 trailing main-window bytes and 16 low-window bytes.
-Its 162 allocated stack bytes are capacity, not a runtime bound. Exact profile
-sizes and image identities are in the
-[development evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
-All eight profiles passed complete offline qualification from source `81cfc96`:
-28 base suites and 270 unit tests without skips per profile, plus 58 supplemental
-suite executions across the matrix. Exact flags, artifacts, commands, logs and
-test-source hashes are bound to each result. The initial sanitizer environment
-failures and the complete successful reruns are retained in the same report.
+The final candidate passes all 15 distinct-source IRQ orders and all 256 LED
+selector values in the CPU model. Startup memory and hostile pre-erase entry
+checks pass. Independent checks pass 30 analyzer, six startup and five IRQ
+unit tests. Settings checks pass 47 tests; a retained real alpha.2 backup passes
+offline preflight for 498 keys, 12 encoder assignments and eight Combo slots.
+The safety gate passes 20 tests, and all host tools pass 158 tests.
+The complete base recheck passes 28 suites and 273 unit tests without skips.
+All 13 supplemental full-profile suites pass on the same unchanged image.
+Detailed source hashes, review closure, initial fixture failure and remaining
+model limits are in the qualification report.
 
-The new [packing selection](../audits/rc6/roadmap-max-20261024/packing.md)
-saves 668 CODE bytes on an unchanged baseline. All 194 helpers pass 3,104 CPU
-state comparisons; integrity checks cover all 1,384 replacement sites.
-[Protocol changes](../audits/rc6/roadmap-max-20261024/protocol-size.md) reduce
-private representation and descriptor costs without changing wire formats.
-[Space Cadet](../audits/rc6/roadmap-max-20261024/space-cadet.md) adds the three
-bounded Shift/tap actions. Feature costs are measured in complete images and
-must not be added as independent estimates.
+Only this exact full image satisfies the new packaging gate, independent program
+policy and fresh packing receipt. Native CI and downloaded-package acceptance
+remain before publication.
+The other seven profiles remain development builds. The earlier eight-profile
+matrix from source `81cfc96` is [dated evidence](../audits/rc6/roadmap-max-20261024/final/README.md),
+not qualification of those profiles after the alpha.3 changes.
 
-The [exact-image stack analyzer](../audits/rc6/runtime-stack-20261024/report.md)
-now resolves bounded USB dispatch and constant ROM callback targets, rejects
-unproven paths and records unresolved roots. It does not yet establish a bound
-for the whole main path or the LED interrupt. A reviewed global stack bound,
-exact-image interrupt/nesting proof and installer transition remain missing.
-No profile is approved for installation or release; the existing release
-workflow and configurator stop before producing a package. No device commands
-were sent during this development work.
-
-[Feature probes](../audits/rc6/roadmap-max-20261024/feature-probes.md) identify
-size and compiler blockers for Mouse Keys, Auto Shift, Tap Dance and Key
-Overrides. The [QMK Settings design](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md)
-inventories effective settings and a versioned record in the measured logical
-gap after Combo data. It is a proposal; the saved format and runtime settings
-remain unchanged.
-
-### Published alpha.2 image
-
-The Combo work was imported from `ak820-combos-20261024-git.zip`, based on
-`4b83bb9`, through `d361501`. Release integration adds reviewed settings
-preservation and native Linux packaging. The application uses 40,313 CODE
-bytes: 38,492 main and 1,821 low. It leaves 120 trailing main-window bytes and
-67 low-window bytes. XRAM is 2,621 bytes; initial SP is `0x5f`, with 160 bytes
-allocated for the stack. These figures do not prove a worst-case stack bound.
-
-The application IHX SHA256 is
-`a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f`.
-The IHX is an application, not a complete flashable ROM. The installer builds
-the complete update with validated local OEM recovery data.
-
-## Verification
-
-The [tag CI run](https://github.com/dvino/ak820/actions/runs/40060505913)
-passed all four jobs. Its firmware qualification passed 28 suites and 270 unit
-tests with zero skips. The fresh local qualification before Linux packaging
-passed 28 suites and 265 tests; later Linux host changes have separate
-[regression evidence](../audits/rc6/alpha2-release-20261024/linux-integration.json).
-Host models and linked CPU execution do not establish device behavior.
-
-Native Windows and Ubuntu 22.04/glibc 2.35 builds passed CLI verification and
-Tk startup checks. Linux also verified its frozen hidraw backend. The three
-downloaded public archives passed checksum, source and packaged-input checks;
-see the [asset check](../audits/rc6/alpha2-release-20261024/asset-check.json) and
-[independent review](../audits/rc6/alpha2-release-20261024/published-artifact-review.md).
-The downloaded Linux CLI also passed local help and offline verification.
-GUI startup checks do not establish manual interaction or display scaling.
+The [roadmap archive acceptance](../audits/rc6/roadmap-acceptance-20261024/review.md)
+records the imported work. The [roadmap](ROADMAP.md) lists remaining release
+work and deferred features. No device commands were issued during alpha.3
+preparation.
 
 ## Installed firmware
 

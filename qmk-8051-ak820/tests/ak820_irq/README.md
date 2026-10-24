@@ -1,45 +1,55 @@
-# AK820 IRQ stack audit (offline)
+# Offline IRQ checks
 
-From the QMK tree, after producing a linked build:
+Run from the QMK tree after building the image:
 
 ```sh
-python tests/ak820_irq/run.py \
-  --build-dir .build/rc5-baseline \
-  --s51 ../toolchains/sdcc-4.4.0/bin/s51 \
-  --stock-rom /path/to/private-oem-references/releases/rc5/reference/stock-full.bin \
-  --output-dir .build/rc5-baseline-irq \
+python3 tests/ak820_irq/run.py \
+  --build-dir /path/to/build \
+  --s51 ../toolchains/sdcc-4.6.0/bin/s51 \
+  --stock-rom /path/to/private/before-full-rom.bin \
+  --output-dir /path/to/irq-results \
   --main-sample-bytes 56
 ```
 
-The ROM is an owner-held local reference from the private archive; it is not
-stored in or distributed with this repository.
+The OEM reference stays outside the repository. The packer's native-image
+validation checks its supported code variant and protected regions. Exact
+wrapper instructions are checked separately.
 
-The runner checks relocated instruction bytes against the linked IHX, explores
-the IRQ callback control flow, and counts balanced PUSH/POP, calls and tail
-jumps. Unsupported stack writes, recursive calls and unknown indirect dispatch
-fail the check. The recognized SDCC string-descriptor dispatch and LED selector
-tables assume a valid table entry, as required by their source index checks.
+The shared stack analyzer checks relocated listing bytes against the IHX and
+bounds every IRQ callback path. Unknown transfers, recursion, unbalanced stack
+use and unproved indirect dispatch fail the check. Each OEM wrapper adds 17
+bytes: two for the hardware return address, 13 saved registers and two for the
+callback call. All 15 ordered nonempty subsets of Timer0, USB and LED are
+bounded. The largest bound adds all three callbacks and their wrappers; it
+does not depend on a particular number or ordering of priority levels.
 
-It verifies the exact preserved OEM wrappers and their 17-byte entry overhead:
-the two-byte hardware return frame, 13 saved registers, and the two-byte call
-to the application callback. It then executes those actual wrapper bytes and
-the linked callbacks in the generic uCsim C52 CPU. LCALL supplies the hardware
-return frame; USB ACK side effects and an interrupt of higher priority are
-injected explicitly. The USB SET_CONFIGURATION path exercises its largest
-static stack frame. USB interrupted by Timer0 or LED is checked at that frame.
-All register banks, ACC/B/DPTR/PSW, SP, and a representative main stack canary
-must be preserved across the wrappers.
+This uses the MCS51 architectural rule that an interrupt cannot preempt an
+active interrupt of equal or higher priority. RETI ends that active state;
+ordinary RET does not. See the original [Intel MCS-51 manual, printed pages
+3-24 and 3-25](https://bitsavers.trailing-edge.com/components/intel/8051/MCS-51_Users_Manual_Feb94.pdf).
+The checker rejects priority writes and early RETI in reachable callbacks.
+The target is assumed to follow these interrupt and instruction semantics.
+This is an explicit architectural assumption, not physical VS11 validation.
 
-The RC4 baseline bounds are Timer0 19, USB 23 and LED 19 bytes, including the
-wrapper. At most two simultaneous interrupt priority levels, following the
-CH555 register contract, therefore add at most 42 bytes. The baseline link map
-has 145 stack bytes available. A **representative** main frame of 56 bytes plus
-42 IRQ bytes leaves 47 bytes. The 56 is the largest previously exercised RC4
-main scenario, **not a global main-stack upper bound**. Supply a larger measured
-main peak when validating a changed profile. The firmware currently preserves
-inherited IP/IP_EX priority choices; the sum includes either priority order.
+The CPU fixture injects all 15 source orderings at callback entry and runs the
+actual OEM wrappers and linked callbacks. Each nested return must preserve
+bank0 R0..R7, ACC, B, DPTR, PSW and SP. A reserved foreground stack canary must
+also survive. Banks 1–3 can contain compiler data and are not part of the
+register preservation contract. Injection at entry exercises preservation;
+the static sum covers interrupts arriving at other callback phases.
 
-`results.json` and CPU logs bind these observations to exact IHX/MAP and runner
-hashes. They do not model VS11K28A interrupt routing, LED DMA, USB timing, actual
-peripheral semantics, stack depth of every main path, or physical hardware.
-No USB device is opened and no firmware or device image is written.
+The emitted checks also reject unexpected source enables and register-bank
+changes. Shared timer/USB helpers must run under their initialization
+mask for both long and page-relative call/jump forms. Initialization jumps
+are rejected. Timer/USB private storage must have no overlay or conflicting
+allocation. The LED IRQ has no C local storage. The LED selector
+is executed for all 256 input values. Values 0x10–0x1f retain their native
+meaning, and the mask limits the table path to its 16 entries.
+
+`results.json` binds results to the image, map, runner and stack analyzer.
+The foreground reservation is a sample, not a global bound. Combine the
+static IRQ sum with the separate main-path and startup bounds for a whole
+image stack result. USB ACK effects and hardware entry frames are supplied
+by the fixture. Peripheral timing, LED DMA, physical key scanning and actual
+silicon interrupt delivery remain outside these offline checks. No device is
+opened or written.
