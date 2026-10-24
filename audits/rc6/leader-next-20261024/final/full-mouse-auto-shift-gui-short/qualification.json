@@ -1,0 +1,783 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 50.94,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/00.txt",
+      "log_sha256": "f1d1a2aa33a3ed06e00ecf41341c0c803e3c146d9f694505461b6245007a8767",
+      "unit_tests": {
+        "run": 135,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.13,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/01.txt",
+      "log_sha256": "70de6fc4d6fd240c0154c552a47e5409fbc4f82dc7ff20a980b5fff7bc5478e5",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/02.txt",
+      "log_sha256": "9199486d6f7e3c960b64f3e77ada29cab008ac5ebeaa0d1245e6d12ed714515b",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.131,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/03.txt",
+      "log_sha256": "cdd2173eba220c80ceb6deb3ed8af6e5c715dafccc8ec86a8944266788f29646",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.042,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/04.txt",
+      "log_sha256": "bcbe490de171f458cb3d2525f2ea9626829591246e6a15115921420ffadefa42",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.053,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/05.txt",
+      "log_sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.72,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/06.txt",
+      "log_sha256": "5ab8f186bb855266c7d0b2a77eaea98e0a678643b9f5a3a4c7e95a6e6552f60a",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.055,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/07.txt",
+      "log_sha256": "670a39115e7523a8984e4842e16547cb2094b03fad392b037b4b9dc8b2656e62",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.044,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/08.txt",
+      "log_sha256": "903811b07c17535058f7c00aa5491e0c43d81bc4476f43bf76ec97624d36475d",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.65,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.586,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.324,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.228,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/12.txt",
+      "log_sha256": "2ae1a06370222cfd4042b160f898fc26384944e4c8cc32ccb18fc13d4ad25459",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.294,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.897,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.202,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.073,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.245,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.348,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/18.txt",
+      "log_sha256": "5e6957a1eea658cb39448866736856adb87367db802d33ecde9ecace9920cbfd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 11.471,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/19.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.725,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/20.txt",
+      "log_sha256": "30a26029388a61bf2eec66216d9b8feca3546d0e010c41819844ab6b0bc98235",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 0.927,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/21.txt",
+      "log_sha256": "afeeb2a3e297932feb362493df7a33bbf15262f16783d99edc593204fb72290a",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.879,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/22.txt",
+      "log_sha256": "cc6799d4c1361b23524498a48009236a0dc591db4628fa644e8fb270499e698f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.916,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.503,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/24.txt",
+      "log_sha256": "6ba21bd08eb7259903d57dd59b069d734a5f4aa032fbc375c143310139e39f3e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 0.929,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/25.txt",
+      "log_sha256": "965bf8f5c01064d62941529a04098e96c61ce2e2f564d4d1133e5490cde893b9",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 5.39,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/26.txt",
+      "log_sha256": "fb8d2aaa346714255be507581feb54e5bfe56406df3652c245d29912634b2692",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 1.747,
+      "log": "/workspace/scratch/1875e97a7527/matrix-b/qmk-8051-ak820/.build/final-full-mouse-auto-shift-gui-short/qualification-logs-in5l5qo0/27.txt",
+      "log_sha256": "99f20a956fe78c0aecfc4302a40389a8c1e20ba377c104da10a51a6ccc284d2e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      },
+      "build_after": {
+        "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+        "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 273,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "a177015400227dc2b7975e519e62150c29295f17a9f65cbc26f9aa72f3817784",
+    "map": "ed6d68fa31169d918b31a28392290c87d29f3b9ddc87c0168e25d1d4d92e741b"
+  },
+  "build_unchanged": true
+}

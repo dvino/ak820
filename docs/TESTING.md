@@ -36,7 +36,7 @@ public OEM instruction fixture and does not require private ROM. CPU fixtures
 model peripheral operations and do not emulate VS11K28A USB or flash silicon.
 A tested stack peak is not a global bound.
 
-For any of the seventeen named profiles, use the dedicated [profile build
+For any of the eighteen named profiles, use the dedicated [profile build
 command](BUILD-PROFILES.md). It first requires the exact image to pass the
 combined startup, foreground and IRQ stack-bound gate. Unknown bounds or
 overflow fail the build before other regression suites run. It then runs the

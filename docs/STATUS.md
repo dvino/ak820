@@ -46,51 +46,36 @@ not access a device; installation results are recorded separately.
 
 ## Current development source
 
-The `full-leader` development profile adds compact [Leader](COMPACT-LEADER.md):
-a physical `QK_LEAD` prefix followed by one selector within 300 ms runs one of
-the 16 existing Vial macros. The selector and prefix are consumed; macro
-contents remain editable in Vial. The keymap, macro and Combo storage layout
-is unchanged. The configurator now lists 18 profiles and a 20-variant
-qualification plan. The combined-source matrix is being regenerated; the
-older results below qualify only their stated frozen source.
+All **18 named profiles and 20 build variants** pass from clean frozen source
+`d04290b`. Each image closes foreground calls, CRT startup and all three
+interrupt sources before regression testing. Each passes 28 base suites and
+273 unit tests with zero skips, plus 16–26 supplemental suites. The
+minimum stack margin is 1 byte. Exact images, resource measurements and
+complete raw builds are retained in the
+[final matrix](../audits/rc6/leader-next-20261024/final/README.md).
 
-The development follow-up narrows keyboard report helper arguments to their
-actual XDATA memory space. The measured `full` candidate saves 34 CODE bytes
-and seven XRAM bytes with the same 160/166 stack bound. Short-call builds also
-accept empty listing directories recreated by the diagnostic linker; the
-reproduced tight-profile IHX is unchanged. Measurements, rejected experiments
-and independent review are in the [optimization report](../audits/rc6/leader-next-20261024/optimization.md).
-The earlier matrix below describes its frozen source, not this follow-up.
+The new `full-leader` profile adds compact [Leader](COMPACT-LEADER.md).
+Physical `QK_LEAD` followed within 300 ms by `1`–`9`, `0`, or `A`–`F` selects
+one of the 16 existing Vial macros. It uses 39,606 CODE bytes and 2,627 XRAM
+bytes; its combined stack bound is 160/162. All 26 linked Leader cases pass,
+including real macro output with queued One Shot and extended-macro callbacks.
 
-All **17 named profiles and 19 build variants** pass from clean frozen source
-`39b6e22`. Every image closes foreground, startup and all three interrupt paths
-before its regression suites. Each passes 28 base suites and 273 base unit
-tests without skips, plus 16–26 supplemental suites. The complete bounds fit
-all linked stack allocations; the minimum remaining margin is 1 byte.
+Report helpers now receive their actual XDATA pointers directly. The rebuilt
+`full` uses 38,890 CODE bytes and 2,600 XRAM bytes: 34 and seven fewer than the
+previous matrix, with the same 160/166 stack bound. Short-call builds also
+accept empty listing directories recreated by the diagnostic linker, while
+rejecting existing files and links. Findings, rejected probes and corrections
+are in the [change report](../audits/rc6/leader-next-20261024/README.md).
 
-The analyzer now resolves the compact RGB callback. This exposed six earlier
-images whose conservative bound exceeded capacity. Correcting the shared delay
-calling convention reduces saved registers without changing the delay loop.
-The rebuilt `full` uses 160 of 166 stack bytes; `full-ctrl-gui` uses 164 of 166.
+Six layers, 16 Vial macro slots, 8192 macro bytes, eight Combos and schema
+`0x082002` remain unchanged. Every image passes 15 distinct-source IRQ orders,
+all 256 LED selector values and seven delay-ABI cases. These are static and
+host/CPU-model results; normal sanitizer checks remain enabled.
 
-The new `full-ctrl-gui` profile adds volatile left/right Ctrl/GUI swaps alongside
-GUI lock. It retains raw modifier ownership and queued One Shot state. Six
-layers, 16 Vial macros, 8192 macro bytes, eight Combos and schema `0x082002`
-remain unchanged.
-
-Every new feature/profile must pass its own exact-image runtime check before
-full regression qualification. All 19 images pass 15 IRQ nest orders, all 256
-LED selector values and seven delay ABI cases. These are static and CPU-model
-results; the public IRQ fixture does not require a private OEM image.
-Measurements and source, image, test and log hashes are in the
-[final matrix](../audits/rc6/runtime-stack-20261024/final/README.md).
-Findings and independent review are in the
-[technical report](../audits/rc6/runtime-stack-20261024/README.md).
-
-The previous compact matrix at source `55acbb0` is historical. Changed source
-still requires separate release and installer-transition approval. No physical
-test or device command was performed. The published and installed firmware
-remains the exact alpha.3 image above.
+The matrices at `39b6e22` and `55acbb0` are historical. Changed source still
+requires separate release and installer-transition approval. No physical test
+or device command was performed. The published and installed firmware remains
+the exact alpha.3 image above.
 
 ## Installed firmware
 

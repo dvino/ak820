@@ -1,0 +1,630 @@
+{
+  "pass": true,
+  "cases": [
+    {
+      "name": "idle",
+      "pass": true,
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "first_press",
+      "pass": true,
+      "actual": [
+        255,
+        71,
+        0,
+        0
+      ],
+      "expected": [
+        255,
+        71,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "other_dark",
+      "pass": true,
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "chord_first",
+      "pass": true,
+      "actual": [
+        255,
+        41,
+        0,
+        0
+      ],
+      "expected": [
+        255,
+        41,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "chord_last",
+      "pass": true,
+      "actual": [
+        255,
+        71,
+        0,
+        0
+      ],
+      "expected": [
+        255,
+        71,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "first_expired",
+      "pass": true,
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "all_expired",
+      "pass": true,
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "encoder_hole",
+      "pass": true,
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "suspend_immediate",
+      "pass": true,
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "resume_black",
+      "pass": true,
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wrap_lit",
+      "pass": true,
+      "actual": [
+        255,
+        71,
+        0,
+        0
+      ],
+      "expected": [
+        255,
+        71,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wrap_expired",
+      "pass": true,
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "indicators": {
+    "name": "dedicated_host_and_layer_indicators",
+    "pass": true,
+    "cases": [
+      {
+        "name": "base_caps_with_unrelated_leds",
+        "pass": true,
+        "actual": {
+          "caps": [
+            255,
+            255,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            255,
+            255,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      },
+      {
+        "name": "unrelated_host_led_bits",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      },
+      {
+        "name": "layer_on_api",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            255,
+            255,
+            60,
+            195
+          ],
+          "irq": [
+            0
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            255,
+            255,
+            60,
+            195
+          ],
+          "irq": [
+            0
+          ]
+        }
+      },
+      {
+        "name": "layer_off_api",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      },
+      {
+        "name": "default_layer_api",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            255,
+            255,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            255,
+            255,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      },
+      {
+        "name": "tri_layer_api",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            255,
+            255,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            255,
+            255,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      },
+      {
+        "name": "capsword_without_host_led",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      },
+      {
+        "name": "suspended",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            0
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            0
+          ]
+        }
+      },
+      {
+        "name": "resumed",
+        "pass": true,
+        "actual": {
+          "caps": [
+            255,
+            255,
+            90,
+            165
+          ],
+          "layer": [
+            255,
+            255,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            255,
+            255,
+            90,
+            165
+          ],
+          "layer": [
+            255,
+            255,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      },
+      {
+        "name": "reset_unconfigured",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      },
+      {
+        "name": "disconnected",
+        "pass": true,
+        "actual": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        },
+        "expected": {
+          "caps": [
+            0,
+            0,
+            90,
+            165
+          ],
+          "layer": [
+            0,
+            0,
+            60,
+            195
+          ],
+          "irq": [
+            32
+          ]
+        }
+      }
+    ],
+    "peak_sp": 97,
+    "tested_stack_bytes": 8,
+    "fixture_auto_shift": "not-compiled",
+    "scope": "Linked updater CPU model with simulated USB/layer state; CapsWord key activity and USB report generation are not invoked here."
+  },
+  "peak_sp": 105,
+  "tested_stack_bytes": 16,
+  "fixture_auto_shift": "not-compiled",
+  "linked_image_sha256": "8c58df6a68de8f9a54d289a3368bcb5a76859ad885f1890af84e300d5e1b80a0",
+  "limits": "uCsim C52 CPU/linked-code fixtures; no VS11K28A peripheral, physical timing or device validation."
+}

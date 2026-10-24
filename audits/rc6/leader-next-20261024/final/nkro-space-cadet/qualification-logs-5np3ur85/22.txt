@@ -1,0 +1,728 @@
+{
+  "linked_image_sha256": "2b0a66adbc0c72daba537b7235fa907f9e034610f3706ace969a9313c40d8e6c",
+  "level": "uCsim C52 linked code; no physical USB/peripheral/IRQ validation",
+  "hardware_validated": false,
+  "tests": [
+    {
+      "name": "tri-layer-order-lower-first",
+      "pass": true,
+      "observations": {
+        "first": [
+          2
+        ],
+        "both": [
+          14
+        ],
+        "first_up": [
+          4
+        ],
+        "both_up": [
+          0
+        ],
+        "no_hid": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "first": [
+          2
+        ],
+        "both": [
+          14
+        ],
+        "first_up": [
+          4
+        ],
+        "both_up": [
+          0
+        ],
+        "no_hid": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-order-upper-first",
+      "pass": true,
+      "observations": {
+        "first": [
+          4
+        ],
+        "both": [
+          14
+        ],
+        "first_up": [
+          2
+        ],
+        "both_up": [
+          0
+        ],
+        "no_hid": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "first": [
+          4
+        ],
+        "both": [
+          14
+        ],
+        "first_up": [
+          2
+        ],
+        "both_up": [
+          0
+        ],
+        "no_hid": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-simultaneous",
+      "pass": true,
+      "observations": {
+        "both": [
+          14
+        ],
+        "both_up": [
+          0
+        ]
+      },
+      "expected": {
+        "both": [
+          14
+        ],
+        "both_up": [
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-release-hidden-by-adjust-map",
+      "pass": true,
+      "observations": {
+        "adjust": [
+          14
+        ],
+        "lower_up": [
+          4
+        ],
+        "upper_up": [
+          0
+        ],
+        "no_spurious_hid": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "adjust": [
+          14
+        ],
+        "lower_up": [
+          4
+        ],
+        "upper_up": [
+          0
+        ],
+        "no_spurious_hid": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-live-remap-release",
+      "pass": true,
+      "observations": {
+        "adjust": [
+          14
+        ],
+        "original_lower_up": [
+          4
+        ],
+        "original_upper_up": [
+          0
+        ],
+        "new_lower_assignment": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_assignment_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "adjust": [
+          14
+        ],
+        "original_lower_up": [
+          4
+        ],
+        "original_upper_up": [
+          0
+        ],
+        "new_lower_assignment": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_assignment_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-unlock-preserves-unrelated-toggle",
+      "pass": true,
+      "observations": {
+        "held_with_toggle": [
+          46
+        ],
+        "unlock_clear_held": [
+          32
+        ],
+        "second_unlock_idempotent": [
+          32
+        ],
+        "suppressed_up_then_cancel": [
+          32
+        ],
+        "reusable_after_cancel": [
+          46
+        ],
+        "reused_up": [
+          32
+        ]
+      },
+      "expected": {
+        "held_with_toggle": [
+          46
+        ],
+        "unlock_clear_held": [
+          32
+        ],
+        "second_unlock_idempotent": [
+          32
+        ],
+        "suppressed_up_then_cancel": [
+          32
+        ],
+        "reusable_after_cancel": [
+          46
+        ],
+        "reused_up": [
+          32
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-unlock-preserves-other-member-toggle",
+      "pass": true,
+      "observations": {
+        "lower_with_upper_toggle": [
+          14
+        ],
+        "unlock_preserves_upper": [
+          4
+        ],
+        "cancel_preserves_upper": [
+          4
+        ]
+      },
+      "expected": {
+        "lower_with_upper_toggle": [
+          14
+        ],
+        "unlock_preserves_upper": [
+          4
+        ],
+        "cancel_preserves_upper": [
+          4
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-unlock-suppresses-new-press",
+      "pass": true,
+      "observations": {
+        "new_press_suppressed": [
+          0
+        ],
+        "new_up_suppressed": [
+          0
+        ],
+        "cancel_clean": [
+          0
+        ]
+      },
+      "expected": {
+        "new_press_suppressed": [
+          0
+        ],
+        "new_up_suppressed": [
+          0
+        ],
+        "cancel_clean": [
+          0
+        ]
+      },
+      "peak_sp": 112,
+      "tested_stack_bytes": 23,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-duplicate-lower-owned-state",
+      "pass": true,
+      "observations": {
+        "both_lower": [
+          2
+        ],
+        "duplicate_adjust": [
+          14
+        ],
+        "first_lower_up": [
+          14
+        ],
+        "upper_up": [
+          2
+        ],
+        "last_lower_up": [
+          0
+        ]
+      },
+      "expected": {
+        "both_lower": [
+          2
+        ],
+        "duplicate_adjust": [
+          14
+        ],
+        "first_lower_up": [
+          14
+        ],
+        "upper_up": [
+          2
+        ],
+        "last_lower_up": [
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-ordinary-mo-derives-adjust",
+      "pass": true,
+      "observations": {
+        "mo_pair_with_adjust": [
+          14
+        ],
+        "mo_lower_only": [
+          2
+        ],
+        "mo_all_up": [
+          0
+        ]
+      },
+      "expected": {
+        "mo_pair_with_adjust": [
+          14
+        ],
+        "mo_lower_only": [
+          2
+        ],
+        "mo_all_up": [
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-toggle-plus-upper",
+      "pass": true,
+      "observations": {
+        "lower_toggled": [
+          2
+        ],
+        "upper_with_toggle": [
+          14
+        ],
+        "upper_up_keeps_toggle": [
+          2
+        ],
+        "toggle_off": [
+          0
+        ]
+      },
+      "expected": {
+        "lower_toggled": [
+          2
+        ],
+        "upper_with_toggle": [
+          14
+        ],
+        "upper_up_keeps_toggle": [
+          2
+        ],
+        "toggle_off": [
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-repeat-keeps-letter-history",
+      "pass": true,
+      "observations": {
+        "letter": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "layer_cycle": [
+          0
+        ],
+        "repeat_letter": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat_no_layer": [
+          0
+        ],
+        "repeat_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "letter": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "layer_cycle": [
+          0
+        ],
+        "repeat_letter": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat_no_layer": [
+          0
+        ],
+        "repeat_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 137,
+      "tested_stack_bytes": 48,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-synthetic-paired-vial-events",
+      "pass": true,
+      "observations": {
+        "virtual_lower": [
+          2
+        ],
+        "virtual_both": [
+          14
+        ],
+        "virtual_lower_up": [
+          4
+        ],
+        "virtual_both_up": [
+          0
+        ]
+      },
+      "expected": {
+        "virtual_lower": [
+          2
+        ],
+        "virtual_both": [
+          14
+        ],
+        "virtual_lower_up": [
+          4
+        ],
+        "virtual_both_up": [
+          0
+        ]
+      },
+      "peak_sp": 111,
+      "tested_stack_bytes": 22,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-unlock-mixed-mo-mo-first",
+      "pass": true,
+      "observations": {
+        "mixed_adjust": [
+          14
+        ],
+        "mixed_unlock": [
+          0
+        ],
+        "mixed_cancel": [
+          0
+        ]
+      },
+      "expected": {
+        "mixed_adjust": [
+          14
+        ],
+        "mixed_unlock": [
+          0
+        ],
+        "mixed_cancel": [
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-unlock-mixed-mo-tl-first",
+      "pass": true,
+      "observations": {
+        "mixed_adjust": [
+          14
+        ],
+        "mixed_unlock": [
+          0
+        ],
+        "mixed_cancel": [
+          0
+        ]
+      },
+      "expected": {
+        "mixed_adjust": [
+          14
+        ],
+        "mixed_unlock": [
+          0
+        ],
+        "mixed_cancel": [
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "tri-layer-held-adjust-key-release",
+      "pass": true,
+      "observations": {
+        "adjust_letter": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "layers_up": [
+          0
+        ],
+        "letter_still_held": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "original_adjust_letter_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "adjust_letter": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "layers_up": [
+          0
+        ],
+        "letter_still_held": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "original_adjust_letter_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 134,
+      "tested_stack_bytes": 45,
+      "fixture_auto_shift": "not-compiled"
+    }
+  ],
+  "test_source_sha256": {
+    "tests/ak820_tri_layer/run.py": "ba9327ab43373c889158461267366fdb5d400e2de2ea3d13812d8a387ae7f536",
+    "tests/ak820_features/run.py": "3f31a8506441b1b2dfe0334a3612b438bdf70e5067152dbaded4ee1280659a33",
+    "tests/ak820_unlock/run.py": "00a8c3bddc982fc572082cb9ba8ec90349210f00c64cbbb83bff0b029b37a6db",
+    "tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864"
+  },
+  "pass": true
+}

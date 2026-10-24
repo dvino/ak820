@@ -25,8 +25,8 @@ run passed 27 of 28 suites. RGB host testing stopped because LeakSanitizer
 could not read sandboxed `/proc` task information. The unchanged RGB suite
 passed outside that restriction with AddressSanitizer, UBSan and LeakSanitizer
 enabled. A supplementary run with leak checking disabled is excluded from
-acceptance evidence. The integrated matrix must repeat the complete suite with
-sanitizers enabled.
+acceptance evidence. The integrated matrix repeats the complete suite with
+the normal sanitizer configuration and no external sanitizer overrides.
 
 The independent reviewer checked all ten declarations and definitions, the
 retained call sites, helper-to-helper NKRO dispatch and the linked SDCC
@@ -46,7 +46,7 @@ exclusion of stale listings. Independent review found no remaining blocker.
 
 The corrected `full-auto-shift-dynamic-macro --short-calls` build passes its
 runtime gate, all 28 base suites with 273 unit tests and no skips, and all 24
-supplemental suites. Sanitizers remain enabled. Its IHX is byte-identical to
+supplemental suites. The normal sanitizer configuration is retained. Its IHX is byte-identical to
 the prior qualified image:
 
 `de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233`
@@ -68,4 +68,4 @@ the report. No finding remains open for this bounded package.
 
 - [SDCC Compiler User Guide](https://sdcc.sourceforge.net/doc/sdccman.pdf),
   section on pointers to MCS-51 named address spaces.
-- [Runtime stack check](../../../../docs/RUNTIME-STACK.md) for proof scope.
+- [Runtime stack check](../../../docs/RUNTIME-STACK.md) for proof scope.

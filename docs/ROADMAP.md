@@ -3,9 +3,9 @@
 # Roadmap
 
 NKRO control, modifier One Shot and Space Cadet are available in the `full`
-profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps and
+profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps,
 Dynamic Macros and Leader in supported combinations. The configurator
-provides eighteen named profiles; the qualification plan covers twenty variants: the named
+provides eighteen named profiles; the qualified matrix covers twenty variants: the named
 profiles plus `full` and `full-mouse-auto-shift` with `--short-calls`. These profiles are source development builds; they do not inherit the published alpha.3 qualification.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
 The published and installed alpha.3 image is the exact full image described in
@@ -59,7 +59,7 @@ Every supported feature combination must be measured as a complete linked
 image. Track both CODE windows, XRAM, internal RAM and stack placement. Shared
 code, dead-code removal and outlining make individual probe costs non-additive.
 Do not count loader, settings or journal space as free CODE. See
-[Resource budget](RESOURCE-BUDGET.md), the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md), and the current exact-image [runtime stack report](../audits/rc6/runtime-stack-20261024/final/README.md).
+[Resource budget](RESOURCE-BUDGET.md), the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md), and the current exact-image [runtime stack report](../audits/rc6/leader-next-20261024/final/README.md).
 
 Every new source profile or image must pass exact-image stack and IRQ proof
 before other regression gates; unknown bounds or overflow fail the build.
@@ -84,7 +84,7 @@ backup and migration plan.
 
 ## Later releases
 
-The alpha.3 release is published and installed. Compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps and
+The alpha.3 release is published and installed. Compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps,
 Dynamic Macros and Leader are available in development source profiles only. Changed
 profiles have no release qualification. Any later release needs a fresh exact-image
 review, platform builds, package acceptance and separate device authorization.

@@ -8,31 +8,32 @@ profiles have source changes beyond that image and are not release-qualified.
 
 ## Current development builds
 
-All 17 profiles and 19 variants pass from frozen source `39b6e22`. The
-[final matrix](../audits/rc6/runtime-stack-20261024/final/README.md) records
+All 18 profiles and 20 variants pass from frozen source `d04290b`. The
+[final matrix](../audits/rc6/leader-next-20261024/final/README.md) records
 exact identities, all checks and the raw build for each row.
 
 | Build | CODE bytes | Main / low trailing free | XRAM | Stack bound / capacity | Margin |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `standard` | 38,077 | 2,339 / 84 | 2,589 | 161 / 162 | 1 |
-| `nkro` | 38,216 | 2,200 / 84 | 2,594 | 161 / 162 | 1 |
-| `one-shot` | 38,670 | 1,814 / 16 | 2,599 | 160 / 162 | 2 |
-| `nkro-one-shot` | 38,809 | 1,675 / 16 | 2,604 | 160 / 162 | 2 |
-| `space-cadet` | 38,193 | 2,223 / 84 | 2,592 | 161 / 166 | 5 |
-| `nkro-space-cadet` | 38,332 | 2,084 / 84 | 2,597 | 161 / 166 | 5 |
-| `one-shot-space-cadet` | 38,785 | 1,699 / 16 | 2,602 | 160 / 166 | 6 |
-| `full` | 38,924 | 1,560 / 16 | 2,607 | 160 / 166 | 6 |
-| `full-gui-lock` | 39,159 | 1,325 / 16 | 2,610 | 164 / 166 | 2 |
-| `full-ctrl-gui` | 39,302 | 1,182 / 16 | 2,610 | 164 / 166 | 2 |
-| `full-dynamic-macro-gui` | 40,279 | 205 / 16 | 2,696 | 164 / 165 | 1 |
-| `full-mouse-auto-shift-gui --short-calls` | 40,391 | 93 / 16 | 2,657 | 164 / 166 | 2 |
-| `full-auto-shift-dynamic-macro --short-calls` | 40,424 | 60 / 16 | 2,710 | 160 / 165 | 5 |
-| `full-dynamic-macro` | 40,044 | 440 / 16 | 2,693 | 160 / 165 | 5 |
-| `full-mouse` | 39,774 | 710 / 16 | 2,637 | 160 / 166 | 6 |
-| `full-auto-shift` | 39,537 | 947 / 16 | 2,624 | 160 / 166 | 6 |
-| `full-mouse-auto-shift` | 40,387 | 97 / 16 | 2,654 | 160 / 166 | 6 |
-| `full --short-calls` | 38,676 | 1,808 / 16 | 2,607 | 160 / 166 | 6 |
-| `full-mouse-auto-shift --short-calls` | 40,168 | 316 / 16 | 2,654 | 160 / 166 | 6 |
+| `standard` | 38,044 | 2,372 / 84 | 2,582 | 161 / 162 | 1 |
+| `nkro` | 38,183 | 2,233 / 84 | 2,587 | 161 / 162 | 1 |
+| `one-shot` | 38,637 | 1,847 / 16 | 2,592 | 160 / 162 | 2 |
+| `nkro-one-shot` | 38,776 | 1,708 / 16 | 2,597 | 160 / 162 | 2 |
+| `space-cadet` | 38,159 | 2,257 / 84 | 2,585 | 161 / 166 | 5 |
+| `nkro-space-cadet` | 38,298 | 2,118 / 84 | 2,590 | 161 / 166 | 5 |
+| `one-shot-space-cadet` | 38,751 | 1,733 / 16 | 2,595 | 160 / 166 | 6 |
+| `full` | 38,890 | 1,594 / 16 | 2,600 | 160 / 166 | 6 |
+| `full-leader` | 39,606 | 878 / 16 | 2,627 | 160 / 162 | 2 |
+| `full-gui-lock` | 39,125 | 1,359 / 16 | 2,603 | 164 / 166 | 2 |
+| `full-ctrl-gui` | 39,268 | 1,216 / 16 | 2,603 | 164 / 166 | 2 |
+| `full-dynamic-macro-gui` | 40,247 | 237 / 16 | 2,689 | 164 / 165 | 1 |
+| `full-mouse-auto-shift-gui --short-calls` | 40,359 | 125 / 16 | 2,650 | 164 / 166 | 2 |
+| `full-auto-shift-dynamic-macro --short-calls` | 40,391 | 93 / 16 | 2,703 | 160 / 165 | 5 |
+| `full-dynamic-macro` | 40,012 | 472 / 16 | 2,686 | 160 / 165 | 5 |
+| `full-mouse` | 39,740 | 744 / 16 | 2,630 | 160 / 166 | 6 |
+| `full-auto-shift` | 39,503 | 981 / 16 | 2,617 | 160 / 166 | 6 |
+| `full-mouse-auto-shift` | 40,353 | 131 / 16 | 2,647 | 160 / 166 | 6 |
+| `full --short-calls` | 38,643 | 1,841 / 16 | 2,600 | 160 / 166 | 6 |
+| `full-mouse-auto-shift --short-calls` | 40,132 | 352 / 16 | 2,647 | 160 / 166 | 6 |
 
 Every stack bound includes the persistent CRT frame and all three distinct IRQ
 sources. The minimum margin is one byte. A changed image must pass the complete
@@ -69,5 +70,5 @@ do not establish behavior on physical hardware.
 
 These stack figures describe the published alpha.3 image only. They do not
 apply to development profiles with changed source. See [Build profiles](BUILD-PROFILES.md)
-for their feature sets and the [technical report](../audits/rc6/runtime-stack-20261024/README.md)
+for their feature sets and the [technical report](../audits/rc6/leader-next-20261024/README.md)
 for current compact-feature measurements and limits.

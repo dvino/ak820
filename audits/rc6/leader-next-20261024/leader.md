@@ -6,7 +6,7 @@ slots. Macro contents remain editable in Vial. The implementation does not
 change the six-layer keymap, 8192-byte macro store, eight Combo slots, NVM
 schema `0x082002`, loader or recovery path.
 
-The [user guide](../../../../docs/COMPACT-LEADER.md) describes selection,
+The [user guide](../../../docs/COMPACT-LEADER.md) describes selection,
 cancellation and unsupported inputs. This report records implementation and
 verification. No device command or physical test was performed; the published
 and installed alpha.3 image remains unchanged.
@@ -67,22 +67,24 @@ The exact-image runtime gate ran before the regression suites:
 | Remaining stack | 2 |
 
 The integrated image passes all 28 base suites and 273 unit tests without
-skips, all 22 supplemental suites, and all 26 linked Leader cases. The normal
-sanitizer configuration remains enabled. The exact IHX SHA256 is:
+skips, all 22 supplemental suites, and all 26 linked Leader cases. Tests use
+their normal sanitizer configuration with no external overrides. The existing
+bounded fixture retains its own leak-check exception. The exact IHX SHA256 is:
 
 `c9764ed8044836270c467a56d5d36162d4d810e864b67ebd7ab7abd4b3c39471`
 
 The complete build, machine reports and command log are retained in
 `probes/integrated-leader/`; hashes and resource measurements are in
 [probes.json](probes.json). This pre-freeze candidate records its modified
-source honestly. It is not the final matrix; all 20 variants will be rebuilt
-from one clean source commit.
+source honestly. The [final matrix](final/README.md) subsequently rebuilt all
+20 variants from one clean source commit and supersedes this candidate.
 
 Independent evidence review verified all 131 integrated files and five
 isolated-candidate files against the manifest, opened the complete raw build
 archive and checked the image, runtime and suite results. The source,
 bilingual documentation and pre-freeze evidence are approved for the feature
-commit. No finding remains open in this package; final matrix review is separate.
+commit. No finding remains open in this package. Final matrix review is
+recorded in the [change report](README.md).
 
 The earlier isolated Leader candidate used 39,640 CODE bytes and the same
 160/162 stack bound. It passed all 22 supplemental suites and 26 linked Leader

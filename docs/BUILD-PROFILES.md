@@ -2,18 +2,17 @@
 
 # Build profiles
 
-The configurator lists eighteen named development profiles. The qualification
-plan covers twenty variants: the 18 profiles plus `full` and
+The configurator lists eighteen named development profiles. The qualified
+matrix covers twenty variants: the 18 profiles plus `full` and
 `full-mouse-auto-shift` built with the optional `--short-calls` setting.
-The `full`
-feature set matches published alpha.3. Other profiles add compact Mouse Keys,
+The `full` feature set matches published alpha.3. Other profiles add compact Mouse Keys,
 Auto Shift, GUI controls, Ctrl/GUI swap, Dynamic Macros or Leader in supported
 combinations. These profiles are for development, not release or flashing.
 They have not inherited alpha.3's image qualification or hardware evidence.
 Every profile build proves stack and
 interrupt bounds for its exact linked image before running other regression
 gates. Unknown bounds or overflow fail the build. See [Status](STATUS.md) and the
-[compact-feature report](../audits/rc6/compact-runtime-20261024/README.md).
+[change report](../audits/rc6/leader-next-20261024/README.md).
 
 ## Build a profile
 
@@ -144,13 +143,13 @@ tapped; `SC_SENT` maps to right Shift while held and Enter when tapped. These
 keys use the existing compact tap-hold path and its modifier ownership. Space
 Cadet keycodes cannot be used as Combo inputs. The implementation does not
 include the full upstream Space Cadet engine. Tested feature edge cases and limits are
-recorded in the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md). Current exact-image runtime evidence is in the [runtime stack report](../audits/rc6/runtime-stack-20261024/final/README.md).
+recorded in the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md). Current exact-image runtime evidence is in the [runtime stack report](../audits/rc6/leader-next-20261024/final/README.md).
 
 The exact linked image determines resource use. Measure each profile from its
 build report; feature costs are not additive. For the exact published alpha.3 `full` image, release evidence bounds main-path
 stack use at 93 bytes, CRT at 2 bytes and all three IRQ paths at 61 bytes. Total
 use is 156 of 162 bytes, with 6 bytes remaining. These figures do not qualify
-changed source profiles. See the current [runtime stack report](../audits/rc6/runtime-stack-20261024/final/README.md) and [Status](STATUS.md) for evidence and limits.
+changed source profiles. See the current [runtime stack report](../audits/rc6/leader-next-20261024/final/README.md) and [Status](STATUS.md) for evidence and limits.
 
 ## Deferred feature inventory
 
