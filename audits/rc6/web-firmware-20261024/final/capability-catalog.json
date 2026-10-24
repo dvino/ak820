@@ -1,0 +1,502 @@
+{
+  "flashing_authorized": false,
+  "format": "ak820-development-capability-catalog-1",
+  "hardware_validated": false,
+  "images": [
+    {
+      "build_identity": {
+        "build_report_sha256": "e0266ebf91e1c896dac8e384864c7c4a7a7375c70adf3e2845b1816bfcd2a63b",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "4b6435ffd76fd886a68e4b2943feeb67a66ad640fb47724601b70622c90bf783",
+        "ihx_sha256": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map_sha256": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964",
+        "mem_sha256": "1430317453b54c7b61130206c0070f2e8f45c4d324646ba1e6f261e821871457",
+        "nvm_schema": 532482,
+        "profile": "full-os-indicators",
+        "source_manifest_sha256": "7bb8cb39e014be40457a959ac1f4b5172b3df5d8b0dbd3acfb63ed045c2b4c52"
+      },
+      "code_identity": {
+        "algorithm": "sha256-code-windows-zero-v1",
+        "covered_bytes": 40505,
+        "fill_byte": 0,
+        "ranges": [
+          {
+            "end_exclusive": 12288,
+            "start": 10400
+          },
+          {
+            "end_exclusive": 50944,
+            "start": 12327
+          }
+        ],
+        "sha256": "3aee39229f75aa9ffb93e75cdfc3aa5380650aa21d053887d5ccb1491a5dcf98"
+      },
+      "compatible_transitions": [],
+      "evidence_sha256": {
+        "base_suites": "ac0371de11715281d1a3b95bddc7ba7a6ab7cbcdae410cde15d718a24231f011",
+        "configuration": "fabe94afe14e9c849696af8c3821277e38815e3de83cefc3f09e63ae2117aea4",
+        "runtime": "6ca86a582bd1820579c2d673db486dde88403432591732025deb3ddcb250e659",
+        "supplemental_suites": "126ce58099f1c85d4d4b5a22dd77b6867d5f024950428690afeeee62bb7ffd5c"
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "eight-two-key-combos",
+        "encoder-map",
+        "grave-escape",
+        "media-keys",
+        "nkro-control",
+        "nkro-reports",
+        "one-shot",
+        "os-indicators",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "space-cadet",
+        "tri-layer",
+        "vialrgb-direct-ram"
+      ],
+      "fixed_limits": {
+        "combos": 8,
+        "encoders": 1,
+        "layers": 6,
+        "macro_bytes": 8192,
+        "macros": 16,
+        "rgb_leds": 82,
+        "rgb_maximum_brightness": 160
+      },
+      "flashing_authorized": false,
+      "hardware_validated": false,
+      "model": "ajazz/ak820",
+      "profile": "full-os-indicators",
+      "project_verified": true,
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39342,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12195,
+            "name": "low",
+            "occupied_bytes": 1796,
+            "start": 10400,
+            "trailing_free_bytes": 92
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49877,
+            "name": "main",
+            "occupied_bytes": 37546,
+            "start": 12327,
+            "trailing_free_bytes": 1066
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 89,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 166,
+          "stack_margin": 6,
+          "stack_qualified": true,
+          "static_bytes": 90
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2609,
+          "capacity": 3072,
+          "end_inclusive": 3632,
+          "start": 1024
+        }
+      },
+      "runtime_qmk_settings": [],
+      "settings_schema": 532482,
+      "settings_writes_authorized": false,
+      "status": "development",
+      "timing_ms": {
+        "combo": 40,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "tap_hold": 200
+      }
+    },
+    {
+      "build_identity": {
+        "build_report_sha256": "09621f2a066d822131bd75aeeff0db2676db6e669e67351317b79da6dc1de58c",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "ec30840c03027ce2f8a947815987ab27df9548d56e6ffe845985cf5782471eb7",
+        "ihx_sha256": "898bfa2fc1bfc02562820611a7b652017bbfabf9d67a3b02d60f3d48e337c114",
+        "map_sha256": "4f403fe028b51d62f132c9a61df62d99411bb133f3afeda1ef585cb70c06ef2e",
+        "mem_sha256": "61ec95bb6e243dd88b1cd7ec080b982f1b3b64bc69bc534c14e4bead2f8d4ada",
+        "nvm_schema": 532482,
+        "profile": "full",
+        "source_manifest_sha256": "16f1ee6c68558ad63c457e5fba1b1466edecd355e58032f581c54ccd2910a74f"
+      },
+      "code_identity": {
+        "algorithm": "sha256-code-windows-zero-v1",
+        "covered_bytes": 40505,
+        "fill_byte": 0,
+        "ranges": [
+          {
+            "end_exclusive": 12288,
+            "start": 10400
+          },
+          {
+            "end_exclusive": 50944,
+            "start": 12327
+          }
+        ],
+        "sha256": "4cf4fd86dae17dff6d5a585b277b9cfb267ca52289fcf6a56fb12ebdbab6d87b"
+      },
+      "compatible_transitions": [],
+      "evidence_sha256": {
+        "base_suites": "80c42e927e7e9901b68b908ff4f38352ab18711508f475935903e7fbf5b6dd83",
+        "configuration": "a667a2513331d8af98ad03fc63d6ac68b4064db3d810fab430103889adec77f4",
+        "runtime": "a789e571f3ade00a344a2b955e1b66ed5e76b7116bc578965ec184c12c7d466d",
+        "supplemental_suites": "19b302d141301ddbe541d3162579749a14ddef8a215b6541da3dcf4315be18e0"
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "eight-two-key-combos",
+        "encoder-map",
+        "grave-escape",
+        "media-keys",
+        "nkro-control",
+        "nkro-reports",
+        "one-shot",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "space-cadet",
+        "tri-layer",
+        "vialrgb-direct-ram"
+      ],
+      "fixed_limits": {
+        "combos": 8,
+        "encoders": 1,
+        "layers": 6,
+        "macro_bytes": 8192,
+        "macros": 16,
+        "rgb_leds": 82,
+        "rgb_maximum_brightness": 160
+      },
+      "flashing_authorized": false,
+      "hardware_validated": false,
+      "model": "ajazz/ak820",
+      "profile": "full",
+      "project_verified": true,
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38890,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49349,
+            "name": "main",
+            "occupied_bytes": 37018,
+            "start": 12327,
+            "trailing_free_bytes": 1594
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 89,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 166,
+          "stack_margin": 6,
+          "stack_qualified": true,
+          "static_bytes": 90
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2600,
+          "capacity": 3072,
+          "end_inclusive": 3623,
+          "start": 1024
+        }
+      },
+      "runtime_qmk_settings": [],
+      "settings_schema": 532482,
+      "settings_writes_authorized": false,
+      "status": "development",
+      "timing_ms": {
+        "combo": 40,
+        "tap_hold": 200
+      }
+    },
+    {
+      "build_identity": {
+        "build_report_sha256": "1f99474f37f892476563d877c96cf17dc6428cbb7e3dcce45cda82efe10526ae",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "92a4ab8b62d8792bbd7f0a5004548e1ef95d4be938604caa3a968a0f34b609d3",
+        "ihx_sha256": "9e049f97a4ed6335f71b90a49e486b9be44b3e2e953d342358a2473889e03470",
+        "map_sha256": "40ea66670b694082929d2f04f04f669155b777d6ece82ce7eeade60e99fc433a",
+        "mem_sha256": "2243c77365dbda850f0ad6d3bfb1d4b6ee42de7116f600514c34b1017e4fedd7",
+        "nvm_schema": 532482,
+        "profile": "full-mac-pc-os-indicators",
+        "source_manifest_sha256": "f4d80f8c1187d8b0259a1ddd859fe2f594cbde361c9b3635ed1db1353843f814"
+      },
+      "code_identity": {
+        "algorithm": "sha256-code-windows-zero-v1",
+        "covered_bytes": 40505,
+        "fill_byte": 0,
+        "ranges": [
+          {
+            "end_exclusive": 12288,
+            "start": 10400
+          },
+          {
+            "end_exclusive": 50944,
+            "start": 12327
+          }
+        ],
+        "sha256": "633cca4626bdf9a60efd255d7c28404a7fd6718bf4bebd977c6fca82516009c9"
+      },
+      "compatible_transitions": [],
+      "evidence_sha256": {
+        "base_suites": "3ebdb6dfee5a4b2bb03350f6670ad20bf6465cd2fa3e922aa24886e0ec156d71",
+        "configuration": "641c9fb4ac2762be30fb5527c807a690e97a0c269a53abb8d4b4836eee6623f8",
+        "runtime": "072fa5498dfb56c96c281e0499af8ddf2d017008712b53396542057b8643e7c5",
+        "supplemental_suites": "eac5bc302c45be8d5e865730ed1508632b3e15c8b7c50644c19595f4ef05ba49"
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "eight-two-key-combos",
+        "encoder-map",
+        "grave-escape",
+        "mac-pc",
+        "media-keys",
+        "nkro-control",
+        "nkro-reports",
+        "one-shot",
+        "os-indicators",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "space-cadet",
+        "tri-layer",
+        "vialrgb-direct-ram"
+      ],
+      "fixed_limits": {
+        "combos": 8,
+        "encoders": 1,
+        "layers": 6,
+        "macro_bytes": 8192,
+        "macros": 16,
+        "rgb_leds": 82,
+        "rgb_maximum_brightness": 160
+      },
+      "flashing_authorized": false,
+      "hardware_validated": false,
+      "model": "ajazz/ak820",
+      "profile": "full-mac-pc-os-indicators",
+      "project_verified": true,
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39614,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12195,
+            "name": "low",
+            "occupied_bytes": 1796,
+            "start": 10400,
+            "trailing_free_bytes": 92
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50149,
+            "name": "main",
+            "occupied_bytes": 37818,
+            "start": 12327,
+            "trailing_free_bytes": 794
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 89,
+          "runtime_stack_bound": 164,
+          "stack_capacity": 166,
+          "stack_margin": 2,
+          "stack_qualified": true,
+          "static_bytes": 90
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2612,
+          "capacity": 3072,
+          "end_inclusive": 3635,
+          "start": 1024
+        }
+      },
+      "runtime_qmk_settings": [],
+      "settings_schema": 532482,
+      "settings_writes_authorized": false,
+      "status": "development",
+      "timing_ms": {
+        "combo": 40,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "tap_hold": 200
+      }
+    },
+    {
+      "build_identity": {
+        "build_report_sha256": "acd0ccfb4ad46f3f147a5c1cb9b428f7f26eca4bd999b1f0d39967c632eec0c6",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "d3c6fe3dd3bade9a0580d97c05826ff36ddf8120b5f56400ea6f83ee96c8966b",
+        "ihx_sha256": "5dfea027dfefa6e01404a008863a402f3a500b9ec1aa4c437afc3f4e22a75e8b",
+        "map_sha256": "b32701d92a763469dacdeb108e832c501faceab508dd7aae73ca7227aad3aafa",
+        "mem_sha256": "dd7eaa8f3f92b5cd064038655220af1f082d4908385574448b6f5a466a49e95f",
+        "nvm_schema": 532482,
+        "profile": "full-mac-pc",
+        "source_manifest_sha256": "b0ba4f78f1733ca0a994fc22652b53241d56cf5aed69d44d7233d9cabba8a678"
+      },
+      "code_identity": {
+        "algorithm": "sha256-code-windows-zero-v1",
+        "covered_bytes": 40505,
+        "fill_byte": 0,
+        "ranges": [
+          {
+            "end_exclusive": 12288,
+            "start": 10400
+          },
+          {
+            "end_exclusive": 50944,
+            "start": 12327
+          }
+        ],
+        "sha256": "ba246ab3f32faa5a682af01e4ca1d570b98d83d274b7e98e2600d2b8141256e6"
+      },
+      "compatible_transitions": [],
+      "evidence_sha256": {
+        "base_suites": "973280545ef652faedeae2550b2eebe5f8e4a958302f9a63a6418014bed20f54",
+        "configuration": "948956d171c8ec10c009aebf7f1522406802e689be3152bb6462183322937257",
+        "runtime": "7cd6830606bb1f9ad6f9220429cecff15fe3a585916715e7ee284273c589b155",
+        "supplemental_suites": "182aad4f58fe0c6e1aa8906a0bbc8dc78b8d8ffc7f6a0ea76bcb86d468cb8283"
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "eight-two-key-combos",
+        "encoder-map",
+        "grave-escape",
+        "mac-pc",
+        "media-keys",
+        "nkro-control",
+        "nkro-reports",
+        "one-shot",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "space-cadet",
+        "tri-layer",
+        "vialrgb-direct-ram"
+      ],
+      "fixed_limits": {
+        "combos": 8,
+        "encoders": 1,
+        "layers": 6,
+        "macro_bytes": 8192,
+        "macros": 16,
+        "rgb_leds": 82,
+        "rgb_maximum_brightness": 160
+      },
+      "flashing_authorized": false,
+      "hardware_validated": false,
+      "model": "ajazz/ak820",
+      "profile": "full-mac-pc",
+      "project_verified": true,
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39177,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12195,
+            "name": "low",
+            "occupied_bytes": 1796,
+            "start": 10400,
+            "trailing_free_bytes": 92
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49712,
+            "name": "main",
+            "occupied_bytes": 37381,
+            "start": 12327,
+            "trailing_free_bytes": 1231
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 89,
+          "runtime_stack_bound": 164,
+          "stack_capacity": 166,
+          "stack_margin": 2,
+          "stack_qualified": true,
+          "static_bytes": 90
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2603,
+          "capacity": 3072,
+          "end_inclusive": 3626,
+          "start": 1024
+        }
+      },
+      "runtime_qmk_settings": [],
+      "settings_schema": 532482,
+      "settings_writes_authorized": false,
+      "status": "development",
+      "timing_ms": {
+        "combo": 40,
+        "tap_hold": 200
+      }
+    }
+  ],
+  "release_approved": false,
+  "settings_writes_authorized": false,
+  "status": "development-only"
+}

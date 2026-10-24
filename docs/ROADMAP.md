@@ -2,19 +2,15 @@
 
 # Roadmap
 
-NKRO control, modifier One Shot and Space Cadet are available in the `full`
-profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls,
-volatile Ctrl/GUI swaps, Dynamic Macros and Leader in supported combinations.
-The configurator provides 21 named profiles, including three new OS-indicator
-and Mac/PC profiles. The historical 20-image matrix belongs to frozen source
-`d04290b`; it does not qualify current profiles. The new qualification scope
-covers `full` and the three new profiles; see the [report](../audits/rc6/web-firmware-20261024/final/README.md)
-for scope and results. These are source development builds; they do not inherit
-the published alpha.3 qualification.
-Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
-The published and installed alpha.3 image is the exact full image described in
-[Status](STATUS.md). Source changes since that release, including feature-profile
-changes, are development work and are not approved for packaging or installation.
+NKRO control, modifier One Shot and Space Cadet are available in `full`.
+Development profiles add compact Mouse Keys, Auto Shift, GUI controls, modifier
+swaps, Dynamic Macros, Leader and OS indicators in supported combinations.
+There are 21 named profiles. Whole-image runtime checks cover all 21 profiles
+and 23 variants; full regression in this package covers `full` and the three
+new module profiles. See [Status](STATUS.md) for evidence and
+[Build profiles](BUILD-PROFILES.md) for behavior and limits.
+Published and installed alpha.3 remains the exact released image. Changed
+source profiles need their own release and installer-transition approval.
 
 ## Deferred features
 

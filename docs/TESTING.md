@@ -36,7 +36,7 @@ public OEM instruction fixture and does not require private ROM. CPU fixtures
 model peripheral operations and do not emulate VS11K28A USB or flash silicon.
 A tested stack peak is not a global bound.
 
-For any of the eighteen named profiles, use the dedicated [profile build
+For any of the 21 named profiles, use the dedicated [profile build
 command](BUILD-PROFILES.md). It first requires the exact image to pass the
 combined startup, foreground and IRQ stack-bound gate. Unknown bounds or
 overflow fail the build before other regression suites run. It then runs the
@@ -46,7 +46,7 @@ for an existing build. Profile results do not prove physical behavior or release
 eligibility. The compact-feature matrix at the [historical qualification
 report](../audits/rc6/compact-runtime-20261024/final/README.md) predates this
 whole-stack proof; current runtime evidence is in the [runtime stack
-report](../audits/rc6/runtime-stack-20261024/README.md).
+report](../audits/rc6/web-firmware-20261024/runtime-all/README.md).
 
 The automatic suite requires no key presses, encoder movement, cable reconnect
 or manual Vial unlock. It does not write to the keyboard. Live protocol tests

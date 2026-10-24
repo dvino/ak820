@@ -16,7 +16,18 @@ The command returns success only when all required paths have known bounds and t
 
 The bound begins at C runtime entry with `IE=IE_EX=0`, as supplied by the packer, and includes the persistent call frame entering `main`. This premise is part of the proof; it does not cover pre-CRT trial erase. It assumes valid C memory accesses, the SDCC register-bank-0 ABI and MCS-51 interrupt in-service behavior. Interrupt wrappers are checked against a pinned public instruction fixture. The fixture does not establish a connected device's identity.
 
-This check produces static and CPU-model evidence. Pre-CRT trial erase, physical timing, power loss and device behavior require separate checks. Source code, linked-image CPU results and behavior of the installed or released alpha.3 image are separate facts; this check proves only the exact linked image named in its report. Runtime stack success does not approve a release or a settings transition. Results and independent review are in the [technical report](../audits/rc6/runtime-stack-20261024/README.md).
+This check produces static and CPU-model evidence. Pre-CRT trial erase, physical timing, power loss and device behavior require separate checks. Source code, linked-image CPU results and behavior of the installed or released alpha.3 image are separate facts; this check proves only the exact linked image named in its report. Runtime stack success does not approve a release or a settings transition. Results and independent review are in the [technical report](../audits/rc6/web-firmware-20261024/runtime-all/README.md).
+
+
+## Whole-image coverage
+
+The foreground root is `_main`, including every reachable call required by the
+linked feature set. Startup is checked separately, including the frame left
+on the stack when CRT calls `main`. USB, timer and LED are the three enabled
+interrupt sources. Their wrappers and callback roots are included for all
+15 possible orders of distinct sources. Unknown required calls or IRQ behavior
+fail the gate. The combined allowance is compared with the stack capacity in
+that image's MAP/MEM, not with a value from another profile.
 
 ## References
 

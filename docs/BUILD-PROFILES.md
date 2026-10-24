@@ -2,20 +2,13 @@
 
 # Build profiles
 
-The configurator lists 21 named development profiles: the previous 18 plus
-three OS-indicator and Mac/PC profiles. The historical 20-image matrix belongs
-to frozen source `d04290b` and does not qualify current profiles. The new
-qualification scope covers separate images for `full` and the three new profiles;
-see the [report](../audits/rc6/web-firmware-20261024/final/README.md) for scope
-and results. The `full` feature set matches published alpha.3. Other profiles
-add compact Mouse Keys, Auto Shift, GUI controls, modifier swaps, Dynamic Macros,
-Leader or OS indicators in supported combinations. These profiles are for
-development, not release or flashing. They have not inherited alpha.3's image
-qualification or hardware evidence.
-Every profile build proves stack and
-interrupt bounds for its exact linked image before running other regression
-gates. Unknown bounds or overflow fail the build. See [Status](STATUS.md) and the
-[change report](../audits/rc6/leader-next-20261024/README.md).
+The configurator lists 21 named development profiles. The `full` feature set
+matches published alpha.3. Other profiles add compact Mouse Keys, Auto Shift,
+GUI controls, modifier swaps, Dynamic Macros, Leader or OS indicators in the
+supported combinations below. These source profiles require their own exact
+image qualification. Every configured build proves whole-image foreground,
+startup and interrupt stack bounds before its regression suites; unknown bounds
+or overflow fail the build. See [Status](STATUS.md) for current verification.
 
 ## Build a profile
 
@@ -155,7 +148,7 @@ The exact linked image determines resource use. Measure each profile from its
 build report; feature costs are not additive. For the exact published alpha.3 `full` image, release evidence bounds main-path
 stack use at 93 bytes, CRT at 2 bytes and all three IRQ paths at 61 bytes. Total
 use is 156 of 162 bytes, with 6 bytes remaining. These figures do not qualify
-changed source profiles. See the earlier [runtime baseline](../audits/rc6/leader-next-20261024/final/README.md), current [qualification scope and results](../audits/rc6/web-firmware-20261024/final/README.md), and [Status](STATUS.md).
+changed source profiles. See the earlier [runtime baseline](../audits/rc6/leader-next-20261024/final/README.md), current [qualification scope and results](../audits/rc6/web-firmware-20261024/runtime-all/README.md), and [Status](STATUS.md).
 
 ## Deferred feature inventory
 

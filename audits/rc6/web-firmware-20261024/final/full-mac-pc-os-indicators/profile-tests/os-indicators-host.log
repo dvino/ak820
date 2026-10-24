@@ -1,0 +1,38 @@
+{
+  "level": "host production C with ASan/UBSan; no hardware validation",
+  "tests": [
+    {
+      "flags": [],
+      "pass": true,
+      "stdout": "PASS: production AK820 USB/descriptor sources: stale RX_LEN, ordered two-ACK SETUP, UTF-16 strings, EP0 segmentation, HID control, Raw32 ownership/reset, original-request recovery whitelist, persistence gate, read-only FD00/FD01 and EP0 AKBT diagnostics\n",
+      "stderr": ""
+    },
+    {
+      "flags": [
+        "--os-indicators"
+      ],
+      "pass": true,
+      "stdout": "PASS: OS indicator production USB path, exact wire replies, malformed requests, no NVM, lease, IRQ restoration, lifecycle cancellation and DMA ownership\nPASS: production AK820 USB/descriptor sources: stale RX_LEN, ordered two-ACK SETUP, UTF-16 strings, EP0 segmentation, HID control, Raw32 ownership/reset, original-request recovery whitelist, persistence gate, read-only FD00/FD01 and EP0 AKBT diagnostics\n",
+      "stderr": ""
+    },
+    {
+      "flags": [
+        "--os-indicators",
+        "--without-mouse"
+      ],
+      "pass": true,
+      "stdout": "PASS: OS indicator production USB path, exact wire replies, malformed requests, no NVM, lease, IRQ restoration, lifecycle cancellation and DMA ownership\nPASS: production AK820 USB/descriptor sources: stale RX_LEN, ordered two-ACK SETUP, UTF-16 strings, EP0 segmentation, HID control, Raw32 ownership/reset, original-request recovery whitelist, persistence gate, read-only FD00/FD01 and EP0 AKBT diagnostics\n",
+      "stderr": ""
+    },
+    {
+      "flags": [
+        "--os-indicators",
+        "--mac-pc"
+      ],
+      "pass": true,
+      "stdout": "PASS: OS indicator production USB path, exact wire replies, malformed requests, no NVM, lease, IRQ restoration, lifecycle cancellation and DMA ownership\nPASS: production AK820 USB/descriptor sources: stale RX_LEN, ordered two-ACK SETUP, UTF-16 strings, EP0 segmentation, HID control, Raw32 ownership/reset, original-request recovery whitelist, persistence gate, read-only FD00/FD01 and EP0 AKBT diagnostics\n",
+      "stderr": ""
+    }
+  ],
+  "pass": true
+}

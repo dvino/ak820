@@ -1,0 +1,783 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 57.89,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/00.txt",
+      "log_sha256": "f4c8ea6cd4c49b5b7e5230fb7c21a98e0fdfb2e8c71fda88139ad401e37bc796",
+      "unit_tests": {
+        "run": 135,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.283,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/01.txt",
+      "log_sha256": "1fd580cff763011bee5c4e235c2eadcd4aef7c52c15a8fdcb5136b64a1e49682",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.255,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/02.txt",
+      "log_sha256": "d43873ece943f50b7bcd286b127f7a6f9840383c79a5c9d810778b5cd9b5487f",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.301,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/03.txt",
+      "log_sha256": "9d9bfe919861c6bced7ea96598b62a038d73702924b624e4aa78f0a168a613f4",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.656,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/04.txt",
+      "log_sha256": "6757c58a81df358499acfbd99c9e7983de38f015d83b50b1b3229f6e6a966d32",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.059,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/05.txt",
+      "log_sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.722,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/06.txt",
+      "log_sha256": "72b01ffee53a8d9051938c86cee9129b9e7c36e8b2f9ab69dbd0a5859067ab72",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.051,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/07.txt",
+      "log_sha256": "21c7e48d0b1ec908feef784bbce1fa55f2c9a7acf76382fa7578754a78bd1ed8",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.037,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/08.txt",
+      "log_sha256": "24a54d7cc59f966e7cd4b7db50d4253c1ddaab4b89d61d97ed6122d74a067d50",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.685,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.525,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.356,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.209,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/12.txt",
+      "log_sha256": "2ae1a06370222cfd4042b160f898fc26384944e4c8cc32ccb18fc13d4ad25459",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.289,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.315,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.601,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.073,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.208,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.328,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/18.txt",
+      "log_sha256": "5e6957a1eea658cb39448866736856adb87367db802d33ecde9ecace9920cbfd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 11.698,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/19.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators",
+        "--s51",
+        "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.504,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/20.txt",
+      "log_sha256": "7f685f7f3c3880d14088ad8ef685242269f0fc5f696320e2e3fa241a95e31b62",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators",
+        "--s51",
+        "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 0.899,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/21.txt",
+      "log_sha256": "4d71777aca5b77219d0f1cae8458bd23119f1d6ed269fa068cd52a2d8e54c57e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators",
+        "--s51",
+        "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.787,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/22.txt",
+      "log_sha256": "63fec81d7d6472ff762fe954b67ff953788c6cba83bce19b974ab05eadc76f19",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators",
+        "--s51",
+        "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.551,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators",
+        "--s51",
+        "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.364,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/24.txt",
+      "log_sha256": "5087198c2f6ab629ca6b43c754e61874f8d11de850d2d87676d366f1cc1f3080",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators",
+        "--s51",
+        "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 0.838,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/25.txt",
+      "log_sha256": "1b2bee7c6aaa330c6c22ce1de82701e1d02059b1bf21ee876a29b7f4b6b9e8a1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators",
+        "--s51",
+        "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 5.2,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/26.txt",
+      "log_sha256": "fb8d2aaa346714255be507581feb54e5bfe56406df3652c245d29912634b2692",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/f17cca441b33/baseline-check/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators",
+        "--s51",
+        "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 1.592,
+      "log": "/workspace/scratch/f17cca441b33/qualified-source-1187d4c/qmk-8051-ak820/.build/final-full-os-indicators/qualification-logs-a_dh4334/27.txt",
+      "log_sha256": "f84c93eb08268f23c3a67f50d75f087650145bc18292c9d4164dee54a61f32d2",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      },
+      "build_after": {
+        "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+        "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/f17cca441b33/accepted-input/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 273,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "928c228d54165011dce0d40c3e89ff8ea47b9178acb94c383fe7845880015ced",
+    "map": "c3bff46f0e46349c941f21b9c93d098636e0e632fe904cb4116c98918170b964"
+  },
+  "build_unchanged": true
+}

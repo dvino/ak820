@@ -1,0 +1,193 @@
+{
+  "archive_bytes": 553944,
+  "archive_sha256": "fa70435351c57466ad61fd8444d860a75ee192c01d3b1a8bd624ae988a95787e",
+  "configuration": {
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "format": "ak820-build-configuration-1",
+    "make_options": {
+      "AK820_COMPACT_AUTOSHIFT": "no",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "no",
+      "AK820_COMPACT_GUI_LOCK": "no",
+      "AK820_COMPACT_LEADER": "no",
+      "AK820_COMPACT_MOUSEKEY": "yes",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "yes",
+      "AK820_MAC_PC": "no",
+      "AK820_NKRO_CONTROL": "yes",
+      "AK820_OS_INDICATORS": "no"
+    },
+    "nvm_schema": 532482,
+    "optional_features": [
+      "nkro-control",
+      "one-shot",
+      "space-cadet",
+      "mouse-keys"
+    ],
+    "profile": "full-mouse",
+    "release_approved": false,
+    "runtime_qmk_settings": [],
+    "timing_ms": {
+      "combo": 40,
+      "mouse_cursor": 20,
+      "mouse_wheel": 80,
+      "tap_hold": 200
+    }
+  },
+  "full_regression": false,
+  "hardware_validated": false,
+  "identity": {
+    "build_report_sha256": "391baa7fc05e19e8a70c2a6a38e27d2c2154ead877e36da8672f2b54b522a546",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "configuration_sha256": "9bd36198e6276ecab3ea025c3509d4e21a5c8b637ba78f9aa9cb4993ad69ac94",
+    "ihx_sha256": "a6249f4292bd23147a19bdd7001a4e72be119b8946759a04b64a0c07a298b0ad",
+    "map_sha256": "a8379930443d0b786b16fe01ca7fc8c424da322a58e449d85c3acb6aa6306258",
+    "mem_sha256": "38be815496fa33ce42909ebca52b47ad0e3f881a7c2612ef23dfc596c3703510",
+    "nvm_schema": 532482,
+    "profile": "full-mouse",
+    "source_manifest_sha256": "f94121ba5c02816488aee7c88db1fff304691b4042ae861a7f431276204654e8"
+  },
+  "logs": {
+    "build_log.txt": "b444d11ff74fbcd90b51f5595b6de1fdc18b4e8f3cb3a595ee8d3b977788a37f",
+    "runtime_log.txt": "dc60344808c635b3f361c7831d5d94fd3997073366adc98ffaaf07b581a5ba8c"
+  },
+  "physical_device_commands": 0,
+  "profile": "full-mouse",
+  "release_approved": false,
+  "resources": {
+    "absolute_xram": [
+      {
+        "reserved_end_exclusive": 1024,
+        "start": 512,
+        "symbol": "_ak820_led_dma"
+      }
+    ],
+    "code_bytes": 39740,
+    "code_windows": [
+      {
+        "end_exclusive": 12288,
+        "highest_address": 12271,
+        "name": "low",
+        "occupied_bytes": 1872,
+        "start": 10400,
+        "trailing_free_bytes": 16
+      },
+      {
+        "end_exclusive": 50944,
+        "highest_address": 50199,
+        "name": "main",
+        "occupied_bytes": 37868,
+        "start": 12327,
+        "trailing_free_bytes": 744
+      }
+    ],
+    "internal_ram": {
+      "initial_sp": 89,
+      "runtime_stack_bound": 160,
+      "stack_capacity": 166,
+      "stack_margin": 6,
+      "stack_qualified": true,
+      "static_bytes": 90
+    },
+    "protected_windows_clear": true,
+    "xram": {
+      "bytes": 2630,
+      "capacity": 3072,
+      "end_inclusive": 3653,
+      "start": 1024
+    }
+  },
+  "runtime": {
+    "foreground_bound": 97,
+    "format": "ak820-runtime-safety-1",
+    "hardware_validated": false,
+    "identity": {
+      "build_report_sha256": "391baa7fc05e19e8a70c2a6a38e27d2c2154ead877e36da8672f2b54b522a546",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "configuration_sha256": "9bd36198e6276ecab3ea025c3509d4e21a5c8b637ba78f9aa9cb4993ad69ac94",
+      "ihx_sha256": "a6249f4292bd23147a19bdd7001a4e72be119b8946759a04b64a0c07a298b0ad",
+      "map_sha256": "a8379930443d0b786b16fe01ca7fc8c424da322a58e449d85c3acb6aa6306258",
+      "mem_sha256": "38be815496fa33ce42909ebca52b47ad0e3f881a7c2612ef23dfc596c3703510",
+      "nvm_schema": 532482,
+      "profile": "full-mouse",
+      "source_manifest_sha256": "f94121ba5c02816488aee7c88db1fff304691b4042ae861a7f431276204654e8"
+    },
+    "irq_bound": 61,
+    "limits": [
+      "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+      "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+      "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+      "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+      "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+    ],
+    "logs": {
+      "irq": "dc38bcf10ee9e9830edfbe0ca78b2ab9d88b78ff1c3ba9ec6bc5ba9cd91ff4f7",
+      "startup": "7f4b135c7581977524593a9d4320325d76a44b658c6db82345b309de0b2c58f0"
+    },
+    "main_entry_frame_bound": 2,
+    "passed": true,
+    "physical_device_commands": 0,
+    "pre_main_bound": 2,
+    "release_approved": false,
+    "reports": {
+      "foreground": {
+        "path": "runtime-stack.json",
+        "sha256": "9040bcea4c7aef88e5ef18b7f8baec58aa292d4e30e0b3ff8ae3d7a7a5e26d32"
+      },
+      "irq": {
+        "path": "runtime-safety/irq/results.json",
+        "sha256": "dc38bcf10ee9e9830edfbe0ca78b2ab9d88b78ff1c3ba9ec6bc5ba9cd91ff4f7"
+      },
+      "startup": {
+        "path": "runtime-safety/startup.json",
+        "sha256": "9a087539f8941ffe4e768ad783fbb164bc35cd5eba3de57d33b7bae1f620b901"
+      }
+    },
+    "root_bounds": {
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2,
+      "_ak820_timer_irq": 2,
+      "_main": 97
+    },
+    "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+    "source_files": {
+      "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+      "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+      "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+      "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+      "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+      "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+      "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+      "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f",
+      "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+      "tools/configure_firmware.py": "bde76bd8061a9bf84feb676aa6e460aec5f9349b78a7f27e33e492949ca514f2"
+    },
+    "stack_bound": 160,
+    "stack_capacity": 166,
+    "stack_margin": 6,
+    "unresolved_roots": [],
+    "whole_program_stack_qualified": true
+  },
+  "runtime_qualified": true,
+  "short_calls": false,
+  "source": {
+    "commit": "1187d4cedd439733bd0c7ceb5c41daac9089de5b",
+    "dirty": false
+  },
+  "variant": "full-mouse"
+}

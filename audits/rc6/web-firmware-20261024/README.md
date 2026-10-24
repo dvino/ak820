@@ -101,8 +101,35 @@ runtime bound and both corrected findings. [Candidate summaries](candidate/manif
 retain their identities; these are dirty-source pre-freeze evidence, not the
 final clean matrix. The catalog's ten tests include zero-fill equivalence.
 
-Final clean-image qualification and matrix review remain pending; their
-scope is recorded in [the matrix report](final/README.md).
+## Final qualification
+
+Clean source `1187d4c` passes [all 23 runtime variants](runtime-all/README.md),
+covering 21 named profiles plus two additional short-call builds. Every exact
+image closes `_main`, CRT startup and all three IRQ sources, with no unknown
+roots. All 15 IRQ orders and 256 LED selectors pass. The minimum margin is one
+byte in standard, nkro and full-dynamic-macro-gui. All twenty pre-existing IHX
+images match the accepted matrix byte for byte; [comparison](accepted-ihx-comparison.json).
+The earlier 20-image verifier belongs to its frozen checkout `f53ec73`.
+
+The [four-image full regression matrix](final/README.md) passes 28 base suites
+and 273 unit tests without skips per image, plus 92 supplemental suite executions.
+Mac/PC passes 10 linked cases in both applicable profiles; OS passes 13 alone
+and 19 with Mac/PC. The catalog was generated twice with identical bytes.
+Remaining 19 variants received fresh whole-image runtime proofs; their full
+regressions were not repeated. Complete proof artifacts, source hashes, compiler
+listings and CPU logs are retained. Independent final review passed: both retained-evidence verifiers, all image
+identities, the 23-row EN/RU resource tables and documentation scope were checked.
+
 Source, offline qualified artifacts and installed firmware remain distinct.
 No device commands, reset, flash, settings write or publication occurred.
 Published and installed alpha.3 is unchanged.
+
+## Independent closure
+
+Independent review ran the four-image verifier (VALIDATED 4) and the complete
+runtime verifier (23 variants). It checked all 20 prior IHX identities, both
+23-row resource tables, CODE-window tails, source and script identities, the
+catalog and all scope statements. The documentation gate passed 55 documents
+with no failures; the diff has no whitespace errors. No blocking finding
+remained. The review approved this evidence and documentation commit only;
+release, installation and physical validation remain separate.

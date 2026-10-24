@@ -56,24 +56,36 @@ not access a device; installation results are recorded separately.
 
 ## Current development source
 
-The configurator lists 21 named profiles. Three new profiles add independent
-[Mac/PC](MAC-PC.md) and [OS indicator](INDICATORS.md) modules:
-`full-mac-pc`, `full-os-indicators` and `full-mac-pc-os-indicators`.
-Mac/PC swaps both Alt/GUI pairs and supplies normal OS state. FD02 lets a
-helper temporarily override OS with off, on or a firmware-generated breathing
-cycle. C and W retain their existing roles. State is volatile; NVM is unchanged.
+All **21 named profiles and 23 variants** pass fresh whole-image stack and
+interrupt checks from clean source `1187d4c`. Foreground calls, CRT startup and
+all USB, timer and LED interrupt roots are closed. Each image passes all 15
+interrupt orders and 256 LED selector values. The minimum margin is one byte
+in `standard`, `nkro` and `full-dynamic-macro-gui`; no required path is unknown.
+See the [complete runtime matrix](../audits/rc6/web-firmware-20261024/runtime-all/README.md).
 
-The combined corrected candidate uses 39,614 CODE bytes and 2,612 XRAM bytes.
-Its exact-image foreground/startup/IRQ bound is 164/166, leaving two bytes.
-All 10 linked Mac/PC cases and 19 OS cases pass after the One Shot correction.
-Clean-source qualification of `full` and the three new profiles remains pending;
-its scope is recorded in the [new matrix](../audits/rc6/web-firmware-20261024/final/README.md).
-The accepted 20-image matrix below remains bound to its earlier source.
+Three new profiles add independent [Mac/PC](MAC-PC.md) and
+[OS indicator](INDICATORS.md) modules: `full-mac-pc`, `full-os-indicators` and
+`full-mac-pc-os-indicators`. Mac/PC swaps both Alt/GUI pairs and supplies normal
+OS state. FD02 lets a helper temporarily choose OS off, on or firmware-generated
+breathing. C and W retain their roles. State is volatile; NVM is unchanged.
+The combined image uses 39,614 CODE bytes and 2,612 XRAM bytes, with stack
+164/166. Mac/PC provides compact modifier switching; the OEM F-row is unchanged.
+The desktop layout helper and OS detectors remain planned.
 
-The development catalog validates linked artifacts, runtime proofs, base
-logs and supplemental tests before describing features. It grants no release,
-settings-write or flashing permission. No device command or physical test was
-performed; published and installed alpha.3 remains unchanged.
+`full` and the three new profiles also pass 28 base suites and 273 unit tests
+without skips per image, plus 21/23/23/25 supplemental suites. Mac/PC passes
+10 linked cases in both applicable profiles; OS passes 13 alone and 19 with
+Mac/PC. Complete builds and logs are in the
+[full regression matrix](../audits/rc6/web-firmware-20261024/final/README.md).
+The other 19 variants have fresh runtime proofs; their full regressions were
+not repeated. All twenty pre-existing variants reproduce their accepted IHX.
+
+The deterministic development catalog validates linked artifacts, runtime
+proofs, base logs and supplemental tests before describing these four images.
+It grants no release, settings-write or flashing permission. No device command
+or physical test was performed; published and installed alpha.3 is unchanged.
+Source review and corrections are recorded in the
+[work report](../audits/rc6/web-firmware-20261024/README.md).
 
 ## Accepted Leader baseline
 

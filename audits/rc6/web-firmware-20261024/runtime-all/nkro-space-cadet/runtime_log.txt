@@ -1,0 +1,184 @@
+RUN RUNTIME startup
+RUN RUNTIME irq
+{
+  "format": "ak820-configured-build-1",
+  "configuration": {
+    "format": "ak820-build-configuration-1",
+    "profile": "nkro-space-cadet",
+    "optional_features": [
+      "nkro-control",
+      "space-cadet"
+    ],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "nvm_schema": 532482,
+    "make_options": {
+      "AK820_MAC_PC": "no",
+      "AK820_OS_INDICATORS": "no",
+      "AK820_COMPACT_LEADER": "no",
+      "AK820_NKRO_CONTROL": "yes",
+      "AK820_COMPACT_ONESHOT": "no",
+      "AK820_COMPACT_SPACE_CADET": "yes",
+      "AK820_COMPACT_MOUSEKEY": "no",
+      "AK820_COMPACT_AUTOSHIFT": "no",
+      "AK820_COMPACT_GUI_LOCK": "no",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "no"
+    },
+    "runtime_qmk_settings": [],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200
+    },
+    "release_approved": false
+  },
+  "identity": {
+    "profile": "nkro-space-cadet",
+    "configuration_sha256": "3178e2cb3f4036c610653ff9db1a4088b97b04fcf5022d437c19ce0b1b22ef10",
+    "ihx_sha256": "2b0a66adbc0c72daba537b7235fa907f9e034610f3706ace969a9313c40d8e6c",
+    "map_sha256": "bf6fb680ba37530facfbd6e1f8411c9199bc1f43332ec3ada2027345ff49af7a",
+    "mem_sha256": "d6bb5841b1f7d90299c54c5ab23e5e2b6ae40d51e765707d2b42459b3f1864af",
+    "build_report_sha256": "59b66b7352e0420d7b741af52ee60ed43ba159a3c4c946f517d8171a9a89d7a7",
+    "source_manifest_sha256": "4fda8f38eea59329beeb40f081a568340eab224de2a0ac9dff14e40017fcad67",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "nvm_schema": 532482
+  },
+  "short_calls": null,
+  "resources": {
+    "code_bytes": 38298,
+    "code_windows": [
+      {
+        "name": "low",
+        "start": 10400,
+        "end_exclusive": 12288,
+        "occupied_bytes": 1804,
+        "highest_address": 12203,
+        "trailing_free_bytes": 84
+      },
+      {
+        "name": "main",
+        "start": 12327,
+        "end_exclusive": 50944,
+        "occupied_bytes": 36494,
+        "highest_address": 48825,
+        "trailing_free_bytes": 2118
+      }
+    ],
+    "xram": {
+      "start": 1024,
+      "end_inclusive": 3613,
+      "bytes": 2590,
+      "capacity": 3072
+    },
+    "internal_ram": {
+      "static_bytes": 90,
+      "initial_sp": 89,
+      "stack_capacity": 166,
+      "runtime_stack_bound": 161,
+      "stack_margin": 5,
+      "stack_qualified": true
+    },
+    "protected_windows_clear": true,
+    "absolute_xram": [
+      {
+        "symbol": "_ak820_led_dma",
+        "start": 512,
+        "reserved_end_exclusive": 1024
+      }
+    ]
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "offline_tests_passed": false,
+  "release_approved": false,
+  "release_blockers": [
+    "No approved installer/settings transition for this feature identity.",
+    "No independent release approval for this image and source."
+  ],
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "runtime_analysis": {
+    "format": "ak820-runtime-safety-1",
+    "passed": true,
+    "identity": {
+      "profile": "nkro-space-cadet",
+      "configuration_sha256": "3178e2cb3f4036c610653ff9db1a4088b97b04fcf5022d437c19ce0b1b22ef10",
+      "ihx_sha256": "2b0a66adbc0c72daba537b7235fa907f9e034610f3706ace969a9313c40d8e6c",
+      "map_sha256": "bf6fb680ba37530facfbd6e1f8411c9199bc1f43332ec3ada2027345ff49af7a",
+      "mem_sha256": "d6bb5841b1f7d90299c54c5ab23e5e2b6ae40d51e765707d2b42459b3f1864af",
+      "build_report_sha256": "59b66b7352e0420d7b741af52ee60ed43ba159a3c4c946f517d8171a9a89d7a7",
+      "source_manifest_sha256": "4fda8f38eea59329beeb40f081a568340eab224de2a0ac9dff14e40017fcad67",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "nvm_schema": 532482
+    },
+    "source_files": {
+      "tools/configure_firmware.py": "bde76bd8061a9bf84feb676aa6e460aec5f9349b78a7f27e33e492949ca514f2",
+      "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+      "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+      "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+      "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+      "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+      "qmk-8051-ak820/tests/ak820_iap/run.py": "5a3003a54e05105ac7b112641522eeb8740dda4bb6032a26e790632ac295ff6b",
+      "qmk-8051-ak820/tests/ak820_emitted/run.py": "3a926d06d7e6ad721392fa8c7148bc28f7e54f3371752123b5b72a46ecf9a864",
+      "qmk-8051-ak820/util/ak820_linked_inventory.py": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5",
+      "qmk-8051-ak820/util/pack_ak820.py": "9e2454b0aaa790874bbb7117680c67fd134b45d4ece7281bf6b5b8ea17e59a7f"
+    },
+    "root_bounds": {
+      "_main": 98,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2
+    },
+    "unresolved_roots": [],
+    "foreground_bound": 98,
+    "main_entry_frame_bound": 2,
+    "pre_main_bound": 2,
+    "irq_bound": 61,
+    "stack_bound": 161,
+    "stack_capacity": 166,
+    "stack_margin": 5,
+    "whole_program_stack_qualified": true,
+    "release_approved": false,
+    "hardware_validated": false,
+    "physical_device_commands": 0,
+    "limits": [
+      "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+      "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+      "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+      "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+      "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+    ],
+    "reports": {
+      "foreground": {
+        "path": "runtime-stack.json",
+        "sha256": "0fe34a813a77c7ce6511d54c6ce53f8e0edb10a0f13a6f4c6b9dd9d76edbc729"
+      },
+      "startup": {
+        "path": "runtime-safety/startup.json",
+        "sha256": "80ce96908562a995fe220ef9c8edc0209b757d1506eed7300d0a9a46ae07ca61"
+      },
+      "irq": {
+        "path": "runtime-safety/irq/results.json",
+        "sha256": "cc6e5fb0b31754914af9aa7a2ada12ab8ac2e86245df3f0258087732ad74ac71"
+      }
+    },
+    "logs": {
+      "startup": "7f4b135c7581977524593a9d4320325d76a44b658c6db82345b309de0b2c58f0",
+      "irq": "cc6e5fb0b31754914af9aa7a2ada12ab8ac2e86245df3f0258087732ad74ac71"
+    },
+    "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+  }
+}
