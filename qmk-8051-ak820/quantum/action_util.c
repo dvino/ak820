@@ -29,7 +29,15 @@ extern keymap_config_t keymap_config;
 
 static uint8_t real_mods = 0;
 static uint8_t weak_mods = 0;
-#if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP)
+#ifdef AK820_MAC_PC
+#    include "ak820_mac_pc.h"
+#    if defined(__SDCC_mcs51)
+__bit ak820_mac_mode;
+#    else
+bool ak820_mac_mode;
+#    endif
+#endif
+#if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP) || defined(AK820_MAC_PC)
 #ifdef AK820_COMPACT_GUI_LOCK
 /* Session-only output mask: keep every physical and generated owner intact.
  * Re-enabling GUI immediately exposes any GUI modifier still held. */
@@ -47,6 +55,15 @@ static bool ctrl_gui_swapped;
 #        endif
 #    endif
 bool ak820_gui_process(uint16_t code, bool pressed) {
+#    if defined(AK820_MAC_PC)
+    if (code == QK_MAGIC_SWAP_ALT_GUI || code == QK_MAGIC_UNSWAP_ALT_GUI || code == QK_MAGIC_TOGGLE_ALT_GUI) {
+        if (pressed) {
+            ak820_mac_mode = code == QK_MAGIC_TOGGLE_ALT_GUI ? !ak820_mac_mode : code == QK_MAGIC_SWAP_ALT_GUI;
+            send_keyboard_report();
+        }
+        return false;
+    }
+#    endif
 #    if defined(AK820_COMPACT_CTRL_GUI_SWAP)
     if (code == QK_MAGIC_SWAP_CTL_GUI || code == QK_MAGIC_UNSWAP_CTL_GUI || code == QK_MAGIC_TOGGLE_CTL_GUI) {
         if (pressed) {
@@ -434,6 +451,13 @@ void send_keyboard_report(void) {
     keyboard_report->mods |= weak_override_mods;
 #endif
 
+#ifdef AK820_MAC_PC
+    /* Transform only the final aggregate; every owner keeps physical bits. */
+    if (ak820_mac_mode) {
+        uint8_t mods = keyboard_report->mods;
+        keyboard_report->mods = (mods & 0x33) | ((mods & 0x44) << 1) | ((mods & 0x88) >> 1);
+    }
+#endif
 #ifdef AK820_COMPACT_CTRL_GUI_SWAP
     if (ctrl_gui_swapped) {
         uint8_t mods = keyboard_report->mods;

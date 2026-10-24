@@ -6,7 +6,15 @@ The published and installed image is `v0.6.0-alpha.3`. Its exact identity and
 release evidence are recorded in [Status](STATUS.md). All current development
 profiles have source changes beyond that image and are not release-qualified.
 
-## Current development builds
+## New Mac/PC and OS profiles
+
+The configurator now lists 21 named profiles. Clean-source measurements for `full`
+and the three new module combinations remain pending; their scope is in the
+[new matrix](../audits/rc6/web-firmware-20261024/final/README.md).
+Other profiles retain the accepted measurements below at their frozen source;
+those measurements do not qualify changed source.
+
+## Accepted Leader baseline
 
 All 18 profiles and 20 variants pass from frozen source `d04290b`. The
 [final matrix](../audits/rc6/leader-next-20261024/final/README.md) records

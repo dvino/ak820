@@ -27,6 +27,11 @@ def main():
     slotmap = [fw.code[fw.address('_ak820_rgb_slots') + i] for i in range(82)]
     assert 71 not in slotmap and 79 not in slotmap
     indicator_cases = []
+    mac_pc = '_ak820_mac_mode' in fw.symbols
+    os_owned = mac_pc or '_ak820_os_indicator_mode' in fw.symbols
+    # Optional OS modules own component 3; otherwise it remains unrelated.
+    # PC/no helper is off. Keep a nonzero sentinel in memory to prove the write.
+    os_idle = 0 if os_owned else 0xc3
 
     def indicator_case(label, report, layer, default, configured, sleeping, irq, expected, producer=()):
         nonlocal indicator_commands
@@ -49,31 +54,40 @@ def main():
         indicator_cases.append((label, expected, irq))
 
     indicator_case('base_caps_with_unrelated_leds', 0xff, 0, 1, 1, False, True,
-                   {'caps': [255, 255, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+                   {'caps': [255, 255, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
     indicator_case('unrelated_host_led_bits', 0xfd, 0, 1, 1, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
     indicator_case('layer_on_api', 0, 0, 1, 1, False, False,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 0xc3]},
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
                    producer=(fw.call('_layer_on', 2),))
     indicator_case('layer_off_api', 0, 0, 1, 1, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]},
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]},
                    producer=(fw.call('_layer_on', 2), fw.call('_layer_off', 2)))
     indicator_case('default_layer_api', 0, 0, 1, 1, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 0xc3]},
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
                    producer=(fw.call('_default_layer_set', 3),))
     indicator_case('tri_layer_api', 0, 0, 1, 1, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 0xc3]},
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
                    producer=(fw.call('_layer_on', 1), fw.call('_layer_on', 2)))
     indicator_case('capsword_without_host_led', 0, 0, 1, 1, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
     indicator_case('suspended', 2, 2, 1, 1, True, False,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
     indicator_case('resumed', 2, 2, 1, 1, False, True,
-                   {'caps': [255, 255, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 0xc3]})
+                   {'caps': [255, 255, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]})
     indicator_case('reset_unconfigured', 0, 2, 1, 0, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
     indicator_case('disconnected', 2, 2, 1, 0, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0xc3]})
+                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
+    if mac_pc:
+        indicator_case('mac_os_without_layer', 0, 0, 1, 1, False, True,
+                       {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 0, 0x3c, 255]},
+                       producer=(fw.write('_ak820_mac_mode', [1]),))
+        indicator_case('mac_os_with_layer', 0, 2, 1, 1, False, True,
+                       {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, 255]})
+        indicator_case('pc_os_without_layer', 0, 0, 1, 1, False, True,
+                       {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, 0]},
+                       producer=(fw.write('_ak820_mac_mode', [0]),))
     indicator_log, indicator_stack = fw.execute('dedicated-indicators', indicator_commands)
     for label, expected, irq in indicator_cases:
         actual = {
@@ -86,7 +100,8 @@ def main():
             'name': label, 'pass': actual == target, 'actual': actual, 'expected': target}
     indicator_report = {'name': 'dedicated_host_and_layer_indicators',
                         'pass': all(case['pass'] for case in indicator_cases),
-                        'cases': indicator_cases, **indicator_stack,
+                        'cases': indicator_cases, 'os_component_owned': os_owned,
+                        'mac_pc_compiled': mac_pc, **indicator_stack,
                         'scope': 'Linked updater CPU model with simulated USB/layer state; CapsWord key activity and USB report generation are not invoked here.'}
     commands = fw.initialize() + fw.clock(0)
     # Existing EEPROM mode IDs: Solid=1, Direct=5; append Reactive=6.

@@ -19,7 +19,8 @@ English source of truth: [Documentation](../INDEX.md).
 | Управлять блокировкой и перестановкой клавиш Win/GUI | [Клавиши Win/GUI](GUI-CONTROL.md) |
 | Записывать и воспроизводить компактные динамические макросы | [Динамические макросы](COMPACT-DYNAMIC-MACROS.md) |
 | Запускать макрос Vial через клавишу-префикс | [Компактный Leader](COMPACT-LEADER.md) |
-| Индикаторы Caps Lock и слоя | [Индикаторы C и W](INDICATORS.md) |
+| Индикаторы Caps Lock, слоя и OS | [Индикаторы C, W и OS](INDICATORS.md) |
+| Переключить Alt и GUI для Mac/PC | [Режим Mac/PC](MAC-PC.md) |
 | Сборка закреплённым инструментарием | [Сборка](BUILD.md) |
 | Тестовые профили сборки и их ограничения | [Профили сборки](BUILD-PROFILES.md) |
 | Проверка стека и IRQ для образа | [Автономная проверка стека](RUNTIME-STACK.md) |

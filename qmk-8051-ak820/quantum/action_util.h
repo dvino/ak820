@@ -33,7 +33,7 @@ extern report_keyboard_t *keyboard_report;
 #endif
 
 void send_keyboard_report(void);
-#if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP)
+#if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP) || defined(AK820_MAC_PC)
 bool ak820_gui_process(uint16_t code, bool pressed);
 #endif
 

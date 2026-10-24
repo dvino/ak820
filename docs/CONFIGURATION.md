@@ -155,7 +155,7 @@ before replacing firmware or moving a layout.
 The dedicated **C** indicator follows the host's Caps Lock state. Caps Word
 does not turn it on by itself. **W** lights when any layer above layer 0 is
 active, including held, toggled or default layers. These indicators work
-independently of key lighting. See [C and W indicators](INDICATORS.md).
+independently of key lighting. See [C, W and OS indicators](INDICATORS.md) and [Mac/PC mode](MAC-PC.md).
 
 ## Unlocking Vial
 

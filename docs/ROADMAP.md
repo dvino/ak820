@@ -3,10 +3,14 @@
 # Roadmap
 
 NKRO control, modifier One Shot and Space Cadet are available in the `full`
-profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps,
-Dynamic Macros and Leader in supported combinations. The configurator
-provides eighteen named profiles; the qualified matrix covers twenty variants: the named
-profiles plus `full` and `full-mouse-auto-shift` with `--short-calls`. These profiles are source development builds; they do not inherit the published alpha.3 qualification.
+profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls,
+volatile Ctrl/GUI swaps, Dynamic Macros and Leader in supported combinations.
+The configurator provides 21 named profiles, including three new OS-indicator
+and Mac/PC profiles. The historical 20-image matrix belongs to frozen source
+`d04290b`; it does not qualify current profiles. The new qualification scope
+covers `full` and the three new profiles; see the [report](../audits/rc6/web-firmware-20261024/final/README.md)
+for scope and results. These are source development builds; they do not inherit
+the published alpha.3 qualification.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
 The published and installed alpha.3 image is the exact full image described in
 [Status](STATUS.md). Source changes since that release, including feature-profile
@@ -24,7 +28,7 @@ enabled.
 | Tap Dance | The upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
 | Key Overrides | The upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; other modifier swaps, including Alt/Caps variants, and persistent settings remain open. |
+| Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; Caps variants and persistent settings remain open. |
 
 The available implementations are intentionally limited. NKRO control
 adds only `NK_ON`, `NK_OFF` and `NK_TOGG`; One Shot handles modifier combinations
@@ -59,7 +63,7 @@ Every supported feature combination must be measured as a complete linked
 image. Track both CODE windows, XRAM, internal RAM and stack placement. Shared
 code, dead-code removal and outlining make individual probe costs non-additive.
 Do not count loader, settings or journal space as free CODE. See
-[Resource budget](RESOURCE-BUDGET.md), the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md), and the current exact-image [runtime stack report](../audits/rc6/leader-next-20261024/final/README.md).
+[Resource budget](RESOURCE-BUDGET.md), the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md), and the prior exact-image [runtime baseline](../audits/rc6/leader-next-20261024/final/README.md).
 
 Every new source profile or image must pass exact-image stack and IRQ proof
 before other regression gates; unknown bounds or overflow fail the build.
@@ -92,8 +96,7 @@ See [Status](STATUS.md) for the published image and current development source.
 
 ## Web and desktop configurator
 
-The [configurator plan](../web/docs/PLAN.md) starts with an Entropy native/Wasm
-prototype and keeps Pipette as a fallback. The first usable website must
+The [configurator plan](../web/docs/PLAN.md) now has offline catalog groundwork and a firmware OS-indicator contract. The Entropy native/Wasm prototype and Pipette comparison remain planned. The first usable website must
 configure the released features, back up settings and perform firmware updates
 and OEM recovery in the browser. If Entropy is selected, native adaptation
 starts first and the browser develops in parallel. Desktop release does not

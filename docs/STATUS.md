@@ -17,9 +17,10 @@ run; it was not a failed firmware or installer test.
 The `web-dev` branch adds [requirements](../web/docs/REQUIREMENTS.md) and an
 [implementation plan](../web/docs/PLAN.md). Entropy is the first shared
 native/Wasm candidate to test; Pipette is the fallback. No configurator code
-has been imported, built or deployed in this work package. Firmware and
-installed-device state are unchanged. Source references, documentation checks
-and independent review are recorded in [the work record](../web/docs/REVIEW.md).
+has been imported, built or deployed. The plans were merged into the accepted
+firmware baseline. Firmware now provides the OS-helper protocol and an offline
+catalog generator; the desktop helper and platform layout detection remain
+planned. See the [work report](../audits/rc6/web-firmware-20261024/README.md).
 
 ## Alpha.3 source and image
 
@@ -55,6 +56,27 @@ not access a device; installation results are recorded separately.
 
 ## Current development source
 
+The configurator lists 21 named profiles. Three new profiles add independent
+[Mac/PC](MAC-PC.md) and [OS indicator](INDICATORS.md) modules:
+`full-mac-pc`, `full-os-indicators` and `full-mac-pc-os-indicators`.
+Mac/PC swaps both Alt/GUI pairs and supplies normal OS state. FD02 lets a
+helper temporarily override OS with off, on or a firmware-generated breathing
+cycle. C and W retain their existing roles. State is volatile; NVM is unchanged.
+
+The combined corrected candidate uses 39,614 CODE bytes and 2,612 XRAM bytes.
+Its exact-image foreground/startup/IRQ bound is 164/166, leaving two bytes.
+All 10 linked Mac/PC cases and 19 OS cases pass after the One Shot correction.
+Clean-source qualification of `full` and the three new profiles remains pending;
+its scope is recorded in the [new matrix](../audits/rc6/web-firmware-20261024/final/README.md).
+The accepted 20-image matrix below remains bound to its earlier source.
+
+The development catalog validates linked artifacts, runtime proofs, base
+logs and supplemental tests before describing features. It grants no release,
+settings-write or flashing permission. No device command or physical test was
+performed; published and installed alpha.3 remains unchanged.
+
+## Accepted Leader baseline
+
 All **18 named profiles and 20 build variants** pass from clean frozen source
 `d04290b`. Each image closes foreground calls, CRT startup and all three
 interrupt sources before regression testing. Each passes 28 base suites and
@@ -63,7 +85,7 @@ minimum stack margin is 1 byte. Exact images, resource measurements and
 complete raw builds are retained in the
 [final matrix](../audits/rc6/leader-next-20261024/final/README.md).
 
-The new `full-leader` profile adds compact [Leader](COMPACT-LEADER.md).
+The accepted `full-leader` profile adds compact [Leader](COMPACT-LEADER.md).
 Physical `QK_LEAD` followed within 300 ms by `1`–`9`, `0`, or `A`–`F` selects
 one of the 16 existing Vial macros. It uses 39,606 CODE bytes and 2,627 XRAM
 bytes; its combined stack bound is 160/162. All 26 linked Leader cases pass,

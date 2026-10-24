@@ -2,13 +2,16 @@
 
 # Build profiles
 
-The configurator lists eighteen named development profiles. The qualified
-matrix covers twenty variants: the 18 profiles plus `full` and
-`full-mouse-auto-shift` built with the optional `--short-calls` setting.
-The `full` feature set matches published alpha.3. Other profiles add compact Mouse Keys,
-Auto Shift, GUI controls, Ctrl/GUI swap, Dynamic Macros or Leader in supported
-combinations. These profiles are for development, not release or flashing.
-They have not inherited alpha.3's image qualification or hardware evidence.
+The configurator lists 21 named development profiles: the previous 18 plus
+three OS-indicator and Mac/PC profiles. The historical 20-image matrix belongs
+to frozen source `d04290b` and does not qualify current profiles. The new
+qualification scope covers separate images for `full` and the three new profiles;
+see the [report](../audits/rc6/web-firmware-20261024/final/README.md) for scope
+and results. The `full` feature set matches published alpha.3. Other profiles
+add compact Mouse Keys, Auto Shift, GUI controls, modifier swaps, Dynamic Macros,
+Leader or OS indicators in supported combinations. These profiles are for
+development, not release or flashing. They have not inherited alpha.3's image
+qualification or hardware evidence.
 Every profile build proves stack and
 interrupt bounds for its exact linked image before running other regression
 gates. Unknown bounds or overflow fail the build. See [Status](STATUS.md) and the
@@ -109,6 +112,9 @@ choices.
 | `full-mouse-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys and Auto Shift |
 | `full-gui-lock` | `nkro-control`, `one-shot`, `space-cadet`, GUI controls |
 | `full-ctrl-gui` | `nkro-control`, `one-shot`, `space-cadet`, GUI controls, left/right Ctrl↔GUI swap |
+| `full-os-indicators` | base `full` features and volatile FD02 OS indicator control |
+| `full-mac-pc` | base `full` features and volatile left/right Alt/GUI swap |
+| `full-mac-pc-os-indicators` | `full-mac-pc` plus volatile FD02 OS indicator control |
 | `full-dynamic-macro` | `nkro-control`, `one-shot`, `space-cadet`, compact Dynamic Macros |
 | `full-dynamic-macro-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Dynamic Macros and GUI controls |
 | `full-mouse-auto-shift-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys, Auto Shift and GUI controls |
@@ -143,19 +149,19 @@ tapped; `SC_SENT` maps to right Shift while held and Enter when tapped. These
 keys use the existing compact tap-hold path and its modifier ownership. Space
 Cadet keycodes cannot be used as Combo inputs. The implementation does not
 include the full upstream Space Cadet engine. Tested feature edge cases and limits are
-recorded in the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md). Current exact-image runtime evidence is in the [runtime stack report](../audits/rc6/leader-next-20261024/final/README.md).
+recorded in the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md). The earlier exact-image runtime baseline is documented in the [runtime stack report](../audits/rc6/leader-next-20261024/final/README.md); it does not qualify these changed profiles.
 
 The exact linked image determines resource use. Measure each profile from its
 build report; feature costs are not additive. For the exact published alpha.3 `full` image, release evidence bounds main-path
 stack use at 93 bytes, CRT at 2 bytes and all three IRQ paths at 61 bytes. Total
 use is 156 of 162 bytes, with 6 bytes remaining. These figures do not qualify
-changed source profiles. See the current [runtime stack report](../audits/rc6/leader-next-20261024/final/README.md) and [Status](STATUS.md) for evidence and limits.
+changed source profiles. See the earlier [runtime baseline](../audits/rc6/leader-next-20261024/final/README.md), current [qualification scope and results](../audits/rc6/web-firmware-20261024/final/README.md), and [Status](STATUS.md).
 
 ## Deferred feature inventory
 
 Seven of the 11 original candidates have bounded development implementations:
 NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift, Dynamic Macros and Leader.
-Magic is partly implemented through GUI controls. The four entries below
+Magic is partly implemented through GUI controls and volatile modifier swaps. The four entries below
 contain remaining work. The `full` profile selects NKRO control, One Shot and
 Space Cadet; a Vial control alone does not establish firmware support.
 
@@ -164,7 +170,7 @@ Space Cadet; a Vial control alone does not establish firmware support.
 | Tap Dance | Upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
 | Key Overrides | Upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; other modifier swaps, including Alt/Caps variants, and persistent settings remain open. |
+| Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; Alt/GUI swap is available in `full-mac-pc`. Caps variants and persistent settings remain open. |
 
 Console and Command remain disabled. Fault injection is a test facility, not a
 selectable firmware feature. Existing FD00/FD01 diagnosis is read-only. The

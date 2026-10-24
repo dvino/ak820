@@ -16,6 +16,8 @@ LEGACY_BUILDERS = frozenset({
     '4094ceba4c883b70355fb6fefa8a219cb18a0847bfbcb623c1e5833feaf276db',
 })
 SWITCHES = {
+    'mac-pc': 'AK820_MAC_PC',
+    'os-indicators': 'AK820_OS_INDICATORS',
     'leader': 'AK820_COMPACT_LEADER',
     'nkro-control': 'AK820_NKRO_CONTROL',
     'one-shot': 'AK820_COMPACT_ONESHOT',
@@ -27,6 +29,9 @@ SWITCHES = {
     'dynamic-macros': 'AK820_COMPACT_DYNAMIC_MACRO',
 }
 PROFILES = {
+    'full-mac-pc': ('nkro-control', 'one-shot', 'space-cadet', 'mac-pc'),
+    'full-mac-pc-os-indicators': ('nkro-control', 'one-shot', 'space-cadet', 'mac-pc', 'os-indicators'),
+    'full-os-indicators': ('nkro-control', 'one-shot', 'space-cadet', 'os-indicators'),
     'full-leader': ('nkro-control', 'one-shot', 'space-cadet', 'leader'),
     'standard': (),
     'nkro': ('nkro-control',),
@@ -72,6 +77,8 @@ def configuration(name: str) -> dict:
                          for feature, switch in SWITCHES.items()},
         'runtime_qmk_settings': [],
         'timing_ms': {'combo': 40, 'tap_hold': 200,
+                      **({'os_indicator_lease': 3000, 'os_indicator_period': 4096}
+                         if 'os-indicators' in enabled else {}),
                       **({'leader': 300} if 'leader' in enabled else {}),
                       **({'mouse_cursor': 20, 'mouse_wheel': 80} if 'mouse-keys' in enabled else {}),
                       **({'auto_shift': 175} if 'auto-shift' in enabled else {}),

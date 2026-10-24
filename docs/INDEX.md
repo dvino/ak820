@@ -19,7 +19,8 @@ difference.
 | Use GUI lock and volatile Ctrl/GUI swap controls | [GUI controls](GUI-CONTROL.md) |
 | Record and play compact Dynamic Macros | [Dynamic Macros](COMPACT-DYNAMIC-MACROS.md) |
 | Select a Vial macro with a Leader prefix | [Compact Leader](COMPACT-LEADER.md) |
-| Understand Caps Lock and layer indicators | [C and W indicators](INDICATORS.md) |
+| Understand Caps Lock, layer and OS indicators | [C, W and OS indicators](INDICATORS.md) |
+| Switch Alt and GUI for Mac/PC use | [Mac/PC mode](MAC-PC.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |
 | Build a development profile and check its limits | [Build profiles](BUILD-PROFILES.md) |
 | Check pushes and publish a release | [CI and releases](CI.md) |

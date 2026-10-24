@@ -32,10 +32,10 @@ from ak820_runtime_safety import combine as combine_runtime_safety
 
 FORMAT = 'ak820-configured-build-1'
 WINDOWS = ((0x28a0, 0x3000), (0x3027, 0xc700))
-SYMBOLS = {'leader': '_ak820_leader_process', 'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
+SYMBOLS = {'os-indicators': '_ak820_os_indicator_value', 'leader': '_ak820_leader_process', 'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
            'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process',
-           'dynamic-macros': '_ak820_dynamic_macro_process', 'gui-lock': '_ak820_gui_process'}
-STATIC_BITS = {'ctrl-gui-swap': '_ctrl_gui_swapped'}
+           'dynamic-macros': '_ak820_dynamic_macro_process'}
+STATIC_BITS = {'gui-lock': '_gui_disabled', 'ctrl-gui-swap': '_ctrl_gui_swapped', 'mac-pc': '_ak820_mac_mode'}
 RELEASE_BLOCKERS = (
     'Run check-runtime to establish the exact-image foreground/startup/IRQ stack bound.',
     'No approved installer/settings transition for this feature identity.',
@@ -455,6 +455,8 @@ def profile_test_plan(name, build, toolchain):
     plan = [('gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'tools',
                              '-p', 'test_configure_firmware.py'])]
     plan.extend([
+        ('capability-catalog-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                          '-s', 'tools', '-p', 'test_build_capability_catalog.py']),
         ('outline-gates', QMK, [sys.executable, 'tests/ak820_optimization/outline_unit.py']),
         ('short-call-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
                                  '-s', 'tests/ak820_shortcalls', '-p', 'test_*.py']),
@@ -526,6 +528,18 @@ def profile_test_plan(name, build, toolchain):
         plan.append(('leader-linked', QMK, [sys.executable, 'tests/ak820_leader/linked.py',
                     '--build-dir', str(build), '--s51', str(toolchain / 'bin' / 's51'),
                     '--output-dir', str(output / 'leader')]))
+    if 'os-indicators' in selected['optional_features']:
+        plan.append(('os-indicators-host', QMK, [sys.executable, 'tests/ak820_os_indicators/host.py',
+                    '--output', str(output / 'os-indicators-host.json')]))
+        plan.append(('os-indicators-linked', QMK, [sys.executable, 'tests/ak820_os_indicators/linked.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                    '--output-dir', str(output / 'os-indicators')]))
+    if 'mac-pc' in selected['optional_features']:
+        plan.append(('mac-pc-host', QMK, [sys.executable, 'tests/ak820_mac_pc/host.py',
+                    '--output', str(output / 'mac-pc-host.json')]))
+        plan.append(('mac-pc-linked', QMK, [sys.executable, 'tests/ak820_mac_pc/linked.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                    '--output-dir', str(output / 'mac-pc')]))
     if 'dynamic-macros' in selected['optional_features']:
         plan.append(('dynamic-macro-host', QMK, [sys.executable, 'tests/ak820_dynamic_macro/host.py',
                     '--output', str(output / 'dynamic-macro-host.json')]))
@@ -555,7 +569,7 @@ def test_source_snapshot():
                                             'qmk-8051-ak820/keyboards/ajazz/ak820/tests/')):
             continue
         path = ROOT / name
-        if path.suffix not in ('.py', '.c', '.h'):
+        if path.suffix not in ('.py', '.c', '.h', '.inc'):
             continue
         require(path.is_file() and path.resolve().is_relative_to(ROOT), 'Test source escapes repository')
         selected[name] = sha(path)

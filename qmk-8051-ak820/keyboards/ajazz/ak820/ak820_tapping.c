@@ -151,6 +151,10 @@ bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
     /* Session Ctrl/GUI controls also leave queued and held OSM ownership alone. */
     if (code == QK_MAGIC_SWAP_CTL_GUI || code == QK_MAGIC_UNSWAP_CTL_GUI || code == QK_MAGIC_TOGGLE_CTL_GUI) return true;
 #endif
+#ifdef AK820_MAC_PC
+    /* Changing the output mapping is not the key that consumes One Shot. */
+    if (code == QK_MAGIC_SWAP_ALT_GUI || code == QK_MAGIC_UNSWAP_ALT_GUI || code == QK_MAGIC_TOGGLE_ALT_GUI) return true;
+#endif
     if ((code >> 8) == 0x52 && ((uint8_t)code & 0xe0) == 0xa0) {
         mods = code & 15;
         if (code & 16) mods <<= 4;

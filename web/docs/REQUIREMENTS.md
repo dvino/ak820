@@ -152,7 +152,7 @@ Requirements for the first browser version are marked **Web**. Standalone applic
 
 **Acceptance:** helper settings (layout mappings, enabled state, and autostart) are stored separately from the keyboard and survive its firmware reset or update.
 
-**AKW-063 · Desktop.** Users map system keyboard layouts to three OS LED states: off, on, and slow breathing. One state may be assigned to several layouts. The helper sends the state; firmware performs the breathing effect. If the helper stops, the connection is lost, or the layout cannot be determined, firmware returns the LED to its normal behavior; the menu shows the reason.
+**AKW-063 · Desktop/Firmware.** Users map system keyboard layouts to three OS indicator states: off, on, and slow breathing. One state may be assigned to several layouts. The helper sends the state; firmware performs the breathing effect. The target is OS, separate from C and W. The optional Mac/PC module supplies the normal OS state: on in Mac mode, off in PC mode. If the helper stops, the connection is lost, or the layout cannot be determined, firmware returns OS to its normal behavior; the menu shows the reason.
 
 **Acceptance:** all three states, connection loss, and an unknown layout are checked. The helper periodically confirms that it is connected.
 

@@ -422,7 +422,7 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record_argumen
 #endif
 
     if (!(
-#if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP)
+#if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP) || defined(AK820_MAC_PC)
             ak820_gui_process(keycode, record->event.pressed) &&
 #endif
 #ifdef AK820_NKRO_CONTROL

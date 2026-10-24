@@ -78,3 +78,16 @@ ifeq ($(AK820_COMPACT_LEADER),yes)
     OPT_DEFS += -DAK820_COMPACT_LEADER
     SRC += ak820_leader.c
 endif
+
+# Temporary host layout indication on the separate OS channel.
+AK820_OS_INDICATORS ?= no
+ifeq ($(AK820_OS_INDICATORS),yes)
+    OPT_DEFS += -DAK820_OS_INDICATORS
+    SRC += ak820_os_indicators.c
+endif
+
+# Session-only Mac/PC modifier mode; the OS indicator follows this mode.
+AK820_MAC_PC ?= no
+ifeq ($(AK820_MAC_PC),yes)
+    OPT_DEFS += -DAK820_MAC_PC
+endif

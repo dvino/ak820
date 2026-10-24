@@ -46,7 +46,8 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md): tap for a key, hold for a modifier or layer.
 - [82 RGB LEDs](docs/CONFIGURATION.md#lighting) with solid color, breathing, color cycles, VialRGB Direct and a separate fade on each pressed key.
 - [C/W indicators](docs/INDICATORS.md): C follows Caps Lock; W shows an active additional layer.
-- Optional development controls for GUI lock and volatile left/right Ctrl↔GUI swapping; these controls are absent from published alpha.3.
+- Optional development controls add GUI lock and volatile left/right Ctrl↔GUI swapping; these controls are absent from published alpha.3.
+- Separate development profiles add a volatile Mac/PC Alt/GUI swap and OS indicator control, also absent from alpha.3. See [indicators](docs/INDICATORS.md) and [Mac/PC mode](docs/MAC-PC.md).
 - Saved [keymaps, macros and global lighting](docs/CONFIGURATION.md), [physical Vial unlock](docs/CONFIGURATION.md#unlocking-vial), and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
 
 See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
@@ -56,7 +57,7 @@ development source profiles. GUI controls, compact Leader and Dynamic Macros are
 available in selected development profiles; these features are not part of the
 published alpha.3 image.
 See [Mouse Keys](docs/COMPACT-MOUSE-KEYS.md) and [Auto Shift](docs/COMPACT_AUTOSHIFT.md).
-See [GUI controls](docs/GUI-CONTROL.md), [Leader](docs/COMPACT-LEADER.md), [Dynamic Macros](docs/COMPACT-DYNAMIC-MACROS.md)
+See [GUI controls](docs/GUI-CONTROL.md), [Mac/PC mode](docs/MAC-PC.md), [Leader](docs/COMPACT-LEADER.md), [Dynamic Macros](docs/COMPACT-DYNAMIC-MACROS.md)
 and [Build profiles](docs/BUILD-PROFILES.md) for profile choices and behavior.
 
 ## Disclaimer
