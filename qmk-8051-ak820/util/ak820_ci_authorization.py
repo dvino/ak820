@@ -164,10 +164,10 @@ def validate_qualification_contract(report: dict) -> None:
     }
     host = {'tests/' + name + '/run.py' for name in (
         'ak820_usb', 'ak820_keymap', 'ak820_caps_word', 'ak820_macro_guard',
-        'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_via_decode', 'ak820_bounded')}
+        'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_via_decode', 'ak820_bounded', 'ak820_combo')}
     cpu = {'tests/' + name + '/run.py' for name in (
         'ak820_features', 'ak820_unlock', 'ak820_tri_layer', 'ak820_iap')}
-    cpu |= {'tests/ak820_rgb/emitted.py', 'tests/ak820_bounded/emitted.py', 'tests/ak820_tapping/emitted.py'}
+    cpu |= {'tests/ak820_rgb/emitted.py', 'tests/ak820_bounded/emitted.py', 'tests/ak820_tapping/emitted.py', 'tests/ak820_combo/emitted.py'}
     tapping_host = 'tests/ak820_tapping/run.py'
     expected = {('discover', *item) for item in discovery} | {('host', item) for item in host}
     expected |= {('cpu', item) for item in cpu} | {('docs', 'tools/check_docs.py'), ('host', tapping_host)}

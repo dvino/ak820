@@ -45,6 +45,14 @@ Use the owner's supplied wording and examples; apply the write-like-me skill
 when composing substantial documentation, without claiming unavailable style
 retrieval.
 
+Owner's rule, 2026-10-24: every document serves its readers and purpose. Keep
+documentation concise, plain and free of repeated material. User guides explain
+actions and behavior; do not mix them with internal workflow or evidence.
+Record verification evidence in Status or technical reports and link to it when
+useful. Public release notes describe only user-visible changes, features,
+fixes and relevant limits. Do not include test results, packaging or licence
+details, installed state, audit or agent process, or repeat the README.
+
 ## Current work boundary
 
 Owner's GUI update rule, 2026-10-23: the update stays inside the installer.

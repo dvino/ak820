@@ -260,7 +260,7 @@ jobs:
             dist/windows/AK820-Windows.zip dist/windows/AK820-Windows.zip.sha256
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
             --title "AK820 $RELEASE_TAG"
-            --notes "Portable Windows installer and public firmware bundle built and checked from commit $GITHUB_SHA. Checksums cover both ZIP files."
+            --notes-file ci/release-notes.md
           )
           if [[ "$RELEASE_PRERELEASE" == true ]]; then
             gh release create "${args[@]}" --verify-tag --prerelease

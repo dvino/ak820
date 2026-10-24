@@ -9,6 +9,8 @@ the new C/W firmware or a device operation; its full regression and CI policy
 review are separate. No device write or interactive Windows acceptance is
 established by this record.
 
+Host bindings refreshed for the reviewed Combo-capable installer and full 28-suite CI contract on 2026-10-24. This retained bundle still selects its earlier firmware; alpha.2 uses the fresh CI bundle. Independent closure is recorded in `audits/rc6/combos-alpha-release-review-20261024.md`.
+
 ```json
 {
   "format": "ak820-offline-review-2",
@@ -30,8 +32,8 @@ established by this record.
       "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
     },
     "qmk-8051-ak820/util/ak820_ci_authorization.py": {
-      "size": 13290,
-      "sha256": "c4a035e2e97c0a07b9d26a81b6a177c9ebd95afe1974fe81b4f49a3789c7191f"
+      "size": 13337,
+      "sha256": "91e7f29dfed79968e7a32c3f29b1c46470a1294f97765981b02790d0f504c561"
     },
     "qmk-8051-ak820/util/ak820_diagnose.py": {
       "size": 13505,
@@ -58,8 +60,8 @@ established by this record.
       "sha256": "91458b9a14bad55f9bb9a056ec43f8daec0ffe996f21f4ffc15e9f6730aa9fc2"
     },
     "tools/ak820_device_protocol.py": {
-      "size": 19409,
-      "sha256": "e108c591ad017f029f6fa97c6e76dcc85a842123d0b61270cf8d8a1406257921"
+      "size": 22064,
+      "sha256": "d60ef46fdbff3277df52924753b5a6070ea33eac24c0081dc6388da8d771aba2"
     },
     "tools/build_ci_release.py": {
       "size": 20973,
@@ -98,8 +100,8 @@ established by this record.
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
     },
     "tools/installer/settings_backup.py": {
-      "size": 28857,
-      "sha256": "89693d97e57bfabf4d54a83326848635bb5c6016d73272940bc94e9be99e76d0"
+      "size": 31925,
+      "sha256": "b68a4841607b1371456eb5a496b2beeab4577493e7d0ba8d151819604ff649eb"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11338,

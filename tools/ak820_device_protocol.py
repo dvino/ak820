@@ -137,10 +137,22 @@ class DeviceAPI:
                 require(1 <= count <= 27 and address <= 65536-count and zero_tail(5), 'Malformed FD00 read')
             else: require(zero_tail(2), 'Malformed FD01 status request')
         elif command == 254:
-            require(sub in (0, 1, 2, 3, 4), 'Unknown FE Vial command')
+            require(sub in (0, 1, 2, 3, 4, 13), 'Unknown FE Vial command')
             if sub in (0, 1): require(zero_tail(2), 'Malformed Vial metadata request')
             elif sub == 2: require(packet[4:6] == bytes(2) and zero_tail(6), 'Malformed Vial definition page request')
             elif sub == 3: require(packet[2] < 6 and packet[3] == 0 and zero_tail(4), 'Malformed encoder getter')
+            elif sub == 13:
+                require(packet[2] in (0, 3, 4), 'Unknown Combo operation')
+                if packet[2] == 0:
+                    require(zero_tail(3), 'Malformed Combo count request')
+                else:
+                    require(packet[3] < 8, 'Invalid Combo index')
+                    if packet[2] == 3:
+                        require(zero_tail(4), 'Malformed Combo getter')
+                    else:
+                        write = True
+                        self.validate_combo(packet[4:14])
+                        require(zero_tail(14), 'Malformed Combo setter')
             else:
                 write = True
                 require(packet[2] < 6 and packet[3] == 0 and packet[4] in (0, 1) and zero_tail(7), 'Malformed encoder setter')
@@ -278,6 +290,51 @@ class DeviceAPI:
         require(0 <= layer < 6 and direction in (0, 1) and 0 <= value <= 0xFFFF, 'Invalid encoder setter arguments')
         packet = self.packet(254, 4, layer, 0, direction, value >> 8, value & 255)
         return self.exchange(packet) == packet
+
+    COMBO_OFFSET = 0x658
+    COMBO_MARKER = b'\x20\x08\x01\x00'
+
+    @staticmethod
+    def validate_combo(data):
+        require(isinstance(data, bytes) and len(data) == 10, 'Combo requires ten bytes')
+        a, b, c, d, output = (int.from_bytes(data[i:i+2], 'little') for i in range(0, 10, 2))
+        require(c == d == 0, 'Unsupported Combo format/version')
+        valid = (a == b == output == 0) or (4 <= a <= 0xA4 and 4 <= b <= 0xA4 and a != b
+                and output < 0x2000 and (4 <= (output & 255) <= 0xA4 or 0xE0 <= (output & 255) <= 0xE7))
+        require(valid, 'Unsupported Combo keys/output')
+        return data
+
+    @classmethod
+    def stored_combo(cls, data):
+        data = cls.validate_combo(data)
+        return data[:4] + cls.COMBO_MARKER + data[8:]
+
+    def combo_count(self):
+        reply = self.exchange(self.packet(254, 13, 0))
+        require(reply == bytes((0, 8, 0)) + bytes(28) + b'\x01', 'Combo capabilities differ')
+        return 8
+
+    def get_combo(self, index):
+        require(type(index) is int and 0 <= index < 8, 'Invalid Combo index')
+        packet = self.packet(254, 13, 3, index)
+        reply = self.exchange(packet)
+        require(reply[0] == 0 and reply[11:] == packet[11:], 'Combo getter ACK mismatch')
+        return self.validate_combo(reply[1:11])
+
+    def set_combo(self, index, data):
+        self._require_writes()
+        require(type(index) is int and 0 <= index < 8, 'Invalid Combo index')
+        data = self.validate_combo(data)
+        before = self.read_nvm()
+        packet = self.packet(254, 13, 4, index, *data)
+        require(self.exchange(packet) == b'\0' + packet[1:], 'Combo setter ACK mismatch')
+        self.status()
+        require(self.get_combo(index) == data, 'Combo getter readback differs')
+        expected = bytearray(before)
+        offset = self.COMBO_OFFSET + 10*index
+        expected[offset:offset+10] = self.stored_combo(data)
+        require(self.read_nvm() == bytes(expected), 'Combo durable settings or neighboring bytes differ')
+        return True
 
     def macros(self):
         require(self.exchange(self.packet(12))[1] == 16, 'Macro count mismatch')

@@ -1,0 +1,55 @@
+{
+  "format": "ak820-alpha2-extra-verification-1",
+  "physical_device_commands": 0,
+  "hardware_validated": false,
+  "tools_unittests": {
+    "run": 111,
+    "skipped": 0,
+    "passed": true
+  },
+  "ci_authorization_unittests": {
+    "run": 11,
+    "skipped": 0,
+    "passed": true
+  },
+  "compiler_unittests": {
+    "run": 3,
+    "skipped": 0,
+    "passed": true
+  },
+  "nvm_powercut_cases": 10944,
+  "macro_powercut_cases": 25088,
+  "sanitizers": {
+    "address": true,
+    "undefined": true,
+    "leak": false
+  },
+  "logs": {
+    "tools-tests-final.log": {
+      "sha256": "1698b4b082a847e9f076bc5fae37d59c12300cb4d42a759dbe8643715c4e17ed",
+      "size": 578
+    },
+    "ci-auth-tests.log": {
+      "sha256": "01f751b137328f97b5d440a4fc354b498d90b679c59f8ef3510d4161e8e01b0a",
+      "size": 110
+    },
+    "compiler-tests.log": {
+      "sha256": "89d79feb3f9f4d5bed17f078329c6f6a7f786ac18d354f60aad23051c243b39e",
+      "size": 101
+    },
+    "nvm-powercut.log": {
+      "sha256": "814945f5d934518770f07738c3709f12decd441cee198201df6d75029d3a23c2",
+      "size": 89
+    },
+    "macro-powercut.log": {
+      "sha256": "12b57ad4e539ed09ca994b7033560fe030d522cb25d46674c10de4555f0c1178",
+      "size": 114
+    }
+  },
+  "workflow_actionlint_passed": true,
+  "syntax": {
+    "python_files": 217,
+    "shell_files": 1,
+    "passed": true
+  }
+}

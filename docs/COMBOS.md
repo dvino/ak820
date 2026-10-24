@@ -7,11 +7,11 @@ replaces two ordinary keys pressed within 40 ms with one key or a modified key,
 for example J + K → Escape or F + D → Ctrl+C. The implementation is specific to
 the AK820. The standard QMK Combo engine remains disabled.
 
-The development image fits the original memory windows with all earlier
+The current candidate fits the original memory windows with all earlier
 functions enabled, including Grave Escape and NKRO. It uses 40,313 CODE bytes,
-with 120 trailing main-window bytes and 67 low-window bytes free. The published
-alpha does not include Combos. This candidate has not been installed or approved
-for the installer; [Status](STATUS.md) records its separate verification state.
+with 120 trailing main-window bytes and 67 low-window bytes free. Published
+alpha.1 does not include Combos. The planned alpha.2 candidate has not been
+installed or released; [Status](STATUS.md) records its verification state.
 
 ## Configuration
 
@@ -90,11 +90,14 @@ On the wire, offsets 4–7 are always zero. A missing marker, another version or
 invalid data reads as an empty entry without writing or initializing the gap.
 Setting an empty entry writes the same markers with zero inputs and output.
 A full raw NVM copy preserves the extension bytes; legacy firmware does not
-interpret them. The pinned installer settings backup does not export Combos,
-and its exact-image checks do not accept this candidate. Before a candidate
-release, backup/restore needs a reviewed Combo extension and an explicit
-legacy-to-candidate migration. A missing legacy Combo section must be distinct
-from a section which intentionally clears all eight entries.
+interpret them. The installer backup distinguishes a legacy image, which has
+no Combo section, from an alpha.2 image, which stores a version-1 section with
+all eight entries, including empty entries. A backup with an unknown marker or
+extension version stops during preflight. When restoring a legacy backup to an
+alpha.2 target, all eight target Combos must be empty; otherwise restore stops
+before writing and preserves the existing entries. An alpha.2 backup with an
+explicit empty section clears all eight target entries. This prevents a legacy
+backup from silently clearing Combos.
 
 Each complete entry fits within one 64-byte EEPROM page: the entry start offsets
 within their page are 24, 34, 44, 54, 0, 10, 20 and 30. The existing journal

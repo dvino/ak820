@@ -33,6 +33,8 @@ SUPPORTED_IMAGES = (
     ('45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d',
      'cc5af6cc86724103fbc3e2c1815bf7a2235edc0ed85a932fd3e993cd6b4f7931'),
 )
+CANDIDATE_IHX = 'a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f'
+SUPPORTED_IMAGES += ((CANDIDATE_IHX, 'd787703f62f96d7204bf25c566eac39f66b8c8c3f711ce152d7ff1eded9716da'),)
 UID = '0470ff9001b915d3'
 DEVICE = {'vid': 0x320F, 'pid': 0x505B, 'vial_uid': UID}
 # Pinned enum in rgb_matrix.h / vialrgb_effects.inc for this exact image.
@@ -94,7 +96,8 @@ def load_profile(bundle, native_backup):
     code_sha256 = pack.digest(payload[:pack.CODE_END-pack.APP_START])
     require((ihx_sha256, code_sha256) in SUPPORTED_IMAGES,
             'Firmware CODE does not match a reviewed settings profile')
-    images = {ihx: {'ihx_sha256': ihx, 'code_sha256': code, 'build_id': pack.BUILD_ID}
+    images = {ihx: {'ihx_sha256': ihx, 'code_sha256': code, 'build_id': pack.BUILD_ID,
+                    'combos_version': 1 if ihx == CANDIDATE_IHX else None}
               for ihx, code in SUPPORTED_IMAGES}
     return {'payload': payload, 'backup': native_backup, 'native_backup': native_backup,
             'definition': definition, 'code': code,
@@ -182,7 +185,29 @@ def rgb_wire(raw, *, selected=False):
     return wire.to_bytes(2, 'little') + bytes((raw[4], raw[1], raw[2], raw[3]))
 
 
-def settings_from_nvm(nvm, rgb_mode):
+def combo_settings(nvm):
+    entries = []
+    for index in range(8):
+        offset = DeviceAPI.COMBO_OFFSET + index*10
+        raw = nvm[offset:offset+10]
+        # Freshly migrated images have an unused all-zero extension.
+        if raw == bytes(10):
+            data = raw
+        else:
+            require(raw[4:8] == DeviceAPI.COMBO_MARKER, 'Unknown Combo marker/version')
+            data = raw[:4] + bytes(4) + raw[8:]
+        entries.append(DeviceAPI.validate_combo(data).hex())
+    return {'version': 1, 'entries_hex': entries}
+
+
+def _combo_capable(profile, identity=None):
+    image = _profile_images(profile)[identity or profile['ihx_sha256']]
+    version = image.get('combos_version')
+    require(version in (None, 1), 'Unknown Combo profile version')
+    return version == 1
+
+
+def settings_from_nvm(nvm, rgb_mode, *, combos=False):
     metadata = pack.validate_nvm(nvm)
     length = metadata['published_macro_length']
     stream = nvm[pack.MACRO_ADDR:pack.MACRO_ADDR+length]
@@ -194,16 +219,23 @@ def settings_from_nvm(nvm, rgb_mode):
                  'keycode': int.from_bytes(nvm[DeviceAPI.encoder_offset(layer, direction):
                                                DeviceAPI.encoder_offset(layer, direction)+2], 'big')}
                 for layer in range(6) for direction in (0, 1)]
-    return {'keys': keys, 'encoders': encoders, 'layout_options': nvm[40],
+    result = {'keys': keys, 'encoders': encoders, 'layout_options': nvm[40],
             'macros': {'count': 16, 'capacity': 8192, 'published_length': length,
                        'logical_length': metadata['logical_macro_length'],
                        'data_hex': stream.hex(), 'commands': macro_commands(stream)},
             'rgb': {'saved_config_hex': nvm[24:32].hex(), 'current_mode_hex': rgb_mode.hex(),
                     'saved_source': 'NVM[24:32]', 'current_source': 'VialRGB 0x08/0x41'},
             'limitations': LIMITATIONS}
+    if combos:
+        result['combos'] = combo_settings(nvm)
+    return result
 
 
 def _check_getters(api, settings):
+    if 'combos' in settings:
+        require(api.combo_count() == 8, 'Combo count differs')
+        for index, data in enumerate(settings['combos']['entries_hex']):
+            require(api.get_combo(index) == bytes.fromhex(data), 'Combo getter differs from saved NVM')
     for item in settings['keys']:
         require(api.get_key(item['layer'], (item['row'], item['column'])) == item['keycode'],
                 'Key getter differs from saved NVM: ' + str(item))
@@ -229,7 +261,7 @@ def capture_settings(api, profile):
     current = bytes.fromhex(rgb['mode_hex'])
     require(current == rgb_wire(nvm[24:32]),
             'RGB RAM and saved NVM differ; save the intended settings explicitly before export')
-    settings = settings_from_nvm(nvm, current)
+    settings = settings_from_nvm(nvm, current, combos=_combo_capable(profile, _rom_identity(rom, profile)['ihx_sha256']))
     _check_getters(api, settings)
     require(api.read_nvm() == nvm, 'NVM changed during getters; export is not a firmware freeze')
     require(api.rgb_mode() == current, 'RGB changed during export')
@@ -330,7 +362,7 @@ def validate_backup(path, profile, expected_identity=None):
     validate_rom(rom, profile, (source_ihx, source_code))
     require(nvm == rom[pack.NVM_START:pack.NVM_END], 'Saved NVM differs from the full ROM')
     settings = _json(files['settings.json'])
-    expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32]))
+    expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32]), combos=_combo_capable(profile, source_ihx))
     require(canonical(settings) == canonical(expected), 'Settings JSON differs from validated NVM or RGB contract')
     return {'path': path, 'identity': identity, 'manifest': manifest, 'settings': expected,
             'rom': rom, 'nvm': nvm, 'source_identity': (source_ihx, source_code)}
@@ -393,6 +425,16 @@ def plan_restore(backup, profile, target_nvm=None):
     require(source_rank <= target_rank,
             'Settings restore would downgrade firmware; only same-image or approved forward transitions are allowed')
     blockers = []
+    combo_entries = None
+    if _combo_capable(profile):
+        target_combos = combo_settings(target_nvm)
+        if 'combos' in settings:
+            combo_entries = settings['combos']['entries_hex']
+        else:
+            require(all(data == bytes(10).hex() for data in target_combos['entries_hex']),
+                    'Legacy backup has no Combos; existing target Combos must not be cleared')
+    else:
+        require('combos' not in settings, 'Target firmware does not support Combos')
     for item in settings['keys'] + settings['encoders']:
         if not keycode_supported(item['keycode']):
             blockers.append('Unsupported keycode ' + hex(item['keycode']) + ': ' + str(item))
@@ -424,7 +466,7 @@ def plan_restore(backup, profile, target_nvm=None):
                 if not keycode_supported(value):
                     blockers.append(f'Unsupported keycode in macro {number}: {value:#06x}')
     require(not blockers, 'Settings cannot be restored before any erase/write:\n' + '\n'.join(blockers))
-    return {'key_count': 498, 'encoder_count': 12, 'macro_chunks': chunks,
+    return {'combo_entries': combo_entries, 'key_count': 498, 'encoder_count': 12, 'macro_chunks': chunks,
             'rgb_saved_mode': rgb_wire(raw, selected=True), 'rgb_effective_mode': rgb_wire(raw),
             'limitations': list(LIMITATIONS), 'requires_physical_unlock': True}
 
@@ -455,7 +497,12 @@ def verify_restore(api, backup, profile):
     require(_rom_identity(rom, profile)['ihx_sha256'] == expected_target[0] and
             _rom_identity(rom, profile)['code_sha256'] == expected_target[1],
             'Final running firmware differs from the selected target image')
-    require(canonical(actual) == canonical(backup['settings']), 'Final restored settings differ from the backup')
+    expected_settings = dict(backup['settings'])
+    if _combo_capable(profile) and 'combos' not in expected_settings:
+        require(all(data == bytes(10).hex() for data in actual['combos']['entries_hex']),
+                'Legacy restore target Combos are not empty')
+        expected_settings['combos'] = actual['combos']
+    require(canonical(actual) == canonical(expected_settings), 'Final restored settings differ from the backup')
     # User values are compared, not journal data, unused slots, stale macro tail
     # or the new firmware's initial-config manifest digest.
     return {'verified': True, 'rom_sha256': pack.digest(rom), 'nvm_sha256': pack.digest(nvm),
@@ -542,6 +589,18 @@ def restore_settings(api, backup, profile, before_write=None, *, target_backup=N
         write('rgb:save', api.save_rgb)
         expected[24:32] = rgb
         durable('RGB save')
+    if plan['combo_entries'] is not None:
+        require(api.combo_count() == 8, 'Combo count differs before restore')
+        for index, value in enumerate(plan['combo_entries']):
+            data = bytes.fromhex(value)
+            offset = DeviceAPI.COMBO_OFFSET + index*10
+            stored = DeviceAPI.stored_combo(data)
+            if expected[offset:offset+10] != stored:
+                write('combo:' + str(index), lambda: api.set_combo(index, data))
+                expected[offset:offset+10] = stored
+                require(api.get_combo(index) == data, 'Combo readback differs')
+                durable('Combo ' + str(index))
+    durable('final settings')
     result = verify_restore(api, backup, profile)
     result.update(writes=writes, target_backup=str(target_backup['path']))
     return result

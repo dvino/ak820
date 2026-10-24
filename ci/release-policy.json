@@ -1,8 +1,8 @@
 {
   "format": "ak820-ci-program-policy-1",
   "program": {
-    "ihx_sha256": "45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d",
-    "symbols_sha256": "11e50e3e0d6e1e9831d4ca85822a65306907753bed5000f7d4301f69af8ade06",
+    "ihx_sha256": "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f",
+    "symbols_sha256": "7dcabc5f511cb17eae298bc53faf7da5cd8a34b627123e42089cda520cf93c74",
     "schema": 532482,
     "keyboard": "ajazz/ak820",
     "keymap": "vial",
@@ -18,8 +18,8 @@
       "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
     },
     "qmk-8051-ak820/util/ak820_ci_authorization.py": {
-      "size": 13290,
-      "sha256": "c4a035e2e97c0a07b9d26a81b6a177c9ebd95afe1974fe81b4f49a3789c7191f"
+      "size": 13337,
+      "sha256": "91e7f29dfed79968e7a32c3f29b1c46470a1294f97765981b02790d0f504c561"
     },
     "qmk-8051-ak820/util/ak820_diagnose.py": {
       "size": 13505,
@@ -46,8 +46,8 @@
       "sha256": "91458b9a14bad55f9bb9a056ec43f8daec0ffe996f21f4ffc15e9f6730aa9fc2"
     },
     "tools/ak820_device_protocol.py": {
-      "size": 19409,
-      "sha256": "e108c591ad017f029f6fa97c6e76dcc85a842123d0b61270cf8d8a1406257921"
+      "size": 22064,
+      "sha256": "d60ef46fdbff3277df52924753b5a6070ea33eac24c0081dc6388da8d771aba2"
     },
     "tools/build_ci_release.py": {
       "size": 20973,
@@ -86,19 +86,19 @@
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
     },
     "tools/installer/settings_backup.py": {
-      "size": 28857,
-      "sha256": "89693d97e57bfabf4d54a83326848635bb5c6016d73272940bc94e9be99e76d0"
+      "size": 31925,
+      "sha256": "b68a4841607b1371456eb5a496b2beeab4577493e7d0ba8d151819604ff649eb"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11338,
       "sha256": "ffa59acf7a6d1f90fa4e7056b577a0bef5d4553cbcc1aeab305fe0f15bee0b72"
     }
   },
-  "packing_receipt_sha256": "3ca05df08d592743c9b5fb8f027edd168c671b4cd23634f014656a5ba2a8cd32",
+  "packing_receipt_sha256": "5f365b1c5bbc3fa0fdf9eb9f635a4bd10cfff4384a56b785d527bd11a2b34dc6",
   "source_files": {
     ".github/workflows/windows-installer.yml": {
-      "size": 12549,
-      "sha256": "94a54891e69627bd434f18d891723c63f698d5d9ad8126658a55f651e8b2a49b"
+      "size": 12443,
+      "sha256": "e57cb561037415dd439aaba67e4c9cf0693639d9ad619d902e78764f61317d91"
     },
     "AK820.cmd": {
       "size": 1149,
@@ -107,6 +107,10 @@
     "AK820.sh": {
       "size": 515,
       "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
+    },
+    "ci/release-notes.md": {
+      "size": 1007,
+      "sha256": "19c039f1c3a6f6cba701e793cb7bf7af1763ea8e329385195bafe1b92dbe9e8d"
     },
     "qmk-8051-ak820/builddefs/build_json.mk": {
       "size": 821,
@@ -529,16 +533,16 @@
       "sha256": "cbe85dbb86d927ebe33489267ac73072b63978a18dd1fe202e9181f11f581c9a"
     },
     "qmk-8051-ak820/drivers/eeprom/eeprom_driver.c": {
-      "size": 2486,
-      "sha256": "ce61006195d9c5274231f0ad8142d777a5517e32630f7ec7349d87764685788b"
+      "size": 3018,
+      "sha256": "de6d62b77a195d6080efcdde444d266c75705d37f4f32c4a177f82ee8b0b2069"
     },
     "qmk-8051-ak820/drivers/eeprom/eeprom_driver.h": {
       "size": 791,
       "sha256": "c79d0993439313d62214118eca4dd1b4715507d7657439ad2e4d929473ecb23e"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.c": {
-      "size": 8860,
-      "sha256": "e7a0819030b7172c6b7590037d8c7c9de1eb3d1cbdbeeb38d0576fd7355294ad"
+      "size": 9004,
+      "sha256": "744928cdba773200642dfc358192ee7a874c166a36af06f16e64b5957aa1aa76"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.h": {
       "size": 1460,
@@ -547,6 +551,14 @@
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_boot.c": {
       "size": 1172,
       "sha256": "b1e8d7625152c9ed6209c392c75a9cb87a228087898ce4264a6b8d833d5daa0f"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_combo.c": {
+      "size": 3519,
+      "sha256": "72994e85eb31d319c1f517e3e99d087827fb1d1cc52a8d1fa79242394b8b048f"
+    },
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_combo.h": {
+      "size": 356,
+      "sha256": "87658fe8c95221baa764fb77375a371ce634a6deb1f8d053f2ce5994bad49014"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_flash.c": {
       "size": 5067,
@@ -557,24 +569,24 @@
       "sha256": "8f9af079a60f226d1ddfcfbd351e447f6c7907ab747c4d671ea536c49c768baf"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_macro.c": {
-      "size": 6812,
-      "sha256": "7b49e135a03eb059c01e3f6cde2227df04f7bcab27338776ff09b0ce5e561031"
+      "size": 6966,
+      "sha256": "e07a5c9d8a1d8375a2f8ba5175b8d3082d407144d0962262cfe3be5b8941b5ad"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_macro.h": {
       "size": 545,
       "sha256": "f0afa783b8ced80b48f11a5f759a8c35f920fe33b5fe0d4e89acee5476bb2e18"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_nvm.c": {
-      "size": 7326,
-      "sha256": "b2c121d4dd14880231b4a3b3a90ad71d2eb6b7b91fdc11021fd99c4995a81a63"
+      "size": 9272,
+      "sha256": "4c4dbf86300833b00221e0ec6dd7bd05f357d16bc631057a7dbc653229d0850f"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_nvm.h": {
-      "size": 2126,
-      "sha256": "e5696104cb9dd93d6a51ce89c2b0fae461018fcaa906440e824e4a31cbeb9438"
+      "size": 2576,
+      "sha256": "9cc3613de1a1715e8e6407b9f824dfe3bd5aabcd55961212f952f1af49ecda3e"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_rgb.c": {
-      "size": 12183,
-      "sha256": "810ac091fb9f0206ab6e6db86e6ab2f51a8003f647c64f35ebb8602db6d23415"
+      "size": 12458,
+      "sha256": "500245f6cf32e12d31b83523422a50863c891fe2e7187f9d31e10941408e9b34"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_startup.c": {
       "size": 1478,
@@ -593,8 +605,8 @@
       "sha256": "69a2218dc73c70feb2622d12f4a6f4e1b4647cc5a0b4d059f9d9a51023f4b1f5"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/config.h": {
-      "size": 2040,
-      "sha256": "67fe73ca0f1c856ac7cb1030b0d0fabc283b96367c39eada6c29e69ebb9e0659"
+      "size": 2097,
+      "sha256": "99497e0d03a8dbb820dae3d94a4a4c06f4c2e11150c3e31a914e84d56f35539a"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/info.json": {
       "size": 14377,
@@ -621,8 +633,8 @@
       "sha256": "277fbf33128b606387e54526733b9a08dc4e604b19e795b23a23ea226b3101b0"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/rules.mk": {
-      "size": 758,
-      "sha256": "cada082048bb740c58891f764a0f7c58bdc58fea4de9bdde77456fe4200025cd"
+      "size": 772,
+      "sha256": "029689d91cdf68dc1616969eea261fca6db9778a1bbdd748bf846b65614dfbc3"
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/tests/include/eeprom.h": {
       "size": 601,
@@ -1209,8 +1221,8 @@
       "sha256": "ef0db7a4f3f1e8874a87b4eb8c9d6db431290d94d6cafa3968aee9ac3617972b"
     },
     "qmk-8051-ak820/quantum/action.c": {
-      "size": 42169,
-      "sha256": "853685f3bca24d8949b4fe5d650627542c6d258c7f2f3a4d21c4d0d009e2f2a6"
+      "size": 41451,
+      "sha256": "c9f666b041cb077c35ad0ce1985a7d9dd99a095d658d435ad9c28801fe160528"
     },
     "qmk-8051-ak820/quantum/action.h": {
       "size": 4496,
@@ -1297,20 +1309,20 @@
       "sha256": "b50c557da4b0de7f98a4ec60936d28c37726b4009451229689e5863373e93bc1"
     },
     "qmk-8051-ak820/quantum/debounce/sym_defer_g.c": {
-      "size": 2039,
-      "sha256": "d4552a565df2e24e15c5b3251eaea3d52c9a7d4321041d6b620a69dfbf086a71"
+      "size": 2183,
+      "sha256": "5f4d229dbda6d33ab53cb6425bec663639d81b5e75f08b5b5eb9bfdbbe282bf2"
     },
     "qmk-8051-ak820/quantum/dynamic_keymap.c": {
-      "size": 26864,
-      "sha256": "3408b75dae79e0ad09d7f5b6a458f6f961026eba58be8ebfb1d15a86f9fc9cdf"
+      "size": 29057,
+      "sha256": "0e1ecf2fda3eba840b2d6b9a4ddaad51db2b39bb77d83d7c30bf4fc2969e849a"
     },
     "qmk-8051-ak820/quantum/dynamic_keymap.h": {
       "size": 4792,
       "sha256": "91af568577132afae84c7f7f5e774e1ea6c38394091b1af0815223a392690101"
     },
     "qmk-8051-ak820/quantum/eeconfig.c": {
-      "size": 8331,
-      "sha256": "aa6c760dce37b2d15cbf6da10a838fee0fcfb80f3c54a2476f36d3f29a543bfa"
+      "size": 8500,
+      "sha256": "920f8be95d82ef490b7ac9c26824f04d272c86b6f0680d0ad491966c12059898"
     },
     "qmk-8051-ak820/quantum/eeconfig.h": {
       "size": 8011,
@@ -1325,8 +1337,8 @@
       "sha256": "b7e28fefb375c66c04c07fdefed04fb088c18a62f4d83773b3f2132343389791"
     },
     "qmk-8051-ak820/quantum/keyboard.c": {
-      "size": 19956,
-      "sha256": "2652eebac8c4a934ca559617c85f4e676371aab33ac7d4e27e45b3d2556ad3af"
+      "size": 20100,
+      "sha256": "6a69812c99f04b48c5a6c7b246a41dfedc1772b5414f9998c0fb3b9826c1d336"
     },
     "qmk-8051-ak820/quantum/keyboard.h": {
       "size": 5936,
@@ -1481,8 +1493,8 @@
       "sha256": "336c1efe088f15905ebd316b9edea481ed760c70c13289b309e8625f37ee3bc1"
     },
     "qmk-8051-ak820/quantum/quantum.c": {
-      "size": 21884,
-      "sha256": "0a236ec2727dcc330f2ebc211309df11ac4af31381d8c7192eec166c890b63df"
+      "size": 22129,
+      "sha256": "72e4c99cf734fd523a0bf6ab90743badbf93659a3221b05356486965089ac997"
     },
     "qmk-8051-ak820/quantum/quantum.h": {
       "size": 5882,
@@ -1501,8 +1513,8 @@
       "sha256": "2ee2cbbdce23f471db527f31387d112fa0c3674787265ec26c5f6c299177e19b"
     },
     "qmk-8051-ak820/quantum/repeat_key.c": {
-      "size": 11157,
-      "sha256": "5adcdf4644bf84481e49e8b659c58cb709a85682527478179b547eb63f8a76af"
+      "size": 11301,
+      "sha256": "3425a4644d4039a6c6b7f098267757bd75e806e92714fd36ff520946ce206988"
     },
     "qmk-8051-ak820/quantum/repeat_key.h": {
       "size": 3204,
@@ -1733,12 +1745,12 @@
       "sha256": "972b5c28e9f4a670c3c88a9f99e68d6e6af05657b5ca2ce141fef1e4c8cb611d"
     },
     "qmk-8051-ak820/quantum/vial.c": {
-      "size": 25666,
-      "sha256": "de9a0a8db2f28f7f36667d3f4f76060e41aa942a0f2695fdcf1b3b04da4f5832"
+      "size": 25888,
+      "sha256": "b81b8c69063a23c9129f110d8f7bc5f1a2489153ae70fe5717485ea919bd1a9e"
     },
     "qmk-8051-ak820/quantum/vial.h": {
-      "size": 5341,
-      "sha256": "10fc557775dbb5939f256d7c5b03de6e73f04dcbdd22c36d2969369b1c48132b"
+      "size": 5379,
+      "sha256": "501cc4283c8c264400f265fe3a0395e9e498a34cd3bf93d24ab1b80e89f86ec0"
     },
     "qmk-8051-ak820/quantum/vial_ensure_keycode.h": {
       "size": 32320,
@@ -1779,6 +1791,26 @@
     "qmk-8051-ak820/tests/ak820_caps_word/run.py": {
       "size": 3640,
       "sha256": "22f024fe7314b5314816c9a95b8e5c91e36e099c874a2cb1c0a46ae8e88d2691"
+    },
+    "qmk-8051-ak820/tests/ak820_combo/README.md": {
+      "size": 2678,
+      "sha256": "36caacc03cee5ca8968c6b243e31bb72506b13c665f6ebf65a9dc554175db1e0"
+    },
+    "qmk-8051-ak820/tests/ak820_combo/emitted.py": {
+      "size": 8632,
+      "sha256": "b75c20a5e0f27a9ce5416f7b42ee0883e1249af9f92c5afa0aecd8a62248ac19"
+    },
+    "qmk-8051-ak820/tests/ak820_combo/harness.c": {
+      "size": 3048,
+      "sha256": "9f63dbb14b4b5c51d08b669fdf7ee1c1dde509c272ed0df11a87da8982f09200"
+    },
+    "qmk-8051-ak820/tests/ak820_combo/run.py": {
+      "size": 2250,
+      "sha256": "ab06f0750bc7656685291f9ee64346ce7b0b8bd7957b44eafbb1d762cb617a10"
+    },
+    "qmk-8051-ak820/tests/ak820_combo/storage.c": {
+      "size": 2480,
+      "sha256": "eed25071a0a5f9f2108225e449a84373e96a0884a40c1c6ff39b8dc47f5825d3"
     },
     "qmk-8051-ak820/tests/ak820_compiler/fixture.c": {
       "size": 2076,
@@ -1889,8 +1921,8 @@
       "sha256": "0c8ee5cc76ad79def08b056a9a525705ca7651aad70f3b6661e159acc07a54d5"
     },
     "qmk-8051-ak820/tests/ak820_optimization/callee.py": {
-      "size": 11169,
-      "sha256": "9eebdaa918914d258ab16bfede35c039525a93f93d93679958aaec89e9ed5b88"
+      "size": 11377,
+      "sha256": "e0579f7f4b7d44c9b5e803f641fbbc4bc4456393ee23e1b470384cd313608ccd"
     },
     "qmk-8051-ak820/tests/ak820_optimization/color_harness.c": {
       "size": 957,
@@ -1945,8 +1977,8 @@
       "sha256": "baf1a52a4792f7280f940d928e4b88d58ee580b059ddadfb1335a095ba01dc0b"
     },
     "qmk-8051-ak820/tests/ak820_optimization/outline_unit.py": {
-      "size": 5361,
-      "sha256": "811e09f4d450ac0d58dfba54ae6de323cf7c4ae50caeac3496fd3f02b656ab18"
+      "size": 8162,
+      "sha256": "1f4a9114dbef4add0af4fd911aec600b3535f9f195f7ad4fc6be8b5b344dbb6e"
     },
     "qmk-8051-ak820/tests/ak820_optimization/run.py": {
       "size": 6505,
@@ -2025,8 +2057,8 @@
       "sha256": "7ae7c980e6d7615fbd472ee596835a8c7ee43fa476fd3264c95d90c1a0006a9e"
     },
     "qmk-8051-ak820/tests/ak820_rgb/harness.c": {
-      "size": 9937,
-      "sha256": "fc9a67357cf26484d8ea5456874edc265b2c8e102f458253356ec77b469bc2e7"
+      "size": 9961,
+      "sha256": "687980f7eefe08fdeac42f9ef654cf8fff88f59d204235c91f583f52e423208e"
     },
     "qmk-8051-ak820/tests/ak820_rgb/run.py": {
       "size": 2714,
@@ -2121,12 +2153,12 @@
       "sha256": "35aeea2da02fee7387b7e83ce557ce1f9ca5ed657e4e0e8dbf01856ecfc6a7f9"
     },
     "qmk-8051-ak820/tests/ak820_tapping/emitted.py": {
-      "size": 21224,
-      "sha256": "a7c27ad81a158c4703ab55a56b3dddd6478a9508e9bab028174be32e96aa7e03"
+      "size": 22174,
+      "sha256": "4f4751cfc43a684820f9ce430187fe07218fcd4bd7c1c9d2d88f41b18c64d562"
     },
     "qmk-8051-ak820/tests/ak820_tapping/harness.c": {
-      "size": 26895,
-      "sha256": "efbaef5213438df92c860ec84abf88231a77d5cd5d196fff2701e54ab35de6ab"
+      "size": 29325,
+      "sha256": "ea2831004ffcba9f5679509d38d0e9e3cb3bc0067e91f3ed2414f268b43383a1"
     },
     "qmk-8051-ak820/tests/ak820_tapping/oracle.py": {
       "size": 4116,
@@ -2137,8 +2169,8 @@
       "sha256": "6bd74c74a93fc22ab98ca57ab767252ddd45058192928501341f7857aad69f13"
     },
     "qmk-8051-ak820/tests/ak820_tapping/run.py": {
-      "size": 9381,
-      "sha256": "fa26726d8921b5c31af5c342ac1847f26e1f64ed4d949fcfe86ced7a4334b29c"
+      "size": 9721,
+      "sha256": "5f3a9f34f188c4bbc7a4132bf03d3181adc215237ac357969171325156430a54"
     },
     "qmk-8051-ak820/tests/ak820_transport_retry/harness.c": {
       "size": 6739,
@@ -2221,8 +2253,8 @@
       "sha256": "b09976147c962699db19087075eeaa21a3e01669241083669846d2922302714a"
     },
     "qmk-8051-ak820/tmk_core/protocol/ch555/usb_ak820.c": {
-      "size": 27506,
-      "sha256": "3cb107ad30956f61b9f248cc14b168f9a515bea60f6bc6d602eb97f350e4951f"
+      "size": 29590,
+      "sha256": "cb71ddd073fe376f80f2b03215eb6a2473d866d667d335767e14db6f60833805"
     },
     "qmk-8051-ak820/tmk_core/protocol/ch555/usb_ak820.h": {
       "size": 894,
@@ -2249,8 +2281,8 @@
       "sha256": "460799c5477b2f85bf5a036041c3b5042a3786a60d1b02e80226aabf4534d35d"
     },
     "qmk-8051-ak820/tmk_core/protocol/report.c": {
-      "size": 9839,
-      "sha256": "49864f87b34fa2eba6dfc80b783e0befe24cf9217ec8b0fd2e0f105652eaadd6"
+      "size": 11375,
+      "sha256": "5cdda9a239dd09dcbcf09872f47f1a70a0a4add708694c2daafee8f76aa2e706"
     },
     "qmk-8051-ak820/tmk_core/protocol/report.h": {
       "size": 10991,
@@ -2293,8 +2325,8 @@
       "sha256": "50a760c6b6efb2c8b8326df3909d1662b84ec298a8fbd55f996a0d34f0bb63b7"
     },
     "qmk-8051-ak820/util/ak820_ci_authorization.py": {
-      "size": 13290,
-      "sha256": "c4a035e2e97c0a07b9d26a81b6a177c9ebd95afe1974fe81b4f49a3789c7191f"
+      "size": 13337,
+      "sha256": "91e7f29dfed79968e7a32c3f29b1c46470a1294f97765981b02790d0f504c561"
     },
     "qmk-8051-ak820/util/ak820_dce.py": {
       "size": 10895,
@@ -2309,8 +2341,8 @@
       "sha256": "a52338332541c4d82acbb0f04130acdfe4ae3e5586aa4ca0b3c3beec096523a5"
     },
     "qmk-8051-ak820/util/ak820_outline_audit.py": {
-      "size": 14318,
-      "sha256": "6ee2e71d283f778f3a8e1afb8d5544c4b7d9d5c12bdb397048ad1fc1f39d1d8a"
+      "size": 15708,
+      "sha256": "425751e534682ee16f84ba9d071a180a5dcc0f843313afdf22aaf0eb57c2271e"
     },
     "qmk-8051-ak820/util/ak820_release_manifest.py": {
       "size": 2517,
@@ -2322,7 +2354,7 @@
     },
     "qmk-8051-ak820/util/build_ak820.py": {
       "size": 12642,
-      "sha256": "3f7a34aeb8666b0c98878d96ddc3335b4033515943af333449082bc733e93202"
+      "sha256": "166dff0bb41a7a029b8f3c1c8cd57976368e63714458ee26b8fabcf1eb6564a6"
     },
     "qmk-8051-ak820/util/build_id.py": {
       "size": 393,
@@ -2381,8 +2413,8 @@
       "sha256": "4ddaa5c7152e16270cd407515bb2d75eb4939f2c9e3c957304ea0c6a2cdd5367"
     },
     "tools/ak820_device_protocol.py": {
-      "size": 19409,
-      "sha256": "e108c591ad017f029f6fa97c6e76dcc85a842123d0b61270cf8d8a1406257921"
+      "size": 22064,
+      "sha256": "d60ef46fdbff3277df52924753b5a6070ea33eac24c0081dc6388da8d771aba2"
     },
     "tools/ak820_device_tests.py": {
       "size": 8679,
@@ -2446,7 +2478,7 @@
     },
     "tools/installer/approved-release.json": {
       "size": 154,
-      "sha256": "d3ce8e59bbc4dd341198b7afa1e31bc02db2138781793a023c9b9fd1e8452152"
+      "sha256": "83d80db1102e6a95531daa9f2f18e1d9dced8142981ca12d8f63834b3823c933"
     },
     "tools/installer/gui.py": {
       "size": 21389,
@@ -2465,8 +2497,8 @@
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
     },
     "tools/installer/settings_backup.py": {
-      "size": 28857,
-      "sha256": "89693d97e57bfabf4d54a83326848635bb5c6016d73272940bc94e9be99e76d0"
+      "size": 31925,
+      "sha256": "b68a4841607b1371456eb5a496b2beeab4577493e7d0ba8d151819604ff649eb"
     },
     "tools/installer/settings_workflow.py": {
       "size": 11338,
@@ -2489,8 +2521,8 @@
       "sha256": "56813aed0424fa0176acd73ba98672d2eee73ff6780c42d9301fb52e38752ae5"
     },
     "tools/installer/test_settings_backup.py": {
-      "size": 27356,
-      "sha256": "7b71172ab938e7cfa3720d0c828f80262deb09a3e86630de7d4ad55adbcef9e6"
+      "size": 32699,
+      "sha256": "059f50b2710ed8bf47a59c926e3c97b28c76bfea7dd3cec8bf9aab4d8199f416"
     },
     "tools/installer/test_settings_workflow.py": {
       "size": 19046,
@@ -2505,8 +2537,8 @@
       "sha256": "1432ca3a30006acbd16b7ec399ca1fa24f764fb80fe2616d1bfd4f597c37102e"
     },
     "tools/test_ak820_device_protocol.py": {
-      "size": 5771,
-      "sha256": "1173e65e5733d1eacddf568429aa81a2458ee887ff09ede3ef392527ab911c5c"
+      "size": 6641,
+      "sha256": "db51a9c721f0a2565d1b576f8129c4b00f8e4cec9243ed7cd9f01a5e76b0266a"
     },
     "tools/test_ak820_device_tests.py": {
       "size": 15214,
@@ -2525,8 +2557,8 @@
       "sha256": "83d436763574a09cb226e80d0a1d6e76388985e95d84cb678729431579160740"
     },
     "tools/test_ci_authorization.py": {
-      "size": 12517,
-      "sha256": "b15e4f554016711330a3f44813294f21df80a812bdf361f42bcf4be4b34c86ca"
+      "size": 12556,
+      "sha256": "12eff9c9538ea8b4d34e8ef0d7eb45781fcc59fbedec086185400ca8519d8a47"
     },
     "tools/test_ci_checks.py": {
       "size": 1924,
@@ -2545,25 +2577,16 @@
       "sha256": "41e42ed6b6b06341ecc14b625f5a166b4c7702a12b59f70e8a7e11ea08f69cb9"
     },
     "tools/test_keyboard.py": {
-      "size": 9310,
-      "sha256": "4b716a52f61cce3f293a9583bd2baad5cde02b79bb955ad111600256b95e3a36"
+      "size": 9523,
+      "sha256": "74d9717d26162b7be90659c201cf0308daf2c3eb72f027aaa1af388a9dd21d73"
     },
     "tools/test_keyboard_runner.py": {
-      "size": 10542,
-      "sha256": "f2edb2062fdd3e2d614b5ab98f163b4d54280926c0ee017bb32015699d979c1d"
+      "size": 10718,
+      "sha256": "b505884ba935e85c248de2436b5d67bf84315e3d7ccd1dbce3dcb5be3f2f2a0d"
     },
     "tools/test_release_version.py": {
       "size": 964,
       "sha256": "1d424901fde11cde94f9339a1939fa1a76f203d2169ca127501f552396ece124"
     }
-  },
-  "settings_contract": {
-    "schema": 532482,
-    "layers": 6,
-    "encoder_assignments": 12,
-    "macros": 16,
-    "macro_capacity": 8192,
-    "allowed_transition": "same-image or forward in exact legacy -> pointer -> compact tap-hold -> C/W indicators order; no downgrade",
-    "physical_validation": false
   }
 }

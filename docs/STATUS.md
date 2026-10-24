@@ -3,8 +3,9 @@
 # Project status
 
 Updated 2026-10-24. The published and installed image remains
-`v0.6.0-alpha.1` (`bb6eca9`); it does not include Combos. The current
-development source builds a separate bounded two-key Combo candidate. Its IHX
+`v0.6.0-alpha.1` (`bb6eca9`); it does not include Combos. Source for the planned
+`v0.6.0-alpha.2` is prepared from `d361501` (archive baseline `4b83bb9`), but
+the tag is not published and the candidate is not installed. Its IHX
 SHA256 is `a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f`.
 It contains 40,313 CODE bytes (38,492 main + 1,821 low), reaches `0xc687`,
 and leaves 120 trailing main-window and 67 low-window bytes. Five reserved
@@ -29,11 +30,16 @@ also passed. The largest foreground stack use observed in the combined suites
 was 61 bytes above initial SP. These are tested paths, not a global or physical
 IRQ-overlap bound.
 
-No device access, flash, installer promotion or release occurred for the
-candidate. Physical timing, GUI acceptance, power-cycle persistence and
-installer support remain open. The installer uses exact reviewed image pins
-and does not export Combo settings; migration is required before a future
-package can include this candidate.
+The fresh release qualification passed all 28 suites and 265 unit tests with
+zero skips and unchanged IHX/MAP; see the [release report](../audits/rc6/alpha2-release-20261024/qualification.json).
+Offline packing and production profile loading passed. Physical timing, GUI
+acceptance, power-cycle persistence and release CI remain open. No device
+operation was performed for alpha.2. Host backup and migration now
+preserve all eight Combo entries: legacy backups omit the section and can restore
+to an alpha.2 target only when its entries are empty; alpha.2 backups include
+all eight entries, including empty slots. Unknown marker versions stop
+preflight. Host verification passed. The planned release tag is
+`v0.6.0-alpha.2`.
 
 ## Published alpha baseline
 
@@ -112,9 +118,11 @@ passed all 26 suites and 258 unit tests with no skips and unchanged IHX/MAP.
 Independent package review and release CI passed. This image is installed as
 `v0.6.0-alpha.1`; the installation result and limits are recorded above.
 
-## Retained tap-hold verification
+## Historical Mod-Tap / Layer-Tap candidate measurements (2026-10-24)
 
-The compact Mod-Tap/Layer-Tap implementation remains a development candidate.
+This section records an earlier compact Mod-Tap/Layer-Tap development build;
+those functions are already included in installed `v0.6.0-alpha.1` and the
+alpha.2 candidate. The measurements below are not the current image.
 After the Grave Escape correction, its build fits with 24 trailing bytes before
 `0xc700`: 40,399 populated CODE bytes, XRAM 2,512, stack allocation capacity 157.
 Its IHX is `d5842186152b0a612289775c89cc8564167cb8f0bb0b2cc34858a37dda7b8fd3`. No candidate update

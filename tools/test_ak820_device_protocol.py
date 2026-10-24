@@ -37,6 +37,25 @@ class ProtocolTests(unittest.TestCase):
         self.addCleanup(api.close)
         return api, raw
 
+    def test_combo_set_is_read_only_by_default(self):
+        api, raw = self.api()
+        with self.assertRaisesRegex(ValueError, 'Writes are disabled'):
+            api.set_combo(0, bytes(10))
+        self.assertEqual(raw.requests, [])
+
+    def test_combo_validation_rejects_unsupported_input_without_transport(self):
+        api, raw = self.api(True)
+        for data in (bytes(9), bytes.fromhex('04000400000000000600'),
+                     bytes.fromhex('04000500010000000600')):
+            with self.assertRaises(ValueError):
+                api.set_combo(0, data)
+        self.assertEqual(raw.requests, [])
+        for packet in (api.packet(254, 13, 1), api.packet(254, 13, 3, 8),
+                       api.packet(254, 13, 0, 1)):
+            with self.assertRaises(ValueError):
+                api.exchange(packet)
+        self.assertEqual(raw.requests, [])
+
     def test_default_is_read_only_and_typed_getter_still_works(self):
         api, raw = self.api()
         self.assertFalse(api.allow_writes)

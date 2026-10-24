@@ -2,7 +2,7 @@
 
 # Installation and recovery
 
-Use the complete release with the wired AJAZZ AK820 / VS11K28A. The installer checks the firmware already in the keyboard; the product name and USB ID alone do not identify a supported build. It stops before erasing if the source is unsupported. See [status](STATUS.md) for evidence and device state.
+Use a published complete release with the wired AJAZZ AK820 / VS11K28A. As of 2026-10-24, `v0.6.0-alpha.1` is the latest published and installed version. The planned `v0.6.0-alpha.2` candidate is not published or installable; its Combo backup migration is implemented, with final verification pending. The installer checks the firmware already in the keyboard; the product name and USB ID alone do not identify a supported build. It stops before erasing if the source is unsupported. See [status](STATUS.md) for evidence and device state.
 
 ## Package setup
 
@@ -60,9 +60,9 @@ The supported commands are:
 ./AK820.sh update --session OEM_DIR --backup-dir NEW_DIR
 ```
 
-The equivalent Windows source commands use `AK820.cmd`. Backup reads the keyboard and publishes a new private folder. Restore saves the current target state before writing. Update saves settings, flashes one approved image, then restores and verifies. New write operations use a physical unlock dialog; they do not ask for typed `yes`. A second physical unlock is required after restart for restore. Errors stop the operation without a retry, rollback or reset.
+The equivalent Windows source commands use `AK820.cmd`. Backup reads the keyboard and publishes a new private folder. Restore saves the current target state before writing. The GUI Update action displays the exact update being confirmed. A fresh physical Esc + left Control hold for three seconds confirms it; the installer requests unlock, enters the loader, flashes once and verifies the result. It then requests a second fresh physical hold before restoring and checking settings. Both holds happen inside the installer. No typed `yes`, separate Vial app or manual Bootloader action is part of this workflow. Cancel before erase if the displayed operation is not intended. Errors stop the operation without a retry, blind restore or reset.
 
-In the GUI, choose the OEM session and output or backup folder, then select Backup settings, Restore settings or Update firmware. For update, prepare a spare keyboard and stable power. When prompted, make a fresh Esc + left Control hold for three seconds. The installer shows the action being confirmed. Cancel before erase if the displayed operation is not intended.
+In the GUI, choose the OEM session and output or backup folder, then select Backup settings, Restore settings or Update firmware. Before an update, prepare alternate input and stable power. When prompted, make a fresh Esc + left Control hold for three seconds. The installer shows the action being confirmed; cancel before erase if it is not the intended update. After flashing and verification, make a second fresh hold when the installer asks to restore the saved settings.
 
 ## OEM recovery
 
@@ -76,7 +76,7 @@ The source installer retains the existing `install`, `install --trial` and `reco
 
 Offline checks do not authorize device writes. Each update needs its own confirmation, a fresh backup and an exact image check. Alpha releases are test builds; the release notes and Status distinguish source, package checks and device results.
 
-## Known alpha stop
+## Historical alpha.1 stop (2026-10-24)
 
 During installation of `v0.6.0-alpha.1`, `open failed` occurred after restart.
 The installer stopped before settings restoration. The cause is not established.

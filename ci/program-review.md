@@ -1,43 +1,64 @@
-# Independent program review — 2026-10-24
+# Independent Combo program review — 2026-10-24
 
-The exact tap-hold and C/W program policy, packing receipt, legacy installer
-host bindings and complete offline qualification evidence are approved for
-CI reproduction. This review did not author the production implementation,
-policy, packing receipt or qualification run. Source/ABI and settings reviews
-are retained in `audits/rc6/`.
+The exact Combo program, settings backup/restore changes, release workflow,
+packing receipt and final policy are approved for CI reproduction and the next
+alpha release. This approval covers offline release preparation. Public CI and
+its generated packages must still pass their normal validation gates. It grants
+no permission to flash and does not establish a new installed image.
 
-All 615 policy source records, 21 shared host records and nine retained legacy
-bundle records matched their current sizes and SHA256 hashes. The policy binds
-IHX `45f28e80cd9e269cb507d6fff47b43cea2766b00967912599a98b036b638011d`
-and symbols `11e50e3e0d6e1e9831d4ca85822a65306907753bed5000f7d4301f69af8ade06`.
-All 468 build input records and 78 build artifact records matched actual bytes.
-The legacy bundle keeps its earlier firmware; its review, manifest and installer
-approval bind updated host source without selecting the new image.
+The implementation, policy, packing receipt and qualification were authored
+separately from this review. All 623 policy source records and 21 host records
+were checked against current sizes and SHA256 hashes. Policy SHA256 is
+`d02e7114fdd9f4b3ecf4bc24923936d121575c9832ec2e570f8b38b4fd7d2e05`.
+The fresh build reproduces IHX
+`a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f`
+and canonical packing symbols
+`7dcabc5f511cb17eae298bc53faf7da5cd8a34b627123e42089cda520cf93c74`.
+All 470 build source/toolchain records and 79 artifact records were checked.
+The nine retained legacy bundle records and installer approval also match;
+that bundle retains its earlier firmware.
 
-The complete qualification passed all 26 required suites, 258 unit tests and
-zero skips with unchanged IHX/MAP. The suite contract, pinned tools, all 26
-saved log hashes and retained evidence manifest were checked independently.
-The 12 RGB and 11 indicator observations match expected values. All 65 linked
-tap-hold cases match expected snapshots and supplied report traces. An
-independent 23-test settings run and production profile loading of the actual
-packed program also passed. Final documentation agrees with these scopes.
-Evidence is retained in
-`audits/rc6/oem-indicators-qualification-20261024/qualification.json` and
-`audits/rc6/oem-indicators-final-integration-review-20261024.md`.
+Final qualification passed all 28 required suites, 265 unit tests and zero
+skips with unchanged IHX/MAP and zero physical device commands. Its full suite
+contract and all 28 saved log hashes were independently checked. Qualification
+SHA256 is `c5f7b57572aab136a81c172d7357d8aa0bf6b936f44687b8e6cb6e960fc50027`.
+An independent targeted rerun passed five Combo settings tests, eleven protocol
+tests and eleven CI authorization tests. Extra retained logs were hash-checked:
+111 tool tests, eleven authorization tests, three compiler tests, 10,944 NVM
+power-cut model cases and 25,088 macro upload power-cut model cases passed.
+ASan and UBSan were enabled for the power-cut models; LeakSanitizer was disabled.
+These models do not establish electrical flash behavior.
 
-This approval covers offline reproduction of this exact program and reviewed
-host source. It does not establish successful public CI, fresh bundle
-acceptance, native interactive Windows acceptance, physical C/W connections,
-key/encoder timing, USB behavior, IRQ overlap, durable storage, reset execution
-or a new installed image. It grants no permission to flash. LeakSanitizer was
-excluded; ASan/UBSan remained active. The macro cancellation case uses a
-disclosed simulator hook. Private OEM inputs and images remain outside Git.
+The fifth exact settings profile binds the candidate's packed CODE. Candidate
+backups carry all eight Combo entries. Legacy backups omit that section and
+cannot clear a nonempty target. Explicit empty candidate entries clear slots.
+Unknown markers, unsupported records and bad readbacks stop the operation.
+Typed setters verify ACK, status, logical readback and complete durable NVM.
+Failure tests cover timeout, bad ACK, storage fault, getter mismatch and
+neighbor corruption, with no later command. Saved production preflights accept
+retained legacy and alpha.1 backups into fresh target defaults; they are not
+fresh current-device backups. Offline packing records permanent/trial images
+and byte-equal native recovery without opening USB.
+
+The installer retains a fresh physical hold for the displayed update and a
+second guarded hold for settings restoration. Exact images, fresh backups,
+cancellation before erase, one flash and failure stops remain. Documentation
+and translations agree with this behavior. Public release notes contain only
+user-visible changes and limits, and the release workflow reads that file.
+All findings and closure are recorded in
+`audits/rc6/combos-alpha-release-review-20261024.md`.
+
+Physical Combo behavior, interactive GUI acceptance, physical unlock, USB
+latency, arbitrary IRQ overlap, electrical IAP, power-loss recovery and
+cold-start retention remain untested for this image. Published release CI and
+fresh package acceptance remain pending. Installed firmware remains alpha.1.
+Private OEM inputs and images remain outside Git.
 
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "status": "passed",
   "hardware_validated": false,
-  "policy_sha256": "93f60dcf6ac827c2315e88fff8fd266168585aaf330429128900954a3f2184b7"
+  "policy_sha256": "d02e7114fdd9f4b3ecf4bc24923936d121575c9832ec2e570f8b38b4fd7d2e05"
 }
 ```

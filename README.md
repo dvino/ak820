@@ -8,8 +8,6 @@ This project brings QMK and Vial to the **wired AJAZZ AK820 with a VS11K28A / CH
 
 Set up keys, layers, the encoder and macros in Vial. After that, the keyboard works without a desktop app running in the background. The port keeps the keyboard's original loader and stores settings in the keyboard.
 
-Test release: [v0.6.0-alpha.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.1). Read the release notes before installing.
-
 ## Hardware Compatibility
 
 | Model | Microcontroller | Support |
@@ -40,12 +38,11 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - Standard keys, modifiers, media and system controls, plus NKRO (sending more than six keys at once).
 - Sixteen macro slots with 8192 bytes of shared storage.
 - Caps Word, Repeat, Alt Repeat, Grave Escape and Tri Layer.
-- The development source adds eight configurable [two-key Combos](docs/COMBOS.md) with a fixed 40 ms term. The published alpha does not include them.
+- Eight configurable [two-key Combos](docs/COMBOS.md), with a fixed 40 ms term.
 - 82 RGB LEDs with solid color, breathing, color cycles, VialRGB Direct and a fade on the pressed key.
 - Persistent keymaps, macros and global lighting; physical Vial unlock.
-- Alpha includes compact [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md). The checked-in legacy bundle still uses only their tap action.
-- Alpha includes [C/W indicators](docs/INDICATORS.md): host Caps Lock and an active additional layer.
-- The source installer can back up and restore supported settings locally and carry them through a supported firmware update. One Shot, Mouse Keys, Tap Dance and Key Overrides remain unsupported. Combo settings are not yet included in installer backup/restore.
+- Compact [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md), plus [C/W indicators](docs/INDICATORS.md) for host Caps Lock and an active additional layer.
+- Settings backup and restore for supported keymaps, macros, lighting and Combo entries; see [backup and restore](docs/SETTINGS-BACKUP.md). One Shot, Mouse Keys, Tap Dance and Key Overrides remain unsupported.
 
 
 ## Disclaimer
@@ -65,9 +62,8 @@ project. See sections 15–17 of the [LICENSE](LICENSE).
 
 Start with the [installation and recovery guide](docs/INSTALL.md) before using the installer.
 
-Read [Settings backup](docs/SETTINGS-BACKUP.md) for the supported host-only
-backup and restore commands. The feature supports the exact reviewed
-SDCC 4.6 images listed there; the checked Windows binaries predate it.
+Read [Settings backup](docs/SETTINGS-BACKUP.md) for backup, restore and update
+instructions.
 
 For the source installer, Python 3.10+ is required. Verify the complete bundle offline:
 

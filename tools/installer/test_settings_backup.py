@@ -138,7 +138,21 @@ class WireDevice:
         write = cmd in (3, 5, 7, 9, 15) or (cmd, sub) == (254, 4)
         if write:
             self.writes.append(packet)
-        if cmd == 253 and sub == 0:
+        if cmd == 254 and sub == 13:
+            op, index = packet[2:4]
+            at = 0x658 + index*10
+            if op == 0:
+                reply = bytearray(bytes((0, 8, 0)) + bytes(28) + b'\1')
+            elif op == 3:
+                raw = self.nvm[at:at+10]
+                data = raw[:4] + bytes(4) + raw[8:] if raw[4:8] == b'\x20\x08\1\0' else bytes(10)
+                reply[0] = 0
+                reply[1:11] = data
+            elif op == 4:
+                self.writes.append(packet)
+                self.nvm[at:at+10] = packet[4:8] + b'\x20\x08\1\0' + packet[12:14]
+                reply[0] = 0
+        elif cmd == 253 and sub == 0:
             at, count = int.from_bytes(packet[2:4], 'big'), packet[4]
             reply[5:5+count] = self.rom()[at:at+count]
         elif cmd == 253 and sub == 1:
@@ -554,6 +568,101 @@ class SettingsTests(unittest.TestCase):
         saved = settings.export_settings(api, self.root/'old-final', old)
         with self.assertRaisesRegex(ValueError, 'Final running firmware'):
             settings.verify_restore(api, saved, candidate)
+
+
+class ComboTests(unittest.TestCase):
+    setUp = SettingsTests.setUp
+    api = SettingsTests.api
+    def candidate(self):
+        old, middle, new, candidate = transition_profiles()
+        candidate['compatible_images'][candidate['ihx_sha256']]['combos_version'] = 1
+        return old, candidate
+
+    def test_combo_nonempty_roundtrip_and_explicit_clear(self):
+        _, candidate = self.candidate()
+        data = bytes.fromhex('04000500000000000600')
+        source = base_nvm()
+        source[0x658:0x662] = DeviceAPI.stored_combo(data)
+        api, _ = self.api(source, profile=candidate)
+        backup = settings.export_settings(api, self.root/'combo', candidate)
+        target, raw = self.api(writes=True, profile=candidate)
+        settings.restore_settings(target, backup, candidate)
+        self.assertEqual(target.get_combo(0), data)
+        empty, _ = self.api(profile=candidate)
+        clear = settings.export_settings(empty, self.root/'clear', candidate)
+        settings.restore_settings(target, clear, candidate)
+        self.assertEqual(raw.nvm[0x658:0x662], DeviceAPI.stored_combo(bytes(10)))
+
+    def test_legacy_does_not_clear_candidate(self):
+        old, candidate = self.candidate()
+        api, _ = self.api(profile=old)
+        backup = settings.export_settings(api, self.root/'legacy-combo', old)
+        self.assertNotIn('combos', backup['settings'])
+        self.assertIsNone(settings.plan_restore(backup, candidate)['combo_entries'])
+        nvm = base_nvm()
+        nvm[0x658:0x662] = DeviceAPI.stored_combo(bytes.fromhex('04000500000000000600'))
+        with self.assertRaisesRegex(ValueError, 'must not be cleared'):
+            settings.plan_restore(backup, candidate, nvm)
+
+    def test_invalid_marker_and_values_fail(self):
+        _, candidate = self.candidate()
+        for data in (bytes.fromhex('04000500200802000600'), bytes.fromhex('04000400200801000600')):
+            nvm = base_nvm()
+            nvm[0x658:0x662] = data
+            with self.assertRaises(ValueError):
+                settings.settings_from_nvm(nvm, settings.rgb_wire(nvm[24:32]), combos=True)
+
+    def test_restore_combo_failures_stop_at_first_entry(self):
+        _, candidate = self.candidate()
+        source = base_nvm()
+        data = bytes.fromhex('04000500000000000600')
+        source[0x658:0x66C] = DeviceAPI.stored_combo(data)*2
+        source_api, _ = self.api(source, profile=candidate)
+        backup = settings.export_settings(source_api, self.root/'two-combos', candidate)
+        for failure in ('timeout', 'ack', 'getter', 'storage', 'neighbor'):
+            api, raw = self.api(writes=True, profile=candidate)
+            terminal = []
+            def fault(device, packet, reply):
+                if packet[:3] == bytes((254, 13, 4)):
+                    if failure == 'timeout':
+                        terminal.append(packet)
+                        raise TimeoutError('model timeout')
+                    if failure == 'ack':
+                        reply[0] = 255
+                        terminal.append(packet)
+                    if failure == 'getter':
+                        device.nvm[0x658] = 7
+                    if failure == 'neighbor':
+                        device.nvm[0x700] ^= 1
+                if device.writes:
+                    if failure == 'storage' and packet[:2] == bytes((253, 1)):
+                        reply[4] = 1
+                        terminal.append(packet)
+                    elif failure == 'getter' and packet[:3] == bytes((254, 13, 3)):
+                        terminal.append(packet)
+                    elif failure == 'neighbor':
+                        # Full durable NVM read ends with a clean status packet.
+                        if packet[:2] == bytes((253, 1)):
+                            terminal.append(packet)
+            raw.fault = fault
+            with self.subTest(failure=failure):
+                with self.assertRaises((ValueError, TimeoutError)):
+                    settings.restore_settings(api, backup, candidate)
+                self.assertEqual(len(raw.writes), 1)
+                self.assertEqual(raw.writes[0][3], 0)
+                self.assertTrue(terminal)
+                self.assertEqual(raw.requests[-1], terminal[-1])
+
+    def test_combo_fault_stops_without_retry(self):
+        _, candidate = self.candidate()
+        api, raw = self.api(writes=True, profile=candidate)
+        def fault(device, packet, reply):
+            if packet[:3] == bytes((254, 13, 4)):
+                device.nvm[0x700] ^= 1
+        raw.fault = fault
+        with self.assertRaisesRegex(ValueError, 'neighboring bytes'):
+            api.set_combo(0, bytes.fromhex('04000500000000000600'))
+        self.assertEqual(len(raw.writes), 1)
 
 
 if __name__ == '__main__':
