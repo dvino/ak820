@@ -82,9 +82,11 @@ static __xdata uint8_t output_report_id;
 static __xdata uint8_t control_zlp;
 static const uint8_t __code *control_pointer;
 
-/* These functions are reachable only from the interrupt service. Giving them
- * private storage prevents SDCC overlay allocation across main/IRQ calls. No
- * memcpy, generic-pointer helper or QMK function is called from this path. */
+/* Runtime calls use the interrupt service. USB_Device_Init also calls
+ * endpoints_reset/raw_abort while IE_USB is disabled. Private storage prevents
+ * SDCC overlay allocation across foreground/IRQ calls; it does not make these
+ * helpers reentrant. No memcpy, generic-pointer helper or QMK function is
+ * called from this path. */
 #pragma save
 #pragma nooverlay
 
