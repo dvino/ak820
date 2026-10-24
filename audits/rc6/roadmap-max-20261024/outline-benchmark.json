@@ -1,0 +1,36 @@
+{
+  "format": "ak820-outline-benchmark-1",
+  "baseline_commit": "48ce5fa",
+  "ihx_sha256": "004bf2cbda40f9c90ab92e0ee6b6a29bc2098e39d5ee8bc6d0da5df638f2565a",
+  "same_helpers_bodies_locations_order": true,
+  "measurements": [
+    {
+      "implementation": "previous",
+      "parse_seconds": 0.26599727899883874,
+      "select_seconds": 30.499828770000022,
+      "total_seconds": 30.76582604899886,
+      "helpers": 155,
+      "nominal_bytes": 2575
+    },
+    {
+      "implementation": "cached",
+      "parse_seconds": 0.26889471799950115,
+      "select_seconds": 0.397761990003346,
+      "total_seconds": 0.6666567080028472,
+      "helpers": 155,
+      "nominal_bytes": 2575
+    }
+  ],
+  "limit": "Single local elapsed-time comparison; hardware and full-build timings are not inferred.",
+  "fresh_link_same_ihx": true,
+  "fresh_builds": {
+    "baseline-dev": {
+      "ihx_sha256": "004bf2cbda40f9c90ab92e0ee6b6a29bc2098e39d5ee8bc6d0da5df638f2565a",
+      "size_bytes": 95372
+    },
+    "cached-outline": {
+      "ihx_sha256": "004bf2cbda40f9c90ab92e0ee6b6a29bc2098e39d5ee8bc6d0da5df638f2565a",
+      "size_bytes": 95372
+    }
+  }
+}

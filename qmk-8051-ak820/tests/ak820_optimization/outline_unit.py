@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Focused safety gates for the exact 8051 outliner; no compiler or USB needed."""
 from pathlib import Path
+from collections import defaultdict
+import random
 import re
 import sys
 import tempfile
@@ -148,6 +150,62 @@ class OutliningGates(unittest.TestCase):
                 for insn in sequence:
                     cell=(insn.module,insn.line)
                     self.assertNotIn(cell,seen);seen.add(cell)
+
+    def test_cached_selection_matches_exhaustive_greedy_search(self):
+        # Independent pre-cache search: enumerate only currently unused
+        # windows again after every selection. A shifted overlapping match
+        # can become usable, so retaining only an initial disjoint set fails.
+        def reference(blocks, limit, minimum):
+            selected, used = [], set()
+            for _ in range(limit):
+                found = defaultdict(list)
+                for block in blocks:
+                    for start in range(len(block)):
+                        for length in range(2, min(40, len(block) - start) + 1):
+                            seq = block[start:start + length]
+                            if any((i.module, i.line) in used for i in seq):
+                                break
+                            if sum(len(i.data) for i in seq) >= 4:
+                                found[tuple(i.exact for i in seq)].append(seq)
+                choices = []
+                for key, matches in found.items():
+                    kept, occupied = [], set()
+                    for seq in matches:
+                        cells = {(i.module, i.line) for i in seq}
+                        if not cells & occupied:
+                            kept.append(seq)
+                            occupied.update(cells)
+                    if len(kept) < 2:
+                        continue
+                    size = sum(len(i.data) for i in kept[0])
+                    saving = (len(kept) - 1) * size - 3 * len(kept) - 1
+                    if saving >= max(1, minimum):
+                        choices.append((saving, size, key, kept))
+                if not choices:
+                    break
+                choice = min(choices, key=lambda c: (-c[0], -c[1], repr(c[2])))
+                selected.append(choice)
+                used.update((i.module, i.line) for seq in choice[3] for i in seq)
+            return selected
+
+        for seed in range(100):
+            rng = random.Random(seed)
+            blocks = []
+            for section in range(4):
+                module = f'quantum/module{section % 2}.asm'
+                motif = [rng.randrange(3) for _ in range(rng.randrange(2, 6))]
+                values = (motif * rng.randrange(2, 5))[:24]
+                block = []
+                for offset, value in enumerate(values):
+                    line = section * 100 + offset
+                    block.append(outline.Instruction(module, 'f', line, line * 2,
+                                                     bytes((0x78, value)), 'mov',
+                                                     f'r0,#{value}', ()))
+                blocks.append(block)
+            limit, minimum = rng.randrange(1, 9), rng.randrange(1, 6)
+            with self.subTest(seed=seed):
+                self.assertEqual(outline.select(blocks, limit, minimum),
+                                 reference(blocks, limit, minimum))
 
     def test_repeated_apply_rejected_readonly_parse_allowed(self):
         self.source('repeat.asm',BODY+['_again:']+BODY)

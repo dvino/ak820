@@ -12,6 +12,7 @@ import argparse
 from collections import defaultdict
 from dataclasses import dataclass
 import hashlib
+import heapq
 import json
 from pathlib import Path
 import re
@@ -160,34 +161,46 @@ def normalized(sequence):
     return tuple(result)
 
 
-def occurrences(blocks, min_instructions=2, max_instructions=40, used=frozenset(), normalize=False):
+def sequence_matches(blocks, min_instructions=2, max_instructions=40, normalize=False):
     found = defaultdict(list)
     for block in blocks:
+        exact = [i.exact for i in block]
         for start in range(len(block)):
             for length in range(min_instructions, min(max_instructions, len(block)-start) + 1):
                 sequence = block[start:start+length]
-                if any((i.module,i.line) in used for i in sequence):
-                    break
                 size = sum(len(i.data) for i in sequence)
                 if size < 4:
                     continue
-                key = normalized(sequence) if normalize else tuple(i.exact for i in sequence)
+                key = normalized(sequence) if normalize else tuple(exact[start:start+length])
                 found[key].append(sequence)
+    return found
+
+
+def candidate(key, matches, used=frozenset()):
+    if len(matches) < 2:
+        return None
+    distinct, occupied = [], set()
+    for seq in matches:
+        cells = {(i.module, i.line) for i in seq}
+        if cells & used or cells & occupied:
+            continue
+        occupied.update(cells)
+        distinct.append(seq)
+    if len(distinct) < 2:
+        return None
+    size = sum(len(i.data) for i in distinct[0])
+    # No added argument setup for exact sequences: architectural register
+    # state at each replacement is exactly the original input state.
+    saving = (len(distinct)-1)*size - 3*len(distinct) - 1
+    return (saving, size, key, distinct) if saving > 0 else None
+
+
+def occurrences(blocks, min_instructions=2, max_instructions=40, used=frozenset(), normalize=False):
     candidates = []
-    for key, matches in found.items():
-        if len(matches) < 2: continue
-        distinct, occupied = [], set()
-        for seq in matches:
-            cells = {(i.module,i.line) for i in seq}
-            if cells & occupied: continue
-            occupied.update(cells); distinct.append(seq)
-        if len(distinct) < 2: continue
-        size = sum(len(i.data) for i in distinct[0])
-        # No added argument setup for exact sequences: architectural register
-        # state at each replacement is exactly the original input state.
-        saving = (len(distinct)-1)*size - 3*len(distinct) - 1
-        if saving > 0:
-            candidates.append((saving,size,key,distinct))
+    for key, matches in sequence_matches(blocks, min_instructions, max_instructions, normalize).items():
+        choice = candidate(key, matches, used)
+        if choice:
+            candidates.append(choice)
     return sorted(candidates,key=lambda c:(-c[0],-c[1],repr(c[2])))
 
 
@@ -200,12 +213,32 @@ def describe(candidate):
 
 
 def select(blocks, max_helpers=200, min_saving=1):
-    selected=[];used=set()
-    for _ in range(max_helpers):
-        remaining=occurrences(blocks,used=used)
-        if not remaining or remaining[0][0]<min_saving: break
-        choice=remaining[0];selected.append(choice)
-        used.update((i.module,i.line) for seq in choice[3] for i in seq)
+    # Enumerate instruction windows once. Each exact sequence has a fixed
+    # length; its matches occur in source order, so greedily retaining the
+    # first nonoverlapping interval gives the maximum match count. Removing
+    # occupied intervals can only lower that count. An old heap priority is
+    # therefore an upper bound; refresh only candidates that reach the top.
+    # Keep the original saving/size/key tie order and all overlapping matches:
+    # a previously rejected overlap may become eligible after another choice.
+    matches = sequence_matches(blocks)
+    queue = []
+    for key, found in matches.items():
+        choice = candidate(key, found)
+        if choice:
+            heapq.heappush(queue, (-choice[0], -choice[1], repr(key), key))
+    selected, used = [], set()
+    while queue and len(selected) < max_helpers:
+        previous = heapq.heappop(queue)
+        key = previous[3]
+        choice = candidate(key, matches[key], used)
+        if not choice or choice[0] < min_saving:
+            continue
+        priority = (-choice[0], -choice[1], previous[2], key)
+        if priority != previous:
+            heapq.heappush(queue, priority)
+            continue
+        selected.append(choice)
+        used.update((i.module, i.line) for seq in choice[3] for i in seq)
     return selected
 
 
