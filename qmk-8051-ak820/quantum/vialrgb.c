@@ -11,12 +11,27 @@
 #    include "ak820_board.h"
 #endif
 
+/* Both private AK820 mode enums fit in one byte. Wire mode IDs remain
+ * 16-bit, including rejection of unsupported high-byte values. */
+#ifdef AK820_BOARD
+typedef uint8_t vialrgb_mode_id_t;
+#    define READ_MODE_ID(address) pgm_read_byte(address)
+#else
+typedef uint16_t vialrgb_mode_id_t;
+#    define READ_MODE_ID(address) pgm_read_word(address)
+#endif
+
 typedef struct {
-    uint16_t vialrgb_id;
-    uint16_t qmk_id;
+    vialrgb_mode_id_t vialrgb_id;
+    vialrgb_mode_id_t qmk_id;
 } vialrgb_supported_mode_t;
 
 #include "vialrgb_effects.inc"
+
+#ifdef AK820_BOARD
+_Static_assert(VIALRGB_EFFECT_PIXEL_FRACTAL <= UINT8_MAX, "VialRGB mode IDs must fit in a byte");
+_Static_assert(RGB_MATRIX_EFFECT_MAX <= UINT8_MAX, "QMK mode IDs must fit in a byte");
+#endif
 
 #define SUPPORTED_MODES_LENGTH (sizeof(supported_modes)/sizeof(*supported_modes))
 
@@ -29,7 +44,7 @@ static void get_supported(uint8_t VIALRGB_BUFFER *args, uint8_t length) {
     uint16_t gt = (uint16_t)args[0] | ((uint16_t)args[1] << 8);
     for (uint8_t i = 0; i < length; ++i) args[i] = 0xff;
     for (uint8_t i = 0; i < SUPPORTED_MODES_LENGTH; ++i) {
-        uint16_t id = pgm_read_word(&supported_modes[i].vialrgb_id);
+        uint16_t id = READ_MODE_ID(&supported_modes[i].vialrgb_id);
         if (id > gt && length >= sizeof(id)) {
             args[0] = id;
             args[1] = id >> 8;
@@ -41,20 +56,18 @@ static void get_supported(uint8_t VIALRGB_BUFFER *args, uint8_t length) {
 
 static uint16_t qmk_id_to_vialrgb_id(uint16_t id) {
     for (uint8_t i = 0; i < SUPPORTED_MODES_LENGTH; ++i) {
-        uint16_t qmk_id = pgm_read_word(&supported_modes[i].qmk_id);
-        uint16_t vialrgb_id = pgm_read_word(&supported_modes[i].vialrgb_id);
+        uint16_t qmk_id = READ_MODE_ID(&supported_modes[i].qmk_id);
         if (qmk_id == id)
-            return vialrgb_id;
+            return READ_MODE_ID(&supported_modes[i].vialrgb_id);
     }
     return 0;
 }
 
 static uint16_t vialrgb_id_to_qmk_id(uint16_t id) {
     for (uint8_t i = 0; i < SUPPORTED_MODES_LENGTH; ++i) {
-        uint16_t qmk_id = pgm_read_word(&supported_modes[i].qmk_id);
-        uint16_t vialrgb_id = pgm_read_word(&supported_modes[i].vialrgb_id);
+        uint16_t vialrgb_id = READ_MODE_ID(&supported_modes[i].vialrgb_id);
         if (vialrgb_id == id)
-            return qmk_id;
+            return READ_MODE_ID(&supported_modes[i].qmk_id);
     }
     return 0;
 }

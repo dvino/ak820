@@ -141,6 +141,7 @@ static void control_next(void) {
 }
 
 /* Interface numbers index this private CODE-only descriptor table. */
+_Static_assert(TOTAL_INTERFACES <= 256u, "descriptor interface index must fit in a byte");
 typedef struct {
     const uint8_t __code *report;
     const USB_HID_Descriptor_HID_t __code *hid;
@@ -177,10 +178,10 @@ static uint16_t descriptor_select(uint8_t type, uint8_t index, uint16_t interfac
     }
     if (index || interface >= TOTAL_INTERFACES) return 0;
     if (type == USB_DESCR_TYP_REPORT || type == USB_DESCR_TYP_HID) {
-        const USB_HID_Descriptor_HID_t __code *hid = interface_descriptors[interface].hid;
+        const USB_HID_Descriptor_HID_t __code *hid = interface_descriptors[(uint8_t)interface].hid;
         if (!hid) return 0;
         if (type == USB_DESCR_TYP_REPORT) {
-            control_pointer = interface_descriptors[interface].report;
+            control_pointer = interface_descriptors[(uint8_t)interface].report;
             return hid->HIDReportLength;
         }
         control_pointer = (const uint8_t __code *)hid;
@@ -348,7 +349,9 @@ static void control_setup(void) {
                 } else { control_stall(); return; }
                 if (length) {
                     if (D0SetupLen > length) D0SetupLen = length;
-                    for (i = 0; i < D0SetupLen; ++i) pD0_EP0_BUF[i] = input_snapshot[offset + i];
+                    /* The selected snapshot length is at most SHARED_EPSIZE (32).
+                     * The full host length was clamped above before narrowing. */
+                    for (i = 0; i < (uint8_t)D0SetupLen; ++i) pD0_EP0_BUF[i] = input_snapshot[offset + i];
                 } else if (index == RAW_INTERFACE && D0SetupLen > RAW_EPSIZE) D0SetupLen = RAW_EPSIZE;
                 D0_EP0T_L = D0SetupLen;
                 control_phase = CTRL_STATUS_OUT;

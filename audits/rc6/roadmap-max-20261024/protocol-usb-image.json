@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "image_sha256": "7bb55a7f53e5952039146095435d61a35363cdd9e9c43eb73b3a0f6fffde102b",
+  "device_length": 18,
+  "configuration_length": 84,
+  "reports": {
+    "Keyboard": {
+      "length": 68,
+      "endpoint": "0x81",
+      "packet_size": 8,
+      "bits": {
+        "8:0": 64,
+        "9:0": 8
+      }
+    },
+    "Raw": {
+      "length": 40,
+      "endpoint": "0x83",
+      "packet_size": 32,
+      "bits": {
+        "8:0": 256,
+        "9:0": 256,
+        "11:0": 64
+      }
+    },
+    "Shared": {
+      "length": 109,
+      "endpoint": "0x82",
+      "packet_size": 32,
+      "bits": {
+        "8:3": 16,
+        "8:4": 16,
+        "8:6": 248,
+        "9:6": 8
+      }
+    }
+  },
+  "strings": {
+    "Manufacturer": {
+      "length": 12,
+      "text": "AJAZZ"
+    },
+    "Product": {
+      "length": 54,
+      "text": "AK820 wired RGB (VS11K28A)"
+    },
+    "SerialNumber": {
+      "length": 28,
+      "text": "vial:f64c2b3c"
+    }
+  },
+  "scope": "emitted SDCC descriptor bytes only; no SIE/device validation"
+}
