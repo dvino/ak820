@@ -37,7 +37,7 @@ blockers. Its retained log hash agrees with the guard report.
 
 The final evidence and documentation are approved for their reporting commit
 with no unresolved blocking findings. The independent archive check follows
-that commit and verifies the delivered Git repository and ZIP representation.
+that commit and verifies the delivered Git repository and archive permissions.
 
 This acceptance does not approve a whole-program stack bound, exact-image
 interrupt/nesting safety, physical behavior, installer/settings transition,
