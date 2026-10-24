@@ -21,6 +21,7 @@ SPEC.loader.exec_module(installer)
 
 class InstallerArchiveTests(unittest.TestCase):
     def setUp(self):
+        (ROOT / ".build").mkdir(exist_ok=True)
         self.temp = tempfile.TemporaryDirectory(dir=ROOT / ".build")
         self.base = Path(self.temp.name)
 

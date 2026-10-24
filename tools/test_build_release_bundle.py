@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 import build_release_bundle as builder
+import ak820_profiles
 from build_release_bundle import ROOT, validate_review, validate_build_artifact, host_manifest
 
 
@@ -239,7 +240,10 @@ class AssemblySnapshotTests(unittest.TestCase):
                 return {"images": {"ak820-vial-trial.bin": {}, "restore-native.bin": {}},
                         "migration": {}}
 
-            with patch.object(builder, "ROOT", root), patch.object(builder, "SOURCE", source), \
+            # This synthetic builder stands in for a reviewed historical build.
+            # Profile approval itself has separate negative-control tests.
+            with patch.object(ak820_profiles, "LEGACY_BUILDERS", {report["builder_sha256"]}), \
+                 patch.object(builder, "ROOT", root), patch.object(builder, "SOURCE", source), \
                  patch.object(builder, "host_manifest", side_effect=[reviewed, changed]), \
                  patch.object(builder.diagnostic, "diagnostic_build"), \
                  patch.object(builder, "validate_build_artifact"), patch.object(builder, "validate_inputs"), \
