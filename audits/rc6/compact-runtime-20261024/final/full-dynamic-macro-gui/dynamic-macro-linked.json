@@ -1,0 +1,3941 @@
+{
+  "level": "Exact linked SDCC C52; simulated peripherals, no physical USB/IRQ proof",
+  "hardware_validated": false,
+  "linked_image_sha256": "ccb88a157137a23eb04cce67a5247fecab75671016be44745dd6c4101afda2fa",
+  "tests": [
+    {
+      "name": "dm-basic-playback",
+      "checks": [
+        {
+          "label": "slot",
+          "actual": [
+            4,
+            0
+          ],
+          "expected": [
+            4,
+            0
+          ]
+        },
+        {
+          "label": "down_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "done",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        48408,
+        32148,
+        82296,
+        80712,
+        15360
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1001280,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-rolling-order",
+      "checks": [
+        {
+          "label": "ordered",
+          "actual": [
+            4,
+            0,
+            5,
+            0
+          ],
+          "expected": [
+            4,
+            0,
+            5,
+            0
+          ]
+        },
+        {
+          "label": "a_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "b_report",
+          "actual": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "done",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        209316,
+        132336,
+        131832,
+        55632,
+        31008,
+        48408,
+        32148,
+        82296,
+        80712,
+        82296,
+        80712,
+        15360
+      ],
+      "max_event_clocks": 209316,
+      "simulated_clocks": 1509828,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-incomplete-compacted",
+      "checks": [
+        {
+          "label": "length",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        },
+        {
+          "label": "completed",
+          "actual": [
+            5,
+            0
+          ],
+          "expected": [
+            5,
+            0
+          ]
+        },
+        {
+          "label": "only-b_report",
+          "actual": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        209316,
+        132336,
+        52128,
+        31008,
+        130620,
+        48408,
+        32148,
+        82296
+      ],
+      "max_event_clocks": 209316,
+      "simulated_clocks": 1246032,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-preheld-not-recorded",
+      "checks": [
+        {
+          "label": "empty",
+          "actual": [
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        207264,
+        47628,
+        31008,
+        131316,
+        47856,
+        31008
+      ],
+      "max_event_clocks": 207264,
+      "simulated_clocks": 735936,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-capacity-overwrite-slots",
+      "checks": [
+        {
+          "label": "full",
+          "actual": [
+            16,
+            0
+          ],
+          "expected": [
+            16,
+            0
+          ]
+        },
+        {
+          "label": "two-slots",
+          "actual": [
+            16,
+            1
+          ],
+          "expected": [
+            16,
+            1
+          ]
+        },
+        {
+          "label": "overwritten",
+          "actual": [
+            1,
+            1
+          ],
+          "expected": [
+            1,
+            1
+          ]
+        },
+        {
+          "label": "second-slot",
+          "actual": [
+            5,
+            0
+          ],
+          "expected": [
+            5,
+            0
+          ]
+        },
+        {
+          "label": "slot2-down_report",
+          "actual": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        209280,
+        132336,
+        209280,
+        132840,
+        209280,
+        133344,
+        209280,
+        133848,
+        209280,
+        134352,
+        209280,
+        134856,
+        209280,
+        135360,
+        209280,
+        135864,
+        209280,
+        136368,
+        209280,
+        136872,
+        209280,
+        137376,
+        209280,
+        137880,
+        209280,
+        138384,
+        209280,
+        138888,
+        209280,
+        139392,
+        207912,
+        139380,
+        207912,
+        139380,
+        207912,
+        139380,
+        207912,
+        139380,
+        110064,
+        31008,
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        48408,
+        32148,
+        82296
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 8534856,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-shift-ownership-0",
+      "checks": [
+        {
+          "label": "macro-shift_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "physical-shift_report",
+          "actual": [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "all-up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        148164,
+        209280,
+        131832,
+        129552,
+        51744,
+        31008,
+        48408,
+        32148,
+        83016,
+        110268,
+        81264,
+        130692
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1505868,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-shift-ownership-1",
+      "checks": [
+        {
+          "label": "macro-shift_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "macro-still-shift_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "all-up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        148164,
+        209280,
+        131832,
+        129552,
+        51744,
+        31008,
+        48408,
+        32148,
+        83016,
+        110268,
+        91800,
+        81288
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1467000,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-held-same-usage-skip",
+      "checks": [
+        {
+          "label": "physical-survives_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "not-owned",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "done",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        207264,
+        48408,
+        32148,
+        18288,
+        15360,
+        130620
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1194444,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-new-physical-owner-survives",
+      "checks": [
+        {
+          "label": "physical-survives_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        48408,
+        32148,
+        82296,
+        148128,
+        36492,
+        131760
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1221588,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-effective-oneshot",
+      "checks": [
+        {
+          "label": "effective-mods",
+          "actual": [
+            4,
+            2
+          ],
+          "expected": [
+            4,
+            2
+          ]
+        },
+        {
+          "label": "replay_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        115464,
+        66780,
+        209460,
+        191952,
+        51744,
+        31008,
+        48408,
+        32148,
+        83016,
+        81288
+      ],
+      "max_event_clocks": 209460,
+      "simulated_clocks": 1229760,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-effective-encoded",
+      "checks": [
+        {
+          "label": "effective-mods",
+          "actual": [
+            6,
+            1
+          ],
+          "expected": [
+            6,
+            1
+          ]
+        },
+        {
+          "label": "replay_report",
+          "actual": [
+            1,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            1,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        263232,
+        191676,
+        51744,
+        31008,
+        48408,
+        32148,
+        83016,
+        81288
+      ],
+      "max_event_clocks": 263232,
+      "simulated_clocks": 1101012,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-nkro-duplicate-physical-owner",
+      "checks": [
+        {
+          "label": "physical-survives_report",
+          "actual": [
+            6,
+            0,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            6,
+            0,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "physical-released_report",
+          "actual": [
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          16,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        233376,
+        48408,
+        32148,
+        18288,
+        15360,
+        157248
+      ],
+      "max_event_clocks": 233376,
+      "simulated_clocks": 1247184,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-generated-output-excluded",
+      "checks": [
+        {
+          "label": "only-original",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 22,
+          "stream_sha256": "492dd401b95aafc1beb37c9e72662bf0bfc2516313154b4090e12e3abbc9c2a8",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        156420
+      ],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        229116,
+        161040,
+        196020,
+        126348,
+        51744,
+        31008
+      ],
+      "max_event_clocks": 229116,
+      "simulated_clocks": 1616436,
+      "peak_sp": 129,
+      "tested_stack_bytes": 39,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-generated-controls-excluded",
+      "checks": [
+        {
+          "label": "not-playing",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "not-recording",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 32,
+          "stream_sha256": "a5bd2b40dfdb083f3dd06bf25b09c3392f99108c4877fd7f2e8a8724a47222d1",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        602100
+      ],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1349592,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-nested-macro-pauses-playback",
+      "checks": [
+        {
+          "label": "no-nested-owner",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "still-playing",
+          "actual": [
+            1
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "label": "foreground-press_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "foreground-release_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 24,
+          "stream_sha256": "67a95e58b88a9b10666b136ec1ab89e0d59f30c34efd2ba4a3df675909149e0d",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        210312
+      ],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        48408,
+        32148,
+        82296,
+        80712
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1201368,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-nested-macro-pauses-due-release",
+      "checks": [
+        {
+          "label": "owned-through-primitive_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released-after-primitive_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "finished",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 24,
+          "stream_sha256": "67a95e58b88a9b10666b136ec1ab89e0d59f30c34efd2ba4a3df675909149e0d",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        210312
+      ],
+      "event_clock_samples": [
+        47628,
+        31008,
+        148164,
+        209280,
+        131832,
+        129552,
+        51744,
+        31008,
+        48408,
+        32148,
+        83016,
+        81288,
+        15360
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1495740,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-clear-replay",
+      "checks": [
+        {
+          "label": "cleared_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "cancelled",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "retained",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        },
+        {
+          "label": "no-revival_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        148164,
+        209280,
+        131832,
+        129552,
+        51744,
+        31008,
+        48408,
+        32148,
+        83016,
+        13620
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1394460,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-clear-recording",
+      "checks": [
+        {
+          "label": "stopped",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "complete-only",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        },
+        {
+          "label": "b-only",
+          "actual": [
+            5,
+            0
+          ],
+          "expected": [
+            5,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        209280,
+        6324
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1076952,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-pending-gates-phases",
+      "checks": [
+        {
+          "label": "busy-no-press_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "press_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "busy-held_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "release_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "release-wait",
+          "actual": [
+            1
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "label": "done",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        48408,
+        32148,
+        13920,
+        82296,
+        13920,
+        80712,
+        13920,
+        15360
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1043040,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-no-recursion-controls",
+      "checks": [
+        {
+          "label": "retained",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        },
+        {
+          "label": "not-recording",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        48408,
+        32148,
+        82296,
+        113988,
+        32148,
+        50148,
+        32148,
+        49152,
+        31008
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1213800,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-real-busy-down-release-retry",
+      "pass": true,
+      "observations": [
+        {
+          "label": "busy-press-retained",
+          "address": 1724,
+          "expected": [
+            1
+          ],
+          "actual": [
+            1
+          ],
+          "pass": true
+        },
+        {
+          "label": "macro-owns-down",
+          "address": 1193,
+          "expected": [
+            4
+          ],
+          "actual": [
+            4
+          ],
+          "pass": true
+        },
+        {
+          "label": "busy-prevents-early-release",
+          "address": 1193,
+          "expected": [
+            4
+          ],
+          "actual": [
+            4
+          ],
+          "pass": true
+        },
+        {
+          "label": "down-eventually-accepted",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "busy-release-retained",
+          "address": 1724,
+          "expected": [
+            1
+          ],
+          "actual": [
+            1
+          ],
+          "pass": true
+        },
+        {
+          "label": "desired-release",
+          "address": 1690,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "accepted-down-until-ready",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "engine-waits-release",
+          "address": 1191,
+          "expected": [
+            1
+          ],
+          "actual": [
+            1
+          ],
+          "pass": true
+        },
+        {
+          "label": "release-eventually-accepted",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "complete-after-release",
+          "address": 1191,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "dm-suspend-resume-cancels-playback",
+      "pass": true,
+      "observations": [
+        {
+          "label": "suspended-no-publication",
+          "address": 8705,
+          "expected": [
+            18
+          ],
+          "actual": [
+            18
+          ],
+          "pass": true
+        },
+        {
+          "label": "resume-clears-replay",
+          "address": 1191,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "resume-release",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "slots-retained",
+          "address": 1188,
+          "expected": [
+            1,
+            0
+          ],
+          "actual": [
+            1,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "dm-unconfigured-pauses-before-down",
+      "pass": true,
+      "observations": [
+        {
+          "label": "no-owner-unconfigured",
+          "address": 1193,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "configured-press",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "dm-reset-guards-before-task",
+      "pass": true,
+      "observations": [
+        {
+          "label": "no-owner-resetting",
+          "address": 1193,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "reset-cancels",
+          "address": 1191,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "no-revival",
+          "address": 3618,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "dm-unlock-0",
+      "checks": [
+        {
+          "label": "unlock-clears_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "not-playing",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "not-recording",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "no-revival_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        48408,
+        32148,
+        82296,
+        5436
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1109196,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    },
+    {
+      "name": "dm-unlock-1",
+      "checks": [
+        {
+          "label": "unlock-clears_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "not-playing",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "not-recording",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "no-revival_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        47628,
+        31008,
+        209280,
+        131832,
+        51744,
+        31008,
+        47628,
+        31008,
+        209280,
+        131832,
+        209280,
+        5436
+      ],
+      "max_event_clocks": 209280,
+      "simulated_clocks": 1580088,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true
+    }
+  ],
+  "pass": true
+}

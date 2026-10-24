@@ -131,7 +131,11 @@ endif
 ifeq ($(strip $(MOUSEKEY_ENABLE)), yes)
     OPT_DEFS += -DMOUSEKEY_ENABLE
     MOUSE_ENABLE := yes
-    SRC += $(QUANTUM_DIR)/mousekey.c
+    ifeq ($(strip $(AK820_COMPACT_MOUSEKEY)), yes)
+        SRC += keyboards/ajazz/ak820/ak820_mousekey.c
+    else
+        SRC += $(QUANTUM_DIR)/mousekey.c
+    endif
 endif
 
 VALID_POINTING_DEVICE_DRIVER_TYPES := adns5050 adns9800 analog_joystick cirque_pinnacle_i2c cirque_pinnacle_spi paw3204 pmw3320 pmw3360 pmw3389 pimoroni_trackball custom

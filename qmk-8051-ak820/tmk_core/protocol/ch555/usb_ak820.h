@@ -18,3 +18,7 @@ bool ak820_usb_take_keyboard_reset(void);
 extern volatile __xdata uint8_t ak820_boot_stage;
 extern volatile __xdata uint8_t ak820_main_heartbeat;
 
+
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+bool ak820_usb_keyboard_blocked(void);
+#endif

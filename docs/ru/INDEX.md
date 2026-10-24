@@ -16,6 +16,8 @@ English source of truth: [Documentation](../INDEX.md).
 | Сохранить или восстановить настройки | [Резервные копии](SETTINGS-BACKUP.md) |
 | Mod-Tap и Layer-Tap | [Mod-Tap и Layer-Tap](TAP-HOLD.md) |
 | Использовать One Shot, Space Cadet и управление NKRO | [Настройка](CONFIGURATION.md) |
+| Управлять клавишами Win/GUI | [Клавиши Win/GUI](GUI-CONTROL.md) |
+| Записывать и воспроизводить компактные динамические макросы | [Динамические макросы](COMPACT-DYNAMIC-MACROS.md) |
 | Индикаторы Caps Lock и слоя | [Индикаторы C и W](INDICATORS.md) |
 | Сборка закреплённым инструментарием | [Сборка](BUILD.md) |
 | Тестовые профили сборки и их ограничения | [Профили сборки](BUILD-PROFILES.md) |

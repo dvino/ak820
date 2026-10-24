@@ -110,17 +110,17 @@ void rgb_matrix_reload_from_eeprom(void) {
 }
 
 void rgb_matrix_init(void) {
-    rgb_matrix_driver.init();
+    /* matrix_init has already started the shared board peripheral. */
     rgb_matrix_reload_from_eeprom();
     frame_at = timer_read() - RGB_MATRIX_LED_FLUSH_LIMIT;
 }
 
 void rgb_matrix_set_color(int index, uint8_t r, uint8_t g, uint8_t b) {
-    if (index >= 0 && index < RGB_MATRIX_LED_COUNT) rgb_matrix_driver.set_color(index, r, g, b);
+    if (index >= 0 && index < RGB_MATRIX_LED_COUNT) ak820_rgb_set_color((uint8_t)index, r, g, b);
 }
 
 void rgb_matrix_set_color_all(uint8_t r, uint8_t g, uint8_t b) {
-    rgb_matrix_driver.set_color_all(r, g, b);
+    ak820_rgb_set_color_all(r, g, b);
 }
 
 /* FastLED/QMK's piecewise sine approximation, expressed using C only. */
@@ -216,7 +216,7 @@ void rgb_matrix_task(void) {
         ++led_index;
     }
     if (led_index == RGB_MATRIX_LED_COUNT) {
-        rgb_matrix_driver.flush();
+        /* Colors are already published to the board's live DMA buffer. */
         rendering = false;
     }
 }
@@ -241,7 +241,6 @@ void rgb_matrix_set_suspend_state(bool state) {
     clear_reactive();
     if (state) {
         rgb_matrix_set_color_all(0, 0, 0);
-        rgb_matrix_driver.flush();
     }
 }
 

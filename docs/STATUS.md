@@ -17,7 +17,7 @@ run; it was not a failed firmware or installer test.
 The full image includes NKRO control, modifier One Shot and compact Space
 Cadet alongside the base functions. Its IHX SHA256 is
 `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`.
-It uses 40,043 CODE bytes, 2,637 XRAM bytes and 162 bytes of allocated stack.
+It uses 40,043 CODE bytes, 2,637 allocated XRAM bytes and 162 bytes of allocated stack.
 There are 441 trailing main-window bytes and 16 low-window bytes.
 
 Exact-image analysis closes the main and three callback roots. The combined
@@ -41,7 +41,8 @@ model limits are in the qualification report.
 
 Only this exact full image satisfies the new packaging gate, independent program
 policy and fresh packing receipt. Native CI and downloaded-package acceptance have passed.
-The other seven profiles remain development builds. The earlier eight-profile
+The other seven profiles in the earlier eight-profile matrix remain development
+builds; the new compact-feature profiles are also development-only. That
 matrix from source `81cfc96` is [dated evidence](../audits/rc6/roadmap-max-20261024/final/README.md),
 not qualification of those profiles after the alpha.3 changes.
 
@@ -49,6 +50,27 @@ The [roadmap archive acceptance](../audits/rc6/roadmap-acceptance-20261024/revie
 records the imported work. The [roadmap](ROADMAP.md) lists future profile work
 and deferred features. The offline qualification did not access a device;
 installation results are recorded below.
+
+## Current development source
+
+All 16 named profiles passed 18 build variants from frozen source `55acbb0`.
+Each image passed 28 base suites and 273 base unit tests with zero skips, plus
+14–24 supplemental suites for its selected features. Later changes add only
+documentation and retained evidence.
+
+Compact Mouse Keys and Auto Shift are joined by volatile GUI controls and
+two temporary Dynamic Macro slots. Six layers, 16 Vial macros, 8192 macro bytes,
+eight Combos and schema `0x082002` remain unchanged. The previous eleven-profile
+matrix belongs to source `06b8f0f` and is historical.
+
+A whole-program stack bound for these images remains unproved. The normal
+package command rejected the changed `full` image because its source differs
+from the reviewed release witness. No physical test or device command was
+performed in this work. The published and installed firmware remains the exact
+alpha.3 image above. Measurements, hashes, raw logs and independent review are
+in the [technical report](../audits/rc6/compact-runtime-20261024/README.md).
+
+Integration checks and archive size are recorded in the [acceptance report](../audits/rc6/compact-runtime-20261024/acceptance.md).
 
 ## Installed firmware
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -16,6 +17,32 @@ import configure_firmware as config
 
 
 class ProfileTests(unittest.TestCase):
+    def test_short_call_proof_cannot_be_removed_or_unbound(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build = root/'build'; build.mkdir()
+            image = build/'ajazz_ak820_vial.ihx'; image.write_text('fixture')
+            with patch.object(config, 'QMK', root):
+                self.assertIsNone(config.check_short_calls({},build,image))
+                (build/'shortcalls-input').mkdir()
+                with self.assertRaisesRegex(ValueError,'Missing opt-in'):
+                    config.check_short_calls({},build,image)
+                (root/'util').mkdir(); (root/'util/ak820_shortcalls.py').write_text('fixture')
+                report = {'short_calls':{}, 'shortcalls_sha256':config.sha(root/'util/ak820_shortcalls.py'),
+                          'artifacts':[]}
+                with self.assertRaisesRegex(ValueError,'Missing or ambiguous'):
+                    config.check_short_calls(report,build,image)
+
+    def test_new_runtime_features_require_their_exact_suites(self):
+        for name in config.profiles.PROFILES:
+            features = config.profiles.configuration(name)['optional_features']
+            plan = config.profile_test_plan(name, Path('/build'), Path('/toolchain'))
+            identifiers = [identifier for identifier, _, _ in plan]
+            self.assertEqual(len(identifiers), len(set(identifiers)))
+            for feature, prefix in (('dynamic-macros', 'dynamic-macro'), ('gui-lock', 'gui-lock')):
+                for suffix in ('host', 'linked'):
+                    self.assertEqual(prefix + '-' + suffix in identifiers, feature in features)
+
     def test_exact_named_combinations_and_no_inherited_switches(self):
         for name, features in config.profiles.PROFILES.items():
             self.assertEqual(config.profiles.select(list(features)), name)
@@ -95,6 +122,16 @@ class ProfileTests(unittest.TestCase):
                 next(row for row in bad['tests'] if row['id'] == 'one-shot-host')['command'].remove('--oneshot')
                 with self.assertRaisesRegex(ValueError, 'identity, arguments'):
                     config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
+                short_log = build / 'profile-tests/short-call-gates.log'
+                original = short_log.read_text()
+                for text in ('Ran 0 tests in 0.1s\n\nOK\n',
+                             'Ran 15 tests in 0.1s\n\nOK (skipped=1)\n'):
+                    short_log.write_text(text)
+                    bad = copy.deepcopy(report)
+                    next(row for row in bad['tests'] if row['id'] == 'short-call-gates')['log_sha256'] = config.sha(short_log)
+                    with self.assertRaisesRegex(ValueError, 'empty or skipped'):
+                        config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
+                short_log.write_text(original)
 
     def test_inline_feature_is_bound_to_exact_compiler_flags(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -103,7 +140,8 @@ class ProfileTests(unittest.TestCase):
             flags = build / 'obj_ajazz_ak820_vial/cflags.txt'
             flags.parent.mkdir(parents=True)
             selected = config.profiles.configuration('full')
-            text = ' '.join('-D' + switch for switch in config.profiles.SWITCHES.values())
+            text = ' '.join('-D' + config.profiles.SWITCHES[feature]
+                            for feature in selected['optional_features'])
             def report(value):
                 flags.write_text(value)
                 return {'artifacts': [{'path': flags.relative_to(root).as_posix(),
@@ -114,6 +152,7 @@ class ProfileTests(unittest.TestCase):
                 for value in (text.replace('-DAK820_COMPACT_SPACE_CADET', ''),
                               text + ' -UAK820_COMPACT_SPACE_CADET',
                               text + ' -DAK820_COMPACT_SPACE_CADET',
+                              text + ' -DAK820_COMPACT_MOUSEKEY',
                               text.replace('-DAK820_COMPACT_SPACE_CADET', '-DAK820_COMPACT_SPACE_CADET=0')):
                     with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'feature flag'):
                         config.check_feature_defines(report(value), build, selected)
@@ -131,6 +170,66 @@ class ProfileTests(unittest.TestCase):
                          'startup-gates', 'startup-stack', 'irq-gates', 'release-safety-gates',
                          'nkro-control-linked', 'one-shot-linked'):
             self.assertIn(required, commands)
+
+    def test_mouse_profile_runs_exact_pipeline_and_host_suites(self):
+        plan = config.profile_test_plan('full-mouse', Path('/tmp/mouse'), Path('/tmp/sdcc'))
+        commands = {name: command for name, _, command in plan}
+        for name in ('mouse-keys-host', 'mouse-keys-linked', 'nkro-control-linked', 'one-shot-linked'):
+            self.assertIn(name, commands)
+        self.assertNotIn('--diagnostic-overflow', commands['mouse-keys-linked'])
+        self.assertEqual(config.profiles.select(['nkro-control', 'one-shot', 'space-cadet', 'mouse-keys']),
+                         'full-mouse')
+
+    def test_auto_shift_profile_keeps_full_features_and_owns_timing(self):
+        profile = config.profiles.configuration('full-auto-shift')
+        self.assertEqual(profile['optional_features'], ['nkro-control', 'one-shot', 'space-cadet', 'auto-shift'])
+        self.assertEqual(profile['timing_ms']['auto_shift'], 175)
+        commands = {name: command for name, _, command in
+                    config.profile_test_plan('full-auto-shift', Path('/tmp/as'), Path('/tmp/sdcc'))}
+        for name in ('auto-shift-host', 'auto-shift-linked', 'nkro-control-linked', 'one-shot-linked', 'core-compact-host'):
+            self.assertIn(name, commands)
+
+    def test_combined_mouse_auto_shift_requires_both_feature_suites(self):
+        name = 'full-mouse-auto-shift'
+        profile = config.profiles.configuration(name)
+        self.assertEqual(set(profile['optional_features']),
+                         {'nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'auto-shift'})
+        self.assertEqual(config.profiles.select(profile['optional_features']), name)
+        commands = {test: command for test, _, command in
+                    config.profile_test_plan(name, Path('/tmp/combined'), Path('/tmp/sdcc'))}
+        for required in ('mouse-keys-host', 'mouse-keys-linked', 'auto-shift-host',
+                         'auto-shift-linked', 'nkro-control-linked', 'one-shot-linked'):
+            self.assertIn(required, commands)
+        self.assertNotIn('--diagnostic-overflow', commands['mouse-keys-linked'])
+
+    def test_short_call_controls_are_required_in_every_profile(self):
+        for name in config.profiles.PROFILES:
+            commands = {test: command for test, _, command in
+                        config.profile_test_plan(name, Path('/tmp/profile'), Path('/tmp/sdcc'))}
+            self.assertEqual(commands['short-call-gates'][1:],
+                             ['-B', '-m', 'unittest', 'discover', '-s',
+                              'tests/ak820_shortcalls', '-p', 'test_*.py'])
+
+    def test_profile_suites_receive_validated_custom_tool_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            build=Path(directory)/'build';build.mkdir()
+            toolchain=Path(directory)/'external-sdcc'
+            identity={'ihx_sha256':'fixture'}
+            observed=[]
+            def run(command, **kwargs):
+                observed.append(kwargs['env'])
+                kwargs['stdout'].write('Ran 1 test in 0.001s\n\nOK\n')
+                return subprocess.CompletedProcess(command,0)
+            with patch.dict(os.environ,{'AK820_SDCC_BIN':'stale-inherited-path'}), \
+                 patch.object(config,'profile_test_plan',return_value=[('short-call-gates',build,['fixture'])]), \
+                 patch.object(config,'test_source_snapshot',return_value={}), \
+                 patch.object(config,'inspect',return_value={'identity':identity}), \
+                 patch.object(config,'validate_profile_tests'), \
+                 patch.object(config.subprocess,'run',side_effect=run):
+                config.run_profile_tests('standard',build,toolchain,identity)
+                self.assertEqual(os.environ['AK820_SDCC_BIN'],'stale-inherited-path')
+            self.assertEqual(len(observed),1)
+            self.assertEqual(observed[0]['AK820_SDCC_BIN'],str((toolchain/'bin').resolve()))
 
     def runtime_fixture(self, build):
         return {'identity': {'ihx_sha256': 'image', 'map_sha256': 'map'},

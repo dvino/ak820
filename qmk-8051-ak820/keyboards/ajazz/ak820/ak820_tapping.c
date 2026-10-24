@@ -143,6 +143,10 @@ uint8_t ak820_oneshot_target = NONE;
 bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
     uint8_t mods;
     if (id == NONE || get_repeat_key_count()) return true;
+#ifdef AK820_COMPACT_GUI_LOCK
+    /* Output controls must not consume a queued modifier or mark held OSM used. */
+    if (code >= QK_MAGIC_GUI_ON && code <= QK_MAGIC_TOGGLE_GUI) return true;
+#endif
     if ((code >> 8) == 0x52 && ((uint8_t)code & 0xe0) == 0xa0) {
         mods = code & 15;
         if (code & 16) mods <<= 4;

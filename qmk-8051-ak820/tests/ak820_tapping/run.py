@@ -28,6 +28,7 @@ args=parser.parse_args()
 inputs=[ROOT/p for p in ['quantum/action.c','quantum/action.h','quantum/action_layer.c','quantum/action_util.c','quantum/dynamic_keymap.c','quantum/vial.c','quantum/send_string/send_string.c','keyboards/ajazz/ak820/ak820_macro.c','quantum/keymap_common.c','quantum/quantum.c','quantum/repeat_key.c','quantum/tri_layer.c','quantum/process_keycode/process_repeat_key.c','quantum/process_keycode/process_tri_layer.c','keyboards/ajazz/ak820/ak820_combo.c','keyboards/ajazz/ak820/ak820_tapping.c','keyboards/ajazz/ak820/ak820_oneshot.c','keyboards/ajazz/ak820/config.h']]+[HERE/'run.py',HERE/'harness.c',HERE/'differential.py',HERE/'oracle.py',HERE/'oracle_harness.c',ROOT/'quantum/action_tapping.c',ROOT/'tmk_core/protocol/report.c',ROOT/'quantum/action_util.h',ROOT/'quantum/action_layer.h',ROOT/'quantum/tri_layer.h',ROOT/'quantum/process_keycode/process_tri_layer.h',ROOT/'keyboards/ajazz/ak820/ak820_tapping.h',ROOT/'quantum/caps_word.c',ROOT/'quantum/process_keycode/process_caps_word.c',ROOT/'quantum/process_keycode/process_grave_esc.c',ROOT/'quantum/process_keycode/process_grave_esc.h']
 # Bind the production headers included directly by the combined fixture too.
 for header in ['tmk_core/protocol/report.h','quantum/quantum_keycodes.h',
+               'quantum/keymap_common.h',
                'quantum/keycode_config.h','tmk_core/protocol/host.h',
                'quantum/repeat_key.h','quantum/process_keycode/process_repeat_key.h',
                'quantum/qmk_settings.h','quantum/caps_word.h',

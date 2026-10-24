@@ -50,7 +50,13 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 
 See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
 One Shot is limited to modifiers, and Space Cadet provides `SC_LSPO`, `SC_RSPC`
-and `SC_SENT`. Mouse Keys, Tap Dance, Key Overrides and Auto Shift are not included.
+and `SC_SENT`. Compact Mouse Keys and Auto Shift can be enabled separately or together in
+development source profiles. GUI controls and compact Dynamic Macros are also
+available in selected development profiles; these features are not part of the
+published alpha.3 image.
+See [Mouse Keys](docs/COMPACT-MOUSE-KEYS.md) and [Auto Shift](docs/COMPACT_AUTOSHIFT.md).
+See [GUI controls](docs/GUI-CONTROL.md), [Dynamic Macros](docs/COMPACT-DYNAMIC-MACROS.md)
+and [Build profiles](docs/BUILD-PROFILES.md) for profile choices and behavior.
 
 ## Disclaimer
 

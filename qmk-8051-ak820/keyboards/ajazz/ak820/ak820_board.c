@@ -327,13 +327,10 @@ typedef char ak820_rgb_slot_map_size_must_match[(sizeof(ak820_rgb_slots) == RGB_
 #        error "Provide AK820_RGB_SLOT_MAP for the selected physical LED count"
 #    endif
 
-static void ak820_rgb_init(void) {
-    /* matrix_init started the shared peripheral before quantum_init. */
-}
-
-/* SDCC indirect calls pass all callback arguments on the internal stack. */
-static void ak820_rgb_set_color(int index, uint8_t r, uint8_t g, uint8_t b) __reentrant {
-    if (index < 0 || index >= RGB_MATRIX_LED_COUNT) {
+/* The only board renderer is known at build time. Direct calls avoid the
+ * stack-only ABI required by an indirect __reentrant callback. */
+void ak820_rgb_set_color(uint8_t index, uint8_t r, uint8_t g, uint8_t b) {
+    if (index >= RGB_MATRIX_LED_COUNT) {
         return;
     }
 #    ifdef AK820_RGB_SLOT_MAP
@@ -343,21 +340,13 @@ static void ak820_rgb_set_color(int index, uint8_t r, uint8_t g, uint8_t b) __re
 #    endif
 }
 
-static void ak820_rgb_set_color_all(uint8_t r, uint8_t g, uint8_t b) __reentrant {
+void ak820_rgb_set_color_all(uint8_t r, uint8_t g, uint8_t b) {
     uint8_t i;
     for (i = 0; i < RGB_MATRIX_LED_COUNT; ++i) {
         ak820_rgb_set_color(i, r, g, b);
     }
 }
 
-static void ak820_rgb_flush(void) {
-    /* Each color is already in the live DMA buffer; no separate bus transfer. */
-}
-
-const rgb_matrix_driver_t rgb_matrix_driver = {
-    ak820_rgb_init,
-    ak820_rgb_set_color,
-    ak820_rgb_set_color_all,
-    ak820_rgb_flush,
-};
+/* matrix_init starts the shared peripheral before quantum_init. Each color
+ * goes straight into the live DMA buffer; no init or flush callback is needed. */
 #endif

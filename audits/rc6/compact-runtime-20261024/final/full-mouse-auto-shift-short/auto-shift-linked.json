@@ -1,0 +1,3017 @@
+{
+  "linked_image_sha256": "d1481d1942d6aba70c6eca856dab01dec26890debafe55c436fef172d4a8be40",
+  "level": "uCsim generic C52, exact linked pipeline; no hardware/USB/IRQ timing proof",
+  "hardware_validated": false,
+  "tests": [
+    {
+      "name": "as-threshold-and-release",
+      "pass": true,
+      "observations": {
+        "pending": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "early": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shifted": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "pending": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "early": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shifted": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-short-and-interrupted",
+      "pass": true,
+      "observations": {
+        "short": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pending": [
+          1
+        ],
+        "interrupted": [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_up": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "short": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pending": [
+          1
+        ],
+        "interrupted": [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_up": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-remap-freezes-keycode",
+      "pass": true,
+      "observations": {
+        "pending": [
+          1
+        ],
+        "original_down": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "original_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remapped_down": [
+          2,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remapped_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "pending": [
+          1
+        ],
+        "original_down": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "original_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remapped_down": [
+          2,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "remapped_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-real-shift-0",
+      "pass": true,
+      "observations": {
+        "auto_shift": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_up": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "auto_shift": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_up": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-real-shift-1",
+      "pass": true,
+      "observations": {
+        "auto_shift": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_up": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "auto_shift": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_up": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-ctrl-bypasses-delay",
+      "pass": true,
+      "observations": {
+        "hotkey": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_owner": [
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "hotkey": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_owner": [
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-encoded-control-owner-bypass",
+      "pass": true,
+      "observations": {
+        "encoded_ctrl": [
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "basic_immediate": [
+          1,
+          0,
+          6,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_owner": [
+          0
+        ],
+        "owner_preserved": [
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "encoded_ctrl": [
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "basic_immediate": [
+          1,
+          0,
+          6,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_owner": [
+          0
+        ],
+        "owner_preserved": [
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-held-owner-new-key",
+      "pass": true,
+      "observations": {
+        "shifted_origin": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_key_immediate": [
+          2,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_owner_up": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "shifted_origin": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new_key_immediate": [
+          2,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_owner_up": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-repeat-remembers-shift",
+      "pass": true,
+      "observations": {
+        "origin": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "origin_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "replayed": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "replay_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "origin": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "origin_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "replayed": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "replay_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 135,
+      "tested_stack_bytes": 46,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-alt-repeat-remembers-shift",
+      "pass": true,
+      "observations": {
+        "origin": [
+          2,
+          0,
+          47,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "origin_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "replayed": [
+          2,
+          0,
+          48,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "replay_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "origin": [
+          2,
+          0,
+          47,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "origin_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "replayed": [
+          2,
+          0,
+          48,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "replay_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 135,
+      "tested_stack_bytes": 46,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-oneshot-bypasses-delay",
+      "pass": true,
+      "observations": {
+        "one_shot": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "immediate": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_owner": [
+          0
+        ],
+        "consumed": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "one_shot": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "immediate": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_owner": [
+          0
+        ],
+        "consumed": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-caps-word",
+      "pass": true,
+      "observations": {
+        "capital": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "up": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "caps_off": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "capital": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "up": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "caps_off": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-clear-0",
+      "pass": true,
+      "observations": {
+        "clear": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_tick_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_release_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_owner": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "clear": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_tick_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_release_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_owner": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-unlock-0",
+      "pass": true,
+      "observations": {
+        "clear": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "blocked_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "cancel_unlock": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_owner": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "clear": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "blocked_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "cancel_unlock": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_owner": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-clear-1",
+      "pass": true,
+      "observations": {
+        "clear": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_tick_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_release_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_owner": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "clear": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_tick_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "no_release_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_owner": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-unlock-1",
+      "pass": true,
+      "observations": {
+        "clear": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "blocked_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "cancel_unlock": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_owner": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "clear": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "blocked_release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "cancel_unlock": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_owner": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "next_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-timer-wrap",
+      "pass": true,
+      "observations": {
+        "pending": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "early": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrapped": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "pending": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "early": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrapped": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-controls-and-held-release",
+      "pass": true,
+      "observations": {
+        "disabled": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "immediate": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "on": [
+          1
+        ],
+        "deferred_again": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shifted_again": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "up_again": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "disabled": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "immediate": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "on": [
+          1
+        ],
+        "deferred_again": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shifted_again": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "up_again": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-exact-release-174",
+      "checks": [
+        {
+          "label": "pending_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        58368,
+        257088
+      ],
+      "max_event_clocks": 257088,
+      "simulated_clocks": 552540,
+      "peak_sp": 120,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "enabled-default",
+      "expected_hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "name": "as-exact-release-175",
+      "checks": [
+        {
+          "label": "pending_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        58368,
+        322296
+      ],
+      "max_event_clocks": 322296,
+      "simulated_clocks": 617748,
+      "peak_sp": 120,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "enabled-default",
+      "expected_hid_send_trace": [
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "name": "as-combo-fallback-output-bypass",
+      "checks": [
+        {
+          "label": "fallback_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "combo_report",
+          "actual": [
+            0,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "still_plain_report",
+          "actual": [
+            0,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        51648,
+        167340,
+        124548,
+        51672,
+        191208,
+        14964,
+        119016,
+        22368
+      ],
+      "max_event_clocks": 191208,
+      "simulated_clocks": 1224036,
+      "peak_sp": 120,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "enabled-default",
+      "pass": true
+    },
+    {
+      "name": "as-encoder-macro-dual-role-bypass",
+      "checks": [
+        {
+          "label": "encoder_immediate_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "encoder_up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "mt_up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "macro_down_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "macro_up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 19,
+          "stream_sha256": "8a10636c3a65f9126bdd803bd129ab51fe8c788031bb9d9386acbf2d1d4d65f1",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        },
+        {
+          "logical_length": 19,
+          "stream_sha256": "f9a8554fc3939e4e255c2c49a4ac135ccc055d26245e82c7e388af1a3bc598c0",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        83040,
+        82680
+      ],
+      "event_clock_samples": [
+        192780,
+        122892,
+        43428,
+        278472
+      ],
+      "max_event_clocks": 278472,
+      "simulated_clocks": 1050648,
+      "peak_sp": 120,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "enabled-default",
+      "pass": true
+    },
+    {
+      "name": "as-nkro-held-and-release",
+      "checks": [
+        {
+          "label": "shifted_bitmap_report",
+          "actual": [
+            6,
+            2,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            6,
+            2,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_bitmap_report",
+          "actual": [
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          16,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        58368,
+        199416,
+        219672
+      ],
+      "max_event_clocks": 219672,
+      "simulated_clocks": 714540,
+      "peak_sp": 120,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "enabled-default",
+      "pass": true
+    },
+    {
+      "name": "as-nkro-switch-cancels-0",
+      "checks": [
+        {
+          "label": "switch_clears_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "no_revival_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        58368,
+        457464,
+        14892,
+        5844,
+        5844
+      ],
+      "max_event_clocks": 457464,
+      "simulated_clocks": 779496,
+      "peak_sp": 120,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "enabled-default",
+      "pass": true
+    },
+    {
+      "name": "as-nkro-switch-cancels-1",
+      "checks": [
+        {
+          "label": "switch_clears_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "no_revival_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        58368,
+        173304,
+        299076,
+        14892,
+        5844,
+        5844
+      ],
+      "max_event_clocks": 299076,
+      "simulated_clocks": 794412,
+      "peak_sp": 120,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "enabled-default",
+      "pass": true
+    },
+    {
+      "name": "as-pending-mouse-button-interruption",
+      "pass": true,
+      "observations": {
+        "pending": [
+          1
+        ],
+        "mouse_interrupts_plain": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "button_down": [
+          1
+        ],
+        "key_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "button_still_held": [
+          1
+        ],
+        "button_up": [
+          0
+        ]
+      },
+      "expected": {
+        "pending": [
+          1
+        ],
+        "mouse_interrupts_plain": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "button_down": [
+          1
+        ],
+        "key_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "button_still_held": [
+          1
+        ],
+        "button_up": [
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    },
+    {
+      "name": "as-held-mouse-movement-and-drag",
+      "pass": true,
+      "observations": {
+        "shifted": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "move": [
+          2,
+          0,
+          8,
+          0,
+          0,
+          0
+        ],
+        "shift_preserved": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "drag": [
+          1
+        ],
+        "owner_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "drag_survives": [
+          1
+        ],
+        "all_up": [
+          0
+        ],
+        "no_key_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "shifted": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "move": [
+          2,
+          0,
+          8,
+          0,
+          0,
+          0
+        ],
+        "shift_preserved": [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "drag": [
+          1
+        ],
+        "owner_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "drag_survives": [
+          1
+        ],
+        "all_up": [
+          0
+        ],
+        "no_key_revival": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "peak_sp": 131,
+      "tested_stack_bytes": 42,
+      "fixture_auto_shift": "enabled-default"
+    }
+  ],
+  "pass": true
+}

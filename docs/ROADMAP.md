@@ -2,43 +2,45 @@
 
 # Roadmap
 
-The three implemented optional features—NKRO control, modifier One Shot and
-Space Cadet—are available in all eight combinations in development profiles.
+NKRO control, modifier One Shot and Space Cadet are available in the `full`
+profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls
+and Dynamic Macros in supported combinations. These profiles are source development builds;
+they do not inherit the published alpha.3 qualification.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
-The exact full image has reviewed stack, interrupt and settings-transition
-proofs and is published as alpha.3. Other profiles remain development work and
-need separate qualification before release. Current source, release and device
-results belong in [Status](STATUS.md).
+The published and installed alpha.3 image is the exact full image described in
+[Status](STATUS.md). Source changes since that release, including feature-profile
+changes, are development work and are not approved for packaging or installation.
 
 ## Deferred features
 
-The initial inventory contains 11 candidates. Three have bounded
-implementations; the other eight remain deferred. A Vial control or keycode is
-not evidence that a feature is enabled.
+The initial inventory contains 11 candidates. Bounded implementations now
+cover NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift, GUI lock and
+Dynamic Macros. A Vial control or keycode alone does not show that a feature is
+enabled.
 
 | Candidate | Open work |
 | --- | --- |
 | Tap Dance | The upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
 | Key Overrides | The upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
-| Mouse Keys | The upstream probe exceeds the main CODE window by 1,381 bytes; a smaller scope and scan-time review are needed. |
-| Auto Shift | Needs explicit C `case` labels instead of GNU case ranges; the upstream probe exceeds the main CODE window by 2,081 bytes. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Magic | Modifier swaps and GUI control need separate compatibility and persistence review. |
+| Magic modifier swaps | GUI lock is available separately; modifier swaps and persistent settings remain open. |
 | Leader | Bound sequence length, timeout and supported outputs. |
-| Dynamic macros | Bound recording RAM and qualify replay behavior; Vial macros remain available. |
 
 Probe details and measured outcomes are in the
 [feature report](../audits/rc6/roadmap-max-20261024/feature-probes.md).
 
-The three available implementations are intentionally limited. NKRO control
+The available implementations are intentionally limited. NKRO control
 adds only `NK_ON`, `NK_OFF` and `NK_TOGG`; One Shot handles modifier combinations
 without layer form, timeout or locking; Space Cadet handles `SC_LSPO`, `SC_RSPC`
 and `SC_SENT` through compact tap-hold. See [Build profiles](BUILD-PROFILES.md)
 for exact behavior and tested interactions.
+GUI lock controls are described in [GUI controls](GUI-CONTROL.md). Compact
+Dynamic Macros provide two volatile slots of 16 completed taps; see the
+[user guide](COMPACT-DYNAMIC-MACROS.md) for exclusions and playback behavior.
 
 ## Runtime settings and saved data
 
-`QMK_SETTINGS = no` in alpha.2 and configured development profiles. Vial
+`QMK_SETTINGS = no` in alpha.3 and configured development profiles. Vial
 keymap, macro and lighting settings do not imply support for QMK Settings.
 Only expose a setting when an enabled handler consumes it and changes behavior.
 
@@ -61,10 +63,9 @@ Do not count loader, settings or journal space as free CODE. See
 [qualification evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
 
 Development builds run regression gates and profile-specific host and linked
-CPU suites against the exact image. The full image additionally has a
-reviewed control-stack and all-source interrupt allowance, under the documented
-MCS-51 architectural contract. Other profiles need their own evidence before
-packaging. Model tests do not establish physical behavior.
+CPU suites against the exact image. The exact published alpha.3 image has reviewed stack, interrupt and
+settings-transition evidence. Source changes since that image need their own
+evidence before packaging. Model tests do not establish physical behavior.
 
 ## Further code-size analysis
 
@@ -77,18 +78,13 @@ in technical reports. Do not reduce layers, macro capacity or existing
 functionality to make a new option appear to fit. Storage changes need their own
 backup and migration plan.
 
-<a id="next-alpha-release"></a>
+## Later releases
 
-## Further profiles and releases
-
-The full alpha.3 release is complete; its results are in [Status](STATUS.md).
-Future work should qualify each newly selected feature identity separately.
-Regenerate stack, interrupt, settings and packing evidence when their inputs
-change. Matching schemas or passing isolated tests do not make profiles
-interchangeable. Keep Windows/Linux installers, checksums and both installation
-languages in subsequent releases. Keep device acceptance separate from models
-and default tests offline or read-only. Any hardware write requires separate
-confirmation.
+The alpha.3 release is published and installed. Compact Mouse Keys and Auto Shift
+are available in development source profiles only, separately and together; the current changed profiles
+have no release qualification. Any later release needs a fresh exact-image
+review, platform builds, package acceptance and separate device authorization.
+See [Status](STATUS.md) for the published image and current development source.
 
 ## Other open work
 

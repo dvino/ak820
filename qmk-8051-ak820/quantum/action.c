@@ -33,8 +33,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "debug.h"
 #include "quantum.h"
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+#    include "ak820_dynamic_macro.h"
+#endif
 #ifdef AK820_COMPACT_TAPPING
 #    include "ak820_tapping.h"
+#    ifdef AK820_COMPACT_AUTOSHIFT
+#        include "ak820_autoshift.h"
+#    endif
 #    ifdef AK820_COMPACT_COMBO
 #        include "ak820_combo.h"
 #    endif
@@ -79,11 +85,17 @@ __attribute__((weak)) bool get_retro_tapping(uint16_t keycode, keyrecord_t *reco
  * FIXME: Needs documentation.
  */
 void action_exec(keyevent_t event) {
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+    ak820_dynamic_macro_task(event.time);
+#endif
 #ifdef AK820_COMPACT_COMBO
     ak820_combo_tick(event.time);
 #endif
 #ifdef AK820_COMPACT_TAPPING
     if (!ak820_tapping_before(&event)) return;
+#    ifdef AK820_COMPACT_AUTOSHIFT
+    if (!ak820_autoshift_before(&event)) return;
+#    endif
 #endif
 #if !defined(AK820_BOARD) || !defined(NO_DEBUG) || defined(RETRO_TAPPING) || defined(RETRO_TAPPING_PER_KEY) || (defined(AUTO_SHIFT_ENABLE) && defined(RETRO_SHIFT))
     /* Retain the runtime predicate only when this block has observable work. */
@@ -153,6 +165,9 @@ if (QS_oneshot_timeout > 0) {
     if (IS_NOEVENT(record.event) || pre_process_record_quantum(&record)) {
 #ifdef AK820_COMPACT_TAPPING
         if (!ak820_tapping_process(&record)) return;
+#    ifdef AK820_COMPACT_AUTOSHIFT
+        if (!ak820_autoshift_process(&record)) return;
+#    endif
 #endif
         process_record(&record);
     }
@@ -165,6 +180,15 @@ if (QS_oneshot_timeout > 0) {
 #endif
 #endif
 }
+
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+void ak820_action_exec(const keyevent_t __xdata *event) {
+    /* A named snapshot also avoids SDCC bug #4054: passing *event directly
+     * by value dereferences it twice. Freeze it before any event callbacks. */
+    keyevent_t snapshot = *event;
+    action_exec(snapshot);
+}
+#endif
 
 #ifdef SWAP_HANDS_ENABLE
 extern const keypos_t PROGMEM hand_swap_config[MATRIX_ROWS][MATRIX_COLS];
@@ -306,6 +330,10 @@ void process_record(keyrecord_t *record) {
         return;
     }
 
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+    if (record->event.key.row < MATRIX_ROWS && record->event.key.col < MATRIX_COLS && !ak820_macro_primitive &&
+        !ak820_dynamic_macro_process(get_record_keycode(record, true), record->event.pressed)) return;
+#endif
 #ifdef AK820_COMPACT_ONESHOT
     uint8_t oneshot_source = ak820_tapping_source(record->event.key);
     bool oneshot_pressed = record->event.pressed;
@@ -324,21 +352,38 @@ void process_record(keyrecord_t *record) {
         return;
     }
 
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+    ak820_dynamic_macro_source = record->event.key.row < MATRIX_ROWS && record->event.key.col < MATRIX_COLS && !get_repeat_key_count() && !ak820_macro_primitive;
+#endif
     process_record_handler(record);
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+    ak820_dynamic_macro_source = false;
+#endif
     post_process_record_quantum(record);
 #ifdef AK820_COMPACT_ONESHOT
     ak820_oneshot_post(oneshot_source, oneshot_pressed);
 #endif
 }
 
-void process_record_handler(keyrecord_t *record) {
+void process_record_handler(keyrecord_t *record_argument) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    /* All retained AK820 records are model-large XDATA objects. Keep the
+     * public generic-pointer ABI; only this private view is specialized. */
+    keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
+#else
+    keyrecord_t *record = record_argument;
+#endif
     //dprint("process_record_handler");
 #if defined(COMBO_ENABLE) || defined(REPEAT_KEY_ENABLE)
     action_t action;
     if (record->keycode) {
         action.code = action_for_keycode(record->keycode);
     } else {
+#ifdef AK820_BOARD
+        action.code = action_for_keycode(ak820_resolve_key(AK820_KEYPOS_VALUE(record->event.key), record->event.pressed));
+#else
         action.code = store_or_get_action(record->event.pressed, record->event.key);
+#endif
     }
 #else
     action_t action;
@@ -419,7 +464,12 @@ void register_mouse(uint8_t mouse_keycode, bool pressed) {
  *
  * FIXME: Needs documentation.
  */
-void process_action(keyrecord_t *record, action_t action) {
+void process_action(keyrecord_t *record_argument, action_t action) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
+#else
+    keyrecord_t *record = record_argument;
+#endif
     bool pressed;
     uint8_t mods;
     pressed = record->event.pressed;
@@ -921,6 +971,9 @@ __attribute__((weak)) void register_code(uint8_t code) {
 
 #ifdef AK820_COMPACT_TAPPING
         if (!add_owned_key(code)) return;
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+        ak820_dynamic_macro_observe(code, true);
+#endif
 #else
         // Force a new key press if the key is already pressed
         // without this, keys with the same keycode, but different
@@ -992,6 +1045,9 @@ __attribute__((weak)) void unregister_code(uint8_t code) {
     } else if (IS_BASIC_KEYCODE(code)) {
 #ifdef AK820_COMPACT_TAPPING
         if (!del_owned_key(code)) return;
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+        ak820_dynamic_macro_observe(code, false);
+#endif
 #else
         del_key(code);
 #endif
@@ -1105,6 +1161,12 @@ void clear_keyboard_but_mods(void) {
 void clear_keyboard_but_mods_and_keys(void) {
 #ifdef AK820_COMPACT_TAPPING
     ak820_tapping_cancel();
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+    ak820_dynamic_macro_cancel();
+#endif
+#    ifdef AK820_COMPACT_AUTOSHIFT
+    ak820_autoshift_cancel();
+#    endif
 #ifdef AK820_COMPACT_ONESHOT
     ak820_oneshot_cancel();
 #endif

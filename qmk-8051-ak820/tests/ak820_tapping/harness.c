@@ -7,6 +7,7 @@
 #include "action.h"
 #include "action_util.h"
 #include "action_layer.h"
+#include "keymap_common.h"
 #include "quantum_keycodes.h"
 #include "keycode_config.h"
 #include "report.h"
@@ -62,6 +63,10 @@ uint16_t keymap_key_to_keycode(uint8_t layer,keypos_t key) {
  if(key.row==VIAL_MATRIX_MAGIC&&key.col==VIAL_MATRIX_MAGIC)return g_vial_magic_keycode_override;
  if (key.row==KEYLOC_ENCODER_CW || key.row==KEYLOC_ENCODER_CCW) return enc[layer][key.row==KEYLOC_ENCODER_CCW];
  return map[layer][key.row][key.col];
+}
+uint16_t ak820_keycode_at(uint8_t layer, uint16_t position) {
+ keypos_t key={.row=position>>8,.col=position};
+ return keymap_key_to_keycode(layer,key);
 }
 void host_keyboard_send(report_keyboard_t *r) { assert(log_count<2048);memcpy(log_reports[log_count++],r,sizeof(*r)); if(trace_mode){printf("H %u",now);for(unsigned i=0;i<8;i++)printf(" %u",r->raw[i]);puts("");} }
 void host_system_send(uint16_t x) {assert(extra_count<2048);extra_log[extra_count++]=(typeof(extra_log[0])){0,x};last_system=x;++systems;}

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "action_layer.h"
+#include "keymap_common.h"
 #include "quantum_keycodes.h"
 #include "report.h"
 #define VIAL_MATRIX_MAGIC 240
@@ -21,6 +22,10 @@ uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
     if ((key.row == KEYLOC_ENCODER_CW || key.row == KEYLOC_ENCODER_CCW) && key.col < NUM_ENCODERS)
         return encoder_map[layer][key.col][key.row == KEYLOC_ENCODER_CW];
     return KC_NO;
+}
+uint16_t ak820_keycode_at(uint8_t layer, uint16_t position) {
+    keypos_t key={.row=position>>8,.col=position};
+    return keymap_key_to_keycode(layer,key);
 }
 uint16_t action_for_key(uint8_t layer, keypos_t key) { return action_for_keycode(keymap_key_to_keycode(layer, key)); }
 

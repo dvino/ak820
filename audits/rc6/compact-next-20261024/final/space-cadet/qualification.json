@@ -1,0 +1,785 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 51.775,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/00.txt",
+      "log_sha256": "db8d04be75f0e29b426cbb6cc470668002889ae5d9db2e84a4eea9cc971fb644",
+      "unit_tests": {
+        "run": 135,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.127,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/01.txt",
+      "log_sha256": "03df5411f36261af9568ca31701bca68ba372d0eb0d1d2dff8ec1f61e24a7621",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.136,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/02.txt",
+      "log_sha256": "99f9615b608bd81615af17504c9e45acc47d30f7be1b872c8072705375e196f1",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.168,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/03.txt",
+      "log_sha256": "e73cb98ef03473d2923acf1c438956085f22f229f22e5f25f12ecfec1853ddfd",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.209,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/04.txt",
+      "log_sha256": "6367bbd5e26297735994e73b9c3d2e9cafaf93459285c7f545f369e2a070f19a",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.059,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/05.txt",
+      "log_sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.65,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/06.txt",
+      "log_sha256": "6d66c4cf1e3fe8d61acc69a08da726b0a71c467c4e07ccaea97d8f8550c011b7",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.054,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/07.txt",
+      "log_sha256": "21c7e48d0b1ec908feef784bbce1fa55f2c9a7acf76382fa7578754a78bd1ed8",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.034,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/08.txt",
+      "log_sha256": "fca779d0adff7b605282e1e92281f7b98f1ac703e9a6c7bf3441bc5d41ed8870",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.671,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.513,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.319,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.182,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/12.txt",
+      "log_sha256": "aed1f8864c9289f67cc8ef8f084b5e6a2b55c97a3b722c7ac6f21132e6d52d56",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.274,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.029,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.319,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.091,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.299,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.363,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/18.txt",
+      "log_sha256": "ab78398099c1d788da902e043b115ff2f5097f44c7b9c8351b68aa793b0beb54",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 11.911,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/19.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.692,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/20.txt",
+      "log_sha256": "647570a95dda5917b2cb52acc1f636ad9fbb8daa4e4be530159c051110ae0e22",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 0.942,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/21.txt",
+      "log_sha256": "e2d9bc69da8c3a55e32266d16ed5e5c25ce6691b415b413dd8c0c15624a28557",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.957,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/22.txt",
+      "log_sha256": "9a18f0298b5a8a6253b7cd2f96dc5017e51754807cbcb966c9e9b02f52ed71e4",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.723,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.366,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/24.txt",
+      "log_sha256": "29c5060fe59859eaaeb954a8231ba238793ea5a8404aa33b134dd90b744deab7",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 0.876,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/25.txt",
+      "log_sha256": "3a168f67cf900003d5561ac7578c88b69cf4330cf63ba319ff2f20d3abc7f032",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 5.309,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/26.txt",
+      "log_sha256": "510027fc3fabd41d053c909bb345f7a740b9015c22fa390f62d9cd3cf576e46a",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 1.776,
+      "log": "/workspace/scratch/af73702a4595/qualify-b/qmk-8051-ak820/.build/final4-space-cadet/qualification-logs-q17g2lma/27.txt",
+      "log_sha256": "0b4db7ec62d4ac8d4a664980bc8f719667ccb3cce2335f1a3c5ce834dc9225e2",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      },
+      "build_after": {
+        "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0"
+  },
+  "unit_tests": {
+    "run": 273,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+    "map": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1"
+  },
+  "build_unchanged": true
+}

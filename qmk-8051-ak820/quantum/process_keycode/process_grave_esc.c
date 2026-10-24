@@ -20,6 +20,7 @@
 #include "action_util.h"
 #ifdef AK820_BOARD
 #    include "action_layer.h"
+#    include "keymap_common.h"
 #    if defined(AK820_COMPACT_TAPPING) && defined(REPEAT_KEY_ENABLE)
 #        include "repeat_key.h"
 #    endif
@@ -30,7 +31,12 @@
  */
 static bool grave_esc_was_shifted = false;
 
-bool process_grave_esc(uint16_t keycode, keyrecord_t *record) {
+bool process_grave_esc(uint16_t keycode, keyrecord_t *record_argument) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
+#else
+    keyrecord_t *record = record_argument;
+#endif
     if (keycode == QK_GRAVE_ESCAPE) {
         /* Repeat restores remembered modifiers as weak mods. Use the
          * effective state so shifted Grave repeats Grave, not Escape. */
@@ -84,7 +90,7 @@ if (QS_grave_esc_shift_override) {
                 record->keycode = resolved;
             } else
 #    endif
-            if (!update_source_keycode_cache(record->event.key, resolved)) {
+            if (!ak820_cache_keycode(AK820_KEYPOS_VALUE(record->event.key), resolved)) {
                 grave_esc_was_shifted = shifted;
             }
 #else

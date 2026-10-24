@@ -83,6 +83,36 @@ static void __attribute__((noinline, unused)) handleKeycodeRGBMode(const uint8_t
  * Handle keycodes for both rgblight and rgbmatrix
  */
 bool process_rgb(const uint16_t keycode, const keyrecord_t *record) {
+#if defined(AK820_BOARD) && defined(RGB_MATRIX_ENABLE) && !defined(RGB_MATRIX_DISABLE_KEYCODES) && !defined(RGBLIGHT_ENABLE) && defined(ENABLE_RGB_MATRIX_BREATHING) && defined(ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT) && !defined(ENABLE_RGB_MATRIX_CYCLE_PINWHEEL)
+    _Static_assert(RGB_TOG == 0x7820 && RGB_MODE_FORWARD == 0x7821 &&
+                   RGB_SPD == 0x782a && RGB_MODE_PLAIN == 0x782b &&
+                   RGB_MODE_BREATHE == 0x782c && RGB_MODE_RAINBOW == 0x782d &&
+                   RGB_MODE_SWIRL == 0x782e && RGB_MODE_TWINKLE == 0x7834,
+                   "AK820 RGB byte dispatch requires the pinned namespaces");
+    uint8_t action = (uint8_t)keycode;
+    if ((uint8_t)(keycode >> 8) != 0x78 || action < 0x20 || action > 0x34) return true;
+#ifndef RGB_TRIGGER_ON_KEYDOWN
+    if (record->event.pressed) return true;
+#else
+    if (!record->event.pressed) return true;
+#endif
+    action -= (uint8_t)RGB_TOG;
+    if (!action) {
+        rgb_matrix_toggle();
+    } else if (action <= 10) {
+        --action;
+        if (get_mods() & MOD_MASK_SHIFT) action ^= 1;
+        ak820_rgb_actions[action]();
+    } else if (action <= 13) {
+        static const uint8_t AK820_RGB_CODE modes[] = {
+            RGB_MATRIX_SOLID_COLOR, RGB_MATRIX_BREATHING, RGB_MATRIX_CYCLE_LEFT_RIGHT
+        };
+        rgb_matrix_mode(modes[action - 11]);
+    }
+    /* The remaining pinned RGB mode keys are consumed without changing the
+     * mode, just as the disabled branches in the upstream switch below. */
+    return false;
+#else
     // need to trigger on key-up for edge-case issue
 #ifndef RGB_TRIGGER_ON_KEYDOWN
     if (!record->event.pressed) {
@@ -257,4 +287,5 @@ bool process_rgb(const uint16_t keycode, const keyrecord_t *record) {
     }
 
     return true;
+#endif
 }

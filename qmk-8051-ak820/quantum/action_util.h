@@ -33,6 +33,9 @@ extern report_keyboard_t *keyboard_report;
 #endif
 
 void send_keyboard_report(void);
+#ifdef AK820_COMPACT_GUI_LOCK
+bool ak820_gui_process(uint16_t code, bool pressed);
+#endif
 
 /* key */
 inline void add_key(uint8_t key) {

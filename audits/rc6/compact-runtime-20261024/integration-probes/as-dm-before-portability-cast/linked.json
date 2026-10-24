@@ -1,0 +1,4079 @@
+{
+  "level": "Exact linked SDCC C52; simulated peripherals, no physical USB/IRQ proof",
+  "hardware_validated": false,
+  "linked_image_sha256": "766306bb6756d37497d483a8c769c2291a1f164b7684f9e616398d286c698c8c",
+  "tests": [
+    {
+      "name": "dm-basic-playback",
+      "checks": [
+        {
+          "label": "slot",
+          "actual": [
+            4,
+            0
+          ],
+          "expected": [
+            4,
+            0
+          ]
+        },
+        {
+          "label": "down_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "done",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49872,
+        33612,
+        83664,
+        82080,
+        16752
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1086372,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-rolling-order",
+      "checks": [
+        {
+          "label": "ordered",
+          "actual": [
+            4,
+            0,
+            5,
+            0
+          ],
+          "expected": [
+            4,
+            0,
+            5,
+            0
+          ]
+        },
+        {
+          "label": "a_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "b_report",
+          "actual": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "done",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        208728,
+        131580,
+        131076,
+        57096,
+        32472,
+        49872,
+        33612,
+        83664,
+        82080,
+        83664,
+        82080,
+        16752
+      ],
+      "max_event_clocks": 208728,
+      "simulated_clocks": 1596312,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-incomplete-compacted",
+      "checks": [
+        {
+          "label": "length",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        },
+        {
+          "label": "completed",
+          "actual": [
+            5,
+            0
+          ],
+          "expected": [
+            5,
+            0
+          ]
+        },
+        {
+          "label": "only-b_report",
+          "actual": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          5,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        208728,
+        131580,
+        53592,
+        32472,
+        129864,
+        49872,
+        33612,
+        83664
+      ],
+      "max_event_clocks": 208728,
+      "simulated_clocks": 1327020,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-preheld-not-recorded",
+      "checks": [
+        {
+          "label": "empty",
+          "actual": [
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        206676,
+        49092,
+        32472,
+        130560,
+        49320,
+        32472
+      ],
+      "max_event_clocks": 206676,
+      "simulated_clocks": 813972,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-capacity-overwrite-slots",
+      "checks": [
+        {
+          "label": "full",
+          "actual": [
+            16,
+            0
+          ],
+          "expected": [
+            16,
+            0
+          ]
+        },
+        {
+          "label": "two-slots",
+          "actual": [
+            16,
+            1
+          ],
+          "expected": [
+            16,
+            1
+          ]
+        },
+        {
+          "label": "overwritten",
+          "actual": [
+            1,
+            1
+          ],
+          "expected": [
+            1,
+            1
+          ]
+        },
+        {
+          "label": "second-slot",
+          "actual": [
+            5,
+            0
+          ],
+          "expected": [
+            5,
+            0
+          ]
+        },
+        {
+          "label": "slot2-down_report",
+          "actual": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        208692,
+        131580,
+        208692,
+        132084,
+        208692,
+        132588,
+        208692,
+        133092,
+        208692,
+        133596,
+        208692,
+        134100,
+        208692,
+        134604,
+        208692,
+        135108,
+        208692,
+        135612,
+        208692,
+        136116,
+        208692,
+        136620,
+        208692,
+        137124,
+        208692,
+        137628,
+        208692,
+        138132,
+        208692,
+        138636,
+        207324,
+        138624,
+        207324,
+        138624,
+        207324,
+        138624,
+        207324,
+        138624,
+        111528,
+        32472,
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49872,
+        33612,
+        83664
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 8600676,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-shift-ownership-0",
+      "checks": [
+        {
+          "label": "macro-shift_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "physical-shift_report",
+          "actual": [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "all-up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        147576,
+        208692,
+        131076,
+        128796,
+        53208,
+        32472,
+        49872,
+        33612,
+        84384,
+        109680,
+        82632,
+        129936
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1586880,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-shift-ownership-1",
+      "checks": [
+        {
+          "label": "macro-shift_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "macro-still-shift_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "all-up_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        147576,
+        208692,
+        131076,
+        128796,
+        53208,
+        32472,
+        49872,
+        33612,
+        84384,
+        109680,
+        91044,
+        82656
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1548012,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-held-same-usage-skip",
+      "checks": [
+        {
+          "label": "physical-survives_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "not-owned",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "done",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        206676,
+        49872,
+        33612,
+        19680,
+        16752,
+        129864
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1276848,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-new-physical-owner-survives",
+      "checks": [
+        {
+          "label": "physical-survives_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49872,
+        33612,
+        83664,
+        147564,
+        37860,
+        131004
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1303968,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-effective-oneshot",
+      "checks": [
+        {
+          "label": "effective-mods",
+          "actual": [
+            4,
+            2
+          ],
+          "expected": [
+            4,
+            2
+          ]
+        },
+        {
+          "label": "replay_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        116676,
+        67992,
+        208872,
+        191172,
+        53208,
+        32472,
+        49872,
+        33612,
+        84384,
+        82656
+      ],
+      "max_event_clocks": 208872,
+      "simulated_clocks": 1315860,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-effective-encoded",
+      "checks": [
+        {
+          "label": "effective-mods",
+          "actual": [
+            6,
+            1
+          ],
+          "expected": [
+            6,
+            1
+          ]
+        },
+        {
+          "label": "replay_report",
+          "actual": [
+            1,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            1,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        262620,
+        190896,
+        53208,
+        32472,
+        49872,
+        33612,
+        84384,
+        82656
+      ],
+      "max_event_clocks": 262620,
+      "simulated_clocks": 1184664,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-nkro-duplicate-physical-owner",
+      "checks": [
+        {
+          "label": "physical-survives_report",
+          "actual": [
+            6,
+            0,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            6,
+            0,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "physical-released_report",
+          "actual": [
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          16,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        232788,
+        49872,
+        33612,
+        19680,
+        16752,
+        156492
+      ],
+      "max_event_clocks": 232788,
+      "simulated_clocks": 1329588,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-generated-output-excluded",
+      "checks": [
+        {
+          "label": "only-original",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 22,
+          "stream_sha256": "492dd401b95aafc1beb37c9e72662bf0bfc2516313154b4090e12e3abbc9c2a8",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        156372
+      ],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        227040,
+        158796,
+        195144,
+        125304,
+        53208,
+        32472
+      ],
+      "max_event_clocks": 227040,
+      "simulated_clocks": 1688184,
+      "peak_sp": 125,
+      "tested_stack_bytes": 35,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-generated-controls-excluded",
+      "checks": [
+        {
+          "label": "not-playing",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "not-recording",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 32,
+          "stream_sha256": "a5bd2b40dfdb083f3dd06bf25b09c3392f99108c4877fd7f2e8a8724a47222d1",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        597060
+      ],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1422588,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-nested-macro-pauses-playback",
+      "checks": [
+        {
+          "label": "no-nested-owner",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "still-playing",
+          "actual": [
+            1
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "label": "foreground-press_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "foreground-release_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 24,
+          "stream_sha256": "67a95e58b88a9b10666b136ec1ab89e0d59f30c34efd2ba4a3df675909149e0d",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        208632
+      ],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49872,
+        33612,
+        83664,
+        82080
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1283388,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-nested-macro-pauses-due-release",
+      "checks": [
+        {
+          "label": "owned-through-primitive_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released-after-primitive_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "finished",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 24,
+          "stream_sha256": "67a95e58b88a9b10666b136ec1ab89e0d59f30c34efd2ba4a3df675909149e0d",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        208632
+      ],
+      "event_clock_samples": [
+        49092,
+        32472,
+        147576,
+        208692,
+        131076,
+        128796,
+        53208,
+        32472,
+        49872,
+        33612,
+        84384,
+        82656,
+        16752
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1577808,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-clear-replay",
+      "checks": [
+        {
+          "label": "cleared_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "cancelled",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "retained",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        },
+        {
+          "label": "no-revival_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        147576,
+        208692,
+        131076,
+        128796,
+        53208,
+        32472,
+        49872,
+        33612,
+        84384,
+        15012
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1476924,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-clear-recording",
+      "checks": [
+        {
+          "label": "stopped",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "complete-only",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        },
+        {
+          "label": "b-only",
+          "actual": [
+            5,
+            0
+          ],
+          "expected": [
+            5,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        208692,
+        6324
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1151556,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-pending-gates-phases",
+      "checks": [
+        {
+          "label": "busy-no-press_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "press_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "busy-held_report",
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "release_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "release-wait",
+          "actual": [
+            1
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "label": "done",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49872,
+        33612,
+        15312,
+        83664,
+        15312,
+        82080,
+        15312,
+        16752
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1132308,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-no-recursion-controls",
+      "checks": [
+        {
+          "label": "retained",
+          "actual": [
+            1,
+            0
+          ],
+          "expected": [
+            1,
+            0
+          ]
+        },
+        {
+          "label": "not-recording",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49872,
+        33612,
+        83664,
+        115428,
+        33612,
+        51612,
+        33612,
+        50616,
+        32472
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1304892,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-auto-shift-effective",
+      "checks": [
+        {
+          "label": "stored-shift",
+          "actual": [
+            4,
+            2
+          ],
+          "expected": [
+            4,
+            2
+          ]
+        },
+        {
+          "label": "shifted-replay_report",
+          "actual": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            2,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "released_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        43980,
+        28296,
+        58848,
+        180948,
+        170796,
+        54552,
+        32832,
+        51216,
+        33972,
+        84744,
+        83016
+      ],
+      "max_event_clocks": 180948,
+      "simulated_clocks": 1218528,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-real-busy-down-release-retry",
+      "pass": true,
+      "observations": [
+        {
+          "label": "busy-press-retained",
+          "address": 1740,
+          "expected": [
+            1
+          ],
+          "actual": [
+            1
+          ],
+          "pass": true
+        },
+        {
+          "label": "macro-owns-down",
+          "address": 1209,
+          "expected": [
+            4
+          ],
+          "actual": [
+            4
+          ],
+          "pass": true
+        },
+        {
+          "label": "busy-prevents-early-release",
+          "address": 1209,
+          "expected": [
+            4
+          ],
+          "actual": [
+            4
+          ],
+          "pass": true
+        },
+        {
+          "label": "down-eventually-accepted",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "busy-release-retained",
+          "address": 1740,
+          "expected": [
+            1
+          ],
+          "actual": [
+            1
+          ],
+          "pass": true
+        },
+        {
+          "label": "desired-release",
+          "address": 1706,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "accepted-down-until-ready",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "engine-waits-release",
+          "address": 1207,
+          "expected": [
+            1
+          ],
+          "actual": [
+            1
+          ],
+          "pass": true
+        },
+        {
+          "label": "release-eventually-accepted",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "complete-after-release",
+          "address": 1207,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF"
+    },
+    {
+      "name": "dm-suspend-resume-cancels-playback",
+      "pass": true,
+      "observations": [
+        {
+          "label": "suspended-no-publication",
+          "address": 8705,
+          "expected": [
+            18
+          ],
+          "actual": [
+            18
+          ],
+          "pass": true
+        },
+        {
+          "label": "resume-clears-replay",
+          "address": 1207,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "resume-release",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "slots-retained",
+          "address": 1204,
+          "expected": [
+            1,
+            0
+          ],
+          "actual": [
+            1,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF"
+    },
+    {
+      "name": "dm-unconfigured-pauses-before-down",
+      "pass": true,
+      "observations": [
+        {
+          "label": "no-owner-unconfigured",
+          "address": 1209,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "configured-press",
+          "address": 4160,
+          "expected": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF"
+    },
+    {
+      "name": "dm-reset-guards-before-task",
+      "pass": true,
+      "observations": [
+        {
+          "label": "no-owner-resetting",
+          "address": 1209,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "reset-cancels",
+          "address": 1207,
+          "expected": [
+            0
+          ],
+          "actual": [
+            0
+          ],
+          "pass": true
+        },
+        {
+          "label": "no-revival",
+          "address": 3632,
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pass": true
+        }
+      ],
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF"
+    },
+    {
+      "name": "dm-unlock-0",
+      "checks": [
+        {
+          "label": "unlock-clears_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "not-playing",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "not-recording",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "no-revival_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49872,
+        33612,
+        83664,
+        5436
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1191612,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    },
+    {
+      "name": "dm-unlock-1",
+      "checks": [
+        {
+          "label": "unlock-clears_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "not-playing",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "not-recording",
+          "actual": [
+            0
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "label": "no-revival_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [],
+      "macro_clock_samples": [],
+      "event_clock_samples": [
+        49092,
+        32472,
+        208692,
+        131076,
+        53208,
+        32472,
+        49092,
+        32472,
+        208692,
+        131076,
+        208692,
+        5436
+      ],
+      "max_event_clocks": 208692,
+      "simulated_clocks": 1659204,
+      "peak_sp": 121,
+      "tested_stack_bytes": 31,
+      "fixture_auto_shift": "disabled-with-AS_OFF",
+      "pass": true
+    }
+  ],
+  "pass": true
+}

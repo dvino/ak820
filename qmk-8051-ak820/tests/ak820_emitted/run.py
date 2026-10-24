@@ -20,7 +20,7 @@ def memory(space: str, address: int, data) -> str:
 
 
 class Firmware:
-    def __init__(self, build: Path, simulator: Path, output: Path):
+    def __init__(self, build: Path, simulator: Path, output: Path, *, auto_shift: bool = False):
         self.build, self.simulator, self.output = build, simulator, output
         self.image = build / "ajazz_ak820_vial.ihx"
         self.symbols = {
@@ -63,6 +63,10 @@ class Firmware:
         if not stack:
             raise ValueError("Missing linked stack layout")
         self.initial_sp, self.stack_capacity = int(stack[1], 16), int(stack[2])
+        self.has_auto_shift = "_ak820_autoshift_process" in self.symbols
+        if auto_shift and not self.has_auto_shift:
+            raise ValueError("Auto Shift fixture requires an Auto Shift image")
+        self.auto_shift = auto_shift
         self.output.mkdir(parents=True, exist_ok=True)
 
     def address(self, name: str) -> int:
@@ -112,6 +116,19 @@ class Firmware:
         commands += self.call("_host_set_driver", self.address("_ch555_usb_stack_driver"))
         commands += self.write("_USB_EnumStatus", [1]) + self.write("_D0UsbConfig", [1])
         commands += ["fill xram 0x2201 0x2203 0x12"]
+        if self.has_auto_shift:
+            # Ordinary regressions exercise immediate typing with Auto Shift
+            # explicitly switched off. Its dedicated suite keeps the actual
+            # power-on default and covers deferred events and interactions.
+            # Use the production AS_OFF key path, not a private-state write.
+            if not self.auto_shift:
+                address = 0xC740 + 2 * (15 * 8 + 7)
+                commands += [memory("rom", address, [0x7c, 0x14])]
+                for pressed in (1, 0):
+                    commands += self.write("_action_exec_PARM_1", [7, 15, 0, 0, 1, pressed])
+                    commands += self.call("_action_exec")
+                commands += [memory("rom", address, nvm[254:256])]
+            commands += self.dump_symbol("fixture_auto_shift_enabled", "_as_enabled", 1)
         return commands
 
     @staticmethod
@@ -147,11 +164,20 @@ class Firmware:
             raise RuntimeError(f"Simulator failed for {name}: {run.returncode}")
         if "Stack overflow" in run.stdout:
             raise RuntimeError(f"Simulator stack overflow in {name}")
+        mode = "not-compiled"
+        if self.has_auto_shift:
+            mode = "not-observed"
+            if "@@fixture_auto_shift_enabled" in run.stdout:
+                enabled = self.extract(run.stdout, "fixture_auto_shift_enabled", self.address("_as_enabled"), 1)
+                if enabled != [int(self.auto_shift)]:
+                    raise RuntimeError(f"Auto Shift fixture mode was not established in {name}")
+                mode = "enabled-default" if self.auto_shift else "disabled-with-AS_OFF"
         peaks = re.findall(r"Most value of stack pointer=\s+0x([0-9a-f]+)", run.stdout)
         if not peaks:
             raise RuntimeError(f"Simulator did not complete {name}")
         peak = int(peaks[-1], 16)
-        return run.stdout, {"peak_sp": peak, "tested_stack_bytes": peak - self.initial_sp}
+        return run.stdout, {"peak_sp": peak, "tested_stack_bytes": peak - self.initial_sp,
+                            "fixture_auto_shift": mode}
 
     def transition(self, rows: list[int], clock: int) -> list[str]:
         return (self.write("_ak820_scan_rows", rows) + self.write("_ak820_scan_ready", [1]) +
@@ -213,11 +239,17 @@ def rgb(fw: Firmware) -> dict:
     commands += fw.write("_g_direct_mode_colors", direct) + fw.call("_rgb_matrix_mode_noeeprom", 5) + fw.frame(200)
     for index in (0, 1, 2, 81):
         commands += fw.dump(f"direct_{index}", "xram", fw.led_address(index), 4)
-    # Seed a known live color through the public callback path, so the sleep
+    # Seed a known live color through the public API, so the sleep
     # regression is independent of whether HSV rendering itself is working.
     commands += fw.write("_rgb_matrix_set_color_PARM_2", [60]) + fw.write("_rgb_matrix_set_color_PARM_3", [30])
     commands += fw.write("_rgb_matrix_set_color_PARM_4", [10]) + fw.call("_rgb_matrix_set_color", 0)
     commands += fw.dump("before_sleep", "xram", fw.led_address(0), 4)
+    commands += fw.dump("bounds_before", "xram", fw.address("_ak820_led_dma"), 512)
+    for invalid in (0xffff, 0x8000, 82, 255, 256, 32767):
+        commands += fw.call("_rgb_matrix_set_color", invalid)
+    for invalid in (82, 255):
+        commands += fw.call("_ak820_rgb_set_color", invalid)
+    commands += fw.dump("bounds_after", "xram", fw.address("_ak820_led_dma"), 512)
     commands += fw.write("_USB_SleepStatus", [2]) + fw.call("_protocol_pre_task")
     commands += fw.dump("sleep_immediate", "xram", fw.address("_ak820_led_dma"), 512)
     commands += fw.frame(300) + fw.dump("sleep_rendered", "xram", fw.address("_ak820_led_dma"), 512)
@@ -230,6 +262,9 @@ def rgb(fw: Firmware) -> dict:
     actual = {"solid": fw.extract(log, "solid", fw.led_address(0), 4),
               "before_sleep": fw.extract(log, "before_sleep", fw.led_address(0), 4)}
     expected = {"solid": [255, 18, 0, 0], "before_sleep": [255, 60, 30, 10]}
+    actual['invalid_indices_preserve_dma'] = (fw.extract(log, 'bounds_before', fw.address('_ak820_led_dma'), 512) ==
+                                             fw.extract(log, 'bounds_after', fw.address('_ak820_led_dma'), 512))
+    expected['invalid_indices_preserve_dma'] = True
     for prefix, indices in (("direct", (0, 1, 2, 81)), ("resume", (0, 1, 81))):
         colors = {0: [255, 18, 18, 18], 1: [255, 0, 0, 18], 2: [0, 0, 0, 0], 81: [255, 0, 18, 0]}
         for index in indices:

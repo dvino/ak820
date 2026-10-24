@@ -13,10 +13,10 @@
 
 #define AK820_BOARD
 #define DYNAMIC_KEYMAP_MACRO_COUNT 16
-#define DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR ((uintptr_t)stream)
+#define DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR 0x800u
 #define DYNAMIC_KEYMAP_MACRO_DELAY 0
 
-static uint8_t stream[128];
+static uint8_t stream[8192];
 static uint16_t stream_length;
 static bool ready = true;
 static unsigned events, texts, waits;
@@ -30,8 +30,11 @@ void send_string_with_delay(const char *s, uint8_t delay);
 static bool ak820_macro_ready(void) { return ready; }
 static uint16_t ak820_macro_length(void) { return stream_length; }
 static uint8_t eeprom_read_byte(const uint8_t *p) {
-    assert(p >= stream && p < stream + stream_length);
-    return *p;
+    uintptr_t offset = (uintptr_t)p;
+    assert(offset >= DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR);
+    offset -= DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR;
+    assert(offset < stream_length && offset < sizeof(stream));
+    return stream[offset];
 }
 static void emit(char kind, uint16_t code) {
     assert(events < sizeof(event_kinds));
@@ -153,6 +156,26 @@ int main(void) {
         dynamic_keymap_macro_send(0);
         assert(texts == 1 && text_bytes[0] == 'X');
     }
-    puts("PASS: real macro/string playback, recursive-action guard, mixed extended/basic termination, high-byte operands, legacy non-ASCII rejection, and delay65024.");
+    /* Skip a long first macro and fourteen empty slots, then execute slot15
+     * with the final terminator at logical0x27ff. Reads stay in the actual
+     * EEPROM interval [0x0800,0x2800), including multibyte operands. */
+    const uint8_t final_slot[] = {1, 5, 0x21, 0x52, 1, 1, 4, 1, 4, 255, 255, 0};
+    memset(stream, 'A', sizeof(stream));
+    memset(stream + sizeof(stream) - sizeof(final_slot) - 15, 0, 15);
+    memcpy(stream + sizeof(stream) - sizeof(final_slot), final_slot, sizeof(final_slot));
+    stream_length = sizeof(stream);
+    events = texts = waits = 0;
+    dynamic_keymap_macro_send(15);
+    assert(events == 2 && !texts && waits == 65024);
+    assert(event_kinds[0] == 'T' && event_codes[0] == 0x5221);
+    assert(event_kinds[1] == 't' && event_codes[1] == 4);
+
+    /* A missing slot delimiter must stop at the exclusive end, without a
+     * wrapped offset, an out-of-range read or an emitted action. */
+    memset(stream, 'A', sizeof(stream));
+    events = texts = waits = 0;
+    dynamic_keymap_macro_send(15);
+    assert(!events && !texts && !waits);
+    puts("PASS: real macro/string playback, recursive-action guard, mixed extended/basic termination, high-byte operands, legacy non-ASCII rejection, delay65024, and full8192-byte EEPROM bounds.");
     return 0;
 }

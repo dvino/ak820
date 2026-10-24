@@ -28,6 +28,9 @@ static report_keyboard_t last_keyboard_report;
 static uint16_t last_keyboard_time;
 enum { PENDING_KEYBOARD = 1, PENDING_SYSTEM = 2, PENDING_CONSUMER = 4 };
 static uint8_t pending_reports;
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+bool ak820_keyboard_report_pending(void) { return (pending_reports & PENDING_KEYBOARD) || ak820_usb_keyboard_blocked(); }
+#endif
 
 static uint8_t keyboard_leds(void) {
     return KB_USB_SetReport;

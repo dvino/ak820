@@ -34,13 +34,10 @@ static uint8_t eeprom[8];
 static void ak820_eeprom_update_block_xdata(const void *p, void *a, unsigned n) { (void)a; memcpy(eeprom,p,n); }
 static void ak820_eeprom_read_block_xdata(void *p, const void *a, unsigned n) { (void)a; memcpy(p,eeprom,n); }
 static RGB output[82];
-static void init(void) {}
-static void set_color(int i,uint8_t r,uint8_t g,uint8_t b) { output[i]=(RGB){r,g,b}; }
-static void set_all(uint8_t r,uint8_t g,uint8_t b) { for(int i=0;i<82;++i) set_color(i,r,g,b); }
-static void flush(void) {}
-static struct { void (*init)(void); void (*set_color)(int,uint8_t,uint8_t,uint8_t);
-    void (*set_color_all)(uint8_t,uint8_t,uint8_t); void (*flush)(void); }
-    rgb_matrix_driver = {init,set_color,set_all,flush};
+static void ak820_rgb_set_color(uint8_t i,uint8_t r,uint8_t g,uint8_t b) { output[i]=(RGB){r,g,b}; }
+static void ak820_rgb_set_color_all(uint8_t r,uint8_t g,uint8_t b) {
+    for(uint8_t i=0;i<82;++i) ak820_rgb_set_color(i,r,g,b);
+}
 HSV g_direct_mode_colors[82];
 static const uint8_t ak820_rgb_slots[82] = /* SLOT MAP */;
 static const struct { uint8_t x,y; } ak820_led_points[82];
@@ -137,6 +134,13 @@ static void reactive(void) {
 int main(void) {
     assert(sizeof(rgb_config_t)==8);
     rgb_matrix_init();
+    /* Public signed index validation must happen before narrowing to a byte. */
+    RGB saved_output[82];
+    memcpy(saved_output, output, sizeof(output));
+    const int invalid_indices[] = {-32768, -1, 82, 255, 256, 32767};
+    for (unsigned i = 0; i < sizeof(invalid_indices) / sizeof(invalid_indices[0]); ++i)
+        rgb_matrix_set_color(invalid_indices[i], 60, 30, 10);
+    assert(!memcmp(saved_output, output, sizeof(output)));
     breathing();
     reactive(); frame(16);
     for(unsigned i=0;i<82;++i) assert(!lit(i));

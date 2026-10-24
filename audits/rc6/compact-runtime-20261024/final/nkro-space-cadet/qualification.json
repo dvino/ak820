@@ -1,0 +1,785 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 50.691,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/00.txt",
+      "log_sha256": "63ee461420c2b9a9e41997bfb7f592ad79e5f175359e5abd34436a7cbfc539e0",
+      "unit_tests": {
+        "run": 135,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/01.txt",
+      "log_sha256": "72cb8cb2b81ce524bef3a02ade3b05e2f7205dede9ffb10a1f67bd9898107be0",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.136,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/02.txt",
+      "log_sha256": "901df7f1e9f986582305e40da9b9c28f64be15120d62c39b03217e7e01b42cca",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.146,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/03.txt",
+      "log_sha256": "74c79e7e0709501019852d7103a16bf6348c7c7fd4847f2776f66b966f9dcbe9",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.18,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/04.txt",
+      "log_sha256": "fc8830fbc01a9bc0bdd85b93de63e73f46c0dd56bd88ad9b2b37ed7a6545ddd2",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.052,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/05.txt",
+      "log_sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.683,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/06.txt",
+      "log_sha256": "df059294e277bc6212cc5222375fce1d9ea7d22c8e483a24112959d9e8716556",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.072,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/07.txt",
+      "log_sha256": "21c7e48d0b1ec908feef784bbce1fa55f2c9a7acf76382fa7578754a78bd1ed8",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.037,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/08.txt",
+      "log_sha256": "bc714a92725bac8bd3d74c767a9779074b93043e7a70144fe5c881f1010f930d",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.602,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.558,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.342,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.184,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/12.txt",
+      "log_sha256": "2ae1a06370222cfd4042b160f898fc26384944e4c8cc32ccb18fc13d4ad25459",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.284,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.698,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.996,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.079,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.232,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.38,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/18.txt",
+      "log_sha256": "5e6957a1eea658cb39448866736856adb87367db802d33ecde9ecace9920cbfd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 11.658,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/19.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet",
+        "--s51",
+        "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.772,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/20.txt",
+      "log_sha256": "88d3c1f8a2d9b1a1ec3342510420cee0ca5a54987d65ebe45c741315e2630db0",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet",
+        "--s51",
+        "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 0.878,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/21.txt",
+      "log_sha256": "f6444e8d98e0839ed34fc8710c2f8695e30493402e5110e23723fa4d9732dcc6",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet",
+        "--s51",
+        "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.844,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/22.txt",
+      "log_sha256": "403eb2044a4736696c59a647e9ff61c15bad4bb7cfa9acb1fd89335758d1de15",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet",
+        "--s51",
+        "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.578,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet",
+        "--s51",
+        "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.356,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/24.txt",
+      "log_sha256": "f162791ac04ae37598b9204b9f965bafe92a6fec71a4706e0eca9984344cdd18",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet",
+        "--s51",
+        "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 0.856,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/25.txt",
+      "log_sha256": "45fa20fb6b2c252ebaf54deb28748c3c2d294cdc3fe83c49069f6de635db1ef6",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet",
+        "--s51",
+        "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 5.1,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/26.txt",
+      "log_sha256": "fdd8c5914c15abf584ef1956fcde32c43a7a09654d49bf264e3f4b947df8a4cf",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet",
+        "--s51",
+        "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 1.677,
+      "log": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-nkro-space-cadet/qualification-logs-vcwrleue/27.txt",
+      "log_sha256": "3a84f6ba5f9b5c657d1b21c590655664eaf039fd8dba32580c2f85e714065622",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      },
+      "build_after": {
+        "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+        "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0"
+  },
+  "unit_tests": {
+    "run": 273,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "88e98b877e5f7571bea75da0f5e2baf0f473ecf9ff8e6d2b53478560fad316bc",
+    "map": "600d12e22d945e72115d43c1344491e67c0c393d8e4799f03e049cfaad7fff1c"
+  },
+  "build_unchanged": true
+}
