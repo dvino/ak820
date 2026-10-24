@@ -2,6 +2,8 @@
 
 # Compact Tap Dance
 
+Configure eight keys with tap, hold and repeated-tap actions.
+
 The optional AK820 module provides eight Vial Tap Dance entries. Map `TD(0)`
 through `TD(7)` to physical keys and set the four actions in Vial. Each action
 accepts a keyboard key, a modifier, or a keyboard key with encoded modifiers.

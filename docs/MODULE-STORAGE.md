@@ -2,8 +2,10 @@
 
 # Module settings storage
 
-Schema `0x082003` adds typed settings for the `full-tap-dance`, `full-key-overrides`
-and `full-qmk-settings` source profiles. Schema `0x082002` remains the host default.
+Schema `0x082003` adds typed settings for the curated `tap-dance`, `key-overrides`
+and `settings` profiles. Their historical `full-*` aliases remain available in
+the low-level CLI. The other six curated profiles and the normal host packaging
+default use schema `0x082002`.
 No schema03 image is added to the installer approval list by this change.
 
 The six keymap layers, encoder table at `0x640`, eight ten-byte Combos at
@@ -49,7 +51,7 @@ Backup format `ak820-settings-backup-2` includes a complete typed `extensions`
 object. It requires exact reviewed image hashes and schema03 profile metadata
 (`extensions_version: 1`, `combos_version: 1`, and a supported profile name).
 The declared features must match `ak820_profiles.configuration(profile)` exactly.
-Each current profile enables only its named module. Export checks getters only
+Each of the three schema03 profiles enables only its named extension. Export checks getters only
 for enabled modules and checks the exact advertised table counts and settings IDs.
 Restore rejects differences in inactive tables or inaccessible settings before
 writing any field. All typed storage remains part of the backup.

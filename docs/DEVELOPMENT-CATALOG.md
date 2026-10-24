@@ -8,19 +8,27 @@ or release publication. A catalog entry requires the complete exact-image
 foreground, startup and interrupt proof, base regression logs and profile tests.
 A source profile alone cannot produce a verified catalog entry.
 
+The generated [nine-image capability catalog](../web/capability-catalog.json)
+contains the qualified typed storage and settings contract. Join it to
+[firmware-matrix.json](../web/firmware-matrix.json) by exact IHX SHA256, using
+profile IDs for display. Its linked-window `code_identity` is not the packed
+permanent CODE identity used to authorize a settings restore.
+
 The additive `module_storage` field uses format
 `ak820-module-storage-contract-1`. Its `modules` object separates stored
 capacity from enabled commands. Schema03 reserves eight Tap Dance rows, eight
 Key Override rows and the QMK Settings record even when a module is inactive.
-The `full-tap-dance`, `full-key-overrides` and `full-qmk-settings` profiles each
-enable only their named module. Desktop controls must use `enabled_entries`
+The curated `tap-dance`, `key-overrides` and `settings` packages each enable
+their named extension. Legacy `full-*` names remain available in the low-level
+CLI for reproducing older builds. Desktop controls must use `enabled_entries`
 and `enabled_qsids`; stored values alone do not make a control available.
-Schema02 entries declare no extension storage.
+Schema02 entries declare no extension storage. The nine curated packages and
+their measured costs are summarized in the [module matrix](MODULE-MATRIX.md).
 
 Settings fields describe QSID, width, little-endian encoding, range, default,
-NVM offset and active consumers. QSID 4 remains stored but is unavailable
-without both QMK Settings and Auto Shift. Tap-code delays apply only to the
-helpers listed in the contract. They do not affect compact tapping, Space
+NVM offset and active consumers. QSID 4 remains reserved; none of the nine curated packages enables both QMK
+Settings and Auto Shift. It must not be exposed as an available control. Tap-code
+delays apply only to the helpers listed in the contract. They do not affect compact tapping, Space
 Cadet, Tap Dance gestures or explicit Vial macro down/up timing. Tap Dance
 uses its row term, with zero selecting 200 ms; it does not use QSID 7.
 The shared codec remains the authority for validating records and rows.

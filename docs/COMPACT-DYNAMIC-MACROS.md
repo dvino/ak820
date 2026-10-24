@@ -2,7 +2,10 @@
 
 # Compact Dynamic Macros
 
-The `full-dynamic-macro` development profile adds two temporary recording slots.
+Record and replay two temporary keyboard sequences.
+
+The curated `work` package includes two temporary recording slots. The older
+`full-dynamic-macro` CLI profile remains available for reproducing previous builds.
 Each slot stores up to 16 completed keyboard taps in RAM. Map `DM_REC1` or
 `DM_REC2` to start recording; starting again replaces that slot. Press
 `DM_RSTP` to stop, or `DM_PLY1` / `DM_PLY2` to stop and play a slot.

@@ -32,7 +32,26 @@ SWITCHES = {
     'ctrl-gui-swap': 'AK820_COMPACT_CTRL_GUI_SWAP',
     'dynamic-macros': 'AK820_COMPACT_DYNAMIC_MACRO',
 }
+DEFAULT_PROFILE = 'work'
+# The desktop and release builder offer these broad, finite feature packages.
+# Historical names below remain usable to reproduce earlier development builds.
+RELEASE_PROFILES = (
+    'work', 'essential', 'typing', 'mouse', 'mouse-typing', 'system',
+    'tap-dance', 'key-overrides', 'settings',
+)
 PROFILES = {
+    'work': ('nkro-control', 'one-shot', 'space-cadet', 'leader',
+             'dynamic-macros', 'os-indicators'),
+    'essential': ('nkro-control', 'one-shot', 'space-cadet', 'os-indicators'),
+    'typing': ('nkro-control', 'one-shot', 'space-cadet', 'auto-shift', 'os-indicators'),
+    'mouse': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'os-indicators'),
+    'mouse-typing': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys',
+                     'auto-shift', 'gui-lock', 'os-indicators'),
+    'system': ('nkro-control', 'one-shot', 'space-cadet', 'gui-lock',
+               'ctrl-gui-swap', 'mac-pc', 'os-indicators'),
+    'tap-dance': ('nkro-control', 'one-shot', 'space-cadet', 'tap-dance'),
+    'key-overrides': ('nkro-control', 'one-shot', 'space-cadet', 'key-overrides'),
+    'settings': ('nkro-control', 'one-shot', 'space-cadet', 'qmk-settings'),
     'full-tap-dance': ('nkro-control', 'one-shot', 'space-cadet', 'tap-dance'),
     'full-key-overrides': ('nkro-control', 'one-shot', 'space-cadet', 'key-overrides'),
     'full-qmk-settings': ('nkro-control', 'one-shot', 'space-cadet', 'qmk-settings'),
@@ -101,7 +120,7 @@ def select(features: list[str]) -> str:
     for name, enabled in PROFILES.items():
         if set(features) == set(enabled):
             return name
-    raise ValueError('This feature combination has no tested profile')
+    raise ValueError('This feature combination has no supported profile')
 
 
 def validate_configuration(value: dict) -> dict:

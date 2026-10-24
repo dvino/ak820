@@ -2,8 +2,10 @@
 
 # Compact Auto Shift
 
-`AK820_COMPACT_AUTOSHIFT=yes` enables the optional board engine. It starts
-enabled and uses a fixed 175 ms hold threshold. `AS_ON`, `AS_OFF` and `AS_TOGG`
+Holding a supported key past 175 ms sends its shifted form.
+
+The `typing` and `mouse-typing` packages include the optional board engine.
+It starts enabled and uses a fixed 175 ms hold threshold. `AS_ON`, `AS_OFF` and `AS_TOGG`
 change the current session without writing settings. `AS_UP`, `AS_DOWN` and
 `AS_RPT` are not supported.
 

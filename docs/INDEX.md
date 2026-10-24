@@ -22,7 +22,9 @@ difference.
 | Understand Caps Lock, layer and OS indicators | [C, W and OS indicators](INDICATORS.md) |
 | Switch Alt and GUI for Mac/PC use | [Mac/PC mode](MAC-PC.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |
-| Build a development profile and check its limits | [Build profiles](BUILD-PROFILES.md) |
+| Choose a profile package and build it | [Build profiles](BUILD-PROFILES.md) |
+| Compare feature compatibility and image size | [Module matrix](MODULE-MATRIX.md) |
+| Read short descriptions and feature limits | [Feature catalog](FEATURES.md) |
 | Check pushes and publish a release | [CI and releases](CI.md) |
 | Change code and submit a contribution | [Development](DEVELOPMENT.md) |
 | Run offline tests and check a real keyboard | [Testing](TESTING.md) |

@@ -7,9 +7,10 @@ English source of truth: [Independent reviews](../REVIEW.md).
 
 | Область | Доказательства |
 | --- | --- |
+| Подготовка беты с девятью профилями | [Каталог, оптимизация, документация и проверка контрактов](../../audits/rc6/beta-catalog-20261024/README.md). |
 | Выпуск alpha.3 | [Проверка выпуска](../../audits/rc6/alpha3-release-20261024/review.md) и [независимое ревью программы](../../audits/rc6/alpha3-release-20261024/program-review.md). |
 | Установка alpha.3 | [Результат проверки устройства](../../audits/rc6/alpha3-release-20261024/device-result.json). |
-| Текущая работа со стеком, IRQ и Ctrl/GUI | [Технический отчёт и записи ревью](../../audits/rc6/runtime-stack-20261024/README.md). |
+| Прежняя работа со стеком, IRQ и Ctrl/GUI | [Технический отчёт и записи ревью](../../audits/rc6/runtime-stack-20261024/README.md). |
 | Прежние исходники компактных функций | [Ревью](../../audits/rc6/compact-runtime-20261024/review.md) и [приёмка](../../audits/rc6/compact-runtime-20261024/acceptance.md). |
 | Проверка стека и IRQ | [Технический отчёт для точного образа](../../audits/rc6/runtime-stack-20261024/README.md). |
 | Очистка репозитория | [Состав сохранённых доказательств и проверки](../../audits/rc6/cleanup-20261024.md). |

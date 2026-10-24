@@ -21,7 +21,7 @@ from ak820_dce import optimize
 from ak820_outline_audit import outline_assembled
 import ak820_shortcalls as shortcalls
 from ak820_build_inputs import FORMAT as INPUT_FORMAT, collect_inputs, input_snapshot
-from ak820_profiles import PROFILES, configuration
+from ak820_profiles import DEFAULT_PROFILE, PROFILES, RELEASE_PROFILES, configuration
 
 
 # Audited C functions only: SDCC emits their register-preserving prologues and
@@ -92,7 +92,7 @@ def main():
                    help='Required compiler version (default: %(default)s; 4.4.0 remains available as a control)')
     p.add_argument('--qmk-bin', type=Path, help='QMK executable from its virtual environment')
     p.add_argument('--build-dir', type=Path, default=Path('.build/ak820'))
-    p.add_argument('--profile', choices=tuple(PROFILES), default='standard',
+    p.add_argument('--profile', choices=tuple(PROFILES), default=DEFAULT_PROFILE,
                    help='Explicit development feature set; this does not approve an installer')
     p.add_argument('--code-start', type=integer, default=0x3027)
     p.add_argument('--code-end', type=integer, default=0xc700)
@@ -103,11 +103,14 @@ def main():
     p.add_argument('--root', action='append', default=[])
     p.add_argument('--build-id', type=integer, default=None, help='Stable Vial EEPROM schema identifier')
     p.add_argument('--extra-flags', default='--opt-code-size', help='Additional compiler flags; board config owns feature flags')
-    p.add_argument('--short-calls', action='store_true', help='Opt in to verified foreground ACALL/AJMP relaxation (AK820 only)')
+    p.add_argument('--short-calls', action=argparse.BooleanOptionalAction, default=None,
+                   help='Verified foreground ACALL/AJMP relaxation; enabled by default for curated profiles')
     p.add_argument('--no-outline', action='store_true', help='Disable AK820 exact instruction outlining for comparison builds')
     p.add_argument('--no-callee-saves', action='store_true', help='Disable the audited AK820 callee-saves list for comparison builds')
     args = p.parse_args()
     selected = configuration(args.profile)
+    if args.short_calls is None:
+        args.short_calls = args.profile in RELEASE_PROFILES
     if args.build_id is None:
         args.build_id = selected['nvm_schema']
     if args.short_calls and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):

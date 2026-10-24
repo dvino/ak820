@@ -1,0 +1,106 @@
+{
+  "base_commit": "570d58d",
+  "date": "2026-10-24",
+  "format": "ak820-beta-preparation-review-1",
+  "hardware_validated": false,
+  "installable": false,
+  "physical_device_commands": 0,
+  "release_approved": false,
+  "reviews": [
+    {
+      "author": "integration",
+      "limits": "Source review; exact-image tests remain separate",
+      "result": "pass",
+      "reviewer": "independent firmware reviewer",
+      "scope": "Dynamic Macro explicit field copy; profile registry/default/short-call policy"
+    },
+    {
+      "author": "firmware contributor",
+      "limits": "Host and linked scenarios rechecked in final work qualification",
+      "result": "pass",
+      "reviewer": "integration reviewer",
+      "scope": "Leader pending selector optimization"
+    },
+    {
+      "author": "matrix and settings contributors",
+      "closed_findings": [
+        "Dynamic Macro controls restricted to physical matrix sources",
+        "Key Override controls reject macro down/up; macro tap supported"
+      ],
+      "result": "pass",
+      "reviewer": "independent contract reviewer",
+      "scope": "Matrix/settings contract"
+    },
+    {
+      "author": "integration and catalog contributor",
+      "closed_findings": [
+        "Resume clears stale generated test outputs and rejects symlinks",
+        "Every explicit unittest gate requires positive count and zero skips",
+        "Candidate files staged and hash-bound before publication; final path collisions rejected"
+      ],
+      "independent_checks": {
+        "configurator_tests": 33,
+        "exporter_tests": 6,
+        "skipped": 0
+      },
+      "result": "pass",
+      "reviewer": "independent contract reviewer",
+      "scope": "Existing-image qualification and export"
+    },
+    {
+      "author": "documentation contributor and integration",
+      "closed_findings": [
+        "One Shot supports matrix and both encoder directions",
+        "Grave Escape defaults distinguished from configurable flags",
+        "Virtual/macro OSM retains held-modifier fallback without arming One Shot; independently traced through Vial, source identity and action dispatch"
+      ],
+      "result": "pass",
+      "reviewer": "independent documentation reviewer",
+      "scope": "Feature summaries and guides, EN/RU"
+    },
+    {
+      "author": "integration",
+      "limits": "Read-only method/diff review; actual retention follows source freeze",
+      "result": "pass",
+      "reviewer": "independent contract reviewer",
+      "scope": "Frozen-source evidence retention"
+    },
+    {
+      "author": "catalog contributor and integration",
+      "independent_checks": [
+        "YAML/static dispatch/permissions/job assertions",
+        "Exact existing action pin comparison",
+        "69 public documents without missing links",
+        "Clean diff whitespace"
+      ],
+      "limits": "No actionlint or hosted execution claimed",
+      "result": "pass",
+      "reviewer": "independent contract reviewer",
+      "scope": "Manual candidate CI and build/test documentation"
+    },
+    {
+      "author": "earlier implementation experiment",
+      "independent_checks": [
+        "No invocation from current build, export or CI paths",
+        "No helper in any of nine compiler input closures or compile command logs",
+        "No cache sidecars in any final build"
+      ],
+      "limits": "Not enabled or qualified as a compiler pipeline; future use requires separate review",
+      "result": "pass-for-retention-only",
+      "reviewer": "independent contract reviewer",
+      "scope": "Unintegrated compiler-cache helper retained in frozen test source snapshot",
+      "sha256": "d6d88469505cbc84eea0fb88cbe6e6ae0fbbbe4f0da616af20e4c518d7ad3dda"
+    },
+    {
+      "author": "integration",
+      "closed_findings": [
+        "Desktop helper next-step text no longer describes completed firmware qualification as pending"
+      ],
+      "limits": "Physical acceptance, permanent OEM packing and actual retained archive verification remain separate",
+      "result": "pass",
+      "reviewer": "independent contract reviewer",
+      "scope": "Final nine-image catalogs, documentation and evidence concordance"
+    }
+  ],
+  "scope": "Nine curated candidates; source, documentation and final artifact review. Exact artifact findings are in artifact-review.json."
+}

@@ -7,9 +7,10 @@ Exact images, checks and limits are recorded in [Status](STATUS.md).
 
 | Scope | Evidence |
 | --- | --- |
+| Nine-profile beta preparation | [Catalog, optimization, documentation and contract review](../audits/rc6/beta-catalog-20261024/README.md). |
 | Alpha.3 release | [Release qualification](../audits/rc6/alpha3-release-20261024/review.md) and [independent program review](../audits/rc6/alpha3-release-20261024/program-review.md). |
 | Alpha.3 installation | [Device result](../audits/rc6/alpha3-release-20261024/device-result.json). |
-| Current stack, IRQ and Ctrl/GUI work | [Technical report and review records](../audits/rc6/runtime-stack-20261024/README.md). |
+| Earlier stack, IRQ and Ctrl/GUI work | [Technical report and review records](../audits/rc6/runtime-stack-20261024/README.md). |
 | Previous compact-feature source | [Review](../audits/rc6/compact-runtime-20261024/review.md) and [acceptance](../audits/rc6/compact-runtime-20261024/acceptance.md). |
 | Runtime stack and IRQ proof | [Exact-image technical report](../audits/rc6/runtime-stack-20261024/README.md). |
 | Repository cleanup | [Retained evidence and checks](../audits/rc6/cleanup-20261024.md). |

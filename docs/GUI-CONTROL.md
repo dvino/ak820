@@ -2,10 +2,13 @@
 
 # GUI controls
 
-The development feature `gui-lock` adds three keycodes that can be assigned
-in Vial. `full-gui-lock` includes them with the `full` features. The separate
-`full-ctrl-gui` profile also adds Ctrl/GUI swapping. These are source-only
-development profiles, not part of published alpha.3.
+Temporarily suppress or restore GUI modifier output.
+
+
+The `mouse-typing` and `system` packages include GUI lock. `system` also
+includes Ctrl/GUI swapping. The low-level CLI retains older `full-*` profile
+names for reproducing earlier builds. These source profiles are not included
+in published alpha.3.
 
 | Keycode | Action |
 | --- | --- |
@@ -35,7 +38,11 @@ persistent QMK Settings.
 
 ## Ctrl/GUI swap
 
-The `full-ctrl-gui` profile adds three Vial keycodes:
+Swap left and right Ctrl and GUI output mappings for the session.
+
+
+The curated `system` package adds three Ctrl/GUI mapping keycodes in Vial.
+The low-level CLI retains the old `full-ctrl-gui` name for reproduction builds:
 
 | Keycode | Action |
 | --- | --- |

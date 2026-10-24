@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 
@@ -455,6 +456,12 @@ def profile_test_plan(name, build, toolchain):
     plan = [('gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'tools',
                              '-p', 'test_configure_firmware.py'])]
     plan.extend([
+        ('firmware-matrix-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                       '-s', 'tools', '-p', 'test_firmware_matrix.py']),
+        ('catalog-bundle-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                      '-s', 'tools', '-p', 'test_build_profile_catalog.py']),
+        ('settings-catalog-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                        '-s', 'tools/installer', '-p', 'test_catalog_settings.py']),
         ('capability-catalog-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
                                           '-s', 'tools', '-p', 'test_build_capability_catalog.py']),
         ('outline-gates', QMK, [sys.executable, 'tests/ak820_optimization/outline_unit.py']),
@@ -599,13 +606,16 @@ def validate_profile_tests(report, name, identity, build, toolchain):
                 'Profile suite identity, arguments, result or build differs')
         log = build / 'profile-tests' / (identifier + '.log')
         require(log.is_file() and row.get('log_sha256') == sha(log), 'Profile log changed or is missing')
-        if identifier in ('gates', 'short-call-gates'):
+        if any(command[index:index + 2] == ['-m', 'unittest'] for index in range(len(command) - 1)):
             counts = unittest_counts(log.read_text())
             require(counts['run'] > 0 and counts['skipped'] == 0, 'Gate tests are empty or skipped')
 
 
 def run_profile_tests(name, build, toolchain, identity):
     output = build / 'profile-tests'
+    require(not output.is_symlink(), 'Profile test output must not be a symlink')
+    if output.exists():
+        shutil.rmtree(output)
     output.mkdir()
     sources = test_source_snapshot()
     records = []
@@ -635,21 +645,48 @@ def run_profile_tests(name, build, toolchain, identity):
             'source_files_sha256': hashlib.sha256(canonical(sources)).hexdigest()}
 
 
+def qualify(directory, toolchain, before=None):
+    """Qualify an existing linked image, with runtime gates before regressions."""
+    before = source_identity() if before is None else before
+    result = inspect(directory, toolchain)
+    name = result['configuration']['profile']
+    result['source'] = before
+    output = directory / 'configuration-report.json'
+    output.write_bytes(canonical(result))
+    apply_runtime_safety(result, run_runtime_safety(directory, result, toolchain))
+    output.write_bytes(canonical(result))
+    qualification = directory / 'qualification.json'
+    subprocess.run([sys.executable, str(ROOT / 'tools/test_keyboard.py'), '--host', '--require-toolchain',
+                    '--toolchain', str(toolchain), '--build-dir', str(directory),
+                    '--iap-fault-profile', 'guarded-erase', '--output', str(qualification)], cwd=ROOT, check=True)
+    fresh = inspect(directory, toolchain)
+    require(fresh['identity'] == result['identity'], 'Build changed during qualification')
+    require(source_identity() == before, 'Git source changed during qualification')
+    result['qualification'] = validate_tests(qualification, result['identity'])
+    result['profile_tests'] = run_profile_tests(name, directory, toolchain, result['identity'])
+    apply_runtime_safety(result, result['runtime_analysis'])
+    result['offline_tests_passed'] = True
+    output.write_bytes(canonical(result))
+    return result
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
     sub.add_parser('list', help='List explicit combinations and deferred options')
     build = sub.add_parser('build', help='Build and test a development profile')
-    selection = build.add_mutually_exclusive_group(required=True)
-    selection.add_argument('--profile', choices=tuple(profiles.PROFILES))
+    selection = build.add_mutually_exclusive_group()
+    selection.add_argument('--profile', choices=tuple(profiles.PROFILES), help='Named profile; defaults to work')
     selection.add_argument('--features', nargs='*', help='Explicit optional feature names; empty selects standard')
-    build.add_argument('--short-calls', action='store_true', help='Opt in to verified foreground ACALL/AJMP relaxation')
+    build.add_argument('--short-calls', action=argparse.BooleanOptionalAction, default=None,
+                       help='Verified foreground ACALL/AJMP relaxation; default for curated profiles')
     build.add_argument('--build-dir', type=Path, required=True)
     build.add_argument('--toolchain', type=Path, default=ROOT / 'toolchains/sdcc-4.6.0')
     build.add_argument('--qmk-bin', type=Path, default=QMK / '.venv/bin/qmk')
     build.add_argument('--python', type=Path, default=Path(sys.executable),
                        help='Python from the QMK build environment')
     for name, help_text in (('inspect', 'Inspect linked resources'),
+                            ('qualify', 'Run all offline gates for an existing linked image'),
                             ('check-runtime', 'Prove the exact-image stack and IRQ bound offline'),
                             ('package', 'Check release eligibility')):
         command = sub.add_parser(name, help=help_text)
@@ -658,6 +695,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if args.command == 'list':
         print(json.dumps({'profiles': [profiles.configuration(name) for name in profiles.PROFILES],
+                          'default_profile': profiles.DEFAULT_PROFILE,
+                          'release_profiles': list(profiles.RELEASE_PROFILES),
                           'deferred': profiles.DEFERRED, 'conflicts': profiles.CONFLICTS,
                           'costs': 'Measure each complete linked image; deltas are not additive.',
                           'release_blockers': list(RELEASE_BLOCKERS)}, indent=2))
@@ -665,34 +704,21 @@ def main(argv=None):
     directory = args.build_dir.resolve()
     toolchain = validate_tools(args.toolchain)
     if args.command == 'build':
-        name = args.profile if args.profile else profiles.select(args.features)
+        name = (args.profile if args.profile else profiles.select(args.features)
+                if args.features is not None else profiles.DEFAULT_PROFILE)
+        profiles.configuration(name)
         require(not directory.exists() and directory.is_relative_to(QMK.resolve()),
                 'Select a fresh build directory beneath the QMK source root')
         before = source_identity()
         command = [str(args.python.resolve()), str(QMK / 'util/build_ak820.py'),
                    '--profile', name, '--toolchain', str(toolchain),
                    '--qmk-bin', str(args.qmk_bin.resolve()), '--build-dir', str(directory)]
-        if args.short_calls:
-            command.append('--short-calls')
+        if args.short_calls is not None:
+            command.append('--short-calls' if args.short_calls else '--no-short-calls')
         subprocess.run(command, cwd=QMK, check=True)
-        result = inspect(directory, toolchain)
-        result['source'] = before
-        output = directory / 'configuration-report.json'
-        output.write_bytes(canonical(result))
-        apply_runtime_safety(result, run_runtime_safety(directory, result, toolchain))
-        output.write_bytes(canonical(result))
-        qualification = directory / 'qualification.json'
-        subprocess.run([sys.executable, str(ROOT / 'tools/test_keyboard.py'), '--host', '--require-toolchain',
-                        '--toolchain', str(toolchain), '--build-dir', str(directory),
-                        '--iap-fault-profile', 'guarded-erase', '--output', str(qualification)], cwd=ROOT, check=True)
-        fresh = inspect(directory, toolchain)
-        require(fresh['identity'] == result['identity'], 'Build changed during qualification')
-        require(source_identity() == before, 'Git source changed during qualification')
-        result['qualification'] = validate_tests(qualification, result['identity'])
-        result['profile_tests'] = run_profile_tests(name, directory, toolchain, result['identity'])
-        apply_runtime_safety(result, result['runtime_analysis'])
-        result['offline_tests_passed'] = True
-        output.write_bytes(canonical(result))
+        result = qualify(directory, toolchain, before)
+    elif args.command == 'qualify':
+        result = qualify(directory, toolchain)
     else:
         result = inspect(directory, toolchain)
         if args.command == 'check-runtime':

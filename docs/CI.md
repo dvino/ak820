@@ -12,17 +12,18 @@ The workflow pins Node.js 24 actions by full commit hash: checkout 7.0.1, setup-
 
 The workflow builds the `full` profile through the configurator and runs its
 qualification suites. The published `v0.6.0-alpha.3` release uses that profile.
-CI reproduced the approved image and built the release packages. The other seven
-profiles remain for development. See [Build profiles](BUILD-PROFILES.md) and
+CI reproduced the approved image and built the release packages. That historical
+release and its pinned release workflow are separate from the current catalog
+of nine curated candidates. See [Build profiles](BUILD-PROFILES.md) and
 [Status](STATUS.md).
 
 The Ubuntu 24.04 firmware job checks the syntax of tracked Python and shell
 files, validates GitHub Actions workflows with a hash-pinned actionlint, checks
 project Python for undefined names with pinned Ruff, and runs all host tool unit tests.
 It downloads the pinned SDCC 4.6.0 and LUFA archives, checks their hashes,
-builds the `full` profile through the configurator, then runs all base and
-full-profile host C and linked CPU regressions and records exact-image stack
-analysis. Storage
+builds the `full` profile through the configurator, checks exact-image stack
+and interrupt bounds before running all base and full-profile host C and
+linked CPU regressions. Storage
 harnesses model interrupted journal and macro writes. These checks cannot
 prove physical USB, lighting or flash durability.
 
@@ -57,6 +58,27 @@ The Windows and Linux installers contain fresh firmware, not the old
 checked-in `releases/rc6/firmware` files. Before publication, the workflow
 checks both GUI and CLI application folders inside each package against the
 same run's firmware bundle.
+
+## Manual nine-profile candidate catalog
+
+The separate [candidate workflow](../.github/workflows/firmware-catalog.yml)
+runs only through `workflow_dispatch` on the Actions page. One Ubuntu 24.04 job
+uses the same pinned actions, SDCC, LUFA and QMK requirements as the release
+workflow. `tools/build_profile_catalog.py` builds all nine curated profiles with
+short calls, checks each exact image's stack and interrupts before regressions,
+and revalidates every profile before exporting the catalog.
+
+A successful run retains one candidate ZIP and SHA256 file as a CI artifact for
+30 days. The ZIP contains the capability matrix, linked IHX/MAP/MEM files and
+per-profile qualification reports. A separate compressed CI artifact retains
+generated build evidence, including partial results after a failure. Build and
+export paths include the run ID and attempt number.
+
+These candidates have `release_approved: false` and `installable: false`.
+The workflow has read-only repository permissions and no publishing job. It
+uses no OEM references and sends no USB commands. Its offline results do not
+prove device behavior or approve a public release. The existing pinned `full`
+release workflow remains separate.
 
 ## Review and reproducible builds
 
@@ -113,12 +135,14 @@ From the repository root:
 ```sh
 python3 tools/ci_checks.py
 python3 tools/check_docs.py
-python3 -B tools/test_keyboard.py --host \
-  --build-dir qmk-8051-ak820/.build/local-1 --require-toolchain \
-  --toolchain toolchains/sdcc-4.6.0 --iap-fault-profile guarded-erase
+python3 tools/configure_firmware.py qualify \
+  --build-dir qmk-8051-ak820/.build/local-1 \
+  --toolchain toolchains/sdcc-4.6.0
 ```
 
-The last command requires a completed pinned build. It does not open USB.
+The last command requires a completed pinned build. It checks exact-image stack
+and interrupt bounds before running the base and profile regressions. It does
+not open USB.
 The workflow also runs tool-specific tests and the separate storage harnesses.
 Check the workflow for their exact commands. A local pass does not prove that
 the GitHub-hosted jobs ran; execution results belong in [Status](STATUS.md).

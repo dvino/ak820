@@ -2,7 +2,9 @@
 
 # Compact Leader
 
-The `full-leader` development profile adds a one-key Leader sequence. Assign
+Press Leader, then one selector within 300 ms to run a Vial macro.
+
+The curated `work` package includes a one-key Leader sequence. Assign
 `QK_LEAD` in Vial, press it, then press one selector within 300 ms. The prefix
 and selector produce no ordinary key output. The selected Vial macro runs on
 the next idle matrix tick. Edit its contents in Vial as usual.
@@ -49,6 +51,7 @@ normal macro actions can change Caps Word or Repeat state. The existing Vial
 interpreter runs synchronously once dispatched; this feature adds no second
 macro engine or output queue.
 
-Only `full-leader` is a supported feature combination. Device timing and
+The `work` package is the curated profile that includes Leader; the low-level
+CLI also retains compatible historical names. Device timing and
 physical behavior require separate validation; host and linked CPU tests do
 not establish them.

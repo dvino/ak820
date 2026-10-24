@@ -34,31 +34,25 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 
 ## Features
 
-- [Six editable layers](docs/CONFIGURATION.md#keys-layers-and-encoder), with separate clockwise and counterclockwise [encoder actions](docs/CONFIGURATION.md#keys-layers-and-encoder) on each layer.
-- [Standard keys, modifiers, media and system controls](docs/CONFIGURATION.md#key-actions), including selectable 6KRO and NKRO reports.
-- [Sixteen macro slots](docs/CONFIGURATION.md#macros) with 8192 bytes of shared storage; macros play on the keyboard without a desktop app running.
-- [**Caps Word**](docs/CONFIGURATION.md#caps-word) types a word in uppercase without holding Shift.
-- [**One Shot**](docs/CONFIGURATION.md#one-shot) for modifiers and [**Space Cadet**](docs/CONFIGURATION.md#space-cadet) tap actions for Shift keys.
-- [**Repeat** and **Alt Repeat**](docs/CONFIGURATION.md#repeat-and-alt-repeat) repeat the last remembered key and modifiers or use its paired alternate, such as the opposite arrow.
-- [**Grave Escape**](docs/CONFIGURATION.md#grave-escape) combines Escape and the Grave key on one key, selected by held modifiers.
-- [**Tri Layer**](docs/CONFIGURATION.md#tri-layer) activates layer 3 while layers 1 and 2 are both active.
-- Eight configurable [two-key Combos](docs/COMBOS.md): for example, J + K sends Escape or F + D sends Ctrl+C when pressed within 40 ms.
-- [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md): tap for a key, hold for a modifier or layer.
-- [82 RGB LEDs](docs/CONFIGURATION.md#lighting) with solid color, breathing, color cycles, VialRGB Direct and a separate fade on each pressed key.
-- [C/W indicators](docs/INDICATORS.md): C follows Caps Lock; W shows an active additional layer.
-- Optional development controls add GUI lock and volatile left/right Ctrl↔GUI swapping; these controls are absent from published alpha.3.
-- Separate development profiles add a volatile Mac/PC Alt/GUI swap and OS indicator control, also absent from alpha.3. See [indicators](docs/INDICATORS.md) and [Mac/PC mode](docs/MAC-PC.md).
-- Saved [keymaps, macros and global lighting](docs/CONFIGURATION.md), [physical Vial unlock](docs/CONFIGURATION.md#unlocking-vial), and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
+The supported firmware provides six editable layers, per-layer encoder actions,
+16 Vial macros, two-key Combos, media and system keys, NKRO reports, Caps Word,
+Repeat and Alt Repeat, Grave Escape, Tri Layer, Mod-Tap and Layer-Tap, and RGB
+lighting with VialRGB Direct. The **C** indicator follows Caps Lock; **W** shows
+an active layer above layer 0. The [feature catalog](docs/FEATURES.md) describes
+each function and its limits.
 
-See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
-One Shot is limited to modifiers, and Space Cadet provides `SC_LSPO`, `SC_RSPC`
-and `SC_SENT`. Compact Mouse Keys and Auto Shift can be enabled separately or together in
-development source profiles. GUI controls, compact Leader and Dynamic Macros are also
-available in selected development profiles; these features are not part of the
-published alpha.3 image.
-See [Mouse Keys](docs/COMPACT-MOUSE-KEYS.md) and [Auto Shift](docs/COMPACT_AUTOSHIFT.md).
-Three additional development profiles enable compact [Tap Dance](docs/COMPACT-TAP-DANCE.md), [Key Overrides](docs/COMPACT-KEY-OVERRIDES.md), or [QMK Settings](docs/QMK-SETTINGS.md), one module per profile. These source features are not part of published alpha.3. See [GUI controls](docs/GUI-CONTROL.md), [Mac/PC mode](docs/MAC-PC.md), [Leader](docs/COMPACT-LEADER.md), [Dynamic Macros](docs/COMPACT-DYNAMIC-MACROS.md)
-and [Build profiles](docs/BUILD-PROFILES.md) for profile choices and behavior.
+Optional modules extend that base in nine named source profiles. The default
+`work` profile adds Leader, Dynamic Macros and OS indicator control. It excludes
+Mouse Keys and Mac/PC mapping. Other packages cover typing, mouse controls,
+system modifier mappings, Tap Dance, Key Overrides or QMK Settings; the
+[profile guide](docs/BUILD-PROFILES.md) explains each package and the
+[compatibility and size matrix](docs/MODULE-MATRIX.md) compares their features
+and resource use. These development packages are not included in the published
+`v0.6.0-alpha.3` image. The published release remains unchanged.
+
+The web and desktop configurator is future work; the profile registry and
+firmware catalog provide its source data. See the
+[configurator requirements and plan](web/README.md).
 
 ## Disclaimer
 
@@ -87,6 +81,6 @@ Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lig
 [Documentation](docs/INDEX.md) · [CI and releases](docs/CI.md) · [Build](docs/BUILD.md) · [Development](docs/DEVELOPMENT.md) · [Testing](docs/TESTING.md) · [Contributing](CONTRIBUTING.md)
 
 The [web and desktop configurator](web/README.md) has requirements and an
-implementation plan on `web-dev`.
+implementation plan in the `web` directory.
 
 English documentation is authoritative; Russian documents are translations. Preserve license notices when reusing the port. Original project code and contributions are GPL-3.0-only; third-party components retain their own licenses. See [licensing](docs/LICENSING.md) and the root [LICENSE](LICENSE).

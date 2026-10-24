@@ -2,6 +2,8 @@
 
 # Key Overrides
 
+Replace a key when selected modifiers and layer conditions match.
+
 Key Overrides replace a keyboard key when the selected modifiers are held.
 For example, Shift + Backspace can send Delete. Eight rows are available in
 Vial. Each row selects a trigger, replacement, layers, required and forbidden

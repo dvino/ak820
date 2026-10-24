@@ -93,7 +93,7 @@ class ProfileTests(unittest.TestCase):
 
     def test_exact_named_combinations_and_no_inherited_switches(self):
         for name, features in config.profiles.PROFILES.items():
-            self.assertEqual(config.profiles.select(list(features)), name)
+            self.assertEqual(set(config.profiles.configuration(config.profiles.select(list(features)))['optional_features']), set(features))
             value = config.profiles.configuration(name)
             self.assertEqual(set(value['make_options']), set(config.profiles.SWITCHES.values()))
             self.assertFalse(value['release_approved'])
@@ -107,6 +107,23 @@ class ProfileTests(unittest.TestCase):
         for value in (None, {}, {'profile': 'unknown'}, {'profile': 'standard', 'release_approved': True}):
             with self.assertRaises(ValueError):
                 config.profiles.validate_configuration(value)
+
+    def test_release_catalog_is_bounded_and_covers_every_existing_module(self):
+        names = config.profiles.RELEASE_PROFILES
+        self.assertLessEqual(len(names), 12)
+        self.assertEqual(len(names), len(set(names)))
+        self.assertIn(config.profiles.DEFAULT_PROFILE, names)
+        features = {feature for name in names for feature in config.profiles.configuration(name)['optional_features']}
+        self.assertEqual(features, set(config.profiles.SWITCHES))
+        for name in names:
+            self.assertFalse(config.profiles.configuration(name)['release_approved'])
+
+    def test_work_default_preserves_required_and_excluded_modules(self):
+        self.assertEqual(config.profiles.DEFAULT_PROFILE, 'work')
+        features = config.profiles.configuration('work')['optional_features']
+        self.assertIn('os-indicators', features)
+        self.assertNotIn('mac-pc', features)
+        self.assertNotIn('mouse-keys', features)
 
     def test_same_schema_does_not_approve_a_different_feature_set(self):
         legacy = {'build_id': config.profiles.SCHEMA,
@@ -170,16 +187,21 @@ class ProfileTests(unittest.TestCase):
                 next(row for row in bad['tests'] if row['id'] == 'one-shot-host')['command'].remove('--oneshot')
                 with self.assertRaisesRegex(ValueError, 'identity, arguments'):
                     config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
-                short_log = build / 'profile-tests/short-call-gates.log'
-                original = short_log.read_text()
-                for text in ('Ran 0 tests in 0.1s\n\nOK\n',
-                             'Ran 15 tests in 0.1s\n\nOK (skipped=1)\n'):
-                    short_log.write_text(text)
-                    bad = copy.deepcopy(report)
-                    next(row for row in bad['tests'] if row['id'] == 'short-call-gates')['log_sha256'] = config.sha(short_log)
-                    with self.assertRaisesRegex(ValueError, 'empty or skipped'):
-                        config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
-                short_log.write_text(original)
+                for row in rows:
+                    command = row['command']
+                    if not any(command[index:index + 2] == ['-m', 'unittest']
+                               for index in range(len(command) - 1)):
+                        continue
+                    log = build / 'profile-tests' / (row['id'] + '.log')
+                    original = log.read_text()
+                    for text in ('Ran 0 tests in 0.1s\n\nOK\n',
+                                 'Ran 15 tests in 0.1s\n\nOK (skipped=1)\n'):
+                        log.write_text(text)
+                        bad = copy.deepcopy(report)
+                        next(item for item in bad['tests'] if item['id'] == row['id'])['log_sha256'] = config.sha(log)
+                        with self.subTest(suite=row['id'], log=text), self.assertRaisesRegex(ValueError, 'empty or skipped'):
+                            config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
+                    log.write_text(original)
 
     def test_inline_feature_is_bound_to_exact_compiler_flags(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -278,6 +300,42 @@ class ProfileTests(unittest.TestCase):
                 self.assertEqual(os.environ['AK820_SDCC_BIN'],'stale-inherited-path')
             self.assertEqual(len(observed),1)
             self.assertEqual(observed[0]['AK820_SDCC_BIN'],str((toolchain/'bin').resolve()))
+
+    def test_profile_requalification_replaces_stale_results_and_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory)
+            toolchain = build / 'toolchain'
+            identity = {'ihx_sha256': 'fixture'}
+            command = ['python', '-m', 'unittest']
+            statuses = iter((0, 0, 1))
+            def run(command, **kwargs):
+                status = next(statuses)
+                kwargs['stdout'].write('Ran 1 test in 0.001s\n\n' + ('OK\n' if status == 0 else 'FAILED\n'))
+                return subprocess.CompletedProcess(command, status)
+            with patch.object(config, 'profile_test_plan', return_value=[('gates', build, command)]), \
+                 patch.object(config, 'test_source_snapshot', return_value={}), \
+                 patch.object(config, 'inspect', return_value={'identity': identity}), \
+                 patch.object(config.subprocess, 'run', side_effect=run):
+                config.run_profile_tests('standard', build, toolchain, identity)
+                stale = build / 'profile-tests/obsolete.log'
+                stale.write_text('previous result')
+                config.run_profile_tests('standard', build, toolchain, identity)
+                self.assertFalse(stale.exists())
+                self.assertTrue(json.loads((build / 'profile-tests/results.json').read_text())['passed'])
+                with self.assertRaisesRegex(ValueError, 'Profile suite failed'):
+                    config.run_profile_tests('standard', build, toolchain, identity)
+                self.assertFalse(json.loads((build / 'profile-tests/results.json').read_text())['passed'])
+
+    def test_profile_requalification_rejects_output_symlinks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            build = root / 'build'; build.mkdir()
+            elsewhere = root / 'elsewhere'; elsewhere.mkdir()
+            protected = elsewhere / 'keep.log'; protected.write_text('keep')
+            (build / 'profile-tests').symlink_to(elsewhere, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, 'must not be a symlink'):
+                config.run_profile_tests('standard', build, root / 'toolchain', {'ihx_sha256': 'fixture'})
+            self.assertEqual(protected.read_text(), 'keep')
 
     def runtime_fixture(self, build):
         return {'identity': {'ihx_sha256': 'image', 'map_sha256': 'map'},

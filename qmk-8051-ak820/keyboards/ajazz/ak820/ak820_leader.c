@@ -32,7 +32,7 @@ void ak820_leader_task(uint16_t now) {
     }
 }
 bool ak820_leader_process(keyrecord_t AK820_STATE_MEM *record) {
-    uint8_t id, mask, index, slot = NONE;
+    uint8_t id, mask, index;
     uint16_t code;
     if (record->event.type != KEY_EVENT || record->event.key.row >= MATRIX_ROWS ||
         record->event.key.col >= MATRIX_COLS || leader_running || ak820_macro_primitive || get_repeat_key_count()) return true;
@@ -44,8 +44,7 @@ bool ak820_leader_process(keyrecord_t AK820_STATE_MEM *record) {
         return false;
     }
     if (!record->event.pressed) return true; /* Preheld release keeps its owner. */
-    code = record->keycode;
-    if (code == QK_LEAD) {
+    if (record->keycode == QK_LEAD) {
         if (leader_pending == NONE) {
             leader_waiting = true;
             leader_started = record->event.time;
@@ -54,11 +53,12 @@ bool ak820_leader_process(keyrecord_t AK820_STATE_MEM *record) {
         if (!leader_waiting) return true;
         leader_waiting = false;
         if ((uint16_t)(record->event.time - leader_started) >= 300) return true;
+        code = record->keycode;
         /* Non-basic controls cancel, then keep their normal action. */
         if (code < KC_A || code > KC_EXSEL) return true;
-        if (code >= KC_1 && code <= KC_0) slot = code - KC_1;
-        else if (code >= KC_A && code <= KC_F) slot = code - KC_A + 10;
-        leader_pending = slot; /* Other basic keys are consumed without output. */
+        if ((uint8_t)code >= KC_1 && (uint8_t)code <= KC_0) leader_pending = (uint8_t)code - KC_1;
+        else if ((uint8_t)code <= KC_F) leader_pending = (uint8_t)code - KC_A + 10;
+        else leader_pending = NONE; /* Other basic keys are consumed without output. */
     }
     leader_suppressed[index] |= mask;
     return false;

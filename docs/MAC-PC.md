@@ -2,6 +2,8 @@
 
 # Mac/PC mode
 
+Swap left and right Alt/GUI mappings to match a Mac layout.
+
 The optional `AK820_MAC_PC` module switches the left and right Alt/GUI
 modifiers together. PC mode leaves them unchanged. Mac mode exchanges Alt
 with GUI on each side; GUI is the Command key on macOS.
@@ -30,6 +32,8 @@ then Ctrl/GUI swap, then GUI lock. The lock therefore blocks GUI output after
 the selected swaps. Clearing held keys, changing rollover mode, and suspend
 cleanup retain the selected Mac/PC mode; a firmware restart returns to PC.
 
-The build profiles are `full-mac-pc` and `full-mac-pc-os-indicators`.
+The curated `system` package includes Mac/PC mode. The low-level CLI also
+retains `full-mac-pc` and `full-mac-pc-os-indicators` for reproducing earlier
+builds.
 The latter also enables the [host override of OS](INDICATORS.md). Indicator behavior
 and the available profiles are documented separately from the mode controls.

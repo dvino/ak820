@@ -18,14 +18,13 @@ python -B -m unittest discover -s tools/installer -p 'test_*.py' -v
 python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p 'test_*.py' -v
 ```
 
-The combined runner records commands, exit codes, hashes and skips. For the full
-qualification with pinned tools and a fresh firmware build:
+The combined runner records commands, exit codes, hashes and skips. For full
+qualification of an already linked image with pinned tools:
 
 ```sh
-python tools/test_keyboard.py --host --require-toolchain \
-  --toolchain toolchains/sdcc-4.6.0 \
+python tools/configure_firmware.py qualify \
   --build-dir qmk-8051-ak820/.build/local-1 \
-  --iap-fault-profile guarded-erase --output host/runs/qualification.json
+  --toolchain toolchains/sdcc-4.6.0
 ```
 
 This checks input/report handling, Caps Word, Repeat and Alt Repeat, Grave
@@ -36,17 +35,24 @@ public OEM instruction fixture and does not require private ROM. CPU fixtures
 model peripheral operations and do not emulate VS11K28A USB or flash silicon.
 A tested stack peak is not a global bound.
 
-For any of the 24 named profiles, use the dedicated [profile build
-command](BUILD-PROFILES.md). It first requires the exact image to pass the
-combined startup, foreground and IRQ stack-bound gate. Unknown bounds or
-overflow fail the build before other regression suites run. It then runs the
-standard offline gates and selected feature host and linked-CPU suites, recording
-results in that build directory. `check-runtime` repeats the runtime evidence
-for an existing build. Profile results do not prove physical behavior or release
-eligibility. The compact-feature matrix at the [historical qualification
-report](../audits/rc6/compact-runtime-20261024/final/README.md) predates this
-whole-stack proof; current runtime evidence is in the [runtime stack
-report](../audits/rc6/web-firmware-20261024/runtime-all/README.md).
+For the nine curated packages, use the finite profile-catalog builder. List its
+nine-row CI matrix with `--list`, then build and qualify all selected exact
+images:
+
+```sh
+python tools/build_profile_catalog.py --list
+python tools/build_profile_catalog.py \
+  --build-root qmk-8051-ak820/.build/catalog \
+  --output .build/profile-catalog
+```
+
+The output path names a fresh directory; the ZIP and its SHA256 file are created
+beside it. The builder checks stack and interrupt bounds for each exact image before its
+regression gates. `--resume` requalifies existing linked images and reruns the
+gates; it does not skip checks. The catalog is offline evidence, not approval to
+flash a device. Current qualification and release state are in [Status](STATUS.md).
+See [Build profiles](BUILD-PROFILES.md) for individual package builds and legacy
+CLI profiles.
 
 The automatic suite requires no key presses, encoder movement, cable reconnect
 or manual Vial unlock. It does not write to the keyboard. Live protocol tests

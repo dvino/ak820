@@ -2,6 +2,8 @@
 
 # QMK Settings
 
+Change a small set of timing and behavior settings through Vial.
+
 Profiles with `AK820_QMK_SETTINGS` provide the settings below through Vial.
 A change is saved and remains after restart. Reset restores the defaults in this
 table. Reset does not change the keymap, macros, Combos or NKRO profile.

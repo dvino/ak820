@@ -18,7 +18,11 @@ static void dm_finish(void) {
         uint8_t slot = dm_record - 1, base = slot * 16, out = 0;
         for (uint8_t i = 0; i < dm_lengths[slot]; ++i) {
             if (!(dm_taps[base + i].code & 0x80)) {
-                dm_taps[base + out] = dm_taps[base + i];
+                /* Keep this two-byte move in XDATA. A struct assignment makes
+                 * SDCC call generic memcpy and save its live loop registers.
+                 * out <= i, so both self-copy and downward compaction are safe. */
+                dm_taps[base + out].code = dm_taps[base + i].code;
+                dm_taps[base + out].mods = dm_taps[base + i].mods;
                 ++out;
             }
         }

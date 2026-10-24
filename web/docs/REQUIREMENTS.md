@@ -22,9 +22,9 @@ Requirements for the first browser version are marked **Web**. Standalone applic
 
 **Acceptance:** flashing is available only for the listed model and a confirmed revision. An unknown device or protected area blocks the write and explains why.
 
-**AKW-003 · Web.** The first version offers the latest approved full-featured image. Module selection and other ready-made compatible variants belong to a later stage; users cannot compile an image on demand.
+**AKW-003 · Web/Desktop.** Offer firmware as a finite set of nine named profile packages, not as independent module switches or arbitrary combinations. The default package for new project-image selection is `work`; it includes NKRO control, One Shot, Space Cadet, Leader, Dynamic Macros and OS indicator control, while excluding Mouse Keys and Mac/PC mapping. The latest approved release remains a separate image choice. A package is available for download or installation only after its exact image has passed the required checks and release approval. Users cannot compile an image on demand.
 
-**Acceptance:** the first version offers the full image by default and does not change its feature set without an explicit choice. Later, the interface may offer only ready-made combinations built and checked as complete images. Capacity is not inferred from estimates for individual features.
+**Acceptance:** the profile selector uses the generated package matrix, defaults to `work`, and shows the exact features and measured size for each qualified image. A package without exact-image qualification cannot be offered as installable. Capacity is never inferred by adding estimates for individual modules.
 
 **AKW-004 · Foundation.** Compare Pipette and Entropy before choosing a foundation. Entropy is the first candidate for testing a shared Rust interface on desktop and in WebAssembly; Pipette is the fallback with a ready web version. Vialite remains an alternative. No fork has been selected.
 
@@ -92,7 +92,7 @@ Requirements for the first browser version are marked **Web**. Standalone applic
 
 **Acceptance:** before erase begins, the actual bytes, target image, and required files are checked. Losing the network after that point does not prevent completion.
 
-**AKW-034 · Catalog.** The editor, help, backup checks, compatibility checks, and release process use one catalog. It contains a registry of features and modules, plus a catalog of exact images with model, confirmed revision, settings schema, features, compatible transitions, release status, and file hashes. Stability, project verification, and revocation are separate properties.
+**AKW-034 · Catalog.** The editor, help, backup checks, compatibility checks, and release process use one catalog. It contains the bilingual feature-description registry, the nine named profile packages with `work` as their default, and a catalog of exact images with model, confirmed revision, settings schema, enabled features, measured resources, compatible transitions, release status, and file hashes. Stability, project verification, and revocation are separate properties.
 
 **Acceptance:** CI checks the catalog against release files. The latest version is selected with pre-releases taken into account, not only from the moving `releases/latest` link. A manifest asserts identity but does not replace checking the actual CODE.
 
