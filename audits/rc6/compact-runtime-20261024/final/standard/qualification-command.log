@@ -1,0 +1,224 @@
+{"modules": 68, "functions": 634, "retained": 416, "removed_count": 218}
+{"image": "/workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/ajazz_ak820_vial.ihx", "code_bytes": 38117, "highest_address": "0xbe04", "hardware_validated": false}
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools/installer -p test_*.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/00.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/01.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/02.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/03.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/04.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/05.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/06.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/07.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tools/check_docs.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/08.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_usb/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/09.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_keymap/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/10.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_caps_word/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/11.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_macro_guard/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/12.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_diagnostic/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/13.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_optimization/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/14.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_rgb/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/15.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_via_decode/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/16.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_combo/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/17.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_bounded/run.py
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/18.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_tapping/run.py --negative-controls --output /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/tapping-host.json
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/19.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_features/run.py --build-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard --s51 /workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/ak820_features
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/20.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_unlock/run.py --build-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard --s51 /workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/ak820_unlock
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/21.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_tri_layer/run.py --build-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard --s51 /workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/ak820_tri_layer
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/22.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_iap/run.py --build-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard --s51 /workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/ak820_iap --iap-fault-profile guarded-erase
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/23.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_rgb/emitted.py --build-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard --s51 /workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/rgb
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/24.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_bounded/emitted.py --build-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard --s51 /workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/bounded
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/25.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_tapping/emitted.py --build-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard --s51 /workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/tapping
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/26.txt
+RUN /workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/.venv/bin/python tests/ak820_combo/emitted.py --build-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard --s51 /workspace/scratch/97c35f9846c1/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/combo
+PASS /workspace/scratch/97c35f9846c1/qual-a/qmk-8051-ak820/.build/final-standard/qualification-logs-36nhras4/27.txt
+RUN PROFILE gates
+RUN PROFILE outline-gates
+RUN PROFILE short-call-gates
+RUN PROFILE core-compact-host
+RUN PROFILE core-compact-linked
+RUN PROFILE emitted-linked
+RUN PROFILE transport-linked
+RUN PROFILE stack-gates
+RUN PROFILE startup-gates
+RUN PROFILE startup-stack
+RUN PROFILE irq-gates
+RUN PROFILE release-safety-gates
+RUN PROFILE outline-integrity
+RUN PROFILE vialrgb-linked
+{
+  "format": "ak820-configured-build-1",
+  "configuration": {
+    "format": "ak820-build-configuration-1",
+    "profile": "standard",
+    "optional_features": [],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "nvm_schema": 532482,
+    "make_options": {
+      "AK820_NKRO_CONTROL": "no",
+      "AK820_COMPACT_ONESHOT": "no",
+      "AK820_COMPACT_SPACE_CADET": "no",
+      "AK820_COMPACT_MOUSEKEY": "no",
+      "AK820_COMPACT_AUTOSHIFT": "no",
+      "AK820_COMPACT_GUI_LOCK": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "no"
+    },
+    "runtime_qmk_settings": [],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200
+    },
+    "release_approved": false
+  },
+  "identity": {
+    "profile": "standard",
+    "configuration_sha256": "9ec1de02eb7481ca61cef2805246b2d075425862f9079f5af038e8ddf98feee7",
+    "ihx_sha256": "348ac596421b9ae4b052f04a9ae3b6bc2e14582eaf0ce71dc5019938ea0ea100",
+    "map_sha256": "b19924697aeacc8e475b27430a1de55a5c919f1b61a2be335508451eecec8af4",
+    "mem_sha256": "52f0177d348070c36f4ab48eeb8f97a41bb0400dd99dd20f632681fa38c49abb",
+    "build_report_sha256": "2efed735231968c3984cdd3b307fbc9581b1f9d18bb98d7ac12451cd2977cd90",
+    "source_manifest_sha256": "0faa79e9a74ab7bbf34555001385b73b593dd7ee37692034a0822790950b5eaf",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "nvm_schema": 532482
+  },
+  "short_calls": null,
+  "resources": {
+    "code_bytes": 38117,
+    "code_windows": [
+      {
+        "name": "low",
+        "start": 10400,
+        "end_exclusive": 12288,
+        "occupied_bytes": 1804,
+        "highest_address": 12203,
+        "trailing_free_bytes": 84
+      },
+      {
+        "name": "main",
+        "start": 12327,
+        "end_exclusive": 50944,
+        "occupied_bytes": 36313,
+        "highest_address": 48644,
+        "trailing_free_bytes": 2299
+      }
+    ],
+    "xram": {
+      "start": 1024,
+      "end_inclusive": 3612,
+      "bytes": 2589,
+      "capacity": 3072
+    },
+    "internal_ram": {
+      "static_bytes": 94,
+      "initial_sp": 93,
+      "stack_capacity": 162,
+      "runtime_stack_bound": null,
+      "stack_margin": null,
+      "stack_qualified": false
+    },
+    "protected_windows_clear": true,
+    "absolute_xram": [
+      {
+        "symbol": "_ak820_led_dma",
+        "start": 512,
+        "reserved_end_exclusive": 1024
+      }
+    ]
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "offline_tests_passed": true,
+  "release_approved": false,
+  "release_blockers": [
+    "No reviewed whole-program foreground stack bound for this image.",
+    "No exact-image IRQ/nesting proof combined with that foreground bound.",
+    "No approved installer/settings transition for this feature identity."
+  ],
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "source": {
+    "commit": "55acbb0f7977d4c7840d49143e9b40a15b1dc3c8",
+    "dirty": false
+  },
+  "qualification": {
+    "sha256": "be567208b662809d88d17e35f1fe40ba781c62a630edf712fe59f4400dbfc156",
+    "suites": 28,
+    "unit_tests": {
+      "run": 273,
+      "skipped": 0
+    }
+  },
+  "profile_tests": {
+    "sha256": "1bcd44bd493496837cd8d14eaf0b55a5ec677af4eb24e5e7ffb62b51ae1945db",
+    "suites": [
+      "gates",
+      "outline-gates",
+      "short-call-gates",
+      "core-compact-host",
+      "core-compact-linked",
+      "emitted-linked",
+      "transport-linked",
+      "stack-gates",
+      "startup-gates",
+      "startup-stack",
+      "irq-gates",
+      "release-safety-gates",
+      "outline-integrity",
+      "vialrgb-linked"
+    ],
+    "source_files_sha256": "739be4c3cc0795e93afcab0bc898f594550b7981a6f81638e6d50ae549a07ba7"
+  },
+  "runtime_analysis": {
+    "report_sha256": "5b4be10eb7c79c054ff6a6060ed01a2f39e59480dc508e98e08ca5ebd7d38a8d",
+    "log_sha256": "b216c06aa386b10650ef635ca4a99bd0f2efb7ce69408ff3536725b6ca6dca71",
+    "exit_code": 2,
+    "whole_program_qualified": false,
+    "unresolved_roots": [
+      "_main"
+    ],
+    "root_bounds": {
+      "_main": null,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2
+    }
+  }
+}

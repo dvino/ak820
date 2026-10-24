@@ -67,6 +67,35 @@ in `integration-probes/gui-dm-combined/` and `gui-as-combined/`.
 Independent integration review approved the implementation checkpoint after
 verifying the 16-profile roster, rejected selection, documentation links,
 accepted artifact hashes, both CODE windows and the 804-byte rejected overflow.
-The frozen eighteen-variant matrix and final evidence review remain required
-before this work is reported as fully checked. No
-physical behavior, runtime stack bound or release eligibility is inferred.
+The frozen eighteen-variant matrix is complete; each image passes the base
+and applicable supplemental suites without skips. Final independent matrix
+and documentation approval follows below. Physical behavior, a runtime stack
+bound and release eligibility are not inferred.
+
+
+## Final independent qualification review
+
+Final documentation and retained qualification evidence are approved, with no
+blocking findings. All 18 records match the matrix exactly and cover the 16
+accepted profile names in 18 unique mode combinations. Independent checks
+verified IHX, MAP, MEM, build-report and raw-archive hashes, archived artifacts
+and all base/supplemental log hashes. The 472 non-generated source/toolchain
+inputs and common test-source snapshot match the frozen bytes.
+
+Every variant has 28 base suites, 273 base unit tests, zero skips and 14–24
+selected supplemental suites. Linked scenario counts and image identities
+agree, including Auto Shift + Dynamic Macros 27, GUI + Dynamic Macros 12 and
+GUI + Mouse Keys + Auto Shift 12. Independent IHX parsing and MEM checks agree
+with both CODE windows, XRAM and stack capacity. All resource tables match.
+
+The rejected 41,288-byte experiment and its 804-byte overflow were verified.
+The actual package rejection matches the changed full image and its source
+witness failure. Documentation checks passed for all 49 public documents;
+source whitespace checks passed. There are no firmware, tool or test changes
+after frozen commit `55acbb0f7977d4c7840d49143e9b40a15b1dc3c8`.
+
+This closes the documentation/evidence commit review. Physical behavior,
+whole-program stack/IRQ bounds and release eligibility remain unproved;
+`_main` is unresolved and every development record keeps `release_approved`
+false. Git attributes only exempt verbatim machine logs and listings from
+whitespace lint; their exact bytes remain bound by hashes.

@@ -124,11 +124,11 @@ changed source profiles. See [Status](STATUS.md) for evidence and limits.
 
 ## Deferred feature inventory
 
-Seven of the 11 candidates or bounded feature areas have development
-implementations: NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift,
-GUI lock and Dynamic Macros. The `full` profile selects the first three. Five
-candidates remain deferred or partial. A Vial control alone does not establish
-firmware support.
+Six of the 11 original candidates have bounded development implementations:
+NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift and Dynamic Macros.
+Magic is partly implemented through GUI controls. The five entries below
+contain remaining work. The `full` profile selects NKRO control, One Shot and
+Space Cadet; a Vial control alone does not establish firmware support.
 
 | Deferred candidate | Open work |
 | --- | --- |

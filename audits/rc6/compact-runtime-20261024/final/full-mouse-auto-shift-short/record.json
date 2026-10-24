@@ -1,0 +1,114 @@
+{
+  "profile": "full-mouse-auto-shift",
+  "short_calls": true,
+  "identity": {
+    "build_report_sha256": "120ba7d466813da2f9c5544f08a8c8ed1adba5fe818162b8de9bd29129c732ca",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "configuration_sha256": "51d509655cdfda14c09000e339f4334779aebc2a0072cd78e6734778dd7f8c6a",
+    "ihx_sha256": "d1481d1942d6aba70c6eca856dab01dec26890debafe55c436fef172d4a8be40",
+    "map_sha256": "de742af38ae24243f42ea69a75496ab8dbcaef4b95470bfd69fdb6e7079fce7c",
+    "mem_sha256": "46b6bb5e0e8222a6661b2933b040faceea2af47781a4a6cc4db1e179cec9cbbf",
+    "nvm_schema": 532482,
+    "profile": "full-mouse-auto-shift",
+    "source_manifest_sha256": "8815fa9da3fb6100e9db5404920d124d45376338f9e77f603ada76efe1f9bc5a"
+  },
+  "source": {
+    "commit": "55acbb0f7977d4c7840d49143e9b40a15b1dc3c8",
+    "dirty": false
+  },
+  "resources": {
+    "absolute_xram": [
+      {
+        "reserved_end_exclusive": 1024,
+        "start": 512,
+        "symbol": "_ak820_led_dma"
+      }
+    ],
+    "code_bytes": 40203,
+    "code_windows": [
+      {
+        "end_exclusive": 12288,
+        "highest_address": 12271,
+        "name": "low",
+        "occupied_bytes": 1872,
+        "start": 10400,
+        "trailing_free_bytes": 16
+      },
+      {
+        "end_exclusive": 50944,
+        "highest_address": 50662,
+        "name": "main",
+        "occupied_bytes": 38331,
+        "start": 12327,
+        "trailing_free_bytes": 281
+      }
+    ],
+    "internal_ram": {
+      "initial_sp": 89,
+      "runtime_stack_bound": null,
+      "stack_capacity": 166,
+      "stack_margin": null,
+      "stack_qualified": false,
+      "static_bytes": 90
+    },
+    "protected_windows_clear": true,
+    "xram": {
+      "bytes": 2654,
+      "capacity": 3072,
+      "end_inclusive": 3677,
+      "start": 1024
+    }
+  },
+  "base_suites": 28,
+  "base_unit_tests": {
+    "run": 273,
+    "skipped": 0
+  },
+  "profile_suites": [
+    "gates",
+    "outline-gates",
+    "short-call-gates",
+    "core-compact-host",
+    "core-compact-linked",
+    "emitted-linked",
+    "transport-linked",
+    "stack-gates",
+    "startup-gates",
+    "startup-stack",
+    "irq-gates",
+    "release-safety-gates",
+    "outline-integrity",
+    "vialrgb-linked",
+    "nkro-control-host",
+    "nkro-control-linked",
+    "one-shot-host",
+    "one-shot-linked",
+    "mouse-keys-host",
+    "mouse-keys-linked",
+    "auto-shift-host",
+    "auto-shift-linked"
+  ],
+  "offline_tests_passed": true,
+  "release_approved": false,
+  "runtime_analysis": {
+    "exit_code": 2,
+    "log_sha256": "707282a30ac0d56ef4aeebbd0a9408ad94e67c7fec53691dbd7093ccec8babd6",
+    "report_sha256": "1a870f355b071a8bb00d74f193ed4d8d12dab79214491a751c5dfe7f634fe454",
+    "root_bounds": {
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2,
+      "_ak820_timer_irq": 2,
+      "_main": null
+    },
+    "unresolved_roots": [
+      "_main"
+    ],
+    "whole_program_qualified": false
+  },
+  "raw_build": {
+    "path": "raw-build.tar.xz",
+    "bytes": 4801072,
+    "sha256": "0a754a9e64e47d308bb2689f123092d862aa67d35ee05738732afeaa69ccd50d"
+  },
+  "build_seconds": 243.061
+}

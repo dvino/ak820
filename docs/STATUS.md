@@ -53,18 +53,22 @@ preparation.
 
 ## Current development source
 
-Sixteen named source profiles now include compact Mouse Keys, Auto Shift,
-volatile GUI controls and two temporary Dynamic Macro slots in supported
-combinations. Common encoder, mouse and EEPROM-cursor optimizations preserve
-six layers, 16 Vial macros, 8192 macro bytes, eight Combos and schema 0x082002.
-The published and installed firmware remains the exact alpha.3 image above.
+All 16 named profiles passed 18 build variants from frozen source `55acbb0`.
+Each image passed 28 base suites and 273 base unit tests with zero skips, plus
+14–24 supplemental suites for its selected features. Later changes add only
+documentation and retained evidence.
 
-Isolated feature tests and integrated resource probes have passed. The GUI
-and Dynamic Macro implementations have independent source/test reviews;
-final qualification of the frozen sixteen-profile source is pending. The
-previous eleven-profile matrix belongs to source 06b8f0f and is historical.
-Current measurements and review scope are in the
-[technical report](../audits/rc6/compact-runtime-20261024/README.md).
+Compact Mouse Keys and Auto Shift are joined by volatile GUI controls and
+two temporary Dynamic Macro slots. Six layers, 16 Vial macros, 8192 macro bytes,
+eight Combos and schema `0x082002` remain unchanged. The previous eleven-profile
+matrix belongs to source `06b8f0f` and is historical.
+
+A whole-program stack bound for these images remains unproved. The normal
+package command rejected the changed `full` image because its source differs
+from the reviewed release witness. No physical test or device command was
+performed in this work. The published and installed firmware remains the exact
+alpha.3 image above. Measurements, hashes, raw logs and independent review are
+in the [technical report](../audits/rc6/compact-runtime-20261024/README.md).
 
 ## Installed firmware
 
