@@ -69,6 +69,29 @@ orders and all 256 LED selector values are checked in the CPU model. This
 uses the documented SDCC/MCS-51 contract; it does not prove physical VS11K28A
 USB, oscillator, flash, DMA timing or behavior during real power loss.
 
+## Retained exact-build evidence
+
+The reviewed source freeze is
+`7125bee79af4717ac1fbafbce4652bfa102516e4`. All nine complete build trees,
+listings, runtime witnesses and regression logs are retained in the
+[final evidence index](final/retention.json). Each archive was reopened and
+verified against its file manifest, exact image, source bytes at that commit
+and runtime/profile checker snapshots. All nine checks pass.
+[Independent retention review](retention-review.json) also matched all 29,145
+retained files to the original build bytes and checked the final copied files.
+
+The original qualification metadata records `570d58d` with a dirty working
+tree; the compiler build report has no source metadata (`null`). These
+descriptive fields are retained unchanged. Each retained record independently
+binds the actual compiled and checker bytes to the reviewed source freeze.
+The following evidence-only commit changes no firmware or checker input.
+
+The [candidate ZIP](final/ak820-beta-catalog-20261024.zip) and its
+[SHA256 file](final/ak820-beta-catalog-20261024.zip.sha256) are retained alongside
+the full evidence. Reverification uses `retain_evidence.py verify` with the
+recorded source commit and one profile directory; it does not need the
+original scratch build tree.
+
 ## Small default-profile optimization
 
 Only two production C functions changed. Dynamic Macro compaction copies its

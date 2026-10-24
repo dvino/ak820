@@ -1,0 +1,27 @@
+{
+  "checks": [
+    "All nine full-regression records bind the reviewed source freeze",
+    "All archive members match retained SHA256 manifests and original build bytes",
+    "Image identities, resources and checker source snapshots match matrix and frozen source",
+    "Every copied final archive, record and command log matches original retained output",
+    "Candidate ZIP, SHA file, final index and qualification log digests agree",
+    "All final evidence files are staged, including work directory and logs"
+  ],
+  "closed_findings": [
+    "README names original qualification metadata570d58d/dirty and compiler build source null accurately",
+    "Corrected README wording staged before evidence commit"
+  ],
+  "final_evidence_files": 31,
+  "format": "ak820-beta-retention-review-1",
+  "hardware_validated": false,
+  "installable": false,
+  "limits": "No builds, full tests or physical device operations rerun during this review",
+  "physical_device_commands": 0,
+  "profiles": 9,
+  "release_approved": false,
+  "result": "pass",
+  "retained_archive_bytes": 37063884,
+  "retained_archive_members": 29145,
+  "reviewer": "independent contract reviewer",
+  "source_commit": "7125bee79af4717ac1fbafbce4652bfa102516e4"
+}
