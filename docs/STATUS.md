@@ -46,28 +46,35 @@ not access a device; installation results are recorded separately.
 
 ## Current development source
 
-The current source adds an exact-image stack and interrupt gate and a volatile
-Ctrl/GUI swap profile. All 17 named profiles retain six layers, 16 Vial macros,
-8192 macro bytes, eight Combos and schema `0x082002`.
+All **17 named profiles and 19 build variants** pass from clean frozen source
+`39b6e22`. Every image closes foreground, startup and all three interrupt paths
+before its regression suites. Each passes 28 base suites and 273 base unit
+tests without skips, plus 16–26 supplemental suites. The complete bounds fit
+all linked stack allocations; the minimum remaining margin is 1 byte.
 
-The new analyzer closes all foreground and callback roots in the 18 previous
-images. Six conservative totals exceeded their allocated stack. A shared delay
-ABI correction reduces saved registers without changing the delay loop. The
-corrected `full` candidate requires 160 of 166 stack bytes; `full-ctrl-gui`
-requires 164 of 166. These are exact-image static and CPU-model results, not
-physical measurements. The complete 19-variant matrix is being regenerated
-from the integrated source.
+The analyzer now resolves the compact RGB callback. This exposed six earlier
+images whose conservative bound exceeded capacity. Correcting the shared delay
+calling convention reduces saved registers without changing the delay loop.
+The rebuilt `full` uses 160 of 166 stack bytes; `full-ctrl-gui` uses 164 of 166.
 
-Each configured build now checks startup, foreground and all three interrupt
-sources before other regressions. An unknown bound or excess use fails the
-build. The public instruction fixture makes the offline IRQ check repeatable
-without a private OEM image. Measurements, identities, findings and independent
-review are in the [technical report](../audits/rc6/runtime-stack-20261024/README.md).
+The new `full-ctrl-gui` profile adds volatile left/right Ctrl/GUI swaps alongside
+GUI lock. It retains raw modifier ownership and queued One Shot state. Six
+layers, 16 Vial macros, 8192 macro bytes, eight Combos and schema `0x082002`
+remain unchanged.
+
+Every new feature/profile must pass its own exact-image runtime check before
+full regression qualification. All 19 images pass 15 IRQ nest orders, all 256
+LED selector values and seven delay ABI cases. These are static and CPU-model
+results; the public IRQ fixture does not require a private OEM image.
+Measurements and source, image, test and log hashes are in the
+[final matrix](../audits/rc6/runtime-stack-20261024/final/README.md).
+Findings and independent review are in the
+[technical report](../audits/rc6/runtime-stack-20261024/README.md).
 
 The previous compact matrix at source `55acbb0` is historical. Changed source
 still requires separate release and installer-transition approval. No physical
-test or device command was performed in this work. The published and installed
-firmware remains the exact alpha.3 image above.
+test or device command was performed. The published and installed firmware
+remains the exact alpha.3 image above.
 
 ## Installed firmware
 

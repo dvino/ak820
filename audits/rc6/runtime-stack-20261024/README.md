@@ -20,6 +20,8 @@ delay correction:
 | `full-mouse-auto-shift-gui --short-calls` | 170 | 166 |
 
 Exact identities and all 18 results are in [baseline-summary.json](baseline-summary.json).
+Complete analyzer reports are retained in `baseline/`; their image and MAP
+hashes match the previous matrix artifacts.
 A conservative bound exceeding capacity does not establish that overflow
 occurred on a device. It prevents qualification until the bound or code is
 corrected.
@@ -34,8 +36,8 @@ balance and loop completion. Physical elapsed time is not measured.
 
 The corrected `full` candidate uses 38,924 CODE and 2,607 XRAM bytes. Its
 foreground bound is 97 bytes. Adding the two-byte CRT frame and 61 bytes for
-all three IRQs gives 160 of 166 bytes, leaving six. The complete [final profile matrix](final/README.md) is being regenerated
-from integrated source.
+all three IRQs gives 160 of 166 bytes, leaving six. All 19 variants from clean source `39b6e22` pass their complete stack, IRQ and
+regression checks; the [final matrix](final/README.md) records every result.
 
 A host debug-loop experiment saved three additional CODE bytes but changed
 overlay placement and reduced stack capacity to 163 bytes while requiring
@@ -85,6 +87,12 @@ Missing paths never use the partial explored peak as an upper bound. The
 checkers run with Python environment flags isolated; proof sources are checked
 again after the regression suites.
 
+`runtime-stack.json` records individual call roots. Its
+`whole_program_qualified` field stays false because that report does not combine
+startup and interrupt frames. The complete decision is recorded separately in
+`runtime-safety/summary.json`: `whole_program_stack_qualified` is true for every
+final matrix image, with its total bound, capacity and margin.
+
 ## Review and evidence
 
 - [ISR source audit](reviews/isr-source.json): architectural contract, shared storage and IRQ masking.
@@ -92,7 +100,7 @@ again after the regression suites.
 - [Delay ABI review](reviews/delay-abi.json): seven independent CPU cases; rejected overlay experiment.
 - [Runtime combiner review](reviews/runtime-core.json): original nine arithmetic/identity tests and 25 configurator tests.
 - [Ctrl/GUI and integration review](reviews/ctrl-gui-integration.json): One Shot correction, feature checks, final source recheck and 28 configurator tests; the subsequent checkpoint review covers integrated documentation and candidate evidence.
-- [Implementation checkpoint review](reviews/implementation-checkpoint.json): source/document agreement and full integrated candidate qualification. The clean-source matrix receives separate final review.
+- [Implementation checkpoint review](reviews/implementation-checkpoint.json): source/document agreement and full integrated candidate qualification. The clean-source matrix and retained evidence receive [final independent review](reviews/final-matrix.json).
 
 The first complete base-regression attempt failed only because LeakSanitizer
 could not inspect its own process under the execution sandbox. The same RGB
@@ -114,6 +122,8 @@ Pre-CRT trial erase, VS11 peripheral timing, physical scanning, USB delivery,
 flash endurance and power-loss behavior remain separate. No device commands
 were sent. The published and installed alpha.3 image is unchanged. Passing
 this check does not change release policy or approve an installer transition.
+The normal package command [rejects the newly qualified full image](package-rejection.json)
+because it differs from the approved release witness.
 
 The calling-convention and interrupt premises follow the
 [SDCC manual](https://sdcc.sourceforge.net/doc/sdccman.pdf) and the

@@ -5,7 +5,7 @@
 NKRO control, modifier One Shot and Space Cadet are available in the `full`
 profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps and
 Dynamic Macros in supported combinations. The configurator
-provides seventeen named profiles and nineteen planned qualification variants: the named
+provides seventeen named profiles and nineteen qualified development variants: the named
 profiles plus `full` and `full-mouse-auto-shift` with `--short-calls`. These profiles are source development builds; they do not inherit the published alpha.3 qualification.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
 The published and installed alpha.3 image is the exact full image described in

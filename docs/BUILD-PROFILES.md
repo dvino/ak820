@@ -3,7 +3,7 @@
 # Build profiles
 
 The configurator lists seventeen named development profiles and supports
-nineteen planned qualification variants: the 17 profiles plus `full` and
+nineteen qualified development variants: the 17 profiles plus `full` and
 `full-mouse-auto-shift` built with the optional `--short-calls` setting.
 The `full`
 feature set matches published alpha.3. Other profiles add compact Mouse Keys,

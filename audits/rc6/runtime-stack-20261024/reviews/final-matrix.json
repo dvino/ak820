@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-24",
+  "scope": "Independent final clean-source19-variant runtime/IRQ qualification, retained artifact transfer and current documentation review",
+  "final_matrix_approved": true,
+  "release_approved": false,
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "blocking_findings": [],
+  "frozen_firmware_and_test_commit": "39b6e227dd72302b9945cb73531f0b2493028591",
+  "verification": {
+    "named_profiles": 17,
+    "variants": 19,
+    "complete_expected_variant_set": true,
+    "base_suite_runs": 532,
+    "base_unit_test_executions": 5187,
+    "base_unit_skips": 0,
+    "supplemental_suite_runs": 401,
+    "irq_orders_per_variant": 15,
+    "led_selector_inputs_per_variant": 256,
+    "delay_abi_cases_per_variant": 7,
+    "ctrl_gui_linked_cases": 8,
+    "minimum_stack_margin": 1,
+    "maximum_stack_margin": 6,
+    "retained_validator_command": "python3 audits/rc6/runtime-stack-20261024/verify_matrix.py",
+    "retained_validator_result": "VALIDATED19; independent review ran default complete-matrix guard"
+  },
+  "reviewed_invariants": [
+    "Exactly17 named profiles plus full-short and full-mouse-auto-shift-short; heavy GUI and Auto Shift+Dynamic Macro profiles require short calls.",
+    "Every record reports clean frozen39b6 source and matches exact IHX/MAP/MEM/build-report/source manifest/configuration identities. Tracked compiler/proof/test source inputs match frozen Git blobs; generated source and build artifacts match raw archive; vendor LUFA headers match frozen dependency lock.",
+    "All19 complete root bounds close with no unresolved paths. Foreground+2 CRT+61 IRQ arithmetic fits actual linked capacity. Foreground-only analyzer deliberately does not claim whole-program qualification; combined report establishes it.",
+    "All15 declared IRQ source orders and15 actual CPU order cases preserve canaries/registers;256 LED selector inputs are checked.",
+    "All28 base suite command plans and273 unit executions per variant have zero skips, unchanged linked artifacts and matching raw log hashes. Exact profile suite IDs, arguments, source snapshots, before/after identities and logs match required profile plans.",
+    "Raw archive byte sizes/SHA256 and distinct member names verified; every retained loose build/report/log/linked-result copy agrees with archived bytes. All build-report artifact hashes and retained listing hashes agree.",
+    "Summary rows and every numeric entry in final matrix and English/Russian resource tables agree with records; aggregate totals count repeated executions explicitly.",
+    "All18 historical baseline analyzer reports agree with baseline summary and close roots; exactly six old conservative totals exceed capacity, clearly historical.",
+    "New English/Russian AGENTS runtime rule agrees with implemented exact-image gate; current STATUS/BUILD/ROADMAP distinguish development qualification from released/installed alpha.3.",
+    "Expected package rejection remains separate evidence; no device commands or release/hardware approval.",
+    "Final audit clarification accurately distinguishes foreground-only runtime-stack.json whole_program_qualified:false from combined runtime-safety/summary.json whole_program_stack_qualified:true; documentation-only addition reviewed without redundant reruns."
+  ],
+  "collector_review": {
+    "path": "/workspace/scratch/628d2ba64df2/collect_runtime_evidence.py",
+    "role": "Retention sanity checking; production build independently validates exact contracts before collection.",
+    "limitations_closed_by_independent_review": [
+      "Collector does not itself enforce exact profile/base suite plans or base log hashes.",
+      "Collector does not itself inspect all roots/IRQ order/selector fields or archive internal loose-file agreement.",
+      "Collector source cleanliness comes from production recorded before/after Git identity; final review additionally checks frozen tracked source blobs."
+    ],
+    "blocking_retention_defect": false
+  },
+  "risks_and_limits": [
+    "Standard, nkro and full-dynamic-macro-gui retain only one byte of conservative stack margin. No variant has zero or negative margin. Every changed image requires fresh proof.",
+    "Full-auto-shift-dynamic-macro-short has only60 main CODE bytes trailing free; full-mouse-auto-shift-gui-short has93. Low-window free space cannot extend main.",
+    "Static control-stack and generic C52 evidence assumes valid memory, SDCC bank0 ABI, disabled interrupts at CRT entry and MCS51 in-service/RETI semantics. Silicon timing, physical USB/scanning, pre-CRT trial erase, durable flash and power-loss behavior remain outside this approval.",
+    "Toolchain-origin dependency hashes are retained in bound build reports; exact local toolchain bytes were validated by production qualification. Offline archive verifier does not require original toolchain/workspace directories.",
+    "Release and installer-transition approval remain absent; published/installed alpha.3 and release policy unchanged."
+  ],
+  "documentation_sha256": {
+    "AGENTS.md": "cf0b908a535b111a670006d2248f8ab2a1e9a9123d9a1d40dd3770717456d1fa",
+    "docs/ru/AGENTS.md": "b18d063c356dd3ebc09dae5d0eeeb214460bfd38f541490ab696d746461dc09c",
+    "README.md": "c96b8d74857090193b08d19d32a924970b561a17e51bcb30adfa3cbcd485c287",
+    "docs/STATUS.md": "64e76fe5c14a7d1a4145e07a2e7e6e650117b88f1bb0f8a9b7056aef6cbedb00",
+    "docs/ru/STATUS.md": "26d3a37391c81e0f31e90ec47f69a78a1621c495dd9cab1a20d3fb5bb67aba6e",
+    "docs/RESOURCE-BUDGET.md": "a6c3f0d7591c3ea8b2b047c4c77208700cb5e975b1d92a07e4b3b9bf56c6d3b2",
+    "docs/ru/RESOURCE-BUDGET.md": "fe4d3c62cbf9d37fec0d48e4151b39e05863a1d3ec99e9056a50875e6a16efe3",
+    "docs/BUILD-PROFILES.md": "3343c1ff03ea7a7b2f27832e926e906ad10e0d0216d85cd87429031d82cb113f",
+    "docs/ru/BUILD-PROFILES.md": "16d183ec89d8aab61079310b580c02de07567cceea40a64934b449e8f939ae84",
+    "docs/ROADMAP.md": "0f6b1e33de5b11bef4dd73a9ca02a8d6bb5973cbdf06c8cb63aec66d589d5e34",
+    "docs/ru/ROADMAP.md": "7c8ff0df3f21e1fe9118c4f8c4b974bf504528f6ab71a85e6202b34def5af75e",
+    "audits/rc6/runtime-stack-20261024/README.md": "ae922fe14942c931b5d602ddba96b48564c58c8b949f5533433174a40c9b4ef0",
+    "audits/rc6/runtime-stack-20261024/final/README.md": "389c2228d0e77d223a474c2cd0e62604892cc896c5dd7769833049b0c4d717ec"
+  },
+  "evidence_sha256": {
+    "final/summary.json": "5e333030006dce494940d7dee95bca52d90ca6dc73c7bfaff7b117e78389f001",
+    "verify_matrix.py": "8fd89614c3665e0418568852c4aa221d17df14845b29d82547853db516a382d1",
+    "package-rejection.json": "eb1494bf972193138ef9ae3bb2df66e42eb079c725db5814ea56cf6473a63f70",
+    "baseline-summary.json": "a7063658892157fc2fa52a978b203a1c8dddfa86c9a986aefa2a0fd50989f9c2"
+  },
+  "record_sha256": {
+    "standard": "fc6a2c144695d02c7b2e4ec2d076f185206a417e4fc46933cdbca0db000da7af",
+    "nkro": "9a49ba7980579ee6fde1b02e333be57d4e565e1a3b9ccecc92d8a310a3120a1e",
+    "one-shot": "831590e58437582076d7235d98b9cd886c0b0dbff61301d3f2e7894286be5704",
+    "nkro-one-shot": "00ad639177dea86e0fbe9c8947c54da4ff2e4e7ae0fb8480178e923528864d14",
+    "space-cadet": "cd5a532a4c2b5d61357a686d3593d254070e855f6ddfd23b8cfd4d3a106f86d0",
+    "nkro-space-cadet": "500674a87b3d79d9ef36155cc4eedb7acb7a2616e62ed9037d3a42da4e7971b4",
+    "one-shot-space-cadet": "5076f3c2edf973bd319a16197ed731c09ab0b9831dbbe9497e5010e57d4e15f0",
+    "full": "9b56dded3364add2009de46df604a147f47a3469fccdccec6c5120f85502fa8d",
+    "full-gui-lock": "41364eefb368bc2be1b3f35271dcf4df02d53cd0e5b1d7443764d33a274788f1",
+    "full-ctrl-gui": "e90d2fe65086de30e6efde09550bf00e4c43171bc1e1339872cc451bf094b87d",
+    "full-dynamic-macro-gui": "354f745034caffd7813e4a071e15feca694c8b51b73df796322c7310fe80dc67",
+    "full-mouse-auto-shift-gui-short": "e9a063d83d34fe3139cfc4cd83745c6cee6736a95e63e1e7b58584619f1246c5",
+    "full-auto-shift-dynamic-macro-short": "8023ead5203af3b5ffcef419964f4039e4f1a67edb99f716e48c89147e01f963",
+    "full-dynamic-macro": "fd079f1d14eb119fb8b409b8f4977d38ff3a301ba1636ff0c09f06b1f68722de",
+    "full-mouse": "a98e366e0d83a6ab3debb21f93a51e6715c4be7e7b7bffba21422f97ecdc39d4",
+    "full-auto-shift": "e9488c144aaeaddcbf7952bd93d4ecff144d7f35fcdc491f9abc710fcf3f549c",
+    "full-mouse-auto-shift": "b08162436be5a406a06fd39fae79312edb8e6998b4909b753375b57b556841cb",
+    "full-short": "ea2a0a6235ecac814807be637cf987cb7bf6ba984b75564954210f3fc8031953",
+    "full-mouse-auto-shift-short": "3213a36d39179f856be47fd69967b75e69f2f5e72f6b6c02a578827079a6e767"
+  }
+}

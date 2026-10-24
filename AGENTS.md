@@ -60,6 +60,15 @@ matching package, check its checksum, extract it and launch the application.
 
 ## Current work boundary
 
+Owner's runtime rule, 2026-10-24: close stack and interrupt checks in the same
+change as every new feature or profile. Use the exact linked image to bound
+foreground calls, startup and all enabled interrupt sources. The configured
+build must pass that check before its full regression suites. Unknown paths,
+an incomplete IRQ contract or a bound above stack capacity block completion.
+Retain machine evidence for that image; a previous profile's bound cannot
+qualify changed source. Keep physical validation separate from static and CPU
+model results.
+
 Owner's GUI update rule, 2026-10-23: the update stays inside the installer.
 After clicking Update, a fresh physical Esc + left Control hold for three
 seconds confirms the displayed update. The installer requests unlock, enters
