@@ -2,11 +2,12 @@
 
 # Build profiles
 
-The configurator builds all eight combinations of the three optional features.
-The `full` profile is the alpha.3 candidate; the other seven remain development
-profiles. Source qualification and independent policy review are complete.
-The candidate is not published or hardware-tested, and release packaging still
-awaits native CI. See [Status](STATUS.md) for current release state.
+The configurator lists eleven development profiles. The `full` feature set
+matches published alpha.3; `full-mouse`, `full-auto-shift` and
+`full-mouse-auto-shift` add compact features. Development profiles are not release or flashing
+recommendations. The new source profiles have not inherited alpha.3's
+image qualification or hardware evidence. See [Status](STATUS.md) and the
+[compact-feature report](../audits/rc6/compact-next-20261024/README.md).
 
 ## Build a profile
 
@@ -23,12 +24,26 @@ python tools/configure_firmware.py build --profile standard \
 ```
 
 Choose any listed profile. The alternative `--features` selector accepts a
-space-separated subset of `nkro-control`, `one-shot` and `space-cadet`; omit
-values to select the standard feature set. For example:
+space-separated list of supported feature names. Only named combinations
+listed by the configurator are valid; the current combined compact profile
+requires `--short-calls` as shown below. For example:
 
 ```sh
 python tools/configure_firmware.py build --features nkro-control one-shot \
   --build-dir qmk-8051-ak820/.build/nkro-one-shot \
+  --toolchain toolchains/sdcc-4.6.0 \
+  --qmk-bin qmk-8051-ak820/.venv/bin/qmk \
+  --python qmk-8051-ak820/.venv/bin/python
+```
+
+For the combined compact profile, pass `--short-calls` explicitly. This option
+is off by default and is required for this current combination to fit. Use a
+fresh build directory:
+
+```sh
+python tools/configure_firmware.py build --profile full-mouse-auto-shift \
+  --short-calls \
+  --build-dir qmk-8051-ak820/.build/full-input \
   --toolchain toolchains/sdcc-4.6.0 \
   --qmk-bin qmk-8051-ak820/.venv/bin/qmk \
   --python qmk-8051-ak820/.venv/bin/python
@@ -47,9 +62,10 @@ To inspect a completed build again, run:
 python tools/configure_firmware.py inspect --build-dir qmk-8051-ak820/.build/new --toolchain toolchains/sdcc-4.6.0
 ```
 
-`inspect` rechecks resource placement and image identity. `package` permits only the complete qualified `full` profile when its source
-proof and independent policy review match. The other seven profiles remain
-blocked from packaging.
+`inspect` rechecks resource placement and image identity. Packaging is restricted
+to the exact published alpha.3 image and its pinned inputs. A profile name such as
+`full` does not authorize a changed source image. Current development profiles
+are not release-qualified.
 
 ## Profiles
 
@@ -70,6 +86,9 @@ choices.
 | `nkro-space-cadet` | `nkro-control`, `space-cadet` |
 | `one-shot-space-cadet` | `one-shot`, `space-cadet` |
 | `full` | `nkro-control`, `one-shot`, `space-cadet` |
+| `full-mouse` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys |
+| `full-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Auto Shift |
+| `full-mouse-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys and Auto Shift |
 
 NKRO control provides `NK_ON`, `NK_OFF` and `NK_TOGG`. The selected report mode
 lasts until restart; restart uses the saved/default mode. Switching clears
@@ -93,22 +112,22 @@ include the full upstream Space Cadet engine. Tested edge cases and limits are
 recorded in the [Space Cadet report](../audits/rc6/roadmap-max-20261024/space-cadet.md).
 
 The exact linked image determines resource use. Measure each profile from its
-build report; feature costs are not additive. For `full`, release evidence bounds main-path stack use at 93 bytes, CRT at
-2 bytes and all three IRQ paths at 61 bytes. Total use is 156 of 162 bytes,
-with 6 bytes remaining. See [Status](STATUS.md) for evidence links and limits.
+build report; feature costs are not additive. For the exact published alpha.3 `full` image, release evidence bounds main-path
+stack use at 93 bytes, CRT at 2 bytes and all three IRQ paths at 61 bytes. Total
+use is 156 of 162 bytes, with 6 bytes remaining. These figures do not qualify
+changed source profiles. See [Status](STATUS.md) for evidence and limits.
 
 ## Deferred feature inventory
 
-Three of the 11 candidates have bounded implementations; the `full` profile
-selects all three. The other eight remain deferred. A Vial control alone does not establish
+Five of the 11 candidates have bounded development implementations. The `full`
+profile selects three; `full-mouse`, `full-auto-shift` and `full-mouse-auto-shift` add compact
+features. Six remain deferred. A Vial control alone does not establish
 firmware support.
 
 | Deferred candidate | Open work |
 | --- | --- |
 | Tap Dance | Upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
 | Key Overrides | Upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
-| Mouse Keys | The upstream probe exceeds the main CODE window by 1,381 bytes; a smaller scope and scan-time review are needed. |
-| Auto Shift | Needs explicit C `case` labels instead of GNU case ranges; the upstream probe exceeds the main CODE window by 2,081 bytes. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
 | Magic | Modifier swaps and GUI control need separate compatibility and persistence review. |
 | Leader | Bound sequence length, timeout and supported outputs. |

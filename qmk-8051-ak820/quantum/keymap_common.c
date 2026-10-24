@@ -56,7 +56,11 @@ extern keymap_config_t keymap_config;
 uint16_t action_for_key(uint8_t layer, keypos_t key) {
     // 16bit keycodes - important
     //ac_dprintf("layer: %x\n",layer);
+#ifdef AK820_BOARD
+    uint16_t keycode = ak820_keycode_at(layer, AK820_KEYPOS_VALUE(key));
+#else
     uint16_t keycode = keymap_key_to_keycode(layer, key);
+#endif
     //ac_dprintf("keycode: %x\n",keycode);
     return action_for_keycode(keycode);
 }
@@ -277,7 +281,13 @@ uint16_t action_for_keycode(uint16_t keycode) {
 }
 
 // translates key to keycode
+#ifdef AK820_BOARD
+uint16_t ak820_keycode_at(uint8_t layer, uint16_t position) {
+    uint8_t row = position >> 8, col = position;
+#else
 __attribute__((weak)) uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
+    uint8_t row = key.row, col = key.col;
+#endif
     //ac_dprintf("km key to kc: layer: %x\n",layer);
     //layer = 0;
 #ifdef VIAL_ENABLE
@@ -285,20 +295,26 @@ __attribute__((weak)) uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key
     if (vial_unlock_in_progress) {
         return KC_NO;
     }
-    if (key.row == VIAL_MATRIX_MAGIC && key.col == VIAL_MATRIX_MAGIC) {
+    if (row == VIAL_MATRIX_MAGIC && col == VIAL_MATRIX_MAGIC) {
         return g_vial_magic_keycode_override;
     }
 #endif
-    if (key.row < MATRIX_ROWS && key.col < MATRIX_COLS) {
+    if (row < MATRIX_ROWS && col < MATRIX_COLS) {
         //ac_dprintf("km key to kc: layer: %x\n",layer);
-        return keycode_at_keymap_location(layer, key.row, key.col);
+        return keycode_at_keymap_location(layer, row, col);
     }
 #ifdef ENCODER_MAP_ENABLE
-    else if (key.row == KEYLOC_ENCODER_CW && key.col < NUM_ENCODERS) {
-        return keycode_at_encodermap_location(layer, key.col, true);
-    } else if (key.row == KEYLOC_ENCODER_CCW && key.col < NUM_ENCODERS) {
-        return keycode_at_encodermap_location(layer, key.col, false);
+    else if (row == KEYLOC_ENCODER_CW && col < NUM_ENCODERS) {
+        return keycode_at_encodermap_location(layer, col, true);
+    } else if (row == KEYLOC_ENCODER_CCW && col < NUM_ENCODERS) {
+        return keycode_at_encodermap_location(layer, col, false);
     }
 #endif // ENCODER_MAP_ENABLE
     return KC_NO;
 }
+
+#ifdef AK820_BOARD
+__attribute__((weak)) uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
+    return ak820_keycode_at(layer, AK820_KEYPOS_VALUE(key));
+}
+#endif

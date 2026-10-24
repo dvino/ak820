@@ -321,13 +321,14 @@ static uint8_t encoder_source_layers_cache[NUM_ENCODERS];
 #    endif
 
 /* All keycode-cache operations use the same checked address calculation. */
-static uint16_t SOURCE_CACHE_MEM *source_keycode_cache_slot(keypos_t key) {
-    if (key.row < MATRIX_ROWS && key.col < MATRIX_COLS) {
-        return &source_keycodes_cache[(uint8_t)(key.row * MATRIX_COLS + key.col)];
+static uint16_t SOURCE_CACHE_MEM *source_keycode_cache_slot(uint16_t position) {
+    uint8_t row = position >> 8, col = position;
+    if (row < MATRIX_ROWS && col < MATRIX_COLS) {
+        return &source_keycodes_cache[(uint8_t)(row * MATRIX_COLS + col)];
     }
 #    ifdef ENCODER_MAP_ENABLE
-    if ((key.row == KEYLOC_ENCODER_CW || key.row == KEYLOC_ENCODER_CCW) && key.col < NUM_ENCODERS) {
-        return &encoder_source_keycodes_cache[key.col + (key.row == KEYLOC_ENCODER_CCW ? NUM_ENCODERS : 0)];
+    if ((row == KEYLOC_ENCODER_CW || row == KEYLOC_ENCODER_CCW) && col < NUM_ENCODERS) {
+        return &encoder_source_keycodes_cache[col + (row == KEYLOC_ENCODER_CCW ? NUM_ENCODERS : 0)];
     }
 #    endif
     return 0;
@@ -335,28 +336,29 @@ static uint16_t SOURCE_CACHE_MEM *source_keycode_cache_slot(keypos_t key) {
 
 /* Resolve a compound key's release to the basic action actually registered
  * on press. Vial's virtual position has its own synchronous state. */
-bool update_source_keycode_cache(keypos_t key, uint16_t keycode) {
-    uint16_t SOURCE_CACHE_MEM *slot = source_keycode_cache_slot(key);
+bool ak820_cache_keycode(uint16_t position, uint16_t keycode) {
+    uint16_t SOURCE_CACHE_MEM *slot = source_keycode_cache_slot(position);
     if (!slot) return false;
     *slot = keycode;
     return true;
 }
 
-void update_source_layers_cache(keypos_t key, uint8_t layer) {
-    uint16_t SOURCE_CACHE_MEM *slot = source_keycode_cache_slot(key);
+void ak820_cache_layer(uint16_t position, uint8_t layer) {
+    uint16_t SOURCE_CACHE_MEM *slot = source_keycode_cache_slot(position);
     if (!slot) return;
     layer &= (1u << MAX_LAYER_BITS) - 1;
 #    ifdef KEY_OVERRIDE_ENABLE
-    if (key.row < MATRIX_ROWS && key.col < MATRIX_COLS) {
-        source_layers_cache[(uint8_t)(key.row * MATRIX_COLS + key.col)] = layer;
+    uint8_t row = position >> 8, col = position;
+    if (row < MATRIX_ROWS && col < MATRIX_COLS) {
+        source_layers_cache[(uint8_t)(row * MATRIX_COLS + col)] = layer;
     }
 #        ifdef ENCODER_MAP_ENABLE
     else {
-        encoder_source_layers_cache[key.col] = layer;
+        encoder_source_layers_cache[col] = layer;
     }
 #        endif
 #    endif
-    *slot = keymap_key_to_keycode(layer, key);
+    *slot = ak820_keycode_at(layer, position);
 }
 
 #    ifdef KEY_OVERRIDE_ENABLE
@@ -378,14 +380,25 @@ uint8_t read_source_layers_cache(keypos_t key) {
 
 #    endif
 
-uint16_t read_source_keycode_cache(keypos_t key) {
+uint16_t ak820_cached_key(uint16_t position) {
 #    ifdef VIAL_ENABLE
     /* Preserve unlock suppression and the synchronous virtual-key ABI. */
     if (vial_unlock_in_progress) return KC_NO;
-    if (key.row == VIAL_MATRIX_MAGIC && key.col == VIAL_MATRIX_MAGIC) return g_vial_magic_keycode_override;
+    if (position == (((uint16_t)VIAL_MATRIX_MAGIC << 8) | VIAL_MATRIX_MAGIC)) return g_vial_magic_keycode_override;
 #    endif
-    uint16_t SOURCE_CACHE_MEM *slot = source_keycode_cache_slot(key);
+    uint16_t SOURCE_CACHE_MEM *slot = source_keycode_cache_slot(position);
     return slot ? *slot : KC_NO;
+}
+/* Public QMK compatibility wrappers remain available to callers and tests.
+ * The AK820 event path calls the scalar forms above directly. */
+bool update_source_keycode_cache(keypos_t key, uint16_t keycode) {
+    return ak820_cache_keycode(AK820_KEYPOS_VALUE(key), keycode);
+}
+void update_source_layers_cache(keypos_t key, uint8_t layer) {
+    ak820_cache_layer(AK820_KEYPOS_VALUE(key), layer);
+}
+uint16_t read_source_keycode_cache(keypos_t key) {
+    return ak820_cached_key(AK820_KEYPOS_VALUE(key));
 }
 #    undef SOURCE_CACHE_MEM
 #else
@@ -475,16 +488,24 @@ uint8_t read_source_layers_cache(keypos_t key) {
  * when the layer is switched after the down event but before the up
  * event as they may get stuck otherwise.
  */
+#ifdef AK820_BOARD
+uint16_t ak820_resolve_key(uint16_t position, bool cache_press) {
+    if (disable_action_cache) {
+        return ak820_keycode_at(ak820_layer_for_key(position), position);
+    }
+    if (cache_press) ak820_cache_layer(position, ak820_layer_for_key(position));
+    return ak820_cached_key(position);
+}
+uint16_t store_or_get_action(bool pressed, keypos_t key) {
+    return action_for_keycode(ak820_resolve_key(AK820_KEYPOS_VALUE(key), pressed));
+}
+#else
 uint16_t store_or_get_action(bool pressed, keypos_t key) {
 #if !defined(NO_ACTION_LAYER) && !defined(STRICT_LAYER_RELEASE)
     if (disable_action_cache) {
         return layer_switch_get_action(key);
     }
 
-#ifdef AK820_BOARD
-    if (pressed) update_source_layers_cache(key, layer_switch_get_layer(key));
-    return action_for_keycode(read_source_keycode_cache(key));
-#else
     uint8_t layer;
     if (pressed) {
         layer = layer_switch_get_layer(key);
@@ -493,27 +514,44 @@ uint16_t store_or_get_action(bool pressed, keypos_t key) {
         layer = read_source_layers_cache(key);
     }
     return action_for_key(layer, key);
-#endif
 #else
     return layer_switch_get_action(key);
 #endif
 }
 
+#endif
+
 /** \brief Layer switch get layer
  *
  * Gets the layer based on key info
  */
+#ifdef AK820_BOARD
+uint8_t ak820_layer_for_key(uint16_t position) {
+#else
 uint8_t layer_switch_get_layer(keypos_t key) {
+#endif
 #ifndef NO_ACTION_LAYER
+#if !defined(AK820_BOARD) || defined(MAGIC_KEYCODE_ENABLE)
     action_t action;
     action.code = ACTION_TRANSPARENT;
+#endif
 
     layer_state_t layers = layer_state | default_layer_state;
     /* check top layer first */
     for (int8_t i = MAX_LAYER - 1; i >= 0; i--) {
         if (layers & ((layer_state_t)1 << i)) {
+#if defined(AK820_BOARD) && !defined(MAGIC_KEYCODE_ENABLE)
+            /* In the pinned AK820 decoder only KC_TRANSPARENT produces the
+             * transparent action. MT/LT remain opaque even with tap byte 1. */
+            if (ak820_keycode_at(i, position) != KC_TRANSPARENT) {
+#else
+#ifdef AK820_BOARD
+            action.code = action_for_keycode(ak820_keycode_at(i, position));
+#else
             action.code = action_for_key(i, key);
+#endif
             if (action.code != ACTION_TRANSPARENT) {
+#endif
                 return i;
             }
         }
@@ -525,12 +563,21 @@ uint8_t layer_switch_get_layer(keypos_t key) {
     return get_highest_layer(default_layer_state);
 #endif
 }
+#ifdef AK820_BOARD
+uint8_t layer_switch_get_layer(keypos_t key) {
+    return ak820_layer_for_key(AK820_KEYPOS_VALUE(key));
+}
+#endif
 
 /** \brief Layer switch get layer
  *
  * Gets action code based on key position
  */
 uint16_t layer_switch_get_action(keypos_t key) {
+#ifdef AK820_BOARD
+    uint16_t position = AK820_KEYPOS_VALUE(key);
+    return action_for_keycode(ak820_keycode_at(ak820_layer_for_key(position), position));
+#else
     //return action_for_key(layer_switch_get_layer(key), key);
     uint8_t layer = layer_switch_get_layer(key);
     //dprintf("layer_sw_get_action:layer %x\n",layer);
@@ -538,6 +585,7 @@ uint16_t layer_switch_get_action(keypos_t key) {
     action = action_for_key(layer, key);
     //dprintf("action %x\n",action);
     return action;
+#endif
 }
 
 #ifndef NO_ACTION_LAYER

@@ -92,6 +92,7 @@ def main():
             print(f"{name}: {result.stdout.strip()}", flush=True)
             results.append({"name": name, "pass": True, "summary": result.stdout.strip()})
     paths.add(root / "keyboards/ajazz/ak820/config.h")
+    paths.add(root / "quantum/keymap_common.h")
     paths.update(p for p in HERE.rglob("*") if p.is_file() and p.suffix in (".py", ".c"))
     report = {"pass": True, "limits": "Host C semantics with sanitizers; actual SDCC/8051 ABI requires emitted.py and ak820_emitted tests.", "tests": results,
               "source_sha256": {str(p.relative_to(root) if p.is_relative_to(root) else p.relative_to(HERE)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(paths)}}

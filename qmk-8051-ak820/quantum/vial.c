@@ -411,7 +411,7 @@ void vial_keycode_down(uint16_t keycode) {
             .type = KEY_EVENT,
             .key = {.row = VIAL_MATRIX_MAGIC, .col = VIAL_MATRIX_MAGIC}, .pressed = 1, .time = (timer_read() | 1) /* time should not be 0 */
         };
-        action_exec(dummy_event);
+        AK820_ACTION_EXEC(dummy_event);
     }
 }
 
@@ -433,7 +433,7 @@ void vial_keycode_up(uint16_t keycode) {
             .type = KEY_EVENT,
             .key = {.row = VIAL_MATRIX_MAGIC, .col = VIAL_MATRIX_MAGIC}, .pressed = 0, .time = (timer_read() | 1) /* time should not be 0 */
         };
-        action_exec(dummy_event);
+        AK820_ACTION_EXEC(dummy_event);
     }
 }
 

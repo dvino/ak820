@@ -1,0 +1,16 @@
+{
+  "command": [
+    "python3",
+    "tools/configure_firmware.py",
+    "package",
+    "--build-dir",
+    "qmk-8051-ak820/.build/final4-full-mouse-auto-shift-short",
+    "--toolchain",
+    "toolchains/sdcc-4.6.0"
+  ],
+  "exit_code": 1,
+  "expected_rejection": true,
+  "log_sha256": "5d401ebcf1011ca8284387357b159da63b6dd38beae67700b0751f75b4fbd7b4",
+  "ihx_sha256": "8873ebe29cea93673f44fa5c20adf8f5c372a73c70f1151da32b7c67671aad85",
+  "physical_device_commands": 0
+}

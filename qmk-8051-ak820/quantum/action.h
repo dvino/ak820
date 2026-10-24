@@ -59,6 +59,15 @@ typedef struct {
 /* Execute action per keyevent */
 void action_exec(keyevent_t event);
 
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* The pinned callers own model-large XDATA events. Share SDCC's aggregate
+ * argument copy without changing action_exec's public by-value contract. */
+void ak820_action_exec(const keyevent_t __xdata *event);
+#    define AK820_ACTION_EXEC(event) ak820_action_exec(&(event))
+#else
+#    define AK820_ACTION_EXEC(event) action_exec(event)
+#endif
+
 /* action for key */
 uint16_t action_for_key(uint8_t layer, keypos_t key);
 uint16_t action_for_keycode(uint16_t keycode);

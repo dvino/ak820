@@ -1,0 +1,1458 @@
+{
+  "date": "2026-10-24",
+  "format": "ak820-compact-final-matrix-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "profile_count": 11,
+  "published_alpha3": {
+    "code_bytes": 40043,
+    "ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
+    "low_trailing_free": 16,
+    "main_trailing_free": 441,
+    "stack_capacity": 162,
+    "xram_allocated_bytes": 2637
+  },
+  "release_approved": false,
+  "source_state": "Uncommitted reviewed changes on upstream; exact inputs are hash-bound in each build report.",
+  "test_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0"
+  },
+  "upstream_commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+  "variant_count": 12,
+  "variants": [
+    {
+      "evidence_archive_bytes": 7183219,
+      "evidence_directory": "final/standard",
+      "evidence_files": 1536,
+      "evidence_original_bytes": 63570408,
+      "hardware_validated": false,
+      "id": "standard",
+      "identity": {
+        "build_report_sha256": "ba6e6b01d5268694e88b9b6d8383317a1c90ecf7f53b2ccab1e13a0a304f9cad",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "df21c4809cef255fa2eb2fe9963223433d2e2b832b9b21164d14177a8d6f1e6b",
+        "ihx_sha256": "a8ce57d310b8a21f09ca9722dd218ca76b5526d7e9644b0bfb121ad2dbd94aee",
+        "map_sha256": "af19619415a2b2858a3dcc82e0b6cd5043323e8dbb0d29247a7935791d633dab",
+        "mem_sha256": "bdcf0f6f29b20b9c774ccc7cdff154caefdbb84d0e58899605b74e5b32550ee5",
+        "nvm_schema": 532482,
+        "profile": "standard",
+        "source_manifest_sha256": "bf2d61150f06b18f3eac4ce419a5b4992eb701a80c81ea286df3f2cce453dcde"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "standard",
+      "profile_tests": {
+        "sha256": "0d8a4ffa2887c4a112dbd05fca2ba15a08bd45af515ed5cbb4ed31475e4aeb78",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "dca50949dc09ad802853568f9a4594ca8b98e769e51fc16c948b9b411509a0ed",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38297,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12203,
+            "name": "low",
+            "occupied_bytes": 1804,
+            "start": 10400,
+            "trailing_free_bytes": 84
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 48824,
+            "name": "main",
+            "occupied_bytes": 36493,
+            "start": 12327,
+            "trailing_free_bytes": 2119
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 96,
+          "runtime_stack_bound": null,
+          "stack_capacity": 159,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 97
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2620,
+          "capacity": 3072,
+          "end_inclusive": 3643,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "707282a30ac0d56ef4aeebbd0a9408ad94e67c7fec53691dbd7093ccec8babd6",
+        "report_sha256": "15f31cdd38ef295aec40dccca0ae868dd676ac906d817c31feaa591c65f2ad7a",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7200250,
+      "evidence_directory": "final/nkro",
+      "evidence_files": 1543,
+      "evidence_original_bytes": 63735485,
+      "hardware_validated": false,
+      "id": "nkro",
+      "identity": {
+        "build_report_sha256": "e01d034ff20a7c1d646ca44110f74ed0f1d0ad394b5017e21ff8f8aa033c6ca5",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "b65845e58302fe476ca83dba76bf15e77567fc09296b8389ad8983ae0b58f740",
+        "ihx_sha256": "9d9763872aab7dea0109f924be7d4a45e26441a77063ecbf75b256b021eeaa80",
+        "map_sha256": "a9444ceba1a155665d2294aebed431164dbba93fc8531c5d71366ad18dce44ea",
+        "mem_sha256": "19223b194347bb83b49d6de9b63f719ba864df7c5c84a85c187c166cd3337f8c",
+        "nvm_schema": 532482,
+        "profile": "nkro",
+        "source_manifest_sha256": "737a15a2598b7069a6156f3bbb522d048a80c8e6191fe680d2411430b7bf1f94"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "nkro",
+      "profile_tests": {
+        "sha256": "3d82d0411da14d7a58677d34a9ebefb1cb349465324a244f6a354a6cafc69e47",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "nkro-control-host",
+          "nkro-control-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "dd4db4a41abb356e1ed911496aa47dadee341b9bcb1af37bae0e26aaf6b98e71",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38436,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12203,
+            "name": "low",
+            "occupied_bytes": 1804,
+            "start": 10400,
+            "trailing_free_bytes": 84
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 48963,
+            "name": "main",
+            "occupied_bytes": 36632,
+            "start": 12327,
+            "trailing_free_bytes": 1980
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 96,
+          "runtime_stack_bound": null,
+          "stack_capacity": 159,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 97
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2625,
+          "capacity": 3072,
+          "end_inclusive": 3648,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "b216c06aa386b10650ef635ca4a99bd0f2efb7ce69408ff3536725b6ca6dca71",
+        "report_sha256": "176021ae9d26f89ec8bc7d3edabf149441c1b53f54b56c4ea1a0bd845b90f42f",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7294832,
+      "evidence_directory": "final/one-shot",
+      "evidence_files": 1570,
+      "evidence_original_bytes": 64579887,
+      "hardware_validated": false,
+      "id": "one-shot",
+      "identity": {
+        "build_report_sha256": "a17677f5415c8c5320fe3af0ff74c6941ee0373543f7db1acee0777e24a589b1",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "c50d60b7d37bff9b1892f88784fad88b1a52847ee490d7949a9b6ae6ad58d5ee",
+        "ihx_sha256": "f99dd65d1c75d07112d1fd3c0f394648632034c62d4888ab7bb5980cda0bf6b9",
+        "map_sha256": "fabd8289cb3c71678f1a03cc01c286e78a7ac2eb3cd9e928bf91adec4916461b",
+        "mem_sha256": "8aacf06461acb79fd38920fdbaf2faad5a3298a612e5b6c7752981a48c41e1d2",
+        "nvm_schema": 532482,
+        "profile": "one-shot",
+        "source_manifest_sha256": "e51e64a7f1fffbae9d9f19970527d4ffb9665bd463c488d31a8c804153ea86b9"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "one-shot",
+      "profile_tests": {
+        "sha256": "6cf682cecff7b32a46ccb781f394ee3fa2394552fedabfabd732bf5d1ff2493c",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "one-shot-host",
+          "one-shot-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "8ed68a5f176cba83da6be53f28eadfc40189f8fece63b3df07683274500fbe15",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38889,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49348,
+            "name": "main",
+            "occupied_bytes": 37017,
+            "start": 12327,
+            "trailing_free_bytes": 1595
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 96,
+          "runtime_stack_bound": null,
+          "stack_capacity": 159,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 97
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2630,
+          "capacity": 3072,
+          "end_inclusive": 3653,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "cf476f32d6fe0cd139fdd84d883a75ed7956a6aea2621f935b1d759d5825f394",
+        "report_sha256": "edba09b0a58192a65ac4dfeec8ccdd0b3e99958450722b17ea4da8ff0b085b43",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7331254,
+      "evidence_directory": "final/nkro-one-shot",
+      "evidence_files": 1583,
+      "evidence_original_bytes": 64914654,
+      "hardware_validated": false,
+      "id": "nkro-one-shot",
+      "identity": {
+        "build_report_sha256": "a110fedb08d08bae17547dbd70c2d854bb2fad09a32a784ba11a7a3e97f944b3",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "2e8acc2c2e40be5df2cf9b7159e3034b282551b9e632a4041b1690b8e3d9f83d",
+        "ihx_sha256": "4557c4fd2bd7295e392faaf883c33db6ce462737a311a829bf273c3dfcab153b",
+        "map_sha256": "ad520a93ad3582eebc81052628046eaa49501f55a74220b0d197c2315ff6892a",
+        "mem_sha256": "182334ad8c64d8b83da1c06d0fe5d47dbf29c5ebfb14a2c57c62626824c49aab",
+        "nvm_schema": 532482,
+        "profile": "nkro-one-shot",
+        "source_manifest_sha256": "fb36e9d76988f126b81edcbe2c979b29307c1f956f99fd9246cca8bec6b05220"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "nkro-one-shot",
+      "profile_tests": {
+        "sha256": "0bf1938c9bb5cf5fa1e0b7a6a72ed0578a94e32fac86c24ad6d9ad0f49cfc0bf",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "nkro-control-host",
+          "nkro-control-linked",
+          "one-shot-host",
+          "one-shot-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "2e8feb66362331ed3fee839145b3878e5b3af98e0347316b4f76345a2a6616f4",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39028,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49487,
+            "name": "main",
+            "occupied_bytes": 37156,
+            "start": 12327,
+            "trailing_free_bytes": 1456
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 96,
+          "runtime_stack_bound": null,
+          "stack_capacity": 159,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 97
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2635,
+          "capacity": 3072,
+          "end_inclusive": 3658,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "2eef1f896ee5fb430e855cc35f8a966d17d7db9239c5e275b4bd17e490223111",
+        "report_sha256": "8f9e1c085653569024b37a58aae67496c951239b95173dc09a2c9c3f93645cf9",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7299836,
+      "evidence_directory": "final/space-cadet",
+      "evidence_files": 1564,
+      "evidence_original_bytes": 65182545,
+      "hardware_validated": false,
+      "id": "space-cadet",
+      "identity": {
+        "build_report_sha256": "bd7158e9381e50391043c74bd7e3e4ffe25300bc0bd7ec137e7c4e15462dbcf7",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "448243a77e3643dd4bd3e4d62fcf6826ba6bfa53ca65879e1ecbee9e2d39ecda",
+        "ihx_sha256": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+        "map_sha256": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1",
+        "mem_sha256": "c9e892b296f447005f0e954d59f19c27ea864d43194b868577e30ee9afd2195e",
+        "nvm_schema": 532482,
+        "profile": "space-cadet",
+        "source_manifest_sha256": "368b9064cb002269368ec09e139d95814d78f6c48805db9c7a36fda5b28a0fd9"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "space-cadet",
+      "profile_tests": {
+        "sha256": "7a295c54a23d74f8e362b1a33b07ce6a16f6589b0bd5facd39320d249d1c6e60",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "space-cadet-host"
+        ]
+      },
+      "qualification": {
+        "sha256": "68bf2250aa92f74b44d7a8fb6974c5b7399ca5d3d7609a4cd7fd5ac3c0a26565",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38415,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12203,
+            "name": "low",
+            "occupied_bytes": 1804,
+            "start": 10400,
+            "trailing_free_bytes": 84
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 48942,
+            "name": "main",
+            "occupied_bytes": 36611,
+            "start": 12327,
+            "trailing_free_bytes": 2001
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2623,
+          "capacity": 3072,
+          "end_inclusive": 3646,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "707282a30ac0d56ef4aeebbd0a9408ad94e67c7fec53691dbd7093ccec8babd6",
+        "report_sha256": "43ce7870035539cfed50c96b6676daf9b83b3959135c2b2c18e89beca142c910",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7328660,
+      "evidence_directory": "final/nkro-space-cadet",
+      "evidence_files": 1575,
+      "evidence_original_bytes": 65462556,
+      "hardware_validated": false,
+      "id": "nkro-space-cadet",
+      "identity": {
+        "build_report_sha256": "10a7946227852ebfb219b2424c05e98aace98353ea4989c8ce58a26eae7d1e8c",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "a6e2923c77d57c6c7427b98b7022db175a2bac78af5b8be98fe7a324e42867af",
+        "ihx_sha256": "69475785f2b2029933af880dfb487697e48ad1d722714f8f265430c1f35bf868",
+        "map_sha256": "e96ca9054b88edd972fc009a0af263cb0cce4407472253624b07720c665b98e0",
+        "mem_sha256": "c390e91033fc6f040b1940cacfdf89d0daf28ce92fb93bd6cd800e93e910433c",
+        "nvm_schema": 532482,
+        "profile": "nkro-space-cadet",
+        "source_manifest_sha256": "3c92514bfa2e3ea17770993b98f8d62418df2faa8ad46bd873de63759ced815a"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "nkro-space-cadet",
+      "profile_tests": {
+        "sha256": "0320053c1107b94ff21eb681feed24170a02eb1a676e119d7c46405169f2a43a",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "nkro-control-host",
+          "nkro-control-linked",
+          "space-cadet-host"
+        ]
+      },
+      "qualification": {
+        "sha256": "cba5f9ce0234ef4579ed63810b136e5a1509fcdaf9728bf7e7fe51bda3f431d7",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38554,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12203,
+            "name": "low",
+            "occupied_bytes": 1804,
+            "start": 10400,
+            "trailing_free_bytes": 84
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49081,
+            "name": "main",
+            "occupied_bytes": 36750,
+            "start": 12327,
+            "trailing_free_bytes": 1862
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2628,
+          "capacity": 3072,
+          "end_inclusive": 3651,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "b216c06aa386b10650ef635ca4a99bd0f2efb7ce69408ff3536725b6ca6dca71",
+        "report_sha256": "7080674762a4f03dd975d53fdb65884517c769f7a2b231a6c789a7d511181131",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7416244,
+      "evidence_directory": "final/one-shot-space-cadet",
+      "evidence_files": 1598,
+      "evidence_original_bytes": 66322758,
+      "hardware_validated": false,
+      "id": "one-shot-space-cadet",
+      "identity": {
+        "build_report_sha256": "8e961c432c2af063455e45cbbf93e0977b0ed7c9a6413b83ef7d6bdc11a9d90c",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "5b1360c36f3f5320b01c727bcff514f812ab421ae4238a2cae2a6567ced7685d",
+        "ihx_sha256": "f18ce8a14c7cf8ac3c7b4f2ab751e7beb517579b7e1804a823ad5456a28c5b85",
+        "map_sha256": "b6f5d57e4bf2031f2b2c3d00361f8753676574de545cf997e4365ace49b74cab",
+        "mem_sha256": "73ce81fa73985f9d89515157e34381ac11b2a15ddfba663cf1412f2a7c67d8bd",
+        "nvm_schema": 532482,
+        "profile": "one-shot-space-cadet",
+        "source_manifest_sha256": "92d7a16a90d0bf38af25ace36ffb9795af203db930ad3d696379501a0c78c874"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "one-shot-space-cadet",
+      "profile_tests": {
+        "sha256": "19556536ab1383df1efadf66ff5bdd80fb0bd24166929e69d95f60c8fbb3c678",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "one-shot-host",
+          "one-shot-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "3caa678d1af682638f162e69d6949095ff37af94e3f7f1bdca2aaecb44817350",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39006,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49465,
+            "name": "main",
+            "occupied_bytes": 37134,
+            "start": 12327,
+            "trailing_free_bytes": 1478
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2633,
+          "capacity": 3072,
+          "end_inclusive": 3656,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "cf476f32d6fe0cd139fdd84d883a75ed7956a6aea2621f935b1d759d5825f394",
+        "report_sha256": "cdeb9874ae3f8c17b06e2fa46898393a0ad992110d07c3d4991c3b4a7bf427ed",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7457580,
+      "evidence_directory": "final/full",
+      "evidence_files": 1615,
+      "evidence_original_bytes": 66713587,
+      "hardware_validated": false,
+      "id": "full",
+      "identity": {
+        "build_report_sha256": "8a62243fd6ccf8822cd44ca8f6c360e61ca981472e6ccbd3ba2edcb1826e3d7a",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "e2b7a0e8e19c747362a3711a41c4d64be4f11d2bc59cb480f56cfd63730caba3",
+        "ihx_sha256": "f68b06854985b813b9c5167c866b2a83031eaca872aae98b310b6d3fca436318",
+        "map_sha256": "a9ee25e9aec20f99d81f7a78ac079714604c224518a8c949cfd8061c46562228",
+        "mem_sha256": "57f2e2debf7b2c687525957d28f2ac1a37353bdf70b9ab8720c325268255142f",
+        "nvm_schema": 532482,
+        "profile": "full",
+        "source_manifest_sha256": "f985a814830ce7a653a5c5e90c3ac5db0f609e725acba3d17bf4b94c3b3be6f8"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "full",
+      "profile_tests": {
+        "sha256": "99e737f0c1732b43d6dbf9de17d7295e1939b2bec4271e256b0a58ec14884869",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "nkro-control-host",
+          "nkro-control-linked",
+          "one-shot-host",
+          "one-shot-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "b4406b174926fb44345cb62cf87f5e2e88abaed2c94a4ea9ce6de0e4b72437f4",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39145,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49604,
+            "name": "main",
+            "occupied_bytes": 37273,
+            "start": 12327,
+            "trailing_free_bytes": 1339
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2638,
+          "capacity": 3072,
+          "end_inclusive": 3661,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "2eef1f896ee5fb430e855cc35f8a966d17d7db9239c5e275b4bd17e490223111",
+        "report_sha256": "17628f7fbeeadfa42ed1d40bfec42dbb90293727c0ab116728af1f9b7a4e0594",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 16733919,
+      "evidence_directory": "final/full-short",
+      "evidence_files": 3352,
+      "evidence_original_bytes": 128402338,
+      "hardware_validated": false,
+      "id": "full-short",
+      "identity": {
+        "build_report_sha256": "c7a5c2728bd22bfc9d278698acca6ee4b448c0429b9330412083a8bdecae07b9",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "e2b7a0e8e19c747362a3711a41c4d64be4f11d2bc59cb480f56cfd63730caba3",
+        "ihx_sha256": "092f03515a28b85a481862aeedea66e519da2fd058fe88ebc9ab0b1e83b5bee6",
+        "map_sha256": "2f0a52dfdcc2f5eccc10473deca421b8cee25541d0d63127d4c6861b19449d38",
+        "mem_sha256": "f22a1f3a1911c746ee245c1561aae815d07fb993eb0a05e4526b29af01b3bcc7",
+        "nvm_schema": 532482,
+        "profile": "full",
+        "source_manifest_sha256": "8d2012f1b89d6734f8578530147e616be04044df9e1908da747e90a3c81d7b20"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "full",
+      "profile_tests": {
+        "sha256": "728827428a4ece02690120f1a985fc48930ce077c4ceaec8ad6cca81ea0ab95b",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "nkro-control-host",
+          "nkro-control-linked",
+          "one-shot-host",
+          "one-shot-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "c85edca5e5be5ed10a259492d38cd638c05edd30e23f98295a187984d95c0ca1",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 38907,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49366,
+            "name": "main",
+            "occupied_bytes": 37035,
+            "start": 12327,
+            "trailing_free_bytes": 1577
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2638,
+          "capacity": 3072,
+          "end_inclusive": 3661,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "2eef1f896ee5fb430e855cc35f8a966d17d7db9239c5e275b4bd17e490223111",
+        "report_sha256": "1c24f07320c129231bb892351dfde8507aaaa08a6abf28ecdcbfc4008768e1af",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": {
+        "algorithm": "foreground-short-transfers-v1",
+        "report": ".build/final-full-short/short-calls.json",
+        "report_sha256": "c8c9f4049a23e2ad5559d17950b067796df5f63155c68bd08f0186937e9c3775",
+        "saved_bytes": 238,
+        "selected": 238
+      },
+      "short_calls": true,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7657568,
+      "evidence_directory": "final/full-mouse",
+      "evidence_files": 1676,
+      "evidence_original_bytes": 68324795,
+      "hardware_validated": false,
+      "id": "full-mouse",
+      "identity": {
+        "build_report_sha256": "09de8d05db1177bc2ad7ec054e607a3e88187f4a1bcc8429dab98f018d9d3fbb",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "4e2833451a8490d2e304279efc41b8a78d0b085c06b697d6bc38d78b95e68a39",
+        "ihx_sha256": "6d447df0b911a53c361d083a2522d5412d91c670276ce1396b3097490ea00fe1",
+        "map_sha256": "82ac30170754c47fb0edda38792232dbbc2dae8a01b7d5107ee994c3dbe273b2",
+        "mem_sha256": "49a7924964c4ecd28a8da0894605871f02a5f376f095ccc24190f755dc9f5115",
+        "nvm_schema": 532482,
+        "profile": "full-mouse",
+        "source_manifest_sha256": "fdac7f529cd8b0a31b1430ab33cddf9741b5eba18e0b73ec0a523fc0c71f871b"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "full-mouse",
+      "profile_tests": {
+        "sha256": "754b2640df9b0e39745d135afd08f319e3d7bdcbb04bbc34a2c1cab88ec692ab",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "nkro-control-host",
+          "nkro-control-linked",
+          "one-shot-host",
+          "one-shot-linked",
+          "mouse-keys-host",
+          "mouse-keys-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "51090d44a56a425568ccf8d9c7468f9590a6562876b5ca5611e313a306a6ab62",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 40029,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50488,
+            "name": "main",
+            "occupied_bytes": 38157,
+            "start": 12327,
+            "trailing_free_bytes": 455
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2670,
+          "capacity": 3072,
+          "end_inclusive": 3693,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "0b26e6a268b7bfb97d894e481ed56b7fe692b254a5cb48725c6df8ab0ba03784",
+        "report_sha256": "b3d12f50d0a5f94af75bec23118c82a41525d4326cfc24ec26b62603c174c91c",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 7764887,
+      "evidence_directory": "final/full-auto-shift",
+      "evidence_files": 1685,
+      "evidence_original_bytes": 69642805,
+      "hardware_validated": false,
+      "id": "full-auto-shift",
+      "identity": {
+        "build_report_sha256": "b5f6001bbef6a6a65fa3a547547086374fcdf3e68215281bf10688585a8cc3b7",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "36e79a771ef9154fe3daf4d180c11e8d55c6eb2c2b4444d6b1b0b40f0bb214ef",
+        "ihx_sha256": "44565c763cd3ddce22daac8363d515c818865bfabe14a471fd4e6f0b84cd560d",
+        "map_sha256": "c3a6df622e775ca3e33da2e8a0cd1f466a4ceaa9a4e131c520d5c9b6d5b0cf83",
+        "mem_sha256": "9bd252ae8ae5c5bffc7b5c59f69d563cd95d6e118ba2a28c8a6acc4dc030695e",
+        "nvm_schema": 532482,
+        "profile": "full-auto-shift",
+        "source_manifest_sha256": "f88306c96961680617f8077c3a2140635a19c21b38b78d47c4e0609645f004f6"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "full-auto-shift",
+      "profile_tests": {
+        "sha256": "ec728922a7ce9cfabc85fe5ea3b89244c6b79ee6439ebc02e39956cc1077d5c4",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "nkro-control-host",
+          "nkro-control-linked",
+          "one-shot-host",
+          "one-shot-linked",
+          "auto-shift-host",
+          "auto-shift-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "020e09c2a2f392cb1ff13e29f22cf6b4dbb86ac86f126e3bef4b40d937831c94",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39758,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50217,
+            "name": "main",
+            "occupied_bytes": 37886,
+            "start": 12327,
+            "trailing_free_bytes": 726
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2655,
+          "capacity": 3072,
+          "end_inclusive": 3678,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "2eef1f896ee5fb430e855cc35f8a966d17d7db9239c5e275b4bd17e490223111",
+        "report_sha256": "45fffb9bff4682f5f6410acf1ff662429f5b6bbe73df45c944bd64ec0f69b3bb",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": null,
+      "short_calls": false,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    },
+    {
+      "evidence_archive_bytes": 15194088,
+      "evidence_directory": "final/full-mouse-auto-shift-short",
+      "evidence_files": 3108,
+      "evidence_original_bytes": 119286859,
+      "hardware_validated": false,
+      "id": "full-mouse-auto-shift-short",
+      "identity": {
+        "build_report_sha256": "fce5d532205e211c23727c4c8fca24b09f87d91875cb4efaf3d63537d48e528b",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "1d7f8c26e7b4a66085a0e01d6978c6a73ad077765a8620681137505b2fb942f5",
+        "ihx_sha256": "8873ebe29cea93673f44fa5c20adf8f5c372a73c70f1151da32b7c67671aad85",
+        "map_sha256": "60817e94fab4c98320f03be01821f0e50c30884a7249c2428f8a9a7f34eb38d1",
+        "mem_sha256": "c6db8c24bf8b29623307895ff8dfd1ffe6342c070feb578863d33da8d231cb9a",
+        "nvm_schema": 532482,
+        "profile": "full-mouse-auto-shift",
+        "source_manifest_sha256": "18ba39132dae0c5ce909f180e15b4689c1f5d1b0c98c139ba478e6860a541b78"
+      },
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "full-mouse-auto-shift",
+      "profile_tests": {
+        "sha256": "3967bae345a5d6459cdf92bfb8d44a0d65c23ce5476be0db498048c3f5b7d841",
+        "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+        "suites": [
+          "gates",
+          "outline-gates",
+          "short-call-gates",
+          "core-compact-host",
+          "core-compact-linked",
+          "emitted-linked",
+          "transport-linked",
+          "stack-gates",
+          "startup-gates",
+          "startup-stack",
+          "irq-gates",
+          "release-safety-gates",
+          "outline-integrity",
+          "vialrgb-linked",
+          "nkro-control-host",
+          "nkro-control-linked",
+          "one-shot-host",
+          "one-shot-linked",
+          "mouse-keys-host",
+          "mouse-keys-linked",
+          "auto-shift-host",
+          "auto-shift-linked"
+        ]
+      },
+      "qualification": {
+        "sha256": "89697cb4ac25bc379be79600c4b12de8c3c9cd330689fb37a349bd1346118e3d",
+        "suites": 28,
+        "unit_tests": {
+          "run": 273,
+          "skipped": 0
+        }
+      },
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 40403,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50862,
+            "name": "main",
+            "occupied_bytes": 38531,
+            "start": 12327,
+            "trailing_free_bytes": 81
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2687,
+          "capacity": 3072,
+          "end_inclusive": 3710,
+          "start": 1024
+        }
+      },
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "0b26e6a268b7bfb97d894e481ed56b7fe692b254a5cb48725c6df8ab0ba03784",
+        "report_sha256": "ce9aa4171494d6554874e3348136eb5610a8fd40fa265ffcbf6afd5637adb28e",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": 2,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main"
+        ],
+        "whole_program_qualified": false
+      },
+      "short_call_result": {
+        "algorithm": "foreground-short-transfers-v1",
+        "report": ".build/final4-full-mouse-auto-shift-short/short-calls.json",
+        "report_sha256": "98b1b0d428f36c5ab1dbf9d024fc8a31fa270193651ff79e128e54028f5420f5",
+        "saved_bytes": 239,
+        "selected": 239
+      },
+      "short_calls": true,
+      "source": {
+        "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+        "dirty": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "configuration": {
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "format": "ak820-build-configuration-1",
+    "make_options": {
+      "AK820_COMPACT_AUTOSHIFT": "no",
+      "AK820_COMPACT_MOUSEKEY": "no",
+      "AK820_COMPACT_ONESHOT": "no",
+      "AK820_COMPACT_SPACE_CADET": "yes",
+      "AK820_NKRO_CONTROL": "no"
+    },
+    "nvm_schema": 532482,
+    "optional_features": [
+      "space-cadet"
+    ],
+    "profile": "space-cadet",
+    "release_approved": false,
+    "runtime_qmk_settings": [],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200
+    }
+  },
+  "format": "ak820-configured-build-1",
+  "hardware_validated": false,
+  "identity": {
+    "build_report_sha256": "bd7158e9381e50391043c74bd7e3e4ffe25300bc0bd7ec137e7c4e15462dbcf7",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "configuration_sha256": "448243a77e3643dd4bd3e4d62fcf6826ba6bfa53ca65879e1ecbee9e2d39ecda",
+    "ihx_sha256": "954026656671bd019c98546c73c8cadb69e88e22494dd281ccf29226e4cebebc",
+    "map_sha256": "b50a2f83ed5b2dafeed1615ed3c24ec78b9bafe0293d46eeafaed0ad65646ab1",
+    "mem_sha256": "c9e892b296f447005f0e954d59f19c27ea864d43194b868577e30ee9afd2195e",
+    "nvm_schema": 532482,
+    "profile": "space-cadet",
+    "source_manifest_sha256": "368b9064cb002269368ec09e139d95814d78f6c48805db9c7a36fda5b28a0fd9"
+  },
+  "offline_tests_passed": true,
+  "physical_device_commands": 0,
+  "profile_tests": {
+    "sha256": "7a295c54a23d74f8e362b1a33b07ce6a16f6589b0bd5facd39320d249d1c6e60",
+    "source_files_sha256": "dec056472ef0163864a537e59fba86e10cdb3d475d05e970cd0c268494aa9180",
+    "suites": [
+      "gates",
+      "outline-gates",
+      "short-call-gates",
+      "core-compact-host",
+      "core-compact-linked",
+      "emitted-linked",
+      "transport-linked",
+      "stack-gates",
+      "startup-gates",
+      "startup-stack",
+      "irq-gates",
+      "release-safety-gates",
+      "outline-integrity",
+      "vialrgb-linked",
+      "space-cadet-host"
+    ]
+  },
+  "qualification": {
+    "sha256": "68bf2250aa92f74b44d7a8fb6974c5b7399ca5d3d7609a4cd7fd5ac3c0a26565",
+    "suites": 28,
+    "unit_tests": {
+      "run": 273,
+      "skipped": 0
+    }
+  },
+  "release_approved": false,
+  "release_blockers": [
+    "No reviewed whole-program foreground stack bound for this image.",
+    "No exact-image IRQ/nesting proof combined with that foreground bound.",
+    "No approved installer/settings transition for this feature identity."
+  ],
+  "resources": {
+    "absolute_xram": [
+      {
+        "reserved_end_exclusive": 1024,
+        "start": 512,
+        "symbol": "_ak820_led_dma"
+      }
+    ],
+    "code_bytes": 38415,
+    "code_windows": [
+      {
+        "end_exclusive": 12288,
+        "highest_address": 12203,
+        "name": "low",
+        "occupied_bytes": 1804,
+        "start": 10400,
+        "trailing_free_bytes": 84
+      },
+      {
+        "end_exclusive": 50944,
+        "highest_address": 48942,
+        "name": "main",
+        "occupied_bytes": 36611,
+        "start": 12327,
+        "trailing_free_bytes": 2001
+      }
+    ],
+    "internal_ram": {
+      "initial_sp": 92,
+      "runtime_stack_bound": null,
+      "stack_capacity": 163,
+      "stack_margin": null,
+      "stack_qualified": false,
+      "static_bytes": 93
+    },
+    "protected_windows_clear": true,
+    "xram": {
+      "bytes": 2623,
+      "capacity": 3072,
+      "end_inclusive": 3646,
+      "start": 1024
+    }
+  },
+  "runtime_analysis": {
+    "exit_code": 2,
+    "log_sha256": "707282a30ac0d56ef4aeebbd0a9408ad94e67c7fec53691dbd7093ccec8babd6",
+    "report_sha256": "43ce7870035539cfed50c96b6676daf9b83b3959135c2b2c18e89beca142c910",
+    "root_bounds": {
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2,
+      "_ak820_timer_irq": 2,
+      "_main": null
+    },
+    "unresolved_roots": [
+      "_main"
+    ],
+    "whole_program_qualified": false
+  },
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "short_calls": null,
+  "source": {
+    "commit": "38ad0133278463b4662dcb81eecaa17c9cd93b9b",
+    "dirty": true
+  }
+}

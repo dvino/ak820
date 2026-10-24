@@ -259,13 +259,22 @@ void soft_reset_keyboard(void) {
 }
 
 /* Convert record into usable keycode via the contained event. */
-uint16_t get_record_keycode(keyrecord_t *record, bool update_layer_cache) {
+uint16_t get_record_keycode(keyrecord_t *record_argument, bool update_layer_cache) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
+#else
+    keyrecord_t *record = record_argument;
+#endif
 #if defined(COMBO_ENABLE) || defined(REPEAT_KEY_ENABLE)
     if (record->keycode) {
         return record->keycode;
     }
 #endif
+#ifdef AK820_BOARD
+    return ak820_resolve_key(AK820_KEYPOS_VALUE(record->event.key), record->event.pressed && update_layer_cache);
+#else
     return get_event_keycode(record->event, update_layer_cache);
+#endif
 }
 
 /* Convert event into usable keycode. Checks the layer cache to ensure that it
@@ -275,6 +284,9 @@ uint16_t get_record_keycode(keyrecord_t *record, bool update_layer_cache) {
  * from triggering properly.
  */
 uint16_t get_event_keycode(keyevent_t event, bool update_layer_cache) {
+#ifdef AK820_BOARD
+    return ak820_resolve_key(AK820_KEYPOS_VALUE(event.key), event.pressed && update_layer_cache);
+#else
 #if !defined(NO_ACTION_LAYER) && !defined(STRICT_LAYER_RELEASE)
     /* TODO: Use store_or_get_action() or a similar function. */
     if (!disable_action_cache) {
@@ -298,10 +310,16 @@ uint16_t get_event_keycode(keyevent_t event, bool update_layer_cache) {
         //dprintf("get_event_keycode:layer %x\n",layer);
         //return keymap_key_to_keycode(layer, event.key);
         return keymap_key_to_keycode(layer_switch_get_layer(event.key), event.key);
+#endif
 }
 
 /* Get keycode, and then process pre tapping functionality */
-bool pre_process_record_quantum(keyrecord_t *record) {
+bool pre_process_record_quantum(keyrecord_t *record_argument) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
+#else
+    keyrecord_t *record = record_argument;
+#endif
     uint16_t keycode = get_record_keycode(record, true);
 #ifdef AK820_COMPACT_TAPPING
     record->keycode = keycode;
@@ -337,7 +355,12 @@ bool process_record_quantum(keyrecord_t *record) {
 #ifdef AK820_NKRO_CONTROL
 /* Switching reports first releases the old protocol. clear_keyboard also
  * cancels deferred owners so releases cannot revive a previous report. */
-static bool process_ak820_nkro(uint16_t keycode, keyrecord_t *record) {
+static bool process_ak820_nkro(uint16_t keycode, keyrecord_t *record_argument) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
+#else
+    keyrecord_t *record = record_argument;
+#endif
     if (keycode < QK_MAGIC_NKRO_ON || keycode > QK_MAGIC_TOGGLE_NKRO) return true;
     if (record->event.pressed) {
         clear_keyboard();
@@ -347,7 +370,12 @@ static bool process_ak820_nkro(uint16_t keycode, keyrecord_t *record) {
 }
 #endif
 
-bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record) {
+bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record_argument) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
+#else
+    keyrecord_t *record = record_argument;
+#endif
     // This is how you use actions here
     // if (keycode == QK_LEADER) {
     //   action_t action;

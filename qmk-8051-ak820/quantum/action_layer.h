@@ -174,12 +174,21 @@ uint8_t read_source_layers_cache(keypos_t key);
 #ifdef AK820_BOARD
 uint16_t read_source_keycode_cache(keypos_t key);
 bool update_source_keycode_cache(keypos_t key, uint16_t keycode);
+/* Scalar internal forms preserve every row/column value, including encoder
+ * and Vial virtual positions; they do not change NVM or matrix indices. */
+uint16_t ak820_cached_key(uint16_t position);
+void ak820_cache_layer(uint16_t position, uint8_t layer);
+bool ak820_cache_keycode(uint16_t position, uint16_t keycode);
 #endif
 #endif
 uint16_t store_or_get_action(bool pressed, keypos_t key);
 
 /* return the topmost non-transparent layer currently associated with key */
 uint8_t layer_switch_get_layer(keypos_t key);
+#ifdef AK820_BOARD
+uint8_t ak820_layer_for_key(uint16_t position);
+uint16_t ak820_resolve_key(uint16_t position, bool cache_press);
+#endif
 
 /* return action depending on current layer status */
 uint16_t layer_switch_get_action(keypos_t key);

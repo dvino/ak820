@@ -19,6 +19,7 @@ from pathlib import Path
 
 from ak820_dce import optimize
 from ak820_outline_audit import outline_assembled
+import ak820_shortcalls as shortcalls
 from ak820_build_inputs import FORMAT as INPUT_FORMAT, collect_inputs, input_snapshot
 from ak820_profiles import PROFILES, configuration
 
@@ -101,10 +102,13 @@ def main():
     p.add_argument('--root', action='append', default=[])
     p.add_argument('--build-id', type=integer, default=0x082002, help='Stable Vial EEPROM schema identifier')
     p.add_argument('--extra-flags', default='--opt-code-size', help='Additional compiler flags; board config owns feature flags')
+    p.add_argument('--short-calls', action='store_true', help='Opt in to verified foreground ACALL/AJMP relaxation (AK820 only)')
     p.add_argument('--no-outline', action='store_true', help='Disable AK820 exact instruction outlining for comparison builds')
     p.add_argument('--no-callee-saves', action='store_true', help='Disable the audited AK820 callee-saves list for comparison builds')
     args = p.parse_args()
     selected = configuration(args.profile)
+    if args.short_calls and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
+        raise ValueError('Short calls require the AK820 target and pinned SDCC 4.6.0')
     if args.keyboard == 'ajazz/ak820':
         # These calls originate in the preserved OEM loader and are inserted
         # by the image packer, so application ASM cannot express their edges.
@@ -144,13 +148,14 @@ def main():
     inputs_before = input_snapshot(root, toolchain)
     commands = []
 
-    def run(label, argv, timeout=300):
+    def run(label, argv, timeout=300, allow_page_errors=False):
         log = build/(label+'.log')
         with log.open('w') as f:
             proc = subprocess.run(argv,cwd=root,env=env,stdout=f,stderr=subprocess.STDOUT,timeout=timeout)
         commands.append({'label':label,'argv':argv,'exit_code':proc.returncode,'log':log.relative_to(root).as_posix(),'log_sha256':sha(log)})
-        if proc.returncode:
+        if proc.returncode and not (allow_page_errors and shortcalls.page_errors_only(log.read_text())):
             raise RuntimeError(label+' failed; see '+str(log))
+        return proc.returncode
 
     target = args.keyboard.replace('/','_')+'_'+args.keymap
     relative_build = str(build.relative_to(root))
@@ -190,17 +195,35 @@ def main():
     if apply_outlining:
         outlining = outline_assembled(dce_input, dce, max_helpers=200, min_saving=1)
         assemble_tree(dce, 'assemble-outlined-')
-    objects = sorted(str(path) for path in dce.rglob('*.rel'))
     ihx = build/(target+'.ihx')
     extra_link = []
     windows = [(args.code_start,args.code_end)]
     if args.keyboard == 'ajazz/ak820':
         extra_link.append('-Wl-bAK820LOW='+hex(args.low_code_start))
         windows.append((args.low_code_start,args.low_code_end))
-    run('link',[sdcc,'-mmcs51','--model-large','--iram-size','0x100',
-        '--xram-loc',hex(args.xram_start),'--xram-size',hex(args.xram_end-args.xram_start),
-        '--code-loc',hex(args.code_start),'--code-size',hex(args.code_end),
-        '--opt-code-size',*extra_link,*objects,'-o',str(ihx)])
+    def link_command(tree, image, code_end):
+        return [sdcc,'-mmcs51','--model-large','--iram-size','0x100',
+            '--xram-loc',hex(args.xram_start),'--xram-size',hex(args.xram_end-args.xram_start),
+            '--code-loc',hex(args.code_start),'--code-size',hex(code_end),
+            '--opt-code-size',*(['-Wl-j'] if args.short_calls else []),*extra_link,
+            *sorted(str(path) for path in tree.rglob('*.rel')),
+            '-o',str(image)]
+
+    short_plan = None
+    short_input = build/'shortcalls-input'
+    if args.short_calls:
+        # Final consumers keep their established dce path. Only this immutable
+        # post-outline preimage is used to construct every diagnostic iteration.
+        dce.rename(short_input)
+        def diagnostic_link(tree, image, label, allow_page_errors):
+            assemble_tree(tree, label+'-assemble-')
+            return run(label, link_command(tree,image,0x10000), allow_page_errors=allow_page_errors)
+        short_plan = shortcalls.prepare(short_input, build/'shortcalls', diagnostic_link)
+        shortcalls.write_tree(short_input, dce, short_plan['candidates'])
+        assemble_tree(dce, 'assemble-shortcalls-final-')
+    # Diagnostic images are never accepted firmware. Repeat the link with the
+    # original strict memory limits and independently validate its final bytes.
+    run('link',link_command(dce,ihx,args.code_end))
     data = ihex_data(ihx)
     invalid = [a for a in data if not any(lo<=a<hi for lo,hi in windows)]
     if invalid:
@@ -211,6 +234,10 @@ def main():
         raise ValueError('XRAM allocation outside permitted interval')
     if 'ERROR' in memory or 'No room' in memory:
         raise ValueError('Memory allocation failure')
+    short_result = None
+    if short_plan is not None:
+        short_result = shortcalls.finish(short_input,dce,build/'shortcalls/baseline.ihx',
+            ihx,short_plan,build/'short-calls.json')
     # This output is intentionally not padded to a device update payload.
     binary = ihx.with_suffix('.bin')
     binary.write_bytes(bytes(data.get(a,0xff) for a in range(min(data),max(data)+1)))
@@ -220,6 +247,11 @@ def main():
         artifacts.append(dce/'outlining.json')
     # Absolute XDATA declarations are not represented by ordinary linker
     # area lengths. Preserve compiler ASM for the profile resource checker.
+    if short_result is not None:
+        artifacts.append(build/'short-calls.json')
+        artifacts.append(ihx.with_suffix('.noi'))
+        artifacts.extend(sorted(dce.rglob('*.asm')))
+        artifacts.extend(sorted(dce.rglob('*.rel')))
     artifacts.extend(asm_paths)
     artifacts.extend(sorted(dce.rglob('*.rst')))
     source_records, dependency_evidence = collect_inputs(root, toolchain, build, expected, inputs_before)
@@ -231,6 +263,12 @@ def main():
         'compiler_sha256':sha(Path(sdcc)), 'assembler_sha256':sha(Path(assembler)),
         'builder_sha256':sha(Path(__file__)), 'dce_sha256':sha(root/'util/ak820_dce.py'),
         'outliner_sha256':sha(root/'util/ak820_outline_audit.py'),
+        'shortcalls_sha256':sha(root/'util/ak820_shortcalls.py'),
+        'short_calls': None if short_result is None else {
+            'algorithm':short_result['algorithm'], 'report':(build/'short-calls.json').relative_to(root).as_posix(),
+            'report_sha256':sha(build/'short-calls.json'), 'selected':len(short_plan['candidates']),
+            'saved_bytes':short_result['saved_bytes'],
+        },
         'audited_callee_saves':list(callee_saves),
         'compiler_extra_flags':compile_flags,
         'outlining': None if outlining is None else {

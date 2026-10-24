@@ -17,7 +17,7 @@ run; it was not a failed firmware or installer test.
 The full image includes NKRO control, modifier One Shot and compact Space
 Cadet alongside the base functions. Its IHX SHA256 is
 `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`.
-It uses 40,043 CODE bytes, 2,631 XRAM bytes and 162 bytes of allocated stack.
+It uses 40,043 CODE bytes, 2,637 allocated XRAM bytes and 162 bytes of allocated stack.
 There are 441 trailing main-window bytes and 16 low-window bytes.
 
 Exact-image analysis closes the main and three callback roots. The combined
@@ -41,7 +41,8 @@ model limits are in the qualification report.
 
 Only this exact full image satisfies the new packaging gate, independent program
 policy and fresh packing receipt. Native CI and downloaded-package acceptance have passed.
-The other seven profiles remain development builds. The earlier eight-profile
+The other seven profiles in the earlier eight-profile matrix remain development
+builds; the new compact-feature profiles are also development-only. That
 matrix from source `81cfc96` is [dated evidence](../audits/rc6/roadmap-max-20261024/final/README.md),
 not qualification of those profiles after the alpha.3 changes.
 
@@ -49,6 +50,17 @@ The [roadmap archive acceptance](../audits/rc6/roadmap-acceptance-20261024/revie
 records the imported work. The [roadmap](ROADMAP.md) lists remaining release
 work and deferred features. No device commands were issued during alpha.3
 preparation.
+
+## Current development source
+
+The source now includes `full-mouse`, `full-auto-shift` and
+`full-mouse-auto-shift` profiles. They add compact Mouse Keys, Auto Shift or
+both to the alpha.3 `full` feature set. These development images are not published or installed and have no
+release approval. The published and installed firmware remains the exact alpha.3
+image identified above. All eleven named development profiles pass offline checks;
+`full` also passes with `--short-calls`, for twelve checked build variants.
+Current compact-feature source, builds and limitations
+are recorded in the [technical report](../audits/rc6/compact-next-20261024/README.md).
 
 ## Installed firmware
 

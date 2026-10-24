@@ -1,0 +1,351 @@
+{
+  "scope": "Core scalar/RGB/private-view stage, before shared event entry and Repeat classification.",
+  "image_sha256": "609297b973cabce672b6c6665393e0373af5a269e160545c163280d89dcf6e51",
+  "default_qualification_passed": false,
+  "suites": [
+    {
+      "command": [
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "ae9216d341e0d67f8197eac08b925653981397bd607bbee4594af96bc2a03ac9"
+    },
+    {
+      "command": [
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "c0cb98a70693b463069afba413d352f8fdc8540f469b9f3860e3385ec8c426dd"
+    },
+    {
+      "command": [
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "bea5c190092f0c39b81665cc37c9b8f69194108eff7b67b84f2a0d7324753e4c"
+    },
+    {
+      "command": [
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "98ca8d27d4a463097e39696a2025cc0f5dfc6bf1feeb51090c9a81d38769ae24"
+    },
+    {
+      "command": [
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "52b24fa287332cd8a5d51991daa1e499392a02c5902d01fea49c2ddceed1d46b"
+    },
+    {
+      "command": [
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f"
+    },
+    {
+      "command": [
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "afd6802b7adc737f7190dc204d6f4f117b356787ae474c880bb95323f690571f"
+    },
+    {
+      "command": [
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "21c7e48d0b1ec908feef784bbce1fa55f2c9a7acf76382fa7578754a78bd1ed8"
+    },
+    {
+      "command": [
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "0df67c8754c105cf663ed16d3558d481ac4362b37f51eefa98fb1d48a752ed0f"
+    },
+    {
+      "command": [
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504"
+    },
+    {
+      "command": [
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e"
+    },
+    {
+      "command": [
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320"
+    },
+    {
+      "command": [
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "aed1f8864c9289f67cc8ef8f084b5e6a2b55c97a3b722c7ac6f21132e6d52d56"
+    },
+    {
+      "command": [
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3"
+    },
+    {
+      "command": [
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca"
+    },
+    {
+      "command": [
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 1,
+      "log_sha256": "067fe643ce4f1b802399a2296402ffd51515c794ce0492be71acaa771634ece8"
+    },
+    {
+      "command": [
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd"
+    },
+    {
+      "command": [
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5"
+    },
+    {
+      "command": [
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "ab78398099c1d788da902e043b115ff2f5097f44c7b9c8351b68aa793b0beb54"
+    },
+    {
+      "command": [
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1"
+    },
+    {
+      "command": [
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/ak820_features"
+      ],
+      "exit_code": 0,
+      "log_sha256": "c093f83df6e4a45483dbde6c55650aa49150592311d7d86391eb2df336a4f961"
+    },
+    {
+      "command": [
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "log_sha256": "510f8a45d8f03d742b1753269201d647a4bf27f1dab2e5f9c54b000bdcd36fc5"
+    },
+    {
+      "command": [
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "log_sha256": "23bf251a3cc735253c2094a96aa4cd50b5379e2f35c4e6db78b07ef087985908"
+    },
+    {
+      "command": [
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c"
+    },
+    {
+      "command": [
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/rgb"
+      ],
+      "exit_code": 0,
+      "log_sha256": "70f80e56e208e6a4934fd6f51890cf32dbe3f8a26ff6ce9065781d9752fab7e2"
+    },
+    {
+      "command": [
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/bounded"
+      ],
+      "exit_code": 0,
+      "log_sha256": "fbc2c7b103b2678c714bd8ece9952876ee7726be98a48fbc210164c6594931e5"
+    },
+    {
+      "command": [
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/tapping"
+      ],
+      "exit_code": 0,
+      "log_sha256": "b7ebec8e3c56779ee41bd244de0d1c13852cd8e527cd9693ef3377191fabcaef"
+    },
+    {
+      "command": [
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/af73702a4595/optimize-work/qmk-8051-ak820/.build/core-qualified/qualification-logs-tngyyey8/combo"
+      ],
+      "exit_code": 0,
+      "log_sha256": "99f20a956fe78c0aecfc4302a40389a8c1e20ba377c104da10a51a6ccc284d2e"
+    }
+  ],
+  "separate_rgb_run": {
+    "environment": {
+      "ASAN_OPTIONS": "detect_leaks=0"
+    },
+    "pass": true,
+    "report_sha256": "867623f5073cb64d5acc26c0b30e3d7bb18fe6967ec0baa068528b33c70278d8",
+    "reason": "LeakSanitizer cannot read /proc/<pid>/task in this sandbox; AddressSanitizer and UBSan remain enabled."
+  },
+  "profile_tests": {
+    "pass": true,
+    "suites": [
+      "gates",
+      "outline-gates",
+      "stack-gates",
+      "startup-gates",
+      "startup-stack",
+      "irq-gates",
+      "release-safety-gates",
+      "outline-integrity",
+      "vialrgb-linked",
+      "nkro-control-host",
+      "nkro-control-linked",
+      "one-shot-host",
+      "one-shot-linked"
+    ],
+    "report_sha256": "cbb5235c17ad29be32d38ec5347351985325bea3122c659a7728390fbebacd51"
+  },
+  "runtime_stack": {
+    "report_sha256": "444619414cd2bd0483e4cc210dde184ac438bf28dad7f755b77b37adad233ccf",
+    "root_bounds": {
+      "_main": null,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": 2
+    },
+    "whole_program_qualified": false
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0
+}

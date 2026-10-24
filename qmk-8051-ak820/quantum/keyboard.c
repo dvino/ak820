@@ -546,7 +546,7 @@ static inline void generate_tick_event(void) {
     if (TIMER_DIFF_16(now, last_tick) != 0) {
         //action_exec(MAKE_TICK_EVENT);
         MAKE_TICK_EVENT;
-        action_exec(dummy_event);
+        AK820_ACTION_EXEC(dummy_event);
         last_tick = now;
     }
 }
@@ -607,7 +607,7 @@ static bool matrix_task(void) {
                 if (process_keypress) {
                     //action_exec(MAKE_KEYEVENT(row, col, key_pressed));
                     MAKE_KEYEVENT(row, col, key_pressed);
-                    action_exec(dummy_event);
+                    AK820_ACTION_EXEC(dummy_event);
                 }
 
                 switch_events(row, col, key_pressed);

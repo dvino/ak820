@@ -22,6 +22,11 @@ TAP_DANCE_ENABLE = no
 COMBO_ENABLE = no
 KEY_OVERRIDE_ENABLE = no
 AUTO_SHIFT_ENABLE = no
+AK820_COMPACT_AUTOSHIFT ?= no
+ifeq ($(AK820_COMPACT_AUTOSHIFT),yes)
+    OPT_DEFS += -DAK820_COMPACT_AUTOSHIFT
+    SRC += ak820_autoshift.c
+endif
 QMK_SETTINGS = no
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = custom
@@ -41,4 +46,11 @@ endif
 AK820_COMPACT_SPACE_CADET ?= no
 ifeq ($(AK820_COMPACT_SPACE_CADET),yes)
     OPT_DEFS += -DAK820_COMPACT_SPACE_CADET
+endif
+
+# Fixed-speed Mouse Keys use the existing HID mouse report and endpoint.
+AK820_COMPACT_MOUSEKEY ?= no
+ifeq ($(AK820_COMPACT_MOUSEKEY),yes)
+    MOUSEKEY_ENABLE = yes
+    OPT_DEFS += -DAK820_COMPACT_MOUSEKEY
 endif

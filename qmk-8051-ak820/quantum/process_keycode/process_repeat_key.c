@@ -26,19 +26,35 @@ __attribute__((weak)) bool remember_last_key_user(uint16_t keycode, keyrecord_t*
 static bool remember_last_key(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
     /* Layer/modifier controls are not repeatable actions. Include LM and DF,
      * too: replaying LM from a Repeat key would create an unowned held layer. */
+#ifdef AK820_BOARD
+    _Static_assert(QK_TO == QK_LAYER_MOD_MAX + 1 && QK_MOMENTARY == QK_TO_MAX + 1 &&
+                   QK_DEF_LAYER == QK_MOMENTARY_MAX + 1 && QK_TOGGLE_LAYER == QK_DEF_LAYER_MAX + 1 &&
+                   QK_ONE_SHOT_LAYER == QK_TOGGLE_LAYER_MAX + 1 && QK_ONE_SHOT_MOD == QK_ONE_SHOT_LAYER_MAX + 1 &&
+                   QK_LAYER_TAP_TOGGLE == QK_ONE_SHOT_MOD_MAX + 1,
+                   "AK820 Repeat layer-control ranges must remain contiguous");
+#endif
     if (keycode == KC_NO || keycode == KC_TRANSPARENT ||
+#ifdef AK820_BOARD
+#    if !defined(NO_ACTION_ONESHOT) || defined(AK820_COMPACT_ONESHOT)
+        (keycode >= QK_LAYER_MOD && keycode <= QK_LAYER_TAP_TOGGLE_MAX) ||
+#    else
+        (keycode >= QK_LAYER_MOD && keycode <= QK_TOGGLE_LAYER_MAX) ||
+        (keycode >= QK_LAYER_TAP_TOGGLE && keycode <= QK_LAYER_TAP_TOGGLE_MAX) ||
+#    endif
+#else
         (keycode >= QK_MOMENTARY && keycode <= QK_MOMENTARY_MAX) ||
         (keycode >= QK_LAYER_MOD && keycode <= QK_LAYER_MOD_MAX) ||
         (keycode >= QK_DEF_LAYER && keycode <= QK_DEF_LAYER_MAX) ||
         (keycode >= QK_TO && keycode <= QK_TO_MAX) ||
         (keycode >= QK_TOGGLE_LAYER && keycode <= QK_TOGGLE_LAYER_MAX) ||
         (keycode >= QK_LAYER_TAP_TOGGLE && keycode <= QK_LAYER_TAP_TOGGLE_MAX) ||
+#endif
         (keycode >= KC_LCTL && keycode <= KC_RGUI) ||
         keycode == KC_HYPR || keycode == KC_MEH || keycode == QK_REPEAT_KEY
 #ifndef NO_ALT_REPEAT_KEY
         || keycode == QK_ALT_REPEAT_KEY
 #endif
-#if !defined(NO_ACTION_ONESHOT) || defined(AK820_COMPACT_ONESHOT)
+#if !defined(AK820_BOARD) && (!defined(NO_ACTION_ONESHOT) || defined(AK820_COMPACT_ONESHOT))
         || (keycode >= QK_ONE_SHOT_LAYER && keycode <= QK_ONE_SHOT_LAYER_MAX)
         || (keycode >= QK_ONE_SHOT_MOD && keycode <= QK_ONE_SHOT_MOD_MAX)
 #endif

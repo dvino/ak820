@@ -19,6 +19,8 @@ SWITCHES = {
     'nkro-control': 'AK820_NKRO_CONTROL',
     'one-shot': 'AK820_COMPACT_ONESHOT',
     'space-cadet': 'AK820_COMPACT_SPACE_CADET',
+    'mouse-keys': 'AK820_COMPACT_MOUSEKEY',
+    'auto-shift': 'AK820_COMPACT_AUTOSHIFT',
 }
 PROFILES = {
     'standard': (),
@@ -29,6 +31,9 @@ PROFILES = {
     'nkro-space-cadet': ('nkro-control', 'space-cadet'),
     'one-shot-space-cadet': ('one-shot', 'space-cadet'),
     'full': ('nkro-control', 'one-shot', 'space-cadet'),
+    'full-mouse': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys'),
+    'full-auto-shift': ('nkro-control', 'one-shot', 'space-cadet', 'auto-shift'),
+    'full-mouse-auto-shift': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'auto-shift'),
 }
 CONFLICTS = []
 BASE_FEATURES = (
@@ -41,8 +46,6 @@ DEFERRED = {
     'qmk-settings': 'Requires a versioned saved extension and typed backup/restore; upstream layout moves Combos.',
     'tap-dance': 'Dynamic entries, input ownership and complete-image cost are not qualified.',
     'key-overrides': 'Modifier ownership, Repeat, Caps Word and macro interactions are not qualified.',
-    'mouse-keys': 'USB mouse reports, scan timing and complete-image cost are not qualified.',
-    'auto-shift': 'Interactions with tap-hold, Combos and Caps Word are not qualified.',
     'magic': 'Modifier swaps and GUI control are separate from the limited NKRO action.',
     'leader': 'Sequence length, timeout and supported output actions are not qualified.',
     'dynamic-macros': 'Recording RAM and replay behavior are not qualified; Vial macros remain enabled.',
@@ -59,7 +62,9 @@ def configuration(name: str) -> dict:
         'make_options': {switch: 'yes' if feature in enabled else 'no'
                          for feature, switch in SWITCHES.items()},
         'runtime_qmk_settings': [],
-        'timing_ms': {'combo': 40, 'tap_hold': 200},
+        'timing_ms': {'combo': 40, 'tap_hold': 200,
+                      **({'mouse_cursor': 20, 'mouse_wheel': 80} if 'mouse-keys' in enabled else {}),
+                      **({'auto_shift': 175} if 'auto-shift' in enabled else {})},
         'release_approved': False,
     }
 

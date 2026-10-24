@@ -54,7 +54,10 @@ USB VID:PID `320F:505B` — дополнительный признак, а не
 
 Примеры назначения и ограничения описаны в [руководстве по настройке](CONFIGURATION.md).
 One Shot работает только с модификаторами, Space Cadet включает `SC_LSPO`,
-`SC_RSPC` и `SC_SENT`. Mouse Keys, Tap Dance, Key Overrides и Auto Shift не включены.
+`SC_RSPC` и `SC_SENT`. Компактные Mouse Keys и Auto Shift можно включить по отдельности или вместе
+в профилях исходников для разработки; они не входят в опубликованный
+образ alpha.3. См. [Mouse Keys](COMPACT-MOUSE-KEYS.md) и
+[Auto Shift](COMPACT_AUTOSHIFT.md).
 
 ## Отказ от ответственности
 

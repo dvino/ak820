@@ -21,6 +21,7 @@ QMK = ROOT / 'qmk-8051-ak820'
 sys.path.insert(0, str(QMK / 'util'))
 import ak820_profiles as profiles
 from build_ak820 import AK820_CALLEE_SAVES
+import ak820_shortcalls as shortcalls
 from ak820_build_inputs import validate_inputs
 from ak820_diagnose import diagnostic_build
 from pack_ak820 import read_symbols, validate_startup
@@ -30,7 +31,8 @@ from test_keyboard import unittest_counts
 
 FORMAT = 'ak820-configured-build-1'
 WINDOWS = ((0x28a0, 0x3000), (0x3027, 0xc700))
-SYMBOLS = {'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process'}
+SYMBOLS = {'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
+           'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process'}
 RELEASE_BLOCKERS = (
     'No reviewed whole-program foreground stack bound for this image.',
     'No exact-image IRQ/nesting proof combined with that foreground bound.',
@@ -223,6 +225,29 @@ def memory_report(code, symbols, memory):
             'protected_windows_clear': True}
 
 
+def check_short_calls(report, build, image):
+    summary = report.get('short_calls')
+    proof_path = build/'short-calls.json'
+    if summary is None:
+        require(not proof_path.exists() and not (build/'shortcalls-input').exists(),
+                'Missing opt-in short-call provenance')
+        return None
+    require(isinstance(summary,dict) and report.get('shortcalls_sha256') == sha(QMK/'util/ak820_shortcalls.py'),
+            'Unqualified short-call tool')
+    relative = proof_path.relative_to(QMK).as_posix()
+    records = [row for row in report['artifacts'] if row.get('path') == relative]
+    require(summary.get('report') == relative and len(records)==1 and proof_path.is_file(),
+            'Missing or ambiguous short-call proof')
+    require(summary.get('report_sha256') == sha(proof_path) == records[0].get('sha256') and
+            records[0].get('size') == proof_path.stat().st_size, 'Unbound short-call proof')
+    proof = load_json(proof_path)
+    require(summary.get('algorithm') == proof.get('algorithm') and
+            summary.get('selected') == len(proof.get('candidates',[])) and
+            summary.get('saved_bytes') == proof.get('saved_bytes'), 'Short-call summary differs')
+    shortcalls.validate_saved(build,image,proof)
+    return summary
+
+
 def inspect(build, toolchain):
     build, toolchain = Path(build).resolve(), validate_tools(toolchain)
     require(build.is_relative_to(QMK.resolve()), 'Build must be beneath the QMK source root')
@@ -244,6 +269,7 @@ def inspect(build, toolchain):
             report.get('audited_callee_saves') == list(AK820_CALLEE_SAVES) and
             isinstance(report.get('outlining'), dict), 'Unqualified compiler/ABI/transform configuration')
     ihx, mapfile, mem = (artifact(report, build, suffix) for suffix in ('ihx', 'map', 'mem'))
+    short_summary = check_short_calls(report, build, ihx)
     code = diagnostic_build(ihx, mapfile, report_path)
     symbols = linked_symbols(mapfile)
     validate_startup(code, symbols)
@@ -263,6 +289,7 @@ def inspect(build, toolchain):
                 'build_report_sha256': sha(report_path), 'source_manifest_sha256': source_manifest_sha,
                 'compiler_sha256': report['compiler_sha256'], 'nvm_schema': profiles.SCHEMA}
     return {'format': FORMAT, 'configuration': selected, 'identity': identity,
+            'short_calls': short_summary,
             'resources': resources, 'hardware_validated': False, 'physical_device_commands': 0,
             'offline_tests_passed': False, 'release_approved': False,
             'release_blockers': list(RELEASE_BLOCKERS),
@@ -348,6 +375,19 @@ def profile_test_plan(name, build, toolchain):
                              '-p', 'test_configure_firmware.py'])]
     plan.extend([
         ('outline-gates', QMK, [sys.executable, 'tests/ak820_optimization/outline_unit.py']),
+        ('short-call-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                 '-s', 'tests/ak820_shortcalls', '-p', 'test_*.py']),
+        ('core-compact-host', QMK, [sys.executable, 'tests/ak820_core_compact/run.py',
+                                  '--output', str(output / 'core-compact-host.json')]),
+        ('core-compact-linked', QMK, [sys.executable, 'tests/ak820_core_compact/linked.py',
+                                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                                    '--output-dir', str(output / 'core-compact')]),
+        ('emitted-linked', QMK, [sys.executable, 'tests/ak820_emitted/run.py',
+                               '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                               '--output-dir', str(output / 'emitted')]),
+        ('transport-linked', QMK, [sys.executable, 'tests/ak820_transport_retry/run.py',
+                                 '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                                 '--output-dir', str(output / 'transport')]),
         ('stack-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
                             '-s', 'tests/ak820_stack', '-p', 'test_*.py']),
         ('startup-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
@@ -383,6 +423,17 @@ def profile_test_plan(name, build, toolchain):
         plan.append(('space-cadet-host', QMK,
                      [sys.executable, 'tests/ak820_tapping/run.py', '--space-cadet', '--negative-controls',
                       '--output', str(output / 'space-cadet-host.json')]))
+    if 'mouse-keys' in selected['optional_features']:
+        plan.append(('mouse-keys-host', QMK, [sys.executable, 'tests/ak820_mousekeys/host.py']))
+        plan.append(('mouse-keys-linked', QMK, [sys.executable, 'tests/ak820_mousekeys/run.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                    '--output-dir', str(output / 'mouse-keys')]))
+    if 'auto-shift' in selected['optional_features']:
+        plan.append(('auto-shift-host', QMK, [sys.executable, 'tests/ak820_autoshift/host.py',
+                    '--output', str(output / 'auto-shift-host.json')]))
+        plan.append(('auto-shift-linked', QMK, [sys.executable, 'tests/ak820_autoshift/linked.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                    '--output-dir', str(output / 'auto-shift')]))
     return plan
 
 
@@ -417,7 +468,7 @@ def validate_profile_tests(report, name, identity, build, toolchain):
                 'Profile suite identity, arguments, result or build differs')
         log = build / 'profile-tests' / (identifier + '.log')
         require(log.is_file() and row.get('log_sha256') == sha(log), 'Profile log changed or is missing')
-        if identifier == 'gates':
+        if identifier in ('gates', 'short-call-gates'):
             counts = unittest_counts(log.read_text())
             require(counts['run'] > 0 and counts['skipped'] == 0, 'Gate tests are empty or skipped')
 
@@ -459,6 +510,7 @@ def main(argv=None):
     selection = build.add_mutually_exclusive_group(required=True)
     selection.add_argument('--profile', choices=tuple(profiles.PROFILES))
     selection.add_argument('--features', nargs='*', help='Explicit optional feature names; empty selects standard')
+    build.add_argument('--short-calls', action='store_true', help='Opt in to verified foreground ACALL/AJMP relaxation')
     build.add_argument('--build-dir', type=Path, required=True)
     build.add_argument('--toolchain', type=Path, default=ROOT / 'toolchains/sdcc-4.6.0')
     build.add_argument('--qmk-bin', type=Path, default=QMK / '.venv/bin/qmk')
@@ -485,6 +537,8 @@ def main(argv=None):
         command = [str(args.python.resolve()), str(QMK / 'util/build_ak820.py'),
                    '--profile', name, '--toolchain', str(toolchain),
                    '--qmk-bin', str(args.qmk_bin.resolve()), '--build-dir', str(directory)]
+        if args.short_calls:
+            command.append('--short-calls')
         subprocess.run(command, cwd=QMK, check=True)
         result = inspect(directory, toolchain)
         result['source'] = before
