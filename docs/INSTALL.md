@@ -1,4 +1,4 @@
-Русский перевод: [Установка и восстановление](ru/INSTALL.md).
+Русский перевод: [Установка и восстановление](https://github.com/dvino/ak820/blob/bef20f89d3da01d770767919bc7c8fc3c3a1a808/docs/ru/INSTALL.md).
 
 # Installation and recovery
 
@@ -10,7 +10,9 @@ backups in separate private copies.
 
 ## Companion-design beta
 
-[v0.6.0-beta.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1) supplies linked firmware images and catalogs for companion development. Download `AK820-Beta1-Catalog.zip` and its `.sha256` file. Check the SHA256 before extracting: use `sha256sum -c AK820-Beta1-Catalog.zip.sha256` on Linux, or `Get-FileHash` and compare it with the checksum file on Windows. Extract with `unzip` or Windows **Extract All**. The archive contains data and IHX applications; it has no application to launch. The separate JSON assets provide the selection matrix, exact-image capabilities and bilingual descriptions. Read the [firmware handoff](../web/docs/FIRMWARE-HANDOFF.md) before integrating them.
+[v0.6.0-beta.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1) supplies linked firmware images and catalogs for companion development. Download `AK820-Beta1-Catalog.zip` and its `.sha256` file. Check the SHA256 before extracting: use `sha256sum -c AK820-Beta1-Catalog.zip.sha256` on Linux, or `Get-FileHash` and compare it with the checksum file on Windows. Extract with `unzip` or Windows **Extract All**. The archive contains data and IHX applications; it has no application to launch. The separate JSON assets provide the selection matrix, exact-image capabilities and bilingual descriptions. Read the [firmware handoff](https://github.com/dvino/ak820/blob/bef20f89d3da01d770767919bc7c8fc3c3a1a808/web/docs/FIRMWARE-HANDOFF.md) before integrating them.
+
+Module descriptions keep `guide.en` and `guide.ru` paths relative to the repository’s `web/` directory. Resolve them against `https://github.com/dvino/ak820/blob/v0.6.0-beta.1/web/`; a companion package must include these guides for offline help.
 
 The beta release includes standalone Windows and Linux x86_64 installers for the `work` profile. Follow the download, checksum and install steps below using the beta release assets. The installers install the exact `work` image with IHX SHA256 `652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880`; the other eight profiles are catalog candidates and are not installed. Beta firmware has not been tested on physical hardware.
 
@@ -92,7 +94,7 @@ without installing firmware.
 
 ## Back up settings and update firmware
 
-Read [Settings backup and restore](SETTINGS-BACKUP.md) before changing the
+Read [Settings backup and restore](https://github.com/dvino/ak820/blob/bef20f89d3da01d770767919bc7c8fc3c3a1a808/docs/SETTINGS-BACKUP.md) before changing the
 firmware. In the GUI, select the OEM recovery session and a new backup folder,
 then choose Update. Prepare alternate input and stable power first. The
 installer shows the exact update; a fresh physical Esc + left Control hold for
@@ -103,7 +105,7 @@ installer. No typed `yes`, separate Vial app or manual Bootloader action is
 needed. Cancel before erase if the displayed update is not intended.
 
 On timeout, storage error or bad readback, stop. Do not retry, reset or restore
-blindly. See [Settings backup and restore](SETTINGS-BACKUP.md) for what can be
+blindly. See [Settings backup and restore](https://github.com/dvino/ak820/blob/bef20f89d3da01d770767919bc7c8fc3c3a1a808/docs/SETTINGS-BACKUP.md) for what can be
 saved and which old backups can be moved to firmware with Combos.
 
 ## OEM recovery
@@ -117,5 +119,5 @@ and the loader is unavailable, stop and seek help; do not repeat an erase.
 ## Use the source installer
 
 The native packages above are the normal way to install a release. To run the
-source installer or build firmware, follow [Build](BUILD.md). Source tools need
+source installer or build firmware, follow [Build](https://github.com/dvino/ak820/blob/bef20f89d3da01d770767919bc7c8fc3c3a1a808/docs/BUILD.md). Source tools need
 Python 3.10 or newer; firmware builds use Linux or WSL with the pinned toolchain.

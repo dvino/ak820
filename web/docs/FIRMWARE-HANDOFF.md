@@ -12,6 +12,8 @@ The matrix reports each exact image and its enabled features. `tap-dance`, `key-
 
 Profiles are individually configured and qualified. There is no all-module combined build. A catalog entry is valid only for its exact linked image and completed evidence; source metadata and host tests alone are insufficient. See [profile definitions](../../qmk-8051-ak820/util/ak820_profiles.py), [module storage](../../docs/MODULE-STORAGE.md), and the [development catalog contract](../../docs/DEVELOPMENT-CATALOG.md). The generated [capability catalog](../capability-catalog.json) supplies typed storage, active settings IDs and limits for these exact nine images; join it to the selection matrix by IHX SHA256.
 
+The `guide.en` and `guide.ru` paths in `module-descriptions.json` are relative to this repository’s `web/` directory. For this beta, resolve them against `https://github.com/dvino/ak820/blob/v0.6.0-beta.1/web/`. A companion package must bundle the referenced guides and resolve them locally for offline help. Standalone release installation guides use absolute source links.
+
 ## Typed settings and validation
 
 Keep the existing six-layer keymap, encoder mapping, macros, Combo, and RGB behavior. Add schema 03 editors only when the exact image enables the corresponding module:
