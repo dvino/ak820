@@ -1,0 +1,91 @@
+{
+  "format": "ak820-beta1-completion-audit-1",
+  "date": "2026-10-25",
+  "objective": "Publish the first firmware/compatibility baseline for companion design while standalone installers install exact work.",
+  "result": "Release artifacts and final documentation content verified; final commit/push is checked against remote Git state after saving this record.",
+  "requirements": [
+    {
+      "id": "accept_supplied_work",
+      "result": "proved",
+      "evidence": [
+        "handoff-check.json:7980 tracked files match 61a8c52 with no omissions/uncommitted inputs",
+        "compiled source bef20f89d3da01d770767919bc7c8fc3c3a1a808 integrated into main/dev"
+      ]
+    },
+    {
+      "id": "public_first_trial_firmware_release",
+      "result": "proved",
+      "evidence": [
+        "publication.json:public non-draft prerelease v0.6.0-beta.1 with16assets",
+        "live tag points to the exact successful CI source commit"
+      ]
+    },
+    {
+      "id": "windows_standalone_installs_work",
+      "result": "proved",
+      "evidence": [
+        "native-review.md:PE AMD64 GUI and CLI bytes/provenance match approved bundle",
+        "published-assets-check.json:immutable target IHX652ee9...f880 and approved CI manifest b2239648...a076"
+      ]
+    },
+    {
+      "id": "linux_x86_64_standalone_installs_work",
+      "result": "proved",
+      "evidence": [
+        "native-review.md:ELF64 x86_64, Ubuntu22.04/glibc2.35 package build and smoke",
+        "published-assets-check.json:both apps contain approved work and local offlineCLI smoke passes"
+      ]
+    },
+    {
+      "id": "companion_compatibility_foundation",
+      "result": "proved",
+      "evidence": [
+        "released firmware-matrix.json:9profiles/default work/all14optional modules covered/only work installable",
+        "released capability-catalog.json and module-descriptions.json:exact image identities, typed limits and bilingual descriptions",
+        "guide base documented; companion implementation remains a separate next phase"
+      ]
+    },
+    {
+      "id": "checksums_and_bilingual_instructions",
+      "result": "proved",
+      "evidence": [
+        "assets.json:16 exact public files; native,firmware,catalog checksum sidecars and catalog SHA256SUMS",
+        "INSTALL-en.md and INSTALL-ru.md:download/check/extract/launch for both systems; source support links pinned and existing"
+      ]
+    },
+    {
+      "id": "verification_and_review",
+      "result": "proved",
+      "evidence": [
+        "review.md:independent source approval before commit; all findings closed",
+        "ci-run.json:all3required jobs success;28base suites/291unit tests/no skips/30profile suites on exact rebuilt work",
+        "native-review.md and published-assets-check.json:independent actual package acceptance and public download checks"
+      ]
+    },
+    {
+      "id": "source_built_installed_states_agree",
+      "result": "proved",
+      "evidence": [
+        "docs/STATUS.md and docs/ru/STATUS.md:source retained work bundle, identical CI rebuilt IHX, last recorded installed alpha.3",
+        "program-policy source686/host25 sizes and SHA remain unchanged after documentation fixes"
+      ]
+    },
+    {
+      "id": "no_device_operation",
+      "result": "proved_with_explicit_scope",
+      "evidence": [
+        "all evidence records physical_device_commands=0; source and frozenCLI verify are offline",
+        "hardware behavior, power loss, retention and manualGUI remain untested; no beta installation claimed"
+      ]
+    }
+  ],
+  "release_url": "https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1",
+  "compiled_source_commit": "bef20f89d3da01d770767919bc7c8fc3c3a1a808",
+  "asset_count": 16,
+  "physical_device_commands": 0,
+  "hardware_validated": false,
+  "remaining_product_work": [
+    "Develop and validate the companion application",
+    "Physical beta validation and manualGUI acceptance require separately authorized device work"
+  ]
+}

@@ -1,7 +1,7 @@
 # Work beta acceptance
 
-Date: 2026-10-25. Release: `v0.6.0-beta.1`. Publication is pending the final
-independent review and native package acceptance.
+Date: 2026-10-25. Release: `v0.6.0-beta.1`. The release is published. All three native CI jobs and
+checks of all 16 downloaded public assets passed; see [publication](publication.json).
 
 The beta integrates source `61a8c52d0c004ec2c67c0891945da98337db468e` from the
 supplied archive and the later configurator migration from `d9954ac`.
@@ -46,5 +46,9 @@ physical USB timing, LED DMA, real flash faults, power-loss behavior or manual
 GUI behavior. No device command was sent. Installed firmware remains alpha.3.
 
 Final checks and findings are recorded in [verification.json](verification.json)
-and [independent review](review.md). Public downloads are checked separately
-before publication is recorded complete.
+and [independent review](review.md). Public download checks passed and are recorded in
+[published-assets-check.json](published-assets-check.json).
+
+The immutable program and offline-review records describe approval before CI.
+Their pending-package wording is scoped to that earlier review point; current
+publication and native acceptance are recorded above and in publication.json.

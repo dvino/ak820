@@ -60,4 +60,4 @@ behavior or release approval.
 
 ## Later releases
 
-The installed alpha.3 image remains unchanged. Future profile releases require independent review, exact-image qualification and matching installer evidence before publication.
+Future profile releases require independent review, exact-image qualification and matching installer evidence before publication.

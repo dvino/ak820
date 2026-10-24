@@ -2,50 +2,49 @@
 
 # Project status
 
-Updated 2026-10-25. [v0.6.0-alpha.3](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.3)
-is published and installed. The release contains standalone Windows and Linux
-x86_64 installers, SHA256 files, the firmware bundle and separate English and
-Russian installation instructions. All three [native CI jobs](https://github.com/dvino/ak820/actions/runs/40076916540)
-passed for source `b17d7c8`. Downloaded public packages pass checksum, exact-image,
-GUI/CLI input and offline CLI verification; see the [publication record](../audits/rc6/alpha3-release-20261024/publication.json)
-and [asset checks](../audits/rc6/alpha3-release-20261024/published-assets-check.json).
-The duplicate tag run was cancelled after publication from that successful main
-run; it was not a failed firmware or installer test.
+Updated 2026-10-25. [v0.6.0-beta.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1)
+is published. Its standalone Windows and Linux x86_64 installers install `work`.
+The release also includes the nine-profile compatibility matrix, exact-image
+capabilities, bilingual descriptions, SHA256 files and English/Russian installation guides.
+Only `work` is approved for installation; the other eight profiles remain candidates.
 
-## Companion-design beta
+All three [native CI jobs](https://github.com/dvino/ak820/actions/runs/40137874411)
+passed for source `bef20f8`. Downloaded public files match all 16 published asset
+hashes. Both GUI/CLI payloads match the same approved firmware bundle; Linux
+CLI help and offline verification also pass locally. See the
+[publication record](../audits/rc6/beta1-release-20261025/publication.json),
+[download checks](../audits/rc6/beta1-release-20261025/published-assets-check.json)
+and [independent package review](../audits/rc6/beta1-release-20261025/native-review.md).
+The duplicate dev and tag runs were cancelled after selecting the successful
+same-source main run; neither cancellation is a failed firmware test.
 
-`v0.6.0-beta.1` is being prepared as the nine-profile firmware baseline for companion design. The work source bundle is approved; native Windows/Linux package acceptance and publication are pending. The beta release is the first installable firmware baseline for the companion and includes standalone Windows and Linux x86_64 installers with SHA256 files and bilingual installation instructions. The installers target the exact `work` image (`652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880`, 40,386 CODE bytes, 2,676 XRAM bytes; stack bound 162/165). The other eight profiles remain catalog candidates and are not included in the installers. Beta firmware has not been tested on hardware. The installed alpha.3 firmware remains unchanged. The [acceptance record](../audits/rc6/beta1-release-20261025/acceptance.md) records the source integration, exact assets and independent review.
+## Work beta
 
-## Alpha.3 source and image
+The exact IHX SHA256 is
+`652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880`.
+Permanent packed CODE SHA256 is
+`a7ad972f47acff20f3492ed846f5c6ca0825d43de263f26cc9328069a27cdd10`.
+The image uses 40,386 CODE bytes and 2,676 XRAM bytes, with 22 trailing bytes
+in the main window and 92 in the low window. The control-stack bound is
+99 foreground + 2 entry + 61 interrupt bytes: 162 of 165, leaving three.
 
-The full image includes NKRO control, modifier One Shot and compact Space
-Cadet alongside the base functions. Its IHX SHA256 is
-`d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`.
-It uses 40,043 CODE bytes, 2,637 allocated XRAM bytes and 162 bytes of allocated stack.
-There are 441 trailing main-window bytes and 16 low-window bytes.
+The source installer uses an independently assembled retained `work` bundle.
+Published native packages contain the CI rebuild of the same exact IHX.
+The fresh CI run passed 28 base suites, 291 unit tests without skips and all
+30 profile suites. Local qualification reused the passed base results and
+repeated all 30 profile suites after two release-asset tools changed during
+the initial phase. The initial source-change stop and all logs are retained.
+See [acceptance](../audits/rc6/beta1-release-20261025/acceptance.md) and
+[current qualification](../audits/rc6/beta1-release-20261025/current-work-qualification.json).
 
-Exact-image analysis closes the main and three callback roots. The combined
-control-stack allowance is 93 bytes for main, two for CRT entry and 61 for all
-three interrupt wrappers and callbacks: 156 bytes, leaving six. The proof uses
-bank-0 SDCC calls, valid memory accesses, private guard objects and MCS-51
-in-service/RETI semantics; it does not assume two priority levels or prove
-physical VS11 timing. See the [release qualification](../audits/rc6/alpha3-release-20261024/review.md)
-and [alpha.3 safety manifest](https://github.com/dvino/ak820/blob/v0.6.0-alpha.3/ci/release-safety.json).
+Offline packing and a retained alpha.2 backup preflight passed. Host models
+cover alpha.3-to-work settings transfer, both encoder directions and downgrade
+rejection. No beta device operation was performed. Physical USB timing, LED DMA,
+real flash faults, power-loss behavior, retention after power cycling and manual
+GUI workflows remain untested. The [release safety manifest](../ci/release-safety.json)
+binds the exact stack, startup, interrupt and settings-transition evidence.
 
-The released image passes all 15 distinct-source IRQ orders and all 256 LED
-selector values in the CPU model. Startup memory and hostile pre-erase entry
-checks pass. Independent checks pass 30 analyzer, six startup and five IRQ
-unit tests. Settings checks pass 47 tests; a retained real alpha.2 backup passes
-offline preflight for 498 keys, 12 encoder assignments and eight Combo slots.
-The safety gate passes 20 tests, and all host tools pass 158 tests.
-The complete base recheck passes 28 suites and 273 unit tests without skips.
-All 13 supplemental full-profile suites pass on the same unchanged image.
-Detailed source hashes, review closure, initial fixture failure and remaining
-model limits are in the qualification report.
-
-The alpha.3 full image satisfied its packaging gate, independent program policy and packing receipt. That evidence applies only to alpha.3. Beta profile qualification is recorded below; it does not include physical device validation.
-
-## Current development source
+## Firmware catalog
 
 The desktop catalog contains nine curated profiles. `work` is the default and
 adds Leader, Dynamic Macros and companion-controlled OS indication to the
@@ -75,16 +74,18 @@ macro bytes and eight two-key Combo slots. `tap-dance`, `key-overrides` and
 `settings` use schema `0x082003`; the other six use `0x082002`. Stored extension
 capacity does not enable an absent module. See [module storage](MODULE-STORAGE.md).
 
-The machine catalog and bilingual popup descriptions are prepared for desktop
-integration. Exact packed settings identities require the validated local OEM
-reference during packaging. Cross-image restore is disabled unless the trusted
-catalog explicitly lists that exact source/target pair. The candidate catalog and ZIP record exact linked images; beta release approval and installer evidence are recorded in the beta acceptance record.
-The [desktop handoff](../web/docs/FIRMWARE-HANDOFF.md) describes these contracts.
+The repository `web/` JSON files preserve the original candidate snapshots.
+Use the release's [firmware-matrix.json](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.1/firmware-matrix.json)
+for installation status and the reviewed packed `work` settings identity.
+Only the `work` row is promoted. Other cross-image settings transfers remain
+blocked unless the trusted catalog explicitly lists the exact source/target pair.
+See the [firmware handoff](../web/docs/FIRMWARE-HANDOFF.md) for capability and help-link contracts.
 
-The previous [module completion evidence](../audits/rc6/module-completion-20261024/final/README.md)
-remains tied to its recorded inputs. No device commands or physical tests have been performed for the new catalog. Installed alpha.3 remains unchanged.
+## Last recorded installation
 
-## Installed firmware
+The last recorded installation is [alpha.3](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.3), dated 2026-10-24.
+Its IHX is `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`.
+Beta.1 was not installed in this work.
 
 Alpha.3 was installed with the CLI from the downloaded published Linux archive.
 One loader transition, one flash and one restart completed successfully. Exact
