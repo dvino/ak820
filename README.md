@@ -60,28 +60,12 @@ project. See sections 15–17 of the [LICENSE](LICENSE).
 
 > Install only on the supported wired hardware revision. A mismatched image can leave the keyboard unusable; a matching USB ID does not make another revision safe.
 
-Start with the [installation and recovery guide](docs/INSTALL.md) before using the installer.
+Download the Windows or Linux package from [Releases](https://github.com/dvino/ak820/releases), then follow the [installation and recovery guide](docs/INSTALL.md).
 
 Read [Settings backup](docs/SETTINGS-BACKUP.md) for backup, restore and update
 instructions.
 
-For the source installer, Python 3.10+ is required. Verify the complete bundle offline:
-
-```sh
-# Linux
-./AK820.sh verify
-```
-
-```powershell
-# Windows
-.\AK820.cmd verify
-```
-
-Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lighting in Vial. Firmware builds use Linux/WSL, Python 3.11+ and the pinned SDCC 4.6.0 toolchain.
-
-Source builds produce a development candidate. The installer-verified release
-image is a separate artifact. See [Build](docs/BUILD.md) and [Status](docs/STATUS.md)
-for the current build and release state.
+Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lighting in Vial. To build from source, see [Build](docs/BUILD.md); firmware builds use Linux/WSL, Python 3.11+ and the pinned SDCC 4.6.0 toolchain.
 
 ## Documentation and contributions
 

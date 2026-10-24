@@ -37,8 +37,15 @@ BUNDLE = ROOT / 'releases' / RELEASE
 APPROVAL = ROOT / 'tools' / 'installer' / 'approved-release.json'
 ORIGINAL = ROOT / 'evidence' / 'oem-backup'
 RECOVERY_REFERENCE = None  # User-owned local inputs, never distributed.
-RUNS = ((Path(os.environ.get('LOCALAPPDATA', Path.home() / 'AppData' / 'Local')) / 'AK820' / 'runs')
-        if FROZEN else ROOT / 'host' / 'runs')
+def runs_directory(frozen=FROZEN):
+    if not frozen:
+        return ROOT / 'host' / 'runs'
+    if sys.platform == 'win32':
+        return Path(os.environ.get('LOCALAPPDATA', Path.home() / 'AppData' / 'Local')) / 'AK820' / 'runs'
+    return Path(os.environ.get('XDG_STATE_HOME') or Path.home() / '.local' / 'state') / 'ak820' / 'runs'
+
+
+RUNS = runs_directory()
 VENV = ROOT / '.venv-ak820-installer'
 PROMPT = None
 PROGRESS = None
@@ -689,7 +696,7 @@ def setup():
 
 def udev(install_rules):
     require(sys.platform.startswith('linux'), 'udev rules apply only to Linux')
-    source = Path(__file__).with_name('70-ak820.rules')
+    source = ROOT / 'tools' / 'installer' / '70-ak820.rules'
     target = '/etc/udev/rules.d/70-ak820.rules'
     commands = [['install', '-m', '0644', str(source), target],
                 ['udevadm', 'control', '--reload-rules'],

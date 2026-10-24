@@ -1,4 +1,4 @@
-"""Small Windows GUI for the shared installer; importing this module opens no USB."""
+"""Small cross-platform GUI for the shared installer; importing this module opens no USB."""
 from __future__ import annotations
 
 import contextlib

@@ -2,86 +2,94 @@
 
 # Installation and recovery
 
-Use a published complete release with the wired AJAZZ AK820 / VS11K28A. As of 2026-10-24, `v0.6.0-alpha.1` is the latest published and installed version. The planned `v0.6.0-alpha.2` candidate is not published or installable; its Combo backup migration is implemented, with final verification pending. The installer checks the firmware already in the keyboard; the product name and USB ID alone do not identify a supported build. It stops before erasing if the source is unsupported. See [status](STATUS.md) for evidence and device state.
+Use these packages only with the wired AJAZZ AK820 that has a VS11K28A
+controller and matching PCB revision. V2, Pro and Max are not supported. The
+product name and USB ID `320F:505B` alone do not confirm compatibility. Keep a
+valid OEM recovery session and a separate settings backup.
 
-## Package setup
+## Download and check a release package
 
-For a Windows release, extract the complete archive and run `AK820/AK820.exe`. Keep all extracted files together. The source installer needs Python 3.10+; Windows firmware builds use WSL, but installing an already built image does not. Offline package verification:
+Open [Releases](https://github.com/dvino/ak820/releases) and download the
+package and matching `.sha256` file for the operating system:
 
-```sh
-./AK820.sh verify
-```
+- Windows: `AK820-Windows.zip` and `AK820-Windows.zip.sha256`.
+- Linux x86_64: `AK820-Linux-x86_64.tar.gz` and
+  `AK820-Linux-x86_64.tar.gz.sha256`.
+
+On Windows, compare the downloaded archive with its checksum in PowerShell:
 
 ```powershell
-.\AK820.cmd verify
+$expected = (Get-Content .\AK820-Windows.zip.sha256 -Raw).Trim().Split()[0]
+$actual = (Get-FileHash .\AK820-Windows.zip -Algorithm SHA256).Hash
+if ($actual -ne $expected) { throw 'SHA256 mismatch; do not extract this package.' }
 ```
 
-Windows CI packages include settings backup, restore and the supported update workflow. Use the complete package from the selected release. The checked-in legacy bundle is older; [Status](STATUS.md) identifies the checked builds. Offline `verify` does not load HID or open USB.
-
-## Use a release firmware bundle with the source installer
-
-Use a clean checkout of the selected release tag. Verify `firmware-bundle.zip`
-with its accompanying SHA256 file, then extract it into a folder named
-`firmware-bundle`. Copy the contents of
-`firmware-bundle/` into `releases/rc6/` and copy its `approved-release.json` to
-`tools/installer/approved-release.json`. Run `./AK820.sh verify` before any
-device command. This selects the CI-built release rather than the legacy
-firmware stored in the source checkout. Keep the full bundle together.
-
-## Linux source setup
-
-Install Python, its venv and development packages, GCC and libudev development
-files. On Debian or Ubuntu the build packages include `build-essential`,
-`python3-dev`, `python3-venv` and `libudev-dev`. Then run:
+On Linux, run the checksum command in the folder containing both downloaded
+files:
 
 ```sh
-./AK820.sh setup
-./AK820.sh udev --install
+sha256sum -c AK820-Linux-x86_64.tar.gz.sha256
 ```
 
-Setup builds pinned hidapi from source with the Linux hidraw backend and
-bypasses cached wheels built with another backend. The udev command uses sudo
-only to install and apply the device rule; run the installer as the ordinary
-desktop user. Neither command resets the keyboard. In a restricted agent
-terminal, `no_new_privs` can prevent sudo even when passwordless sudo is
-configured; apply the udev command from the ordinary desktop terminal.
+If a checksum does not match, do not extract or run the package. Download both
+files again.
 
-## Settings backup and supported update
+## Windows
 
-Read [Settings backup and restore](SETTINGS-BACKUP.md) before running the new commands. They support only the exact reviewed IHX/CODE pairs listed there. Every operation needs a valid OEM recovery session because exact CODE reconstruction uses native bytes not shipped in the repository. Keep the OEM session and settings backup separately.
+Extract the complete ZIP and keep its folders together. Launch
+`AK820-Windows/AK820/AK820.exe`. Python does not need to be installed. The
+command-line tool is in `AK820-Windows/AK820-cli/AK820-cli.exe`.
 
-Before restore or update, confirm the wired VS11K28A hardware revision. Neither the AK820 name nor USB `320F:505B` alone proves compatibility; V2, Pro and Max are unsupported. A mismatched image can leave the keyboard unusable.
+## Linux
 
-The supported commands are:
+The standalone package is for x86_64 Linux with glibc 2.35 or newer, such as
+Ubuntu 22.04. It includes Python and Tk. It needs `libudev1`, a desktop display
+that supports X11 or XWayland, and normal `udev`/hidraw device access.
+
+After checking the checksum, extract the archive and launch the GUI:
 
 ```sh
-./AK820.sh backup --session OEM_DIR --output NEW_DIR
-./AK820.sh restore --session OEM_DIR --backup BACKUP_DIR
-./AK820.sh update --session OEM_DIR --backup-dir NEW_DIR
+tar -xzf AK820-Linux-x86_64.tar.gz
+cd AK820-Linux-x86_64
+./AK820/AK820
 ```
 
-The equivalent Windows source commands use `AK820.cmd`. Backup reads the keyboard and publishes a new private folder. Restore saves the current target state before writing. The GUI Update action displays the exact update being confirmed. A fresh physical Esc + left Control hold for three seconds confirms it; the installer requests unlock, enters the loader, flashes once and verifies the result. It then requests a second fresh physical hold before restoring and checking settings. Both holds happen inside the installer. No typed `yes`, separate Vial app or manual Bootloader action is part of this workflow. Cancel before erase if the displayed operation is not intended. Errors stop the operation without a retry, blind restore or reset.
+If the application cannot access the keyboard, install the supplied device
+rule from a desktop terminal:
 
-In the GUI, choose the OEM session and output or backup folder, then select Backup settings, Restore settings or Update firmware. Before an update, prepare alternate input and stable power. When prompted, make a fresh Esc + left Control hold for three seconds. The installer shows the action being confirmed; cancel before erase if it is not the intended update. After flashing and verification, make a second fresh hold when the installer asks to restore the saved settings.
+```sh
+./AK820-cli/AK820-cli udev --install
+```
+
+This command uses `sudo` only to install and apply the rule. Run the GUI as the
+ordinary desktop user; do not launch it with `sudo`.
+
+## Back up settings and update firmware
+
+Read [Settings backup and restore](SETTINGS-BACKUP.md) before changing the
+firmware. In the GUI, select the OEM recovery session and a new backup folder,
+then choose Update. Prepare alternate input and stable power first. The
+installer shows the exact update; a fresh physical Esc + left Control hold for
+three seconds confirms it. The installer requests unlock, enters the loader,
+flashes once and verifies the image. It then asks for a second fresh hold before
+restoring and checking the saved settings. Both holds happen inside the
+installer. No typed `yes`, separate Vial app or manual Bootloader action is
+needed. Cancel before erase if the displayed update is not intended.
+
+On timeout, storage error or bad readback, stop. Do not retry, reset or restore
+blindly. See [Settings backup and restore](SETTINGS-BACKUP.md) for what can be
+saved and which old backups can be moved to firmware with Combos.
 
 ## OEM recovery
 
-The OEM recovery session contains the original native bytes required to reconstruct and validate the supported firmware. Use a valid session from a supported OEM keyboard; do not use another person's settings backup as a substitute. Keep recovery files private and make a separate copy. ROM captures and diagnostic files may contain personal settings; do not publish them.
+The OEM recovery session contains original firmware data needed to reconstruct
+and check the supported image. Keep it private and separate from the settings
+backup. For recovery from a loader that is already visible, use the supplied
+CLI's `recover --session OEM_DIR` command. If the application is unresponsive
+and the loader is unavailable, stop and seek help; do not repeat an erase.
 
-For recovery from an already visible loader, use the source command `recover --session OEM_DIR`. Recovery does not restart a running application or retry an erase that failed. If the application is unresponsive and the loader cannot be reached, stop; software recovery has not been established for that condition.
+## Use the source installer
 
-## Existing install paths
-
-The source installer retains the existing `install`, `install --trial` and `recover --session OEM_DIR` workflows. Their behavior and hardware verification state are described in [status](STATUS.md). Do not treat a successful transfer or checksum as proof of physical typing, settings persistence or power-cycle behavior.
-
-Offline checks do not authorize device writes. Each update needs its own confirmation, a fresh backup and an exact image check. Alpha releases are test builds; the release notes and Status distinguish source, package checks and device results.
-
-## Historical alpha.1 stop (2026-10-24)
-
-During installation of `v0.6.0-alpha.1`, `open failed` occurred after restart.
-The installer stopped before settings restoration. The cause is not established.
-Do not repeat the flash. Preserve the log and backup; first check permissions,
-the exact running CODE and healthy storage through read-only diagnosis. Only
-after those checks pass may a separate normal settings restore proceed with
-a fresh target backup and physical confirmation. See [Status](STATUS.md) for
-the recorded operation.
+The native packages above are the normal way to install a release. To run the
+source installer or build firmware, follow [Build](BUILD.md). Source tools need
+Python 3.10 or newer; firmware builds use Linux or WSL with the pinned toolchain.

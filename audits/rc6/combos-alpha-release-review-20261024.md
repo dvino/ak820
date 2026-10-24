@@ -12,7 +12,8 @@ The comparison starts at `4b83bb9` and includes imported `d361501` plus the
 reviewed release integration. The initial findings below describe the imported
 state; the closure section records the final result.
 No build, USB access, reset, bootloader command, flash, commit or push was
-performed during this review. Only this report was written.
+performed during this review. Only this report and `ci/program-review.md` were
+written.
 
 ## Evidence checked
 
@@ -183,3 +184,43 @@ The application build, offline packing and settings profile agree. The final
 review therefore approves the completed offline release work for commit and
 release CI. Public CI/package acceptance and all stated physical conditions
 remain separate. No hardware flashing permission follows from this result.
+
+## Linux release scope review
+
+The added standalone Linux x86_64 installer, native CI job, publication checks,
+state directory handling and English/Russian installation guides are approved
+for commit and CI. Native Ubuntu 22.04 packaging and smoke must pass before
+publication. The final policy SHA256 is
+`e4ae796fe635b87c4a2375eeab73c5b6ebff88c98eef8b8a3d9fc3e9099faba1`;
+it replaces earlier policy hashes in this report. All 627 source records,
+21 host records, packing receipt and retained legacy bundle/approval were
+independently rechecked against final bytes.
+
+Two blocking findings were closed before approval. The permission rule lookup
+used the frozen module's virtual `__file__` rather than the collected rule;
+it now uses `ROOT/tools/installer/70-ak820.rules`. Settings preparation similarly
+tried to hash virtual module paths; it now pins the explicit collected source
+copies. Focused fixtures supply nonexistent virtual paths and mock all
+permission subprocesses. Four runtime path tests and one frozen preparation
+test passed independently. Nine Linux packaging tests also passed independently.
+
+All six saved Linux integration log hashes and sizes were independently checked.
+The full installer run passed 130 tests before the two path fixes; the final
+focused tests cover those fixes. The saved tool run passed 120 tests. The full
+final workflow run reports sixteen passing tests in retained session output.
+Syntax checks cover 220 Python files and one shell file; actionlint passed.
+No firmware changed, so the earlier 28-suite/265-test result remains firmware
+qualification with its original host scope. CI reruns the full final suite.
+
+The Linux builder retains the native glibc 2.35 guard; the local glibc 2.39 host
+was not used to claim native package success. Archive fixtures verify executable
+permissions, safe internal library links, approved inputs and failure stops.
+The builder's real CI smoke requires frozen hidraw import, CLI help/verification
+and Tk under Xvfb. Publication requires both native Windows and Linux jobs,
+sidecar hashes and fresh firmware/approval agreement in both applications per
+package. Native package success remains a publication prerequisite.
+
+Installation guides match the exact archive and executable paths, checksum
+commands and Linux permission command. The permanent release rule is recorded
+in both AGENTS versions. Notes remain limited to user-visible changes. No
+hardware access or installation followed from this review.

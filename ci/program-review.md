@@ -7,9 +7,9 @@ its generated packages must still pass their normal validation gates. It grants
 no permission to flash and does not establish a new installed image.
 
 The implementation, policy, packing receipt and qualification were authored
-separately from this review. All 623 policy source records and 21 host records
+separately from this review. All 627 policy source records and 21 host records
 were checked against current sizes and SHA256 hashes. Policy SHA256 is
-`d02e7114fdd9f4b3ecf4bc24923936d121575c9832ec2e570f8b38b4fd7d2e05`.
+`e4ae796fe635b87c4a2375eeab73c5b6ebff88c98eef8b8a3d9fc3e9099faba1`.
 The fresh build reproduces IHX
 `a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f`
 and canonical packing symbols
@@ -18,7 +18,7 @@ All 470 build source/toolchain records and 79 artifact records were checked.
 The nine retained legacy bundle records and installer approval also match;
 that bundle retains its earlier firmware.
 
-Final qualification passed all 28 required suites, 265 unit tests and zero
+Firmware qualification before the later Linux host integration passed all 28 required suites, 265 unit tests and zero
 skips with unchanged IHX/MAP and zero physical device commands. Its full suite
 contract and all 28 saved log hashes were independently checked. Qualification
 SHA256 is `c5f7b57572aab136a81c172d7357d8aa0bf6b936f44687b8e6cb6e960fc50027`.
@@ -54,11 +54,44 @@ cold-start retention remain untested for this image. Published release CI and
 fresh package acceptance remain pending. Installed firmware remains alpha.1.
 Private OEM inputs and images remain outside Git.
 
+## Linux installer addition
+
+The native Linux x86_64 builder, pinned requirements, runtime paths, workflow
+and bilingual release installation instructions are approved for commit and
+CI. The final policy includes the new builder and tests. Firmware is unchanged;
+the earlier 28-suite qualification remains firmware evidence, not a full test
+of the later host changes. CI will rerun the complete qualification.
+
+Nine packaging tests and four runtime path tests passed independently. The
+frozen preparation regression also passed independently. The retained six
+Linux integration logs were checked against recorded sizes and hashes. They
+record 130 full installer tests before the final path fixes, 120 tool tests,
+nine packaging tests, four runtime-path tests, one frozen preparation test and
+syntax checks. A separate final complete workflow run reports sixteen tests
+passing; its output is retained in the work session rather than a hashed file.
+
+Review found and closed two frozen resource path errors: the udev rule lookup
+and settings source pins now use explicit collected paths under the frozen
+application root. Regression fixtures use nonexistent virtual module paths and
+mock permission commands; they never install rules or access hardware. Frozen
+Linux logs use XDG state storage; the Windows log path is unchanged.
+
+The builder requires native x86_64 glibc 2.35 and does not bypass that guard on
+the local glibc 2.39 host. It validates executable modes, internal tar links,
+collected approved files, the frozen hidraw import and CLI/Tk smoke results.
+The publication gate requires both native package jobs, checks sidecar hashes,
+and checks each Linux/Windows application's exact fresh firmware and approval.
+Native Ubuntu 22.04 collection and runtime smoke remain pending. Release is
+approved only after those CI gates pass; local fixtures do not establish a
+working native package. Installation guides match both archive layouts and
+cover checksums, extraction, launch and Linux permissions. No hardware operation
+is authorized by this addition.
+
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "status": "passed",
   "hardware_validated": false,
-  "policy_sha256": "d02e7114fdd9f4b3ecf4bc24923936d121575c9832ec2e570f8b38b4fd7d2e05"
+  "policy_sha256": "e4ae796fe635b87c4a2375eeab73c5b6ebff88c98eef8b8a3d9fc3e9099faba1"
 }
 ```

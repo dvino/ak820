@@ -192,9 +192,66 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  linux-package:
+    name: Native Linux x86_64 package build and smoke
+    needs: linux-regression
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ak820-fresh-ci-firmware
+          path: dist/ci-firmware
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/installer/requirements-build-linux.txt
+      - name: Install native Linux package dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes build-essential libudev-dev libusb-1.0-0-dev python3-tk xvfb xauth
+      - name: Install pinned build requirements with HIDRAW backend
+        env:
+          HIDAPI_WITH_HIDRAW: '1'
+          HIDAPI_WITH_LIBUSB: '0'
+        run: python -m pip install --no-binary=hidapi --no-cache-dir -r tools/installer/requirements-build-linux.txt
+      - name: Verify and overlay fresh CI firmware
+        env:
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          (cd dist/ci-firmware && sha256sum --check firmware-bundle.zip.sha256)
+          python - <<'PYTHON'
+          import json, os, shutil, subprocess
+          from pathlib import Path
+          bundle = Path('dist/ci-firmware/firmware-bundle')
+          attestation = json.loads((bundle / 'reports/build-attestation.json').read_text())
+          if attestation['source_commit'] != os.environ['SOURCE_COMMIT'] or subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip() != os.environ['SOURCE_COMMIT']:
+              raise SystemExit('Linux checkout and firmware source commit differ')
+          shutil.rmtree('releases/rc6')
+          shutil.copytree(bundle, 'releases/rc6')
+          shutil.copyfile(bundle / 'approved-release.json', 'tools/installer/approved-release.json')
+          PYTHON
+      - name: Run Linux packaging regressions
+        run: python -B -m unittest discover -s tools -p test_build_linux_installer.py
+      - name: Build and smoke-test approved Linux package
+        run: python tools/build_linux_installer.py --output dist/AK820-Linux-x86_64
+      - name: Write Linux package checksum
+        run: (cd dist && sha256sum AK820-Linux-x86_64.tar.gz > AK820-Linux-x86_64.tar.gz.sha256)
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: success()
+        with:
+          name: ak820-reviewed-linux-portable
+          path: |
+            dist/AK820-Linux-x86_64.tar.gz
+            dist/AK820-Linux-x86_64.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 30
+
   publish:
     name: Publish tagged version from main
-    needs: [linux-regression, windows-package]
+    needs: [linux-regression, windows-package, linux-package]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -212,6 +269,10 @@ jobs:
         with:
           name: ak820-fresh-ci-firmware
           path: dist/firmware
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ak820-reviewed-linux-portable
+          path: dist/linux
       - name: Verify release trigger and asset hashes
         id: release
         shell: bash
@@ -223,9 +284,10 @@ jobs:
           git fetch origin main:refs/remotes/origin/main
           git merge-base --is-ancestor "$SOURCE_COMMIT" refs/remotes/origin/main
           (cd dist/windows && sha256sum --check AK820-Windows.zip.sha256)
+          (cd dist/linux && sha256sum --check AK820-Linux-x86_64.tar.gz.sha256)
           (cd dist/firmware && sha256sum --check firmware-bundle.zip.sha256)
           python - <<'PY'
-          import hashlib, json, os, zipfile
+          import hashlib, json, os, tarfile, zipfile
           from pathlib import Path
           bundle = Path('dist/firmware/firmware-bundle')
           attestation = json.loads((bundle / 'reports/build-attestation.json').read_text(encoding='utf-8'))
@@ -248,6 +310,19 @@ jobs:
                       actual = hashlib.sha256(package.read(packaged)).hexdigest()
                       if actual != expected:
                           raise SystemExit(f'{app} package does not contain fresh CI input: {name}')
+          with tarfile.open('dist/linux/AK820-Linux-x86_64.tar.gz', 'r:gz') as package:
+              for app in ('AK820', 'AK820-cli'):
+                  prefix = f'AK820-Linux-x86_64/{app}/_internal/'
+                  for name in ['installer-release.json', *manifest['files'], 'approved-release.json']:
+                      source = bundle / name
+                      packaged = prefix + ('tools/installer/approved-release.json' if name == 'approved-release.json' else 'releases/rc6/' + name)
+                      member = package.getmember(packaged)
+                      if not member.isfile():
+                          raise SystemExit('Linux approved input is not a regular file')
+                      with package.extractfile(member) as stream:
+                          actual = hashlib.sha256(stream.read()).hexdigest()
+                      if actual != hashlib.sha256(source.read_bytes()).hexdigest():
+                          raise SystemExit(f'{app} Linux package does not contain fresh CI input: {name}')
           PY
       - name: Create GitHub release
         env:
@@ -258,6 +333,7 @@ jobs:
           args=(
             "$RELEASE_TAG"
             dist/windows/AK820-Windows.zip dist/windows/AK820-Windows.zip.sha256
+            dist/linux/AK820-Linux-x86_64.tar.gz dist/linux/AK820-Linux-x86_64.tar.gz.sha256
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
             --title "AK820 $RELEASE_TAG"
             --notes-file ci/release-notes.md

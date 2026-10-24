@@ -41,6 +41,11 @@ all eight entries, including empty slots. Unknown marker versions stop
 preflight. Host verification passed. The planned release tag is
 `v0.6.0-alpha.2`.
 
+The release workflow now builds native Windows and Linux x86_64 installers.
+The Linux build requires Ubuntu 22.04/glibc 2.35 and checks the frozen hidraw
+backend, CLI verification and GUI startup under Xvfb without device access.
+Native CI packaging remains pending; local packaging fixtures do not prove it.
+
 ## Published alpha baseline
 
 Updated 2026-10-24. [v0.6.0-alpha.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.1)

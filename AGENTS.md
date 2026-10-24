@@ -53,6 +53,11 @@ useful. Public release notes describe only user-visible changes, features,
 fixes and relevant limits. Do not include test results, packaging or licence
 details, installed state, audit or agent process, or repeat the README.
 
+Owner's release rule, 2026-10-24: each public release includes standalone
+Windows and Linux x86_64 installers with SHA256 files, plus English and Russian
+installation instructions for both systems. Explain how to download the
+matching package, check its checksum, extract it and launch the application.
+
 ## Current work boundary
 
 Owner's GUI update rule, 2026-10-23: the update stays inside the installer.

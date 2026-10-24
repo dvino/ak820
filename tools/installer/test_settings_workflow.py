@@ -379,3 +379,32 @@ class EndToEndWorkflowTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class FrozenPreparationTests(unittest.TestCase):
+    def test_prepare_pins_collected_sources_with_virtual_module_paths(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            bundle, source, session, target, refs = [root / name for name in ('bundle','source','session','target','refs')]
+            names = ['tools/installer/settings_workflow.py', 'tools/installer/settings_backup.py']
+            files = [root/'approval.json', bundle/'installer-release.json', bundle/'firmware/application.ihx']
+            files += [root/name for name in names]
+            for directory in (source, session, target):
+                files += [directory/name for name in ('images.json','before-full-rom.bin','restore-native.bin')]
+            files += [target/'permanent.bin', refs/'stock-full.bin', refs/'native-installed.bin']
+            for path in files:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b'fixture')
+            host = SimpleNamespace(ROOT=root, BUNDLE=bundle, APPROVAL=root/'approval.json', RECOVERY_REFERENCE=refs,
+                load_release=Mock(return_value={'files':['firmware/application.ihx'], 'host_files':names}),
+                copy_recovery=Mock(return_value=(session, b'native')), prepare_trial=Mock(return_value=(target, {})),
+                transport=SimpleNamespace(session_image=Mock(return_value=(None,b'payload',b'native')),IMAGES={'permanent':'permanent.bin'}),
+                require=lambda ok, message: None if ok else (_ for _ in ()).throw(ValueError(message)),
+                sha=lambda data: hashlib.sha256(data).hexdigest())
+            with patch.object(workflow, '__file__', str(root/'settings_workflow.py')), \
+                    patch.object(workflow.settings, '__file__', str(root/'settings_backup.py')), \
+                    patch.object(workflow.settings, 'load_profile', return_value={'payload':b'payload'}):
+                context = workflow.prepare(host, Mock(), source)
+            self.assertTrue(all(root/name in context['pins'] for name in names))
+            self.assertNotIn(root/'settings_workflow.py', context['pins'])

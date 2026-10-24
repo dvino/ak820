@@ -1,0 +1,10 @@
+# Build on Ubuntu 22.04 x86_64 with python3-dev, python3-tk, libudev-dev,
+# libusb-1.0-0-dev, build-essential, xvfb and xauth installed.
+# HIDAPI_WITH_HIDRAW=1 HIDAPI_WITH_LIBUSB=0 python -m pip install --no-binary=hidapi -r tools/installer/requirements-build-linux.txt
+# End users do not need Python or these build dependencies.
+PyInstaller==6.16.0
+hidapi==0.15.0
+altgraph==0.17.5
+packaging==26.3
+pyinstaller-hooks-contrib==2026.9
+setuptools==84.2.1

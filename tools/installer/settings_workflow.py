@@ -31,7 +31,8 @@ def prepare(host, log, source):
     paths = [host.APPROVAL, host.BUNDLE / 'installer-release.json']
     paths += [host.BUNDLE / name for name in release['files']]
     paths += [host.ROOT / name for name in release['host_files']]
-    paths += [Path(__file__), Path(settings.__file__)]
+    paths += [host.ROOT / 'tools/installer/settings_workflow.py',
+              host.ROOT / 'tools/installer/settings_backup.py']
     for folder in (Path(source), session, target):
         paths += [folder / name for name in ('images.json', 'before-full-rom.bin', 'restore-native.bin')]
     paths += [target / host.transport.IMAGES['permanent']]
