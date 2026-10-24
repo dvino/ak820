@@ -8,8 +8,7 @@ commands; the firmware does not need a separate backup protocol.
 
 ## Supported firmware and migration
 
-The installer accepts five exact reviewed image profiles. Their IHX and CODE
-hashes are listed in the [profile record](../audits/rc6/alpha2-release-20261024/settings-profiles.json);
+The installer accepts six exact reviewed image profiles.
 [Status](STATUS.md) identifies the current release and installed image.
 It checks both the application and firmware already in the keyboard before
 writing. Same-build restore and approved forward migrations are supported;

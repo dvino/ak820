@@ -59,9 +59,6 @@ EE_CLR, EEPROM reset, reset timing, persistent storage, power-fail behavior or
 interrupt overlap. Every other case loads the original image in a separate
 simulator process.
 
-The earlier 2026-10-23 65-case run remains failed: its last case patched an
-unused `eeconfig_init` entry and timed out. The final image dispatches EE_CLR
-through `eeconfig_disable` and `soft_reset_keyboard`. The diagnosis and scoped
-hook check are recorded in
-[`compact-tapping-macro-cancel-diagnosis-20261023.md`](../../../audits/rc6/compact-tapping-macro-cancel-diagnosis-20261023.md).
-A successful single hook case does not establish a complete suite pass.
+The cancellation hook check does not establish a complete suite pass. Current
+exact-image results are recorded in the
+[development matrix](../../../audits/rc6/compact-runtime-20261024/final/README.md).

@@ -321,7 +321,7 @@ class ProfileTests(unittest.TestCase):
 class MemoryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        fixture = config.ROOT / 'audits/rc6/combos-20261024/candidate'
+        fixture = config.ROOT / 'audits/rc6/compact-runtime-20261024/final/full'
         cls.memory = (fixture / 'ajazz_ak820_vial.mem').read_text()
         cls.symbols = config.linked_symbols(fixture / 'ajazz_ak820_vial.map')
         # Only occupied addresses matter for memory membership, not contents.

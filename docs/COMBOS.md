@@ -2,12 +2,10 @@
 
 # Two-key Combos
 
-Firmware version 0.6.0-alpha.2 adds eight configurable two-key Combos for the
-AK820. Pressing two configured keys within 40 ms sends one key or modified key
-instead, for example J + K → Escape or F + D → Ctrl+C. Alpha.1 does not support
-Combos. See [Status](STATUS.md) for release and device state, and the retained
-[Combo technical report](../audits/rc6/combos-20261024.md) for
-implementation and verification details.
+The firmware supports eight configurable two-key Combos. Pressing two
+configured keys within 40 ms sends one key or modified key instead, for example
+J + K → Escape or F + D → Ctrl+C. See [Status](STATUS.md) for release and device
+state.
 
 ## Configure in Vial
 

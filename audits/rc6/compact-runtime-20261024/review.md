@@ -16,7 +16,7 @@ separately and does not inherit alpha.3 release approval.
 | GUI controls | Independent `review_gui` source/docs review and rerun of host plus 11 linked cases | Approved after One Shot finding was fixed and retested |
 | Dynamic Macros | Independent `review_dynamic` source/docs review and rerun of host plus 26 linked cases | Approved after nested Vial ownership finding was fixed; final isolated evidence refreshed and checked |
 | EEPROM cursor and profile/configurator wiring | Independent `review_integration` static ABI/bounds review, ASan/UBSan rerun and 25 configurator tests | Approved, including full 8192-byte upper boundary; final profile-list cleanup checked before commit |
-| User guides and README/roadmap integration | Root review of the separate documentation author's EN/RU changes; independent integration review of English scope/behavior | Source, published image and installed state remain distinct; exact combined evidence still pending |
+| User guides and README/roadmap integration | Root review of the separate documentation author's EN/RU changes; independent integration review of English scope/behavior | Source, published image and installed state remain distinct; final combined evidence is recorded below |
 
 ## Findings and closure
 
@@ -48,7 +48,7 @@ local and external paths without skips. The caller's environment is preserved.
 
 The exploratory all-input profile exceeded the main window by 804 bytes and
 was removed from the accepted selector. The final selector and guides list 16
-profiles. It is retained only as a rejected experiment.
+profiles. Its original bytes remain in Git history and the external cleanup backup.
 
 ## Combined-feature review and checkpoint closure
 
@@ -61,8 +61,8 @@ Auto Shift enabled, checks masked-GUI bypass and the 174/175 ms boundary, and
 preserves the Shift owner across GUI toggles and release. Production handlers
 run without injecting private feature state. The first macro fixture used an
 early tick; the corrected normal idle task observes the documented 10 ms
-phase. Firmware was unchanged. Results, simulator scripts and logs are retained
-in `integration-probes/gui-dm-combined/` and `gui-as-combined/`.
+phase. Firmware was unchanged. The superseded probe results remain in Git history and the external cleanup
+backup. Current combined scenarios are retained in the final matrix raw builds.
 
 Independent integration review approved the implementation checkpoint after
 verifying the 16-profile roster, rejected selection, documentation links,

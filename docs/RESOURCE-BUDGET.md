@@ -37,7 +37,7 @@ bytes even with short transfers; that profile is unsupported.
 `--short-calls`. Other rows without that suffix are measured without it.
 New images remain unqualified for release.
 
-## Historical comparisons
+## Published image
 
 | Resource | published alpha.3 image |
 | --- | ---: |
@@ -51,14 +51,6 @@ New images remain unqualified for release.
 Allocated stack capacity is not a worst-case runtime bound. Free bytes in the
 two CODE windows cannot be exchanged. NVM and macro storage are not executable
 CODE.
-
-A historical controlled comparison found that reducing six layers to four
-saved zero CODE and zero XRAM, while freeing 520 logical NVM addresses. Those
-addresses were not added to macro storage and the encoder base would move,
-requiring a schema and migration decision. The project therefore retains six
-layers. Details of the old comparison and RGB measurements remain in the dated
-[technical study](../audits/rc6/optimization-deep-analysis-20261023.md); they do
-not describe the current release image.
 
 The published alpha.3 `full` image was measured as a complete linked image, including
 both CODE windows and RAM. Main-path use is 93 stack bytes, CRT use is 2 bytes,

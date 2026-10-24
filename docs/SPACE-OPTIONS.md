@@ -2,17 +2,13 @@
 
 # Further code-space options
 
-The published and installed `v0.6.0-alpha.2` includes eight two-key Combos.
-Current sizes are in [Resource budget](RESOURCE-BUDGET.md); source, artifact and
-device evidence are in [Status](STATUS.md).
+Measure the complete linked image before changing code to save space. Compare
+behavior, both CODE windows, XRAM and stack against a fixed control. Shared
+code and outlining make individual feature costs non-additive. Keep six layers,
+16 macros, 8192 macro bytes and eight Combo slots unless a separate format and
+migration change is approved.
 
-The [next stage](ROADMAP.md) includes further analysis of the active code and
-compact optional features. First measure the complete linked image and identify
-the constrained resource. Then compare a bounded change against a fixed control, including
-behavior, both CODE windows, XRAM and stack. A probe or source-level estimate
-is not a complete-image result.
-
-The dated [optimization study](../audits/rc6/optimization-deep-analysis-20261023.md)
-contains earlier experiments and rejected ideas. Its measurements apply to
-those historical controls only. Short-call rewriting and compiler changes need
-new correctness evidence before they can be considered.
+Current measurements and limits are in [Resource budget](RESOURCE-BUDGET.md).
+The [development matrix](../audits/rc6/compact-runtime-20261024/final/README.md)
+records the exact images. Passing resource checks does not establish a runtime
+stack bound or physical behavior. See [Roadmap](ROADMAP.md) for further work.

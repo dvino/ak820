@@ -26,9 +26,6 @@ enabled.
 | Magic modifier swaps | GUI lock is available separately; modifier swaps and persistent settings remain open. |
 | Leader | Bound sequence length, timeout and supported outputs. |
 
-Probe details and measured outcomes are in the
-[feature report](../audits/rc6/roadmap-max-20261024/feature-probes.md).
-
 The available implementations are intentionally limited. NKRO control
 adds only `NK_ON`, `NK_OFF` and `NK_TOGG`; One Shot handles modifier combinations
 without layer form, timeout or locking; Space Cadet handles `SC_LSPO`, `SC_RSPC`
@@ -59,8 +56,8 @@ Every supported feature combination must be measured as a complete linked
 image. Track both CODE windows, XRAM, internal RAM and stack placement. Shared
 code, dead-code removal and outlining make individual probe costs non-additive.
 Do not count loader, settings or journal space as free CODE. See
-[Resource budget](RESOURCE-BUDGET.md) and the dated
-[qualification evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
+[Resource budget](RESOURCE-BUDGET.md) and the current
+[qualification evidence](../audits/rc6/compact-runtime-20261024/final/README.md).
 
 Development builds run regression gates and profile-specific host and linked
 CPU suites against the exact image. The exact published alpha.3 image has reviewed stack, interrupt and

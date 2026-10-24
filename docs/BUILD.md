@@ -68,7 +68,7 @@ Outlining changes the linked image and is not a runtime feature. Savings from
 one image do not predict another profile because shared code and packing
 interact. ABI changes require new stack and interrupt evidence. Do not run
 build configurations concurrently in one source tree because Make uses shared
-generated files. See the [outlining measurements](../audits/rc6/roadmap-max-20261024/outline-speed.md).
+generated files.
 
 Run [offline tests](TESTING.md), then assemble a new release bundle from the
 repository root after independent review. The review record must be a JSON file

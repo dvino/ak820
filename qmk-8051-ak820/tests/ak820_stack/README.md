@@ -81,9 +81,7 @@ but an empty intersection cannot establish absence while paths remain unknown.
 
 This tool does not certify release safety. Shared static storage, data-pointer
 safety, ABI preservation, startup, OEM wrappers, peripheral behavior and IRQ
-nesting need separate evidence. No USB device is opened. The concrete first
-analysis and remaining work are in
-[the runtime report](../../../audits/rc6/runtime-stack-20261024/report.md).
-
-The FULL alpha3 image analysis and remaining blockers are recorded in
-[the alpha3 report](../../../audits/rc6/alpha3-stack-20261024/report.md).
+nesting need separate evidence. No USB device is opened. Current development images have an unresolved foreground stack root; see the
+[development matrix](../../../audits/rc6/compact-runtime-20261024/final/README.md).
+The exact published alpha.3 image has separate
+[release evidence](../../../audits/rc6/alpha3-release-20261024/review.md).

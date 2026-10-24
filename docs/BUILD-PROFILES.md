@@ -114,7 +114,7 @@ tapped; `SC_SENT` maps to right Shift while held and Enter when tapped. These
 keys use the existing compact tap-hold path and its modifier ownership. Space
 Cadet keycodes cannot be used as Combo inputs. The implementation does not
 include the full upstream Space Cadet engine. Tested edge cases and limits are
-recorded in the [Space Cadet report](../audits/rc6/roadmap-max-20261024/space-cadet.md).
+recorded in the [current matrix](../audits/rc6/compact-runtime-20261024/final/README.md).
 
 The exact linked image determines resource use. Measure each profile from its
 build report; feature costs are not additive. For the exact published alpha.3 `full` image, release evidence bounds main-path
@@ -141,5 +141,3 @@ Space Cadet; a Vial control alone does not establish firmware support.
 Console and Command remain disabled. Fault injection is a test facility, not a
 selectable firmware feature. Existing FD00/FD01 diagnosis is read-only. The
 configurator does not open USB or send keyboard commands.
-
-Probe details are in the [feature report](../audits/rc6/roadmap-max-20261024/feature-probes.md).

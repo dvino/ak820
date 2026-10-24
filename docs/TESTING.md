@@ -35,12 +35,12 @@ build; consult the generated report. IRQ/device fixtures may require private
 OEM references. CPU fixtures model peripheral operations and do not emulate
 VS11K28A USB or flash silicon. A tested stack peak is not a global bound.
 
-For any of the eight configured profiles, use the dedicated [profile build
+For any of the sixteen configured profiles, use the dedicated [profile build
 command](BUILD-PROFILES.md). It runs the standard offline regression gates and
 the selected feature's host and linked-CPU suites against the exact image, and
 records results in that build directory. Profile results do not prove physical
 behavior or release eligibility. See the
-[qualification evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
+[qualification evidence](../audits/rc6/compact-runtime-20261024/final/README.md).
 
 The automatic suite requires no key presses, encoder movement, cable reconnect
 or manual Vial unlock. It does not write to the keyboard. Live protocol tests

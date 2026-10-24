@@ -1,0 +1,233 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 169.977,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/00.txt",
+      "log_sha256": "c3ea24a0d8884589e1736df197b7b47c2a5f1231606af117591847b9080e5b3f",
+      "unit_tests": {
+        "run": 135,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.241,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/01.txt",
+      "log_sha256": "5cd53a53d04023de114b2eeda7623449bed3d63b39f9d54d792ddacfe315b8e9",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.277,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/02.txt",
+      "log_sha256": "f7705cf6e371ea73108d1d7fe09c19c1479b3ff3e6cf7985619c3244a336c1fd",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.291,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/03.txt",
+      "log_sha256": "bb4f013ef5b41706d10c82c398fe5c07e7ec491233962f677b5bbfd5258e0827",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.218,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/04.txt",
+      "log_sha256": "9be89560e8ec11b18844dd625e88566621ab897529880ff1d0c634c383c72c3c",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.109,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/05.txt",
+      "log_sha256": "53ec6bfd32b426a23950e2fbbff5aba6e95df6d3ed7324d3edb40dd8151e63f8",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.472,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/06.txt",
+      "log_sha256": "83c9ca581897f43c3170016cb550049ad035c2300696cef7370bb802ca0be07a",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.105,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/07.txt",
+      "log_sha256": "0d6653413f55f7cf64dbfab59b6b29c640ade8e63585414ab2a44a0892a5ed0a",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/Documents/git/ak820",
+      "command": [
+        "/usr/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.093,
+      "log": "/tmp/ak820-cleanup-offline-logs-p3r2axpb/08.txt",
+      "log_sha256": "bc714a92725bac8bd3d74c767a9779074b93043e7a70144fe5c881f1010f930d",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/home/danil/Documents/git/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": false,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 273,
+    "skipped": 0
+  },
+  "passed": true
+}

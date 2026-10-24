@@ -39,24 +39,18 @@ All 13 supplemental full-profile suites pass on the same unchanged image.
 Detailed source hashes, review closure, initial fixture failure and remaining
 model limits are in the qualification report.
 
-Only this exact full image satisfies the new packaging gate, independent program
-policy and fresh packing receipt. Native CI and downloaded-package acceptance have passed.
-The other seven profiles in the earlier eight-profile matrix remain development
-builds; the new compact-feature profiles are also development-only. That
-matrix from source `81cfc96` is [dated evidence](../audits/rc6/roadmap-max-20261024/final/README.md),
-not qualification of those profiles after the alpha.3 changes.
-
-The [roadmap archive acceptance](../audits/rc6/roadmap-acceptance-20261024/review.md)
-records the imported work. The [roadmap](ROADMAP.md) lists future profile work
-and deferred features. The offline qualification did not access a device;
-installation results are recorded below.
+Only the exact alpha.3 full image satisfies the packaging gate, independent
+program policy and packing receipt. Other profiles and changed source are for
+development. The current matrix is recorded below. Offline qualification did
+not access a device; installation results are recorded separately.
 
 ## Current development source
 
 All 16 named profiles passed 18 build variants from frozen source `55acbb0`.
 Each image passed 28 base suites and 273 base unit tests with zero skips, plus
-14–24 supplemental suites for its selected features. Later changes add only
-documentation and retained evidence.
+14–24 supplemental suites for its selected features. These results belong to
+the frozen source. Cleanup later changed the configurator test fixture path;
+firmware source and retained image bytes are unchanged.
 
 Compact Mouse Keys and Auto Shift are joined by volatile GUI controls and
 two temporary Dynamic Macro slots. Six layers, 16 Vial macros, 8192 macro bytes,
@@ -71,6 +65,8 @@ alpha.3 image above. Measurements, hashes, raw logs and independent review are
 in the [technical report](../audits/rc6/compact-runtime-20261024/README.md).
 
 Integration checks and archive size are recorded in the [acceptance report](../audits/rc6/compact-runtime-20261024/acceptance.md).
+
+Repository cleanup and retained evidence are recorded in the [cleanup report](../audits/rc6/cleanup-20261024.md).
 
 ## Installed firmware
 

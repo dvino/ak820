@@ -10,21 +10,21 @@
 | ---: | ---: | --- | --- | --- |
 | 1 | 1 | Grave Escape modifier overrides (ALT/CTRL/GUI/SHIFT bits) | 0 | `process_grave_esc.c` consumes these bits; Grave Escape is enabled on the board. |
 | 2 | 2 | Combo term, ms | `COMBO_TERM` 50 ms upstream; board compact engine is explicitly fixed at 40 ms | `get_combo_term()` is the upstream hook. `ak820_combo.c` has a literal 40 ms threshold; QSID 2 would do nothing until that engine is wired to the setting. |
-| 3 | 1 | Auto Shift flags | 0 | Auto Shift is disabled; flags are dormant. |
-| 4 | 2 | Auto Shift timeout, ms | `AUTO_SHIFT_TIMEOUT` 175 ms | Auto Shift is disabled; timeout callback is dormant. |
+| 3 | 1 | Auto Shift flags | 0 | Compact Auto Shift does not consume this QSID; flags are dormant. |
+| 4 | 2 | Auto Shift timeout, ms | `AUTO_SHIFT_TIMEOUT` 175 ms | Compact Auto Shift uses a fixed 175 ms threshold; this QSID is dormant. |
 | 5 | 1 | One Shot tap-toggle count | `ONESHOT_TAP_TOGGLE` 5 | Generic One Shot behavior is replaced by `NO_ACTION_ONESHOT` plus the bounded compact modifier implementation. Tap-toggle is not implemented there. |
 | 6 | 2 | One Shot timeout, ms | `ONESHOT_TIMEOUT` 5000 ms | Compact One Shot has no timeout; do not expose this ID as effective. |
 | 7 | 2 | Tapping term, ms | `TAPPING_TERM` 200 ms | `ak820_tapping.c` uses fixed 200 ms. It needs an explicit compact-engine read of the saved value before QSID 7 is effective. |
 | 8 | 1 | Tapping policy bits: permissive hold, hold-on-other-key-press, force hold, retro tapping | 0 | The custom engine implements a fixed “other press resolves hold” rule and omits the other upstream policies; reject this ID rather than expose inert/unsupported combinations. |
-| 9 | 2 | Mouse delay, ms | 5 kinetic / 150 inertia / 10 default | Mouse Keys disabled. |
-| 10 | 2 | Mouse interval, ms | 10 kinetic / 16 inertia / 20 default | Mouse Keys disabled. |
-| 11 | 2 | Mouse movement delta | 16 kinetic / 1 inertia / 8 default | Mouse Keys disabled. |
-| 12 | 2 | Mouse maximum speed | 32 inertia / 10 otherwise | Mouse Keys disabled. |
-| 13 | 2 | Mouse time to max | 32 inertia / 30 otherwise | Mouse Keys disabled. |
-| 14 | 2 | Mouse wheel delay, ms | `MOUSEKEY_WHEEL_DELAY` (10) | Mouse Keys disabled. |
-| 15 | 2 | Mouse wheel interval, ms | `MOUSEKEY_WHEEL_INTERVAL` (80) | Mouse Keys disabled. |
-| 16 | 2 | Mouse wheel maximum speed | `MOUSEKEY_WHEEL_MAX_SPEED` (8) | Mouse Keys disabled. |
-| 17 | 2 | Mouse wheel time to max | `MOUSEKEY_WHEEL_TIME_TO_MAX` (40) | Mouse Keys disabled. |
+| 9 | 2 | Mouse delay, ms | 5 kinetic / 150 inertia / 10 default | Compact Mouse Keys does not consume this upstream QSID. |
+| 10 | 2 | Mouse interval, ms | 10 kinetic / 16 inertia / 20 default | Compact Mouse Keys does not consume this upstream QSID. |
+| 11 | 2 | Mouse movement delta | 16 kinetic / 1 inertia / 8 default | Compact Mouse Keys does not consume this upstream QSID. |
+| 12 | 2 | Mouse maximum speed | 32 inertia / 10 otherwise | Compact Mouse Keys does not consume this upstream QSID. |
+| 13 | 2 | Mouse time to max | 32 inertia / 30 otherwise | Compact Mouse Keys does not consume this upstream QSID. |
+| 14 | 2 | Mouse wheel delay, ms | `MOUSEKEY_WHEEL_DELAY` (10) | Compact Mouse Keys does not consume this upstream QSID. |
+| 15 | 2 | Mouse wheel interval, ms | `MOUSEKEY_WHEEL_INTERVAL` (80) | Compact Mouse Keys does not consume this upstream QSID. |
+| 16 | 2 | Mouse wheel maximum speed | `MOUSEKEY_WHEEL_MAX_SPEED` (8) | Compact Mouse Keys does not consume this upstream QSID. |
+| 17 | 2 | Mouse wheel time to max | `MOUSEKEY_WHEEL_TIME_TO_MAX` (40) | Compact Mouse Keys does not consume this upstream QSID. |
 | 18 | 2 | Tap-code delay, ms | `TAP_CODE_DELAY` 0 in `action.h` when unset; `qmk_settings.h` fallback says 10, so the setting-enabled compile path must pin this explicitly | Used by `quantum.c`, `action.c`, Vial and related call sites; relevant even without another optional engine. |
 | 19 | 2 | Caps Lock tap-hold delay, ms | `TAP_HOLD_CAPS_DELAY` 80 | Used by `quantum.c` and `action.c`; relevant. |
 | 20 | 1 | Tapping toggle count | `TAPPING_TOGGLE` 5 | Generic action engine calls it; custom AK820 tap engine does not implement multi-tap locking. Exclude unless a caller is demonstrated. |
