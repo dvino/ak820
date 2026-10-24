@@ -12,6 +12,15 @@ and [asset checks](../audits/rc6/alpha3-release-20261024/published-assets-check.
 The duplicate tag run was cancelled after publication from that successful main
 run; it was not a failed firmware or installer test.
 
+## Web and desktop configurator
+
+The `web-dev` branch adds [requirements](../web/docs/REQUIREMENTS.md) and an
+[implementation plan](../web/docs/PLAN.md). Entropy is the first shared
+native/Wasm candidate to test; Pipette is the fallback. No configurator code
+has been imported, built or deployed in this work package. Firmware and
+installed-device state are unchanged. Source references, documentation checks
+and independent review are recorded in [the work record](../web/docs/REVIEW.md).
+
 ## Alpha.3 source and image
 
 The full image includes NKRO control, modifier One Shot and compact Space

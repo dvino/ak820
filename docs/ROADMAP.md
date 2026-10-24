@@ -90,7 +90,19 @@ profiles have no release qualification. Any later release needs a fresh exact-im
 review, platform builds, package acceptance and separate device authorization.
 See [Status](STATUS.md) for the published image and current development source.
 
-## Other open work
+## Web and desktop configurator
+
+The [configurator plan](../web/docs/PLAN.md) starts with an Entropy native/Wasm
+prototype and keeps Pipette as a fallback. The first usable website must
+configure the released features, back up settings and perform firmware updates
+and OEM recovery in the browser. If Entropy is selected, native adaptation
+starts first and the browser develops in parallel. Desktop release does not
+wait for the website. Shared desktop packages work offline; the optional
+system-layout helper is a separate milestone. Feature, configurator and help
+support must be checked together before release. See the
+[requirements](../web/docs/REQUIREMENTS.md) and [current status](STATUS.md).
+
+## Remaining device checks
 
 Physical Combo timing, nonempty Combo writes, cold-start retention, power-loss
 behavior and manual Windows/Linux GUI acceptance remain open. VialRGB Direct
