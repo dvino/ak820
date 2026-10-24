@@ -66,3 +66,9 @@ AK820_COMPACT_GUI_LOCK ?= no
 ifeq ($(AK820_COMPACT_GUI_LOCK),yes)
     OPT_DEFS += -DAK820_COMPACT_GUI_LOCK
 endif
+
+# Volatile Ctrl/GUI report swap; independent of upstream persistent Magic.
+AK820_COMPACT_CTRL_GUI_SWAP ?= no
+ifeq ($(AK820_COMPACT_CTRL_GUI_SWAP),yes)
+    OPT_DEFS += -DAK820_COMPACT_CTRL_GUI_SWAP
+endif

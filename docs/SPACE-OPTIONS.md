@@ -10,5 +10,9 @@ migration change is approved.
 
 Current measurements and limits are in [Resource budget](RESOURCE-BUDGET.md).
 The [development matrix](../audits/rc6/compact-runtime-20261024/final/README.md)
-records the exact images. Passing resource checks does not establish a runtime
-stack bound or physical behavior. See [Roadmap](ROADMAP.md) for further work.
+records the measured feature images; it predates whole-stack proof for the new
+candidate. Resource allocation alone is not a runtime bound. Each new profile
+must pass exact-image startup, foreground and IRQ stack analysis, with all paths
+bounded and the combined allocation within capacity. See the [runtime stack
+report](../audits/rc6/runtime-stack-20261024/README.md). A pass does not prove
+physical behavior. See [Roadmap](ROADMAP.md) for further work.

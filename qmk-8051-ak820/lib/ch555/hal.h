@@ -19,6 +19,12 @@
 //#include <intrins.h>
 #include "ch555.h"
 
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* The leaf delay changes only two registers. Let its generated prologue
+ * preserve them, rather than saving all eight in callee-save mDelaymS. */
+#pragma callee_saves mDelayuS
+#endif
+
 
 #ifndef  SUCCESS
 #define  SUCCESS    0

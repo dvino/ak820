@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-24",
+  "scope": "Independent review of retained delay callee-save change; rejected host debug-loop candidate recorded separately",
+  "approved": true,
+  "blocking_findings": [],
+  "source_sha256": {
+    "qmk-8051-ak820/lib/ch555/hal.h": "68b66ded3309b081499671458899564f807077f093e062291261c0832d19af34",
+    "qmk-8051-ak820/tests/ak820_delay/run.py": "577d007e5dbffd9b986df6f113e947cd6c2a4c60848d272ae87f802dcb17ff9a"
+  },
+  "evidence": [
+    "hal.h declaration visible to hal.c and current callers through platforms/mcs51/_wait.h",
+    "Exact RST: mDelayuS saves/restores R7/R6; mDelaymS also saves/restores R7/R6, no whole-bank child-call save",
+    "No IRQ callback reaches delay or host report sending routines",
+    "Independent linked C52 run passed all7 ABI cases"
+  ],
+  "cpu_report": "/tmp/ak820-delay-independent-retained/results.json",
+  "cpu_report_sha256": "1d43b2b95eec8eb7c779dd3bdaa0d9d59680174f93b1ab77c0ea624c24756c5b",
+  "limits": [
+    "No physical delay timing/USB wake measurement",
+    "Final combined runtime and full regression evidence owned by root"
+  ],
+  "rejected_candidate": {
+    "path": "qmk-8051-ak820/tmk_core/protocol/host.c",
+    "change": "Guard empty debug loop with NO_DEBUG/NO_PRINT",
+    "source_review": "No source correctness defect",
+    "resource_result": "Whole-image stack placement falls166->163 while main stays101;164-byte combined bound does not fit. Candidate reverted by author."
+  }
+}

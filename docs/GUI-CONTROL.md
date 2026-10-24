@@ -3,8 +3,9 @@
 # GUI controls
 
 The development feature `gui-lock` adds three keycodes that can be assigned
-in Vial. The `full-gui-lock` profile includes them with the existing `full`
-features. This is an offline development build; it is not a released firmware.
+in Vial. `full-gui-lock` includes them with the `full` features. The separate
+`full-ctrl-gui` profile also adds Ctrl/GUI swapping. These are source-only
+development profiles, not part of published alpha.3.
 
 | Keycode | Action |
 | --- | --- |
@@ -29,5 +30,20 @@ the Auto Shift delay even while GUI output is disabled. Dynamic Macros also
 retain the recorded GUI modifier; this filter controls whether it is sent.
 
 A clear, NKRO switch or suspend cleanup releases its ordinary owners and keeps
-the selected GUI mask. These controls do not enable modifier swaps, other
-Magic actions or persistent QMK Settings.
+the selected GUI mask. GUI lock does not enable other Magic actions or
+persistent QMK Settings.
+
+## Ctrl/GUI swap
+
+The `full-ctrl-gui` profile adds three Vial keycodes:
+
+| Keycode | Action |
+| --- | --- |
+| `CG_SWAP` (`0x701b`) | Swap left Ctrl with left GUI and right Ctrl with right GUI. |
+| `CG_NORM` (`0x701c`) | Restore the normal mapping. |
+| `CG_TOGG` (`0x701d`) | Toggle between normal and swapped mappings. |
+
+The mapping is applied to output before GUI lock filters GUI bits. Internal
+modifier owners are preserved, so changing the mapping does not discard held
+modifiers. The selection lasts until reboot and is not saved. It does not add
+persistent Magic settings.

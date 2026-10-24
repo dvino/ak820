@@ -3,9 +3,10 @@
 # Roadmap
 
 NKRO control, modifier One Shot and Space Cadet are available in the `full`
-profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls
-and Dynamic Macros in supported combinations. These profiles are source development builds;
-they do not inherit the published alpha.3 qualification.
+profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps and
+Dynamic Macros in supported combinations. The configurator
+provides seventeen named profiles and nineteen planned qualification variants: the named
+profiles plus `full` and `full-mouse-auto-shift` with `--short-calls`. These profiles are source development builds; they do not inherit the published alpha.3 qualification.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
 The published and installed alpha.3 image is the exact full image described in
 [Status](STATUS.md). Source changes since that release, including feature-profile
@@ -23,7 +24,7 @@ enabled.
 | Tap Dance | The upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
 | Key Overrides | The upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Magic modifier swaps | GUI lock is available separately; modifier swaps and persistent settings remain open. |
+| Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; other modifier swaps, including Alt/Caps variants, and persistent settings remain open. |
 | Leader | Bound sequence length, timeout and supported outputs. |
 
 The available implementations are intentionally limited. NKRO control
@@ -56,13 +57,17 @@ Every supported feature combination must be measured as a complete linked
 image. Track both CODE windows, XRAM, internal RAM and stack placement. Shared
 code, dead-code removal and outlining make individual probe costs non-additive.
 Do not count loader, settings or journal space as free CODE. See
-[Resource budget](RESOURCE-BUDGET.md) and the current
-[qualification evidence](../audits/rc6/compact-runtime-20261024/final/README.md).
+[Resource budget](RESOURCE-BUDGET.md), the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md), and the current exact-image [runtime stack report](../audits/rc6/runtime-stack-20261024/final/README.md).
 
-Development builds run regression gates and profile-specific host and linked
-CPU suites against the exact image. The exact published alpha.3 image has reviewed stack, interrupt and
-settings-transition evidence. Source changes since that image need their own
-evidence before packaging. Model tests do not establish physical behavior.
+Every new source profile or image must pass exact-image stack and IRQ proof
+before other regression gates; unknown bounds or overflow fail the build.
+`check-runtime` reruns the proof on an existing build. Regression gates and
+profile-specific host and linked CPU suites then run against the exact image.
+The exact published alpha.3 image has reviewed stack, interrupt and
+settings-transition evidence. Source code, linked-image CPU results and the
+actual installed or released alpha.3 are separate facts. Source changes need their own stack and IRQ
+evidence before other regressions and any release review. Model tests do not
+establish physical behavior.
 
 ## Further code-size analysis
 
@@ -77,9 +82,9 @@ backup and migration plan.
 
 ## Later releases
 
-The alpha.3 release is published and installed. Compact Mouse Keys and Auto Shift
-are available in development source profiles only, separately and together; the current changed profiles
-have no release qualification. Any later release needs a fresh exact-image
+The alpha.3 release is published and installed. Compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps and
+Dynamic Macros are available in development source profiles only. Changed
+profiles have no release qualification. Any later release needs a fresh exact-image
 review, platform builds, package acceptance and separate device authorization.
 See [Status](STATUS.md) for the published image and current development source.
 

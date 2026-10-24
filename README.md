@@ -46,6 +46,7 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 - [Mod-Tap and Layer-Tap](docs/TAP-HOLD.md): tap for a key, hold for a modifier or layer.
 - [82 RGB LEDs](docs/CONFIGURATION.md#lighting) with solid color, breathing, color cycles, VialRGB Direct and a separate fade on each pressed key.
 - [C/W indicators](docs/INDICATORS.md): C follows Caps Lock; W shows an active additional layer.
+- Optional development controls for GUI lock and volatile left/right Ctrl↔GUI swapping; these controls are absent from published alpha.3.
 - Saved [keymaps, macros and global lighting](docs/CONFIGURATION.md), [physical Vial unlock](docs/CONFIGURATION.md#unlocking-vial), and [settings backup and restore](docs/SETTINGS-BACKUP.md), including all eight Combo slots.
 
 See [Configuration](docs/CONFIGURATION.md) for assignment examples and limits.
@@ -78,7 +79,7 @@ Download the Windows or Linux package from [Releases](https://github.com/dvino/a
 Read [Settings backup](docs/SETTINGS-BACKUP.md) for backup, restore and update
 instructions.
 
-Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lighting in Vial. To build from source, see [Build](docs/BUILD.md); firmware builds use Linux/WSL, Python 3.11+ and the pinned SDCC 4.6.0 toolchain.
+Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lighting in Vial. To build from source, see [Build](docs/BUILD.md); firmware builds use Linux/WSL, Python 3.11+ and the pinned SDCC 4.6.0 toolchain. Every development profile build requires the [stack and interrupt check](docs/RUNTIME-STACK.md) before its other regression checks. This source check does not qualify a release or describe the installed alpha.3 image.
 
 ## Documentation and contributions
 

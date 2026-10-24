@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-24",
+  "scope": "Independent compact ROM callback proof review",
+  "approved": true,
+  "blocking_findings": [],
+  "source_sha256": {
+    "qmk-8051-ak820/tests/ak820_stack/analyze.py": "5814367834e97500c219f3ef5f53d14b4f7e4937ae265caa901fadaae93934c3",
+    "qmk-8051-ak820/tests/ak820_stack/test_analyze.py": "572a942ac15b2706d2fde634e1775e7f08b1524e8777aeeed87ed87e4bfd36a7",
+    "qmk-8051-ak820/tests/ak820_stack/README.md": "9907dc6decacbb4977782a336ba58c72c4f727fa6173d75f28a1d609fdffb4f9"
+  },
+  "finding_closure": [
+    {
+      "id": "F1",
+      "finding": "Coherent relocation of all spill operands could grant callback targets for an unrelated/peripheral/ISR byte.",
+      "resolution": "Bind spill to unique one-byte _process_rgb_action_* XSEG allocation in process_rgb.rst; record symbol,address,listing hash. Missing,ambiguous,wrong-sized/wrong-space allocations and coherent relocation reject.",
+      "status": "closed",
+      "premise": "Valid compiler object layout, no local address escape, separate IRQ allocation disjointness."
+    }
+  ],
+  "reviewed_invariants": [
+    "Normalized nonzero byte/carry guard covers all possible incoming R5 values.",
+    "Modifier getter complete acyclic call tree only reads memory and changes A/R7/DPTR; R6 index preserved and R7 push/pop balanced.",
+    "ROM table offset arithmetic includes low-byte carry and excludes16-bit wrap.",
+    "Exact ROM getter, DPTR setter and indirect helper establish callback target provenance.",
+    "Saved R5/R6 plus LCALL contribute4 bytes during callback; helper/toggle/default/continuation paths also covered."
+  ],
+  "unit_tests": 32,
+  "independent_exact_image": {
+    "ihx_sha256": "53b9505fe2fe1c872598b0f2f61882674f23e8bba572babb3f42928a3c7c59e5",
+    "main": 100,
+    "timer": 2,
+    "usb": 6,
+    "led": 2,
+    "unresolved": []
+  },
+  "report": "/tmp/ak820-stack-independent.json",
+  "report_sha256": "c3e8d486df88a79eecacdc90ab1f04b37868bd920bbd81fb94b4c6f7961a60b8",
+  "limits": [
+    "Reviewed analyzer is an instruction/control-stack proof under stated data/architecture premises, not full memory or silicon safety.",
+    "All18-profile evidence is author-run; independent reproduction here covers one fresh full build."
+  ]
+}

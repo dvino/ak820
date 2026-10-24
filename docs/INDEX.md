@@ -16,7 +16,7 @@ difference.
 | Save or restore settings | [Settings backup](SETTINGS-BACKUP.md) |
 | Understand Mod-Tap and Layer-Tap behavior | [Mod-Tap and Layer-Tap](TAP-HOLD.md) |
 | Use One Shot, Space Cadet and NKRO controls | [Configuration](CONFIGURATION.md) |
-| Use GUI lock controls | [GUI controls](GUI-CONTROL.md) |
+| Use GUI lock and volatile Ctrl/GUI swap controls | [GUI controls](GUI-CONTROL.md) |
 | Record and play compact Dynamic Macros | [Dynamic Macros](COMPACT-DYNAMIC-MACROS.md) |
 | Understand Caps Lock and layer indicators | [C and W indicators](INDICATORS.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |

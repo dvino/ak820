@@ -60,6 +60,24 @@ two and const-ROM pointer getter. Both guarded exits and every selected table
 slot are analyzed. Helper bodies and saved registers are included in the bound.
 Tests change guards, register identities, XOR, spills and helper targets.
 
+The compact byte callback form checks normalization into a saved register,
+the zero-action branch, the unsigned carry guard, index decrement, private
+spill/reload and optional XOR. Its modifier getter must have a complete,
+acyclic straight-line call tree that only reads RAM and changes A, R7 or DPTR,
+with balanced R7 saves. It cannot overwrite the index registers or spill.
+The spill must match a unique one-byte `_process_rgb_action_*` allocation in
+the XSEG section of `process_rgb.rst`. Its symbol, address and listing hash
+are recorded; missing, ambiguous or differently sized allocations grant no
+targets. This relies on the local action having no escaped address and no
+concurrent clobber. The separate IRQ contract must prove that ISR allocations
+do not overlap this cell. Coherent relocation of all three spill operands
+without the matching allocation fails closed.
+The outlined ROM-byte getter, DPTR setter and indirect-call helper must match
+complete instruction bodies. Every admitted ROM slot and both non-callback
+branches are analyzed. The report includes the helper's peak and all checked
+instruction addresses. Mutation tests cover guards, register identities, spill
+addresses, helper targets and bodies, memory writes and missing ROM bytes.
+
 Private bool guards can close a recursive path. The report records the private
 object, source hash and exact read/write sites. After C line splicing and
 comment/literal stripping, every identifier use must be one of four complete
@@ -81,7 +99,12 @@ but an empty intersection cannot establish absence while paths remain unknown.
 
 This tool does not certify release safety. Shared static storage, data-pointer
 safety, ABI preservation, startup, OEM wrappers, peripheral behavior and IRQ
-nesting need separate evidence. No USB device is opened. Current development images have an unresolved foreground stack root; see the
+nesting need separate evidence. No USB device is opened. The compact callback proof closes the foreground roots of all 18 retained
+2026-10-24 development profiles. Their main bounds range from 99 to 107 bytes;
+the three application IRQ callbacks remain 2, 6 and 2 bytes. These figures
+exclude startup and OEM interrupt wrappers. Some profiles exceed available
+stack after those frames are added, so a closed root does not imply a safe
+whole-image bound. The retained inputs are in the
 [development matrix](../../../audits/rc6/compact-runtime-20261024/final/README.md).
 The exact published alpha.3 image has separate
 [release evidence](../../../audits/rc6/alpha3-release-20261024/review.md).

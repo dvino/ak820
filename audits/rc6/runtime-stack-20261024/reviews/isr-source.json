@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-24",
+  "scope": "Independent ISR/ABI source review plus linked CPU checks; not approval of newly authored public-fixture code",
+  "source_hashes": {
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_board.c": "6d4c147af1d264ad62c0a033f5a4d38cd3bcdf8fc797514e31814344fe28b0df",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_timer.c": "69a2218dc73c70feb2622d12f4a6f4e1b4647cc5a0b4d059f9d9a51023f4b1f5",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_flash.c": "b5ef5524ff1206a7d49fc5e3aa3436b9feed9bba33c2a1062429f42c21c1b34b",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_boot.c": "b1e8d7625152c9ed6209c392c75a9cb87a228087898ce4264a6b8d833d5daa0f",
+    "qmk-8051-ak820/tmk_core/protocol/ch555/usb_ak820.c": "7c765cb1e50f5fc36456dfb49f60d20693e5561b5e71388abbba2bc8ba97fd80"
+  },
+  "findings": [],
+  "reviewed_contracts": [
+    "Three enabled application IRQ sources: Timer0, USB, LED; callbacks use ordinary RET and immutable OEM wrappers provide the sole RETI.",
+    "Fixed priority within an active chain plus MCS51 in-service semantics limits nesting to distinct sources; summing all three callback/wrapper bounds does not assume a particular number of VS11 priority levels.",
+    "OEM wrappers preserve ACC, B, DPL, DPH, PSW and bank0 R0..R7. Bank0 is the compiler ABI; alternate banks may contain ordinary compiler data.",
+    "Timer/USB callback storage is nonoverlaid; shared foreground helper calls are confined to masked initialization.",
+    "Timer32 foreground access uses critical sections. Matrix snapshots mask LED IRQ and restore its prior enable. USB state transitions/publication use EA-preserving critical sections.",
+    "Flash IAP and loader-marker erase disable EA; failure paths restore saved IE, successful loader transition resets without re-enabling IRQs.",
+    "No new silicon-specific IRQ priority evidence was found; the existing explicit MCS51 architectural premise remains a premise, not a physical measurement."
+  ],
+  "primary_references": [
+    {
+      "url": "https://bitsavers.trailing-edge.com/components/intel/8051/MCS-51_Users_Manual_Feb94.pdf",
+      "description": "Original Intel MCS51 manual retained by existing architecture contract, printed pages 3-24, 3-25 and 2-65. Browser extraction unavailable due to 15 MB document size; existing report and source were reviewed."
+    },
+    {
+      "url": "https://sdcc.sourceforge.net/doc/sdccman.pdf",
+      "description": "SDCC compiler manual, sections3.7,3.8.1.1-4,3.8.2,3.9.1: nonoverlay, volatile/atomic shared state, stack/ABI and critical sections. Current manual is4.6.4; exact linked checks use project4.6.0 toolchain."
+    }
+  ],
+  "verification": {
+    "irq_unit_tests": 10,
+    "instruction_mutation_subcases": 234,
+    "report": "/tmp/ak820-isr-review-full/results.json",
+    "image_sha256": "53b9505fe2fe1c872598b0f2f61882674f23e8bba572babb3f42928a3c7c59e5",
+    "irq_order_cases": 15,
+    "selector_cases": 256,
+    "callback_bounds": {
+      "timer": 2,
+      "usb": 6,
+      "led": 2
+    },
+    "wrapper_per_source": 17,
+    "combined_irq_bound": 61,
+    "full_stack_capacity": 166,
+    "foreground_sample_reservation": 102,
+    "sample_sum": 163,
+    "sample_remaining": 3,
+    "no_device_access": true
+  },
+  "open_boundaries": [
+    "Root must close foreground/startup proof and sum it with these61 bytes on each final image.",
+    "Physical peripheral timing/routing and VS11 silicon assumptions remain outside offline proof.",
+    "New fixture implementation needs independent review before commit."
+  ]
+}

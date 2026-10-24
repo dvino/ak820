@@ -6,14 +6,24 @@ Run from the QMK tree after building the image:
 python3 tests/ak820_irq/run.py \
   --build-dir /path/to/build \
   --s51 ../toolchains/sdcc-4.6.0/bin/s51 \
-  --stock-rom /path/to/private/before-full-rom.bin \
   --output-dir /path/to/irq-results \
   --main-sample-bytes 56
 ```
 
-The OEM reference stays outside the repository. The packer's native-image
-validation checks its supported code variant and protected regions. Exact
-wrapper instructions are checked separately.
+The default uses [oem-wrappers.json](oem-wrappers.json): 234 actual instruction
+bytes copied from the retained public alpha.3 CPU log. It contains only the
+three 76-byte OEM wrappers and their six-byte dispatch helper. Each block is
+checked against an independent pinned hash, address and interrupt ordinal.
+The fixture records the original ROM identity and the public evidence hashes.
+Unit tests compare the bytes with that evidence and reject a change to any
+instruction byte, even when its supplied checksum changes too.
+
+Use `--wrapper-fixture /path/to/oem-wrappers.json` for an explicit copy of this
+same reviewed fixture. Alternatively, `--stock-rom /path/to/private/before-full-rom.bin`
+validates a complete private OEM image before extracting its actual wrappers.
+The options are mutually exclusive. The public fixture is an instruction model;
+it cannot establish a connected keyboard's OEM identity, replace a backup or
+satisfy the packer's native-image validation. No complete OEM ROM is constructed.
 
 The shared stack analyzer checks relocated listing bytes against the IHX and
 bounds every IRQ callback path. Unknown transfers, recursion, unbalanced stack
@@ -46,7 +56,9 @@ allocation. The LED IRQ has no C local storage. The LED selector
 is executed for all 256 input values. Values 0x10–0x1f retain their native
 meaning, and the mask limits the table path to its 16 entries.
 
-`results.json` binds results to the image, map, runner and stack analyzer.
+`results.json` binds results to the image, map, runner, stack analyzer and wrapper
+source. For the public fixture, `stock_rom_sha256` is null; the historical stock
+identity is recorded separately under `wrapper_source.origin`.
 The foreground reservation is a sample, not a global bound. Combine the
 static IRQ sum with the separate main-path and startup bounds for a whole
 image stack result. USB ACK effects and hardware entry frames are supplied

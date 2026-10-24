@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-24",
+  "scope": "Independent production Ctrl/GUI feature and configurator integration review; final integrated qualification and user documentation pending",
+  "interim_code_approved": true,
+  "release_approved": false,
+  "hardware_validated": false,
+  "blocking_findings": [],
+  "source_sha256": {
+    "tools/configure_firmware.py": "772336c301183f02da882bd29871b73fa5200589732d250325caaf230abe80e8",
+    "tools/test_configure_firmware.py": "58a11fc8c53c31e8880ef9b3a53c386bc5d13c9910ba329925c64dcb4d8b4959",
+    "qmk-8051-ak820/quantum/action_util.c": "9befa3bd90d3a98071a8a8c6c34ada3d90d46dfd2e879d850835d0deb700403b",
+    "qmk-8051-ak820/quantum/action_util.h": "06f46b9e1fd981b05bf56c286cb20f9c291b40a0c94b53d1ef853adb682a6ce3",
+    "qmk-8051-ak820/quantum/quantum.c": "37deef23fbddd818ce6aad47b5400eb422ee16b310049e59de798cae4e174617",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_tapping.c": "be5f5698bbdecc27e20c0175d28ee4a436acb8bc8f25773a5b5f1faef22820a5",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/rules.mk": "9a7a8b60d8d2ccbd782f057d1fbe7de71e1f857aaf830a776b6a792ecc3dc3a3",
+    "qmk-8051-ak820/util/ak820_profiles.py": "7645a15df48516648b2afbc9a823256bc0e69bedcd60229853e2c7a11790dd6b",
+    "qmk-8051-ak820/tests/ak820_ctrl_gui/host.py": "d9e9d1fff3778a5e694aade737af66095d330bc30e1806f223e52a47961486f5",
+    "qmk-8051-ak820/tests/ak820_ctrl_gui/flags.py": "fb23f89bfcec8a457a1ff2026df3aaad35fa835baa49a6f7b82e839aaef86bb6",
+    "qmk-8051-ak820/tests/ak820_ctrl_gui/linked.py": "c800d32a4e5e4187b0bca78ae0fc97c27d5445eb48c69472f1bed61a8ed19eb5"
+  },
+  "independent_test_runs": {
+    "ctrl_gui_host": "pass; exhaustive keycodes and edges, all256 effective modifier masks/owner combinations and lock ordering",
+    "ctrl_gui_flags": "pass; independent flag negative controls/default-off wiring",
+    "configure_firmware_unittests": 28,
+    "runtime_safety_unittests": 9
+  },
+  "finding_closure": [
+    {
+      "finding": "Ctrl/GUI controls consumed queued compact One Shot modifiers and marked held One Shot keys used before quantum handler",
+      "fix": "Exact swap/normal/toggle bypass in compact One Shot preprocessor under the swap feature flag",
+      "regression": "Fresh linked queued-OSM full-control-tap and held-OSM control-tap cases pass; previous test concealed failure by holding control until after letter"
+    }
+  ],
+  "reviewed_invariants": [
+    "Swap is applied once to assembled raw modifier ownership before final GUI output mask; no NVM/schema/upstream Magic changes.",
+    "Physical/weak/generated ownership survives held mode changes and is removed by original owner releases.",
+    "Shared GUI handler cannot establish swap presence; exact private swap bit must exist iff selected.",
+    "Relocated listings are hash/size bound and instruction bytes bound to final image; private swap state must have one unique label and immediately matching .ds1 allocation in BSEG(BIT), bit address below128.",
+    "Missing/extra state and invalid area/size/address/missing/duplicate allocation fail negative tests.",
+    "All swap profiles require host, flags and linked suites; absent-feature profiles do not include those suites.",
+    "Exact-image foreground/startup/IRQ proof executes and must pass before test_keyboard qualification or profile regressions.",
+    "Final runtime proof source hashes are rechecked after regressions; release approval remains false."
+  ],
+  "reviewed_linked_evidence": {
+    "path": "/tmp/ak820-cg-linked-final3/results.json",
+    "ihx_sha256": "cb669d103b66434344ec97c4657cf17770a8e7f0f8fe4c17b6510e5f20eaf3cb",
+    "cases_passed": 8,
+    "evidence_level": "generic C52 CPU fixture, not hardware/USB/interrupt timing"
+  },
+  "pending": [
+    "Fresh exact root full-ctrl-gui runtime stack/IRQ proof and integrated qualification matrix",
+    "Final user/technical documentation and results agreement before commit"
+  ]
+}

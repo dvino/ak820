@@ -2,11 +2,17 @@
 
 # Build profiles
 
-The configurator lists sixteen supported development profiles. The `full`
+The configurator lists seventeen named development profiles and supports
+nineteen planned qualification variants: the 17 profiles plus `full` and
+`full-mouse-auto-shift` built with the optional `--short-calls` setting.
+The `full`
 feature set matches published alpha.3. Other profiles add compact Mouse Keys,
-Auto Shift, GUI controls or Dynamic Macros in supported combinations. These
-profiles are for development, not release or flashing. They have not inherited alpha.3's
-image qualification or hardware evidence. See [Status](STATUS.md) and the
+Auto Shift, GUI controls, Ctrl/GUI swap or Dynamic Macros in supported
+combinations. These profiles are for development, not release or flashing.
+They have not inherited alpha.3's image qualification or hardware evidence.
+Every profile build proves stack and
+interrupt bounds for its exact linked image before running other regression
+gates. Unknown bounds or overflow fail the build. See [Status](STATUS.md) and the
 [compact-feature report](../audits/rc6/compact-runtime-20261024/README.md).
 
 ## Build a profile
@@ -37,8 +43,9 @@ python tools/configure_firmware.py build --features nkro-control one-shot \
 ```
 
 `full-mouse-auto-shift-gui` and `full-auto-shift-dynamic-macro` require
-`--short-calls`, which remains off by default. Other supported profiles do not
-require this option. Use a fresh build directory:
+`--short-calls`, which remains off by default. The optional setting also has
+additional qualification variants for `full` and `full-mouse-auto-shift`. Other profiles use the
+standard build. Use a fresh build directory:
 
 ```sh
 python tools/configure_firmware.py build --profile full-mouse-auto-shift-gui \
@@ -50,11 +57,12 @@ python tools/configure_firmware.py build --profile full-mouse-auto-shift-gui \
 ```
 
 `--profile` and `--features` are alternative selectors. `build` links the
-image, checks both CODE windows and RAM placement, then runs the standard
-regression gates and the selected feature's host and linked-CPU suites against
-the exact image. It records the configuration, qualification and profile
-suite results in the build directory. These offline checks do not validate a
-physical keyboard or establish release safety.
+image, checks both CODE windows and RAM placement, then proves stack and
+interrupt bounds for the exact image before running standard regression gates
+and the selected feature's host and linked-CPU suites. An unknown required
+bound or stack overflow fails the build. It records the configuration,
+qualification and profile suite results in the build directory. These offline
+checks do not validate a physical keyboard or establish release safety.
 
 To inspect a completed build again, run:
 
@@ -62,7 +70,17 @@ To inspect a completed build again, run:
 python tools/configure_firmware.py inspect --build-dir qmk-8051-ak820/.build/new --toolchain toolchains/sdcc-4.6.0
 ```
 
-`inspect` rechecks resource placement and image identity. Packaging is restricted
+`inspect` rechecks resource placement and image identity. To rerun the runtime
+proof for an existing build, use:
+
+```sh
+python tools/configure_firmware.py check-runtime \
+  --build-dir qmk-8051-ak820/.build/new \
+  --toolchain toolchains/sdcc-4.6.0
+```
+
+See [Runtime stack check](RUNTIME-STACK.md) for scope and assumptions.
+Packaging is restricted
 to the exact published alpha.3 image and its pinned inputs. A profile name such as
 `full` does not authorize a changed source image. Current development profiles
 are not release-qualified.
@@ -90,10 +108,16 @@ choices.
 | `full-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Auto Shift |
 | `full-mouse-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys and Auto Shift |
 | `full-gui-lock` | `nkro-control`, `one-shot`, `space-cadet`, GUI controls |
+| `full-ctrl-gui` | `nkro-control`, `one-shot`, `space-cadet`, GUI controls, left/right Ctrl↔GUI swap |
 | `full-dynamic-macro` | `nkro-control`, `one-shot`, `space-cadet`, compact Dynamic Macros |
 | `full-dynamic-macro-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Dynamic Macros and GUI controls |
 | `full-mouse-auto-shift-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys, Auto Shift and GUI controls |
 | `full-auto-shift-dynamic-macro` | `nkro-control`, `one-shot`, `space-cadet`, compact Auto Shift and Dynamic Macros |
+
+`full-ctrl-gui` adds `CG_SWAP`, `CG_NORM` and `CG_TOGG`. They swap both left
+and right Ctrl/GUI output mappings and reset on reboot. Mapping happens before
+GUI lock; modifier owners remain intact. The mapping is volatile and does not
+enable persistent Magic settings. See [GUI controls](GUI-CONTROL.md).
 
 NKRO control provides `NK_ON`, `NK_OFF` and `NK_TOGG`. The selected report mode
 lasts until restart; restart uses the saved/default mode. Switching clears
@@ -113,14 +137,14 @@ tapped; `SC_RSPC` maps to right Shift while held and Shift + `0` (`)`) when
 tapped; `SC_SENT` maps to right Shift while held and Enter when tapped. These
 keys use the existing compact tap-hold path and its modifier ownership. Space
 Cadet keycodes cannot be used as Combo inputs. The implementation does not
-include the full upstream Space Cadet engine. Tested edge cases and limits are
-recorded in the [current matrix](../audits/rc6/compact-runtime-20261024/final/README.md).
+include the full upstream Space Cadet engine. Tested feature edge cases and limits are
+recorded in the historical [compact-feature matrix](../audits/rc6/compact-runtime-20261024/final/README.md). Current exact-image runtime evidence is in the [runtime stack report](../audits/rc6/runtime-stack-20261024/final/README.md).
 
 The exact linked image determines resource use. Measure each profile from its
 build report; feature costs are not additive. For the exact published alpha.3 `full` image, release evidence bounds main-path
 stack use at 93 bytes, CRT at 2 bytes and all three IRQ paths at 61 bytes. Total
 use is 156 of 162 bytes, with 6 bytes remaining. These figures do not qualify
-changed source profiles. See [Status](STATUS.md) for evidence and limits.
+changed source profiles. See the current [runtime stack report](../audits/rc6/runtime-stack-20261024/final/README.md) and [Status](STATUS.md) for evidence and limits.
 
 ## Deferred feature inventory
 
@@ -135,7 +159,7 @@ Space Cadet; a Vial control alone does not establish firmware support.
 | Tap Dance | Upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
 | Key Overrides | Upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Magic modifier swaps | GUI lock is available separately; modifier swaps and persistent settings remain open. |
+| Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; other modifier swaps, including Alt/Caps variants, and persistent settings remain open. |
 | Leader | Bound sequence length, timeout and supported outputs. |
 
 Console and Command remain disabled. Fault injection is a test facility, not a

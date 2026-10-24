@@ -147,6 +147,10 @@ bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
     /* Output controls must not consume a queued modifier or mark held OSM used. */
     if (code >= QK_MAGIC_GUI_ON && code <= QK_MAGIC_TOGGLE_GUI) return true;
 #endif
+#ifdef AK820_COMPACT_CTRL_GUI_SWAP
+    /* Session Ctrl/GUI controls also leave queued and held OSM ownership alone. */
+    if (code == QK_MAGIC_SWAP_CTL_GUI || code == QK_MAGIC_UNSWAP_CTL_GUI || code == QK_MAGIC_TOGGLE_CTL_GUI) return true;
+#endif
     if ((code >> 8) == 0x52 && ((uint8_t)code & 0xe0) == 0xa0) {
         mods = code & 15;
         if (code & 16) mods <<= 4;

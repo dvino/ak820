@@ -29,6 +29,7 @@ extern keymap_config_t keymap_config;
 
 static uint8_t real_mods = 0;
 static uint8_t weak_mods = 0;
+#if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP)
 #ifdef AK820_COMPACT_GUI_LOCK
 /* Session-only output mask: keep every physical and generated owner intact.
  * Re-enabling GUI immediately exposes any GUI modifier still held. */
@@ -37,13 +38,34 @@ static __bit gui_disabled;
 #    else
 static bool gui_disabled;
 #    endif
+#endif
+#    if defined(AK820_COMPACT_CTRL_GUI_SWAP)
+#        if defined(__SDCC_mcs51)
+static __bit ctrl_gui_swapped;
+#        else
+static bool ctrl_gui_swapped;
+#        endif
+#    endif
 bool ak820_gui_process(uint16_t code, bool pressed) {
+#    if defined(AK820_COMPACT_CTRL_GUI_SWAP)
+    if (code == QK_MAGIC_SWAP_CTL_GUI || code == QK_MAGIC_UNSWAP_CTL_GUI || code == QK_MAGIC_TOGGLE_CTL_GUI) {
+        if (pressed) {
+            ctrl_gui_swapped = code == QK_MAGIC_TOGGLE_CTL_GUI ? !ctrl_gui_swapped : code == QK_MAGIC_SWAP_CTL_GUI;
+            send_keyboard_report();
+        }
+        return false;
+    }
+#    endif
+#    if defined(AK820_COMPACT_GUI_LOCK)
     if (code < QK_MAGIC_GUI_ON || code > QK_MAGIC_TOGGLE_GUI) return true;
     if (pressed) {
         gui_disabled = code == QK_MAGIC_TOGGLE_GUI ? !gui_disabled : code == QK_MAGIC_GUI_OFF;
         send_keyboard_report();
     }
     return false;
+#    else
+    return true;
+#    endif
 }
 #endif
 #ifdef AK820_COMPACT_TAPPING
@@ -412,6 +434,12 @@ void send_keyboard_report(void) {
     keyboard_report->mods |= weak_override_mods;
 #endif
 
+#ifdef AK820_COMPACT_CTRL_GUI_SWAP
+    if (ctrl_gui_swapped) {
+        uint8_t mods = keyboard_report->mods;
+        keyboard_report->mods = (mods & 0x66) | ((mods & 0x11) << 3) | ((mods & 0x88) >> 3);
+    }
+#endif
 #ifdef AK820_COMPACT_GUI_LOCK
     if (gui_disabled) keyboard_report->mods &= ~(MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI));
 #endif

@@ -2,8 +2,8 @@
 """Select, build and inspect AK820 development profiles without opening USB.
 
 Only named feature combinations are accepted. Every build is linked inside the
-real memory windows and tested against its own IHX/MAP. A passing CPU model is
-not release approval: the missing whole-program stack proof blocks packaging.
+real memory windows and tested against its own IHX/MAP. The foreground, startup
+and interrupt bounds must fit its stack. Release approval remains separate.
 """
 from __future__ import annotations
 
@@ -28,16 +28,18 @@ from pack_ak820 import read_symbols, validate_startup
 from ak820_ci_authorization import validate_qualification_contract
 from build_release_bundle import SDCC46_PINS
 from test_keyboard import unittest_counts
+from ak820_runtime_safety import combine as combine_runtime_safety
 
 FORMAT = 'ak820-configured-build-1'
 WINDOWS = ((0x28a0, 0x3000), (0x3027, 0xc700))
 SYMBOLS = {'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
            'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process',
            'dynamic-macros': '_ak820_dynamic_macro_process', 'gui-lock': '_ak820_gui_process'}
+STATIC_BITS = {'ctrl-gui-swap': '_ctrl_gui_swapped'}
 RELEASE_BLOCKERS = (
-    'No reviewed whole-program foreground stack bound for this image.',
-    'No exact-image IRQ/nesting proof combined with that foreground bound.',
+    'Run check-runtime to establish the exact-image foreground/startup/IRQ stack bound.',
     'No approved installer/settings transition for this feature identity.',
+    'No independent release approval for this image and source.',
 )
 
 
@@ -127,7 +129,7 @@ def check_absolute_xdata(report, build):
 
 
 def retained_static_symbols(report, build, code):
-    """Resolve private function labels without changing the firmware's ABI.
+    """Resolve private functions and state without changing the firmware's ABI.
 
     Static functions need not be exported solely for a host checker. Bind the
     relocated listings and verify their instruction bytes against final IHX.
@@ -144,10 +146,21 @@ def retained_static_symbols(report, build, code):
         records = [row for row in report['artifacts'] if row.get('path') == name]
         require(len(records) == 1 and records[0].get('sha256') == sha(path) and
                 records[0].get('size') == path.stat().st_size, 'Unbound relocated listing')
-        for line in path.read_text().splitlines():
+        lines = path.read_text().splitlines()
+        area = None
+        for index, line in enumerate(lines):
+            declaration = re.search(r'(?:^|\s)\.area\s+(\w+)\s*(\([^)]*\))?', line)
+            if declaration:
+                area = (declaration[1], declaration[2])
             label = re.match(r'^\s*([0-9A-F]{6})\s+\d+\s+(_[\w$]+):', line)
-            if label and label[2] in SYMBOLS.values():
-                require(label[2] not in found, 'Ambiguous feature handler')
+            if label and label[2] in (*SYMBOLS.values(), *STATIC_BITS.values()):
+                require(label[2] not in found, 'Ambiguous feature symbol')
+                if label[2] in STATIC_BITS.values():
+                    allocation = re.match(r'^\s*([0-9A-F]{6})\s+\d+\s+\.ds\s+1\s*$',
+                                          lines[index + 1] if index + 1 < len(lines) else '')
+                    require(area == ('BSEG', '(BIT)') and allocation and
+                            allocation[1] == label[1] and int(label[1], 16) < 128,
+                            'Invalid feature bit allocation')
                 found[label[2]] = int(label[1], 16)
             instruction = re.match(r'^\s*([0-9A-F]{6})\s+((?:[0-9A-F]{2}\s+)+)\[\s*\d+\]', line)
             if instruction:
@@ -155,6 +168,15 @@ def retained_static_symbols(report, build, code):
                 require(all(code.get(address + i) == byte for i, byte in enumerate(raw)),
                         'Relocated instruction differs from IHX')
     return found
+
+
+def check_feature_symbols(symbols, selected, code):
+    for feature, symbol in SYMBOLS.items():
+        require((symbol in symbols and symbols[symbol] in code) ==
+                (feature in selected['optional_features']), 'Compiled feature differs from profile: ' + feature)
+    for feature, symbol in STATIC_BITS.items():
+        require((symbol in symbols) == (feature in selected['optional_features']),
+                'Compiled feature state differs from profile: ' + feature)
 
 
 def check_feature_defines(report, build, selected):
@@ -274,10 +296,7 @@ def inspect(build, toolchain):
     code = diagnostic_build(ihx, mapfile, report_path)
     symbols = linked_symbols(mapfile)
     validate_startup(code, symbols)
-    handlers = retained_static_symbols(report, build, code)
-    for feature, symbol in SYMBOLS.items():
-        require((symbol in handlers and handlers[symbol] in code) ==
-                (feature in selected['optional_features']), 'Compiled feature differs from profile: ' + feature)
+    check_feature_symbols(retained_static_symbols(report, build, code), selected, code)
     resources = memory_report(code, symbols, mem.read_text())
     resources['absolute_xram'] = check_absolute_xdata(report, build)
     require(resources['code_bytes'] == report.get('code_bytes'), 'CODE byte count disagrees')
@@ -347,7 +366,7 @@ def run_runtime_analysis(build, identity):
     """Record exact-image progress without treating partial bounds as approval."""
     output = build / 'runtime-stack.json'
     runner = QMK / 'tests/ak820_stack/analyze.py'
-    command = [sys.executable, str(runner), '--build-dir', str(build), '--output', str(output)]
+    command = [sys.executable, '-I', str(runner), '--build-dir', str(build), '--output', str(output)]
     log = build / 'runtime-stack.log'
     with log.open('w') as stream:
         result = subprocess.run(command, cwd=QMK, stdout=stream, stderr=subprocess.STDOUT)
@@ -367,6 +386,67 @@ def run_runtime_analysis(build, identity):
     return {'report_sha256': sha(output), 'log_sha256': sha(log), 'exit_code': result.returncode,
             'whole_program_qualified': False, 'unresolved_roots': unknown,
             'root_bounds': {name: value.get('bound') for name, value in roots.items()}}
+
+
+def runtime_source_snapshot():
+    names = ('tools/configure_firmware.py', 'tools/ak820_runtime_safety.py',
+             'qmk-8051-ak820/tests/ak820_stack/analyze.py',
+             'qmk-8051-ak820/tests/ak820_startup/stack_contract.py',
+             'qmk-8051-ak820/tests/ak820_irq/run.py',
+             'qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json',
+             'qmk-8051-ak820/tests/ak820_iap/run.py',
+             'qmk-8051-ak820/tests/ak820_emitted/run.py',
+             'qmk-8051-ak820/util/ak820_linked_inventory.py',
+             'qmk-8051-ak820/util/pack_ak820.py')
+    return {name: sha(ROOT / name) for name in names}
+
+
+def run_runtime_safety(build, inspected, toolchain):
+    """Recompute every proof; stored booleans never grant a successful result."""
+    output = build / 'runtime-safety'
+    output.mkdir(exist_ok=True)
+    summary = output / 'summary.json'
+    summary.unlink(missing_ok=True)
+    sources = runtime_source_snapshot()
+    identity = inspected['identity']
+    run_runtime_analysis(build, identity)
+    commands = [
+        ('startup', [sys.executable, '-I', str(QMK / 'tests/ak820_startup/stack_contract.py'),
+                     '--build-dir', str(build), '--output', str(output / 'startup.json')]),
+        ('irq', [sys.executable, '-I', str(QMK / 'tests/ak820_irq/run.py'),
+                 '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                 '--wrapper-fixture', str(QMK / 'tests/ak820_irq/oem-wrappers.json'),
+                 '--output-dir', str(output / 'irq')]),
+    ]
+    for name, command in commands:
+        print('RUN RUNTIME', name, flush=True)
+        with (output / (name + '.log')).open('w') as stream:
+            result = subprocess.run(command, cwd=QMK, stdout=stream, stderr=subprocess.STDOUT)
+        require(result.returncode == 0, 'Runtime proof failed: ' + name)
+    require(runtime_source_snapshot() == sources, 'Runtime proof sources changed during checks')
+    require(inspect(build, toolchain)['identity'] == identity, 'Build changed during runtime checks')
+    paths = {'foreground': build / 'runtime-stack.json', 'startup': output / 'startup.json',
+             'irq': output / 'irq/results.json'}
+    report = combine_runtime_safety(*(load_json(paths[name]) for name in ('foreground', 'startup', 'irq')),
+                                    identity, inspected['resources']['internal_ram'], sources)
+    report['reports'] = {name: {'path': path.relative_to(build).as_posix(), 'sha256': sha(path)}
+                         for name, path in paths.items()}
+    report['logs'] = {name: sha(output / (name + '.log')) for name in ('startup', 'irq')}
+    report['simulator_sha256'] = sha(toolchain / 'bin/s51')
+    summary.write_bytes(canonical(report))
+    require(report['passed'], 'Runtime stack does not fit or has unresolved paths; see ' + str(summary))
+    return report
+
+
+def apply_runtime_safety(result, proof):
+    require(proof.get('passed') is True and proof.get('identity') == result['identity'] and
+            proof.get('release_approved') is False, 'Invalid runtime proof for this build')
+    require(proof.get('source_files') == runtime_source_snapshot(), 'Runtime proof sources changed after checks')
+    result['runtime_analysis'] = proof
+    result['release_approved'] = False
+    result['resources']['internal_ram'].update(runtime_stack_bound=proof['stack_bound'],
+        stack_margin=proof['stack_margin'], stack_qualified=True)
+    result['release_blockers'] = list(RELEASE_BLOCKERS[1:])
 
 
 def profile_test_plan(name, build, toolchain):
@@ -391,6 +471,11 @@ def profile_test_plan(name, build, toolchain):
                                  '--output-dir', str(output / 'transport')]),
         ('stack-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
                             '-s', 'tests/ak820_stack', '-p', 'test_*.py']),
+        ('runtime-safety-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                      '-s', 'tools', '-p', 'test_runtime_safety.py']),
+        ('delay-abi', QMK, [sys.executable, '-I', 'tests/ak820_delay/run.py',
+                            '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                            '--output-dir', str(output / 'delay-abi')]),
         ('startup-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
                                '-s', 'tests/ak820_startup', '-p', 'test_stack_contract.py']),
         ('startup-stack', QMK, [sys.executable, 'tests/ak820_startup/stack_contract.py',
@@ -446,6 +531,12 @@ def profile_test_plan(name, build, toolchain):
         plan.append(('gui-lock-linked', QMK, [sys.executable, 'tests/ak820_gui_lock/linked.py',
                     '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
                     '--output-dir', str(output / 'gui-lock')]))
+    if 'ctrl-gui-swap' in selected['optional_features']:
+        plan.append(('ctrl-gui-host', QMK, [sys.executable, 'tests/ak820_ctrl_gui/host.py']))
+        plan.append(('ctrl-gui-flags', QMK, [sys.executable, 'tests/ak820_ctrl_gui/flags.py']))
+        plan.append(('ctrl-gui-linked', QMK, [sys.executable, 'tests/ak820_ctrl_gui/linked.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                    '--output-dir', str(output / 'ctrl-gui')]))
     return plan
 
 
@@ -530,8 +621,10 @@ def main(argv=None):
     build.add_argument('--qmk-bin', type=Path, default=QMK / '.venv/bin/qmk')
     build.add_argument('--python', type=Path, default=Path(sys.executable),
                        help='Python from the QMK build environment')
-    for name in ('inspect', 'package'):
-        command = sub.add_parser(name, help='Inspect linked resources' if name == 'inspect' else 'Check release eligibility')
+    for name, help_text in (('inspect', 'Inspect linked resources'),
+                            ('check-runtime', 'Prove the exact-image stack and IRQ bound offline'),
+                            ('package', 'Check release eligibility')):
+        command = sub.add_parser(name, help=help_text)
         command.add_argument('--build-dir', type=Path, required=True)
         command.add_argument('--toolchain', type=Path, default=ROOT / 'toolchains/sdcc-4.6.0')
     args = parser.parse_args(argv)
@@ -558,6 +651,8 @@ def main(argv=None):
         result['source'] = before
         output = directory / 'configuration-report.json'
         output.write_bytes(canonical(result))
+        apply_runtime_safety(result, run_runtime_safety(directory, result, toolchain))
+        output.write_bytes(canonical(result))
         qualification = directory / 'qualification.json'
         subprocess.run([sys.executable, str(ROOT / 'tools/test_keyboard.py'), '--host', '--require-toolchain',
                         '--toolchain', str(toolchain), '--build-dir', str(directory),
@@ -567,12 +662,14 @@ def main(argv=None):
         require(source_identity() == before, 'Git source changed during qualification')
         result['qualification'] = validate_tests(qualification, result['identity'])
         result['profile_tests'] = run_profile_tests(name, directory, toolchain, result['identity'])
-        result['runtime_analysis'] = run_runtime_analysis(directory, result['identity'])
+        apply_runtime_safety(result, result['runtime_analysis'])
         result['offline_tests_passed'] = True
         output.write_bytes(canonical(result))
     else:
         result = inspect(directory, toolchain)
-        if args.command == 'package':
+        if args.command == 'check-runtime':
+            apply_runtime_safety(result, run_runtime_safety(directory, result, toolchain))
+        elif args.command == 'package':
             require_release_approval(result, load_json(directory / 'build-report.json'), directory, toolchain)
     print(json.dumps(result, indent=2))
     return 0

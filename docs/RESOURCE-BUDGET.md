@@ -8,34 +8,26 @@ profiles have source changes beyond that image and are not release-qualified.
 
 ## Current development builds
 
-All 16 profiles passed 18 build variants from source `55acbb0`. The complete
-[matrix](../audits/rc6/compact-runtime-20261024/final/README.md) records exact
-hashes, checks and stack allocations for every image.
+The integrated source has 17 named profiles and 19 planned matrix variants.
+The final matrix is being regenerated. Exact identities and evidence are in
+the [stack and interrupt report](../audits/rc6/runtime-stack-20261024/README.md).
 
-| Build | CODE bytes | Main / low trailing free | XRAM |
-| --- | ---: | ---: | ---: |
-| `full` | 38,964 | 1,520 / 16 | 2,607 |
-| `full --short-calls` | 38,717 | 1,767 / 16 | 2,607 |
-| `full-mouse` | 39,814 | 670 / 16 | 2,637 |
-| `full-auto-shift` | 39,577 | 907 / 16 | 2,624 |
-| `full-mouse-auto-shift` | 40,427 | 57 / 16 | 2,654 |
-| `full-mouse-auto-shift --short-calls` | 40,203 | 281 / 16 | 2,654 |
-| `full-gui-lock` | 39,199 | 1,285 / 16 | 2,610 |
-| `full-dynamic-macro` | 40,084 | 400 / 16 | 2,693 |
-| `full-dynamic-macro-gui` | 40,319 | 165 / 16 | 2,696 |
-| `full-mouse-auto-shift-gui --short-calls` | 40,432 | 52 / 16 | 2,657 |
-| `full-auto-shift-dynamic-macro --short-calls` | 40,466 | 18 / 16 | 2,710 |
+| Integrated candidate | CODE bytes | XRAM | Stack bound / capacity | Margin |
+| --- | ---: | ---: | ---: | ---: |
+| `full` | 38,924 | 2,607 | 160 / 166 | 6 |
+| `full-ctrl-gui` | 39,302 | 2,610 | 164 / 166 | 2 |
 
-XRAM capacity is 3072 bytes, separate from 512 fixed DMA bytes. These `full`
-variants allocate 165–166 stack bytes; that is capacity, not a proven runtime
-bound. The CODE windows are separate: low trailing space cannot be added to
-main. Mouse Keys + Auto Shift now fits without short transfers.
+Stack bounds include the persistent CRT frame and all three distinct IRQ
+sources. Every configured build must establish its own complete bound and
+fit its linked stack allocation before other regression suites run. A measured
+CPU peak alone cannot substitute for that bound.
 
-Adding Dynamic Macros to Mouse Keys + Auto Shift exceeded the main window by 804
-bytes even with short transfers; that profile is unsupported.
+XRAM capacity is 3072 bytes, separate from 512 fixed DMA bytes. The CODE
+windows are separate; low trailing space cannot be added to main.
 `full-mouse-auto-shift-gui` and `full-auto-shift-dynamic-macro` require
-`--short-calls`. Other rows without that suffix are measured without it.
-New images remain unqualified for release.
+`--short-calls`. Mouse Keys + Auto Shift + Dynamic Macros remains unsupported;
+the previous probe exceeded the main window by 804 bytes even with short
+transfers. New source images still need independent release qualification.
 
 ## Published image
 
@@ -60,5 +52,5 @@ do not establish behavior on physical hardware.
 
 These stack figures describe the published alpha.3 image only. They do not
 apply to development profiles with changed source. See [Build profiles](BUILD-PROFILES.md)
-for their feature sets and the [technical report](../audits/rc6/compact-runtime-20261024/README.md)
+for their feature sets and the [technical report](../audits/rc6/runtime-stack-20261024/README.md)
 for current compact-feature measurements and limits.

@@ -17,6 +17,19 @@ import configure_firmware as config
 
 
 class ProfileTests(unittest.TestCase):
+    def test_runtime_proof_cannot_survive_later_checker_edits_or_grant_release_approval(self):
+        result = {'identity': {'ihx_sha256': 'image'}, 'resources': {'internal_ram': {}},
+                  'release_approved': True}
+        proof = {'identity': result['identity'], 'passed': True, 'source_files': {'checker': 'before'},
+                 'stack_bound': 160, 'stack_margin': 6, 'release_approved': False}
+        with patch.object(config, 'runtime_source_snapshot', return_value={'checker': 'before'}):
+            config.apply_runtime_safety(result, proof)
+            self.assertFalse(result['release_approved'])
+            self.assertTrue(result['resources']['internal_ram']['stack_qualified'])
+        with patch.object(config, 'runtime_source_snapshot', return_value={'checker': 'after'}), \
+             self.assertRaisesRegex(ValueError, 'sources changed after checks'):
+            config.apply_runtime_safety(result, proof)
+
     def test_short_call_proof_cannot_be_removed_or_unbound(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -42,6 +55,22 @@ class ProfileTests(unittest.TestCase):
             for feature, prefix in (('dynamic-macros', 'dynamic-macro'), ('gui-lock', 'gui-lock')):
                 for suffix in ('host', 'linked'):
                     self.assertEqual(prefix + '-' + suffix in identifiers, feature in features)
+            for suffix in ('host', 'flags', 'linked'):
+                self.assertEqual('ctrl-gui-' + suffix in identifiers, 'ctrl-gui-swap' in features)
+
+    def test_shared_gui_handler_does_not_prove_ctrl_gui_swap(self):
+        selected = config.profiles.configuration('full-gui-lock')
+        symbols = {symbol: 0x3027 for feature, symbol in config.SYMBOLS.items()
+                   if feature in selected['optional_features']}
+        code = {0x3027: 0x22}
+        config.check_feature_symbols(symbols, selected, code)
+        swapped = config.profiles.configuration('full-ctrl-gui')
+        with self.assertRaisesRegex(ValueError, 'feature state'):
+            config.check_feature_symbols(symbols, swapped, code)
+        symbols['_ctrl_gui_swapped'] = 0x21
+        config.check_feature_symbols(symbols, swapped, code)
+        with self.assertRaisesRegex(ValueError, 'feature state'):
+            config.check_feature_symbols(symbols, selected, code)
 
     def test_exact_named_combinations_and_no_inherited_switches(self):
         for name, features in config.profiles.PROFILES.items():
@@ -166,7 +195,7 @@ class ProfileTests(unittest.TestCase):
         commands = {name: command for name, _, command in plan}
         self.assertIn('--oneshot', commands['one-shot-host'])
         self.assertIn('--space-cadet', commands['one-shot-host'])
-        for required in ('outline-gates', 'stack-gates', 'outline-integrity', 'vialrgb-linked',
+        for required in ('outline-gates', 'stack-gates', 'runtime-safety-gates', 'delay-abi', 'outline-integrity', 'vialrgb-linked',
                          'startup-gates', 'startup-stack', 'irq-gates', 'release-safety-gates',
                          'nkro-control-linked', 'one-shot-linked'):
             self.assertIn(required, commands)
@@ -316,6 +345,33 @@ class ProfileTests(unittest.TestCase):
                 listing.unlink()
                 with self.assertRaisesRegex(ValueError, 'listing'):
                     config.retained_static_symbols(report, build, {0x3027: 0x22})
+
+    def test_ctrl_gui_state_requires_one_unique_internal_bit_allocation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            build = root / 'build'
+            (build / 'dce').mkdir(parents=True)
+            listing = build / 'dce/fixture.rst'
+            valid = ('  567 .area BSEG (BIT)\n'
+                     '  000021 570 _ctrl_gui_swapped:\n'
+                     '  000021 571 .ds 1\n'
+                     '  572 .area CSEG (CODE)\n'
+                     '  003027 22 [24] 573 ret\n')
+            def inspect(text):
+                listing.write_text(text)
+                report = {'artifacts': [{'path': 'build/dce/fixture.rst',
+                                        'sha256': config.sha(listing), 'size': listing.stat().st_size}]}
+                return config.retained_static_symbols(report, build, {0x3027: 0x22})
+            with patch.object(config, 'QMK', root):
+                self.assertEqual(inspect(valid), {'_ctrl_gui_swapped': 0x21})
+                for changed in (valid.replace('BSEG (BIT)', 'XSEG (XDATA)'),
+                                valid.replace('BSEG (BIT)', 'BSEG (DATA)'),
+                                valid.replace('.ds 1', '.ds 2'),
+                                valid.replace('000021 571', '000022 571'),
+                                valid.replace('000021', '000080'),
+                                valid.replace('  000021 571 .ds 1\n', ''), valid + valid):
+                    with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'feature'):
+                        inspect(changed)
 
 
 class MemoryTests(unittest.TestCase):

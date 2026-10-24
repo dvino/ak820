@@ -94,12 +94,33 @@ def load(build):
     for path in sorted((build / 'dce').rglob('*.rst')):
         for address, name in re.findall(r'^\s*([0-9A-F]{6})\s+\d+\s+(_(?:dynamic_keymap_macro_send_sending_\w+|ak820_repeat_invoking)):', path.read_text(), re.M):
             symbols[name] = int(address,16)
+    callback_spills = {}
+    candidates = []
+    for path in (build / 'dce').rglob('process_rgb.rst'):
+        area = None
+        lines = path.read_text().splitlines()
+        for index, line in enumerate(lines):
+            match = re.search(r'\.area\s+(\w+)', line)
+            if match:
+                area = match[1]
+            match = re.match(r'^\s*([0-9A-F]{6})\s+\d+\s+(_process_rgb_action_\w+):\s*$', line)
+            if match:
+                allocation = re.match(r'^\s*([0-9A-F]{6})\s+\d+\s+\.ds\s+(\d+)\s*$',
+                                      lines[index+1] if index+1 < len(lines) else '')
+                candidates.append((path,area,match,allocation))
+    if len(candidates) == 1:
+        path, area, match, allocation = candidates[0]
+        if area == 'XSEG' and allocation and allocation[1] == match[1] and allocation[2] == '1':
+            callback_spills[int(match[1],16)] = {'symbol': match[2],
+                'listing': str(path.relative_to(build)),
+                'listing_sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
     return instructions, symbols, code, {'ihx_sha256': hashlib.sha256(image.read_bytes()).hexdigest(),
-        'map_sha256': hashlib.sha256(mapping.read_bytes()).hexdigest(), 'listing_sha256': listings}
+        'map_sha256': hashlib.sha256(mapping.read_bytes()).hexdigest(), 'listing_sha256': listings, 'compact_callback_spills': callback_spills}
 
 
 class Analyzer:
-    def __init__(self, instructions, code=None):
+    def __init__(self, instructions, code=None, callback_spills=()):
+        self.callback_spills = frozenset(callback_spills)
         self.instructions = dict(instructions)
         occupied = set()
         for pc, raw in instructions.items():
@@ -596,6 +617,102 @@ class Analyzer:
                 'default': relative(7), 'continuation': at+6, 'rom_slots': slots,
                 'reachable': sorted(set(addresses + [at,at+3]) | helper_reachable)}
 
+    def compact_rom_callback_dispatch(self, pc):
+        """Byte normalization, nonzero/range guards and outlined ROM callback.
+
+        The modifier getter may only read RAM and alter A, R7 and DPTR. Its
+        complete straight-line call tree is checked, including balanced R7
+        saves, so the saved index and private spill cannot be changed.
+        """
+        lengths = (1,2,1,2,3,2,1,2,2,1,2,1,3,1,3,2,2,2,3,2,1,1,
+                   3,1,3,1,2,2,2,3,1,1,1,1,1,2,2,3,3)
+        r, addresses, at = [], [], pc
+        for length in lengths:
+            row = self.peek_instruction(at)
+            if row is None or len(row) != length:
+                return None
+            r.append(row); addresses.append(at); at += length
+        def relative(i):
+            delta = r[i][-1]
+            return addresses[i]+len(r[i])+(delta if delta < 128 else delta-256)
+        if not (r[0] == b'\xed' and r[1][0] == 0x24 and r[2] == b'\xff'
+                and r[3] == b'\x70\x05' and r[4][0] == 0x12 and r[5][0] == 0x80
+                and relative(3) == addresses[6] and r[6] == b'\xef'
+                and r[7][0] == 0x24 and r[7][1] >= 128 and r[8][0] == 0x40
+                and r[9] == b'\xed' and r[10] == bytes((0x24,(r[1][1]-1)&255))
+                and r[11] == b'\xfe' and r[12][0] == 0x90 and r[13] == b'\xf0'
+                and r[14][0] == 0x12 and r[15] == b'\xe5\x82' and r[16][0] == 0x54
+                and r[17] == b'\x60\x07' and r[18] == r[12] and r[19] == b'\x74\x01'
+                and r[20] == b'\x6e' and r[21] == b'\xf0' and r[22] == r[12]
+                and relative(17) == addresses[22] and r[23] == b'\xe0'
+                and r[24] == b'\x75\xf0\x02' and r[25] == b'\xa4'
+                and r[26][0] == 0x24 and r[27] == b'\xf5\x82' and r[28][0] == 0x74
+                and r[29][0] == 0x12 and r[30] == b'\xfd' and r[31] == b'\xa3'
+                and r[32] == b'\xe4' and r[33] == b'\x93' and r[34] == b'\xfe'
+                and r[35] == b'\xc0\x06' and r[36] == b'\xc0\x05'
+                and r[37][0] == r[38][0] == 0x12):
+            return None
+        spill = int.from_bytes(r[12][1:], 'big')
+        if spill not in self.callback_spills:
+            return None
+        seen, active = set(), set()
+        def getter(entry):
+            if entry in active:
+                return None
+            active.add(entry)
+            cursor, height, peak = entry, 0, 0
+            local = set()
+            while cursor not in local:
+                local.add(cursor); seen.add(cursor)
+                row = self.peek_instruction(cursor)
+                if row is None:
+                    break
+                if row == b'\x22':
+                    active.remove(entry)
+                    return peak if height == 0 else None
+                if row[0] == 0x12:
+                    child = getter(int.from_bytes(row[1:], 'big'))
+                    if child is None:
+                        break
+                    peak = max(peak,height+2+child)
+                elif row == b'\xc0\x07':
+                    height += 1
+                elif row == b'\xd0\x07':
+                    height -= 1
+                    if height < 0:
+                        break
+                elif not (row[0] == 0x90 or row in (b'\xe0',b'\xff',b'\xef',b'\x4f',b'\x42\x07',b'\x8f\x82',b'\xf5\x82')):
+                    break
+                peak = max(peak,height)
+                cursor += len(row)
+            active.remove(entry)
+            return None
+        getter_peak = getter(int.from_bytes(r[14][1:], 'big'))
+        def body(call, expected):
+            cursor = int.from_bytes(call[1:], 'big')
+            offset = 0
+            while offset < len(expected):
+                row = self.peek_instruction(cursor+offset)
+                if row is None or row != expected[offset:offset+len(row)]:
+                    return False
+                seen.add(cursor+offset); offset += len(row)
+            return offset == len(expected)
+        if (getter_peak is None or not body(r[29], b'\x35\xf0\xf5\x83\xe4\x93\x22')
+                or not body(r[37], b'\x8d\x82\x8e\x83\x22')
+                or not body(r[38], b'\xe4\x73')):
+            return None
+        # Nonzero normalized action and carry guard prove 1..count-1.
+        count = 256-r[7][1]
+        indices = {index ^ shift for index in range(count-1) for shift in (0,1)}
+        base = r[26][1] | r[28][1] << 8
+        slots = [base+2*i for i in sorted(indices)]
+        if any(slot+1 > 65535 or slot not in self.code or slot+1 not in self.code for slot in slots):
+            return None
+        return {'targets': sorted({self.code[slot] | self.code[slot+1]<<8 for slot in slots}),
+                'default': relative(8), 'continuation': at, 'rom_slots': slots,
+                'direct_target': int.from_bytes(r[4][1:], 'big'), 'direct_continuation': relative(5),
+                'getter_peak': getter_peak, 'spill': spill, 'reachable': sorted(set(addresses)|seen)}
+
     def bound(self, entry, context=frozenset()):
         key = (entry, context)
         if key in self.memo:
@@ -641,6 +758,20 @@ class Analyzer:
                 for target in callback_dispatch['targets']:
                     child = self.bound(target, flags)
                     maximum = max(maximum, height + 4 + child['explored_peak'])
+                    transitive.update(child['reachable'])
+                    failures.extend(item for item in child['unresolved'] if item not in failures)
+                continue
+            compact = self.compact_rom_callback_dispatch(pc)
+            if compact is not None:
+                self.guarded_callback_transfers[pc] = compact
+                transitive.update(compact['reachable'])
+                maximum = max(maximum, height + 2 + compact['getter_peak'], height + 4)
+                work.append((compact['default'], height, flags))
+                work.append((compact['continuation'], height + 2, flags))
+                work.append((compact['direct_continuation'], height, flags))
+                for target, frame in [(compact['direct_target'],2)] + [(t,4) for t in compact['targets']]:
+                    child = self.bound(target, flags)
+                    maximum = max(maximum,height+frame+child['explored_peak'])
                     transitive.update(child['reachable'])
                     failures.extend(item for item in child['unresolved'] if item not in failures)
                 continue
@@ -741,7 +872,7 @@ def main():
     parser.add_argument('--output', required=True, type=Path)
     args = parser.parse_args()
     instructions, symbols, code, identity = load(args.build_dir)
-    analyzer = Analyzer(instructions, code)
+    analyzer = Analyzer(instructions, code, identity['compact_callback_spills'])
     private_guards = {}
     source_root = Path(__file__).resolve().parents[2]
     for prefix, source, declaration in (
@@ -802,6 +933,7 @@ def main():
                   'No indirect target or reentrant-frame SP write is accepted without a separate proof.',
                   'No proof of data-pointer safety, shared static temporaries, overlay allocation or callee-save ABI.',
                   'ROM pointer-thunk tracking assumes the normal SDCC bank-0 calling convention; unknown instructions and values fail closed.',
+                  'Compact callbacks require the identified one-byte XSEG process_rgb action allocation, no address escape and no concurrent clobber; IRQ storage disjointness needs separate evidence.',
                   'Guard contexts require private C bool objects whose addresses do not escape, valid memory accesses and the usual compiler object layout; arbitrary aliasing/corruption is not proved safe.',
                   'OEM wrappers and interrupt routing are outside this application-only instruction graph.',
                   'Interrupt wrapper frames and nesting require the separate exact-image all-three-source IRQ contract; no priority-count limit is assumed here.',

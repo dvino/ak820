@@ -46,27 +46,28 @@ not access a device; installation results are recorded separately.
 
 ## Current development source
 
-All 16 named profiles passed 18 build variants from frozen source `55acbb0`.
-Each image passed 28 base suites and 273 base unit tests with zero skips, plus
-14–24 supplemental suites for its selected features. These results belong to
-the frozen source. Cleanup later changed the configurator test fixture path;
-firmware source and retained image bytes are unchanged.
+The current source adds an exact-image stack and interrupt gate and a volatile
+Ctrl/GUI swap profile. All 17 named profiles retain six layers, 16 Vial macros,
+8192 macro bytes, eight Combos and schema `0x082002`.
 
-Compact Mouse Keys and Auto Shift are joined by volatile GUI controls and
-two temporary Dynamic Macro slots. Six layers, 16 Vial macros, 8192 macro bytes,
-eight Combos and schema `0x082002` remain unchanged. The previous eleven-profile
-matrix belongs to source `06b8f0f` and is historical.
+The new analyzer closes all foreground and callback roots in the 18 previous
+images. Six conservative totals exceeded their allocated stack. A shared delay
+ABI correction reduces saved registers without changing the delay loop. The
+corrected `full` candidate requires 160 of 166 stack bytes; `full-ctrl-gui`
+requires 164 of 166. These are exact-image static and CPU-model results, not
+physical measurements. The complete 19-variant matrix is being regenerated
+from the integrated source.
 
-A whole-program stack bound for these images remains unproved. The normal
-package command rejected the changed `full` image because its source differs
-from the reviewed release witness. No physical test or device command was
-performed in this work. The published and installed firmware remains the exact
-alpha.3 image above. Measurements, hashes, raw logs and independent review are
-in the [technical report](../audits/rc6/compact-runtime-20261024/README.md).
+Each configured build now checks startup, foreground and all three interrupt
+sources before other regressions. An unknown bound or excess use fails the
+build. The public instruction fixture makes the offline IRQ check repeatable
+without a private OEM image. Measurements, identities, findings and independent
+review are in the [technical report](../audits/rc6/runtime-stack-20261024/README.md).
 
-Integration checks and archive size are recorded in the [acceptance report](../audits/rc6/compact-runtime-20261024/acceptance.md).
-
-Repository cleanup and retained evidence are recorded in the [cleanup report](../audits/rc6/cleanup-20261024.md).
+The previous compact matrix at source `55acbb0` is historical. Changed source
+still requires separate release and installer-transition approval. No physical
+test or device command was performed in this work. The published and installed
+firmware remains the exact alpha.3 image above.
 
 ## Installed firmware
 

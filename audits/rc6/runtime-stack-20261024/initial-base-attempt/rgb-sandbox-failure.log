@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/628d2ba64df2/ak820/qmk-8051-ak820/tests/ak820_rgb/run.py", line 59, in <module>
+    main()
+  File "/workspace/scratch/628d2ba64df2/ak820/qmk-8051-ak820/tests/ak820_rgb/run.py", line 47, in main
+    raise RuntimeError(result.stdout + result.stderr)
+RuntimeError: ==1552==Can't open /proc/1551/task for reading.
+==1551==LeakSanitizer has encountered a fatal error.
+==1551==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1
+==1551==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)
+

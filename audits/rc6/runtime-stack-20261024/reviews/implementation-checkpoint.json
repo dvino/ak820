@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-24",
+  "scope": "Independent implementation checkpoint review before clean frozen-source19-variant matrix",
+  "implementation_checkpoint_approved": true,
+  "release_approved": false,
+  "hardware_validated": false,
+  "blocking_findings": [],
+  "source_sha256": {
+    "tools/configure_firmware.py": "772336c301183f02da882bd29871b73fa5200589732d250325caaf230abe80e8",
+    "tools/test_configure_firmware.py": "58a11fc8c53c31e8880ef9b3a53c386bc5d13c9910ba329925c64dcb4d8b4959",
+    "qmk-8051-ak820/quantum/action_util.c": "9befa3bd90d3a98071a8a8c6c34ada3d90d46dfd2e879d850835d0deb700403b",
+    "qmk-8051-ak820/quantum/action_util.h": "06f46b9e1fd981b05bf56c286cb20f9c291b40a0c94b53d1ef853adb682a6ce3",
+    "qmk-8051-ak820/quantum/quantum.c": "37deef23fbddd818ce6aad47b5400eb422ee16b310049e59de798cae4e174617",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_tapping.c": "be5f5698bbdecc27e20c0175d28ee4a436acb8bc8f25773a5b5f1faef22820a5",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/rules.mk": "9a7a8b60d8d2ccbd782f057d1fbe7de71e1f857aaf830a776b6a792ecc3dc3a3",
+    "qmk-8051-ak820/util/ak820_profiles.py": "7645a15df48516648b2afbc9a823256bc0e69bedcd60229853e2c7a11790dd6b",
+    "qmk-8051-ak820/tests/ak820_ctrl_gui/host.py": "d9e9d1fff3778a5e694aade737af66095d330bc30e1806f223e52a47961486f5",
+    "qmk-8051-ak820/tests/ak820_ctrl_gui/flags.py": "fb23f89bfcec8a457a1ff2026df3aaad35fa835baa49a6f7b82e839aaef86bb6",
+    "qmk-8051-ak820/tests/ak820_ctrl_gui/linked.py": "c800d32a4e5e4187b0bca78ae0fc97c27d5445eb48c69472f1bed61a8ed19eb5"
+  },
+  "documentation_sha256": {
+    "README.md": "c96b8d74857090193b08d19d32a924970b561a17e51bcb30adfa3cbcd485c287",
+    "audits/rc6/runtime-stack-20261024/README.md": "170093ee323de6ff445420a93cafa5c667220df10b095d7f0e601ccd79a85af4",
+    "audits/rc6/runtime-stack-20261024/final/README.md": "067c0621c30b9d69bd3186661a359a94bf4b08e4473d1e873fa8219c0834329b",
+    "docs/BUILD-PROFILES.md": "d4817770107b9ee12a18a8149b02d3d63f3770d18f757113463183aabe01efc9",
+    "docs/DEVELOPMENT.md": "cd1f5c733d16c78d56298d598dc2ad0220c66e4428ba192831bad7ad2df562a5",
+    "docs/GUI-CONTROL.md": "33fd1baff1b7a9d2dea326a5cd40e0826f2a54101497d7d86ace56c265829928",
+    "docs/INDEX.md": "d1b0db9f8890b75c44cbfe92a3cfa09b62550f7caf8893b6cee59b12d7bf976c",
+    "docs/RESOURCE-BUDGET.md": "a8cf54849fe2bad23fe6e1cd81271ec512d4910a475c282ab950d997d33b1814",
+    "docs/REVIEW.md": "0b73da0aed5cfb71bcd58deeb3765ea3ee185e389952ee091e8deffbef66035e",
+    "docs/ROADMAP.md": "f2401632d004e18db0a4ab80086936cd86b5e6907c0c70e7986e74b072fdf00f",
+    "docs/RUNTIME-STACK.md": "6161e9afc65f24d7ab6973563455e69e9eb188a0fdd9745d879b86b4f687474a",
+    "docs/SPACE-OPTIONS.md": "b5484352146fba3444756538a2f90a9cf8c9257e6268496fb1bd69601d02274c",
+    "docs/STATUS.md": "4b31b03a81c4a9651e5843c90a99a1eb2033248d41ee4e546777cf86b9a13df4",
+    "docs/TESTING.md": "9c43e51d0da440eb8597fabd5ad329e1c8d0c5cb6325efb2bbabbd9e0785be60",
+    "docs/ru/BUILD-PROFILES.md": "1960b6e9239c80ef6d4dcb8c7595b6b560c4f01fb716ef3230237f1d3be46ec6",
+    "docs/ru/DEVELOPMENT.md": "02877822ff3d6459d2998afec7ad51c9ad4ee019f8d3afaa20bbbcf65a643f17",
+    "docs/ru/GUI-CONTROL.md": "7fcf2c418d00373f840bc124578e1d43d4b1cd9e30a605557c378f5ebf30e4c2",
+    "docs/ru/INDEX.md": "0e6e03965305f7fffa2ad100ac0e9708fb786c455be57f80f1eb563935c1de2c",
+    "docs/ru/README.md": "dbd7d77da7153782af7693e36185da01264fabb96ab8682b21df15495711b7a3",
+    "docs/ru/RESOURCE-BUDGET.md": "9262f17a8e4c9e7ad9442dd840b9956271738e56b2f0205601d9066911a74476",
+    "docs/ru/REVIEW.md": "d002fe21eb71dd121b7cf1a439c76d5d56121505ac6b8f82e434c531afe38a31",
+    "docs/ru/ROADMAP.md": "7c8ff0df3f21e1fe9118c4f8c4b974bf504528f6ab71a85e6202b34def5af75e",
+    "docs/ru/RUNTIME-STACK.md": "f3a7a615f364af6aa91229552ac55a1b4d6eadb16952f29ee00a43c164fe7ceb",
+    "docs/ru/SPACE-OPTIONS.md": "ab57470fd49f5eea4557fe410218d4ade0d45501746ad102dedace99c04ae9f6",
+    "docs/ru/STATUS.md": "7b1a41d6cfcb6ed587a25e5b9ca54daf8a235249923918ccbb5395da56a543e1",
+    "docs/ru/TESTING.md": "7973d831b1f018773aa173253d13203f7263245644d7a3beccea4cb985edb771",
+    "qmk-8051-ak820/tests/ak820_irq/README.md": "d4a1443026aea780994353b61d6048cef10afe1543b3211737210137709b7a7a",
+    "qmk-8051-ak820/tests/ak820_stack/README.md": "9907dc6decacbb4977782a336ba58c72c4f727fa6173d75f28a1d609fdffb4f9"
+  },
+  "evidence_sha256": {
+    "qmk-8051-ak820/.build/integrated-ctrl-gui/configuration-report.json": "7ca81b5c50cc822a950b5fae6c37fdb5109ac85b07c233bbe16608d35ee14be9",
+    "qmk-8051-ak820/.build/integrated-ctrl-gui/qualification.json": "10524a057c27d2e8da450ad9863fafb59623c40b8dd8479a539fcffcb475c321",
+    "qmk-8051-ak820/.build/integrated-ctrl-gui/runtime-safety/summary.json": "f77cece400cba0761e8fa2b9d20cdeab83b0e3fe0e972046258026438d4ecc4d",
+    "qmk-8051-ak820/.build/integrated-ctrl-gui/profile-tests/results.json": "5ea55e715fa69f2f5bf04f853d6bc4905f39b3921ee0d7401ac04fe3bd9ed447",
+    "qmk-8051-ak820/.build/integrated-ctrl-gui/profile-tests/ctrl-gui/results.json": "13a323fedd6b5d8c90da51c87b2f7aa28cd132d8cc12947b7626e7ac634df894"
+  },
+  "integrated_candidate": {
+    "profile": "full-ctrl-gui",
+    "ihx_sha256": "cb669d103b66434344ec97c4657cf17770a8e7f0f8fe4c17b6510e5f20eaf3cb",
+    "code_bytes": 39302,
+    "xram_bytes": 2610,
+    "foreground": 101,
+    "crt_frame": 2,
+    "irq": 61,
+    "combined_bound": 164,
+    "stack_capacity": 166,
+    "margin": 2,
+    "base_suites": 28,
+    "base_unit_tests": 273,
+    "skipped": 0,
+    "supplemental_suites": 25,
+    "offline_tests_passed": true
+  },
+  "review_actions": [
+    "Read changed English/Russian documents and new runtime guides, technical audit and final matrix placeholder.",
+    "Verified current source/runtime proof and all profile suite/log hashes through production validation functions with recorded Python/toolchain paths.",
+    "Confirmed code hashes unchanged since independent integration approval.",
+    "Verified distinctions between static bounds, CPU model evidence, clean-source matrix pending, release approval and installed alpha.3."
+  ],
+  "finding_closure": [
+    {
+      "finding": "Nineteen measured variants claimed before integrated matrix completion",
+      "closure": "English/Russian build and roadmap descriptions now identify planned qualification variants."
+    },
+    {
+      "finding": "Previous compact-feature review labeled current development source",
+      "closure": "English/Russian review tables distinguish current runtime/feature work from previous compact-feature source."
+    },
+    {
+      "finding": "Ctrl/GUI controls consumed queued compact One Shot modifiers and marked held One Shot keys used before quantum handler",
+      "fix": "Exact swap/normal/toggle bypass in compact One Shot preprocessor under the swap feature flag",
+      "regression": "Fresh linked queued-OSM full-control-tap and held-OSM control-tap cases pass; previous test concealed failure by holding control until after letter"
+    }
+  ],
+  "limitations": [
+    "Approval covers implementation checkpoint and integrated candidate, not completion of clean frozen-source matrix.",
+    "Full19-variant clean-source matrix and its final documentation/evidence must receive separate review.",
+    "No release/installer transition approval and no physical device tests or commands."
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-24",
+  "scope": "Independent review of runtime proof combiner and orchestration core; final profile-plan/docs additions reviewed separately",
+  "approved": true,
+  "blocking_findings": [],
+  "source_sha256": {
+    "tools/ak820_runtime_safety.py": "47131fc04579e714ac7bac30c9bb0e3759b354d5db5761ef02714ccf68c22fc8",
+    "tools/test_runtime_safety.py": "533e6b3d877b355d2d3cdc52b2cd8f439f59dcba34d8445c11bb71a77facdb9a",
+    "tools/configure_firmware.py": "fecac28f68470708da0d86bc687512d727abee7c459f56c2a505c4be6eba61a4"
+  },
+  "unit_tests_independently_run": {
+    "runtime_safety": 9,
+    "configure_firmware": 25
+  },
+  "reviewed_invariants": [
+    "Fresh subprocess proofs are required; previous scalar/bool reports cannot grant the new result.",
+    "Checker processes use isolated Python mode so environment PYTHONOPTIMIZE cannot disable assertion gates.",
+    "Initial/final inspect bind pinned tools, source/include closure, compiler flags, listings, image,MAP,MEM and stack placement.",
+    "Required foreground/callback roots and source identities must agree; unknown paths remain unqualified.",
+    "All15 distinct source orders and256 selector inputs are required, and callback frame totals include3*17 OEM/hardware bytes.",
+    "Startup persistent frame and pre-main peak included; capacity failure written with negative margin and raises.",
+    "Local process_rgb spill identity is bound in analyzer; fresh IRQ allocation checks reject overlap with any ISR storage.",
+    "Release authorization and physical validation remain false and existing packaging policy unchanged."
+  ],
+  "clarification_requested": "State that CRT entry starts with IE=IE_EX=0 from the packer prelude; pre-CRT trial erase is separate.",
+  "read_only_exact_run": {
+    "passed": true,
+    "identity": {
+      "build_report_sha256": "6405d1abbc2d4e7292c954e16dc71b5d226bff84478db3032421e0c09c7c1864",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "configuration_sha256": "0c84ed95ed43c94dd216ebaa7cab69cf7f6b06c5ae5e4ff81b12ce963240df56",
+      "ihx_sha256": "c41b65b7b575fb0f7f353372f933ede0203cf90cc2833f1906cbbe7b860643a9",
+      "map_sha256": "c2fb09e14688f430fbeaa4ad9408d9fe8387423391b6f2feb352cae7dea5b7fb",
+      "mem_sha256": "590f5877071f4a2fa960a6d452b75249cadaa64e25afc69d7227375724d3f4a4",
+      "nvm_schema": 532482,
+      "profile": "full",
+      "source_manifest_sha256": "2a642485c104a38015cbace9e8a9f73136645fdcae772d442f8c819dfeb3dd77"
+    },
+    "foreground_bound": 97,
+    "main_entry_frame_bound": 2,
+    "irq_bound": 61,
+    "stack_bound": 160,
+    "stack_capacity": 166,
+    "stack_margin": 6
+  },
+  "exact_run_scope": "Root-owned end-to-end execution reviewed read-only; independent tests cover combiner/orchestration contracts."
+}

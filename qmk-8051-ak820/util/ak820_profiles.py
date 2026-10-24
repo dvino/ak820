@@ -22,6 +22,7 @@ SWITCHES = {
     'mouse-keys': 'AK820_COMPACT_MOUSEKEY',
     'auto-shift': 'AK820_COMPACT_AUTOSHIFT',
     'gui-lock': 'AK820_COMPACT_GUI_LOCK',
+    'ctrl-gui-swap': 'AK820_COMPACT_CTRL_GUI_SWAP',
     'dynamic-macros': 'AK820_COMPACT_DYNAMIC_MACRO',
 }
 PROFILES = {
@@ -34,6 +35,7 @@ PROFILES = {
     'one-shot-space-cadet': ('one-shot', 'space-cadet'),
     'full': ('nkro-control', 'one-shot', 'space-cadet'),
     'full-gui-lock': ('nkro-control', 'one-shot', 'space-cadet', 'gui-lock'),
+    'full-ctrl-gui': ('nkro-control', 'one-shot', 'space-cadet', 'gui-lock', 'ctrl-gui-swap'),
     'full-dynamic-macro-gui': ('nkro-control', 'one-shot', 'space-cadet', 'dynamic-macros', 'gui-lock'),
     'full-mouse-auto-shift-gui': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'auto-shift', 'gui-lock'),
     'full-auto-shift-dynamic-macro': ('nkro-control', 'one-shot', 'space-cadet', 'auto-shift', 'dynamic-macros'),
@@ -53,7 +55,7 @@ DEFERRED = {
     'qmk-settings': 'Requires a versioned saved extension and typed backup/restore; upstream layout moves Combos.',
     'tap-dance': 'Dynamic entries, input ownership and complete-image cost are not qualified.',
     'key-overrides': 'Modifier ownership, Repeat, Caps Word and macro interactions are not qualified.',
-    'magic': 'Modifier swaps and persistent Magic settings remain deferred; volatile GUI and NKRO controls are separate.',
+    'magic': 'Other modifier swaps and persistent Magic settings remain deferred; Ctrl/GUI swap is volatile and session-only.',
     'leader': 'Sequence length, timeout and supported output actions are not qualified.',
 }
 
