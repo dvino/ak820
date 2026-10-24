@@ -5,12 +5,14 @@
 The published and installed image remains `v0.6.0-alpha.3`. Its identity and
 release evidence are in [Status](STATUS.md). Current source is development work.
 
-## Current development builds
+## Previous development baseline
 
-All 21 named profiles and 23 variants pass whole-image runtime proof from clean
+The previous 21 named profiles and 23 variants passed whole-image runtime proof from clean
 source `1187d4c`. The [runtime matrix](../audits/rc6/web-firmware-20261024/runtime-all/README.md)
-retains exact identities and proofs. `full` and the three new module profiles
-also pass the [complete regression suite](../audits/rc6/web-firmware-20261024/final/README.md).
+retains exact identities and proofs. `full`, `full-mac-pc`, `full-os-indicators` and `full-mac-pc-os-indicators`
+also passed the [complete regression suite](../audits/rc6/web-firmware-20261024/final/README.md).
+These measurements do not qualify the changed module-completion source. Current
+results are recorded in [Status](STATUS.md).
 
 | Build | CODE bytes | Main / low trailing free | XRAM | Stack bound / capacity | Margin |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -71,3 +73,11 @@ These stack figures describe the published alpha.3 image only. They do not
 apply to development profiles with changed source. See [Build profiles](BUILD-PROFILES.md)
 for their feature sets and the [technical report](../audits/rc6/leader-next-20261024/README.md)
 for the accepted compact-feature baseline measurements and limits.
+
+## Fixed Vial callbacks
+
+The AK820 SDCC target uses the empty default keyboard/user record callbacks.
+Their calls, argument copies and unused post-processing lookup are omitted.
+Other targets and native host fixtures retain their callback paths. Adding a
+custom callback requires enabling that path deliberately and repeating whole-image
+CODE, stack and regression checks; the SDCC port does not provide weak overrides.

@@ -51,74 +51,40 @@ model limits are in the qualification report.
 
 Only the exact alpha.3 full image satisfies the packaging gate, independent
 program policy and packing receipt. Other profiles and changed source are for
-development. The current matrix is recorded below. Offline qualification did
+development. The current development checkpoint is recorded below. Offline qualification did
 not access a device; installation results are recorded separately.
 
 ## Current development source
 
-All **21 named profiles and 23 variants** pass fresh whole-image stack and
-interrupt checks from clean source `1187d4c`. Foreground calls, CRT startup and
-all USB, timer and LED interrupt roots are closed. Each image passes all 15
-interrupt orders and 256 LED selector values. The minimum margin is one byte
-in `standard`, `nkro` and `full-dynamic-macro-gui`; no required path is unknown.
-See the [complete runtime matrix](../audits/rc6/web-firmware-20261024/runtime-all/README.md).
+The source now defines **24 named profiles**. Three profiles independently add
+[Tap Dance](COMPACT-TAP-DANCE.md), [Key Overrides](COMPACT-KEY-OVERRIDES.md) and
+[runtime QMK Settings](QMK-SETTINGS.md) to `full`. There is no named build with
+all three extensions enabled together. Six layers, 16 Vial macro slots, 8192
+macro bytes and eight Combo slots remain available.
 
-Three new profiles add independent [Mac/PC](MAC-PC.md) and
-[OS indicator](INDICATORS.md) modules: `full-mac-pc`, `full-os-indicators` and
-`full-mac-pc-os-indicators`. Mac/PC swaps both Alt/GUI pairs and supplies normal
-OS state. FD02 lets a helper temporarily choose OS off, on or firmware-generated
-breathing. C and W retain their roles. State is volatile; NVM is unchanged.
-The combined image uses 39,614 CODE bytes and 2,612 XRAM bytes, with stack
-164/166. Mac/PC provides compact modifier switching; the OEM F-row is unchanged.
-The desktop layout helper and OS detectors remain planned.
+The three extension profiles use schema `0x082003`; the other profiles retain
+`0x082002`. Typed commands, backup validation and explicit migration preserve
+the existing keymap, encoder, Combo and macro regions. Stored extension data
+and enabled controls are separate. See [module storage](MODULE-STORAGE.md) and
+the [desktop handoff](../web/docs/FIRMWARE-HANDOFF.md).
 
-`full` and the three new profiles also pass 28 base suites and 273 unit tests
-without skips per image, plus 21/23/23/25 supplemental suites. Mac/PC passes
-10 linked cases in both applicable profiles; OS passes 13 alone and 19 with
-Mac/PC. Complete builds and logs are in the
-[full regression matrix](../audits/rc6/web-firmware-20261024/final/README.md).
-The other 19 variants have fresh runtime proofs; their full regressions were
-not repeated. All twenty pre-existing variants reproduce their accepted IHX.
+Exact-image foreground, startup and all three interrupt checks pass for the
+current `full` and three extension builds. The bounds are 162/167 bytes for
+`full`, 166/166 for Tap Dance, 162/162 for Key Overrides and 162/166 for QMK
+Settings. The two zero-margin profiles require a new whole-image proof for
+any further change. Full regressions and the remaining profile matrix are
+being completed; previous-source results do not qualify these images.
 
-The deterministic development catalog validates linked artifacts, runtime
-proofs, base logs and supplemental tests before describing these four images.
-It grants no release, settings-write or flashing permission. No device command
-or physical test was performed; published and installed alpha.3 is unchanged.
-Source review and corrections are recorded in the
-[work report](../audits/rc6/web-firmware-20261024/README.md).
+The first common regression exposed host/CPU fixture assumptions about the
+record pointer type, optional Vial counts, settings initialization and the
+outgoing report under Key Overrides. The fixture corrections and final
+results are retained in the [module work report](../audits/rc6/module-completion-20261024/README.md).
 
-## Accepted Leader baseline
-
-All **18 named profiles and 20 build variants** pass from clean frozen source
-`d04290b`. Each image closes foreground calls, CRT startup and all three
-interrupt sources before regression testing. Each passes 28 base suites and
-273 unit tests with zero skips, plus 16–26 supplemental suites. The
-minimum stack margin is 1 byte. Exact images, resource measurements and
-complete raw builds are retained in the
-[final matrix](../audits/rc6/leader-next-20261024/final/README.md).
-
-The accepted `full-leader` profile adds compact [Leader](COMPACT-LEADER.md).
-Physical `QK_LEAD` followed within 300 ms by `1`–`9`, `0`, or `A`–`F` selects
-one of the 16 existing Vial macros. It uses 39,606 CODE bytes and 2,627 XRAM
-bytes; its combined stack bound is 160/162. All 26 linked Leader cases pass,
-including real macro output with queued One Shot and extended-macro callbacks.
-
-Report helpers now receive their actual XDATA pointers directly. The rebuilt
-`full` uses 38,890 CODE bytes and 2,600 XRAM bytes: 34 and seven fewer than the
-previous matrix, with the same 160/166 stack bound. Short-call builds also
-accept empty listing directories recreated by the diagnostic linker, while
-rejecting existing files and links. Findings, rejected probes and corrections
-are in the [change report](../audits/rc6/leader-next-20261024/README.md).
-
-Six layers, 16 Vial macro slots, 8192 macro bytes, eight Combos and schema
-`0x082002` remain unchanged. Every image passes 15 distinct-source IRQ orders,
-all 256 LED selector values and seven delay-ABI cases. These are static and
-host/CPU-model results; normal sanitizer checks remain enabled.
-
-The matrices at `39b6e22` and `55acbb0` are historical. Changed source still
-requires separate release and installer-transition approval. No physical test
-or device command was performed. The published and installed firmware remains
-the exact alpha.3 image above.
+The earlier [21-profile matrix](../audits/rc6/web-firmware-20261024/runtime-all/README.md)
+and [Leader matrix](../audits/rc6/leader-next-20261024/final/README.md) describe
+their own frozen source only. No device command or physical test was performed
+for this work. The published and installed alpha.3 image is unchanged; the
+new images have no release or installer-transition approval.
 
 ## Installed firmware
 

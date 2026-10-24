@@ -91,3 +91,20 @@ AK820_MAC_PC ?= no
 ifeq ($(AK820_MAC_PC),yes)
     OPT_DEFS += -DAK820_MAC_PC
 endif
+
+# Schema-3 typed modules preserve all legacy keymap/Combo/macro addresses.
+AK820_COMPACT_TAP_DANCE ?= no
+ifeq ($(AK820_COMPACT_TAP_DANCE),yes)
+    OPT_DEFS += -DAK820_COMPACT_TAP_DANCE
+    SRC += ak820_tap_dance.c
+endif
+AK820_COMPACT_KEY_OVERRIDE ?= no
+ifeq ($(AK820_COMPACT_KEY_OVERRIDE),yes)
+    OPT_DEFS += -DAK820_COMPACT_KEY_OVERRIDE
+    SRC += ak820_key_override.c
+endif
+AK820_QMK_SETTINGS ?= no
+ifeq ($(AK820_QMK_SETTINGS),yes)
+    OPT_DEFS += -DAK820_QMK_SETTINGS
+    SRC += ak820_settings.c
+endif

@@ -2,8 +2,9 @@
 
 # Build profiles
 
-The configurator lists 21 named development profiles. The `full` feature set
-matches published alpha.3. Other profiles add compact Mouse Keys, Auto Shift,
+The configurator lists 24 named development profiles. The `full` feature set
+matches published alpha.3. Each new module profile retains `full` and adds its
+named module alone; the three modules are not combined. Other profiles add compact Mouse Keys, Auto Shift,
 GUI controls, modifier swaps, Dynamic Macros, Leader or OS indicators in the
 supported combinations below. These source profiles require their own exact
 image qualification. Every configured build proves whole-image foreground,
@@ -26,8 +27,7 @@ python tools/configure_firmware.py build --profile standard \
 
 Choose any listed profile. The alternative `--features` selector accepts a
 space-separated list of supported feature names. Only named combinations
-listed by the configurator are valid. Two profiles require optional
-`--short-calls`, as shown below. For example:
+listed by the configurator are valid. The three new module profiles require `--short-calls`. Two earlier profiles also require it, as shown below. For example:
 
 ```sh
 python tools/configure_firmware.py build --features nkro-control one-shot \
@@ -37,10 +37,10 @@ python tools/configure_firmware.py build --features nkro-control one-shot \
   --python qmk-8051-ak820/.venv/bin/python
 ```
 
-`full-mouse-auto-shift-gui` and `full-auto-shift-dynamic-macro` require
-`--short-calls`, which remains off by default. The optional setting also has
-additional qualification variants for `full` and `full-mouse-auto-shift`. Other profiles use the
-standard build. Use a fresh build directory:
+`full-mouse-auto-shift-gui`, `full-auto-shift-dynamic-macro`, `full-tap-dance`,
+`full-key-overrides` and `full-qmk-settings` require `--short-calls`, which is
+off by default. Earlier short-call qualification variants also exist for `full`
+and `full-mouse-auto-shift`. Use a fresh build directory:
 
 ```sh
 python tools/configure_firmware.py build --profile full-mouse-auto-shift-gui \
@@ -82,12 +82,15 @@ are not release-qualified.
 
 ## Profiles
 
-All profiles retain the base feature set: six layers, 16 Vial macros, eight
-two-key Combos, compact tap-hold, encoder mapping, media keys, NKRO report
+All profiles retain the base feature set: six layers, 16 Vial macros with an
+8192-byte buffer, eight two-key Combos at the fixed `0x658` offset, compact tap-hold, encoder mapping, media keys, NKRO report
 support, Caps Word, Repeat and Alt Repeat, Grave Escape, Tri Layer, RGB effects
-and VialRGB Direct in RAM. Combo timing remains 40 ms; compact tap-hold remains
-200 ms. Runtime QMK Settings are disabled. Optional features are build-time
-choices.
+and VialRGB Direct in RAM. Default Combo timing is 40 ms and default compact
+tap-hold timing is 200 ms. `full-qmk-settings` changes these through QSIDs 2 and 7.
+Runtime QMK Settings are available only in `full-qmk-settings` and remain a
+source-only development feature. Only the three new module profiles use schema
+`0x082003`; the legacy `0x082002` format is unchanged. Optional modules are
+build-time choices.
 
 | Profile | Optional features |
 | --- | --- |
@@ -112,6 +115,9 @@ choices.
 | `full-dynamic-macro-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Dynamic Macros and GUI controls |
 | `full-mouse-auto-shift-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys, Auto Shift and GUI controls |
 | `full-auto-shift-dynamic-macro` | `nkro-control`, `one-shot`, `space-cadet`, compact Auto Shift and Dynamic Macros |
+| `full-tap-dance` | `full` plus compact Tap Dance |
+| `full-key-overrides` | `full` plus compact Key Overrides |
+| `full-qmk-settings` | `full` plus typed QMK Settings |
 
 `full-leader` selects an existing Vial macro with a physical `QK_LEAD` prefix
 and one basic selector within 300 ms. `1`–`9`, `0`, `A`–`F` map to slots
@@ -150,21 +156,8 @@ stack use at 93 bytes, CRT at 2 bytes and all three IRQ paths at 61 bytes. Total
 use is 156 of 162 bytes, with 6 bytes remaining. These figures do not qualify
 changed source profiles. See the earlier [runtime baseline](../audits/rc6/leader-next-20261024/final/README.md), current [qualification scope and results](../audits/rc6/web-firmware-20261024/runtime-all/README.md), and [Status](STATUS.md).
 
-## Deferred feature inventory
+## Remaining limits
 
-Seven of the 11 original candidates have bounded development implementations:
-NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift, Dynamic Macros and Leader.
-Magic is partly implemented through GUI controls and volatile modifier swaps. The four entries below
-contain remaining work. The `full` profile selects NKRO control, One Shot and
-Space Cadet; a Vial control alone does not establish firmware support.
+The three compact modules are available only in their named development profiles. They are not release-approved. Each profile adds its own module to `full`; the three modules are not combined in one profile. Their exact behavior, rejected inputs, storage and protocol limits are documented in [Tap Dance](COMPACT-TAP-DANCE.md), [Key Overrides](COMPACT-KEY-OVERRIDES.md), [QMK Settings](QMK-SETTINGS.md) and [module storage](MODULE-STORAGE.md).
 
-| Deferred candidate | Open work |
-| --- | --- |
-| Tap Dance | Upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
-| Key Overrides | Upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
-| QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; Alt/GUI swap is available in `full-mac-pc`. Caps variants and persistent settings remain open. |
-
-Console and Command remain disabled. Fault injection is a test facility, not a
-selectable firmware feature. Existing FD00/FD01 diagnosis is read-only. The
-configurator does not open USB or send keyboard commands.
+Magic support remains limited to volatile GUI controls and volatile Ctrl/GUI or Alt/GUI mapping in selected profiles. Caps variants and persistent Magic settings are outside the current module contract. See [GUI controls](GUI-CONTROL.md) and [Mac/PC mode](MAC-PC.md). Console and Command remain disabled.

@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 import sys
 import configure_firmware as configured
+import ak820_extension_settings as extensions
 
 FORMAT = 'ak820-development-capability-catalog-1'
 MODEL = 'ajazz/ak820'
@@ -81,6 +82,7 @@ def fixed_limits(build):
                        'Fixed limits are not bound to compiled source')
     fields = {'layers': 'DYNAMIC_KEYMAP_LAYER_COUNT', 'macros': 'DYNAMIC_KEYMAP_MACRO_COUNT',
               'macro_bytes': 'DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE', 'combos': 'VIAL_COMBO_ENTRIES',
+              'tap_dance': 'VIAL_TAP_DANCE_ENTRIES', 'key_overrides': 'VIAL_KEY_OVERRIDE_ENTRIES',
               'encoders': 'NUM_ENCODERS', 'rgb_leds': 'RGB_MATRIX_LED_COUNT',
               'rgb_maximum_brightness': 'RGB_MATRIX_MAXIMUM_BRIGHTNESS'}
     result = {}
@@ -90,6 +92,72 @@ def fixed_limits(build):
         configured.require(len(values) == 1, 'Unknown fixed limit: ' + define)
         result[key] = int(values[0], 0)
     return result
+
+
+def module_contract(configuration, limits):
+    """Describe enabled consumers separately from dormant schema03 storage.
+
+    This is descriptive metadata only. Entry qualification is still performed
+    by inspect_entry's exact-image evidence pipeline.
+    """
+    configured.profiles.validate_configuration(configuration)
+    enabled = set(configuration['optional_features'])
+    schema03 = configuration['nvm_schema'] == extensions.SCHEMA
+    modules = {}
+    for kind, feature, define in (('tap_dance', 'tap-dance', 'tap_dance'),
+                                 ('key_overrides', 'key-overrides', 'key_overrides')):
+        count = limits[define] if schema03 else 0
+        configured.require(count == (8 if schema03 else 0), 'Unknown typed module capacity')
+        modules[kind] = {'enabled': feature in enabled,
+            'stored_entries': count, 'enabled_entries': count if feature in enabled else 0,
+            'entry_bytes': 10, 'codec': 'ak820_extension_settings.validate_entry', 'entry_offsets': [extensions.slot_offset(kind,i) for i in range(count)],
+            'wire_get_operation': 1 if kind == 'tap_dance' else 5,
+            'wire_set_operation': 2 if kind == 'tap_dance' else 6}
+    names = {1: ('grave_escape_flags', ['grave-escape']),
+             2: ('combo_term_ms', ['two-key-combos']),
+             4: ('auto_shift_timeout_ms', ['compact-auto-shift']),
+             7: ('tapping_term_ms', ['compact-mod-tap','compact-layer-tap','space-cadet']),
+             18: ('tap_code_delay_ms', ['tap_code','tap_code16']),
+             19: ('caps_lock_delay_ms', ['tap_code','tap_code16'])}
+    qsids = configuration['runtime_qmk_settings']
+    settings = []
+    if schema03:
+        for qsid, (offset,width,low,high,default) in sorted(extensions.FIELDS.items()):
+            name, consumers = names[qsid]
+            settings.append({'qsid': qsid, 'name': name, 'stored': True,
+                'enabled': qsid in qsids, 'offset': extensions.SETTINGS_ADDR+offset,
+                'width_bytes': width, 'encoding': 'uint8' if width == 1 else 'uint16-le',
+                'minimum': low, 'maximum': high, 'default': default,
+                'consumers': consumers if qsid in qsids else [],
+                'consumer_key_filter': 'caps-lock' if qsid == 19 else ('except-caps-lock' if qsid == 18 else None)})
+    modules['qmk_settings'] = {'enabled': 'qmk-settings' in enabled,
+        'stored_record_bytes': 24 if schema03 else 0,
+        'record_offset': extensions.SETTINGS_ADDR if schema03 else None,
+        'enabled_qsids': list(qsids), 'fields': settings,
+        'wire_commands': {'query': 9, 'get': 10, 'set': 11, 'reset': 12}}
+    return {'format': 'ak820-module-storage-contract-1', 'schema': configuration['nvm_schema'],
+        'address_space': 'NVM-relative', 'modules': modules,
+        'migration': {'explicit_target_required': schema03,
+            'accepted_source_schemas': [0x082001,0x082002,extensions.SCHEMA] if schema03 else [0x082001,0x082002],
+            'schema03_downgrade_supported': False,
+            'preserves': ['source-keymap-layers','source-encoder-map','schema02-nonempty-combos','published-macros'],
+            'schema01_new_layers': 'transparent',
+            'macro_capacity_check_required': True},
+        'restore': {'backup_format': 'ak820-settings-backup-2' if schema03 else 'ak820-settings-backup-1',
+            'exact_reviewed_image_required': True,
+            'inactive_data': 'preserve; reject differences before any write',
+            'legacy_target_extensions': 'require empty tables and default settings',
+            'write_authorization_granted': False, 'failure_action': 'stop-without-retry'},
+        'limits': {'tap_dance': {'maximum_waiting_gestures': 1, 'maximum_gesture_presses': 2,
+            'term_zero_default_ms': 200, 'explicit_term_ms': [1,32767],
+            'physical_sources_only': True, 'special_action_outputs': False},
+            'key_overrides': {'maximum_captured_triggers': 1, 'first_matching_row_wins': True,
+                'layer_mask': [1,63], 'runtime_enablement_persisted': False,
+                'callbacks': False},
+            'qmk_settings': {'delays_apply_to': ['tap_code','tap_code16'],
+                'delays_do_not_apply_to': ['compact-tap-hold','space-cadet','tap-dance','vial-macro-down-up'],
+                'tap_dance_term_uses_qsid7': False}},
+        'physical_behavior_verified': False, 'power_loss_persistence_verified': False}
 
 
 def inspect_entry(build, toolchain):
@@ -120,11 +188,13 @@ def inspect_entry(build, toolchain):
     code = configured.diagnostic_build(build / 'ajazz_ak820_vial.ihx',
         build / 'ajazz_ak820_vial.map', build / 'build-report.json')
     configuration = inspected['configuration']
+    limits = fixed_limits(build)
     result = {'model': MODEL, 'profile': configuration['profile'],
               'settings_schema': configuration['nvm_schema'],
               'code_identity': code_identity(code), 'build_identity': identity,
               'features': sorted(configuration['base_features'] + configuration['optional_features']),
-              'timing_ms': configuration['timing_ms'], 'fixed_limits': fixed_limits(build),
+              'timing_ms': configuration['timing_ms'], 'fixed_limits': limits,
+              'module_storage': module_contract(configuration, limits),
               'resources': inspected['resources'],
               'runtime_qmk_settings': configuration['runtime_qmk_settings'],
               'evidence_sha256': {'configuration': configured.sha(build / 'configuration-report.json'),

@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "quantum.h"
 #include "ak820_tapping.h"
+#ifdef AK820_QMK_SETTINGS
+#    include "ak820_settings.h"
+#    define AK820_TAPPING_TERM ak820_settings_tapping_term()
+#else
+#    define AK820_TAPPING_TERM 200
+#endif
 #include "encoder.h"
 #ifdef VIAL_ENABLE
 #    include "vial.h"
@@ -64,7 +70,7 @@ bool ak820_tapping_before(const keyevent_t AK820_STATE_MEM *event) {
         return false;
     }
 #endif
-    if (pending != NONE && ((uint16_t)(event->time - pending_time) >= 200 ||
+    if (pending != NONE && ((uint16_t)(event->time - pending_time) >= AK820_TAPPING_TERM ||
         (IS_EVENT(*event) && event->pressed && (id == NONE || id != pending)))) commit_pending();
     if (IS_NOEVENT(*event) || id == NONE) return true;
     if ((source_state[id] & SOURCE_BLOCKED)) {

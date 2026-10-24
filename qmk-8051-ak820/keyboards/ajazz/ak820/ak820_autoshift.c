@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "quantum.h"
 #include "ak820_autoshift.h"
+#ifdef AK820_QMK_SETTINGS
+#    include "ak820_settings.h"
+#    define AK820_AUTOSHIFT_TERM ak820_settings_autoshift_timeout()
+#else
+#    define AK820_AUTOSHIFT_TERM 175
+#endif
 
 /* One source owns the deferred press and its eventual release. Generated
  * records never enter these hooks. Tapping's source guard rejects duplicates
@@ -16,7 +22,7 @@ static void as_emit(bool shifted) {
 }
 bool ak820_autoshift_before(const keyevent_t AK820_STATE_MEM *event) {
     if (!as_state) return true;
-    if (as_state == 1 && (uint16_t)(event->time - as_saved.event.time) >= 175) {
+    if (as_state == 1 && (uint16_t)(event->time - as_saved.event.time) >= AK820_AUTOSHIFT_TERM) {
         as_emit(true);
         if (!as_state) return false;
     }

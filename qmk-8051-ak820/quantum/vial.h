@@ -74,7 +74,7 @@ void vial_keycode_tap(uint16_t keycode);
 #define VIAL_MATRIX_MAGIC 240
 
 
-#ifdef TAP_DANCE_ENABLE
+#if defined(TAP_DANCE_ENABLE) || defined(AK820_COMPACT_TAP_DANCE)
 #define VIAL_TAP_DANCE_ENABLE
 
 #ifndef VIAL_TAP_DANCE_ENTRIES
@@ -138,10 +138,12 @@ _Static_assert(sizeof(vial_combo_entry_t) == 10, "Unexpected size of the vial_co
 #endif
 
 
-#ifdef KEY_OVERRIDE_ENABLE
+#if defined(KEY_OVERRIDE_ENABLE) || defined(AK820_COMPACT_KEY_OVERRIDE)
 #define VIAL_KEY_OVERRIDE_ENABLE
 
+#ifdef KEY_OVERRIDE_ENABLE
 #include "process_key_override.h"
+#endif
 
 #ifndef VIAL_KEY_OVERRIDE_ENTRIES
     #if TOTAL_EEPROM_BYTE_COUNT > 4000

@@ -29,6 +29,11 @@ difference.
 | See the published image and device checks | [Status](STATUS.md) |
 | See planned features | [Roadmap](ROADMAP.md) |
 | Develop the web and desktop configurator | [Requirements and plan](../web/README.md) |
+| Assign tap, hold and double-tap actions | [Compact Tap Dance](COMPACT-TAP-DANCE.md) |
+| Replace a key under selected modifiers | [Compact Key Overrides](COMPACT-KEY-OVERRIDES.md) |
+| Change supported timings and Grave Escape options | [QMK Settings](QMK-SETTINGS.md) |
+| Integrate module storage and backups | [Module storage](MODULE-STORAGE.md) |
+| Identify exact development image capabilities | [Development catalog](DEVELOPMENT-CATALOG.md) |
 
 This port is for the wired AJAZZ AK820 with a VS11K28A controller and USB
 `320F:505B`. AK820 V2, Pro and Max use different hardware.

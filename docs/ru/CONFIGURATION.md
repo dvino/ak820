@@ -189,9 +189,15 @@ Word не включает его. Индикатор **W** горит, когд
 
 ## Ограничения
 
-Mouse Keys, Tap Dance, Key Overrides, Auto Shift и QMK Settings не поддерживаются.
+В опубликованной alpha.3 недоступны Mouse Keys, Tap Dance, Key Overrides,
+Auto Shift и изменяемые QMK Settings.
 Управление NKRO, One Shot для модификаторов и ограниченные действия Space Cadet
 доступны в профиле full. Их ограничения приведены в [профилях сборки](BUILD-PROFILES.md).
-Параметры времени и поведения во вкладке QMK Settings недоступны. Наличие
+Параметры времени и поведения во вкладке QMK Settings в этом выпуске недоступны. Наличие
 команды в Vial само по себе не добавляет её поддержку в прошивку. Перед
 назначением проверьте поддержку действия в установленной прошивке.
+
+Профили разработки предоставляют отдельные компактные модули
+[Tap Dance](COMPACT-TAP-DANCE.md), [Key Overrides](COMPACT-KEY-OVERRIDES.md)
+и [QMK Settings](QMK-SETTINGS.md). Допустимые сочетания приведены в
+[профилях сборки](BUILD-PROFILES.md).

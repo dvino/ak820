@@ -113,6 +113,10 @@ class Firmware:
         for index in range(0, 512, 2):
             nvm[index:index + 2] = keymap[index:index + 2][::-1]
         commands += [memory("rom", 0xC740 + index, nvm[index:index + 32]) for index in range(0, 512, 32)]
+        # Board init normally loads runtime timing settings. Zeroed simulated
+        # ROM selects production defaults without requesting a flash write.
+        if "_ak820_settings_init" in self.symbols:
+            commands += self.call("_ak820_settings_init")
         commands += self.call("_host_set_driver", self.address("_ch555_usb_stack_driver"))
         commands += self.write("_USB_EnumStatus", [1]) + self.write("_D0UsbConfig", [1])
         commands += ["fill xram 0x2201 0x2203 0x12"]

@@ -229,3 +229,21 @@ static inline void qs_wait_ms(uint16_t timer) {
 #else
     #define qs_wait_ms wait_ms
 #endif
+
+#ifdef AK820_QMK_SETTINGS
+#    include "ak820_settings.h"
+#    undef QS_grave_esc_alt_override
+#    undef QS_grave_esc_ctrl_override
+#    undef QS_grave_esc_gui_override
+#    undef QS_grave_esc_shift_override
+#    undef QS_combo_term
+#    undef QS_tap_code_delay
+#    undef QS_tap_hold_caps_delay
+#    define QS_grave_esc_alt_override (ak820_settings_grave_esc() & 1)
+#    define QS_grave_esc_ctrl_override (ak820_settings_grave_esc() & 2)
+#    define QS_grave_esc_gui_override (ak820_settings_grave_esc() & 4)
+#    define QS_grave_esc_shift_override (ak820_settings_grave_esc() & 8)
+#    define QS_combo_term ak820_settings_combo_term()
+#    define QS_tap_code_delay ak820_settings_tap_code_delay()
+#    define QS_tap_hold_caps_delay ak820_settings_caps_delay()
+#endif

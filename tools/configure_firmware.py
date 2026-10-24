@@ -32,7 +32,7 @@ from ak820_runtime_safety import combine as combine_runtime_safety
 
 FORMAT = 'ak820-configured-build-1'
 WINDOWS = ((0x28a0, 0x3000), (0x3027, 0xc700))
-SYMBOLS = {'os-indicators': '_ak820_os_indicator_value', 'leader': '_ak820_leader_process', 'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
+SYMBOLS = {'tap-dance': '_ak820_tap_dance_process', 'key-overrides': '_ak820_key_override_process', 'qmk-settings': '_ak820_settings_set', 'os-indicators': '_ak820_os_indicator_value', 'leader': '_ak820_leader_process', 'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
            'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process',
            'dynamic-macros': '_ak820_dynamic_macro_process'}
 STATIC_BITS = {'gui-lock': '_gui_disabled', 'ctrl-gui-swap': '_ctrl_gui_swapped', 'mac-pc': '_ak820_mac_mode'}
@@ -278,7 +278,7 @@ def inspect(build, toolchain):
     report = load_json(report_path)
     selected = profiles.validate_configuration(report.get('configuration'))
     require(report.get('keyboard') == 'ajazz/ak820' and report.get('keymap') == 'vial' and
-            report.get('build_id') == profiles.SCHEMA and report.get('hardware_validated') is False,
+            report.get('build_id') == selected['nvm_schema'] and report.get('hardware_validated') is False,
             'Wrong target, saved schema or hardware claim')
     require(report.get('code_window') == [0x3027, 0xc700] and
             {tuple(window) for window in report.get('code_windows', [])} == set(WINDOWS) and
@@ -307,7 +307,7 @@ def inspect(build, toolchain):
     identity = {'profile': selected['profile'], 'configuration_sha256': hashlib.sha256(canonical(selected)).hexdigest(),
                 'ihx_sha256': sha(ihx), 'map_sha256': sha(mapfile), 'mem_sha256': sha(mem),
                 'build_report_sha256': sha(report_path), 'source_manifest_sha256': source_manifest_sha,
-                'compiler_sha256': report['compiler_sha256'], 'nvm_schema': profiles.SCHEMA}
+                'compiler_sha256': report['compiler_sha256'], 'nvm_schema': selected['nvm_schema']}
     return {'format': FORMAT, 'configuration': selected, 'identity': identity,
             'short_calls': short_summary,
             'resources': resources, 'hardware_validated': False, 'physical_device_commands': 0,
@@ -522,6 +522,13 @@ def profile_test_plan(name, build, toolchain):
         plan.append(('auto-shift-linked', QMK, [sys.executable, 'tests/ak820_autoshift/linked.py',
                     '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
                     '--output-dir', str(output / 'auto-shift')]))
+    for feature, folder in (('tap-dance', 'ak820_tap_dance'), ('key-overrides', 'ak820_key_overrides'), ('qmk-settings', 'ak820_settings')):
+        if feature not in selected['optional_features']:
+            continue
+        plan.append((feature + '-host', QMK, [sys.executable, 'tests/' + folder + '/host.py']))
+        plan.append((feature + '-linked', QMK, [sys.executable, 'tests/' + folder + '/linked.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                    '--output-dir', str(output / folder)]))
     if 'leader' in selected['optional_features']:
         plan.append(('leader-host', QMK, [sys.executable, 'tests/ak820_leader/host.py',
                     '--output', str(output / 'leader-host.json')]))
@@ -565,7 +572,8 @@ def test_source_snapshot():
     selected = {}
     for raw in names:
         name = os.fsdecode(raw)
-        if not name or not name.startswith(('tools/', 'qmk-8051-ak820/tests/',
+        if not name or not name.startswith(('tools/', 'tests/', 'qmk-8051-ak820/tests/',
+                                            'qmk-8051-ak820/util/',
                                             'qmk-8051-ak820/keyboards/ajazz/ak820/tests/')):
             continue
         path = ROOT / name

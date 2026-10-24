@@ -16,6 +16,12 @@
  */
 
 #include "quantum.h"
+#ifdef AK820_COMPACT_TAP_DANCE
+#    include "ak820_tap_dance.h"
+#endif
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+#    include "ak820_key_override.h"
+#endif
 #ifdef AK820_COMPACT_LEADER
 #    include "ak820_leader.h"
 #endif
@@ -262,7 +268,7 @@ void soft_reset_keyboard(void) {
 }
 
 /* Convert record into usable keycode via the contained event. */
-uint16_t get_record_keycode(keyrecord_t *record_argument, bool update_layer_cache) {
+uint16_t get_record_keycode(keyrecord_t AK820_RECORD_MEM *record_argument, bool update_layer_cache) {
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
     keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
 #else
@@ -317,7 +323,7 @@ uint16_t get_event_keycode(keyevent_t event, bool update_layer_cache) {
 }
 
 /* Get keycode, and then process pre tapping functionality */
-bool pre_process_record_quantum(keyrecord_t *record_argument) {
+bool pre_process_record_quantum(keyrecord_t AK820_RECORD_MEM *record_argument) {
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
     keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
 #else
@@ -331,11 +337,25 @@ bool pre_process_record_quantum(keyrecord_t *record_argument) {
 #    ifdef AK820_COMPACT_COMBO
     /* Resolve earlier buffered typing before admitting a Leader prefix. */
     if (keycode == QK_LEAD && record->event.pressed && record->event.key.row < MATRIX_ROWS && record->event.key.col < MATRIX_COLS)
-        ak820_combo_tick(record->event.time + 40);
+        ak820_combo_tick(record->event.time +
+#    ifdef AK820_QMK_SETTINGS
+            ak820_settings_combo_term()
+#    else
+            40
+#    endif
+        );
 #    endif
     if (!ak820_leader_process((keyrecord_t AK820_STATE_MEM *)record)) return false;
 #endif
-    return pre_process_record_kb(keycode, record) &&
+    #ifdef AK820_COMPACT_TAP_DANCE
+    if (!ak820_tap_dance_process((keyrecord_t AK820_STATE_MEM *)record)) return false;
+    #endif
+    /* The fixed SDCC Vial target uses the empty record callbacks above.
+     * SDCC has no weak override here; omit calls and argument spills. */
+    return
+#if !defined(AK820_BOARD) || !defined(__SDCC_mcs51)
+           pre_process_record_kb(keycode, record) &&
+#endif
 #ifdef AK820_COMPACT_COMBO
            /* Board callers are action_exec's model-large XDATA record. */
            ak820_combo_process((keyrecord_t AK820_STATE_MEM *)record) &&
@@ -347,12 +367,12 @@ bool pre_process_record_quantum(keyrecord_t *record_argument) {
 }
 
 /* Get keycode, and then call keyboard function */
-void post_process_record_quantum(keyrecord_t *record) {
+void post_process_record_quantum(keyrecord_t AK820_RECORD_MEM *record) {
     uint16_t keycode = get_record_keycode(record, false);
     post_process_record_kb(keycode, record);
 }
 
-bool process_record_quantum(keyrecord_t *record) {
+bool process_record_quantum(keyrecord_t AK820_RECORD_MEM *record) {
 #ifdef AK820_COMPACT_TAPPING
     uint16_t keycode = get_record_keycode(record, false);
 #else
@@ -360,6 +380,16 @@ bool process_record_quantum(keyrecord_t *record) {
 #endif
     return process_record_quantum_helper(keycode, record);
 }
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+static bool process_ak820_override(keyrecord_t AK820_STATE_MEM *record) {
+    /* Repeat/macro records can borrow a physical position but never own it. */
+    if (get_repeat_key_count() || ak820_macro_primitive) return true;
+    if (ak820_key_override_process(record, get_mods() | get_weak_mods(),
+                                  get_highest_layer(layer_state | default_layer_state))) return true;
+    send_keyboard_report();
+    return false;
+}
+#endif
 /* Core keycode function, hands off handling to other functions,
     then processes internal quantum keycodes, and then processes
     ACTIONs.                                                      */
@@ -381,7 +411,7 @@ static bool process_ak820_nkro(uint16_t keycode, keyrecord_t *record_argument) {
 }
 #endif
 
-bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record_argument) {
+bool process_record_quantum_helper(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record_argument) {
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
     keyrecord_t __xdata *record = (keyrecord_t __xdata *)record_argument;
 #else
@@ -448,7 +478,7 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record_argumen
 #if defined(VIA_ENABLE)
             process_record_via(keycode, record) &&
 #endif
-#if defined(VIAL_ENABLE) && (!defined(AK820_BOARD) || defined(VIAL_TAP_DANCE_ENABLE))
+#if defined(VIAL_ENABLE) && (!defined(AK820_BOARD) || (defined(VIAL_TAP_DANCE_ENABLE) && !defined(AK820_COMPACT_TAP_DANCE)))
             /* The only work in this hook is Vial Tap Dance release handling.
              * Skip its argument setup and call when that feature is absent. */
             process_record_vial(keycode, record) &&
@@ -456,7 +486,9 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record_argumen
 #if defined(POINTING_DEVICE_ENABLE) && defined(POINTING_DEVICE_AUTO_MOUSE_ENABLE)
             process_auto_mouse(keycode, record) &&
 #endif
+#if !defined(AK820_BOARD) || !defined(__SDCC_mcs51)
             process_record_kb(keycode, record) &&
+#endif
 #if defined(SECURE_ENABLE)
             process_secure(keycode, record) &&
 #endif
@@ -480,6 +512,9 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record_argumen
 #endif
 #ifdef CAPS_WORD_ENABLE
             process_caps_word(keycode, record) &&
+#endif
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+            process_ak820_override((keyrecord_t AK820_STATE_MEM *)record) &&
 #endif
 #ifdef KEY_OVERRIDE_ENABLE
             process_key_override(keycode, record) &&
@@ -615,7 +650,11 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record_argumen
         }
     }
 
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+    return true;
+#else
     return process_action_kb(record);
+#endif
 }
 
 void set_single_persistent_default_layer(uint8_t default_layer) {

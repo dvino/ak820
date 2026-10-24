@@ -31,6 +31,7 @@ AK820_CALLEE_SAVES = (
     'timer_read', 'timer_read32', 'ak820_nvm_ok', 'get_mods', 'get_weak_mods',
     'matrix_get_row', 'readPin', 'eeprom_read_byte', 'eeprom_update_byte',
     'ak820_flash_read', 'mDelaymS',
+    'get_repeat_key_count',
 )
 
 
@@ -100,13 +101,15 @@ def main():
     p.add_argument('--xram-start', type=integer, default=0x0400)
     p.add_argument('--xram-end', type=integer, default=0x1000)
     p.add_argument('--root', action='append', default=[])
-    p.add_argument('--build-id', type=integer, default=0x082002, help='Stable Vial EEPROM schema identifier')
+    p.add_argument('--build-id', type=integer, default=None, help='Stable Vial EEPROM schema identifier')
     p.add_argument('--extra-flags', default='--opt-code-size', help='Additional compiler flags; board config owns feature flags')
     p.add_argument('--short-calls', action='store_true', help='Opt in to verified foreground ACALL/AJMP relaxation (AK820 only)')
     p.add_argument('--no-outline', action='store_true', help='Disable AK820 exact instruction outlining for comparison builds')
     p.add_argument('--no-callee-saves', action='store_true', help='Disable the audited AK820 callee-saves list for comparison builds')
     args = p.parse_args()
     selected = configuration(args.profile)
+    if args.build_id is None:
+        args.build_id = selected['nvm_schema']
     if args.short_calls and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
         raise ValueError('Short calls require the AK820 target and pinned SDCC 4.6.0')
     if args.keyboard == 'ajazz/ak820':

@@ -92,7 +92,7 @@ def load(build):
     symbols = {name: int(address, 16) for address, name in re.findall(
         r'^(?:[CD]:)?\s+([0-9A-F]{8})\s+(_\S+)', mapping.read_text(), re.M)}
     for path in sorted((build / 'dce').rglob('*.rst')):
-        for address, name in re.findall(r'^\s*([0-9A-F]{6})\s+\d+\s+(_(?:dynamic_keymap_macro_send_sending_\w+|ak820_repeat_invoking)):', path.read_text(), re.M):
+        for address, name in re.findall(r'^\s*([0-9A-F]{6})\s+\d+\s+(_(?:dynamic_keymap_macro_send_sending_\w+|ak820_repeat_invoking|ak820_td_invoking)):', path.read_text(), re.M):
             symbols[name] = int(address,16)
     callback_spills = {}
     candidates = []
@@ -877,7 +877,8 @@ def main():
     source_root = Path(__file__).resolve().parents[2]
     for prefix, source, declaration in (
             ('_dynamic_keymap_macro_send_sending_', 'quantum/dynamic_keymap.c', 'static bool sending;'),
-            ('_ak820_repeat_invoking', 'quantum/repeat_key.c', 'static bool ak820_repeat_invoking;')):
+            ('_ak820_repeat_invoking', 'quantum/repeat_key.c', 'static bool ak820_repeat_invoking;'),
+            ('_ak820_td_invoking', 'keyboards/ajazz/ak820/ak820_tap_dance.c', 'static bool ak820_td_invoking;')):
         path = source_root / source
         text = path.read_text()
         variable = declaration.split()[-1].rstrip(';')

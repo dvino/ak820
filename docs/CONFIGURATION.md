@@ -183,10 +183,14 @@ mean that the firmware supports it.
 
 ## Limits
 
-Mouse Keys, Tap Dance, Key Overrides, Auto Shift and QMK Settings are not
-supported. NKRO control, modifier One Shot and the limited Space Cadet actions
+In published alpha.3, Mouse Keys, Tap Dance, Key Overrides, Auto Shift and
+runtime QMK Settings are unavailable. NKRO control, modifier One Shot and the limited Space Cadet actions
 are available in the full profile. Their boundaries are listed in
 [Build profiles](BUILD-PROFILES.md). Timing and behavior options in the QMK
-Settings tab are unavailable. A Vial control alone does not add firmware
+Settings tab are unavailable in that release. A Vial control alone does not add firmware
 support. Before assigning an action, check that it is supported by the installed
 firmware.
+
+Development profiles provide separate compact [Tap Dance](COMPACT-TAP-DANCE.md),
+[Key Overrides](COMPACT-KEY-OVERRIDES.md) and [QMK Settings](QMK-SETTINGS.md)
+modules. Select a supported combination from [Build profiles](BUILD-PROFILES.md).

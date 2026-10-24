@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "qmk_settings.h"
 #include <string.h>
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+#    include "ak820_key_override.h"
+#endif
 
 extern keymap_config_t keymap_config;
 
@@ -451,6 +454,10 @@ void send_keyboard_report(void) {
     keyboard_report->mods |= weak_override_mods;
 #endif
 
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+    ak820_key_override_sync(keyboard_report->mods, get_highest_layer(layer_state | default_layer_state));
+    keyboard_report->mods = ak820_key_override_mods(keyboard_report->mods);
+#endif
 #ifdef AK820_MAC_PC
     /* Transform only the final aggregate; every owner keeps physical bits. */
     if (ak820_mac_mode) {
@@ -468,8 +475,37 @@ void send_keyboard_report(void) {
     if (gui_disabled) keyboard_report->mods &= ~(MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI));
 #endif
 
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+    /* Projection owns no shared references. Macros/other physical keys may
+     * hold the same usage; releasing the override cannot remove them. */
+    static report_keyboard_t projected;
+    uint8_t AK820_STATE_MEM *out = (uint8_t AK820_STATE_MEM *)&projected;
+    const uint8_t AK820_STATE_MEM *base = (const uint8_t AK820_STATE_MEM *)keyboard_report;
+    for (uint8_t i = 0; i < sizeof(projected); ++i) out[i] = base[i];
+    uint8_t overlay_key = ak820_key_override_key();
+    if (overlay_key) {
+#    ifdef NKRO_ENABLE
+        if (keyboard_protocol && keymap_config.nkro) {
+            projected.nkro.bits[overlay_key >> 3] |= 1u << (overlay_key & 7);
+        } else
+#    endif
+        {
+            uint8_t empty = 255;
+            for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; ++i) {
+                if (projected.keys[i] == overlay_key) goto projected_ready;
+                if (!projected.keys[i]) empty = i;
+            }
+            if (empty != 255) projected.keys[empty] = overlay_key;
+            else for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; ++i) projected.keys[i] = 1;
+        }
+    }
+projected_ready: ;
+#    define AK820_REPORT_OUT (&projected)
+#else
+#    define AK820_REPORT_OUT keyboard_report
+#endif
 #ifdef PROTOCOL_VUSB
-    host_keyboard_send(keyboard_report);
+    host_keyboard_send(AK820_REPORT_OUT);
 #else
     static report_keyboard_t last_report;
 
@@ -479,10 +515,10 @@ void send_keyboard_report(void) {
     bool changed = false;
 #    if defined(__SDCC_mcs51)
     uint8_t __xdata *dest = (uint8_t __xdata *)&last_report;
-    const uint8_t __xdata *src = (const uint8_t __xdata *)keyboard_report;
+    const uint8_t __xdata *src = (const uint8_t __xdata *)AK820_REPORT_OUT;
 #    else
     uint8_t *dest = (uint8_t *)&last_report;
-    const uint8_t *src = (const uint8_t *)keyboard_report;
+    const uint8_t *src = (const uint8_t *)AK820_REPORT_OUT;
 #    endif
     for (uint8_t i = 0; i < sizeof(report_keyboard_t); ++i) {
         if (dest[i] != src[i]) {
@@ -490,14 +526,15 @@ void send_keyboard_report(void) {
             changed = true;
         }
     }
-    if (changed) host_keyboard_send(keyboard_report);
+    if (changed) host_keyboard_send(AK820_REPORT_OUT);
 #else
-    if (memcmp(keyboard_report, &last_report, sizeof(report_keyboard_t)) != 0) {
-        memcpy(&last_report, keyboard_report, sizeof(report_keyboard_t));
-        host_keyboard_send(keyboard_report);
+    if (memcmp(AK820_REPORT_OUT, &last_report, sizeof(report_keyboard_t)) != 0) {
+        memcpy(&last_report, AK820_REPORT_OUT, sizeof(report_keyboard_t));
+        host_keyboard_send(AK820_REPORT_OUT);
     }
 #endif
 #endif
+#undef AK820_REPORT_OUT
 }
 
 /** \brief Get mods

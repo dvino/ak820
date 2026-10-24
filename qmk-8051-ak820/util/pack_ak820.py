@@ -20,6 +20,7 @@ ERASE_START, MARKER_CHECK_START = 0x2830, 0x2888
 NVM_START, NVM_END = 0xC700, 0xEF00
 MANIFEST_START = 0xEF80
 BUILD_ID = 0x082002
+EXTENSION_BUILD_ID = 0x082003
 LEGACY_BUILD_ID = 0x082001
 LAYER_COUNT = 6
 KEYMAP_ADDR = 0x0040
@@ -158,7 +159,7 @@ def validate_native(live, stock=None, native=None):
 
 def nvm_layout(build_id):
     """Known, explicit layouts only. Physical NVM/journal bounds never move."""
-    if build_id == BUILD_ID:
+    if build_id in (BUILD_ID, EXTENSION_BUILD_ID):
         return {'layers': LAYER_COUNT, 'encoder_addr': ENCODER_ADDR,
                 'macro_addr': MACRO_ADDR, 'macro_size': MACRO_SIZE,
                 'macro_busy_addr': MACRO_BUSY_ADDR}
@@ -205,6 +206,9 @@ def validate_nvm(nvm, build_id=BUILD_ID):
     if (len(nvm) != NVM_END - NVM_START or nvm[:2] != bytes.fromhex('e6fe')
             or nvm[37:40] != build_id.to_bytes(3, 'little')):
         raise ValueError('NVM magic/schema differs; an explicit migration is required')
+    if build_id == EXTENSION_BUILD_ID:
+        import ak820_extension_settings as extensions
+        extensions.from_nvm(nvm)
     meta = layout['macro_busy_addr']
     if nvm[meta]:
         raise ValueError('An incomplete macro upload is still disabled; finish/retry it before migration')
@@ -227,9 +231,27 @@ def empty_nvm():
     return nvm
 
 
-def migrate_vial_nvm(nvm, source_build_id):
+def migrate_vial_nvm(nvm, source_build_id, *, target_build_id=BUILD_ID):
     """Lossless migration of known live Vial settings; never truncate macros."""
+    nvm_layout(target_build_id)
     source = validate_nvm(nvm, source_build_id)
+    if source_build_id == EXTENSION_BUILD_ID and target_build_id != EXTENSION_BUILD_ID:
+        raise ValueError('Schema03 downgrade is forbidden')
+    if target_build_id == EXTENSION_BUILD_ID:
+        if source_build_id == EXTENSION_BUILD_ID:
+            return bytes(nvm), {'mode': 'byte_exact_nvm_copy', 'target_build_id': target_build_id}
+        base, report = migrate_vial_nvm(nvm, source_build_id)
+        result = bytearray(base)
+        # Preserve all schema02 fields, including nonempty Combos.
+        result[0x6A8:0x7F0] = bytes(0x7F0-0x6A8)
+        result[37:40] = target_build_id.to_bytes(3, 'little')
+        import ak820_extension_settings as extensions
+        result[0x6A8:0x6C0] = extensions.settings_record()
+        validate_nvm(result, target_build_id)
+        return bytes(result), {**report, 'mode': 'explicit_schema_migration',
+                               'target_build_id': target_build_id, 'source_build_id': source_build_id}
+    if target_build_id != BUILD_ID:
+        raise ValueError('Unsupported migration target')
     if source_build_id == BUILD_ID:
         return bytes(nvm), {'mode': 'byte_exact_nvm_copy', 'nvm_bytes': len(nvm),
                             'layers': LAYER_COUNT, 'macro_count': MACRO_COUNT,
@@ -340,11 +362,11 @@ def validate_startup(data, symbols):
         raise ValueError('Unsupported XINIT: expected linked AK820 single-DPTR CRT, not generic MOVX @Ri')
 
 
-def pack(data,symbols,stock,nvm,trial):
+def pack(data,symbols,stock,nvm,trial, *, target_build_id=BUILD_ID):
     if len(nvm)!=NVM_END-NVM_START:
         raise ValueError('Incorrect settings/reference size')
     validate_native(stock)
-    validate_nvm(nvm)
+    validate_nvm(nvm, target_build_id)
     required=['__sdcc_gsinit_startup','_USB_DeviceInterrupt','_ak820_timer_irq','_ak820_led_irq','_keymaps','_encoder_map']
     for name in required:
         if name not in symbols or symbols[name] not in data:
@@ -392,18 +414,19 @@ def pack(data,symbols,stock,nvm,trial):
     full[NVM_START:NVM_END]=nvm
     code_hash=bytes.fromhex(digest(full[APP_START:CODE_END]))
     config_hash=bytes.fromhex(digest(nvm))[:16]
-    full[MANIFEST_START:APP_END]=MAGIC+bytes((1,int(trial)))+b'\0\0'+BUILD_ID.to_bytes(4,'little')+code_hash+config_hash
+    full[MANIFEST_START:APP_END]=MAGIC+bytes((1,int(trial)))+b'\0\0'+target_build_id.to_bytes(4,'little')+code_hash+config_hash
     if full[:APP_START]!=stock[:APP_START] or full[APP_END:]!=stock[APP_END:]:
         raise AssertionError('Protected ROM changed')
     return bytes(full[APP_START:APP_END])
 
 
-def verify_payload(payload, *, allow_legacy=False):
+def verify_payload(payload, *, allow_legacy=False, target_build_id=BUILD_ID):
     if len(payload)!=APP_END-APP_START:
         raise ValueError('Wrong update image length; never use a full-ROM image')
     manifest=payload[MANIFEST_START-APP_START:]
     build_id=int.from_bytes(manifest[12:16],'little')
-    allowed=(BUILD_ID,LEGACY_BUILD_ID) if allow_legacy else (BUILD_ID,)
+    nvm_layout(target_build_id)
+    allowed=(target_build_id,LEGACY_BUILD_ID) if allow_legacy else (target_build_id,)
     if manifest[:8]!=MAGIC or manifest[8]!=1 or manifest[9] not in (0,1) or build_id not in allowed:
         raise ValueError('Unknown application manifest')
     if bytes.fromhex(digest(payload[:CODE_END-APP_START]))!=manifest[16:48]:

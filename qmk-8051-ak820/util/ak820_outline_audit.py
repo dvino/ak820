@@ -53,6 +53,9 @@ FOREGROUND_MODULES = {
     # Foreground action engines; USB/timer/LED IRQ closures cannot reach them.
     "ak820_tapping.asm": None,
     "ak820_combo.asm": None,
+    "ak820_tap_dance.asm": None,
+    "ak820_key_override.asm": None,
+    "ak820_settings.asm": None,
     "ak820_board.asm": frozenset({
         "ak820_set_slot_rgb", "ak820_rgb_init", "ak820_rgb_set_color",
         "ak820_rgb_set_color_all", "ak820_rgb_flush",

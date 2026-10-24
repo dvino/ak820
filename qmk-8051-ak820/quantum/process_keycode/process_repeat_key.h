@@ -26,7 +26,7 @@
  * @return true    Continue processing keycodes, and send to host
  * @return false   Stop processing keycodes, and don't send to host
  */
-bool process_last_key(uint16_t keycode, keyrecord_t* record);
+bool process_last_key(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record);
 
 /**
  * @brief Optional callback defining which keys are remembered.
@@ -61,4 +61,4 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
  * @return true    Continue processing keycodes, and send to host
  * @return false   Stop processing keycodes, and don't send to host
  */
-bool process_repeat_key(uint16_t keycode, keyrecord_t* record);
+bool process_repeat_key(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record);

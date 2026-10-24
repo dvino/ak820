@@ -57,7 +57,7 @@ development source profiles. GUI controls, compact Leader and Dynamic Macros are
 available in selected development profiles; these features are not part of the
 published alpha.3 image.
 See [Mouse Keys](docs/COMPACT-MOUSE-KEYS.md) and [Auto Shift](docs/COMPACT_AUTOSHIFT.md).
-See [GUI controls](docs/GUI-CONTROL.md), [Mac/PC mode](docs/MAC-PC.md), [Leader](docs/COMPACT-LEADER.md), [Dynamic Macros](docs/COMPACT-DYNAMIC-MACROS.md)
+Three additional development profiles enable compact [Tap Dance](docs/COMPACT-TAP-DANCE.md), [Key Overrides](docs/COMPACT-KEY-OVERRIDES.md), or [QMK Settings](docs/QMK-SETTINGS.md), one module per profile. These source features are not part of published alpha.3. See [GUI controls](docs/GUI-CONTROL.md), [Mac/PC mode](docs/MAC-PC.md), [Leader](docs/COMPACT-LEADER.md), [Dynamic Macros](docs/COMPACT-DYNAMIC-MACROS.md)
 and [Build profiles](docs/BUILD-PROFILES.md) for profile choices and behavior.
 
 ## Disclaimer

@@ -1,0 +1,783 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 48.66,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/00.txt",
+      "log_sha256": "63ad88666108bbeb034211f8fcae8072987c2d2bd5befbcb31d6f2daf2f76760",
+      "unit_tests": {
+        "run": 138,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.106,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/01.txt",
+      "log_sha256": "fc523972b6a1714a1d54810e5e0468e39c4bd3e3d5232a86ffd2e808fc829bd9",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.108,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/02.txt",
+      "log_sha256": "dcdcd6cce779c1a2c6a8ca179ac053495271932fc37f38577279129e41b1a479",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.158,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/03.txt",
+      "log_sha256": "7053c4a34ca3e8a546643695fef526149639a5c88c4eaf822ce9d2449a5551ca",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.141,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/04.txt",
+      "log_sha256": "03639de0fbe6c624c45829e2ae26d96f5463dcaa38cb25235993002949e0d781",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.054,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/05.txt",
+      "log_sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.625,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/06.txt",
+      "log_sha256": "56de6225d870b1afa9d920c58dd778a35d7a636b6154c48fe1fbbcb2f8e717d5",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.051,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/07.txt",
+      "log_sha256": "e586fc0f3bb2a05f4c80f07d1b4c6171e830592f6c7aaf70d4af3b0aa3ebd072",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.047,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/08.txt",
+      "log_sha256": "5a8bcaefcea4befdc9af5868f2fd907c88fc6bde98498eaf76e15534548b6417",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.651,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.546,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.288,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.173,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/12.txt",
+      "log_sha256": "2ae1a06370222cfd4042b160f898fc26384944e4c8cc32ccb18fc13d4ad25459",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.272,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.815,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 1,
+      "seconds": 3.784,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/15.txt",
+      "log_sha256": "a0e24346f3020c2f83767e32b3c0a340ced0dc7df415bf00f04ca93125024c65",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.069,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.204,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.317,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/18.txt",
+      "log_sha256": "5e6957a1eea658cb39448866736856adb87367db802d33ecde9ecace9920cbfd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/tapping-host.json"
+      ],
+      "exit_code": 1,
+      "seconds": 0.916,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/19.txt",
+      "log_sha256": "e760f7b3aacba1a4f31b6201b6b3ac7bb509716828deb36dd23c60e5ebd34bb8",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.107,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/20.txt",
+      "log_sha256": "056deced2f70c5b6cee34bc8c39eb102e2012dede9165b0a1d15d7b9d97ac221",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 0.848,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/21.txt",
+      "log_sha256": "31947f2b60c851da21a4735fe16d5cdf69666528d95ae2834394a9521f4e48e3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.79,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/22.txt",
+      "log_sha256": "aad7a213fe8830fbaf45076697c0d25e0026aa8ec6219fcc97099a01894155a8",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.387,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.37,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/24.txt",
+      "log_sha256": "665f35791d6888ebb2730708cda22031aadfb0a1d747eb7e42ac6464becfd12c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 0.882,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/25.txt",
+      "log_sha256": "a31200a0240e33ca6e20590ae55cc52f61586cc10197768fbd65b1542de922d1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 4.781,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/26.txt",
+      "log_sha256": "fb8d2aaa346714255be507581feb54e5bfe56406df3652c245d29912634b2692",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/combo"
+      ],
+      "exit_code": 1,
+      "seconds": 1.7,
+      "log": "/workspace/scratch/1cfaab45a4b0/firmware-module-completion/ak820/qmk-8051-ak820/.build/module-precommit-td6/qualification-logs-wury_yos/27.txt",
+      "log_sha256": "54d874519f88b6ffe1db58f976c0a1ca98abb1bc62160b39a62d3ae3915c5b32",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      },
+      "build_after": {
+        "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+        "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 276,
+    "skipped": 0
+  },
+  "passed": false,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "ad48287366117e500bf6581b95720669d1f6eb7bd50ba2b87b8e1bb15965547e",
+    "map": "22355485f6173ff41e40dd5b4df5922328c5b156d1fe69a534728bd893fda8d9"
+  },
+  "build_unchanged": true
+}

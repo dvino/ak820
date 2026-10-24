@@ -58,7 +58,9 @@ USB VID:PID `320F:505B` — дополнительный признак, а не
 One Shot работает только с модификаторами, Space Cadet включает `SC_LSPO`,
 `SC_RSPC` и `SC_SENT`. Компактные Mouse Keys, Auto Shift, Leader, управление GUI и
 динамические макросы можно включить в выбранных профилях разработки; их нет в
-опубликованном образе alpha.3. См. [Mouse Keys](COMPACT-MOUSE-KEYS.md),
+опубликованном образе alpha.3. Три отдельных профиля разработки добавляют компактные
+[Tap Dance](COMPACT-TAP-DANCE.md), [Key Overrides](COMPACT-KEY-OVERRIDES.md)
+или [QMK Settings](QMK-SETTINGS.md); каждый включает только один из этих модулей. См. [Mouse Keys](COMPACT-MOUSE-KEYS.md),
 [Auto Shift](COMPACT_AUTOSHIFT.md), [клавиши Win/GUI](GUI-CONTROL.md),
 [Leader](COMPACT-LEADER.md), [динамические макросы](COMPACT-DYNAMIC-MACROS.md) и [профили сборки](BUILD-PROFILES.md).
 Для каждой новой сборки профиля требуется [проверка стека и IRQ](RUNTIME-STACK.md)

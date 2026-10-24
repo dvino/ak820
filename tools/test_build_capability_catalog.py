@@ -13,6 +13,39 @@ config = catalog.configured
 
 
 class CatalogTests(unittest.TestCase):
+    def test_individual_module_contracts_are_capability_aware(self):
+        limits={'tap_dance':8,'key_overrides':8}
+        for name,td,ko,qsids in (('full-tap-dance',8,0,[]),
+                ('full-key-overrides',0,8,[]), ('full-qmk-settings',0,0,[1,2,7,18,19])):
+            with self.subTest(name=name):
+                contract=catalog.module_contract(config.profiles.configuration(name),limits)
+                modules=contract['modules']
+                self.assertEqual(modules['tap_dance']['enabled_entries'],td)
+                self.assertEqual(modules['key_overrides']['enabled_entries'],ko)
+                self.assertEqual(modules['qmk_settings']['enabled_qsids'],qsids)
+                self.assertEqual(modules['tap_dance']['stored_entries'],8)
+                self.assertEqual(modules['key_overrides']['stored_entries'],8)
+                fields={f['qsid']:f for f in modules['qmk_settings']['fields']}
+                self.assertFalse(fields[4]['enabled'])
+                self.assertEqual(fields[4]['consumers'],[])
+                self.assertEqual(fields[7]['maximum'],1000)
+                self.assertFalse(contract['limits']['qmk_settings']['tap_dance_term_uses_qsid7'])
+                self.assertFalse(contract['restore']['write_authorization_granted'])
+                self.assertFalse(contract['physical_behavior_verified'])
+                for module in ('tap_dance','key_overrides'):
+                    for offset in modules[module]['entry_offsets']:
+                        self.assertEqual(offset//64,(offset+9)//64)
+
+    def test_schema02_has_no_extension_storage_or_enabled_settings(self):
+        contract=catalog.module_contract(config.profiles.configuration('full'),{'tap_dance':8,'key_overrides':8})
+        self.assertEqual(contract['modules']['tap_dance']['stored_entries'],0)
+        self.assertEqual(contract['modules']['qmk_settings']['fields'],[])
+        self.assertFalse(contract['migration']['schema03_downgrade_supported'])
+        forged=config.profiles.configuration('full-tap-dance')
+        forged['runtime_qmk_settings']=[1,2,7,18,19]
+        with self.assertRaises(ValueError):catalog.module_contract(forged,{'tap_dance':8,'key_overrides':8})
+        with self.assertRaises(ValueError):catalog.module_contract(config.profiles.configuration('full-tap-dance'),{'tap_dance':7,'key_overrides':8})
+
     def test_fingerprint_binds_bytes_addresses_and_holes(self):
         image = {0x28a0: 2, 0x3027: 0x22}
         identity = catalog.code_identity(image)

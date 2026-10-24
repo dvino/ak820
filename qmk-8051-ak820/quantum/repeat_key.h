@@ -31,7 +31,7 @@ void     set_last_mods(uint8_t mods);        /**< Sets the last mods. */
 keyrecord_t* get_last_record(void);
 
 /** @brief Sets keycode and record info for the last key. */
-void set_last_record(uint16_t keycode, keyrecord_t* record);
+void set_last_record(uint16_t keycode, keyrecord_t AK820_RECORD_MEM *record);
 
 /**
  * @brief Signed count of times the key has been repeated or alternate repeated.
@@ -53,7 +53,7 @@ int8_t get_repeat_key_count(void);
  * @brief Calls `process_record()` on a generated record repeating the last key.
  * @param event Event information in the generated record.
  */
-void repeat_key_invoke(const keyevent_t* event);
+void repeat_key_invoke(const keyevent_t AK820_RECORD_MEM *event);
 
 #ifndef NO_ALT_REPEAT_KEY
 
@@ -71,7 +71,7 @@ uint16_t get_alt_repeat_key_keycode(void);
  * @brief Calls `process_record()` to alternate repeat the last key.
  * @param event Event information in the generated record.
  */
-void alt_repeat_key_invoke(const keyevent_t* event);
+void alt_repeat_key_invoke(const keyevent_t AK820_RECORD_MEM *event);
 
 /**
  * @brief Optional user callback to define additional alternate keys.

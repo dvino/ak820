@@ -61,7 +61,7 @@ with tempfile.TemporaryDirectory(prefix='ak820-tapping-') as temp:
             ('cancel-blocks-released-source','((state & SOURCE_ACTIVE) << 1)','((state & (SOURCE_ACTIVE | SOURCE_HELD)) ? SOURCE_BLOCKED : 0)'),
             ('macro-counter-wrap','ak820_macro_primitive = data[1] != SS_TAP_CODE;','ak820_macro_primitive = false;'),
             ('macro-tap-consumes-down','ak820_macro_primitive = data[1] != SS_TAP_CODE;','ak820_macro_primitive = true;'),
-            ('early-hold','event->time - pending_time) >= 200','event->time - pending_time) >= 199'),
+            ('early-hold','event->time - pending_time) >= AK820_TAPPING_TERM','event->time - pending_time) >= (AK820_TAPPING_TERM - 1)'),
             ('wrong-right-group','if (mods & 16) mods <<= 4;','if (mods & 16) mods &= 15;'),
             ('lost-release','if (event->pressed == ((source_state[id] & SOURCE_ACTIVE) != 0)) return false;','if (!event->pressed || event->pressed == ((source_state[id] & SOURCE_ACTIVE) != 0)) return false;'),
             ('premature-lookup','if (!ak820_tapping_before(&event)) return;','if (IS_EVENT(event) && event.pressed) update_source_layers_cache(event.key,layer_switch_get_layer(event.key));\n    if (!ak820_tapping_before(&event)) return;')]

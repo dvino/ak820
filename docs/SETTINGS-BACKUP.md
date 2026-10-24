@@ -65,9 +65,13 @@ closed and do not change settings during a backup. Repeated reads check for
 changes but cannot guarantee an atomic snapshot. A mismatch stops the operation.
 
 The backup does not include the Direct RGB palette, temporary lighting state,
-animation position, held keys or a running macro's position. One Shot, Mouse
-Keys, Tap Dance and Key Overrides are unsupported. Restore stops before writing
+animation position, held keys or a running macro's position. For installer-approved
+release images, separate One Shot, Mouse Keys, Tap Dance and Key Overrides
+settings are unsupported. Restore stops before writing
 when a value cannot be reproduced with supported settings commands.
 
 Exact image identities and current validation results are recorded in
 [Status](STATUS.md).
+
+Development schema03 has a separate typed backup contract for module settings;
+see [Module storage](MODULE-STORAGE.md). The approved installer image list is unchanged.

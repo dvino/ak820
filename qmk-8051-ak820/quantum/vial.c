@@ -90,7 +90,11 @@ void vial_unlock_task(void) {
 }
 
 #ifdef VIAL_TAP_DANCE_ENABLE
+#    ifdef AK820_COMPACT_TAP_DANCE
+#        define reload_tap_dance() ((void)0)
+#    else
 static void reload_tap_dance(void);
+#    endif
 #endif
 
 #ifdef VIAL_COMBO_ENABLE
@@ -102,10 +106,18 @@ static void reload_combo(void);
 #endif
 
 #ifdef VIAL_KEY_OVERRIDE_ENABLE
+#    ifdef AK820_COMPACT_KEY_OVERRIDE
+#        include "ak820_key_override.h"
+#        define reload_key_override ak820_key_override_reload
+#    else
 static void reload_key_override(void);
+#    endif
 #endif
 
 void vial_init(void) {
+#ifdef AK820_QMK_SETTINGS
+    ak820_settings_init();
+#endif
 #ifdef VIAL_TAP_DANCE_ENABLE
     reload_tap_dance();
 #endif
@@ -289,29 +301,45 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
             break;
         }
         case vial_qmk_settings_query: {
-#ifdef QMK_SETTINGS
+#if defined(QMK_SETTINGS) || defined(AK820_QMK_SETTINGS)
             uint16_t qsid_greater_than = msg[2] | (msg[3] << 8);
+#ifdef AK820_QMK_SETTINGS
+            ak820_settings_query(qsid_greater_than, msg, length);
+#else
             qmk_settings_query(qsid_greater_than, msg, length);
+#endif
 #else
             VIAL_FILL_PACKET(msg, 0xFF, length); /* indicate that we don't support any qsid */
 #endif
             break;
         }
-#ifdef QMK_SETTINGS
+#if defined(QMK_SETTINGS) || defined(AK820_QMK_SETTINGS)
         case vial_qmk_settings_get: {
             uint16_t qsid = msg[2] | (msg[3] << 8);
+#ifdef AK820_QMK_SETTINGS
+            msg[0] = ak820_settings_get(qsid, &msg[1], length - 1);
+#else
             msg[0] = qmk_settings_get(qsid, &msg[1], length - 1);
+#endif
 
             break;
         }
         case vial_qmk_settings_set: {
             uint16_t qsid = msg[2] | (msg[3] << 8);
+#ifdef AK820_QMK_SETTINGS
+            msg[0] = ak820_settings_set(qsid, &msg[4], length - 4);
+#else
             msg[0] = qmk_settings_set(qsid, &msg[4], length - 4);
+#endif
 
             break;
         }
         case vial_qmk_settings_reset: {
+#ifdef AK820_QMK_SETTINGS
+            msg[0] = ak820_settings_reset();
+#else
             qmk_settings_reset();
+#endif
             break;
         }
 #endif
@@ -339,10 +367,12 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
                 uint8_t idx = msg[3];
                 vial_tap_dance_entry_t td;
                 memcpy(&td, &msg[4], sizeof(td));
+#ifndef AK820_COMPACT_TAP_DANCE
                 td.on_tap = vial_keycode_firewall(td.on_tap);
                 td.on_hold = vial_keycode_firewall(td.on_hold);
                 td.on_double_tap = vial_keycode_firewall(td.on_double_tap);
                 td.on_tap_hold = vial_keycode_firewall(td.on_tap_hold);
+#endif
                 msg[0] = dynamic_keymap_set_tap_dance(idx, &td);
                 reload_tap_dance();
                 break;
@@ -378,9 +408,11 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
                 uint8_t idx = msg[3];
                 vial_key_override_entry_t entry;
                 memcpy(&entry, &msg[4], sizeof(entry));
+#ifndef AK820_COMPACT_KEY_OVERRIDE
                 entry.replacement = vial_keycode_firewall(entry.replacement);
+#endif
                 msg[0] = dynamic_keymap_set_key_override(idx, &entry);
-                reload_key_override();
+                if (!msg[0]) reload_key_override();
                 break;
             }
 #endif
@@ -443,7 +475,7 @@ void vial_keycode_tap(uint16_t keycode) {
     vial_keycode_up(keycode);
 }
 
-#ifdef VIAL_TAP_DANCE_ENABLE
+#if defined(VIAL_TAP_DANCE_ENABLE) && !defined(AK820_COMPACT_TAP_DANCE)
 #include "process_tap_dance.h"
 
 /* based on ZSA configurator generated code */
@@ -647,12 +679,12 @@ static void reload_combo(void) {
 }
 #endif
 
-#ifdef VIAL_TAP_DANCE_ENABLE
+#if defined(VIAL_TAP_DANCE_ENABLE) && !defined(AK820_COMPACT_TAP_DANCE)
 void process_tap_dance_action_on_dance_finished(tap_dance_action_t *action);
 #endif
 
 bool process_record_vial(uint16_t keycode, keyrecord_t *record) {
-#ifdef VIAL_TAP_DANCE_ENABLE
+#if defined(VIAL_TAP_DANCE_ENABLE) && !defined(AK820_COMPACT_TAP_DANCE)
     /* process releases before tap-dance timeout arrives */
     if (!record->event.pressed && keycode >= QK_TAP_DANCE && keycode <= QK_TAP_DANCE_MAX) {
         uint16_t idx = keycode - QK_TAP_DANCE;
@@ -677,7 +709,7 @@ bool process_record_vial(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-#ifdef VIAL_KEY_OVERRIDE_ENABLE
+#if defined(VIAL_KEY_OVERRIDE_ENABLE) && !defined(AK820_COMPACT_KEY_OVERRIDE)
 __xdata static bool vial_key_override_disabled = 0;
 static key_override_t overrides[VIAL_KEY_OVERRIDE_ENTRIES] = { 0 };
 static key_override_t *override_ptrs[VIAL_KEY_OVERRIDE_ENTRIES + 1] = { 0 };

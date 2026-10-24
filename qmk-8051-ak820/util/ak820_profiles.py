@@ -8,6 +8,7 @@ from __future__ import annotations
 
 FORMAT = 'ak820-build-configuration-1'
 SCHEMA = 0x082002
+EXTENSION_SCHEMA = 0x082003
 # Historical builders retained by the repository and published alpha.2. Their
 # ordinary release checks still verify the actual builder, source and image.
 LEGACY_BUILDERS = frozenset({
@@ -16,6 +17,9 @@ LEGACY_BUILDERS = frozenset({
     '4094ceba4c883b70355fb6fefa8a219cb18a0847bfbcb623c1e5833feaf276db',
 })
 SWITCHES = {
+    'tap-dance': 'AK820_COMPACT_TAP_DANCE',
+    'key-overrides': 'AK820_COMPACT_KEY_OVERRIDE',
+    'qmk-settings': 'AK820_QMK_SETTINGS',
     'mac-pc': 'AK820_MAC_PC',
     'os-indicators': 'AK820_OS_INDICATORS',
     'leader': 'AK820_COMPACT_LEADER',
@@ -29,6 +33,9 @@ SWITCHES = {
     'dynamic-macros': 'AK820_COMPACT_DYNAMIC_MACRO',
 }
 PROFILES = {
+    'full-tap-dance': ('nkro-control', 'one-shot', 'space-cadet', 'tap-dance'),
+    'full-key-overrides': ('nkro-control', 'one-shot', 'space-cadet', 'key-overrides'),
+    'full-qmk-settings': ('nkro-control', 'one-shot', 'space-cadet', 'qmk-settings'),
     'full-mac-pc': ('nkro-control', 'one-shot', 'space-cadet', 'mac-pc'),
     'full-mac-pc-os-indicators': ('nkro-control', 'one-shot', 'space-cadet', 'mac-pc', 'os-indicators'),
     'full-os-indicators': ('nkro-control', 'one-shot', 'space-cadet', 'os-indicators'),
@@ -59,10 +66,7 @@ BASE_FEATURES = (
     'rgb-effects', 'vialrgb-direct-ram',
 )
 DEFERRED = {
-    'qmk-settings': 'Requires a versioned saved extension and typed backup/restore; upstream layout moves Combos.',
-    'tap-dance': 'Dynamic entries, input ownership and complete-image cost are not qualified.',
-    'key-overrides': 'Modifier ownership, Repeat, Caps Word and macro interactions are not qualified.',
-    'magic': 'Other modifier swaps and persistent Magic settings remain deferred; Ctrl/GUI swap is volatile and session-only.',
+    'magic': 'Additional swaps, Caps variants and persistent Magic settings are outside the bounded module contract; Ctrl/GUI and Alt/GUI swaps are session-only.',
 }
 
 
@@ -72,10 +76,11 @@ def configuration(name: str) -> dict:
     enabled = PROFILES[name]
     return {
         'format': FORMAT, 'profile': name, 'optional_features': list(enabled),
-        'base_features': list(BASE_FEATURES), 'nvm_schema': SCHEMA,
+        'base_features': list(BASE_FEATURES),
+        'nvm_schema': EXTENSION_SCHEMA if any(f in enabled for f in ('tap-dance', 'key-overrides', 'qmk-settings')) else SCHEMA,
         'make_options': {switch: 'yes' if feature in enabled else 'no'
                          for feature, switch in SWITCHES.items()},
-        'runtime_qmk_settings': [],
+        'runtime_qmk_settings': ([1, 2, 4, 7, 18, 19] if 'auto-shift' in enabled else [1, 2, 7, 18, 19]) if 'qmk-settings' in enabled else [],
         'timing_ms': {'combo': 40, 'tap_hold': 200,
                       **({'os_indicator_lease': 3000, 'os_indicator_period': 4096}
                          if 'os-indicators' in enabled else {}),

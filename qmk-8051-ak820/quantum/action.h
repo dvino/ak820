@@ -56,6 +56,14 @@ typedef struct {
 #endif
 } keyrecord_t;
 
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* The board's retained event pipeline owns model-large XDATA records.
+ * Pass their actual address space through the internal core calls. */
+#    define AK820_RECORD_MEM __xdata
+#else
+#    define AK820_RECORD_MEM
+#endif
+
 /* Execute action per keyevent */
 void action_exec(keyevent_t event);
 
@@ -73,7 +81,7 @@ uint16_t action_for_key(uint8_t layer, keypos_t key);
 uint16_t action_for_keycode(uint16_t keycode);
 
 /* keyboard-specific key event (pre)processing */
-bool process_record_quantum(keyrecord_t *record);
+bool process_record_quantum(keyrecord_t AK820_RECORD_MEM *record);
 
 /* Utilities for actions.  */
 #if !defined(NO_ACTION_LAYER) && !defined(STRICT_LAYER_RELEASE)
@@ -117,11 +125,11 @@ bool is_swap_hands_on(void);
 void process_hand_swap(keyevent_t *record);
 #endif
 
-void process_record_nocache(keyrecord_t *record);
-void process_record(keyrecord_t *record);
-void process_record_handler(keyrecord_t *record);
-void post_process_record_quantum(keyrecord_t *record);
-void process_action(keyrecord_t *record, action_t action);
+void process_record_nocache(keyrecord_t AK820_RECORD_MEM *record);
+void process_record(keyrecord_t AK820_RECORD_MEM *record);
+void process_record_handler(keyrecord_t AK820_RECORD_MEM *record);
+void post_process_record_quantum(keyrecord_t AK820_RECORD_MEM *record);
+void process_action(keyrecord_t AK820_RECORD_MEM *record, action_t action);
 void register_code(uint8_t code);
 void unregister_code(uint8_t code);
 void tap_code(uint8_t code);

@@ -7,13 +7,44 @@ tapping=importlib.util.module_from_spec(spec);spec.loader.exec_module(tapping)
 linked=tapping.linked
 BASE=0xc700+0x658
 
+def vial_counts(fw):
+    """Use the configured image identity; retain the legacy image contract."""
+    path=fw.build/'configuration-report.json'
+    if not path.exists():
+        return [0,8,0]
+    report=json.loads(path.read_text())
+    if report.get('format')!='ak820-configured-build-1':
+        raise ValueError('Unsupported configured build report')
+    config=report['configuration'];identity=report['identity']
+    canonical=(json.dumps(config,sort_keys=True,indent=2)+'\n').encode()
+    if hashlib.sha256(canonical).hexdigest()!=identity['configuration_sha256']:
+        raise ValueError('Configuration hash differs')
+    for name,key in [('ajazz_ak820_vial.ihx','ihx_sha256'),('ajazz_ak820_vial.map','map_sha256'),('build-report.json','build_report_sha256')]:
+        if hashlib.sha256((fw.build/name).read_bytes()).hexdigest()!=identity[key]:
+            raise ValueError('Configured image identity differs: '+name)
+    if config!=json.loads((fw.build/'build-report.json').read_text())['configuration']:
+        raise ValueError('Configuration differs from compiled build report')
+    options=config['make_options']
+    names=('AK820_COMPACT_TAP_DANCE','AK820_COMPACT_KEY_OVERRIDE')
+    schema=config['nvm_schema']
+    if schema==0x082002:
+        flags=[options.get(name,'no') for name in names]
+        if flags!=['no','no']:raise ValueError('Legacy schema cannot enable optional Vial entries')
+    elif schema==0x082003:
+        if any(name not in options for name in names):raise ValueError('Missing optional Vial feature configuration')
+        flags=[options[name] for name in names]
+    else:raise ValueError('Unsupported configured NVM schema')
+    if any(flag not in ('yes','no') for flag in flags):
+        raise ValueError('Invalid optional Vial feature configuration')
+    return [8 if flags[0]=='yes' else 0,8,8 if flags[1]=='yes' else 0]
+
 def entry(a=4,b=5,out=6,marker=0x0820,version=1):return list(struct.pack('<5H',a,b,marker,version,out))
 def setup(fw,name,out=6,nkro=False):
     t=tapping.Trace(fw,name)
     t.commands += [linked.memory('rom',BASE,entry(out=out))]+fw.call('_ak820_combo_reload')
     for p,c in [((0,0),4),((0,1),5),((0,2),7)]:t.map(p,c)
     if nkro:
-        t.width=32;t.commands=[c.replace(f'{fw.address("_actual_keyboard_report")+7:#x} 16;',f'{fw.address("_actual_keyboard_report")+31:#x} 16;') for c in t.commands]
+        t.width=32;t.commands=[c.replace(f'{t.report_address+7:#x} 16;',f'{t.report_address+31:#x} 16;') for c in t.commands]
         t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1])
     return t
 
@@ -41,8 +72,10 @@ def cases(fw):
                 p=lambda mod=0,*k:report(nkro,mod,*k)
                 t=setup(fw,f'chord-{int(nkro)}-{order[0]}-{release[0]}',nkro=nkro)
                 t.event((0,order[0]),1,100);t.check('pending',[0]*32 if nkro else p());t.event((0,order[1]),1,139);t.check('active',p(0,6))
+                if nkro and t.report_symbol!='_actual_keyboard_report':
+                    t.check_memory('unprojected-owner-report-id','_actual_keyboard_report',0,[0])
                 t.event((0,release[0]),0,140);t.check('first-release',p());t.event((0,release[1]),0,141);t.check('remaining-suppressed',p())
-                tests.append(finish(t,[[0]+p(0,6)[1:],[0]+p()[1:]] if nkro else [p(0,6),p()]))
+                tests.append(finish(t,[p(0,6),p()]))
     for start in (100,65520):
         t=setup(fw,f'timeout-wrap-{start}');t.event((0,0),1,start);t.tick((start+39)&65535);t.check('39-pending',report());t.tick((start+40)&65535);t.check('40-flushed',report(False,0,4));t.event((0,0),0,(start+41)&65535);t.check('released',report());tests.append(finish(t,[report(False,0,4),report()]))
     t=setup(fw,'second-at-40-does-not-match');t.event((0,0),1,100);t.event((0,1),1,140);t.check('first-flushed',report(False,0,4));t.tick(180);t.check('both-ordinary',report(False,0,4,5));t.event((0,0),0,181);t.event((0,1),0,182);t.check('released',report());tests.append(finish(t))
@@ -63,7 +96,7 @@ def cases(fw):
         t.commands+=fw.call('_clear_keyboard');t.tick(200);t.event((0,0),1,201);t.check('blocked-held',report());t.event((0,0),0,202)
         if active:t.event((0,1),0,203)
         t.event((0,0),1,210);t.event((0,1),1,211);t.check('fresh',report(False,0,6));t.event((0,0),0,212);t.event((0,1),0,213);t.check('fresh-release',report());tests.append(finish(t))
-    t=setup(fw,'vial-count-get-marker-bounds');dispatch(t,0,expected=[0,8,0]+[0]*28+[1],label='counts');dispatch(t,3,expected=[0]+entry(marker=0,version=0),label='masked');dispatch(t,3,7,expected=[0]*11,label='last-empty');dispatch(t,3,8,expected=[255]+[0]*10,label='out-of-range');tests.append(finish(t))
+    t=setup(fw,'vial-count-get-marker-bounds');dispatch(t,0,expected=vial_counts(fw)+[0]*28+[1],label='counts');dispatch(t,3,expected=[0]+entry(marker=0,version=0),label='masked');dispatch(t,3,7,expected=[0]*11,label='last-empty');dispatch(t,3,8,expected=[255]+[0]*10,label='out-of-range');tests.append(finish(t))
     t=setup(fw,'vial-invalid-set-keeps-live-table');t.event((0,0),1,100)
     dispatch(t,4,data=entry(a=4,b=4,marker=0,version=0),expected=[255],label='invalid')
     dispatch(t,4,8,entry(marker=0,version=0),expected=[255],label='bounds')

@@ -23,7 +23,13 @@
 /* Repeat and Alternate Repeat use the compact target implementation. */
 #define LAYER_STATE_8BIT
 #define EEPROM_SIZE 0x2800
+#if defined(AK820_COMPACT_TAP_DANCE) || defined(AK820_COMPACT_KEY_OVERRIDE) || defined(AK820_QMK_SETTINGS)
+#define AK820_NVM_BUILD_ID 0x082003
+#else
 #define AK820_NVM_BUILD_ID 0x082002
+#endif
+#define VIAL_TAP_DANCE_ENTRIES 8
+#define VIAL_KEY_OVERRIDE_ENTRIES 8
 #define DYNAMIC_KEYMAP_LAYER_COUNT 6
 #define DYNAMIC_KEYMAP_EEPROM_ADDR 0x0040
 #define DYNAMIC_KEYMAP_MACRO_COUNT 16

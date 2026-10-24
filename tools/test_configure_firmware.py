@@ -17,19 +17,23 @@ import configure_firmware as config
 
 
 class ProfileTests(unittest.TestCase):
-    def test_included_c_fixture_is_part_of_source_snapshot(self):
+    def test_included_fixtures_and_tool_dependencies_are_part_of_source_snapshot(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            name = 'qmk-8051-ak820/tests/fixture/host_tests.inc'
-            path = root / name
-            path.parent.mkdir(parents=True)
-            path.write_text('original fixture')
-            with patch.object(config, 'ROOT', root), patch.object(config.subprocess, 'check_output',
-                    return_value=name.encode() + b'\0'):
-                before = config.test_source_snapshot()
-                self.assertEqual(before, {name: config.sha(path)})
-                path.write_text('changed fixture')
-                self.assertNotEqual(config.test_source_snapshot(), before)
+            for name in ('qmk-8051-ak820/tests/fixture/host_tests.inc',
+                         'tests/test_compact_key_overrides.py',
+                         'qmk-8051-ak820/util/test_ak820_settings.c',
+                         'qmk-8051-ak820/util/ak820_extension_settings.py'):
+                with self.subTest(name=name):
+                    path = root / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text('original fixture')
+                    with patch.object(config, 'ROOT', root), patch.object(config.subprocess, 'check_output',
+                            return_value=name.encode() + b'\0'):
+                        before = config.test_source_snapshot()
+                        self.assertEqual(before, {name: config.sha(path)})
+                        path.write_text('changed fixture')
+                        self.assertNotEqual(config.test_source_snapshot(), before)
 
     def test_runtime_proof_cannot_survive_later_checker_edits_or_grant_release_approval(self):
         result = {'identity': {'ihx_sha256': 'image'}, 'resources': {'internal_ram': {}},
@@ -66,7 +70,7 @@ class ProfileTests(unittest.TestCase):
             plan = config.profile_test_plan(name, Path('/build'), Path('/toolchain'))
             identifiers = [identifier for identifier, _, _ in plan]
             self.assertEqual(len(identifiers), len(set(identifiers)))
-            for feature, prefix in (('dynamic-macros', 'dynamic-macro'), ('gui-lock', 'gui-lock'), ('leader', 'leader'), ('os-indicators', 'os-indicators'), ('mac-pc', 'mac-pc')):
+            for feature, prefix in (('tap-dance', 'tap-dance'), ('key-overrides', 'key-overrides'), ('qmk-settings', 'qmk-settings'), ('dynamic-macros', 'dynamic-macro'), ('gui-lock', 'gui-lock'), ('leader', 'leader'), ('os-indicators', 'os-indicators'), ('mac-pc', 'mac-pc')):
                 for suffix in ('host', 'linked'):
                     self.assertEqual(prefix + '-' + suffix in identifiers, feature in features)
             for suffix in ('host', 'flags', 'linked'):
