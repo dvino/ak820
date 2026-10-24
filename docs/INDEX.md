@@ -18,6 +18,7 @@ difference.
 | Use One Shot, Space Cadet and NKRO controls | [Configuration](CONFIGURATION.md) |
 | Use GUI lock and volatile Ctrl/GUI swap controls | [GUI controls](GUI-CONTROL.md) |
 | Record and play compact Dynamic Macros | [Dynamic Macros](COMPACT-DYNAMIC-MACROS.md) |
+| Select a Vial macro with a Leader prefix | [Compact Leader](COMPACT-LEADER.md) |
 | Understand Caps Lock and layer indicators | [C and W indicators](INDICATORS.md) |
 | Build firmware with the pinned toolchain | [Build](BUILD.md) |
 | Build a development profile and check its limits | [Build profiles](BUILD-PROFILES.md) |

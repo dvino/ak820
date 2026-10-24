@@ -18,6 +18,7 @@ English source of truth: [Documentation](../INDEX.md).
 | Использовать One Shot, Space Cadet и управление NKRO | [Настройка](CONFIGURATION.md) |
 | Управлять блокировкой и перестановкой клавиш Win/GUI | [Клавиши Win/GUI](GUI-CONTROL.md) |
 | Записывать и воспроизводить компактные динамические макросы | [Динамические макросы](COMPACT-DYNAMIC-MACROS.md) |
+| Запускать макрос Vial через клавишу-префикс | [Компактный Leader](COMPACT-LEADER.md) |
 | Индикаторы Caps Lock и слоя | [Индикаторы C и W](INDICATORS.md) |
 | Сборка закреплённым инструментарием | [Сборка](BUILD.md) |
 | Тестовые профили сборки и их ограничения | [Профили сборки](BUILD-PROFILES.md) |

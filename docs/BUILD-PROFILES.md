@@ -2,12 +2,12 @@
 
 # Build profiles
 
-The configurator lists seventeen named development profiles and supports
-nineteen qualified development variants: the 17 profiles plus `full` and
+The configurator lists eighteen named development profiles. The qualification
+plan covers twenty variants: the 18 profiles plus `full` and
 `full-mouse-auto-shift` built with the optional `--short-calls` setting.
 The `full`
 feature set matches published alpha.3. Other profiles add compact Mouse Keys,
-Auto Shift, GUI controls, Ctrl/GUI swap or Dynamic Macros in supported
+Auto Shift, GUI controls, Ctrl/GUI swap, Dynamic Macros or Leader in supported
 combinations. These profiles are for development, not release or flashing.
 They have not inherited alpha.3's image qualification or hardware evidence.
 Every profile build proves stack and
@@ -104,6 +104,7 @@ choices.
 | `nkro-space-cadet` | `nkro-control`, `space-cadet` |
 | `one-shot-space-cadet` | `one-shot`, `space-cadet` |
 | `full` | `nkro-control`, `one-shot`, `space-cadet` |
+| `full-leader` | `nkro-control`, `one-shot`, `space-cadet`, compact Leader |
 | `full-mouse` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys |
 | `full-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Auto Shift |
 | `full-mouse-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys and Auto Shift |
@@ -113,6 +114,11 @@ choices.
 | `full-dynamic-macro-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Dynamic Macros and GUI controls |
 | `full-mouse-auto-shift-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys, Auto Shift and GUI controls |
 | `full-auto-shift-dynamic-macro` | `nkro-control`, `one-shot`, `space-cadet`, compact Auto Shift and Dynamic Macros |
+
+`full-leader` selects an existing Vial macro with a physical `QK_LEAD` prefix
+and one basic selector within 300 ms. `1`–`9`, `0`, `A`–`F` map to slots
+0–15. Macro contents remain editable in Vial. Encoder and virtual prefixes,
+longer sequences and a configurable dictionary are absent. See [Leader](COMPACT-LEADER.md).
 
 `full-ctrl-gui` adds `CG_SWAP`, `CG_NORM` and `CG_TOGG`. They swap both left
 and right Ctrl/GUI output mappings and reset on reboot. Mapping happens before
@@ -148,9 +154,9 @@ changed source profiles. See the current [runtime stack report](../audits/rc6/ru
 
 ## Deferred feature inventory
 
-Six of the 11 original candidates have bounded development implementations:
-NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift and Dynamic Macros.
-Magic is partly implemented through GUI controls. The five entries below
+Seven of the 11 original candidates have bounded development implementations:
+NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift, Dynamic Macros and Leader.
+Magic is partly implemented through GUI controls. The four entries below
 contain remaining work. The `full` profile selects NKRO control, One Shot and
 Space Cadet; a Vial control alone does not establish firmware support.
 
@@ -160,7 +166,6 @@ Space Cadet; a Vial control alone does not establish firmware support.
 | Key Overrides | Upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
 | Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; other modifier swaps, including Alt/Caps variants, and persistent settings remain open. |
-| Leader | Bound sequence length, timeout and supported outputs. |
 
 Console and Command remain disabled. Fault injection is a test facility, not a
 selectable firmware feature. Existing FD00/FD01 diagnosis is read-only. The

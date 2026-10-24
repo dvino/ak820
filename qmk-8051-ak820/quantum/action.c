@@ -33,6 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "debug.h"
 #include "quantum.h"
+#ifdef AK820_COMPACT_LEADER
+#    include "ak820_leader.h"
+#endif
 #ifdef AK820_COMPACT_DYNAMIC_MACRO
 #    include "ak820_dynamic_macro.h"
 #endif
@@ -178,6 +181,11 @@ if (QS_oneshot_timeout > 0) {
         dprintln();
     }
 #endif
+#endif
+#ifdef AK820_COMPACT_LEADER
+    /* Only idle ticks dispatch macros, after every use of event/record.
+     * Extended macros re-enter action_exec and overwrite SDCC static locals. */
+    if (IS_NOEVENT(event)) ak820_leader_task(event.time);
 #endif
 }
 
@@ -1161,6 +1169,9 @@ void clear_keyboard_but_mods(void) {
 void clear_keyboard_but_mods_and_keys(void) {
 #ifdef AK820_COMPACT_TAPPING
     ak820_tapping_cancel();
+#ifdef AK820_COMPACT_LEADER
+    ak820_leader_cancel();
+#endif
 #ifdef AK820_COMPACT_DYNAMIC_MACRO
     ak820_dynamic_macro_cancel();
 #endif

@@ -16,6 +16,7 @@ LEGACY_BUILDERS = frozenset({
     '4094ceba4c883b70355fb6fefa8a219cb18a0847bfbcb623c1e5833feaf276db',
 })
 SWITCHES = {
+    'leader': 'AK820_COMPACT_LEADER',
     'nkro-control': 'AK820_NKRO_CONTROL',
     'one-shot': 'AK820_COMPACT_ONESHOT',
     'space-cadet': 'AK820_COMPACT_SPACE_CADET',
@@ -26,6 +27,7 @@ SWITCHES = {
     'dynamic-macros': 'AK820_COMPACT_DYNAMIC_MACRO',
 }
 PROFILES = {
+    'full-leader': ('nkro-control', 'one-shot', 'space-cadet', 'leader'),
     'standard': (),
     'nkro': ('nkro-control',),
     'one-shot': ('one-shot',),
@@ -56,7 +58,6 @@ DEFERRED = {
     'tap-dance': 'Dynamic entries, input ownership and complete-image cost are not qualified.',
     'key-overrides': 'Modifier ownership, Repeat, Caps Word and macro interactions are not qualified.',
     'magic': 'Other modifier swaps and persistent Magic settings remain deferred; Ctrl/GUI swap is volatile and session-only.',
-    'leader': 'Sequence length, timeout and supported output actions are not qualified.',
 }
 
 
@@ -71,6 +72,7 @@ def configuration(name: str) -> dict:
                          for feature, switch in SWITCHES.items()},
         'runtime_qmk_settings': [],
         'timing_ms': {'combo': 40, 'tap_hold': 200,
+                      **({'leader': 300} if 'leader' in enabled else {}),
                       **({'mouse_cursor': 20, 'mouse_wheel': 80} if 'mouse-keys' in enabled else {}),
                       **({'auto_shift': 175} if 'auto-shift' in enabled else {}),
                       **({'dynamic_macro_phase': 10} if 'dynamic-macros' in enabled else {})},

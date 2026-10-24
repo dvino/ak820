@@ -16,6 +16,9 @@
  */
 
 #include "quantum.h"
+#ifdef AK820_COMPACT_LEADER
+#    include "ak820_leader.h"
+#endif
 #ifdef AK820_COMPACT_COMBO
 #    include "ak820_combo.h"
 #endif
@@ -323,6 +326,14 @@ bool pre_process_record_quantum(keyrecord_t *record_argument) {
     uint16_t keycode = get_record_keycode(record, true);
 #ifdef AK820_COMPACT_TAPPING
     record->keycode = keycode;
+#endif
+#ifdef AK820_COMPACT_LEADER
+#    ifdef AK820_COMPACT_COMBO
+    /* Resolve earlier buffered typing before admitting a Leader prefix. */
+    if (keycode == QK_LEAD && record->event.pressed && record->event.key.row < MATRIX_ROWS && record->event.key.col < MATRIX_COLS)
+        ak820_combo_tick(record->event.time + 40);
+#    endif
+    if (!ak820_leader_process((keyrecord_t AK820_STATE_MEM *)record)) return false;
 #endif
     return pre_process_record_kb(keycode, record) &&
 #ifdef AK820_COMPACT_COMBO

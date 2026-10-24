@@ -32,7 +32,7 @@ from ak820_runtime_safety import combine as combine_runtime_safety
 
 FORMAT = 'ak820-configured-build-1'
 WINDOWS = ((0x28a0, 0x3000), (0x3027, 0xc700))
-SYMBOLS = {'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
+SYMBOLS = {'leader': '_ak820_leader_process', 'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
            'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process',
            'dynamic-macros': '_ak820_dynamic_macro_process', 'gui-lock': '_ak820_gui_process'}
 STATIC_BITS = {'ctrl-gui-swap': '_ctrl_gui_swapped'}
@@ -520,6 +520,12 @@ def profile_test_plan(name, build, toolchain):
         plan.append(('auto-shift-linked', QMK, [sys.executable, 'tests/ak820_autoshift/linked.py',
                     '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
                     '--output-dir', str(output / 'auto-shift')]))
+    if 'leader' in selected['optional_features']:
+        plan.append(('leader-host', QMK, [sys.executable, 'tests/ak820_leader/host.py',
+                    '--output', str(output / 'leader-host.json')]))
+        plan.append(('leader-linked', QMK, [sys.executable, 'tests/ak820_leader/linked.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin' / 's51'),
+                    '--output-dir', str(output / 'leader')]))
     if 'dynamic-macros' in selected['optional_features']:
         plan.append(('dynamic-macro-host', QMK, [sys.executable, 'tests/ak820_dynamic_macro/host.py',
                     '--output', str(output / 'dynamic-macro-host.json')]))

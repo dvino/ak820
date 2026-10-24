@@ -46,6 +46,14 @@ not access a device; installation results are recorded separately.
 
 ## Current development source
 
+The `full-leader` development profile adds compact [Leader](COMPACT-LEADER.md):
+a physical `QK_LEAD` prefix followed by one selector within 300 ms runs one of
+the 16 existing Vial macros. The selector and prefix are consumed; macro
+contents remain editable in Vial. The keymap, macro and Combo storage layout
+is unchanged. The configurator now lists 18 profiles and a 20-variant
+qualification plan. The combined-source matrix is being regenerated; the
+older results below qualify only their stated frozen source.
+
 The development follow-up narrows keyboard report helper arguments to their
 actual XDATA memory space. The measured `full` candidate saves 34 CODE bytes
 and seven XRAM bytes with the same 160/166 stack bound. Short-call builds also

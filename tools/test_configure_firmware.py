@@ -52,7 +52,7 @@ class ProfileTests(unittest.TestCase):
             plan = config.profile_test_plan(name, Path('/build'), Path('/toolchain'))
             identifiers = [identifier for identifier, _, _ in plan]
             self.assertEqual(len(identifiers), len(set(identifiers)))
-            for feature, prefix in (('dynamic-macros', 'dynamic-macro'), ('gui-lock', 'gui-lock')):
+            for feature, prefix in (('dynamic-macros', 'dynamic-macro'), ('gui-lock', 'gui-lock'), ('leader', 'leader')):
                 for suffix in ('host', 'linked'):
                     self.assertEqual(prefix + '-' + suffix in identifiers, feature in features)
             for suffix in ('host', 'flags', 'linked'):

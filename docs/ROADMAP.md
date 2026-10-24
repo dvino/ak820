@@ -4,8 +4,8 @@
 
 NKRO control, modifier One Shot and Space Cadet are available in the `full`
 profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps and
-Dynamic Macros in supported combinations. The configurator
-provides seventeen named profiles and nineteen qualified development variants: the named
+Dynamic Macros and Leader in supported combinations. The configurator
+provides eighteen named profiles; the qualification plan covers twenty variants: the named
 profiles plus `full` and `full-mouse-auto-shift` with `--short-calls`. These profiles are source development builds; they do not inherit the published alpha.3 qualification.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
 The published and installed alpha.3 image is the exact full image described in
@@ -16,7 +16,7 @@ changes, are development work and are not approved for packaging or installation
 
 The initial inventory contains 11 candidates. Bounded implementations now
 cover NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift, GUI lock and
-Dynamic Macros. A Vial control or keycode alone does not show that a feature is
+Dynamic Macros and Leader. A Vial control or keycode alone does not show that a feature is
 enabled.
 
 | Candidate | Open work |
@@ -25,7 +25,6 @@ enabled.
 | Key Overrides | The upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
 | Other Magic changes | Ctrl/GUI swap is available in `full-ctrl-gui`; other modifier swaps, including Alt/Caps variants, and persistent settings remain open. |
-| Leader | Bound sequence length, timeout and supported outputs. |
 
 The available implementations are intentionally limited. NKRO control
 adds only `NK_ON`, `NK_OFF` and `NK_TOGG`; One Shot handles modifier combinations
@@ -35,6 +34,9 @@ for exact behavior and tested interactions.
 GUI lock controls are described in [GUI controls](GUI-CONTROL.md). Compact
 Dynamic Macros provide two volatile slots of 16 completed taps; see the
 [user guide](COMPACT-DYNAMIC-MACROS.md) for exclusions and playback behavior.
+Compact [Leader](COMPACT-LEADER.md) selects one of the 16 existing Vial macros
+with `QK_LEAD` followed by a single selector within 300 ms. Longer sequences
+and a configurable sequence dictionary are not implemented.
 
 ## Runtime settings and saved data
 
@@ -83,7 +85,7 @@ backup and migration plan.
 ## Later releases
 
 The alpha.3 release is published and installed. Compact Mouse Keys, Auto Shift, GUI controls, volatile Ctrl/GUI swaps and
-Dynamic Macros are available in development source profiles only. Changed
+Dynamic Macros and Leader are available in development source profiles only. Changed
 profiles have no release qualification. Any later release needs a fresh exact-image
 review, platform builds, package acceptance and separate device authorization.
 See [Status](STATUS.md) for the published image and current development source.
