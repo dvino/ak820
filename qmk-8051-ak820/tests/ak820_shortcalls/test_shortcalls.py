@@ -32,6 +32,49 @@ def fixture():
 
 
 class ShortCallTests(unittest.TestCase):
+    def test_recreated_empty_listing_directories_are_safe(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source, target = root / 'source', root / 'target'
+            (source / 'quantum').mkdir(parents=True)
+            (source / 'quantum/test.asm').write_text('_test:\n\tret\n')
+            (source / 'quantum/test.rst').write_text('stale listing')
+            (source / 'reachability.json').write_text('{}\n')
+            (target / 'quantum/empty').mkdir(parents=True)
+            short.write_tree(source, target, [])
+            self.assertEqual((target / 'quantum/test.asm').read_bytes(),
+                             (source / 'quantum/test.asm').read_bytes())
+            self.assertEqual((target / 'reachability.json').read_text(), '{}\n')
+            self.assertFalse((target / 'quantum/test.rst').exists())
+
+    def test_existing_outputs_and_links_are_rejected_without_changes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source, target = root / 'source', root / 'target'
+            source.mkdir()
+            (source / 'test.asm').write_text('_test:\n\tret\n')
+            target.mkdir()
+            stale = target / 'stale.rst'
+            stale.write_text('keep this')
+            with self.assertRaisesRegex(ValueError, 'already exists'):
+                short.write_tree(source, target, [])
+            self.assertEqual(stale.read_text(), 'keep this')
+            self.assertFalse((target / 'test.asm').exists())
+            stale.unlink()
+            stale.symlink_to(root / 'absent')
+            with self.assertRaisesRegex(ValueError, 'already exists'):
+                short.write_tree(source, target, [])
+            self.assertTrue(stale.is_symlink())
+            linked = root / 'linked'
+            linked.symlink_to(target, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, 'already exists'):
+                short.write_tree(source, linked, [])
+            regular = root / 'regular'
+            regular.write_text('keep this too')
+            with self.assertRaisesRegex(ValueError, 'already exists'):
+                short.write_tree(source, regular, [])
+            self.assertEqual(regular.read_text(), 'keep this too')
+
     def test_pc_plus_two_page_edge_for_both_kinds(self):
         for kind in ('lcall','ljmp'):
             self.assertTrue(short.short_valid(0x7fe,encoding(0x800,kind),0x800,kind))

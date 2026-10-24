@@ -345,20 +345,29 @@ static inline uint16_t KEYCODE2CONSUMER(uint8_t key) {
 }
 #endif
 
-uint8_t has_anykey(report_keyboard_t* keyboard_report);
-uint8_t get_first_key(report_keyboard_t* keyboard_report);
-bool    is_key_pressed(report_keyboard_t* keyboard_report, uint8_t key);
-
-void add_key_byte(report_keyboard_t* keyboard_report, uint8_t code);
-void del_key_byte(report_keyboard_t* keyboard_report, uint8_t code);
-#ifdef NKRO_ENABLE
-void add_key_bit(report_keyboard_t* keyboard_report, uint8_t code);
-void del_key_bit(report_keyboard_t* keyboard_report, uint8_t code);
+/* AK820 retains only XDATA keyboard reports. Matching declarations keep
+ * SDCC's memory-space tag out of the report helper call ABI. Other targets
+ * and host regression builds retain their existing pointer type. */
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+#    define AK820_REPORT_MEM __xdata
+#else
+#    define AK820_REPORT_MEM
 #endif
 
-void add_key_to_report(report_keyboard_t* keyboard_report, uint8_t key);
-void del_key_from_report(report_keyboard_t* keyboard_report, uint8_t key);
-void clear_keys_from_report(report_keyboard_t* keyboard_report);
+uint8_t has_anykey(report_keyboard_t AK820_REPORT_MEM* keyboard_report);
+uint8_t get_first_key(report_keyboard_t AK820_REPORT_MEM* keyboard_report);
+bool    is_key_pressed(report_keyboard_t AK820_REPORT_MEM* keyboard_report, uint8_t key);
+
+void add_key_byte(report_keyboard_t AK820_REPORT_MEM* keyboard_report, uint8_t code);
+void del_key_byte(report_keyboard_t AK820_REPORT_MEM* keyboard_report, uint8_t code);
+#ifdef NKRO_ENABLE
+void add_key_bit(report_keyboard_t AK820_REPORT_MEM* keyboard_report, uint8_t code);
+void del_key_bit(report_keyboard_t AK820_REPORT_MEM* keyboard_report, uint8_t code);
+#endif
+
+void add_key_to_report(report_keyboard_t AK820_REPORT_MEM* keyboard_report, uint8_t key);
+void del_key_from_report(report_keyboard_t AK820_REPORT_MEM* keyboard_report, uint8_t key);
+void clear_keys_from_report(report_keyboard_t AK820_REPORT_MEM* keyboard_report);
 
 #ifdef MOUSE_ENABLE
 bool has_mouse_report_changed(report_mouse_t* new_report, report_mouse_t* old_report);

@@ -1,0 +1,783 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 52.349,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/00.txt",
+      "log_sha256": "2085901cdd9520aba9e3ad5ae7d31e579fe4630cccd0672d9fbff8c16173fe42",
+      "unit_tests": {
+        "run": 135,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.143,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/01.txt",
+      "log_sha256": "8ffa5975dbde749685ff98587bd42d81c65a4fbb8cdb7823318908026d6cecb9",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.122,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/02.txt",
+      "log_sha256": "34158e5f56b4c358f5e9a2126a13611fd073b21b8830b820ce0186e2d2740a6b",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.169,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/03.txt",
+      "log_sha256": "3e8357f2186bdd230050a0c605287cd9c997071ccf517dee8154f5426eff14c9",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.302,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/04.txt",
+      "log_sha256": "432864d6fe94b2397c3d7d3878056a09524272d4a7a23b7d909ed57d7a666e37",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.069,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/05.txt",
+      "log_sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.666,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/06.txt",
+      "log_sha256": "3423008d9ab40a9dab594c6d08ce8d5ce10ec9ff0f3af15e155a1076ed44b991",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/07.txt",
+      "log_sha256": "21c7e48d0b1ec908feef784bbce1fa55f2c9a7acf76382fa7578754a78bd1ed8",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.036,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/08.txt",
+      "log_sha256": "3bcb97840364ac8492a6b458766b4ce23a1da28b7737863d56334ea5d1ee07d4",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.635,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.564,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.377,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.202,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/12.txt",
+      "log_sha256": "2ae1a06370222cfd4042b160f898fc26384944e4c8cc32ccb18fc13d4ad25459",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.289,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.899,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.615,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.08,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.266,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.409,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/18.txt",
+      "log_sha256": "5e6957a1eea658cb39448866736856adb87367db802d33ecde9ecace9920cbfd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 12.899,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/19.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.74,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/20.txt",
+      "log_sha256": "792142426ebdfbaaaaa0bbee2c8d49dae7d6cb7baadb174ff2e6c0bfe6c563d2",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 1.138,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/21.txt",
+      "log_sha256": "f3ddaf56fc6cb92b990bf327e11f89d840b93c0df15faef0ee215fb1f369639b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.835,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/22.txt",
+      "log_sha256": "39c760e22a783db9ac214889ae752cb76cc27eb95f3fc387a33e9746faa7e5a9",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.913,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.457,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/24.txt",
+      "log_sha256": "59ae157a2fff53e9c6ab40d53f32410177ab2313395c0ea6ce56f417263863b9",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 0.99,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/25.txt",
+      "log_sha256": "72722a71516443e9fda4441e833f12539c20614ce31d347acd177aaeedd369ec",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 5.789,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/26.txt",
+      "log_sha256": "26e5f24a8fe9b4a33cb12c084c1c4d955cfcc36df1bcd1991b7f87e3afca09f6",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820",
+      "command": [
+        "/workspace/scratch/1875e97a7527/source/ak820/qmk-8051-ak820/.venv/bin/python",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs",
+        "--s51",
+        "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 1.834,
+      "log": "/workspace/scratch/1875e97a7527/buildfix-ak820/qmk-8051-ak820/.build/shortcalls-emptydirs/qualification-logs-nw7rffpc/27.txt",
+      "log_sha256": "601755d7312634184bd781b42ca2938d0754eba902702d1cb53dfbc61395d45d",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      },
+      "build_after": {
+        "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+        "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/1875e97a7527/source/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 273,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "de8fa10d00cf2844fca89846639ddd1745f95b7542b957c1520c9fa99f6e7233",
+    "map": "c840f7d0c84ff3a0f9d8b8e358e177601557e6975ca6fb97e7f993d6cc45a9b6"
+  },
+  "build_unchanged": true
+}

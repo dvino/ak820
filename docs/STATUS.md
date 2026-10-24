@@ -46,6 +46,14 @@ not access a device; installation results are recorded separately.
 
 ## Current development source
 
+The development follow-up narrows keyboard report helper arguments to their
+actual XDATA memory space. The measured `full` candidate saves 34 CODE bytes
+and seven XRAM bytes with the same 160/166 stack bound. Short-call builds also
+accept empty listing directories recreated by the diagnostic linker; the
+reproduced tight-profile IHX is unchanged. Measurements, rejected experiments
+and independent review are in the [optimization report](../audits/rc6/leader-next-20261024/optimization.md).
+The earlier matrix below describes its frozen source, not this follow-up.
+
 All **17 named profiles and 19 build variants** pass from clean frozen source
 `39b6e22`. Every image closes foreground, startup and all three interrupt paths
 before its regression suites. Each passes 28 base suites and 273 base unit

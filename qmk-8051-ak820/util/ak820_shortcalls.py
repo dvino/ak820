@@ -252,7 +252,12 @@ def rewrite(original, candidate):
 
 def write_tree(source, target, candidates):
     """Always derive trials from the immutable input; copy no stale listings."""
-    if target.exists():
+    # ASlink may recreate the original listing directories after their tree
+    # was renamed to the immutable preimage. Empty directories contain no
+    # build input. Reject every file, link or special object as before.
+    if target.is_symlink() or (target.exists() and (
+            not target.is_dir() or any(path.is_symlink() or not path.is_dir()
+                                      for path in target.rglob('*')))):
         raise ValueError('Short-call output already exists: ' + str(target))
     for path in sorted(source.rglob('*')):
         if path.is_file() and path.suffix in ('.asm', '.json'):
