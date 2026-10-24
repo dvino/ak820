@@ -1,0 +1,51 @@
+{
+  "format": "ak820-github-alpha-asset-check-2",
+  "tag": "v0.6.0-alpha.2",
+  "source_commit": "4772c433057bde5c9ccc4f2f3f904f1dcb326c17",
+  "assets": {
+    "firmware-bundle.zip": "2d60d9c29aaabd17bc714c3dff1799f5e114f0d9d426c0608924fa1e4f6ec7a1",
+    "AK820-Windows.zip": "a639e70ba5c17158f0602c6d0d51cac0f27477b9ac0fe9b3380e0cfbcf4b280c",
+    "AK820-Linux-x86_64.tar.gz": "3172fe11523ce09fb9a6c0c8ee2064394b1dec7049dd6e68c6e137d411e9feed"
+  },
+  "release_notes_match": true,
+  "application_ihx_sha256": "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f",
+  "manifest_sha256": "ed4f347ce4af7b421c76a2f8c7e83c6d9e1e8f075dc10c4e8f81f51b2e7d908a",
+  "qualification": {
+    "suites": 28,
+    "unit_tests": 270,
+    "skipped": 0
+  },
+  "packages": {
+    "windows": {
+      "approved_inputs_per_app": 36,
+      "platform": {
+        "system": "Windows",
+        "python": "3.12.10",
+        "pyinstaller": "6.16.0"
+      },
+      "checks": {
+        "cli_help": "passed",
+        "offline_verify": "passed",
+        "native_tk_ui_smoke": "passed"
+      }
+    },
+    "linux": {
+      "approved_inputs_per_app": 36,
+      "platform": {
+        "system": "Linux",
+        "architecture": "x86_64",
+        "glibc_baseline": "2.35",
+        "python": "3.12.15",
+        "pyinstaller": "6.16.0"
+      },
+      "checks": {
+        "cli_help": "passed",
+        "offline_verify": "passed",
+        "native_tk_ui_smoke_xvfb": "passed",
+        "frozen_hidraw_import": "passed"
+      }
+    }
+  },
+  "physical_device_commands": 0,
+  "hardware_validated": false
+}
