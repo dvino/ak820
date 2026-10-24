@@ -41,3 +41,11 @@ The retention tool was independently inspected for source/commit binding,
 complete artifact manifests, unchanged report bytes, combined runtime checks,
 base/profile log verification and honest preservation of source metadata.
 Portable verification checks retained evidence and does not rerun CPU tests.
+
+A follow-up full-regression finding was confined to the core Repeat host
+fixture: its hand-written record preamble also needed the empty host pointer
+qualifier. Independent inspection accepted the two-line boundary change.
+All five ordinary UBSan groups pass (234,881,024 bounded input combinations).
+No firmware input or runtime-proof source changed; runtime-only images remain
+bound to `ac48c65`, while full qualification uses the fixture follow-up commit.
+The initially failed supplemental logs remain in the complete Tap Dance build.

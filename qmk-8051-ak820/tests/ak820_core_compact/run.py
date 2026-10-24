@@ -41,6 +41,8 @@ def main():
 #define AK820_BOARD
 typedef struct { uint8_t col, row; } keypos_t;
 typedef struct { struct { bool pressed; } event; } keyrecord_t;
+/* Host pointers have no SDCC address-space qualifier; action.h is stubbed here. */
+#define AK820_RECORD_MEM
 static uint32_t calls, trace;
 '''
     position = function(keymap, 'ak820_keycode_at')
