@@ -10,6 +10,9 @@ for package selection, checksums and launch commands.
 
 ## Source and built image
 
+Archive `129c1c8..bcc337d` was accepted for offline development; see the
+[acceptance review](../audits/rc6/configurable-20261024/intake-review.md).
+
 The development branch now has `standard`, `nkro` and `one-shot` configurable
 development profiles. Their commands, behavior and limits are in
 [Build profiles](BUILD-PROFILES.md). The profile builds run offline regression
