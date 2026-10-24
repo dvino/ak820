@@ -41,16 +41,17 @@ GUI startup checks do not establish manual interaction or display scaling.
 
 ## Installed firmware
 
-Read-only checks through the downloaded Linux installer confirmed that
-`v0.6.0-alpha.1` remains installed. A new private backup verified 498 key
-assignments, 12 encoder assignments, 16 macro slots and saved RGB settings.
-The [preflash report](../audits/rc6/alpha2-release-20261024/read-only-preflash.json)
-records the exact source image and an accepted offline restore plan into
-alpha.2 defaults. No setting write or firmware flash was performed for alpha.2.
-A new backup and fresh physical confirmation are still required during update.
+`v0.6.0-alpha.2` is installed from the downloaded Linux release installer.
+One flash and one restart completed without an error. Exact CODE and the full
+application manifest matched the target after restart. Settings restoration
+passed after a separate fresh physical confirmation. A final read-only backup
+verified 498 key assignments, 12 encoder assignments, 16 macro slots, eight
+saved RGB bytes and eight empty Combo getters. Two typed setters restored the
+differences; this is not a write test of every assignment or macro slot.
 
-Physical Combo timing, alpha.2 typing and encoder behavior, manual Windows/Linux
-GUI use, cold-start retention and power-loss behavior remain untested. The
-[earlier alpha.1 installation report](../audits/rc6/alpha-release-20261024/device-result.json)
-records its restart/open failure and the separately verified settings restore.
-It is evidence about alpha.1, not a new installation result.
+The [installation report](../audits/rc6/alpha2-release-20261024/device-result.json)
+binds the source, installed image and private backup hashes. Settings and OEM
+recovery files remain private. General operation was reported as apparently
+working; individual physical key, encoder and Combo cases were not separately
+confirmed. Power-cycle retention, power-loss behavior, nonempty Combo writes
+and manual Windows/Linux GUI acceptance remain untested.
