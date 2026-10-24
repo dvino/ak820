@@ -2,15 +2,19 @@
 
 # Project status
 
-Updated 2026-10-24. The published and installed release is still
-[v0.6.0-alpha.2](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.2).
-Its Windows and Linux x86_64 packages are described in [Install](INSTALL.md).
-Alpha.3 is being prepared from the `full` profile; publication and native
-installer acceptance are pending.
+Updated 2026-10-24. [v0.6.0-alpha.3](https://github.com/dvino/ak820/releases/tag/v0.6.0-alpha.3)
+is published and installed. The release contains standalone Windows and Linux
+x86_64 installers, SHA256 files, the firmware bundle and separate English and
+Russian installation instructions. All three [native CI jobs](https://github.com/dvino/ak820/actions/runs/40076916540)
+passed for source `b17d7c8`. Downloaded public packages pass checksum, exact-image,
+GUI/CLI input and offline CLI verification; see the [publication record](../audits/rc6/alpha3-release-20261024/publication.json)
+and [asset checks](../audits/rc6/alpha3-release-20261024/published-assets-check.json).
+The duplicate tag run was cancelled after publication from that successful main
+run; it was not a failed firmware or installer test.
 
 ## Alpha.3 source and image
 
-The full candidate includes NKRO control, modifier One Shot and compact Space
+The full image includes NKRO control, modifier One Shot and compact Space
 Cadet alongside the base functions. Its IHX SHA256 is
 `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`.
 It uses 40,043 CODE bytes, 2,631 XRAM bytes and 162 bytes of allocated stack.
@@ -36,8 +40,7 @@ Detailed source hashes, review closure, initial fixture failure and remaining
 model limits are in the qualification report.
 
 Only this exact full image satisfies the new packaging gate, independent program
-policy and fresh packing receipt. Native CI and downloaded-package acceptance
-remain before publication.
+policy and fresh packing receipt. Native CI and downloaded-package acceptance have passed.
 The other seven profiles remain development builds. The earlier eight-profile
 matrix from source `81cfc96` is [dated evidence](../audits/rc6/roadmap-max-20261024/final/README.md),
 not qualification of those profiles after the alpha.3 changes.
@@ -49,17 +52,19 @@ preparation.
 
 ## Installed firmware
 
-`v0.6.0-alpha.2` is installed from the downloaded Linux release installer.
-One flash and one restart completed without an error. Exact CODE and the full
-application manifest matched the target after restart. Settings restoration
-passed after a separate fresh physical confirmation. A final read-only backup
-verified 498 key assignments, 12 encoder assignments, 16 macro slots, eight
-saved RGB bytes and eight empty Combo getters. Two typed setters restored the
-differences; this is not a write test of every assignment or macro slot.
+Alpha.3 was installed with the CLI from the downloaded published Linux archive.
+One loader transition, one flash and one restart completed successfully. Exact
+CODE and the full application manifest matched the released target after restart.
+A second fresh physical confirmation authorized restoring settings. Restoration
+verified 498 keys, 12 encoder assignments, 16 macro slots, eight saved RGB bytes
+and the eight Combo slots; ten typed setters were used. Full durable NVM readback
+passed. Typing was reported working after the update.
 
-The [installation report](../audits/rc6/alpha2-release-20261024/device-result.json)
-binds the source, installed image and private backup hashes. Settings and OEM
-recovery files remain private. General operation was reported as apparently
-working; individual physical key, encoder and Combo cases were not separately
-confirmed. Power-cycle retention, power-loss behavior, nonempty Combo writes
-and manual Windows/Linux GUI acceptance remain untested.
+The first confirmation attempt timed out before loader entry or erase. It stopped
+without retry; a new attempt was explicitly authorized. Fresh backups, update
+and restore confirmations and private evidence hashes are recorded in the
+[device result](../audits/rc6/alpha3-release-20261024/device-result.json).
+OEM recovery images, settings and device captures remain private.
+
+Individual physical NKRO, One Shot, Space Cadet and encoder cases, power-cycle
+retention, power-loss behavior and manual GUI acceptance were not tested.

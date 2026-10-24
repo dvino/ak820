@@ -1,0 +1,58 @@
+{
+  "format": "ak820-alpha3-device-result-1",
+  "release": "v0.6.0-alpha.3",
+  "source_commit": "b17d7c8b52ec7a234a742a64380e22354698030b",
+  "installer": "Downloaded published Linux x86_64 CLI",
+  "installer_archive_sha256": "095cb9a48f1a85d7748b2bdca275be299e18f29c3c2cfa23420d22e07271027c",
+  "result": "passed",
+  "flash_count": 1,
+  "bootloader_transitions": 1,
+  "restart_count": 1,
+  "physical_confirmations": [
+    "update",
+    "restore"
+  ],
+  "source_ihx_sha256": "a64dc561ba898a0107a5c21cbdb861fc0653583856ad64bd379c35343a58022f",
+  "installed_ihx_sha256": "d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18",
+  "installed_code_sha256": "01f0f7a979d8cfa8217b3bba333758ae3509cf7f3f8e35fbffb1ed034b808e5d",
+  "flashed_payload_sha256": "1f699404a8538e9b577aabcb6446f4ec9fe9d4c7c6bbb4116810412759365716",
+  "flashed_payload_bytes": 51136,
+  "exact_code_and_full_manifest_readback": true,
+  "settings_restore": {
+    "verified": true,
+    "rom_sha256": "3e91b3ea9638a5506c513a8999c6e3439bbdce9e332a2fc530e8397b19b7a5c6",
+    "nvm_sha256": "01515590f64e72b2540002b88091773656d9a1c80f3b18efdcb308d009de5b36",
+    "keys": 498,
+    "encoders": 12,
+    "macros": 16,
+    "rgb_saved_bytes": 8,
+    "physical_behavior": "not tested",
+    "power_loss_persistence": "not tested",
+    "writes": 10
+  },
+  "typing": "Reported working after update",
+  "earlier_attempt": {
+    "result": "physical confirmation timeout",
+    "flash_count": 0,
+    "bootloader_transitions": 0,
+    "automatic_retry": false,
+    "new_attempt_explicitly_authorized": true
+  },
+  "private_evidence": {
+    "update_events_sha256": "da5f0f0f2265afb2d9201e9568ecc07242a7cc638a4ed6685077227d28c62aee",
+    "transport_sha256": "0c9c768ea43a0258060bbea7023d446c74961e0e5bd007d27f365deca4bd7041",
+    "boot_status_sha256": "8380140602ea527ac791fe909a72cbec69a89bddf91470aaa94ca58d50c8d42f",
+    "before_backup_manifest_sha256": "577f245480f9be0502805906e9662914dfa0cd0f9893ce785bf088d2df62886d",
+    "after_update_manifest_sha256": "395dbda3980ea7d5374ddc45260a8531194a0137cb457a2b150aae5a69f130c9"
+  },
+  "limits": [
+    "No power-cycle retention or power-loss test",
+    "No separate physical NKRO, One Shot, Space Cadet or encoder regression",
+    "No manual Windows/Linux GUI acceptance"
+  ],
+  "source_code_sha256": "d787703f62f96d7204bf25c566eac39f66b8c8c3f711ce152d7ff1eded9716da",
+  "independent_review": {
+    "status": "passed",
+    "scope": "Publication, image identities, private evidence hashes, flash and restore results, and bilingual status; no further device operation."
+  }
+}
