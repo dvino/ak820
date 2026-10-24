@@ -49,3 +49,12 @@ All five ordinary UBSan groups pass (234,881,024 bounded input combinations).
 No firmware input or runtime-proof source changed; runtime-only images remain
 bound to `ac48c65`, while full qualification uses the fixture follow-up commit.
 The initially failed supplemental logs remain in the complete Tap Dance build.
+
+A second follow-up corrected user-facing NKRO/One Shot observations: the shared
+feature fixture now selects the actual projected report and verifies each
+outgoing callback pointer. Original state assertions and report-ID expectations
+are unchanged. Direct unlock fixtures retain their original default behavior.
+Independent inspection and negative controls accepted the change. NKRO passes
+7 cases and 44 checks on all four images; KO One Shot passes 15 cases and 61
+checks; the specialized KO suite retains all 13 cases, 59 checks and 80 sends.
+Only test fixtures changed. No firmware or runtime-proof input changed.

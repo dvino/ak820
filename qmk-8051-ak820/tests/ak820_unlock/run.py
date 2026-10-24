@@ -27,9 +27,18 @@ def vial(fw, subcommand):
             fw.call("_vial_handle_cmd", packet))
 
 
-def run_case(fw, name, setup, checks):
+def run_case(fw, name, setup, checks, *, outgoing_reports=False):
     commands, observations = list(setup), []
+    report_address=None
+    if outgoing_reports:
+        projections=[symbol for symbol in fw.symbols if symbol.startswith('_send_keyboard_report_projected_')]
+        if len(projections)>1:raise ValueError('Ambiguous outgoing report projection')
+        report_symbol=projections[0] if projections else '_actual_keyboard_report'
+        report_address=fw.address(report_symbol)
+        commands += [f'break {fw.address("_ak820_host_send_keyboard"):#x}',
+                     'commands 1 "echo @@OUTPTR; dump sfr 0x82 0x83 16; fill xram 0x2201 0x2203 0x12; run"']
     for label, symbol, size, expected, transition in checks:
+        if outgoing_reports and symbol=='_actual_keyboard_report':symbol=report_symbol
         # Terminate markers so e.g. "held" cannot match "held_released" in
         # the shared fixture's substring-based log extractor.
         commands += transition + fw.dump_symbol(label + "@", symbol, size)
@@ -38,8 +47,11 @@ def run_case(fw, name, setup, checks):
     actual = {label: fw.extract(log, label + "@", fw.address(symbol), size)
               for label, symbol, size, _ in observations}
     expected = {label: value for label, _, _, value in observations}
-    return {"name": name, "pass": actual == expected, "observations": actual,
-            "expected": expected, **stack}
+    pointers=[fw.extract('@@pointer\n'+part,'pointer',0x82,2) for part in log.split('@@OUTPTR\n')[1:]] if outgoing_reports else []
+    pointer_ok=all(pointer==[report_address&255,report_address>>8] for pointer in pointers)
+    return {"name": name, "pass": actual == expected and pointer_ok, "observations": actual,
+            "expected": expected, "outgoing_report_address":report_address,
+            "outgoing_pointer_checks":pointers, **stack}
 
 
 def cases(fw):
