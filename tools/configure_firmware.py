@@ -154,6 +154,22 @@ def retained_static_symbols(report, build, code):
     return found
 
 
+def check_feature_defines(report, build, selected):
+    """Bind inline options as well as standalone handlers to compiler inputs."""
+    flags = build / 'obj_ajazz_ak820_vial/cflags.txt'
+    relative = flags.relative_to(QMK).as_posix()
+    records = [row for row in report.get('artifacts', [])
+               if row.get('path', '').replace('\\', '/') == relative]
+    require(len(records) == 1 and flags.is_file() and
+            records[0].get('sha256') == sha(flags) and
+            records[0].get('size') == flags.stat().st_size, 'Unbound compiler feature flags')
+    tokens = flags.read_text().split()
+    for feature, define in profiles.SWITCHES.items():
+        actual = [token for token in tokens if re.match(r'^-[DU]' + re.escape(define) + r'(?:=|$)', token)]
+        expected = ['-D' + define] if feature in selected['optional_features'] else []
+        require(actual == expected, 'Compiler feature flag differs from profile: ' + feature)
+
+
 def memory_report(code, symbols, memory):
     """Validate allocated memory; deliberately do not infer a stack bound."""
     require(code and all(any(lo <= address < hi for lo, hi in WINDOWS) for address in code),
@@ -220,6 +236,7 @@ def inspect(build, toolchain):
             {tuple(window) for window in report.get('code_windows', [])} == set(WINDOWS) and
             report.get('xram_window') == [0x400, 0x1000], 'Experimental linker windows cannot qualify')
     validate_inputs(report, QMK, toolchain)
+    check_feature_defines(report, build, selected)
     expected_flags = '--opt-code-size --callee-saves ' + ','.join(AK820_CALLEE_SAVES)
     require(report.get('compiler_sha256') == SDCC46_PINS['sdcc'] and
             report.get('assembler_sha256') == SDCC46_PINS['sdas8051'] and
@@ -277,11 +294,48 @@ def require_release_approval(report):
     raise ValueError('No profile is approved for packaging: ' + '; '.join(RELEASE_BLOCKERS))
 
 
+def run_runtime_analysis(build, identity):
+    """Record exact-image progress without treating partial bounds as approval."""
+    output = build / 'runtime-stack.json'
+    runner = QMK / 'tests/ak820_stack/analyze.py'
+    command = [sys.executable, str(runner), '--build-dir', str(build), '--output', str(output)]
+    log = build / 'runtime-stack.log'
+    with log.open('w') as stream:
+        result = subprocess.run(command, cwd=QMK, stdout=stream, stderr=subprocess.STDOUT)
+    require(result.returncode in (0, 2) and output.is_file(), 'Runtime stack analysis failed')
+    report = load_json(output)
+    require(report.get('identity', {}).get('ihx_sha256') == identity['ihx_sha256'] and
+            report.get('identity', {}).get('map_sha256') == identity['map_sha256'] and
+            report.get('analyzer_sha256') == sha(runner) and
+            report.get('decoder_source_sha256') == sha(QMK / 'util/ak820_linked_inventory.py') and
+            report.get('whole_program_qualified') is False,
+            'Runtime stack report differs from this image or claims unapproved qualification')
+    roots = report.get('roots', {})
+    require(set(roots) == {'_main', '_ak820_timer_irq', '_USB_DeviceInterrupt', '_ak820_led_irq'},
+            'Runtime stack report omitted a required root')
+    unknown = [name for name, value in roots.items() if value.get('bound') is None]
+    require(result.returncode == (2 if unknown else 0), 'Runtime stack exit status disagrees with bounds')
+    return {'report_sha256': sha(output), 'log_sha256': sha(log), 'exit_code': result.returncode,
+            'whole_program_qualified': False, 'unresolved_roots': unknown,
+            'root_bounds': {name: value.get('bound') for name, value in roots.items()}}
+
+
 def profile_test_plan(name, build, toolchain):
     selected = profiles.configuration(name)
     output = build / 'profile-tests'
     plan = [('gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'tools',
                              '-p', 'test_configure_firmware.py'])]
+    plan.extend([
+        ('outline-gates', QMK, [sys.executable, 'tests/ak820_optimization/outline_unit.py']),
+        ('stack-gates', QMK, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                            '-s', 'tests/ak820_stack', '-p', 'test_*.py']),
+        ('outline-integrity', QMK, [sys.executable, 'tests/ak820_optimization/outline_integrity.py',
+                                   '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                                   '--output-dir', str(output / 'outline-integrity')]),
+        ('vialrgb-linked', QMK, [sys.executable, 'tests/ak820_vialrgb/linked.py',
+                                '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                                '--output-dir', str(output / 'vialrgb')]),
+    ])
     for feature, folder in (('nkro-control', 'ak820_nkro_control'), ('one-shot', 'ak820_oneshot')):
         if feature not in selected['optional_features']:
             continue
@@ -290,10 +344,16 @@ def profile_test_plan(name, build, toolchain):
         else:
             host = [sys.executable, 'tests/ak820_tapping/run.py', '--oneshot', '--negative-controls',
                     '--output', str(output / 'one-shot-host.json')]
+            if 'space-cadet' in selected['optional_features']:
+                host.append('--space-cadet')
         plan.append((feature + '-host', QMK, host))
         plan.append((feature + '-linked', QMK,
                      [sys.executable, 'tests/' + folder + '/linked.py', '--build-dir', str(build),
                       '--s51', str(toolchain / 'bin/s51'), '--output-dir', str(output / folder)]))
+    if 'space-cadet' in selected['optional_features'] and 'one-shot' not in selected['optional_features']:
+        plan.append(('space-cadet-host', QMK,
+                     [sys.executable, 'tests/ak820_tapping/run.py', '--space-cadet', '--negative-controls',
+                      '--output', str(output / 'space-cadet-host.json')]))
     return plan
 
 
@@ -410,6 +470,7 @@ def main(argv=None):
         require(source_identity() == before, 'Git source changed during qualification')
         result['qualification'] = validate_tests(qualification, result['identity'])
         result['profile_tests'] = run_profile_tests(name, directory, toolchain, result['identity'])
+        result['runtime_analysis'] = run_runtime_analysis(directory, result['identity'])
         result['offline_tests_passed'] = True
         output.write_bytes(canonical(result))
     else:

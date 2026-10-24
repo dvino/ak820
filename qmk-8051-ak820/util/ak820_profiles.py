@@ -18,16 +18,19 @@ LEGACY_BUILDERS = frozenset({
 SWITCHES = {
     'nkro-control': 'AK820_NKRO_CONTROL',
     'one-shot': 'AK820_COMPACT_ONESHOT',
+    'space-cadet': 'AK820_COMPACT_SPACE_CADET',
 }
 PROFILES = {
     'standard': (),
     'nkro': ('nkro-control',),
     'one-shot': ('one-shot',),
+    'nkro-one-shot': ('nkro-control', 'one-shot'),
+    'space-cadet': ('space-cadet',),
+    'nkro-space-cadet': ('nkro-control', 'space-cadet'),
+    'one-shot-space-cadet': ('one-shot', 'space-cadet'),
+    'full': ('nkro-control', 'one-shot', 'space-cadet'),
 }
-CONFLICTS = [{
-    'features': ['nkro-control', 'one-shot'],
-    'reason': 'The combined image exceeds the main CODE window; individual costs are not additive.',
-}]
+CONFLICTS = []
 BASE_FEATURES = (
     'six-layers', 'sixteen-vial-macros', 'eight-two-key-combos',
     'compact-tap-hold', 'encoder-map', 'media-keys', 'nkro-reports',
@@ -42,7 +45,6 @@ DEFERRED = {
     'auto-shift': 'Interactions with tap-hold, Combos and Caps Word are not qualified.',
     'magic': 'Modifier swaps and GUI control are separate from the limited NKRO action.',
     'leader': 'Sequence length, timeout and supported output actions are not qualified.',
-    'space-cadet': 'Tap-hold ownership and cancellation are not qualified.',
     'dynamic-macros': 'Recording RAM and replay behavior are not qualified; Vial macros remain enabled.',
 }
 

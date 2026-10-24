@@ -2,119 +2,92 @@
 
 # Roadmap
 
-The first configurable development profiles are implemented: `standard`,
-`nkro` and `one-shot`. See [Build profiles](BUILD-PROFILES.md) for behavior,
-commands and limits. No profile is approved for installation or release while
-the whole-program stack bound, exact-image interrupt/nesting proof and installer
-transition remain open. Current release and installation results belong in
-[Status](STATUS.md). The broader stage remains open for the work below.
+The three implemented optional features—NKRO control, modifier One Shot and
+Space Cadet—are available in all eight combinations in development profiles.
+Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
+No configured profile is approved for installation or release until the
+global stack bound, exact-image interrupt and nesting safety, and installer
+transition are qualified. Current release and installed-device results belong
+in [Status](STATUS.md).
 
-## Compact optional features
+## Deferred features
 
-The initial inventory and two bounded implementations are complete. One Shot
-modifiers and NKRO control are available in separate development profiles;
-their tested scope is documented in [Build profiles](BUILD-PROFILES.md). The
-remaining candidates below are still deferred. A setting shown by Vial is not
-proof that a module is included.
+The initial inventory contains 11 candidates. Three have bounded development
+implementations; the other eight remain deferred. A Vial control or keycode is
+not evidence that a feature is enabled.
 
-| Candidate | First implementation scope | Memory and compatibility |
-| --- | --- | --- |
-| One Shot | Limited modifier combinations in the `one-shot` development profile; layers and other behaviors are excluded. | Profile regression tests run offline; release safety proof remains open. |
-| Tap Dance | A small, fixed set of tap/hold patterns | Measure; check the shared input pipeline, tap-hold and Combos. |
-| Key Overrides | Replace a key when specified modifiers are active | Measure; check modifier ownership, Repeat, Caps Word and macros. |
-| Mouse Keys | Basic pointer, button and wheel actions | Measure; check USB reports, scan timing and encoder actions. |
-| Auto Shift | Choose Shift from press duration | Measure; check interaction with tap-hold, Combos and Caps Word. |
-| NKRO control | `NK_ON`, `NK_OFF` and `NK_TOGG` in the `nkro` development profile; volatile only. | Profile regression tests run offline; saved settings and other Magic actions are not included. |
-| QMK Settings in Vial | Change supported timing and behavior options without rebuilding | Start with a compact subset; connect each option to its actual handler and measure CODE, RAM and saved-data costs. |
-| Magic | Selected modifier swaps and GUI-key control | Review separately from NKRO; check keycode configuration, persistence and existing modifier owners. |
-| Leader | Short sequences that trigger actions | Bound sequence length, timeout and supported results. |
-| Space Cadet | A modifier while held, a parenthesis when tapped | Check compact tap-hold ownership and cancellation. |
-| Dynamic macros | Record and replay key sequences on the keyboard | Distinguish from the existing 16 Vial macros; bound the recording buffer and check RAM and replay behavior. |
+| Candidate | Open work |
+| --- | --- |
+| Tap Dance | The upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
+| Key Overrides | The upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
+| Mouse Keys | The upstream probe exceeds the main CODE window by 1,381 bytes; a smaller scope and scan-time review are needed. |
+| Auto Shift | Needs explicit C `case` labels instead of GNU case ranges; the upstream probe exceeds the main CODE window by 2,081 bytes. |
+| QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
+| Magic | Modifier swaps and GUI control need separate compatibility and persistence review. |
+| Leader | Bound sequence length, timeout and supported outputs. |
+| Dynamic macros | Bound recording RAM and qualify replay behavior; Vial macros remain available. |
 
-The profile inventory separates runtime settings from build switches and user
-features from deliberately excluded diagnostics; see [Build profiles](BUILD-PROFILES.md).
+Probe details and measured outcomes are in the
+[feature report](../audits/rc6/roadmap-max-20261024/feature-probes.md).
 
-The deferred entries are candidates, not promised build options. Their byte
-costs and allowed combinations are not yet measured. The order of implementation
-should follow usefulness, complete-image cost and interaction complexity.
+The three available implementations are intentionally limited. NKRO control
+adds only `NK_ON`, `NK_OFF` and `NK_TOGG`; One Shot handles modifier combinations
+without layer form, timeout or locking; Space Cadet handles `SC_LSPO`, `SC_RSPC`
+and `SC_SENT` through compact tap-hold. See [Build profiles](BUILD-PROFILES.md)
+for exact behavior and tested interactions.
 
-## QMK Settings and existing compact functions
+## Runtime settings and saved data
 
-`QMK_SETTINGS = no` in alpha.2 and all current development profiles. The existing Vial keymap, macro and lighting
-settings do not imply QMK Settings support. Inventory the upstream settings:
-tap-hold timing and policy, Combo timing, Grave Escape overrides, tap delays,
-One Shot, Auto Shift, Mouse Keys and Magic options. Offer only settings consumed
-by enabled handlers; a visible control must change actual behavior.
+`QMK_SETTINGS = no` in alpha.2 and configured development profiles. Vial
+keymap, macro and lighting settings do not imply support for QMK Settings.
+Only expose a setting when an enabled handler consumes it and changes behavior.
 
-The current compact tap-hold and Combo engines use fixed timing and reduced
-behavior. Assess configurable timing and additional behaviors separately from
-enabling their upstream engines. List which upstream behaviors remain absent.
+The upstream QMK Settings structure is 36 bytes before other dynamic feature
+data. Enabling the upstream flag alone moves the fixed Combo layout at `0x658`
+and is incompatible. The reviewed compatible plan places a versioned record in
+the measured 328-byte gap from `0x6a8` to `0x7ef`, preserving existing Combo
+offsets. A new versioned saved record and migration still need implementation.
+Define defaults, reset, typed backup and restore, then measure the complete linked image. See the
+[QMK Settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md).
+The upstream structure size alone is not the feature's total resource cost.
 
-The upstream QMK Settings structure occupies 36 bytes before other dynamic
-feature data. The current Combo base is fixed by a compile-time assertion.
-Enabling the flag alone is therefore insufficient: design the saved layout,
-versioning, defaults, reset, backup and migration together, then measure the
-whole image. The 36 bytes are a structure size, not a total feature cost.
+## Resource and compatibility evidence
 
-## Compatibility and memory table
+Every supported feature combination must be measured as a complete linked
+image. Track both CODE windows, XRAM, internal RAM and stack placement. Shared
+code, dead-code removal and outlining make individual probe costs non-additive.
+Do not count loader, settings or journal space as free CODE. See
+[Resource budget](RESOURCE-BUDGET.md) and the dated
+[qualification evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
 
-For each module and supported combination, record dependencies, conflicts,
-saved-format changes and the exact build settings. Measure the complete linked
-image with the pinned compiler; shared code, dead-code removal and outlining
-make individual size deltas non-additive.
-
-Track both CODE windows separately, along with XRAM, internal RAM and stack
-requirements. The current alpha.2 has 120 trailing main-window bytes and 67
-low-window bytes; these are different regions. Its 160-byte allocated stack
-capacity is not a proven runtime allowance. See [Memory](RESOURCE-BUDGET.md).
-Do not count reserved loader, settings or journal space as free code memory.
-Unknown costs or unchecked combinations must stay marked as unknown.
-
-## Build configurator
-
-The configurator accepts only the three implemented development profiles and
-rejects the combined NKRO plus One Shot image. Each build links within the real
-memory windows and runs offline regression tests on its exact image. It does
-not approve profiles for packaging: a reviewed whole-program stack bound,
-exact-image interrupt/nesting proof and installer transition are missing.
-Estimates alone must never permit an oversized firmware image.
-
-Development results contain the selected options, source commit, toolchain,
-resource report and exact firmware identity. Both CODE windows, XRAM, internal
-RAM and protected addresses are checked. Runtime stack margin remains
-unqualified; therefore packaging stops without producing an approved package.
-Expand the allowed combinations only as evidence becomes available.
+Development builds run regression gates and profile-specific host and linked
+CPU suites against the exact image. Those checks do not establish physical
+behavior, a whole-program stack bound or exact-image interrupt/nesting safety.
+The configurator remains closed to packaging until all release gates, including
+the installer transition, are qualified.
 
 ## Further code-size analysis
 
-Review all code reachable by the selected firmware: action and event handling,
-USB, descriptors, Vial, macros, lighting, settings and build-time transforms.
-Look for duplicated work, unnecessary generic pointers, avoidable data copies,
-representation costs and shared helpers. Compare each proposal with the exact
-current build, including interactions with optional modules.
-
-Preserve behavior, interrupt safety, ABI and storage checks. Keep rejected
-experiments out of the production build and retain their evidence in technical
-reports. Do not reduce layers, macro capacity or existing functionality to make
-a new option appear to fit. A layout or storage-format change needs its own
-migration and backup plan.
+Review code reachable in each selected build: action and event handling, USB,
+descriptors, Vial, macros, lighting, settings and build-time transforms. Compare
+proposals against the complete current image, including interactions with
+optional modules. Preserve behavior, interrupt safety, ABI and storage checks.
+Keep rejected experiments out of production builds and retain their evidence
+in technical reports. Do not reduce layers, macro capacity or existing
+functionality to make a new option appear to fit. Storage changes need their own
+backup and migration plan.
 
 ## Completion of this stage
 
-- Document each implemented option, its limits and complete-image resource cost.
-- Publish the compatibility table and profiles after release qualification.
-- Keep the configurator closed to packaging until stack, IRQ and installer proofs pass.
-- Run relevant host and linked CPU regressions for every development profile;
-  test interactions rather than just isolated modules.
-- Bind packages, settings backup compatibility and update checks to the exact
-  selected image. A different feature set is not interchangeable merely
-  because it shares a settings schema.
-- Keep device acceptance separate from models. Default tests remain offline or
-  read-only; every hardware flash needs separate confirmation.
+- Keep the eight documented profiles in sync with the configurator and exact-image reports.
+- Qualify the global stack bound, interrupt/nesting safety and installer transition before packaging any profile.
+- Bind any future package and settings backup compatibility to the exact selected image and feature set.
+- Keep device acceptance separate from host and linked-CPU models.
+- Keep default tests offline or read-only; hardware flashing needs separate confirmation.
 
 ## Other open work
 
 Physical Combo timing, nonempty Combo writes, cold-start retention, power-loss
-behavior and manual Windows/Linux GUI acceptance remain open.
-VialRGB Direct remains RAM-only. Persistent palettes are outside this
-stage until their storage and migration design is separately agreed.
+behavior and manual Windows/Linux GUI acceptance remain open. VialRGB Direct
+remains RAM-only. Persistent palettes are outside this stage until their
+storage and migration design is separately agreed.

@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 from collections import defaultdict
 from dataclasses import dataclass
+from fractions import Fraction
 import hashlib
 import heapq
 import json
@@ -22,6 +23,24 @@ LISTED = re.compile(r"^\s*([0-9A-F]{6})\s+((?:[rstup*]?[0-9A-F]{2}\s*)+)\[[\d ]+
 SYMBOL = re.compile(r"(?<![\w$])(_[A-Za-z_$][\w$]*)(?![\w$])")
 SAFE_OPS = {"mov", "movx", "movc", "inc", "dec", "add", "addc", "subb", "clr", "cpl", "anl", "orl", "xrl", "rl", "rr", "rlc", "rrc", "swap", "mul", "div", "xch"}
 REGS = {"a", "b", "c", "dpl", "dph", "dptr", "ab", *[f"r{i}" for i in range(8)], *[f"ar{i}" for i in range(8)]}
+
+# A finite search changes only the order of choosing exact, disjoint sequences.
+# Each score is saving**4 * body_bytes**body_power / sites**site_power.
+# Integer powers and rational comparison keep ties reproducible. Site powers
+# are at most four: because saving=(body_bytes-3)*sites-body_bytes-1, a score
+# cannot increase when occupied intervals remove sites. This is the upper-bound
+# property used by the lazy queue below. The original greedy order is retained
+# as a candidate, so the selected nominal saving cannot be worse.
+SELECTION_STRATEGIES = (
+    ("saving", 0, 0),
+    ("long-body", 4, 2),
+    ("balanced-body", 2, 2),
+    ("site-balance", 0, 2),
+    ("density-quarter", -1, 4),
+    ("density-half", -2, 4),
+    ("density-three-quarters", -3, 4),
+    ("density", -4, 4),
+)
 
 
 # Additional foreground modules. None admits every CSEG function in that
@@ -212,7 +231,7 @@ def describe(candidate):
             "locations":[{"module":s[0].module,"function":s[0].function,"line":s[0].line+1,"address":s[0].address} for s in matches]}
 
 
-def select(blocks, max_helpers=200, min_saving=1):
+def select_matches(matches, max_helpers, min_saving, strategy):
     # Enumerate instruction windows once. Each exact sequence has a fixed
     # length; its matches occur in source order, so greedily retaining the
     # first nonoverlapping interval gives the maximum match count. Removing
@@ -220,26 +239,61 @@ def select(blocks, max_helpers=200, min_saving=1):
     # therefore an upper bound; refresh only candidates that reach the top.
     # Keep the original saving/size/key tie order and all overlapping matches:
     # a previously rejected overlap may become eligible after another choice.
-    matches = sequence_matches(blocks)
+    _, body_power, site_power = strategy
+
+    def priority(choice):
+        saving, size, key, sites = choice
+        numerator = saving ** 4 * size ** max(0, body_power)
+        denominator = len(sites) ** site_power * size ** max(0, -body_power)
+        return (-Fraction(numerator, denominator), -saving, -size, repr(key), key)
+
     queue = []
     for key, found in matches.items():
         choice = candidate(key, found)
         if choice:
-            heapq.heappush(queue, (-choice[0], -choice[1], repr(key), key))
+            heapq.heappush(queue, priority(choice))
     selected, used = [], set()
     while queue and len(selected) < max_helpers:
         previous = heapq.heappop(queue)
-        key = previous[3]
+        key = previous[-1]
         choice = candidate(key, matches[key], used)
         if not choice or choice[0] < min_saving:
             continue
-        priority = (-choice[0], -choice[1], previous[2], key)
-        if priority != previous:
-            heapq.heappush(queue, priority)
+        current = priority(choice)
+        if current != previous:
+            heapq.heappush(queue, current)
             continue
         selected.append(choice)
         used.update((i.module, i.line) for seq in choice[3] for i in seq)
     return selected
+
+
+def select(blocks, max_helpers=200, min_saving=1):
+    """The original greedy selection, retained for controls and comparisons."""
+    return select_matches(sequence_matches(blocks), max_helpers, min_saving, SELECTION_STRATEGIES[0])
+
+
+def select_compact(blocks, max_helpers=200, min_saving=1):
+    """Pick the largest measured nominal saving from fixed exact strategies.
+
+    Every choice uses the same instruction eligibility, helper cap and two-byte
+    stack cost. Equal savings prefer fewer replacements, then fewer helpers.
+    This bounded heuristic search is not a proof of globally optimal packing.
+    The real memory windows must still be checked after the full link.
+    """
+    matches = sequence_matches(blocks)
+    best, objective, chosen, trials = [], (-1, 0, 0), None, []
+    for strategy in SELECTION_STRATEGIES:
+        selected = select_matches(matches, max_helpers, min_saving, strategy)
+        saving = sum(c[0] for c in selected)
+        sites = sum(len(c[3]) for c in selected)
+        row = {"strategy": strategy[0], "body_power": strategy[1], "site_power": strategy[2],
+               "nominal_net_bytes": saving, "helpers": len(selected), "replacement_sites": sites}
+        trials.append(row)
+        score = (saving, -sites, -len(selected))
+        if score > objective:
+            best, objective, chosen = selected, score, strategy[0]
+    return best, {"selected_strategy": chosen, "strategies": trials}
 
 
 def outline_dce(source: Path, target: Path, selected):
@@ -286,8 +340,9 @@ def outline_assembled(source_dce: Path, output_dce: Path, *, max_helpers=200, mi
     if any("_ak820_outline_" in p.read_text() for p in source_dce.rglob("*.asm")):
         raise ValueError("Refusing an already outlined input: helpers must never nest")
     blocks,rejected = parse_dce(source_dce, ".lst")
-    selected = select(blocks, max_helpers, min_saving)
-    report = {"algorithm": "exact-foreground-register-xdata-code-v3", "listing_suffix": ".lst",
+    selected, selection = select_compact(blocks, max_helpers, min_saving)
+    report = {"algorithm": "exact-foreground-register-xdata-code-v4", "listing_suffix": ".lst",
+              "selection": selection,
               "tool_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               "input_asm_sha256": {p.relative_to(source_dce).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
                                    for p in sorted(source_dce.rglob("*.asm"))},
@@ -319,7 +374,7 @@ def main():
     blocks,rejected=parse(build,args.listing_suffix)
     candidates=occurrences(blocks)
     normalized_candidates=occurrences(blocks,normalize=True)
-    selected=select(blocks,args.max_helpers,args.min_saving)
+    selected,selection=select_compact(blocks,args.max_helpers,args.min_saving)
     image=build/'ajazz_ak820_vial.ihx'
     report={"linked_image_sha256":hashlib.sha256(image.read_bytes()).hexdigest() if image.is_file() else None,
             "listing_suffix":args.listing_suffix,
@@ -328,7 +383,7 @@ def main():
             "safe_blocks":len(blocks),"rejected_instructions":rejected,
             "exact_top":[describe(c) for c in candidates[:20]],
             "normalized_top":[describe(c) for c in normalized_candidates[:20]],
-            "selected_exact":[describe(c) for c in selected],
+            "selection":selection,"selected_exact":[describe(c) for c in selected],
             "selected_nominal_net_bytes":sum(c[0] for c in selected),"extra_stack_bytes":2 if selected else 0}
     if args.outline_dir:
         outline_dce(build / "dce",args.outline_dir.resolve(),selected)

@@ -10,27 +10,47 @@ for package selection, checksums and launch commands.
 
 ## Source and built image
 
-Archive `129c1c8..bcc337d` was accepted for offline development; see the
-[acceptance review](../audits/rc6/configurable-20261024/intake-review.md).
+Development continued from `dev` commit `48ce5fa`. The configurator now offers
+all eight combinations of NKRO control, modifier One Shot and compact Space
+Cadet. Commands and limits are in [Build profiles](BUILD-PROFILES.md). Published
+and installed alpha.2 remains unchanged.
 
-The development branch now has `standard`, `nkro` and `one-shot` configurable
-development profiles. Their commands, behavior and limits are in
-[Build profiles](BUILD-PROFILES.md). The profile builds run offline regression
-tests on their exact linked image, but no profile is approved for installation
-or release. A reviewed whole-program stack bound, exact-image interrupt and
-nesting proof, and installer transition for the new feature identity are still
-missing. The existing release workflow stops at bundle assembly on these profiles.
-The previous release policy has not been replaced or extended.
+All eight profiles pass full linking and exact memory/configuration checks.
+The current standard image uses **39,115 CODE and 2,612 XRAM bytes**, saving
+699 CODE bytes from the starting development image and 1,198 from alpha.2.
+The full profile with all three optional features uses **40,018 CODE and 2,630
+XRAM bytes**; it leaves 466 trailing main-window bytes and 16 low-window bytes.
+Its 162 allocated stack bytes are capacity, not a runtime bound. Exact profile
+sizes and image identities are in the
+[development evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
+Full offline regression qualification of the frozen source revision is pending.
 
-The configurable-build work also has [source optimizations](../audits/rc6/configurable-20261024/size-source.md).
-The private-state and outlining changes account for a 279-byte and 220-byte
-CODE saving respectively. The final standard profile uses 39,814 CODE and
-2,612 XRAM bytes: 499 and nine fewer than alpha.2. All three profiles passed
-28 base regression suites (270 unit tests without skips) and their additional
-profile tests. Exact sizes, hashes and limits are in the
-[profile qualification report](../audits/rc6/configurable-20261024/qualification.md).
-These development results are separate from published and installed alpha.2
-figures below; they are not a new release or device test.
+The new [packing selection](../audits/rc6/roadmap-max-20261024/packing.md)
+saves 668 CODE bytes on an unchanged baseline. All 194 helpers pass 3,104 CPU
+state comparisons; integrity checks cover all 1,384 replacement sites.
+[Protocol changes](../audits/rc6/roadmap-max-20261024/protocol-size.md) reduce
+private representation and descriptor costs without changing wire formats.
+[Space Cadet](../audits/rc6/roadmap-max-20261024/space-cadet.md) adds the three
+bounded Shift/tap actions. Feature costs are measured in complete images and
+must not be added as independent estimates.
+
+The [exact-image stack analyzer](../audits/rc6/runtime-stack-20261024/report.md)
+now resolves bounded USB dispatch and constant ROM callback targets, rejects
+unproven paths and records unresolved roots. It does not yet establish a bound
+for the whole main path or the LED interrupt. A reviewed global stack bound,
+exact-image interrupt/nesting proof and installer transition remain missing.
+No profile is approved for installation or release; the existing release
+workflow and configurator stop before producing a package. No device commands
+were sent during this development work.
+
+[Feature probes](../audits/rc6/roadmap-max-20261024/feature-probes.md) identify
+size and compiler blockers for Mouse Keys, Auto Shift, Tap Dance and Key
+Overrides. The [QMK Settings design](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md)
+inventories effective settings and a versioned record in the measured logical
+gap after Combo data. It is a proposal; the saved format and runtime settings
+remain unchanged.
+
+### Published alpha.2 image
 
 The Combo work was imported from `ak820-combos-20261024-git.zip`, based on
 `4b83bb9`, through `d361501`. Release integration adds reviewed settings

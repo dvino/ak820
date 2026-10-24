@@ -56,21 +56,21 @@ file length or source size.
 
 ## Development profiles
 
-To select the `standard`, `nkro` or `one-shot` development profile, use the
-[profile configurator](BUILD-PROFILES.md). It links the complete image, checks
-resource placement and runs offline tests against that image. The combined
-NKRO and One Shot profile is rejected. These development images are not approved
-for installation or release: the whole-program stack bound, exact-image
-interrupt/nesting proof and installer transition are still open. The existing release packagers reject configured development images.
-Release assembly commands below apply only to an independently approved image;
-they stop on these development profiles.
+To select any of the eight development profiles, use the [profile
+configurator](BUILD-PROFILES.md). It links the complete image, checks resource
+placement and runs offline regression gates plus the selected feature suites
+against that image. No configured profile is approved for installation or
+release: the whole-program stack bound, exact-image interrupt/nesting safety
+and installer transition remain open. Packaging stops for every configured
+profile.
 
-The default exact instruction outlining and audited callee-save list have
-comparison switches `--no-outline` and `--no-callee-saves`. The released alpha.2 profile uses the normal audited outlining configuration.
-Summary savings from individual probes are non-additive and do not predict complete
-linked-image size. ABI changes require new stack and interrupt evidence. Do not
-run build configurations concurrently in one source tree because Make uses shared
-generated files.
+The build uses the compact instruction outliner with a fixed opcode and module
+allowlist. `--no-outline` and `--no-callee-saves` provide comparison builds.
+Outlining changes the linked image and is not a runtime feature. Savings from
+one image do not predict another profile because shared code and packing
+interact. ABI changes require new stack and interrupt evidence. Do not run
+build configurations concurrently in one source tree because Make uses shared
+generated files. See the [outlining measurements](../audits/rc6/roadmap-max-20261024/outline-speed.md).
 
 Run [offline tests](TESTING.md), then assemble a new release bundle from the
 repository root after independent review. The review record must be a JSON file

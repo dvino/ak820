@@ -27,8 +27,8 @@ class ProfileTests(unittest.TestCase):
         for features in (['one-shot', 'one-shot'], ['mouse-keys'], ['QMK_SETTINGS=yes'], ['no-combos']):
             with self.assertRaises(ValueError):
                 config.profiles.select(features)
-        with self.assertRaisesRegex(ValueError, 'combination'):
-            config.profiles.select(['nkro-control', 'one-shot'])
+        self.assertEqual(config.profiles.select(['nkro-control', 'one-shot']), 'nkro-one-shot')
+        self.assertEqual(config.profiles.select(['space-cadet', 'one-shot', 'nkro-control']), 'full')
         for value in (None, {}, {'profile': 'unknown'}, {'profile': 'standard', 'release_approved': True}):
             with self.assertRaises(ValueError):
                 config.profiles.validate_configuration(value)
@@ -91,9 +91,100 @@ class ProfileTests(unittest.TestCase):
                 bad = copy.deepcopy(report); bad['tests'][-1]['build_after'] = {'ihx_sha256': 'different'}
                 with self.assertRaisesRegex(ValueError, 'identity, arguments'):
                     config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
-                bad = copy.deepcopy(report); bad['tests'][1]['command'].remove('--oneshot')
+                bad = copy.deepcopy(report)
+                next(row for row in bad['tests'] if row['id'] == 'one-shot-host')['command'].remove('--oneshot')
                 with self.assertRaisesRegex(ValueError, 'identity, arguments'):
                     config.validate_profile_tests(bad, 'one-shot', identity, build, toolchain)
+
+    def test_inline_feature_is_bound_to_exact_compiler_flags(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build = root / 'candidate'
+            flags = build / 'obj_ajazz_ak820_vial/cflags.txt'
+            flags.parent.mkdir(parents=True)
+            selected = config.profiles.configuration('full')
+            text = ' '.join('-D' + switch for switch in config.profiles.SWITCHES.values())
+            def report(value):
+                flags.write_text(value)
+                return {'artifacts': [{'path': flags.relative_to(root).as_posix(),
+                                       'sha256': config.sha(flags), 'size': flags.stat().st_size}]}
+            with patch.object(config, 'QMK', root):
+                valid = report(text)
+                config.check_feature_defines(valid, build, selected)
+                for value in (text.replace('-DAK820_COMPACT_SPACE_CADET', ''),
+                              text + ' -UAK820_COMPACT_SPACE_CADET',
+                              text + ' -DAK820_COMPACT_SPACE_CADET',
+                              text.replace('-DAK820_COMPACT_SPACE_CADET', '-DAK820_COMPACT_SPACE_CADET=0')):
+                    with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'feature flag'):
+                        config.check_feature_defines(report(value), build, selected)
+                valid = report(text)
+                flags.write_text(text + ' -UAK820_COMPACT_SPACE_CADET')
+                with self.assertRaisesRegex(ValueError, 'Unbound'):
+                    config.check_feature_defines(valid, build, selected)
+
+    def test_combined_options_run_interaction_and_inline_checks(self):
+        plan = config.profile_test_plan('full', Path('/tmp/full'), Path('/tmp/sdcc'))
+        commands = {name: command for name, _, command in plan}
+        self.assertIn('--oneshot', commands['one-shot-host'])
+        self.assertIn('--space-cadet', commands['one-shot-host'])
+        for required in ('outline-gates', 'stack-gates', 'outline-integrity', 'vialrgb-linked',
+                         'nkro-control-linked', 'one-shot-linked'):
+            self.assertIn(required, commands)
+
+    def runtime_fixture(self, build):
+        return {'identity': {'ihx_sha256': 'image', 'map_sha256': 'map'},
+                'analyzer_sha256': config.sha(config.QMK / 'tests/ak820_stack/analyze.py'),
+                'decoder_source_sha256': config.sha(config.QMK / 'util/ak820_linked_inventory.py'),
+                'whole_program_qualified': False,
+                'roots': {'_main': {'bound': None}, '_ak820_led_irq': {'bound': None},
+                          '_ak820_timer_irq': {'bound': 2}, '_USB_DeviceInterrupt': {'bound': 6}}}
+
+    def invoke_runtime_fixture(self, build, report, status=2):
+        def run(*args, **kwargs):
+            (build / 'runtime-stack.json').write_text(json.dumps(report))
+            return subprocess.CompletedProcess(args[0], status)
+        with patch.object(config.subprocess, 'run', side_effect=run):
+            return config.run_runtime_analysis(build, {'ihx_sha256': 'image', 'map_sha256': 'map'})
+
+    def test_runtime_analysis_preserves_unknown_bounds_without_approval(self):
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory)
+            result = self.invoke_runtime_fixture(build, self.runtime_fixture(build))
+            self.assertFalse(result['whole_program_qualified'])
+            self.assertEqual(set(result['unresolved_roots']), {'_main', '_ak820_led_irq'})
+            self.assertIsNone(result['root_bounds']['_main'])
+            self.assertEqual(result['report_sha256'], config.sha(build / 'runtime-stack.json'))
+
+    def test_runtime_analysis_rejects_wrong_image_sources_and_forged_approval(self):
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory)
+            mutations = [('identity', 'ihx_sha256', 'wrong image'),
+                         ('identity', 'map_sha256', 'wrong map'),
+                         (None, 'analyzer_sha256', 'wrong analyzer'),
+                         (None, 'decoder_source_sha256', 'wrong decoder'),
+                         (None, 'whole_program_qualified', True)]
+            for section, key, value in mutations:
+                report = self.runtime_fixture(build)
+                (report[section] if section else report)[key] = value
+                with self.subTest(key=key), self.assertRaisesRegex(ValueError, 'differs from this image'):
+                    self.invoke_runtime_fixture(build, report)
+
+    def test_runtime_analysis_rejects_missing_root_and_inconsistent_exit_status(self):
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory)
+            report = self.runtime_fixture(build)
+            del report['roots']['_ak820_led_irq']
+            with self.assertRaisesRegex(ValueError, 'omitted a required root'):
+                self.invoke_runtime_fixture(build, report)
+            with self.assertRaisesRegex(ValueError, 'exit status disagrees'):
+                self.invoke_runtime_fixture(build, self.runtime_fixture(build), 0)
+            report = self.runtime_fixture(build)
+            for value in report['roots'].values():
+                value['bound'] = 2
+            with self.assertRaisesRegex(ValueError, 'exit status disagrees'):
+                self.invoke_runtime_fixture(build, report, 2)
+            with self.assertRaisesRegex(ValueError, 'analysis failed'):
+                self.invoke_runtime_fixture(build, self.runtime_fixture(build), 1)
 
     def test_duplicate_json_and_fake_success_are_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

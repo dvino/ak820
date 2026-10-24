@@ -2,17 +2,16 @@
 
 # Build profiles
 
-The configurator builds and checks development images. No profile is approved
-for installation or release. The build runs offline tests against the exact
-linked image, but it does not prove a whole-program stack bound or exact-image
-interrupt and nesting safety. The installer transition for a new feature
-identity is also not approved. The `package` command therefore always stops.
-The remaining work is listed in the [roadmap](ROADMAP.md). Evidence is in the
-[profile qualification report](../audits/rc6/configurable-20261024/qualification.md).
+The configurator builds and checks development images. All eight combinations
+of the three implemented optional features can be selected. No configured
+profile is approved for installation or release. Packaging remains blocked
+until a whole-program stack bound, exact-image interrupt and nesting safety,
+and the installer transition are qualified. See the [roadmap](ROADMAP.md) and
+[qualification report](../audits/rc6/roadmap-max-20261024/final/README.md).
 
 ## Build a profile
 
-Run commands from the repository root. Select one profile and a fresh build
+Run commands from the repository root. Use one profile and a fresh build
 directory under `qmk-8051-ak820`:
 
 ```sh
@@ -24,67 +23,99 @@ python tools/configure_firmware.py build --profile standard \
   --python qmk-8051-ak820/.venv/bin/python
 ```
 
-Replace `standard` with `nkro` or `one-shot` to select that option. The
-alternative `--features` form accepts no value (no optional feature),
-`nkro-control`, or `one-shot`. For example, use `--features nkro-control` to
-select NKRO. Do not combine the two optional features: that image exceeds the
-main CODE window. `--profile` and `--features` are alternative selectors.
+Choose any listed profile. The alternative `--features` selector accepts a
+space-separated subset of `nkro-control`, `one-shot` and `space-cadet`; omit
+values to select the standard feature set. For example:
 
-`build` creates and links the image, checks both CODE windows and RAM placement,
-then runs the offline host and CPU regression suite against that exact image.
-It writes `configuration-report.json`, `qualification.json` and
-`profile-tests/results.json` in the build directory. The profile tests include
-the gate checks and, when selected, the option’s host and linked CPU tests. These checks do not validate a physical keyboard. To inspect an
-existing build again, run:
+```sh
+python tools/configure_firmware.py build --features nkro-control one-shot \
+  --build-dir qmk-8051-ak820/.build/nkro-one-shot \
+  --toolchain toolchains/sdcc-4.6.0 \
+  --qmk-bin qmk-8051-ak820/.venv/bin/qmk \
+  --python qmk-8051-ak820/.venv/bin/python
+```
+
+`--profile` and `--features` are alternative selectors. `build` links the
+image, checks both CODE windows and RAM placement, then runs the standard
+regression gates and the selected feature's host and linked-CPU suites against
+the exact image. It records the configuration, qualification and profile
+suite results in the build directory. These offline checks do not validate a
+physical keyboard or establish release safety.
+
+To inspect a completed build again, run:
 
 ```sh
 python tools/configure_firmware.py inspect --build-dir qmk-8051-ak820/.build/new --toolchain toolchains/sdcc-4.6.0
 ```
 
-`inspect` rechecks the linked resources and image identity. `package` uses the
-same build directory and toolchain arguments, then refuses because the release
-evidence and installer transition listed above are missing. A successful
-development build is not an installable package.
+`inspect` rechecks resource placement and image identity. `package` always
+stops: no configured profile is approved for release, regardless of a
+successful development build.
 
-## What each profile contains
+## Profiles
 
-All profiles retain six layers, 16 Vial macros, eight two-key Combos, Grave
-Escape and NKRO report support. Combo timing remains 40 ms and compact tap-hold
-timing remains 200 ms. Runtime QMK Settings are disabled; profile selection is
-a separate build-time choice.
+All profiles retain the base feature set: six layers, 16 Vial macros, eight
+two-key Combos, compact tap-hold, encoder mapping, media keys, NKRO report
+support, Caps Word, Repeat and Alt Repeat, Grave Escape, Tri Layer, RGB effects
+and VialRGB Direct in RAM. Combo timing remains 40 ms; compact tap-hold remains
+200 ms. Runtime QMK Settings are disabled. Optional features are build-time
+choices.
 
-| Profile | Optional feature | Behavior and limit |
-| --- | --- | --- |
-| `standard` | None | Base feature set only. |
-| `nkro` | NKRO control (`NK_ON`, `NK_OFF`, `NK_TOGG`) | Selects the report mode until restart. Restart uses the saved/default mode. Switching clears held keys and pending actions; release those keys before pressing them again. No setting is written to flash. |
-| `one-shot` | One Shot modifiers (`OSM`) | Tap OSM, then a key: its modifiers apply until that key is released. Several queued modifier sets combine. Holding OSM acts as a normal modifier. While a consuming key remains down, another OSM acts only as a held modifier. Matrix keys and both encoder directions work. OSL, timeout, locking and tap-toggle are absent. Assigning an OSM key in Vial is distinct from injecting a virtual OSM event from Vial or a macro; those injected events are not supported. |
-
-The exact linked image determines resource use. Measure both CODE windows and
-RAM from each build report; feature costs are not additive, so a delta from one
-profile cannot predict another. The configurator checks allocation limits but
-does not claim a qualified runtime stack allowance.
-
-## Implementation inventory
-
-Two of the 11 roadmap candidates have compact implementations. The others
-remain deferred. A client control alone does not establish firmware support.
-
-| Candidate | Current status or limit |
+| Profile | Optional features |
 | --- | --- |
-| One Shot | Implemented only as the bounded modifier behavior described above; layer form and other behaviors are not included. |
-| Tap Dance | Deferred; dynamic entries, shared input ownership and full-image cost need qualification. |
-| Key Overrides | Deferred; modifier ownership and interactions with Repeat, Caps Word and macros need qualification. |
-| Mouse Keys | Deferred; mouse reports, scan timing and full-image cost need qualification. |
-| Auto Shift | Deferred; interactions with tap-hold, Combos and Caps Word need qualification. |
-| NKRO control | Implemented only as the three report-mode actions described above; this does not enable all Magic actions. |
-| QMK Settings in Vial | Disabled at runtime. Upstream setting IDs 1, 2, 7, 8, 18, 19, 20 and 21 are inventory items, not a promise that their controls are accepted. The upstream structure is 36 bytes and changes the dynamic layout around Combo data at `0x658`; versioning, independent typed backup, defaults and migration must be qualified before enabling it. Existing Combo and tap-hold timing stays fixed at 40 ms and 200 ms. |
-| Magic | Deferred; modifier swaps and GUI-key control require separate compatibility and persistence review. |
-| Leader | Deferred; sequence length, timeout and supported outputs need bounds. |
-| Space Cadet | Deferred; tap-hold ownership and cancellation need qualification. |
-| Dynamic macros | Deferred; recording RAM and replay behavior need qualification. The existing 16 Vial macro slots remain available. |
+| `standard` | None |
+| `nkro` | `nkro-control` |
+| `one-shot` | `one-shot` |
+| `nkro-one-shot` | `nkro-control`, `one-shot` |
+| `space-cadet` | `space-cadet` |
+| `nkro-space-cadet` | `nkro-control`, `space-cadet` |
+| `one-shot-space-cadet` | `one-shot`, `space-cadet` |
+| `full` | `nkro-control`, `one-shot`, `space-cadet` |
 
-### Diagnostic exclusions
+NKRO control provides `NK_ON`, `NK_OFF` and `NK_TOGG`. The selected report mode
+lasts until restart; restart uses the saved/default mode. Switching clears
+held keys and pending actions, so release held keys before pressing them again.
+No setting is written to flash. This does not enable other Magic actions.
 
-Console and Command remain disabled. Offline fault injection is a test facility,
-not a selectable firmware feature. Existing read-only FD00/FD01 diagnosis remains
-present. The configurator itself never opens USB or sends keyboard commands.
+One Shot supports modifier combinations. Tap OSM, then a key: its modifiers
+apply until that key is released. Several queued modifier sets combine. Holding
+OSM acts as a normal modifier. While a consuming key remains down, another OSM
+acts only as a held modifier. Matrix keys and both encoder directions are
+supported. Layer One Shot, timeout, locking and tap-toggle are absent. Assigning
+an OSM key in Vial is supported; injecting a virtual OSM event from Vial or a
+macro is not.
+
+Space Cadet maps `SC_LSPO` to left Shift while held and Shift + `9` (`(`) when
+tapped; `SC_RSPC` maps to right Shift while held and Shift + `0` (`)`) when
+tapped; `SC_SENT` maps to right Shift while held and Enter when tapped. These
+keys use the existing compact tap-hold path and its modifier ownership. Space
+Cadet keycodes cannot be used as Combo inputs. The implementation does not
+include the full upstream Space Cadet engine. Tested edge cases and limits are
+recorded in the [Space Cadet report](../audits/rc6/roadmap-max-20261024/space-cadet.md).
+
+The exact linked image determines resource use. Measure each profile from its
+build report; feature costs are not additive. The configurator checks resource
+placement but does not establish a qualified runtime stack allowance.
+
+## Deferred feature inventory
+
+Three of the 11 candidates have bounded implementations in development
+profiles. The other eight remain deferred. A client control alone does not
+establish firmware support.
+
+| Deferred candidate | Open work |
+| --- | --- |
+| Tap Dance | Upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
+| Key Overrides | Upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
+| Mouse Keys | The upstream probe exceeds the main CODE window by 1,381 bytes; a smaller scope and scan-time review are needed. |
+| Auto Shift | Needs explicit C `case` labels instead of GNU case ranges; the upstream probe exceeds the main CODE window by 2,081 bytes. |
+| QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
+| Magic | Modifier swaps and GUI control need separate compatibility and persistence review. |
+| Leader | Bound sequence length, timeout and supported outputs. |
+| Dynamic macros | Bound recording RAM and qualify replay; existing Vial macros remain available. |
+
+Console and Command remain disabled. Fault injection is a test facility, not a
+selectable firmware feature. Existing FD00/FD01 diagnosis is read-only. The
+configurator does not open USB or send keyboard commands.
+
+Probe details are in the [feature report](../audits/rc6/roadmap-max-20261024/feature-probes.md).

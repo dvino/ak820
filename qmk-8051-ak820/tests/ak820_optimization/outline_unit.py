@@ -2,6 +2,7 @@
 """Focused safety gates for the exact 8051 outliner; no compiler or USB needed."""
 from pathlib import Path
 from collections import defaultdict
+from fractions import Fraction
 import random
 import re
 import sys
@@ -155,7 +156,7 @@ class OutliningGates(unittest.TestCase):
         # Independent pre-cache search: enumerate only currently unused
         # windows again after every selection. A shifted overlapping match
         # can become usable, so retaining only an initial disjoint set fails.
-        def reference(blocks, limit, minimum):
+        def reference(blocks, limit, minimum, strategy):
             selected, used = [], set()
             for _ in range(limit):
                 found = defaultdict(list)
@@ -183,7 +184,13 @@ class OutliningGates(unittest.TestCase):
                         choices.append((saving, size, key, kept))
                 if not choices:
                     break
-                choice = min(choices, key=lambda c: (-c[0], -c[1], repr(c[2])))
+                def priority(c):
+                    saving, size, key, sites = c
+                    body_power, site_power = strategy[1:]
+                    score = Fraction(saving ** 4 * size ** max(0, body_power),
+                                     len(sites) ** site_power * size ** max(0, -body_power))
+                    return (-score, -saving, -size, repr(key))
+                choice = min(choices, key=priority)
                 selected.append(choice)
                 used.update((i.module, i.line) for seq in choice[3] for i in seq)
             return selected
@@ -203,9 +210,20 @@ class OutliningGates(unittest.TestCase):
                                                      f'r0,#{value}', ()))
                 blocks.append(block)
             limit, minimum = rng.randrange(1, 9), rng.randrange(1, 6)
-            with self.subTest(seed=seed):
-                self.assertEqual(outline.select(blocks, limit, minimum),
-                                 reference(blocks, limit, minimum))
+            matches = outline.sequence_matches(blocks)
+            expected = []
+            for strategy in outline.SELECTION_STRATEGIES:
+                with self.subTest(seed=seed, strategy=strategy[0]):
+                    result = reference(blocks, limit, minimum, strategy)
+                    expected.append(result)
+                    self.assertEqual(outline.select_matches(matches, limit, minimum, strategy), result)
+            best, report = outline.select_compact(blocks, limit, minimum)
+            objective = lambda values: (sum(c[0] for c in values),
+                                        -sum(len(c[3]) for c in values), -len(values))
+            self.assertEqual(best, max(expected, key=objective))
+            self.assertEqual(report['selected_strategy'],
+                             outline.SELECTION_STRATEGIES[expected.index(best)][0])
+            self.assertGreaterEqual(sum(c[0] for c in best), sum(c[0] for c in expected[0]))
 
     def test_repeated_apply_rejected_readonly_parse_allowed(self):
         self.source('repeat.asm',BODY+['_again:']+BODY)
