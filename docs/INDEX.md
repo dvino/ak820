@@ -26,6 +26,7 @@ difference.
 | Run offline tests and check a real keyboard | [Testing](TESTING.md) |
 | See the published image and device checks | [Status](STATUS.md) |
 | See planned features | [Roadmap](ROADMAP.md) |
+| Develop the web and desktop configurator | [Requirements and plan](../web/README.md) |
 
 This port is for the wired AJAZZ AK820 with a VS11K28A controller and USB
 `320F:505B`. AK820 V2, Pro and Max use different hardware.
