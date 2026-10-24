@@ -53,14 +53,18 @@ preparation.
 
 ## Current development source
 
-The source now includes `full-mouse`, `full-auto-shift` and
-`full-mouse-auto-shift` profiles. They add compact Mouse Keys, Auto Shift or
-both to the alpha.3 `full` feature set. These development images are not published or installed and have no
-release approval. The published and installed firmware remains the exact alpha.3
-image identified above. All eleven named development profiles pass offline checks;
-`full` also passes with `--short-calls`, for twelve checked build variants.
-Current compact-feature source, builds and limitations
-are recorded in the [technical report](../audits/rc6/compact-next-20261024/README.md).
+Sixteen named source profiles now include compact Mouse Keys, Auto Shift,
+volatile GUI controls and two temporary Dynamic Macro slots in supported
+combinations. Common encoder, mouse and EEPROM-cursor optimizations preserve
+six layers, 16 Vial macros, 8192 macro bytes, eight Combos and schema 0x082002.
+The published and installed firmware remains the exact alpha.3 image above.
+
+Isolated feature tests and integrated resource probes have passed. The GUI
+and Dynamic Macro implementations have independent source/test reviews;
+final qualification of the frozen sixteen-profile source is pending. The
+previous eleven-profile matrix belongs to source 06b8f0f and is historical.
+Current measurements and review scope are in the
+[technical report](../audits/rc6/compact-runtime-20261024/README.md).
 
 ## Installed firmware
 

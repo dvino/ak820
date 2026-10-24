@@ -54,7 +54,8 @@ class Module:
     labels: dict[tuple[str, str], int]
 
 
-def modules(tree, image, *, diagnostic_candidates=None, diagnostic_symbols=None):
+def modules(tree, image, *, diagnostic_candidates=None, diagnostic_symbols=None,
+            diagnostic_rejections=None):
     """Authenticate relocated rows and match every instruction to its ASM line."""
     result, warning_sites = {}, []
     admitted_warnings = {(c['module'],c['line']):c for c in (diagnostic_candidates or [])}
@@ -80,6 +81,8 @@ def modules(tree, image, *, diagnostic_candidates=None, diagnostic_symbols=None)
                 candidate = admitted_warnings[key]
                 if marker[1] is not None and marker[1] != candidate['target']:
                     raise ValueError('Diagnostic marker symbol differs')
+                if key in warning_sites:
+                    raise ValueError('Duplicate diagnostic listing page marker')
                 warning_sites.append(key)
             with tempfile.NamedTemporaryFile(mode='w+',suffix='.rst') as temporary:
                 temporary.write(''.join(cleaned))
@@ -132,8 +135,20 @@ def modules(tree, image, *, diagnostic_candidates=None, diagnostic_symbols=None)
         candidate = admitted_warnings[(name,line)]
         row = result[name].instructions[line-1]
         target = resolve(result[name],candidate['function'],candidate['target'],diagnostic_symbols)
-        if short_valid(row.address,row.data,target,candidate['kind']):
-            raise ValueError('Diagnostic page marker at independently valid site')
+        expected = 'acall' if candidate['kind'] == 'lcall' else 'ajmp'
+        original = re.sub(r'\b'+expected+r'\b', candidate['kind'],
+                          result[name].source[line-1], count=1)
+        if (candidate['kind'] not in ('lcall', 'ljmp') or row.opcode != expected
+                or row.operand != candidate['target'] or row.function != candidate['function']
+                or rewrite(original, candidate) != result[name].source[line-1]):
+            raise ValueError('Diagnostic marker candidate differs from source row')
+        # ASlink can reject a boundary transfer whose PC+2 decoding is valid.
+        # Such a trial is never a final artifact: restore this exact site to
+        # its immutable long instruction and relink, preserving strict checks.
+        if diagnostic_rejections is not None:
+            diagnostic_rejections.append({'module':name, 'line':line,
+                'site':row.address, 'target':target, 'bytes':row.data.hex(),
+                'encoding_valid':short_valid(row.address,row.data,target,candidate['kind'])})
     return result
 
 
@@ -386,10 +401,16 @@ def prepare(source, work, link):
         exit_code = link(tree, image, 'shortcalls-'+str(iteration), True)
         require_immutable(source, initial)
         trial_symbols = code_symbols(image.with_suffix('.map'))
-        final = modules(tree, ihx_bytes(image), diagnostic_candidates=active, diagnostic_symbols=trial_symbols)
+        linker_rejections = []
+        final = modules(tree, ihx_bytes(image), diagnostic_candidates=active,
+                        diagnostic_symbols=trial_symbols, diagnostic_rejections=linker_rejections)
         rows = checks(final, trial_symbols, active)
-        invalid = {(r['module'],r['line']) for r in rows if not r['valid']}
+        encoding_rejections = {(r['module'],r['line']) for r in rows if not r['valid']}
+        invalid = encoding_rejections | {(r['module'],r['line']) for r in linker_rejections}
         history.append({'iteration':iteration, 'selected':len(active), 'invalid':len(invalid),
+                        'encoding_rejected_sites':[{'module':name,'line':line}
+                            for name,line in sorted(encoding_rejections)],
+                        'linker_rejected_sites':linker_rejections,
                         'link_exit_code':exit_code})
         (trial/'checks.json').write_text(json.dumps(rows, indent=2)+'\n')
         if not invalid:

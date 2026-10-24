@@ -46,24 +46,25 @@ void mousekey_off(uint8_t code) {
 }
 
 /* Opposing held directions cancel even when only one was newly pressed. */
-static int8_t axis(uint8_t selected, uint8_t negative, uint8_t positive) {
-    if ((directions & (negative | positive)) == (negative | positive)) return 0;
-    if (selected & negative) return -1;
-    if (selected & positive) return 1;
+static int8_t axis(uint8_t selected) {
+    if (selected & 1) return -1;
+    if (selected & 2) return 1;
     return 0;
 }
 
 void mousekey_send(void) {
     uint8_t selected = immediate;
+    uint8_t opposed = directions & (directions >> 1) & 0x55;
+    selected &= (uint8_t)~(opposed | (opposed << 1));
     immediate = 0; /* Relative movement never accumulates behind a busy endpoint. */
 #ifdef MOUSE_SHARED_EP
     mouse_report.report_id = REPORT_ID_MOUSE;
 #endif
     mouse_report.buttons = buttons;
-    mouse_report.x = axis(selected, 4, 8) * 8;
-    mouse_report.y = axis(selected, 1, 2) * 8;
-    mouse_report.v = axis(selected, 0x20, 0x10);
-    mouse_report.h = axis(selected, 0x40, 0x80);
+    mouse_report.x = axis(selected >> 2) * 8;
+    mouse_report.y = axis(selected) * 8;
+    mouse_report.v = (selected & 0x20) ? -1 : ((selected & 0x10) ? 1 : 0);
+    mouse_report.h = axis(selected >> 6);
     if (!(mouse_report.x || mouse_report.y || mouse_report.v || mouse_report.h || buttons != accepted_buttons)) return;
     if (ak820_usb_try_send(MOUSE_IN_EPNUM, (const uint8_t __xdata *)&mouse_report, sizeof(mouse_report))) accepted_buttons = buttons;
 }

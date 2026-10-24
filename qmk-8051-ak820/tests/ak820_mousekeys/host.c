@@ -17,7 +17,22 @@ static void press(uint8_t code) { mousekey_on(code); mousekey_send(); }
 static void release(uint8_t code) { mousekey_off(code); mousekey_send(); }
 static void tick(uint16_t t) { clock_ms=t; mousekey_task(); }
 static void clean(void) { ready=true; mousekey_clear(); mousekey_send(); attempts=sent=0; }
+static int8_t reference_axis(uint8_t held, uint8_t selected, uint8_t negative, uint8_t positive) {
+    if ((held & (negative | positive)) == (negative | positive)) return 0;
+    if (selected & negative) return -1;
+    if (selected & positive) return 1;
+    return 0;
+}
 int main(void) {
+    for (unsigned held=0; held<256; ++held) for (unsigned selected=0; selected<256; ++selected) {
+        directions=held; immediate=selected; buttons=1; accepted_buttons=0;
+        mousekey_send();
+        assert(last.x == reference_axis(held, selected, 4, 8)*8);
+        assert(last.y == reference_axis(held, selected, 1, 2)*8);
+        assert(last.v == reference_axis(held, selected, 0x20, 0x10));
+        assert(last.h == reference_axis(held, selected, 0x40, 0x80));
+        assert(immediate == 0 && last.buttons == 1);
+    }
     const uint8_t codes[]={0xcd,0xce,0xcf,0xd0,0xd9,0xda,0xdb,0xdc};
     const int8_t vectors[][4]={{0,-8,0,0},{0,8,0,0},{-8,0,0,0},{8,0,0,0},{0,0,1,0},{0,0,-1,0},{0,0,0,-1},{0,0,0,1}};
     for(unsigned i=0;i<8;i++) { clean(); press(codes[i]); assert(sent==1); assert(last.x==vectors[i][0]&&last.y==vectors[i][1]&&last.v==vectors[i][2]&&last.h==vectors[i][3]); release(codes[i]); assert(sent==1); }
@@ -32,5 +47,5 @@ int main(void) {
     clean(); press(0xd1); ready=false; mousekey_clear(); mousekey_send(); ready=true; tick(37); assert(last.buttons==0);
     clean(); clock_ms=100; press(0xd0); ready=false; tick(120); tick(200); ready=true; tick(201); assert(sent==1); tick(220); assert(sent==2&&last.x==8);
     before=sent; for(uint8_t c=0xd6;c<=0xdf;c++) if(c<0xd9||c>0xdc) {press(c);release(c);} assert(sent==before); tick(239); assert(sent==before); tick(240); assert(sent==before+1);
-    puts("PASS: real compact Mouse Keys C: directions, cadence, wrap, gaps, opposites, drag, five buttons, clear, busy retry, unsupported keys");
+    puts("PASS: real compact Mouse Keys C: 65536 axis comparisons, directions, cadence, wrap, gaps, opposites, drag, five buttons, clear, busy retry, unsupported keys");
 }

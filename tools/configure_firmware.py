@@ -32,7 +32,8 @@ from test_keyboard import unittest_counts
 FORMAT = 'ak820-configured-build-1'
 WINDOWS = ((0x28a0, 0x3000), (0x3027, 0xc700))
 SYMBOLS = {'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
-           'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process'}
+           'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process',
+           'dynamic-macros': '_ak820_dynamic_macro_process', 'gui-lock': '_ak820_gui_process'}
 RELEASE_BLOCKERS = (
     'No reviewed whole-program foreground stack bound for this image.',
     'No exact-image IRQ/nesting proof combined with that foreground bound.',
@@ -434,6 +435,17 @@ def profile_test_plan(name, build, toolchain):
         plan.append(('auto-shift-linked', QMK, [sys.executable, 'tests/ak820_autoshift/linked.py',
                     '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
                     '--output-dir', str(output / 'auto-shift')]))
+    if 'dynamic-macros' in selected['optional_features']:
+        plan.append(('dynamic-macro-host', QMK, [sys.executable, 'tests/ak820_dynamic_macro/host.py',
+                    '--output', str(output / 'dynamic-macro-host.json')]))
+        plan.append(('dynamic-macro-linked', QMK, [sys.executable, 'tests/ak820_dynamic_macro/linked.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                    '--output-dir', str(output / 'dynamic-macro')]))
+    if 'gui-lock' in selected['optional_features']:
+        plan.append(('gui-lock-host', QMK, [sys.executable, 'tests/ak820_gui_lock/host.py']))
+        plan.append(('gui-lock-linked', QMK, [sys.executable, 'tests/ak820_gui_lock/linked.py',
+                    '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
+                    '--output-dir', str(output / 'gui-lock')]))
     return plan
 
 
@@ -478,13 +490,15 @@ def run_profile_tests(name, build, toolchain, identity):
     output.mkdir()
     sources = test_source_snapshot()
     records = []
+    test_env = dict(os.environ, AK820_SDCC_BIN=str((Path(toolchain) / 'bin').resolve()))
     for identifier, cwd, command in profile_test_plan(name, build, toolchain):
         before = inspect(build, toolchain)['identity']
         require(before == identity, 'Build changed before profile tests')
         log = output / (identifier + '.log')
         print('RUN PROFILE', identifier, flush=True)
         with log.open('w') as stream:
-            result = subprocess.run(command, cwd=cwd, stdout=stream, stderr=subprocess.STDOUT)
+            result = subprocess.run(command, cwd=cwd, stdout=stream, stderr=subprocess.STDOUT,
+                                    env=test_env)
         after = inspect(build, toolchain)['identity']
         records.append({'id': identifier, 'cwd': str(cwd), 'command': command,
                         'exit_code': result.returncode, 'log_sha256': sha(log),

@@ -1,13 +1,17 @@
 """Fail-closed controls for foreground short-transfer reassembly."""
 import hashlib
+import os
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'util'))
 import ak820_shortcalls as short
+sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'tools'))
+from build_release_bundle import SDCC46_PINS
 
 
 def encoding(target,kind='lcall'):
@@ -128,7 +132,7 @@ class ShortCallTests(unittest.TestCase):
         after.labels[('g','_g')]=0x1200
         short.verify({name:before},{name:after},{},{},[])
 
-    def test_diagnostic_page_marker_requires_invalid_selected_site(self):
+    def test_diagnostic_page_marker_rejects_known_candidate_even_if_encoding_valid(self):
         with tempfile.TemporaryDirectory() as temporary:
             tree=Path(temporary);asm=tree/'quantum/test.asm';asm.parent.mkdir()
             asm.write_text('.area CSEG (CODE)\n; function f\n_f:\n\tacall\t_g\n')
@@ -138,22 +142,71 @@ class ShortCallTests(unittest.TestCase):
                  '?ASlink-Warning-2K Page relocation error\n'+
                  '      001000 31 00            [24]    4 \tacall\t_g\n')
             rst=asm.with_suffix('.rst');rst.write_text(raw)
-            candidate={'module':'quantum/test.asm','line':4,'function':'f','target':'_g','kind':'lcall'}
+            candidate={'module':'quantum/test.asm','line':4,'function':'f','target':'_g','kind':'lcall',
+                       'source_line_sha256':hashlib.sha256(b'\tlcall\t_g\n').hexdigest()}
             image={0x1000:0x31,0x1001:0}
             with self.assertRaisesRegex(ValueError,'unrecognized listing row'):
                 short.modules(tree,image)
             with self.assertRaisesRegex(ValueError,'Unexpected diagnostic'):
                 short.modules(tree,image,diagnostic_candidates=[],diagnostic_symbols={})
-            with self.assertRaisesRegex(ValueError,'independently valid'):
-                short.modules(tree,image,diagnostic_candidates=[candidate],diagnostic_symbols={'_g':0x1100})
+            rejected=[]
+            short.modules(tree,image,diagnostic_candidates=[candidate],
+                          diagnostic_symbols={'_g':0x1100},diagnostic_rejections=rejected)
+            self.assertEqual(rejected,[{'module':'quantum/test.asm','line':4,
+                'site':0x1000,'target':0x1100,'bytes':'3100','encoding_valid':True}])
+            with self.assertRaisesRegex(ValueError,'candidate differs'):
+                short.modules(tree,image,diagnostic_candidates=[{**candidate,'target':'_other'}],
+                              diagnostic_symbols={'_other':0x1100})
+            with self.assertRaises(ValueError):
+                short.modules(tree,{0x1000:0x31,0x1001:1},diagnostic_candidates=[candidate],
+                              diagnostic_symbols={'_g':0x1100})
             short.modules(tree,image,diagnostic_candidates=[candidate],diagnostic_symbols={'_g':0x1900})
             self.assertEqual(rst.read_text(),raw)
+            rst.write_text(raw.replace('?ASlink-Warning-2K Page relocation error\n',
+                '?ASlink-Warning-2K Page relocation error\n'*2))
+            with self.assertRaisesRegex(ValueError,'Unexpected diagnostic'):
+                short.modules(tree,image,diagnostic_candidates=[candidate],diagnostic_symbols={'_g':0x1100})
+            rst.write_text(raw)
+            with self.assertRaisesRegex(ValueError,'source hash'):
+                short.modules(tree,image,diagnostic_candidates=[{**candidate,'source_line_sha256':'bad'}],
+                              diagnostic_symbols={'_g':0x1100})
             rst.write_text(raw.replace('Page relocation error','Page relocation error for symbol  _wrong'))
             with self.assertRaisesRegex(ValueError,'marker symbol differs'):
                 short.modules(tree,image,diagnostic_candidates=[candidate],diagnostic_symbols={'_g':0x1900})
             rst.write_text(raw.replace('2K Page relocation error','unrelated warning'))
             with self.assertRaisesRegex(ValueError,'unrecognized listing row'):
                 short.modules(tree,image,diagnostic_candidates=[candidate],diagnostic_symbols={'_g':0x1900})
+
+    def test_real_aslink_boundary_marker_is_authenticated_and_rejected(self):
+        configured=os.environ.get('AK820_SDCC_BIN')
+        tools=Path(configured) if configured else Path(__file__).resolve().parents[3]/'toolchains/sdcc-4.6.0/bin'
+        if not configured and not (tools/'sdas8051').exists():
+            self.skipTest('Pinned SDCC 4.6.0 toolchain unavailable; set AK820_SDCC_BIN')
+        for name in ('sdas8051','sdld'):
+            self.assertTrue((tools/name).is_file(),'Missing pinned tool: '+name)
+            self.assertEqual(short.digest(tools/name),SDCC46_PINS[name],'Wrong pinned tool: '+name)
+        with tempfile.TemporaryDirectory() as temporary:
+            tree=Path(temporary)
+            original='.area CSEG (CODE)\n.globl _g\n; function f\n_f:\n lcall _g\n'
+            candidate={'module':'edge.asm','line':5,'function':'f','target':'_g',
+                       'kind':'lcall','source_line_sha256':hashlib.sha256(b' lcall _g\n').hexdigest()}
+            (tree/'edge.asm').write_text(original.replace('lcall','acall'))
+            (tree/'target.asm').write_text('.area TARGET (CODE)\n.globl _g\n_g:\n ret\n')
+            for name in ('edge','target'):
+                subprocess.run([str(tools/'sdas8051'),'-plosgff',str(tree/(name+'.asm'))],check=True,capture_output=True)
+            for site in (0x97fe,0x97ff):
+                linked=subprocess.run([str(tools/'sdld'),'-n','-i','-m','-w','-u',
+                    '-b',f'CSEG={site:#x}','-b','TARGET=0x9d26',str(tree/'layout'),
+                    str(tree/'edge.rel'),str(tree/'target.rel')],capture_output=True,text=True)
+                self.assertTrue(short.page_errors_only(linked.stderr+linked.stdout))
+                image=short.ihx_bytes(tree/'layout.ihx');rejected=[]
+                short.modules(tree,image,diagnostic_candidates=[candidate],
+                              diagnostic_symbols={'_g':0x9d26},diagnostic_rejections=rejected)
+                self.assertEqual(len(rejected),1)
+                self.assertTrue(rejected[0]['encoding_valid'])
+                self.assertEqual(rejected[0]['bytes'],'b126')
+                with self.assertRaisesRegex(ValueError,'unrecognized listing row'):
+                    short.modules(tree,image)
 
     def test_pc_relative_function_cannot_change_internal_offsets(self):
         name='quantum/test.asm';before=fixture();after=fixture()
@@ -199,14 +252,19 @@ class ShortCallTests(unittest.TestCase):
                 observed.append((label,[p.read_text() for p in tree.rglob('*.asm')]))
                 return 1 if label=='shortcalls-0' else 0
             with patch.object(short,'ihx_bytes',return_value={0x1000:0x12}),\
-                 patch.object(short,'modules',return_value={'quantum/test.asm':module}),\
+                 patch.object(short,'modules',side_effect=lambda *args,**kwargs:
+                    (kwargs.get('diagnostic_rejections',[]).extend(
+                        [{**candidate,'encoding_valid':True}] if len(observed)==2 else [])
+                     or {'quantum/test.asm':module})),\
                  patch.object(short,'code_symbols',return_value={}),\
                  patch.object(short,'select',return_value=([candidate],{})),\
-                 patch.object(short,'checks',side_effect=[[{**candidate,'valid':False}],[]]):
+                 patch.object(short,'checks',side_effect=[[{**candidate,'valid':True}],[]]):
                 # Reuse the real tree writer with a matching relative path.
                 (source/'quantum').mkdir();(source/'test.asm').rename(source/'quantum/test.asm')
                 plan=short.prepare(source,root/'work',link)
             self.assertEqual(plan['candidates'],[])
+            self.assertEqual(plan['iterations'][0]['encoding_rejected_sites'],[])
+            self.assertEqual(len(plan['iterations'][0]['linker_rejected_sites']),1)
             self.assertIn('acall',observed[1][1][0])
             self.assertIn('lcall',observed[2][1][0])
             self.assertEqual(plan['iterations'][-1]['link_exit_code'],0)

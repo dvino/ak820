@@ -17,6 +17,9 @@ real `send_string()` and `send_string_with_delay()` bodies, at run time.
 The harness supplies EEPROM, key-emission endpoints and timing stubs. It checks
 recursive playback through every extended tap/down/up operation, subsequent
 playback after early returns and breaks, and a Vial delay of 65024 ms.
+The EEPROM stub uses logical offsets, matching the board API. Full 8192-byte
+cases check slot15 ending at0x27ff and a missing delimiter stopping at the
+exclusive end0x2800, without an out-of-range read.
 
 Every combination of extended and basic macro actions is consumed by the real
 string walker. Its short command must be terminated even after an extended

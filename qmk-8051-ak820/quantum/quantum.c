@@ -411,6 +411,9 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record_argumen
 #endif
 
     if (!(
+#ifdef AK820_COMPACT_GUI_LOCK
+            ak820_gui_process(keycode, record->event.pressed) &&
+#endif
 #ifdef AK820_NKRO_CONTROL
             process_ak820_nkro(keycode, record) &&
 #endif
@@ -732,9 +735,9 @@ const char *get_numeric_str(char *buf, size_t buf_len, uint32_t curr_num, char c
  *       contents. Use the result immediately, instead of caching it.
  */
 const char *get_u8_str(uint8_t curr_num, char curr_pad) {
-    static char    buf[4]   = {0};
+    static char    buf[4];
     static uint8_t last_num = 0xFF;
-    static char    last_pad = '\0';
+    static char    last_pad;
     if (last_num == curr_num && last_pad == curr_pad) {
         return buf;
     }
@@ -752,9 +755,9 @@ const char *get_u8_str(uint8_t curr_num, char curr_pad) {
  *       contents. Use the result immediately, instead of caching it.
  */
 const char *get_u16_str(uint16_t curr_num, char curr_pad) {
-    static char     buf[6]   = {0};
+    static char     buf[6];
     static uint16_t last_num = 0xFF;
-    static char     last_pad = '\0';
+    static char     last_pad;
     if (last_num == curr_num && last_pad == curr_pad) {
         return buf;
     }

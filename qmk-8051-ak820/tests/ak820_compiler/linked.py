@@ -33,19 +33,26 @@ for label,value,clock in [('press',8,100),('release',0,120)]:
         tag=kind+'_'+label
         commands+=fw.dump_symbol(tag,symbol,6)
         observations.append((tag,symbol,[3,1,clock+6,0,1,int(value!=0)]))
-# Call both retained encoder branches. Inspect all four event objects after
-# return, including both release records, instead of inferring stores from USB.
-encoder_asm=(a.build/'dce/quantum/encoder.asm').read_text()
-events=re.findall(r';\s*quantum/encoder.c:\d+: MAKE_ENCODER_(CW|CCW)_EVENT\(index, (true|false)\);(.*?)(?=;\s*quantum/encoder.c:)',encoder_asm,re.S)
-if len(events)!=4: raise ValueError('Expected four retained encoder event factories')
+# Stop at the actual shared action wrapper on both calls. The encoder uses
+# one event object; inspecting it only after return would miss its press byte.
+symbol=unique('_encoder_exec_mapping_dummy_event_')
+wrapper=fw.address('_ak820_action_exec')
 for clockwise in [1,0]:
+    direction='CW' if clockwise else 'CCW'
+    press_time=300+clockwise*100
+    release_time=press_time+31
+    commands+=fw.clock(press_time)+[f'break {wrapper:#x}']
     commands+=fw.write('_encoder_exec_mapping_PARM_2',[clockwise])+fw.call('_encoder_exec_mapping',0)
-for direction,pressed,body in events:
-    symbols=re.findall(r'mov\s+dptr,#(_encoder_exec_mapping_dummy_event_\w+)',body)
-    if len(set(symbols))!=1: raise ValueError('Cannot identify event factory object')
-    symbol=symbols[0]; tag='encoder_'+direction+'_'+pressed
+    tag='encoder_'+direction+'_true'
     commands+=fw.dump_symbol(tag,symbol,6)
-    observations.append((tag,symbol,[0,0xfd if direction=='CW' else 0xfc,None,None,2 if direction=='CW' else 3,int(pressed=='true')]))
+    observations.append((tag,symbol,[0,0xfd if clockwise else 0xfc,press_time&255,press_time>>8,2 if clockwise else 3,1]))
+    # Supply a later peripheral clock while the press is being processed.
+    # The release must read it again instead of reusing the press timestamp.
+    commands+=fw.clock(release_time)+['run']
+    tag='encoder_'+direction+'_false'
+    commands+=fw.dump_symbol(tag,symbol,6)
+    observations.append((tag,symbol,[0,0xfd if clockwise else 0xfc,release_time&255,release_time>>8,2 if clockwise else 3,0]))
+    commands += [f'clear {wrapper:#x}', 'run']
 log,stack=fw.execute('linked-bool-stores',commands)
 cases=[]
 for tag,symbol,expected in observations:

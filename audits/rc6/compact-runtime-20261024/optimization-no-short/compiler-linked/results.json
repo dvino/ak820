@@ -1,0 +1,187 @@
+{
+  "image_sha256": "59355f36c7da013d363a9ea0f5226e2e622274fd9c26673004e276acc19712f1",
+  "cases": [
+    {
+      "name": "matrix_press",
+      "symbol": "_matrix_task_dummy_event_90004_529",
+      "address": 3006,
+      "expected": [
+        3,
+        1,
+        null,
+        null,
+        1,
+        1
+      ],
+      "actual": [
+        3,
+        1,
+        106,
+        0,
+        1,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "record_press",
+      "symbol": "_action_exec_record_10001_629",
+      "address": 2121,
+      "expected": [
+        3,
+        1,
+        null,
+        null,
+        1,
+        1
+      ],
+      "actual": [
+        3,
+        1,
+        106,
+        0,
+        1,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "matrix_release",
+      "symbol": "_matrix_task_dummy_event_90004_529",
+      "address": 3006,
+      "expected": [
+        3,
+        1,
+        null,
+        null,
+        1,
+        0
+      ],
+      "actual": [
+        3,
+        1,
+        126,
+        0,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "record_release",
+      "symbol": "_action_exec_record_10001_629",
+      "address": 2121,
+      "expected": [
+        3,
+        1,
+        null,
+        null,
+        1,
+        0
+      ],
+      "actual": [
+        3,
+        1,
+        126,
+        0,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "encoder_CW_true",
+      "symbol": "_encoder_exec_mapping_dummy_event_10000_167",
+      "address": 2956,
+      "expected": [
+        0,
+        253,
+        144,
+        1,
+        2,
+        1
+      ],
+      "actual": [
+        0,
+        253,
+        144,
+        1,
+        2,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "encoder_CW_false",
+      "symbol": "_encoder_exec_mapping_dummy_event_10000_167",
+      "address": 2956,
+      "expected": [
+        0,
+        253,
+        175,
+        1,
+        2,
+        0
+      ],
+      "actual": [
+        0,
+        253,
+        175,
+        1,
+        2,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "encoder_CCW_true",
+      "symbol": "_encoder_exec_mapping_dummy_event_10000_167",
+      "address": 2956,
+      "expected": [
+        0,
+        252,
+        44,
+        1,
+        3,
+        1
+      ],
+      "actual": [
+        0,
+        252,
+        44,
+        1,
+        3,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "encoder_CCW_false",
+      "symbol": "_encoder_exec_mapping_dummy_event_10000_167",
+      "address": 2956,
+      "expected": [
+        0,
+        252,
+        75,
+        1,
+        3,
+        0
+      ],
+      "actual": [
+        0,
+        252,
+        75,
+        1,
+        3,
+        0
+      ],
+      "passed": true
+    }
+  ],
+  "stack": {
+    "peak_sp": 134,
+    "tested_stack_bytes": 42,
+    "fixture_auto_shift": "disabled-with-AS_OFF"
+  },
+  "passed": true
+}

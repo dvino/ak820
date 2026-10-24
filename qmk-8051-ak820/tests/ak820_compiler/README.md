@@ -35,8 +35,10 @@ python3 qmk-8051-ak820/tests/ak820_compiler/linked.py \
 
 It executes the retained matrix path for press and release, then checks the
 event object and the action record. It also executes both encoder mapping
-branches and checks their four press/release objects. Static symbols come
-from relocated listings; changed factory shapes fail instead of guessing.
+directions and stops at the shared action wrapper for each press and release.
+The single encoder event buffer is checked before each call. A later simulated
+clock value between calls checks that release reads a fresh timestamp. Static
+symbols come from relocated listings; missing or ambiguous buffers fail.
 This runner imports the existing `ak820_emitted` CPU harness and uses its
 simulated matrix, USB and NVM setup. Its report identifies the exact IHX hash.
 The CPU model does not prove physical keys, encoder wiring, USB timing,

@@ -1,0 +1,7 @@
+{"modules": 71, "functions": 662, "retained": 439, "removed_count": 223}
+Traceback (most recent call last):
+  File "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/util/build_ak820.py", line 296, in <module>
+    main()
+  File "/workspace/scratch/97c35f9846c1/ak820/qmk-8051-ak820/util/build_ak820.py", line 230, in main
+    raise ValueError('Linked code outside permitted interval: '+hex(min(invalid))+'..'+hex(max(invalid)))
+ValueError: Linked code outside permitted interval: 0xc700..0xca23

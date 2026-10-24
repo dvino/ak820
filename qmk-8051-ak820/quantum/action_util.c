@@ -29,6 +29,23 @@ extern keymap_config_t keymap_config;
 
 static uint8_t real_mods = 0;
 static uint8_t weak_mods = 0;
+#ifdef AK820_COMPACT_GUI_LOCK
+/* Session-only output mask: keep every physical and generated owner intact.
+ * Re-enabling GUI immediately exposes any GUI modifier still held. */
+#    if defined(__SDCC_mcs51)
+static __bit gui_disabled;
+#    else
+static bool gui_disabled;
+#    endif
+bool ak820_gui_process(uint16_t code, bool pressed) {
+    if (code < QK_MAGIC_GUI_ON || code > QK_MAGIC_TOGGLE_GUI) return true;
+    if (pressed) {
+        gui_disabled = code == QK_MAGIC_TOGGLE_GUI ? !gui_disabled : code == QK_MAGIC_GUI_OFF;
+        send_keyboard_report();
+    }
+    return false;
+}
+#endif
 #ifdef AK820_COMPACT_TAPPING
 /* Raw temporary modifiers (Caps Word, macros) and held action owners are
  * separate. Clearing temporary weak state cannot release an encoded action. */
@@ -393,6 +410,10 @@ void send_keyboard_report(void) {
     // These need to be last to be able to properly control key overrides
     keyboard_report->mods &= ~suppressed_mods;
     keyboard_report->mods |= weak_override_mods;
+#endif
+
+#ifdef AK820_COMPACT_GUI_LOCK
+    if (gui_disabled) keyboard_report->mods &= ~(MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI));
 #endif
 
 #ifdef PROTOCOL_VUSB

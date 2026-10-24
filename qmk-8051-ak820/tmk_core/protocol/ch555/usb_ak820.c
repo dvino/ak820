@@ -661,6 +661,12 @@ void ak820_usb_raw_task(void) {
     EA = saved_ea;
 }
 
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+bool ak820_usb_keyboard_blocked(void) {
+    return !USB_EnumStatus || (USB_SleepStatus & 2) || keyboard_reset;
+}
+#endif
+
 bool ak820_usb_take_keyboard_reset(void) {
     uint8_t result;
     uint8_t saved_ea = EA;

@@ -20,7 +20,9 @@ It checks each direction and button, cursor and wheel thresholds, wraparound,
 long gaps, diagonal and opposing movement, dragging, busy endpoint retries,
 dropped movement backlog, unsupported keycodes, physical matrix dispatch,
 unlock cleanup and NKRO mode cleanup. Host checks use the same production C
-and additionally count sends to detect duplicate reports.
+and additionally count sends to detect duplicate reports. An exhaustive host
+comparison checks all 65,536 held/selected direction pairs against the previous
+axis rules, including cancellation and wheel sign priority.
 
 `--diagnostic-overflow` runs only direct ABI cases without the simulated NVM
 map. It can inspect an over-limit exploratory image; that image is not

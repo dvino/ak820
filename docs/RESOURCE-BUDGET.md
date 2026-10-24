@@ -8,24 +8,23 @@ profiles have source changes beyond that image and are not release-qualified.
 
 ## Current development builds
 
-The 2026-10-24 matrix passes offline checks for all eleven profiles and twelve
-build variants. The complete measurements and exact image hashes are in the
-[technical report](../audits/rc6/compact-next-20261024/README.md).
+Integrated resource probes preserve the original memory windows and all base
+features. Final frozen-profile qualification is pending; the exact probe
+artifacts are in the [technical report](../audits/rc6/compact-runtime-20261024/README.md).
 
 | Build | CODE bytes | Main / low trailing free | Allocated XRAM |
 | --- | ---: | ---: | ---: |
 | Published alpha.3 `full` | 40,043 | 441 / 16 | 2,637 |
-| Optimized `full` | 39,145 | 1,339 / 16 | 2,638 |
-| Optimized `full --short-calls` | 38,907 | 1,577 / 16 | 2,638 |
-| `full-mouse` | 40,029 | 455 / 16 | 2,670 |
-| `full-auto-shift` | 39,758 | 726 / 16 | 2,655 |
-| `full-mouse-auto-shift --short-calls` | 40,403 | 81 / 16 | 2,687 |
+| `full-mouse-auto-shift` | 40,427 | 57 / 16 | 2,654 |
+| `full-dynamic-macro-gui` | 40,319 | 165 / 16 | 2,696 |
+| `full-mouse-auto-shift-gui --short-calls` | 40,432 | 52 / 16 | 2,657 |
 
-XRAM capacity is 3,072 bytes, separate from the fixed 512-byte DMA reservation.
-The current `full` variants allocate 163 stack bytes; their maximum runtime
-stack use remains unproved. The new combined profile needs `--short-calls`,
-which remains off by default. These figures do not transfer alpha.3 release
-approval to changed images.
+XRAM capacity is 3072 bytes, separate from 512 fixed DMA bytes. These images
+allocate 165–166 stack bytes; that capacity is not a runtime stack bound.
+The Mouse Keys + Auto Shift combination now fits without short transfers.
+Adding Dynamic Macros to that combination exceeded the main window by 804
+bytes even with short transfers and is not a supported profile. New builds
+remain unqualified for release.
 
 ## Historical comparisons
 
@@ -58,5 +57,5 @@ do not establish behavior on physical hardware.
 
 These stack figures describe the published alpha.3 image only. They do not
 apply to development profiles with changed source. See [Build profiles](BUILD-PROFILES.md)
-for their feature sets and the [technical report](../audits/rc6/compact-next-20261024/README.md)
+for their feature sets and the [technical report](../audits/rc6/compact-runtime-20261024/README.md)
 for current compact-feature measurements and limits.

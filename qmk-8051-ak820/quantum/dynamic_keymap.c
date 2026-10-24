@@ -624,7 +624,7 @@ void dynamic_keymap_macro_send(uint8_t id) {
     // The Vial GUI never writes the upstream last-byte busy marker.
     // AK820 commits only complete validated streams using a separate byte.
     if (!ak820_macro_ready()) return;
-    uint8_t *p;
+    uint16_t p;
 #else
     // Check the last byte of the buffer.
     // If it's not zero, then we are in the middle
@@ -638,10 +638,12 @@ void dynamic_keymap_macro_send(uint8_t id) {
 
     // Skip N null characters
     // p will then point to the Nth macro
-    p         = (uint8_t *)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR);
 #ifdef AK820_BOARD
-    uint8_t *end = (uint8_t *)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + ak820_macro_length());
+    /* EEPROM tokens are 16-bit offsets, never generic C memory addresses. */
+    p = DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR;
+    uint16_t end = DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + ak820_macro_length();
 #else
+    p = (uint8_t *)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR);
     uint8_t *end = (uint8_t *)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE);
 #endif
     while (id > 0) {
@@ -651,7 +653,7 @@ void dynamic_keymap_macro_send(uint8_t id) {
         if (p == end) {
             return;
         }
-        if (eeprom_read_byte(p) == 0) {
+        if (eeprom_read_byte((const uint8_t *)(uintptr_t)p) == 0) {
             --id;
         }
         ++p;
@@ -675,7 +677,7 @@ void dynamic_keymap_macro_send(uint8_t id) {
            && !ak820_macro_cancelled
 #endif
     ) {
-        data[0] = eeprom_read_byte(p++);
+        data[0] = eeprom_read_byte((const uint8_t *)(uintptr_t)p++);
         data[1] = 0;
         // Stop at the null terminator of this macro string
         if (data[0] == 0) {
@@ -684,12 +686,12 @@ void dynamic_keymap_macro_send(uint8_t id) {
         if (data[0] == SS_QMK_PREFIX) {
             // If the char is magic, process it as indicated by the next character
             // (tap, down, up, delay)
-            data[1] = eeprom_read_byte(p++);
+            data[1] = eeprom_read_byte((const uint8_t *)(uintptr_t)p++);
             if (data[1] == 0)
                 break;
             if (data[1] == SS_TAP_CODE || data[1] == SS_DOWN_CODE || data[1] == SS_UP_CODE) {
                 // For tap, down, up, just stuff it into the array and send_string it
-                data[2] = eeprom_read_byte(p++);
+                data[2] = eeprom_read_byte((const uint8_t *)(uintptr_t)p++);
 #ifdef AK820_BOARD
                 /* The Vial stream is already decoded. Avoid parsing a second
                  * synthetic send-string byte stream for the same action. */
@@ -710,9 +712,9 @@ void dynamic_keymap_macro_send(uint8_t id) {
                 if (data[2] != 0) send_string(data);
 #endif
             } else if (data[1] == VIAL_MACRO_EXT_TAP || data[1] == VIAL_MACRO_EXT_DOWN || data[1] == VIAL_MACRO_EXT_UP) {
-                data[2] = eeprom_read_byte(p++);
+                data[2] = eeprom_read_byte((const uint8_t *)(uintptr_t)p++);
                 if (data[2] != 0) {
-                    data[3] = eeprom_read_byte(p++);
+                    data[3] = eeprom_read_byte((const uint8_t *)(uintptr_t)p++);
                     if (data[3] != 0) {
                         uint16_t kc;
 #ifdef AK820_BOARD
@@ -742,8 +744,8 @@ void dynamic_keymap_macro_send(uint8_t id) {
                 }
             } else if (data[1] == SS_DELAY_CODE) {
                 // For delay, decode the delay and wait_ms for that amount
-                uint8_t d0 = eeprom_read_byte(p++);
-                uint8_t d1 = eeprom_read_byte(p++);
+                uint8_t d0 = eeprom_read_byte((const uint8_t *)(uintptr_t)p++);
+                uint8_t d1 = eeprom_read_byte((const uint8_t *)(uintptr_t)p++);
                 if (d0 == 0 || d1 == 0)
                     break;
                 // we cannot use 0 for these, need to subtract 1 and use 255 instead of 256 for delay calculation

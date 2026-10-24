@@ -2,10 +2,10 @@
 
 # Build profiles
 
-The configurator lists eleven development profiles. The `full` feature set
-matches published alpha.3; `full-mouse`, `full-auto-shift` and
-`full-mouse-auto-shift` add compact features. Development profiles are not release or flashing
-recommendations. The new source profiles have not inherited alpha.3's
+The configurator lists sixteen supported development profiles. The `full`
+feature set matches published alpha.3. Other profiles add compact Mouse Keys,
+Auto Shift, GUI controls or Dynamic Macros in supported combinations. These
+profiles are for development, not release or flashing. They have not inherited alpha.3's
 image qualification or hardware evidence. See [Status](STATUS.md) and the
 [compact-feature report](../audits/rc6/compact-next-20261024/README.md).
 
@@ -25,8 +25,8 @@ python tools/configure_firmware.py build --profile standard \
 
 Choose any listed profile. The alternative `--features` selector accepts a
 space-separated list of supported feature names. Only named combinations
-listed by the configurator are valid; the current combined compact profile
-requires `--short-calls` as shown below. For example:
+listed by the configurator are valid. Two profiles require optional
+`--short-calls`, as shown below. For example:
 
 ```sh
 python tools/configure_firmware.py build --features nkro-control one-shot \
@@ -36,12 +36,12 @@ python tools/configure_firmware.py build --features nkro-control one-shot \
   --python qmk-8051-ak820/.venv/bin/python
 ```
 
-For the combined compact profile, pass `--short-calls` explicitly. This option
-is off by default and is required for this current combination to fit. Use a
-fresh build directory:
+`full-mouse-auto-shift-gui` and `full-auto-shift-dynamic-macro` require
+`--short-calls`, which remains off by default. Other supported profiles do not
+require this option. Use a fresh build directory:
 
 ```sh
-python tools/configure_firmware.py build --profile full-mouse-auto-shift \
+python tools/configure_firmware.py build --profile full-mouse-auto-shift-gui \
   --short-calls \
   --build-dir qmk-8051-ak820/.build/full-input \
   --toolchain toolchains/sdcc-4.6.0 \
@@ -89,6 +89,11 @@ choices.
 | `full-mouse` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys |
 | `full-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Auto Shift |
 | `full-mouse-auto-shift` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys and Auto Shift |
+| `full-gui-lock` | `nkro-control`, `one-shot`, `space-cadet`, GUI controls |
+| `full-dynamic-macro` | `nkro-control`, `one-shot`, `space-cadet`, compact Dynamic Macros |
+| `full-dynamic-macro-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Dynamic Macros and GUI controls |
+| `full-mouse-auto-shift-gui` | `nkro-control`, `one-shot`, `space-cadet`, compact Mouse Keys, Auto Shift and GUI controls |
+| `full-auto-shift-dynamic-macro` | `nkro-control`, `one-shot`, `space-cadet`, compact Auto Shift and Dynamic Macros |
 
 NKRO control provides `NK_ON`, `NK_OFF` and `NK_TOGG`. The selected report mode
 lasts until restart; restart uses the saved/default mode. Switching clears
@@ -119,9 +124,10 @@ changed source profiles. See [Status](STATUS.md) for evidence and limits.
 
 ## Deferred feature inventory
 
-Five of the 11 candidates have bounded development implementations. The `full`
-profile selects three; `full-mouse`, `full-auto-shift` and `full-mouse-auto-shift` add compact
-features. Six remain deferred. A Vial control alone does not establish
+Seven of the 11 candidates or bounded feature areas have development
+implementations: NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift,
+GUI lock and Dynamic Macros. The `full` profile selects the first three. Five
+candidates remain deferred or partial. A Vial control alone does not establish
 firmware support.
 
 | Deferred candidate | Open work |
@@ -129,9 +135,8 @@ firmware support.
 | Tap Dance | Upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
 | Key Overrides | Upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Magic | Modifier swaps and GUI control need separate compatibility and persistence review. |
+| Magic modifier swaps | GUI lock is available separately; modifier swaps and persistent settings remain open. |
 | Leader | Bound sequence length, timeout and supported outputs. |
-| Dynamic macros | Bound recording RAM and qualify replay; existing Vial macros remain available. |
 
 Console and Command remain disabled. Fault injection is a test facility, not a
 selectable firmware feature. Existing FD00/FD01 diagnosis is read-only. The

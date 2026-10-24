@@ -3,8 +3,8 @@
 # Roadmap
 
 NKRO control, modifier One Shot and Space Cadet are available in the `full`
-profile. Development profiles add compact Mouse Keys and Auto Shift individually and
-together. These new profiles are source development builds;
+profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls
+and Dynamic Macros in supported combinations. These profiles are source development builds;
 they do not inherit the published alpha.3 qualification.
 Their behavior and limits are listed in [Build profiles](BUILD-PROFILES.md).
 The published and installed alpha.3 image is the exact full image described in
@@ -13,27 +13,30 @@ changes, are development work and are not approved for packaging or installation
 
 ## Deferred features
 
-The initial inventory contains 11 candidates. Five have bounded development
-implementations; six remain deferred. A Vial control or keycode is
-not evidence that a feature is enabled.
+The initial inventory contains 11 candidates. Bounded implementations now
+cover NKRO control, One Shot, Space Cadet, Mouse Keys, Auto Shift, GUI lock and
+Dynamic Macros. A Vial control or keycode alone does not show that a feature is
+enabled.
 
 | Candidate | Open work |
 | --- | --- |
 | Tap Dance | The upstream probe has callback ABI blockers and moves fixed Combo storage; a compact implementation must preserve the Combo layout. |
 | Key Overrides | The upstream probe has callback ABI blockers; modifier ownership and interactions with Repeat, Caps Word and macros remain open. |
 | QMK Settings in Vial | A new versioned saved record, typed backup and restore, and migration still need implementation. The compatible plan preserves existing Combo offsets; see the [settings plan](../audits/rc6/roadmap-max-20261024/qmk-settings-plan.md). |
-| Magic | Modifier swaps and GUI control need separate compatibility and persistence review. |
+| Magic modifier swaps | GUI lock is available separately; modifier swaps and persistent settings remain open. |
 | Leader | Bound sequence length, timeout and supported outputs. |
-| Dynamic macros | Bound recording RAM and qualify replay behavior; Vial macros remain available. |
 
 Probe details and measured outcomes are in the
 [feature report](../audits/rc6/roadmap-max-20261024/feature-probes.md).
 
-The three available implementations are intentionally limited. NKRO control
+The available implementations are intentionally limited. NKRO control
 adds only `NK_ON`, `NK_OFF` and `NK_TOGG`; One Shot handles modifier combinations
 without layer form, timeout or locking; Space Cadet handles `SC_LSPO`, `SC_RSPC`
 and `SC_SENT` through compact tap-hold. See [Build profiles](BUILD-PROFILES.md)
 for exact behavior and tested interactions.
+GUI lock controls are described in [GUI controls](GUI-CONTROL.md). Compact
+Dynamic Macros provide two volatile slots of 16 completed taps; see the
+[user guide](COMPACT-DYNAMIC-MACROS.md) for exclusions and playback behavior.
 
 ## Runtime settings and saved data
 
