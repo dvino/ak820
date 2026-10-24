@@ -1,0 +1,143 @@
+{
+  "configuration": {
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "format": "ak820-build-configuration-1",
+    "make_options": {
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "no",
+      "AK820_NKRO_CONTROL": "no"
+    },
+    "nvm_schema": 532482,
+    "optional_features": [
+      "one-shot"
+    ],
+    "profile": "one-shot",
+    "release_approved": false,
+    "runtime_qmk_settings": [],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200
+    }
+  },
+  "format": "ak820-configured-build-1",
+  "hardware_validated": false,
+  "identity": {
+    "build_report_sha256": "e068330c94fa891d8dc7765811ee1a4f23915d87582647b1ca63488c4513bad6",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "configuration_sha256": "6af38cba028bff1d9d03946e981a4a4bbaedd03989a20486380c36f4e491dab0",
+    "ihx_sha256": "8355f4f85f47f19e5af5c84776071af6091af5d12274e86f07f76e5d257ef9f9",
+    "map_sha256": "bc902ce7242e7e817d630f0d7663dda0ce91288403eec525d4249d292c0d1223",
+    "mem_sha256": "4f0dcff8cb3a13f9df68a9aa6f29308451d671f587571ddb49b972e00b893ffe",
+    "nvm_schema": 532482,
+    "profile": "one-shot",
+    "source_manifest_sha256": "322c7aef79f12e1e8a5d27a9c1d24948bf28336b10afa17005954886f6ce714d"
+  },
+  "offline_tests_passed": true,
+  "physical_device_commands": 0,
+  "profile_tests": {
+    "sha256": "45c9c0a608188915b128a73ed440b807e46280241ee6890f5c450abd986159a3",
+    "source_files_sha256": "c204eb78a71f216915596058029e67ca352374482397a94098703dbe4631591b",
+    "suites": [
+      "gates",
+      "outline-gates",
+      "stack-gates",
+      "outline-integrity",
+      "vialrgb-linked",
+      "one-shot-host",
+      "one-shot-linked"
+    ]
+  },
+  "qualification": {
+    "sha256": "bfe9769c8ba041e54b24ef6a63f093257b98f1447d4e988d05bbc8519818a430",
+    "suites": 28,
+    "unit_tests": {
+      "run": 270,
+      "skipped": 0
+    }
+  },
+  "release_approved": false,
+  "release_blockers": [
+    "No reviewed whole-program foreground stack bound for this image.",
+    "No exact-image IRQ/nesting proof combined with that foreground bound.",
+    "No approved installer/settings transition for this feature identity."
+  ],
+  "resources": {
+    "absolute_xram": [
+      {
+        "reserved_end_exclusive": 1024,
+        "start": 512,
+        "symbol": "_ak820_led_dma"
+      }
+    ],
+    "code_bytes": 39765,
+    "code_windows": [
+      {
+        "end_exclusive": 12288,
+        "highest_address": 12271,
+        "name": "low",
+        "occupied_bytes": 1872,
+        "start": 10400,
+        "trailing_free_bytes": 16
+      },
+      {
+        "end_exclusive": 50944,
+        "highest_address": 50224,
+        "name": "main",
+        "occupied_bytes": 37893,
+        "start": 12327,
+        "trailing_free_bytes": 719
+      }
+    ],
+    "internal_ram": {
+      "initial_sp": 95,
+      "runtime_stack_bound": null,
+      "stack_capacity": 160,
+      "stack_margin": null,
+      "stack_qualified": false,
+      "static_bytes": 96
+    },
+    "protected_windows_clear": true,
+    "xram": {
+      "bytes": 2622,
+      "capacity": 3072,
+      "end_inclusive": 3645,
+      "start": 1024
+    }
+  },
+  "runtime_analysis": {
+    "exit_code": 2,
+    "log_sha256": "e2a28643acc25654a184482c4c11d316eb26742602867eca8702bde80019d0bf",
+    "report_sha256": "bc07862b293cc98467b4f203d0a15786ca7fd839830cffcf95e3acc1c4de6987",
+    "root_bounds": {
+      "_USB_DeviceInterrupt": 6,
+      "_ak820_led_irq": null,
+      "_ak820_timer_irq": 2,
+      "_main": null
+    },
+    "unresolved_roots": [
+      "_main",
+      "_ak820_led_irq"
+    ],
+    "whole_program_qualified": false
+  },
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "source": {
+    "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+    "dirty": false
+  }
+}

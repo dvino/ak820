@@ -1,0 +1,779 @@
+{
+  "format": "ak820-final-profile-matrix-1",
+  "source_commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+  "complete": true,
+  "profiles": [
+    {
+      "profile": "standard",
+      "source": {
+        "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+        "dirty": false
+      },
+      "identity": {
+        "build_report_sha256": "6471705bb77cceef6de8878933a3b84b256925e838f9753c56522acc73608741",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "cfc4b303d0b8b2240785997a94192beaf996a1d5814ed5397f343835f723737b",
+        "ihx_sha256": "b3ffa3e87d42f84f0c8a05ce0c592e47badea53a5839ddbd3e8b50488d9ff665",
+        "map_sha256": "16cc0e0b0a3fa4b56e7f9275161bf7e3ac7e76e9f9636304fac43423ecc0ae17",
+        "mem_sha256": "020ce50869a9fe37a2424d4e36bed252656758073f9c4583d7e830ad7976f518",
+        "nvm_schema": 532482,
+        "profile": "standard",
+        "source_manifest_sha256": "f9cb86dcb508debc6a3095e95d640247505b6e02bbe13d118b50e4ac237912ba"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39115,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12203,
+            "name": "low",
+            "occupied_bytes": 1804,
+            "start": 10400,
+            "trailing_free_bytes": 84
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49642,
+            "name": "main",
+            "occupied_bytes": 37311,
+            "start": 12327,
+            "trailing_free_bytes": 1301
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 95,
+          "runtime_stack_bound": null,
+          "stack_capacity": 160,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 96
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2612,
+          "capacity": 3072,
+          "end_inclusive": 3635,
+          "start": 1024
+        }
+      },
+      "base_suites": 28,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "supplemental_suites": [
+        "gates",
+        "outline-gates",
+        "stack-gates",
+        "outline-integrity",
+        "vialrgb-linked"
+      ],
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "519814c14ed4ff1397d913552043f631be7b14602d1be42e3113b204ae018b0a",
+        "report_sha256": "5b4539a8b33df81cd757785e0c08096fed05584d4b7bfb95392591a5a327de86",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": null,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main",
+          "_ak820_led_irq"
+        ],
+        "whole_program_qualified": false
+      },
+      "release_approved": false,
+      "configuration_report_sha256": "20946882f4c88d0069c4391f2f4d36a97b9c5424b9b5ab26e122d590dd6aef95",
+      "retained_files": 236,
+      "retained_bytes": 3340807
+    },
+    {
+      "profile": "nkro",
+      "source": {
+        "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+        "dirty": false
+      },
+      "identity": {
+        "build_report_sha256": "190f8ddd992827f6848550a18344379e09386f48a3b7b645721fd98241c5f742",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "7e1e1ddff07d32712a3e393d31204ae7f48e2280dbf1c3ce60f60ba73cdb4bb9",
+        "ihx_sha256": "04251fc6c79463525ebedae418a448c5fc99876be2066e5e8407148f0216b4a3",
+        "map_sha256": "07a01a47047cf58ce247890a102dc029a9fce351275c388b6184c75609734b2f",
+        "mem_sha256": "718b566655b4d53a09f7cfabe63376ef5a36e8bff16b73f45a1de63b9b54f941",
+        "nvm_schema": 532482,
+        "profile": "nkro",
+        "source_manifest_sha256": "ac087b1212cf16ef7ea6231d5646eadbdcecc3e9d8fbb2a129204f96607a76c8"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39259,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12203,
+            "name": "low",
+            "occupied_bytes": 1804,
+            "start": 10400,
+            "trailing_free_bytes": 84
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49786,
+            "name": "main",
+            "occupied_bytes": 37455,
+            "start": 12327,
+            "trailing_free_bytes": 1157
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 96,
+          "runtime_stack_bound": null,
+          "stack_capacity": 159,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 97
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2617,
+          "capacity": 3072,
+          "end_inclusive": 3640,
+          "start": 1024
+        }
+      },
+      "base_suites": 28,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "supplemental_suites": [
+        "gates",
+        "outline-gates",
+        "stack-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "nkro-control-host",
+        "nkro-control-linked"
+      ],
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "98ae6d0171a0df5e9f1924e4bebfa352b0269b7edb4355d32926ab7778696aac",
+        "report_sha256": "3c37a65d3fc7535ac7550884ad3479f2fb93dd72c993703d53f1bf3451ba0419",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": null,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main",
+          "_ak820_led_irq"
+        ],
+        "whole_program_qualified": false
+      },
+      "release_approved": false,
+      "configuration_report_sha256": "17f73769f828aac6bed75ab894d0f3da4ecb8ba959105c95bce83644be1feb11",
+      "retained_files": 241,
+      "retained_bytes": 3362150
+    },
+    {
+      "profile": "one-shot",
+      "source": {
+        "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+        "dirty": false
+      },
+      "identity": {
+        "build_report_sha256": "e068330c94fa891d8dc7765811ee1a4f23915d87582647b1ca63488c4513bad6",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "6af38cba028bff1d9d03946e981a4a4bbaedd03989a20486380c36f4e491dab0",
+        "ihx_sha256": "8355f4f85f47f19e5af5c84776071af6091af5d12274e86f07f76e5d257ef9f9",
+        "map_sha256": "bc902ce7242e7e817d630f0d7663dda0ce91288403eec525d4249d292c0d1223",
+        "mem_sha256": "4f0dcff8cb3a13f9df68a9aa6f29308451d671f587571ddb49b972e00b893ffe",
+        "nvm_schema": 532482,
+        "profile": "one-shot",
+        "source_manifest_sha256": "322c7aef79f12e1e8a5d27a9c1d24948bf28336b10afa17005954886f6ce714d"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39765,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50224,
+            "name": "main",
+            "occupied_bytes": 37893,
+            "start": 12327,
+            "trailing_free_bytes": 719
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 95,
+          "runtime_stack_bound": null,
+          "stack_capacity": 160,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 96
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2622,
+          "capacity": 3072,
+          "end_inclusive": 3645,
+          "start": 1024
+        }
+      },
+      "base_suites": 28,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "supplemental_suites": [
+        "gates",
+        "outline-gates",
+        "stack-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "one-shot-host",
+        "one-shot-linked"
+      ],
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "e2a28643acc25654a184482c4c11d316eb26742602867eca8702bde80019d0bf",
+        "report_sha256": "bc07862b293cc98467b4f203d0a15786ca7fd839830cffcf95e3acc1c4de6987",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": null,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main",
+          "_ak820_led_irq"
+        ],
+        "whole_program_qualified": false
+      },
+      "release_approved": false,
+      "configuration_report_sha256": "2f6da3ff89d922fccf9c8d0a0b65d6b7f431e907df8baba94ab174ef51f820f5",
+      "retained_files": 255,
+      "retained_bytes": 3456997
+    },
+    {
+      "profile": "nkro-one-shot",
+      "source": {
+        "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+        "dirty": false
+      },
+      "identity": {
+        "build_report_sha256": "6dc43c9e666fec4da909bbd79ae769959b6d9fa8252d9fd0bb218adf814a4c6a",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "36f1282864b77e4e22a53e2b907400a49297dd54bac838cd3383f51362da3057",
+        "ihx_sha256": "d9267e218ec923e0625599dd659df1f4586cfde6c6a12351b403caf6ba15e1b7",
+        "map_sha256": "2bcccef975bf12e4cd7fccd31c7d5956c92470dc345faefaf7bb6c9f87434c13",
+        "mem_sha256": "6490d048014dd438b352f65084871c6cf8d4b29d20492e863d49077a8e0afc36",
+        "nvm_schema": 532482,
+        "profile": "nkro-one-shot",
+        "source_manifest_sha256": "457651ace28085be4f1d52345a7f051ddbd9be17fe9125031325bbc57af6b0bf"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39909,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50368,
+            "name": "main",
+            "occupied_bytes": 38037,
+            "start": 12327,
+            "trailing_free_bytes": 575
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 96,
+          "runtime_stack_bound": null,
+          "stack_capacity": 159,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 97
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2627,
+          "capacity": 3072,
+          "end_inclusive": 3650,
+          "start": 1024
+        }
+      },
+      "base_suites": 28,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "supplemental_suites": [
+        "gates",
+        "outline-gates",
+        "stack-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "nkro-control-host",
+        "nkro-control-linked",
+        "one-shot-host",
+        "one-shot-linked"
+      ],
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "3df0f976d8321c1ca05f0f037bcdb97b104464ac33341c60630acae5cf8092e5",
+        "report_sha256": "1c26874fd5bb4fdb7996e34633fa8a2498a9297c4120fd89687d0fb889d760c3",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": null,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main",
+          "_ak820_led_irq"
+        ],
+        "whole_program_qualified": false
+      },
+      "release_approved": false,
+      "configuration_report_sha256": "e2b083e0522587351b2e908c7b42cc603fb23ec731d4033466b46bdfdda88eba",
+      "retained_files": 263,
+      "retained_bytes": 3500474
+    },
+    {
+      "profile": "space-cadet",
+      "source": {
+        "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+        "dirty": false
+      },
+      "identity": {
+        "build_report_sha256": "d502715e927735bd8c820c4df362d4ac5e50603ec38e0748ada96801cebb5702",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "7e158cde843c3f1c6cc031225dfe5b8be2b354220b091ae58b4edbeb275fec1c",
+        "ihx_sha256": "a093db48537163bff6adde8d17d7aef3ba47bcf91a452969b29853ea2e18aaa7",
+        "map_sha256": "983df35b3b965b60fe5ed8261a0d7e437d4d00a03dc1fbdd335f273291b533bf",
+        "mem_sha256": "f81b6f87802bba87362656db95c7f9ce7c1ff9f2f965d2d53f2121a00b089424",
+        "nvm_schema": 532482,
+        "profile": "space-cadet",
+        "source_manifest_sha256": "cb22efa8d1e96573efa547294dc4f0778cea131731a3d4ebed2b76580e845e37"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39225,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12203,
+            "name": "low",
+            "occupied_bytes": 1804,
+            "start": 10400,
+            "trailing_free_bytes": 84
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49752,
+            "name": "main",
+            "occupied_bytes": 37421,
+            "start": 12327,
+            "trailing_free_bytes": 1191
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2615,
+          "capacity": 3072,
+          "end_inclusive": 3638,
+          "start": 1024
+        }
+      },
+      "base_suites": 28,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "supplemental_suites": [
+        "gates",
+        "outline-gates",
+        "stack-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "space-cadet-host"
+      ],
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "9f0bae5262a6936bb5658b96b83bb1f846552c58f9c5acf3a40ed5b37341c796",
+        "report_sha256": "ed82e67f5646b03075859741bc68d13fabf8a24e1f265c0edcb65a07bd1515c8",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": null,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main",
+          "_ak820_led_irq"
+        ],
+        "whole_program_qualified": false
+      },
+      "release_approved": false,
+      "configuration_report_sha256": "1a34a4bf6a51cd874b53ac85651b0b49567d35996fb9ba3a37a620e2a6e49ce4",
+      "retained_files": 251,
+      "retained_bytes": 3479768
+    },
+    {
+      "profile": "nkro-space-cadet",
+      "source": {
+        "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+        "dirty": false
+      },
+      "identity": {
+        "build_report_sha256": "46a25b5f38ff2a6e5131307908df9737daa45eb3e53eee075592453f6f98fd44",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "4f917ed49edbecff951d35370e84fa00166a55e2be6c642337d54d7ab357605f",
+        "ihx_sha256": "5294361be4f85538d08639c3e30b8de5ed87c45da281aafca5add91d20fbd732",
+        "map_sha256": "e9be2d05847194eb53c49abfc4e38bd5a3c9bc580dc5757b29827329af46794c",
+        "mem_sha256": "86521ac39cd47f6df180fce2bb8841205c6a74ffbebe9f1b86b11f88f9adf7b5",
+        "nvm_schema": 532482,
+        "profile": "nkro-space-cadet",
+        "source_manifest_sha256": "d669fc288bbba2cf633edcccd45d86d96ba6f7a1af4e28ace6f4af82af4976be"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39369,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12203,
+            "name": "low",
+            "occupied_bytes": 1804,
+            "start": 10400,
+            "trailing_free_bytes": 84
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 49896,
+            "name": "main",
+            "occupied_bytes": 37565,
+            "start": 12327,
+            "trailing_free_bytes": 1047
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 93,
+          "runtime_stack_bound": null,
+          "stack_capacity": 162,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 94
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2620,
+          "capacity": 3072,
+          "end_inclusive": 3643,
+          "start": 1024
+        }
+      },
+      "base_suites": 28,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "supplemental_suites": [
+        "gates",
+        "outline-gates",
+        "stack-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "nkro-control-host",
+        "nkro-control-linked",
+        "space-cadet-host"
+      ],
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "9a3735fcbc9e26d37db2ea6c724f63b854324b8296f98c0318dee882b066d91d",
+        "report_sha256": "e8eb195d8f59f8b4583d51359a56686cb7dd04010a0a6af4ef433bb4fd3880a5",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": null,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main",
+          "_ak820_led_irq"
+        ],
+        "whole_program_qualified": false
+      },
+      "release_approved": false,
+      "configuration_report_sha256": "bca588c75fb6dcbed423d7244734b30695dd13db82f7f486f13febf3602ed833",
+      "retained_files": 258,
+      "retained_bytes": 3517802
+    },
+    {
+      "profile": "one-shot-space-cadet",
+      "source": {
+        "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+        "dirty": false
+      },
+      "identity": {
+        "build_report_sha256": "bf0c39ae800dffb1037b640e76a365611f116ca5872e3b2f483e95fe6b4ed4c4",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "775e70ac090a3ecb8b06deb002e579476b07fcd5a4355bd4f9e26fc9365361ce",
+        "ihx_sha256": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map_sha256": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9",
+        "mem_sha256": "69fe91d4c340c96784c27ca133b9339534a53875ae70323a3f7b44733e0c83cb",
+        "nvm_schema": 532482,
+        "profile": "one-shot-space-cadet",
+        "source_manifest_sha256": "a62c28ecafa698e7b131cf9315cb324f24b91df054bbf3b0099fe2d7a1b9e7f3"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 39874,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50333,
+            "name": "main",
+            "occupied_bytes": 38002,
+            "start": 12327,
+            "trailing_free_bytes": 610
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 92,
+          "runtime_stack_bound": null,
+          "stack_capacity": 163,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 93
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2625,
+          "capacity": 3072,
+          "end_inclusive": 3648,
+          "start": 1024
+        }
+      },
+      "base_suites": 28,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "supplemental_suites": [
+        "gates",
+        "outline-gates",
+        "stack-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "one-shot-host",
+        "one-shot-linked"
+      ],
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "47c874d1e83256eb517d2a64b62741f5a635738a03f9de342687cbf47da89ec6",
+        "report_sha256": "e044bc0dacd9463b15c59ead56a592fd650fdde3271d4cc9e81bbeed8c624ad0",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": null,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main",
+          "_ak820_led_irq"
+        ],
+        "whole_program_qualified": false
+      },
+      "release_approved": false,
+      "configuration_report_sha256": "1160b1ea29e68274236baa2ff11ed1873a068441985133ad5bf3f8c09786e783",
+      "retained_files": 269,
+      "retained_bytes": 3602672
+    },
+    {
+      "profile": "full",
+      "source": {
+        "commit": "81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0",
+        "dirty": false
+      },
+      "identity": {
+        "build_report_sha256": "dedc08a67d6d9faec4dc495ed0fcf46e5cc1136c086832cb61381b0925d641e4",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "b7f59c39ad1c9816bea1287d6a061f6aaac1659aacbc6e2ec5ba0d518746a304",
+        "ihx_sha256": "45681603a105334214919be0b8c32fc4ea94e8fc9d5a2003e98d673809d15a78",
+        "map_sha256": "b170a2d10e50464c15c981fe04f40af7f880b5c4282b79d834f848c922d998a8",
+        "mem_sha256": "d6983d8d7331fea8102a664cb3a6c955edccb11902d8bf56c7380f1f540b6afe",
+        "nvm_schema": 532482,
+        "profile": "full",
+        "source_manifest_sha256": "5c03f9d9817d2375e02d455327d9fb8620adc36c68a4fae1d46758855dd2d8d4"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          }
+        ],
+        "code_bytes": 40018,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12271,
+            "name": "low",
+            "occupied_bytes": 1872,
+            "start": 10400,
+            "trailing_free_bytes": 16
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50477,
+            "name": "main",
+            "occupied_bytes": 38146,
+            "start": 12327,
+            "trailing_free_bytes": 466
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 93,
+          "runtime_stack_bound": null,
+          "stack_capacity": 162,
+          "stack_margin": null,
+          "stack_qualified": false,
+          "static_bytes": 94
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2630,
+          "capacity": 3072,
+          "end_inclusive": 3653,
+          "start": 1024
+        }
+      },
+      "base_suites": 28,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "supplemental_suites": [
+        "gates",
+        "outline-gates",
+        "stack-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "nkro-control-host",
+        "nkro-control-linked",
+        "one-shot-host",
+        "one-shot-linked"
+      ],
+      "runtime_analysis": {
+        "exit_code": 2,
+        "log_sha256": "6a074ce50d71b9a3761ae624826d4a77d607b10bab68b8c93de5f25ff0014985",
+        "report_sha256": "bd7ee664f82e376e26778ca3a44824d180908dc256885ee2ae342967a41cb2cb",
+        "root_bounds": {
+          "_USB_DeviceInterrupt": 6,
+          "_ak820_led_irq": null,
+          "_ak820_timer_irq": 2,
+          "_main": null
+        },
+        "unresolved_roots": [
+          "_main",
+          "_ak820_led_irq"
+        ],
+        "whole_program_qualified": false
+      },
+      "release_approved": false,
+      "configuration_report_sha256": "6cb54da7a80ec6249090291dee1768812a411bb01fb8e4f917623cf7493239c7",
+      "retained_files": 279,
+      "retained_bytes": 3627836
+    }
+  ],
+  "totals": {
+    "profiles": 8,
+    "base_suites": 224,
+    "base_unit_tests": 2160,
+    "skipped": 0,
+    "supplemental_suites": 58
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "release_approved": false
+}

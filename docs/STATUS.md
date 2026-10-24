@@ -23,7 +23,11 @@ XRAM bytes**; it leaves 466 trailing main-window bytes and 16 low-window bytes.
 Its 162 allocated stack bytes are capacity, not a runtime bound. Exact profile
 sizes and image identities are in the
 [development evidence](../audits/rc6/roadmap-max-20261024/final/README.md).
-Full offline regression qualification of the frozen source revision is pending.
+All eight profiles passed complete offline qualification from source `81cfc96`:
+28 base suites and 270 unit tests without skips per profile, plus 58 supplemental
+suite executions across the matrix. Exact flags, artifacts, commands, logs and
+test-source hashes are bound to each result. The initial sanitizer environment
+failures and the complete successful reruns are retained in the same report.
 
 The new [packing selection](../audits/rc6/roadmap-max-20261024/packing.md)
 saves 668 CODE bytes on an unchanged baseline. All 194 helpers pass 3,104 CPU

@@ -1,9 +1,16 @@
-# Development profile evidence
+# Development profile qualification
 
-All eight profiles pass the linked memory and configuration checks on 2026-10-24.
-Full offline regression qualification of the frozen source revision is the next
-gate; this initial table records builds only. No profile is approved for release
-or installation. No device was opened.
+All eight profiles passed complete offline regression qualification from source
+`81cfc9609f10cfd5161b5fb128af5c8b5f5e0ad0` on 2026-10-24. The source was clean
+and unchanged during each run. Builds ran sequentially within each of three
+independent worktrees using the pinned SDCC 4.6.0 compiler and C52 simulator.
+No device was opened. No profile is approved for release or installation.
+
+The final images reproduce every preliminary IHX hash and resource measurement.
+MAP and build-report hashes differ between execution directories because those
+reports embed paths; each final qualification binds its own exact files.
+[Machine matrix](matrix.json) records the final image, source, tool and test
+identities. [SHA256SUMS](SHA256SUMS) covers every retained file in this directory.
 
 ## Exact linked resource use
 
@@ -35,12 +42,103 @@ CODE bytes smaller than alpha.2. Its low window has only 16 trailing bytes.
 These are complete-image comparisons; individual optimization costs are
 nonadditive.
 
-Build identities and source manifests are recorded in
-[profile-builds.json](../profile-builds.json). Those are preliminary build
-records; final regression records will be bound to their own exact image,
-MAP, build report and test source hashes.
+## Completed checks
 
-## Scope and related evidence
+Every profile passed 28 base suites and 270 unit tests with zero skips. Across
+eight profiles, that is **224 base suite executions and 2,160 base unit-test
+executions**. The selected features add **58 supplemental suite executions**.
+These are repeated per-profile runs, not a count of unique test implementations.
+
+Each profile's common supplements include 18 configurator gates, 13 outliner
+unit tests, 17 stack-analyzer unit tests, exact outline integrity and 987 linked
+VialRGB cases. NKRO and One Shot add their host and linked-CPU suites. Space
+Cadet adds its host negative controls or joins the One Shot host suite; the base
+tapping CPU runner detects the exact profile and includes its Space Cadet cases.
+The combined profile also checks NKRO cancellation of pending, held and consuming
+One Shot state, and pending/held Space Cadet actions.
+
+| Profile | Base suites | Supplemental suites |
+| --- | ---: | ---: |
+| `standard` | 28 | 5 |
+| `nkro` | 28 | 7 |
+| `one-shot` | 28 | 7 |
+| `nkro-one-shot` | 28 | 9 |
+| `space-cadet` | 28 | 6 |
+| `nkro-space-cadet` | 28 | 8 |
+| `one-shot-space-cadet` | 28 | 7 |
+| `full` | 28 | 9 |
+
+The full profile passes 79 linked tapping/input cases, 15 One Shot cases and
+seven NKRO cases. All profile gate reports bind source files, exact commands,
+logs and before/after image identities. Repeated commands cannot replace a
+missing suite. Compiler flags also bind inline Space Cadet to its declared
+profile, independently of standalone handler symbols.
+
+The full image's actual `package` invocation stops with the expected release
+blockers; [guard result](package-guard.json). A successful offline qualification
+does not bypass packaging restrictions.
+
+## Runtime stack and physical limits
+
+Each exact image has a runtime stack diagnostic, with the analyzer, instruction
+decoder, MAP and relocated listings bound by hashes. All eight diagnostics
+return status 2: `_main` and `_ak820_led_irq` remain unresolved. Timer and USB
+callback bounds are two and six bytes, excluding hardware/OEM entry and any
+nested-interrupt allowance. The analyzer explicitly records
+`whole_program_qualified: false`.
+
+No global stack allowance, exact-image interrupt/nesting proof, physical timing,
+USB controller behavior, DMA behavior, flash persistence, power-loss behavior,
+or installer transition is approved by these tests. The application IHX files
+are development outputs, not complete flashable ROMs or installation packages.
+
+## Environment failure retained
+
+The first isolated runs for standard, NKRO and Space Cadet failed only in the
+RGB host runner when LeakSanitizer could not read the process task directory
+under `/proc`. Each failed report records the failure; none counts as a pass.
+The other 27 base suites passed, with 270 unit tests and no skips.
+
+The same RGB runner passed outside that process isolation with ASan, UBSan and
+LeakSanitizer unchanged. Every final profile was then rebuilt in a fresh
+`final2-*` directory and ran the complete unmodified qualification in that
+execution environment. No sanitizer, assertion, feature or release gate was
+disabled. [Failure evidence](environment-failure/summary.json) retains the three
+original reports and compressed failing logs.
+
+## Retained files and reproduction
+
+Each profile directory includes the application IHX, MAP and MEM, build and
+configuration reports, the complete base qualification, supplemental results,
+outline/reachability manifests, compiler flags and runtime diagnostic. Logs are
+stored as gzip-compressed verbatim bytes. Each `files.json` records both original
+and stored SHA256 and size; original paths in reports identify the execution
+location. The archive does not include generated object trees, simulator command
+scripts or temporary simulated ROM fixtures. Those are regenerated by the checked
+runners; retained logs and reports are evidence of the completed executions.
+
+From this directory, verify the retained data with:
+
+```sh
+sha256sum -c SHA256SUMS
+```
+
+To reproduce a complete profile, follow [Build](../../../../docs/BUILD.md) to
+prepare the pinned tools, then run from the repository root:
+
+```sh
+python tools/configure_firmware.py build --profile full \
+  --build-dir qmk-8051-ak820/.build/recheck-full \
+  --toolchain toolchains/sdcc-4.6.0 \
+  --qmk-bin qmk-8051-ak820/.venv/bin/qmk \
+  --python qmk-8051-ak820/.venv/bin/python
+```
+
+Use a fresh directory for each of the eight named profiles. Host sanitizer
+checks need an environment where their process-introspection facilities work;
+a sanitizer startup failure remains a failed run and must not be hidden.
+
+## Related evidence and review
 
 - [Packing change and 3,104 CPU state comparisons](../packing.md).
 - [Protocol representation and request comparisons](../protocol-size.md).
@@ -48,6 +146,7 @@ MAP, build report and test source hashes.
 - [Exact-image stack analysis and unresolved roots](../../runtime-stack-20261024/report.md).
 - [Deferred feature build probes](../feature-probes.md).
 - [QMK Settings storage and migration proposal](../qmk-settings-plan.md).
+- [Independent final acceptance](../final-acceptance.md).
 
 The published and installed firmware remains v0.6.0-alpha.2. This work neither
 publishes nor installs a new release.

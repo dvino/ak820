@@ -1,0 +1,783 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 47.776,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/00.txt",
+      "log_sha256": "c1de6f0e5ec138581f2df91e6ae30ecc32d10448f999086b83ed660956049c65",
+      "unit_tests": {
+        "run": 132,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.141,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/01.txt",
+      "log_sha256": "bcec33b1e2feacdbbbb366f02f2fb9a06b407974100716ad6cadd2c096a7c049",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.152,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/02.txt",
+      "log_sha256": "fb5b5be8181850d21251305c245599678abbebb69f9e23a6c117f8492719e1b5",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.165,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/03.txt",
+      "log_sha256": "fc4c2931d826fdf9b0e86ffa1cfe8c0853740785be8422229562ca76e7ef3774",
+      "unit_tests": {
+        "run": 10,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.169,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/04.txt",
+      "log_sha256": "d8580475c9bbcd20c45a13467168c0110a5a572162d2416c6547b3ac98c9694a",
+      "unit_tests": {
+        "run": 19,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.073,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/05.txt",
+      "log_sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f",
+      "unit_tests": {
+        "run": 11,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/06.txt",
+      "log_sha256": "c3595ed2436f3afe06de6c8e72cf7645d8bacf699fe604fcf0f6ffbfd8e43c64",
+      "unit_tests": {
+        "run": 67,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/07.txt",
+      "log_sha256": "e586fc0f3bb2a05f4c80f07d1b4c6171e830592f6c7aaf70d4af3b0aa3ebd072",
+      "unit_tests": {
+        "run": 7,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.047,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/08.txt",
+      "log_sha256": "0df67c8754c105cf663ed16d3558d481ac4362b37f51eefa98fb1d48a752ed0f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.647,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/09.txt",
+      "log_sha256": "e66f0d5d6e51bc61b2b971b51d418a6023288be0b1e00f42946e0dd1a7ee0504",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.485,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/11.txt",
+      "log_sha256": "f9eb04d618fd6e84fca35154aae98d233d8bcd6781d3dcfa85e389835d8f3320",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.175,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/12.txt",
+      "log_sha256": "aed1f8864c9289f67cc8ef8f084b5e6a2b55c97a3b722c7ac6f21132e6d52d56",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.251,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.771,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.184,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.072,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.208,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/17.txt",
+      "log_sha256": "10d02c7803446fdb62193e0663ca4c243f4dd702b672d286276b8f2d0cd339c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.33,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/18.txt",
+      "log_sha256": "ab78398099c1d788da902e043b115ff2f5097f44c7b9c8351b68aa793b0beb54",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 11.271,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/19.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.673,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/20.txt",
+      "log_sha256": "543af28ae3c162207356eae44160c66d56804099f122e0b3673031ce24fffe35",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 0.922,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/21.txt",
+      "log_sha256": "c326d5f780f7083cfe997e90256f93532523c3c46bd2efcd1f247b4b3fc391ff",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 0.804,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/22.txt",
+      "log_sha256": "d11c98725cc1b86d68397ae82fe687d2d37f299dcf14123ca34f263e345701a8",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 3.644,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/23.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.384,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/24.txt",
+      "log_sha256": "0b756fc660ff7fb982081f7eec75542b1b4ad233b5c6f6ef3880d7f78791546e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 0.781,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/25.txt",
+      "log_sha256": "242f49bbc3848ffedea591b0d78dada3f747cff9cc48e2203d16e7bac9c9438d",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 5.394,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/26.txt",
+      "log_sha256": "26e5f24a8fe9b4a33cb12c084c1c4d955cfcc36df1bcd1991b7f87e3afca09f6",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    },
+    {
+      "cwd": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet",
+        "--s51",
+        "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 1.678,
+      "log": "/workspace/scratch/e3f0b26d59a5/ak820-qual-b/qmk-8051-ak820/.build/final2-one-shot-space-cadet/qualification-logs-15dyrsvs/27.txt",
+      "log_sha256": "601755d7312634184bd781b42ca2938d0754eba902702d1cb53dfbc61395d45d",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      },
+      "build_after": {
+        "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+        "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/workspace/scratch/664bab7a0eb4/ak820/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 270,
+    "skipped": 0
+  },
+  "passed": true,
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "a5c306b4bfa1f80dd54f187c0573a7478b14c70e09445dc065c03dcd37ed3155",
+    "map": "15e35147854f4da26e2bfda156bd9c152d45999d435760258d82ec8c508065e9"
+  },
+  "build_unchanged": true
+}

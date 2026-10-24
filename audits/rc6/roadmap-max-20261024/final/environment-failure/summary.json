@@ -1,0 +1,56 @@
+{
+  "initial_runs": [
+    {
+      "profile": "standard",
+      "passed": false,
+      "failed_suite": "tests/ak820_rgb/run.py",
+      "failure": "LeakSanitizer could not access process tasks in isolated environment",
+      "other_suites_passed": 27,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "image_hashes": {
+        "ihx": "b3ffa3e87d42f84f0c8a05ce0c592e47badea53a5839ddbd3e8b50488d9ff665",
+        "map": "0b0d7eda154a08d40fee1f6c799de889972a500089f5cf6db4c2de2f2ad12f56"
+      },
+      "qualification_sha256": "1e0b97fec55e943aa10fb10544fa54a787b8a4046a188d1feb502563ad7dcc9d",
+      "rgb_log_sha256": "1e54f4e9861390dda435eed93db3b6753c513ccfa791d4b995660e941856041f"
+    },
+    {
+      "profile": "nkro",
+      "passed": false,
+      "failed_suite": "tests/ak820_rgb/run.py",
+      "failure": "LeakSanitizer could not access process tasks in isolated environment",
+      "other_suites_passed": 27,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "image_hashes": {
+        "ihx": "04251fc6c79463525ebedae418a448c5fc99876be2066e5e8407148f0216b4a3",
+        "map": "f9d26483a6bc01bf3eff8770c0fda2366a352db60ce19128654493588239f872"
+      },
+      "qualification_sha256": "bba01e791154a0664befaa5b5fdea41e6ec4dbf13b103255391521c911769c0e",
+      "rgb_log_sha256": "583d8e1d53267b364a0c75172756d4f03b70b132d5d3fe5e60359143848048dd"
+    },
+    {
+      "profile": "space-cadet",
+      "passed": false,
+      "failed_suite": "tests/ak820_rgb/run.py",
+      "failure": "LeakSanitizer could not access process tasks in isolated environment",
+      "other_suites_passed": 27,
+      "unit_tests": {
+        "run": 270,
+        "skipped": 0
+      },
+      "image_hashes": {
+        "ihx": "a093db48537163bff6adde8d17d7aef3ba47bcf91a452969b29853ea2e18aaa7",
+        "map": "c58529aaae1f7ba6b9a4310c82927149fd875dfa449c349ff7c9a53cfef0f4a6"
+      },
+      "qualification_sha256": "0f029fdc92abaf28c2b8b5d1f4e5f67f992016f574c2a7b02eb6ff7d05b3f5ed",
+      "rgb_log_sha256": "bf8072c6615470eb24e55278695bb3b625e1fc0d0db44b8bfbf8ec78080d3a7f"
+    }
+  ],
+  "resolution": "Run unchanged offline tests outside the restricted process environment; ASan, UBSan and LeakSanitizer remain enabled. No firmware source or gates changed."
+}
