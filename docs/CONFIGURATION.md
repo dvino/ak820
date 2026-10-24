@@ -163,7 +163,8 @@ mean that the firmware supports it.
 ## Limits
 
 This firmware does not support One Shot actions, Mouse Keys, Tap Dance, Key
-Overrides or Auto Shift. Other generic QMK/Vial options may also appear in the
+Overrides, Auto Shift or QMK Settings. Timing and behavior options in the
+QMK Settings tab are unavailable in this build. Other generic QMK/Vial options may also appear in the
 client without firmware support. Importing a layout cannot add missing firmware
 features. When an action is important, verify that it is included here or in a
 linked guide before assigning it.

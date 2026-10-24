@@ -22,11 +22,37 @@ written down. A setting shown by Vial is not proof that a module is included.
 | Mouse Keys | Basic pointer, button and wheel actions | Measure; check USB reports, scan timing and encoder actions. |
 | Auto Shift | Choose Shift from press duration | Measure; check interaction with tap-hold, Combos and Caps Word. |
 | NKRO control | A small user action for the reporting code already present | Measure; check both report modes and saved settings without enabling all Magic actions. |
-| Other disabled QMK functions | Review Leader, Space Cadet, dynamic macros and runtime settings separately | Define a bounded scope first; do not enable upstream modules blindly. |
+| QMK Settings in Vial | Change supported timing and behavior options without rebuilding | Start with a compact subset; connect each option to its actual handler and measure CODE, RAM and saved-data costs. |
+| Magic | Selected modifier swaps and GUI-key control | Review separately from NKRO; check keycode configuration, persistence and existing modifier owners. |
+| Leader | Short sequences that trigger actions | Bound sequence length, timeout and supported results. |
+| Space Cadet | A modifier while held, a parenthesis when tapped | Check compact tap-hold ownership and cancellation. |
+| Dynamic macros | Record and replay key sequences on the keyboard | Distinguish from the existing 16 Vial macros; bound the recording buffer and check RAM and replay behavior. |
+
+Before selecting profiles, inventory disabled, partially supported and build-only
+options. Separate runtime settings from build switches and user features from
+deliberately excluded diagnostics.
 
 These are candidates, not promised build options. Their byte costs and allowed
 combinations are not yet measured. The order of implementation should follow
 usefulness, complete-image cost and interaction complexity.
+
+## QMK Settings and existing compact functions
+
+`QMK_SETTINGS = no` in alpha.2. The existing Vial keymap, macro and lighting
+settings do not imply QMK Settings support. Inventory the upstream settings:
+tap-hold timing and policy, Combo timing, Grave Escape overrides, tap delays,
+One Shot, Auto Shift, Mouse Keys and Magic options. Offer only settings consumed
+by enabled handlers; a visible control must change actual behavior.
+
+The current compact tap-hold and Combo engines use fixed timing and reduced
+behavior. Assess configurable timing and additional behaviors separately from
+enabling their upstream engines. List which upstream behaviors remain absent.
+
+The upstream QMK Settings structure occupies 36 bytes before other dynamic
+feature data. The current Combo base is fixed by a compile-time assertion.
+Enabling the flag alone is therefore insufficient: design the saved layout,
+versioning, defaults, reset, backup and migration together, then measure the
+whole image. The 36 bytes are a structure size, not a total feature cost.
 
 ## Compatibility and memory table
 
@@ -87,8 +113,6 @@ migration and backup plan.
 ## Other open work
 
 Physical Combo timing, nonempty Combo writes, cold-start retention, power-loss
-behavior and manual Windows/Linux GUI acceptance remain open. Language
-switching on Caps and a Windows language helper require a separate behavior
-contract, including cancellation and stale state; language status must remain
-in RAM. VialRGB Direct remains RAM-only. Persistent palettes are outside this
+behavior and manual Windows/Linux GUI acceptance remain open.
+VialRGB Direct remains RAM-only. Persistent palettes are outside this
 stage until their storage and migration design is separately agreed.
