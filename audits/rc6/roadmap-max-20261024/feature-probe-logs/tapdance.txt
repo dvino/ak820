@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/e3f0b26d59a5/ak820-feature-probes/qmk-8051-ak820/util/build_ak820.py", line 258, in <module>
+    main()
+  File "/workspace/scratch/e3f0b26d59a5/ak820-feature-probes/qmk-8051-ak820/util/build_ak820.py", line 164, in main
+    run('compile',['make','-r','-R','-f','builddefs/build_keyboard.mk','sdcc-objects',
+  File "/workspace/scratch/e3f0b26d59a5/ak820-feature-probes/qmk-8051-ak820/util/build_ak820.py", line 153, in run
+    raise RuntimeError(label+' failed; see '+str(log))
+RuntimeError: compile failed; see /workspace/scratch/e3f0b26d59a5/ak820-feature-probes/qmk-8051-ak820/.build/probe-tapdance/compile.log
+
+quantum/vial.c:602: error 78: incompatible types
+from type 'void function   ( struct __00000089 generic* fixed, void generic* __xdata) fixed'
+  to type 'void function   ( struct __00000089 generic* fixed, void generic* fixed) __xdata'
+quantum/vial.c:603: error 78: incompatible types
+from type 'void function   ( struct __00000089 generic* fixed, void generic* __xdata) fixed'
+  to type 'void function   ( struct __00000089 generic* fixed, void generic* fixed) __xdata'
+quantum/vial.c:604: error 78: incompatible types
+from type 'void function   ( struct __00000089 generic* fixed, void generic* __xdata) fixed'
+  to type 'void function   ( struct __00000089 generic* fixed, void generic* fixed) __xdata'

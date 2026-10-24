@@ -1,0 +1,116 @@
+{
+  "format": "ak820-feature-probes-1",
+  "source_commit": "16222db8753cfec83cec55c7a728530e1b261c06",
+  "outliner_sha256": "9099302044712de27cf1452b9f4b506ab3407d9b2ecdb9cfdd5ebf3975901ef5",
+  "compiler": "SDCC 4.6.0",
+  "profile": "standard",
+  "windows": [
+    [
+      "0x28a0",
+      "0x3000 exclusive"
+    ],
+    [
+      "0x3027",
+      "0xc700 exclusive"
+    ]
+  ],
+  "hardware_validated": false,
+  "probes": [
+    {
+      "name": "baseline",
+      "build_dir": "qmk-8051-ak820/.build/probe-baseline",
+      "accepted_by_builder": true,
+      "ihx_sha256": "b3ffa3e87d42f84f0c8a05ce0c592e47badea53a5839ddbd3e8b50488d9ff665",
+      "map_sha256": "578b9b891ed550b6e3b0a5f6b69e16b91b6dd268d72fba3305f1758304bccb70",
+      "mem_sha256": "020ce50869a9fe37a2424d4e36bed252656758073f9c4583d7e830ad7976f518",
+      "code_bytes": 39115,
+      "highest_address": "0xc1ea",
+      "low_code_bytes": 1804,
+      "main_and_overflow_bytes": 37311,
+      "overflow_bytes": 0,
+      "overflow_start": null,
+      "memory_summary": "Stack starts at: 0x60 (sp set to 0x5f) with 160 bytes available.\nThe largest spare internal RAM space starts at 0x1f with 1 byte available.\n\nOther memory:\n   Name             Start    End      Size     Max     \n   ---------------- -------- -------- -------- --------\n   PAGED EXT. RAM                         0      256   \n   EXTERNAL RAM     0x0400   0x0e33    2612     3072   \n   ROM/EPROM/FLASH  0x28a0   0xc1ea   39120    50944",
+      "delta_from_matched_baseline": 0
+    },
+    {
+      "name": "mouse",
+      "build_dir": "qmk-8051-ak820/.build/probe-mouse",
+      "accepted_by_builder": false,
+      "ihx_sha256": "f80c6d57d604a641b1c81641d55528aed345df5d892c0291bb0bef4d2ac015dc",
+      "map_sha256": "75e5b9f2dc1fa4ebe915fbd1b1c43bfa9f392d3e5b3ea40897881ebe8b12c87e",
+      "mem_sha256": "9a24446be43d11bd8bd010796e0d2f66b47b5580ff98fc4648122abd24ac7f2e",
+      "code_bytes": 41797,
+      "highest_address": "0xcc64",
+      "low_code_bytes": 1804,
+      "main_and_overflow_bytes": 39993,
+      "overflow_bytes": 1381,
+      "overflow_start": "0xc700",
+      "memory_summary": "Stack starts at: 0x61 (sp set to 0x60) with 159 bytes available.\nThe largest spare internal RAM space starts at 0x1f with 1 byte available.\n\nOther memory:\n   Name             Start    End      Size     Max     \n   ---------------- -------- -------- -------- --------\n   PAGED EXT. RAM                         0      256   \n   EXTERNAL RAM     0x0400   0x0e7a    2683     3072   \n   ROM/EPROM/FLASH  0x28a0   0xcc64   41802    50944",
+      "delta_from_matched_baseline": 2682
+    },
+    {
+      "name": "autoshift",
+      "build_dir": "qmk-8051-ak820/.build/probe-autoshift",
+      "accepted_by_builder": false,
+      "compile_errors": [
+        "quantum/process_keycode/process_auto_shift.c:74: error 301: 'case' range expressions require C2y or later",
+        "quantum/process_keycode/process_auto_shift.c:77: error 301: 'case' range expressions require C2y or later",
+        "quantum/process_keycode/process_auto_shift.c:84: error 301: 'case' range expressions require C2y or later",
+        "quantum/process_keycode/process_auto_shift.c:77: error 301: 'case' range expressions require C2y or later",
+        "quantum/process_keycode/process_auto_shift.c:84: error 301: 'case' range expressions require C2y or later",
+        "Compiling: quantum/process_keycode/process_caps_word.c                                              [ERRORS]1 ",
+        "quantum/process_keycode/process_auto_shift.c:84: error 301: 'case' range expressions require C2y or later",
+        "Compiling: quantum/process_keycode/process_caps_word.c                                              [ERRORS]1 ",
+        " | "
+      ]
+    },
+    {
+      "name": "autoshift-portable",
+      "build_dir": "qmk-8051-ak820/.build/probe-autoshift-portable",
+      "accepted_by_builder": false,
+      "ihx_sha256": "62ee5114ef6dec112c452c8a7a1e23f01c6416a8711ae9bde5dd049450cec344",
+      "map_sha256": "ccf67be836239544ca19a523838d2117c44a7fbc6b0a040467072bef2b518fd2",
+      "mem_sha256": "07888083726dfa16e663f6ae061e45efb63f89fb15e5aff3b4410480867e0489",
+      "code_bytes": 42497,
+      "highest_address": "0xcf20",
+      "low_code_bytes": 1804,
+      "main_and_overflow_bytes": 40693,
+      "overflow_bytes": 2081,
+      "overflow_start": "0xc700",
+      "memory_summary": "Stack starts at: 0x65 (sp set to 0x64) with 155 bytes available.\nNo spare internal RAM space left.\n\nOther memory:\n   Name             Start    End      Size     Max     \n   ---------------- -------- -------- -------- --------\n   PAGED EXT. RAM                         0      256   \n   EXTERNAL RAM     0x0400   0x0ec1    2754     3072   \n   ROM/EPROM/FLASH  0x28a0   0xcf20   42502    50944",
+      "delta_from_matched_baseline": 3382
+    },
+    {
+      "name": "tapdance",
+      "build_dir": "qmk-8051-ak820/.build/probe-tapdance",
+      "accepted_by_builder": false,
+      "compile_errors": [
+        "quantum/vial.c:602: error 78: incompatible types",
+        "from type 'void function   ( struct __00000089 generic* fixed, void generic* __xdata) fixed'",
+        "  to type 'void function   ( struct __00000089 generic* fixed, void generic* fixed) __xdata'",
+        "quantum/vial.c:603: error 78: incompatible types",
+        "from type 'void function   ( struct __00000089 generic* fixed, void generic* __xdata) fixed'",
+        "  to type 'void function   ( struct __00000089 generic* fixed, void generic* fixed) __xdata'",
+        "quantum/vial.c:604: error 78: incompatible types",
+        "from type 'void function   ( struct __00000089 generic* fixed, void generic* __xdata) fixed'",
+        "  to type 'void function   ( struct __00000089 generic* fixed, void generic* fixed) __xdata'"
+      ]
+    },
+    {
+      "name": "overrides",
+      "build_dir": "qmk-8051-ak820/.build/probe-overrides",
+      "accepted_by_builder": false,
+      "compile_errors": [
+        "quantum/vial.c:723: error 47: indirections to different types assignment   ",
+        "from type 'const-int literal'",
+        "  to type 'struct __00000064 __xdata'",
+        "quantum/vial.c:682: error 35: '&' illegal operand, address of literal",
+        "quantum/vial.c:682: error 2: Initializer element is not a constant expression",
+        " [ERRORS]1 ",
+        "quantum/vial.c:682: error 2: Initializer element is not a constant expression",
+        " [ERRORS]1 ",
+        " | "
+      ]
+    }
+  ]
+}
