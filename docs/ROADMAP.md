@@ -2,6 +2,10 @@
 
 # Roadmap
 
+## AK Configurator
+
+The AK Configurator is being developed in the separate [dvino/ak-configurator](https://github.com/dvino/ak-configurator) repository. The planned shared core is native Rust, with a parallel WebAssembly build for the browser. Entropy is the selected starting point; Pipette remains an optional fallback if Entropy cannot meet a requirement. See the configurator [requirements](https://github.com/dvino/ak-configurator/blob/main/docs/REQUIREMENTS.md) and [plan](https://github.com/dvino/ak-configurator/blob/main/docs/PLAN.md). This repository continues to hold the AK820 firmware.
+
 NKRO control, modifier One Shot and Space Cadet are available in the `full`
 profile. Development profiles add compact Mouse Keys, Auto Shift, GUI controls
 and Dynamic Macros in supported combinations. These profiles are source development builds;

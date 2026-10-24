@@ -29,3 +29,5 @@ difference.
 
 This port is for the wired AJAZZ AK820 with a VS11K28A controller and USB
 `320F:505B`. AK820 V2, Pro and Max use different hardware.
+
+The separate [AK Configurator](https://github.com/dvino/ak-configurator) project contains its [requirements](https://github.com/dvino/ak-configurator/blob/main/docs/REQUIREMENTS.md) and [development plan](https://github.com/dvino/ak-configurator/blob/main/docs/PLAN.md).

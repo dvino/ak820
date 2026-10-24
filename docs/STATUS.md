@@ -86,3 +86,7 @@ OEM recovery images, settings and device captures remain private.
 
 Individual physical NKRO, One Shot, Space Cadet and encoder cases, power-cycle
 retention, power-loss behavior and manual GUI acceptance were not tested.
+
+## AK Configurator
+
+Configurator source is maintained in the separate [dvino/ak-configurator](https://github.com/dvino/ak-configurator) repository. The local source was imported there; it has not yet been adapted for AK820. This repository contains no AK820-adapted configurator build, device test or deployment. See its [requirements](https://github.com/dvino/ak-configurator/blob/main/docs/REQUIREMENTS.md), [plan](https://github.com/dvino/ak-configurator/blob/main/docs/PLAN.md) and [migration review](https://github.com/dvino/ak-configurator/blob/main/docs/REVIEW.md). Local documentation checks and independent review cover both migration diffs; they do not qualify the application or firmware.

@@ -85,7 +85,7 @@ One Shot работает только с модификаторами, Space Ca
 исходников, следуйте разделу [Сборка](BUILD.md). Сборка использует Linux/WSL,
 Python 3.11+ и закреплённый SDCC 4.6.0.
 
-[Документация](INDEX.md) · [CI и выпуски](CI.md) · [Сборка](BUILD.md) · [Разработка](DEVELOPMENT.md) ·
+[Документация](INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI и выпуски](CI.md) · [Сборка](BUILD.md) · [Разработка](DEVELOPMENT.md) ·
 [Проверки](TESTING.md) · [Участие](CONTRIBUTING.md).
 
 Английская документация — источник правды, русская — перевод. Оригинальный

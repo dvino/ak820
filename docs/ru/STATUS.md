@@ -92,3 +92,7 @@ OEM-образы восстановления, настройки и запис�
 Отдельные физические проверки NKRO, One Shot, Space Cadet и энкодера,
 сохранение после отключения питания, сбои питания и ручная работа GUI
 не проверялись.
+
+## AK Configurator
+
+Исходный код конфигуратора ведётся в отдельном репозитории [dvino/ak-configurator](https://github.com/dvino/ak-configurator). Исходники Entropy были импортированы туда, но ещё не адаптированы для AK820. В этом репозитории нет сборки конфигуратора для AK820, проверки на устройстве или развёртывания. См. [требования](https://github.com/dvino/ak-configurator/blob/main/docs/REQUIREMENTS.md), [план](https://github.com/dvino/ak-configurator/blob/main/docs/PLAN.md) и [ревью переноса](https://github.com/dvino/ak-configurator/blob/main/docs/REVIEW.md). Локальные проверки документов и независимое ревью охватили оба набора изменений; они не подтверждают готовность приложения или прошивки.

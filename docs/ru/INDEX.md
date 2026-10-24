@@ -29,3 +29,5 @@ English source of truth: [Documentation](../INDEX.md).
 
 Порт предназначен для проводной AJAZZ AK820 с контроллером VS11K28A и USB
 `320F:505B`. В AK820 V2, Pro и Max установлено другое оборудование.
+
+Отдельный проект [AK Configurator](https://github.com/dvino/ak-configurator) содержит [требования](https://github.com/dvino/ak-configurator/blob/main/docs/REQUIREMENTS.md) и [план разработки](https://github.com/dvino/ak-configurator/blob/main/docs/PLAN.md).

@@ -2,6 +2,10 @@ English source of truth: [Roadmap](../ROADMAP.md).
 
 # Планы
 
+## AK Configurator
+
+AK Configurator разрабатывается в отдельном репозитории [dvino/ak-configurator](https://github.com/dvino/ak-configurator). Для общей основы запланирован нативный Rust и параллельная сборка WebAssembly для браузера. В качестве основы выбран Entropy; Pipette останется запасным вариантом, если Entropy не подойдёт. См. [требования](https://github.com/dvino/ak-configurator/blob/main/docs/REQUIREMENTS.md) и [план](https://github.com/dvino/ak-configurator/blob/main/docs/PLAN.md). В этом репозитории остаётся прошивка AK820.
+
 Управление NKRO, модификаторы One Shot и Space Cadet доступны в профиле
 `full`. Профили разработки добавляют компактные Mouse Keys, Auto Shift,
 управление GUI и динамические макросы в поддерживаемых сочетаниях. Эти профили
