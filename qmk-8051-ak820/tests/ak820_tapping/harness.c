@@ -302,5 +302,41 @@ int main(int argc,char **argv) {
  reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,KC_A);assign(1,KC_B);event(0,1,10);clear_keyboard();tick(100);event(0,0,110);assert(!key_refs[KC_A]&&!key_refs[KC_C]);event(0,1,120);event(1,1,130);assert(key_refs[KC_C]==1);clear_keyboard();event(0,0,140);event(1,0,150);clean();
  reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,KC_A);assign(1,0x2205);event(0,1,10);event(1,1,20);assert(key_refs[KC_A]==1&&!get_mods());tick(220);assert(get_mods()==2);event(0,0,230);event(1,0,240);clean();
  reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,0x4107);assign(1,KC_A);map[1][0][1]=KC_B;event(0,1,10);event(1,1,20);assert(layer_state==2);tick(60);assert(key_refs[KC_B]==1&&!key_refs[KC_A]);event(1,0,70);event(0,0,80);clean();
+#ifdef AK820_COMPACT_SPACE_CADET
+ /* Shifted parenthesis taps pass through the normal record pipeline and keep
+  * physical, weak and queued One Shot modifiers separate from the tap owner. */
+ for (unsigned right=0; right<2; ++right) {
+  reset(); assign(0,right?SC_RSPC:SC_LSPO); event(0,1,10); event(0,0,20);
+  assert(!get_mods() && !is_key_pressed(keyboard_report,KC_9) && !is_key_pressed(keyboard_report,KC_0));
+  bool saw=false; for(unsigned i=0;i<log_count;i++) if(log_reports[i][0]==(right?0x20:0x02) && log_reports[i][2]==(right?KC_0:KC_9)) saw=true;
+  assert(saw && actual_keyboard_report.raw[0]==0); clean();
+ }
+ reset(); assign(0,SC_LSPO); assign(1,KC_LSFT); event(1,1,1); event(0,1,10); event(0,0,20);
+ assert(get_mods()==MOD_BIT(KC_LEFT_SHIFT)); event(1,0,30); clean();
+ reset(); assign(0,SC_RSPC); caps_word_on(); event(0,1,10); event(0,0,20);
+ bool caps_saw_paren=false; for(unsigned i=0;i<log_count;i++) if(log_reports[i][2]==KC_0 && (log_reports[i][0]&MOD_BIT(KC_RIGHT_SHIFT))) caps_saw_paren=true;
+ assert(caps_saw_paren); caps_word_off(); assert(!get_weak_mods()); clean();
+#ifdef AK820_COMPACT_ONESHOT
+ reset(); assign(0,0x52a1); assign(1,SC_LSPO); event(0,1,1); event(0,0,2); event(1,1,10); event(1,0,20);
+ assert(!get_mods() && !get_weak_mods()); bool saw_osm_paren=false;
+ for(unsigned i=0;i<log_count;i++) if(log_reports[i][0]==(MOD_BIT(KC_LEFT_SHIFT)|MOD_BIT(KC_LEFT_CTRL)) && log_reports[i][2]==KC_9) saw_osm_paren=true;
+ assert(saw_osm_paren); clean();
+#endif
+ /* Two held Space Cadet sources own the same modifier independently. */
+ for(unsigned reverse=0;reverse<2;reverse++) {
+  reset(); assign(0,SC_LSPO); assign(1,SC_LSPO); event(0,1,10); event(1,1,20); tick(220); assert(get_mods()==MOD_BIT(KC_LEFT_SHIFT)&&actual_keyboard_report.raw[0]==MOD_BIT(KC_LEFT_SHIFT));
+  event(reverse?1:0,0,230); assert(get_mods()==MOD_BIT(KC_LEFT_SHIFT)&&actual_keyboard_report.raw[0]==MOD_BIT(KC_LEFT_SHIFT)); event(reverse?0:1,0,240); assert(!get_mods()&&actual_keyboard_report.raw[0]==0); clean();
+ }
+ for(unsigned reverse=0;reverse<2;reverse++) {
+  reset(); assign(0,SC_LSPO); assign(1,KC_LSFT); event(0,1,10); tick(210); event(1,1,220); assert(get_mods()==MOD_BIT(KC_LEFT_SHIFT)&&actual_keyboard_report.raw[0]==MOD_BIT(KC_LEFT_SHIFT));
+  event(reverse?1:0,0,230); assert(get_mods()==MOD_BIT(KC_LEFT_SHIFT)&&actual_keyboard_report.raw[0]==MOD_BIT(KC_LEFT_SHIFT)); event(reverse?0:1,0,240); assert(!get_mods()&&actual_keyboard_report.raw[0]==0); clean();
+ }
+ reset(); assign(0,SC_SENT); event(0,1,10); event(0,0,20); bool saw_enter=false;
+ for(unsigned i=0;i<log_count;i++) if(log_reports[i][2]==KC_ENTER) saw_enter=true; assert(saw_enter && !get_mods()); clean();
+ for(unsigned dir=0;dir<2;dir++) { reset(); enc[0][dir]=SC_LSPO; encoder(dir,1,10); encoder(dir,0,11); bool saw_encoder_paren=false; for(unsigned i=0;i<log_count;i++) if(log_reports[i][0]==MOD_BIT(KC_LEFT_SHIFT)&&log_reports[i][2]==KC_9) saw_encoder_paren=true; assert(saw_encoder_paren&&actual_keyboard_report.raw[0]==0); clean(); }
+ reset(); assign(0,SC_SENT); event(0,1,10); tick(210); assert(get_mods()==MOD_BIT(KC_RIGHT_SHIFT)); event(0,0,220); assert(!get_mods()); clean();
+ reset(); assign(0,SC_LSPO); event(0,1,10); tick(210); assert(get_mods()==MOD_BIT(KC_LEFT_SHIFT)); clear_keyboard(); event(0,0,220); assert(!get_mods()); event(0,1,230); assert(!get_mods()); event(0,0,240); clean();
+ reset(); assign(0,SC_LSPO); assign(1,QK_REPEAT_KEY); event(0,1,10); event(0,0,20); assert(get_last_keycode()==KC_9); event(1,1,30); assert(is_key_pressed(keyboard_report,KC_9)); bool repeated_shift=false; for(unsigned i=0;i<log_count;i++) if(log_reports[i][0]==MOD_BIT(KC_LEFT_SHIFT)&&log_reports[i][2]==KC_9) repeated_shift=true; assert(repeated_shift); event(1,0,40); clean();
+#endif
  puts("PASS: production host tap/cache/action/ownership/configured-combo traces");return 0;
 }

@@ -79,10 +79,18 @@ bool ak820_tapping_before(const keyevent_t AK820_STATE_MEM *event) {
 bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
     uint8_t id, kind;
     uint16_t code;
+#ifdef AK820_COMPACT_SPACE_CADET
+    uint8_t sc_mods = 0;
+#endif
     if (IS_NOEVENT(record->event)) return true;
     id = ak820_tapping_source(record->event.key);
     if (id == NONE) return true;
     code = record->keycode;
+#ifdef AK820_COMPACT_SPACE_CADET
+    if (code == SC_LSPO) { code = MT(MOD_LSFT, KC_9); sc_mods = MOD_BIT(KC_LEFT_SHIFT); }
+    else if (code == SC_RSPC) { code = MT(MOD_RSFT, KC_0); sc_mods = MOD_BIT(KC_RIGHT_SHIFT); }
+    else if (code == SC_SENT) code = MT(MOD_RSFT, KC_ENTER);
+#endif
     kind = code >> 8;
     if (kind < 0x20 || kind >= 0x50) return true;
     if (kind >= 0x40 && (kind & 15) >= MAX_LAYER) return false;
@@ -92,6 +100,9 @@ bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
         pending_code = code;
     } else if (id == pending) {
         pending = NONE;
+#ifdef AK820_COMPACT_SPACE_CADET
+        if (sc_mods) add_owned_mods(sc_mods);
+#endif
         /* NO and transparent are opaque dual-role taps that emit nothing.
          * All other accepted basic bytes use the real basic decoder/pipeline. */
         record->keycode = (uint8_t)code;
@@ -102,6 +113,12 @@ bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
             record->event.pressed = false;
             process_record(record);
         }
+#ifdef AK820_COMPACT_SPACE_CADET
+        if (sc_mods) {
+            del_owned_mods(sc_mods);
+            send_keyboard_report();
+        }
+#endif
     } else if ((source_state[id] & SOURCE_HELD)) {
         source_state[id] &= ~SOURCE_HELD;
         hold(code, false);

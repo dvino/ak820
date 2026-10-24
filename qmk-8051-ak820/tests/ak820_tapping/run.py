@@ -22,6 +22,7 @@ def stripped(path):
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--output',type=Path)
 parser.add_argument('--oneshot',action='store_true')
+parser.add_argument('--space-cadet',action='store_true')
 parser.add_argument('--negative-controls',action='store_true')
 args=parser.parse_args()
 inputs=[ROOT/p for p in ['quantum/action.c','quantum/action.h','quantum/action_layer.c','quantum/action_util.c','quantum/dynamic_keymap.c','quantum/vial.c','quantum/send_string/send_string.c','keyboards/ajazz/ak820/ak820_macro.c','quantum/keymap_common.c','quantum/quantum.c','quantum/repeat_key.c','quantum/tri_layer.c','quantum/process_keycode/process_repeat_key.c','quantum/process_keycode/process_tri_layer.c','keyboards/ajazz/ak820/ak820_combo.c','keyboards/ajazz/ak820/ak820_tapping.c','keyboards/ajazz/ak820/ak820_oneshot.c','keyboards/ajazz/ak820/config.h']]+[HERE/'run.py',HERE/'harness.c',HERE/'differential.py',HERE/'oracle.py',HERE/'oracle_harness.c',ROOT/'quantum/action_tapping.c',ROOT/'tmk_core/protocol/report.c',ROOT/'quantum/action_util.h',ROOT/'quantum/action_layer.h',ROOT/'quantum/tri_layer.h',ROOT/'quantum/process_keycode/process_tri_layer.h',ROOT/'keyboards/ajazz/ak820/ak820_tapping.h',ROOT/'quantum/caps_word.c',ROOT/'quantum/process_keycode/process_caps_word.c',ROOT/'quantum/process_keycode/process_grave_esc.c',ROOT/'quantum/process_keycode/process_grave_esc.h']
@@ -46,11 +47,12 @@ with tempfile.TemporaryDirectory(prefix='ak820-tapping-') as temp:
     src=(HERE/'harness.c').read_text().replace('/* PRODUCTION */','\n'.join(parts));(work/'test.c').write_text(src)
     cmd=[os.environ.get('CC','cc'),'-std=gnu11','-O1','-g','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Wno-implicit-function-declaration','-Wno-unused-function','-Wno-unknown-pragmas','-Wno-int-to-pointer-cast','-fsanitize=undefined','-fno-sanitize-recover=undefined','-DMAX_LAYER=6','-DCAPS_WORD_ENABLE','-DGRAVE_ESC_ENABLE','-DVIAL_ENABLE','-DEEPROM_CUSTOM','-DPROTOCOL_CH555','-DNKRO_ENABLE','-DREPEAT_KEY_ENABLE','-DTRI_LAYER_ENABLE','-DENCODER_MAP_ENABLE','-DEXTRAKEY_ENABLE','-DNO_RESET','-include',str(ROOT/'keyboards/ajazz/ak820/config.h'),*['-I'+str(p) for p in [work,ROOT/'keyboards/ajazz/ak820',ROOT/'quantum',ROOT/'quantum/keymap_extras',ROOT/'quantum/sequencer',ROOT/'quantum/send_string',ROOT/'quantum/process_keycode',ROOT/'platforms',ROOT/'tmk_core/protocol',ROOT]],str(work/'test.c'),'-o',str(work/'test')]
     if args.oneshot: cmd.insert(1,'-DAK820_COMPACT_ONESHOT')
+    if args.space_cadet: cmd.insert(1,'-DAK820_COMPACT_SPACE_CADET')
     subprocess.run(cmd,check=True);subprocess.run([str(work/'test')],check=True)
     comparison=differential.check(work/'test',work)
     controls=[]
     if args.negative_controls:
-        for name,old,new in [
+        negative_control_specs=[
             ('grave-raw-owner','register_code(shifted ? KC_GRAVE : KC_ESCAPE);','add_key(shifted ? KC_GRAVE : KC_ESCAPE);'),
             ('grave-physical-cache','if (get_repeat_key_count()) {','if (record->keycode) {'),
             ('caps-cleanup-consumes-owner','del_weak_mods(MOD_MASK_SHIFT);\n    send_keyboard_report();','unregister_weak_mods(MOD_MASK_SHIFT);'),
@@ -61,7 +63,12 @@ with tempfile.TemporaryDirectory(prefix='ak820-tapping-') as temp:
             ('early-hold','event->time - pending_time) >= 200','event->time - pending_time) >= 199'),
             ('wrong-right-group','if (mods & 16) mods <<= 4;','if (mods & 16) mods &= 15;'),
             ('lost-release','if (event->pressed == ((source_state[id] & SOURCE_ACTIVE) != 0)) return false;','if (!event->pressed || event->pressed == ((source_state[id] & SOURCE_ACTIVE) != 0)) return false;'),
-            ('premature-lookup','if (!ak820_tapping_before(&event)) return;','if (IS_EVENT(event) && event.pressed) update_source_layers_cache(event.key,layer_switch_get_layer(event.key));\n    if (!ak820_tapping_before(&event)) return;')]:
+            ('premature-lookup','if (!ak820_tapping_before(&event)) return;','if (IS_EVENT(event) && event.pressed) update_source_layers_cache(event.key,layer_switch_get_layer(event.key));\n    if (!ak820_tapping_before(&event)) return;')]
+        if args.space_cadet:
+            negative_control_specs += [
+                ('space-cadet-final-modifier-release-report','del_owned_mods(sc_mods);\n            send_keyboard_report();','del_owned_mods(sc_mods);'),
+                ('space-cadet-held-modifier-report','if (pressed) register_mods(mods);','if (pressed) add_owned_mods(mods);')]
+        for name,old,new in negative_control_specs:
             if name=='premature-lookup':
                 mutated=src.replace(old,new).replace('uint16_t keycode = get_record_keycode(record, true);','uint16_t keycode = get_record_keycode(record, false);')
             else:

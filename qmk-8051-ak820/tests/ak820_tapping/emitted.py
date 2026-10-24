@@ -64,6 +64,38 @@ def vial(fw,command):
 def packet(mod=0,*keys):return [mod,0,*keys,*([0]*(6-len(keys)))]
 def cases(fw):
     out=[]
+    features=set(json.loads((fw.build/'build-report.json').read_text()).get('configuration',{}).get('optional_features',[]))
+    if 'space-cadet' in features:
+        for code,tap,mods in [(0x7c1a,0x26,2),(0x7c1b,0x27,32),(0x7c1e,0x28,0)]:
+            t=Trace(fw,f'space-cadet-tap-{code:04x}');t.map((0,0),code);t.event((0,0),1,100);t.event((0,0),0,101);t.check('released',packet())
+            expected=[packet(mods,tap),packet()] if mods==0 else [packet(mods,tap),packet(mods),packet()]
+            r=t.run();r['expected_hid_send_trace']=expected;r['pass_'] &= r['hid_send_trace']==expected;out.append(r)
+        t=Trace(fw,'space-cadet-sent-held');t.map((0,0),0x7c1e);t.event((0,0),1,100);t.tick(300);t.check('right-shift-held',packet(32));t.event((0,0),0,301);t.check('right-shift-released',packet());r=t.run()
+        r['expected_hid_send_trace']=[packet(32),packet()];r['pass_'] &= r['hid_send_trace']==r['expected_hid_send_trace'];out.append(r)
+        for row in (253,252):
+            address=0xcd40+(0 if row==253 else 2);t=Trace(fw,f'space-cadet-encoder-{row}');t.commands += [linked.memory('rom',address,[0x7c,0x1a])]
+            t.event((row,0),1,100);t.event((row,0),0,101);r=t.run();r['expected_hid_send_trace']=[packet(2,0x26),packet(2),packet()]
+            r['pass_'] &= r['hid_send_trace']==r['expected_hid_send_trace'];out.append(r)
+        t=Trace(fw,'space-cadet-repeat-shift');t.map((0,0),0x7c1a);t.map((0,1),0x7c79);t.event((0,0),1,100);t.event((0,0),0,101);t.event((0,1),1,102);t.check('repeat-down',packet(2,0x26));r=t.run()
+        r['pass_'] &= any(p[0]==2 and p[2]==0x26 for p in r['hid_send_trace']);out.append(r)
+        for physical_first in (False,True):
+            for sc_releases_first in (False,True):
+                t=Trace(fw,f'space-cadet-physical-shift-{physical_first}-{sc_releases_first}');t.map((0,0),0x7c1a);t.map((0,1),0xe1)
+                if physical_first:t.event((0,1),1,90)
+                t.event((0,0),1,100);t.tick(300)
+                if not physical_first:t.event((0,1),1,301)
+                t.check('both-held',packet(2))
+                if sc_releases_first:
+                    t.event((0,0),0,302);t.check('physical-survives',packet(2));t.event((0,1),0,303)
+                else:
+                    t.event((0,1),0,302);t.check('space-cadet-survives',packet(2));t.event((0,0),0,303)
+                t.check('empty',packet());out.append(t.run())
+        t=Trace(fw,'space-cadet-clear-held');t.map((0,0),0x7c1a);t.event((0,0),1,100);t.tick(300);t.check('held',packet(2));t.commands+=fw.call('_clear_keyboard');t.check('clear',packet());t.event((0,0),0,301);t.check('late-release',packet());out.append(t.run())
+        t=Trace(fw,'space-cadet-caps-word');t.map((0,0),0x7c73);t.map((0,1),0x7c1b);t.map((0,2),0x04);t.event((0,0),1,90);t.event((0,0),0,91);t.event((0,1),1,100);t.event((0,1),0,101);t.event((0,2),1,102);t.check('capital-letter',packet(2,0x04));r=t.run()
+        r['expected_parenthesis_press']=packet(32,0x27);r['pass_'] &= r['expected_parenthesis_press'] in r['hid_send_trace'] and packet(2,0x04) in r['hid_send_trace'];out.append(r)
+        if 'one-shot' in features:
+            t=Trace(fw,'space-cadet-oneshot-ctrl');t.map((0,0),0x52a1);t.map((0,1),0x7c1a);t.event((0,0),1,90);t.event((0,0),0,91);t.event((0,1),1,100);t.event((0,1),0,101);t.check('empty',packet());r=t.run()
+            r['expected_parenthesis_press']=packet(3,0x26);r['pass_'] &= r['expected_parenthesis_press'] in r['hid_send_trace'] and r['hid_send_trace'][-1]==packet();out.append(r)
     for duration,start in [(199,100),(200,100),(199,65500),(200,65500)]:
         t=Trace(fw,f'boundary-{duration}-{start}');t.map((0,0),0x2104);t.event((0,0),1,start);t.tick((start+duration)&65535)
         t.check('decision',packet(1 if duration>=200 else 0));t.event((0,0),0,(start+duration)&65535);t.check('released',packet());r=t.run()
