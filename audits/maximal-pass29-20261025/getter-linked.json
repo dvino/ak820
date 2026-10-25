@@ -1,0 +1,76 @@
+{
+  "pass": true,
+  "cases": 2431,
+  "valid_matrix": 768,
+  "invalid_matrix_axis_boundaries": 15,
+  "valid_encoder_all_raw_bytes": 1536,
+  "invalid_encoder_boundary_samples": 112,
+  "reader_entries": 4608,
+  "trace_checks": [
+    {
+      "shard": 0,
+      "reader_entries": 576,
+      "generic_pointer_B_zero": true,
+      "ordered_DPTR_matches_report": true
+    },
+    {
+      "shard": 1,
+      "reader_entries": 576,
+      "generic_pointer_B_zero": true,
+      "ordered_DPTR_matches_report": true
+    },
+    {
+      "shard": 2,
+      "reader_entries": 576,
+      "generic_pointer_B_zero": true,
+      "ordered_DPTR_matches_report": true
+    },
+    {
+      "shard": 3,
+      "reader_entries": 576,
+      "generic_pointer_B_zero": true,
+      "ordered_DPTR_matches_report": true
+    },
+    {
+      "shard": 4,
+      "reader_entries": 576,
+      "generic_pointer_B_zero": true,
+      "ordered_DPTR_matches_report": true
+    },
+    {
+      "shard": 5,
+      "reader_entries": 576,
+      "generic_pointer_B_zero": true,
+      "ordered_DPTR_matches_report": true
+    },
+    {
+      "shard": 6,
+      "reader_entries": 576,
+      "generic_pointer_B_zero": true,
+      "ordered_DPTR_matches_report": true
+    },
+    {
+      "shard": 7,
+      "reader_entries": 576,
+      "generic_pointer_B_zero": true,
+      "ordered_DPTR_matches_report": true
+    }
+  ],
+  "code_before": {
+    "bytes": 44601,
+    "sha256_address_order": "b0b7cf133e144661cf06ea643f43d0d314f589575b17ff07b69503023b6e94dc"
+  },
+  "code_after": {
+    "bytes": 44601,
+    "sha256_address_order": "b0b7cf133e144661cf06ea643f43d0d314f589575b17ff07b69503023b6e94dc"
+  },
+  "shards": 8,
+  "image_sha256": "693fdcd928f2d84b32e19b858cdd6cce29b46d01ea5694403788da08bf3969f9",
+  "build_manifest_sha256": "62e9b5ec0db81a856b46e81b0dfaf39030538f322e57ea69aa4e9eec1c9d22d3",
+  "runner_sha256": "691646ee5cb11b23cb6cd17f38e63c834bb2742ed295238c480cd9de9d484da4",
+  "limits": [
+    "Generic C52 CPU model; no peripherals or hardware.",
+    "CRT to main entry only; IE/IE_EX disabled. No main or NVM init, ROM seed, IRQ, new read-fault, cross-page or durable-storage proof.",
+    "Single actual 64-byte cache page primed per call; source bytes and CODE preserved."
+  ]
+}

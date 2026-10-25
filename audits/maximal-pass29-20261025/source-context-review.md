@@ -1,0 +1,19 @@
+# Classifier27 source and bootstrap context review
+
+Result: PASS for research-source admission and creation of the next transformed diagnostic image. No blocking finding was identified. This does not qualify a full image, interrupt wrappers/nesting, stack capacity, installation or hardware behavior.
+
+Reviewed tree: `cfd05a0f5d296cc692224038a747dabb6694041f` plus the USB classifier change only. Concurrent reusable-test work was excluded. No full build, device command, source edit or certificate edit was performed.
+
+The frozen `raw-classifier.patch` was applied to an external temporary copy of HEAD and produced byte-identical current `usb_ak820.c`. The tested `candidate.inc`, including assertions, is present verbatim. Candidate SHA256: `a8cca1c93432eb355a991bfedd08bd149e40f922ffc0dad675def25b972aca8c`; patch SHA256: `087b17ce42be75f5a31d46433f654d660acaef1a8479aa5d61ba425c18bcdbe2`. All enum excerpts match current VIA/Vial/VialRGB headers verbatim.
+
+The exact outer command comparisons remain unchanged in meaning. The keyboard and lighting ranges admit precisely their former contiguous read sets. The Vial range excludes encoder-set; its assertions cover every interior member, hole and excluded settings tail. Dynamic Vial admits precisely entries/count and three getters, excluding the two interior setters and the next setter. Unknown commands/subcommands retain false. Existing recovery/unlock and bootloader request classification is unchanged; this classifier grants reply handling only, and the downstream authorization and NVM gates are unchanged.
+
+The frozen host harness was rerun inside `ak820-nkro-study-env:local` with networking disabled and evidence mounted read-only. PASS: all 16,777,216 prefix triples; the 32-byte packet remained unchanged; broken range widening was detected for 256 triples and broken setter admission for 258. This is host evidence, not compiled firmware or hardware behavior.
+
+Bootstrap `.build/resume27-classifier-bootstrap` has CODE 45270 and parameter-spills=None. All 496 build-report source/toolchain manifest entries were checked against current files. The original whole USB assembly is protected, not just its IRQ function. Its new canonical identity is `96f12683754b4ce86e16bdff655d275ca370ca083a443d056fb468dcf4d59b19`; board and timer whole-module protection is retained. The compiler-created classifier temporary is a named BSEG bit used only within the classifier, whose sole call is in foreground raw-task handling. It is covered by whole-module identity; component storage cost is not promoted to an ABI or concurrency proof.
+
+`validate_context` passed against the exact original compiler object tree, DCE tree, current fixed-map sources and pinned toolchain. Every certificate provenance path/hash was verified by that validator. `make_context_certificate` was independently rerun into `/tmp/classifier27-review-context.json`; its parsed result equals `classifier27-bootstrap-context.json` exactly. No baseline27 context was reused.
+
+The stack analyzer and startup contract checker were independently rerun against the exact linked bootstrap and compared with the supplied JSON: both parsed reports are identical. Root bounds: foreground 103, USB 5, timer 2, LED 2; all unresolved lists empty. Startup control/main-entry frame bound is 2, initial SP is 88, and interrupt enables remain unchanged until main. Image SHA256 is `9b4dc30bd9d9e371ce0369c06cf5b148b37e7f2fe7a7cc5ed9f8e89e1db86f1c`; map SHA256 is `3e8ebb067d9a5c36af8b4b7850772d0f82b80a88bc37720869d5fbb693eb5745`.
+
+The certificate correctly retains application_irq_only=true, whole_image_qualified=false and hardware_qualified=false. The stack report likewise retains whole_program_qualified=false. Any subsequent transformed diagnostic image requires its own exact-image postlink, stack/startup and applicable IRQ/wrapper/storage checks. Bootstrap evidence cannot qualify that future image.

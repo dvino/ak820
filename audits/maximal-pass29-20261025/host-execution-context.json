@@ -1,0 +1,27 @@
+{
+  "scope": "Outer execution context for forced local GCC host run; runner own container_image_id null remains unchanged",
+  "image_id": "sha256:b41196ff4098d5b33786f23238a17ad1fb21b943a588076e085c4881e920d97d",
+  "uid_gid": "1001:1001",
+  "network": "none",
+  "repo_mount": "read-only parent; only getter29-host-regression.jsonl bind writable",
+  "test_command": [
+    "python3",
+    "tests/ak820_getter_bounds/run.py"
+  ],
+  "compiler_identity_probe_argv": [
+    "docker",
+    "run",
+    "--rm",
+    "--network=none",
+    "--userns=host",
+    "--user",
+    "1001:1001",
+    "sha256:b41196ff4098d5b33786f23238a17ad1fb21b943a588076e085c4881e920d97d",
+    "sh",
+    "-c",
+    "command -v gcc; gcc --version; sha256sum /usr/bin/gcc"
+  ],
+  "compiler_identity_probe_stdout": "/usr/bin/gcc\ngcc (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n75e997ec62297a6484f491bae28ab0ccb489daba23e398fd10fe68e9e6f0def8  /usr/bin/gcc\n",
+  "probe_return_code": 0,
+  "execution_log": "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/getter29-host-local-gcc.log"
+}

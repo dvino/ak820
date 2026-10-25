@@ -14,15 +14,17 @@ run; it was not a failed firmware or installer test.
 
 ## Whole-program compression
 
-The current diagnostic image 28 retains all 14 optional modules and uses
-44,638 CODE and 3,007 physical XRAM bytes. It saves 61 linked CODE bytes against
-retained pass 27. Main CODE still overflows by 4,285 bytes. The conditional
-stack bound remains 165 of 167 bytes, with no IRAM overlay. Host differential
-and exact linked setter checks pass within their scope. Retained context
-certificates are revalidated; actual-image stack, startup and bounded CPU
-checks pass. Full configured regressions remain blocked by CODE and incomplete
-OEM startup/IRQ, bank and writer contracts. No device or release change was
-made. [Details](MAXIMUM-FUNCTIONALITY-STATUS.md).
+The current diagnostic image 29 retains all 14 optional modules and uses
+44,601 CODE and 3,007 physical XRAM bytes. Forwarding AK820 location getters
+to existing bounds-checked readers saves 37 linked CODE bytes against retained
+pass 28. Main CODE still overflows by 4,248 bytes. The conditional stack bound
+remains 165 of 167 bytes, with no IRAM overlay. Host differential and exact
+linked getter checks pass within their scope. Retained context certificates
+are revalidated; actual-image stack, startup and bounded CPU checks pass.
+Full configured regressions remain blocked by CODE and incomplete OEM
+startup/IRQ, bank and writer contracts. No device or release change was made.
+[Details](MAXIMUM-FUNCTIONALITY-STATUS.md).
+
 
 ## Companion-design beta
 

@@ -1,0 +1,844 @@
+{
+  "pass": true,
+  "scope": "Exact linked work-profile static stack and modeled IRQ CPU checks only",
+  "image_sha256": "7127b0677552dd075d5dfffcd69469231a5f9dddc93983378a9c4ed27baa5f8f",
+  "map_sha256": "e0d3b2fbf2bf2d5b13b59a448a73c0cf889a68d3f3c9897d348058fc6e340c58",
+  "build_report_sha256": "9d06e39da9fae65fd8441c0ebde0fa5093f8b77863a06cee9f62e9844d35571c",
+  "runner_sha256": "cd692d22a959108a12156b1162cd3af0daf826db74ef8c3f569b496cee7dff1f",
+  "s51_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+  "support_sha256": {
+    "tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+    "tests/ak820_stack/analyze.py": "4cb2689c1c55af93fa0c7aaf5371cc4aba485159321ec0a54a4468d51d62f690",
+    "tests/ak820_iap/run.py": "fc97a63d72fe8166312e10ab5dd0e7a3f1a087535411bfb011ffcfe7b9b78c33",
+    "tests/ak820_emitted/run.py": "2ba1632814fc7ef528ded6b48f590e1593a5494d1208ee780b543af7116d304a"
+  },
+  "guard_source_manifest_checks": [
+    {
+      "path": "quantum/dynamic_keymap.c",
+      "sha256": "c97c3ea6511d51f246a9044679e418a3adcbc456022fa712f35c26c9e76a4a0b",
+      "compiled_symbols": [
+        "_dynamic_keymap_macro_send_sending_10000_437"
+      ],
+      "matches_build_manifest": true
+    },
+    {
+      "path": "quantum/repeat_key.c",
+      "sha256": "d477f09b3598d13a91ceed6fde314e5c43d7f3f3af3f43fc7a808ceb2b6645f2",
+      "compiled_symbols": [
+        "_ak820_repeat_invoking"
+      ],
+      "matches_build_manifest": true
+    }
+  ],
+  "initial_sp": 84,
+  "stack_capacity": 171,
+  "occupied_CODE_bytes": 37361,
+  "occupied_CODE_ge_c700": 0,
+  "wrapper_source": {
+    "kind": "public-pinned-wrapper-fixture",
+    "fixture_sha256": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+    "origin": {
+      "stock_rom_sha256": "1dc3e2f79bd03d0bdc4e7a0fc43241e6e89445799948990725ee644ec45c09d1",
+      "protected_region_sha256": "9c4d481c14fe26b58f0f3eee81e84f45f118e06d755fd051da8d1cea5d78eb33",
+      "evidence": [
+        {
+          "path": "audits/rc6/alpha3-irq-20261024/static-contract.json",
+          "sha256": "cce4d8d5436262bc4306967b7b20530c32e71b285532a8a6d6cce72c846f88e8"
+        },
+        {
+          "path": "audits/rc6/alpha3-irq-20261024/final/timer-usb-led.log",
+          "sha256": "2ce174f5609fda5f6b3ed65a28964ef2a46342397a6e6455446ff95b5bdfd05e"
+        },
+        {
+          "path": "audits/rc6/alpha3-irq-20261024/final/results.json",
+          "sha256": "1d57dd20e1e8e4d0f0ff743012b0da1ac2f9687f1d03e943f89f37e42841eb76"
+        }
+      ]
+    },
+    "instruction_bytes": 234
+  },
+  "limits": [
+    "Generic C52 CPU; no physical IRQ routing, timing, USB transport, LED DMA or device qualification.",
+    "Pinned OEM wrapper instructions and explicit USB ACK side effect supply the interrupt model.",
+    "CRT executes to main entry only; main and board/NVM/settings initialization do not run.",
+    "Only compiled private guard sources used by the fresh bound are required and authenticated.",
+    "IRQ-only component check; no full configured regression or storage check."
+  ],
+  "foreground_bound": 98,
+  "foreground_unresolved": [],
+  "observed_main_entry_sp": 86,
+  "crt_frame_bytes": 2,
+  "crt_main_call_pc": 12400,
+  "crt_main_call_hex": "1295c6",
+  "foreground_reserved": 100,
+  "callback_bounds": {
+    "timer": 2,
+    "usb": 5,
+    "led": 2
+  },
+  "irq_bounds": {
+    "timer": 19,
+    "usb": 22,
+    "led": 19
+  },
+  "irq_total": 60,
+  "total_stack_bound": 160,
+  "remaining_stack_bytes": 11,
+  "cpu_cases": [
+    {
+      "irq_order": [
+        "timer"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 203,
+      "irq_stack_bytes": 19,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "usb"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 206,
+      "irq_stack_bytes": 22,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "led"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 203,
+      "irq_stack_bytes": 19,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "timer",
+        "usb"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 223,
+      "irq_stack_bytes": 39,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "timer",
+        "led"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 220,
+      "irq_stack_bytes": 36,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "usb",
+        "timer"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 220,
+      "irq_stack_bytes": 36,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "usb",
+        "led"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 220,
+      "irq_stack_bytes": 36,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "led",
+        "timer"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 220,
+      "irq_stack_bytes": 36,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "led",
+        "usb"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 223,
+      "irq_stack_bytes": 39,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "timer",
+        "usb",
+        "led"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 237,
+      "irq_stack_bytes": 53,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "timer",
+        "led",
+        "usb"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 240,
+      "irq_stack_bytes": 56,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "usb",
+        "timer",
+        "led"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 237,
+      "irq_stack_bytes": 53,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "usb",
+        "led",
+        "timer"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 237,
+      "irq_stack_bytes": 53,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "led",
+        "timer",
+        "usb"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 240,
+      "irq_stack_bytes": 56,
+      "canary_and_registers_preserved": true
+    },
+    {
+      "irq_order": [
+        "led",
+        "usb",
+        "timer"
+      ],
+      "reserved_main_bytes": 100,
+      "peak_sp": 237,
+      "irq_stack_bytes": 53,
+      "canary_and_registers_preserved": true
+    }
+  ],
+  "selector_cases": {
+    "input_values_checked": 256,
+    "valid_native_values_unchanged": "0x10..0x1f",
+    "entry": 12882,
+    "mask": 12895,
+    "bounded_table_entries": 16
+  },
+  "emitted_contracts": {
+    "compiler_register_bank": 0,
+    "source_enable_sites": [
+      {
+        "pc": 12718,
+        "bit": 237
+      },
+      {
+        "pc": 12841,
+        "bit": 174
+      },
+      {
+        "pc": 13070,
+        "bit": 237
+      },
+      {
+        "pc": 13183,
+        "bit": 237
+      },
+      {
+        "pc": 15935,
+        "bit": 237
+      },
+      {
+        "pc": 20039,
+        "bit": 169
+      },
+      {
+        "pc": 20043,
+        "bit": 175
+      },
+      {
+        "pc": 20103,
+        "bit": 175
+      },
+      {
+        "pc": 27482,
+        "bit": 233
+      },
+      {
+        "pc": 27764,
+        "bit": 175
+      },
+      {
+        "pc": 27933,
+        "bit": 175
+      },
+      {
+        "pc": 28046,
+        "bit": 175
+      },
+      {
+        "pc": 28305,
+        "bit": 175
+      },
+      {
+        "pc": 28317,
+        "bit": 175
+      },
+      {
+        "pc": 28769,
+        "bit": 175
+      },
+      {
+        "pc": 28928,
+        "bit": 175
+      },
+      {
+        "pc": 28980,
+        "bit": 175
+      }
+    ],
+    "saved_ie_restores": [
+      {
+        "restore_pc": 13410,
+        "save_pc": 13326,
+        "saved_byte": "_bootloader_jump_saved_ie_10000_19",
+        "address": 1121
+      },
+      {
+        "restore_pc": 15486,
+        "save_pc": 15372,
+        "saved_byte": "_flash_operation_previous_ie_10000_22",
+        "address": 1283
+      }
+    ],
+    "shared_helper_masked_init_calls": [
+      {
+        "helper": "_timer_reload",
+        "foreground_calls": [
+          20034
+        ],
+        "disabled_bit": 175,
+        "clear_pc": 20010,
+        "enable_pc": 20043
+      },
+      {
+        "helper": "_endpoints_reset",
+        "foreground_calls": [
+          27392
+        ],
+        "disabled_bit": 233,
+        "clear_pc": 27381,
+        "enable_pc": 27482
+      },
+      {
+        "helper": "_raw_abort",
+        "foreground_calls": [],
+        "disabled_bit": 233,
+        "clear_pc": 27381,
+        "enable_pc": 27482
+      }
+    ],
+    "nonoverlay_allocations": [
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1088,
+        "size": 16
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1104,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1105,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1106,
+        "size": 3
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1109,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1110,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1111,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1112,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1113,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1114,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1115,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1116,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1117,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1118,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1119,
+        "size": 1
+      },
+      {
+        "module": "ak820_board.rst",
+        "area": "XSEG",
+        "address": 1120,
+        "size": 1
+      },
+      {
+        "module": "ak820_timer.rst",
+        "area": "BSEG",
+        "address": 13,
+        "size": 1
+      },
+      {
+        "module": "ak820_timer.rst",
+        "area": "XSEG",
+        "address": 1643,
+        "size": 4
+      },
+      {
+        "module": "ak820_timer.rst",
+        "area": "XSEG",
+        "address": 1647,
+        "size": 2
+      },
+      {
+        "module": "ak820_timer.rst",
+        "area": "XSEG",
+        "address": 1649,
+        "size": 4
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "DSEG",
+        "address": 39,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "DSEG",
+        "address": 40,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "DSEG",
+        "address": 42,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "DSEG",
+        "address": 44,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "DSEG",
+        "address": 46,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "DSEG",
+        "address": 47,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 21,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 22,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 23,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 24,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 25,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 26,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 27,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 28,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 29,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 30,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 31,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 32,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "BSEG",
+        "address": 33,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1943,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1944,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1946,
+        "size": 3
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1949,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1950,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1951,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1952,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1953,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1954,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1955,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1956,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1957,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1958,
+        "size": 32
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1990,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1991,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 1992,
+        "size": 46
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2038,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2039,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2040,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2041,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2042,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2044,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2045,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2047,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2048,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2050,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2051,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2053,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2054,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2055,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2056,
+        "size": 2
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2058,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2059,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2060,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2061,
+        "size": 1
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2062,
+        "size": 3
+      },
+      {
+        "module": "protocol/ch555/usb_ak820.rst",
+        "area": "XSEG",
+        "address": 2065,
+        "size": 1
+      }
+    ],
+    "limits": [
+      "Nooverlay storage and masked shared helper calls are checked; foreground/ISR protocol state still uses its explicit concurrency protocol."
+    ]
+  },
+  "inputs_unchanged": true,
+  "full_occupied_CODE_integrity_sessions": [
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361,
+    37361
+  ]
+}
