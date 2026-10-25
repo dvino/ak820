@@ -559,62 +559,30 @@ bool ak820_usb_try_send(uint8_t endpoint, const uint8_t __xdata *report, uint8_t
 /* Permit discovery and the existing physical-unlock recovery flow after an
  * NVM fault. Unknown commands/subcommands and every setter stay fail-closed.
  * This only controls replies; VIA/Vial still enforce command authorization. */
+_Static_assert(id_layout_options == id_uptime + 1 && id_switch_matrix_state == id_uptime + 2 && id_firmware_version == id_uptime + 3, "keyboard read enum sequence changed");
+_Static_assert(vialrgb_get_mode == vialrgb_get_info + 1 && vialrgb_get_supported == vialrgb_get_info + 2 && vialrgb_get_number_leds == vialrgb_get_info + 3 && vialrgb_get_led_info == vialrgb_get_info + 4, "VialRGB read enum sequence changed");
+_Static_assert(vial_get_size == vial_get_keyboard_id + 1 && vial_get_def == vial_get_keyboard_id + 2 && vial_get_encoder == vial_get_keyboard_id + 3 && vial_set_encoder == vial_get_keyboard_id + 4 && vial_get_unlock_status == vial_get_keyboard_id + 5 && vial_unlock_start == vial_get_keyboard_id + 6 && vial_unlock_poll == vial_get_keyboard_id + 7 && vial_lock == vial_get_keyboard_id + 8 && vial_qmk_settings_query == vial_get_keyboard_id + 9 && vial_qmk_settings_get == vial_get_keyboard_id + 10, "Vial read enum sequence changed");
+_Static_assert(dynamic_vial_tap_dance_get == dynamic_vial_get_number_of_entries + 1 && dynamic_vial_tap_dance_set == dynamic_vial_get_number_of_entries + 2 && dynamic_vial_combo_get == dynamic_vial_get_number_of_entries + 3 && dynamic_vial_combo_set == dynamic_vial_get_number_of_entries + 4 && dynamic_vial_key_override_get == dynamic_vial_get_number_of_entries + 5 && dynamic_vial_key_override_set == dynamic_vial_get_number_of_entries + 6, "dynamic Vial enum sequence changed");
+_Static_assert(vial_qmk_settings_set == vial_get_keyboard_id + 11 && vial_qmk_settings_reset == vial_get_keyboard_id + 12 && vial_dynamic_entry_op == vial_get_keyboard_id + 13, "Vial excluded command tail changed");
+_Static_assert(vial_set_encoder == 4 && dynamic_vial_tap_dance_set == 2 && dynamic_vial_combo_set == 4, "setter holes changed");
+
 static bool raw_request_is_nonpersistent(void) {
-    switch (raw_buffer[0]) {
-        case id_get_protocol_version:
-        case id_dynamic_keymap_get_keycode:
-        case id_dynamic_keymap_macro_get_count:
-        case id_dynamic_keymap_macro_get_buffer_size:
-        case id_dynamic_keymap_macro_get_buffer:
-        case id_dynamic_keymap_get_layer_count:
-        case id_dynamic_keymap_get_buffer:
-        case id_bootloader_jump:
+    if (raw_buffer[0] == id_get_protocol_version || raw_buffer[0] == id_dynamic_keymap_get_keycode ||
+        raw_buffer[0] == id_dynamic_keymap_macro_get_count || raw_buffer[0] == id_dynamic_keymap_macro_get_buffer_size ||
+        raw_buffer[0] == id_dynamic_keymap_macro_get_buffer || raw_buffer[0] == id_dynamic_keymap_get_layer_count ||
+        raw_buffer[0] == id_dynamic_keymap_get_buffer || raw_buffer[0] == id_bootloader_jump) return true;
+    if (raw_buffer[0] == id_get_keyboard_value)
+        return raw_buffer[1] >= id_uptime && raw_buffer[1] <= id_firmware_version;
+    if (raw_buffer[0] == id_lighting_get_value)
+        return raw_buffer[1] >= vialrgb_get_info && raw_buffer[1] <= vialrgb_get_led_info;
+    if (raw_buffer[0] == id_vial_prefix) {
+        if (raw_buffer[1] >= vial_get_keyboard_id && raw_buffer[1] <= vial_qmk_settings_get && raw_buffer[1] != vial_set_encoder)
             return true;
-        case id_get_keyboard_value:
-            switch (raw_buffer[1]) {
-                case id_uptime:
-                case id_layout_options:
-                case id_switch_matrix_state:
-                case id_firmware_version:
-                    return true;
-                default: return false;
-            }
-        case id_lighting_get_value:
-            switch (raw_buffer[1]) {
-                case vialrgb_get_info:
-                case vialrgb_get_mode:
-                case vialrgb_get_supported:
-                case vialrgb_get_number_leds:
-                case vialrgb_get_led_info:
-                    return true;
-                default: return false;
-            }
-        case id_vial_prefix:
-            switch (raw_buffer[1]) {
-                case vial_get_keyboard_id:
-                case vial_get_size:
-                case vial_get_def:
-                case vial_get_encoder:
-                case vial_get_unlock_status:
-                case vial_unlock_start:
-                case vial_unlock_poll:
-                case vial_lock:
-                case vial_qmk_settings_query:
-                case vial_qmk_settings_get:
-                    return true;
-                case vial_dynamic_entry_op:
-                    switch (raw_buffer[2]) {
-                        case dynamic_vial_get_number_of_entries:
-                        case dynamic_vial_tap_dance_get:
-                        case dynamic_vial_combo_get:
-                        case dynamic_vial_key_override_get:
-                            return true;
-                        default: return false;
-                    }
-                default: return false;
-            }
-        default: return false;
+        if (raw_buffer[1] == vial_dynamic_entry_op)
+            return raw_buffer[2] >= dynamic_vial_get_number_of_entries && raw_buffer[2] <= dynamic_vial_key_override_get &&
+                   raw_buffer[2] != dynamic_vial_tap_dance_set && raw_buffer[2] != dynamic_vial_combo_set;
     }
+    return false;
 }
 
 void ak820_usb_raw_send(const uint8_t *report, uint8_t length) {

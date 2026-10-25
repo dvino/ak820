@@ -1,21 +1,139 @@
 {
-  "format": "ak820-maximal-current-2",
+  "label": "27",
+  "build": "resume27-classifier",
+  "configuration": {
+    "format": "ak820-build-configuration-1",
+    "profile": "maximal",
+    "optional_features": [
+      "tap-dance",
+      "key-overrides",
+      "qmk-settings",
+      "mac-pc",
+      "os-indicators",
+      "leader",
+      "nkro-control",
+      "one-shot",
+      "space-cadet",
+      "mouse-keys",
+      "auto-shift",
+      "gui-lock",
+      "ctrl-gui-swap",
+      "dynamic-macros"
+    ],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "nkro-reports",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "grave-escape",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "nvm_schema": 532483,
+    "make_options": {
+      "AK820_COMPACT_TAP_DANCE": "yes",
+      "AK820_COMPACT_KEY_OVERRIDE": "yes",
+      "AK820_QMK_SETTINGS": "yes",
+      "AK820_MAC_PC": "yes",
+      "AK820_OS_INDICATORS": "yes",
+      "AK820_COMPACT_LEADER": "yes",
+      "AK820_NKRO_CONTROL": "yes",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "yes",
+      "AK820_COMPACT_MOUSEKEY": "yes",
+      "AK820_COMPACT_AUTOSHIFT": "yes",
+      "AK820_COMPACT_GUI_LOCK": "yes",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+      "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+    },
+    "runtime_qmk_settings": [
+      1,
+      2,
+      4,
+      7,
+      18,
+      19
+    ],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200,
+      "os_indicator_lease": 3000,
+      "os_indicator_period": 4096,
+      "leader": 300,
+      "mouse_cursor": 20,
+      "mouse_wheel": 80,
+      "auto_shift": 175,
+      "dynamic_macro_phase": 10
+    },
+    "release_approved": false
+  },
+  "code_bytes": 44699,
+  "code_low_bytes": 1741,
+  "code_main_bytes": 42958,
+  "main_highest_address": "0xd7f9",
+  "main_overflow_bytes": 4346,
+  "main_trailing_free_bytes": 0,
+  "ordinary_xram_bytes": 2943,
+  "flash_stage_bytes": 64,
+  "physical_xram_bytes": 3007,
+  "stack_capacity_bytes": 167,
+  "roots": {
+    "_main": 103,
+    "_ak820_timer_irq": 2,
+    "_USB_DeviceInterrupt": 5,
+    "_ak820_led_irq": 2
+  },
+  "artifacts": [
+    {
+      "path": "qmk-8051-ak820/.build/resume27-classifier/build-report.json",
+      "sha256": "39cb250505417ee328c73af674649961eb1864f56de93d56c1082002188eb1a8",
+      "bytes": 1117209
+    },
+    {
+      "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.ihx",
+      "sha256": "96b7e63eba3e30b2d598b0f52e19b23c7a07ff5363194f87d565d359ab5da7f3",
+      "bytes": 107170
+    },
+    {
+      "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.map",
+      "sha256": "5989dc6a02634556d36f13739517c99e6df95bbb9ab87127416bb5528632c37c",
+      "bytes": 109808
+    },
+    {
+      "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.mem",
+      "sha256": "9b82ffeac123f52a36933123dec9104498f9de52f802c29e98a9d8f86d11f6ff",
+      "bytes": 1205
+    },
+    {
+      "path": "qmk-8051-ak820/.build/resume27-classifier/parameter-spills-stack.json",
+      "sha256": "7d703b003f7d520df31986abf5f4c68446a41cfc31d517abfe631fb02169e380",
+      "bytes": 353464
+    }
+  ],
+  "verified_artifacts": 1867,
+  "verified_source_and_toolchain_inputs": 499,
+  "historical_git_blob_inputs": [],
+  "source_manifest_sha256": "4ea0085342545719864808c3dcac1a43e4363641743bd48c0423d7549186593b",
+  "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+  "conditional_stack_bound_bytes": 165,
+  "conditional_margin_bytes": 2,
+  "format": "ak820-maximal-current-3",
   "diagnostic_only": true,
   "installable": false,
   "profile": "maximal",
   "module_count": 14,
-  "build": "resume26b-state-bytes",
-  "baseline_commit": "09330ab708e1eb3671571f63894c583e01743eef",
-  "code_bytes": 44747,
-  "code_low_bytes": 1741,
-  "code_main_bytes": 43006,
-  "main_highest_address": "0xd829",
-  "physical_xram_bytes": 3007,
-  "ordinary_xram_bytes": 2943,
-  "flash_stage_bytes": 64,
-  "stack_capacity_bytes": 167,
-  "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
-  "main_deficit_bytes": 4394,
+  "whole_program_qualified": false,
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "installer_or_release_changes": false,
+  "iram_overlay_enabled": false,
   "physical_code_windows": [
     [
       10400,
@@ -28,114 +146,319 @@
   ],
   "xram_limit_bytes": 3072,
   "xram_remaining_bytes": 65,
-  "foreground_bound_bytes": 103,
-  "usb_bound_bytes": 5,
-  "timer_bound_bytes": 2,
-  "led_bound_bytes": 2,
-  "unresolved_root_paths": 0,
-  "crt_main_entry_frame_bytes": 2,
-  "irq_wrapper_bytes_each": 17,
-  "distinct_source_irq_bound_bytes": 60,
-  "stack_estimate_bytes": 165,
-  "conditional_stack_margin_bytes": 2,
-  "whole_program_qualified": false,
-  "hardware_validated": false,
-  "parameter_spills": {
-    "report": ".build/resume26b-state-bytes/parameter-spills.json",
-    "report_sha256": "10ac947dba22dbbc9b83bc99a40b29177e7d806ad9628e811e193de9c149d2db",
-    "context_sha256": "5ef9515da0e78550a824626a42110b9579c1d6360b7a49c56fbb3e28ddb4e851",
-    "selected": 82,
-    "object_saved_bytes": 727,
-    "postlink_qualified": true,
-    "linked_saved_bytes": null,
-    "extra_stack_bytes": 0
+  "delta_from_reproduced26b": {
+    "code_bytes": -48,
+    "physical_xram_bytes": 0,
+    "stack_capacity_bytes": 0,
+    "main_overflow_bytes": -48
   },
-  "nvm_read_block_asm": true,
-  "nvm_update_block_asm": true,
-  "keymap_words_asm": true,
-  "iram_overlay_enabled": false,
-  "delta_from_reproduced22": {
-    "code_bytes": -714,
-    "physical_xram_bytes": 31,
-    "stack_capacity_bytes": 11,
-    "main_overflow_bytes": -714
-  },
-  "artifacts": [
-    {
-      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/build-report.json",
-      "sha256": "47f7a54498ff21dd3fba38c9d159eb5b8f974f22c8d3b613acc2ff973c3cdd18",
-      "bytes": 1136918
+  "baseline26b": {
+    "label": "26b",
+    "build": "resume27-baseline26b",
+    "configuration": {
+      "format": "ak820-build-configuration-1",
+      "profile": "maximal",
+      "optional_features": [
+        "tap-dance",
+        "key-overrides",
+        "qmk-settings",
+        "mac-pc",
+        "os-indicators",
+        "leader",
+        "nkro-control",
+        "one-shot",
+        "space-cadet",
+        "mouse-keys",
+        "auto-shift",
+        "gui-lock",
+        "ctrl-gui-swap",
+        "dynamic-macros"
+      ],
+      "base_features": [
+        "six-layers",
+        "sixteen-vial-macros",
+        "eight-two-key-combos",
+        "compact-tap-hold",
+        "encoder-map",
+        "media-keys",
+        "nkro-reports",
+        "caps-word",
+        "repeat",
+        "alternate-repeat",
+        "grave-escape",
+        "tri-layer",
+        "rgb-effects",
+        "vialrgb-direct-ram"
+      ],
+      "nvm_schema": 532483,
+      "make_options": {
+        "AK820_COMPACT_TAP_DANCE": "yes",
+        "AK820_COMPACT_KEY_OVERRIDE": "yes",
+        "AK820_QMK_SETTINGS": "yes",
+        "AK820_MAC_PC": "yes",
+        "AK820_OS_INDICATORS": "yes",
+        "AK820_COMPACT_LEADER": "yes",
+        "AK820_NKRO_CONTROL": "yes",
+        "AK820_COMPACT_ONESHOT": "yes",
+        "AK820_COMPACT_SPACE_CADET": "yes",
+        "AK820_COMPACT_MOUSEKEY": "yes",
+        "AK820_COMPACT_AUTOSHIFT": "yes",
+        "AK820_COMPACT_GUI_LOCK": "yes",
+        "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+        "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+      },
+      "runtime_qmk_settings": [
+        1,
+        2,
+        4,
+        7,
+        18,
+        19
+      ],
+      "timing_ms": {
+        "combo": 40,
+        "tap_hold": 200,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "leader": 300,
+        "mouse_cursor": 20,
+        "mouse_wheel": 80,
+        "auto_shift": 175,
+        "dynamic_macro_phase": 10
+      },
+      "release_approved": false
     },
-    {
-      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.ihx",
-      "sha256": "47400365dfe8e7e56fd46a548938ca8c9024467ca13120f506cb7213e9f7ef10",
-      "bytes": 107290
+    "code_bytes": 44747,
+    "code_low_bytes": 1741,
+    "code_main_bytes": 43006,
+    "main_highest_address": "0xd829",
+    "main_overflow_bytes": 4394,
+    "main_trailing_free_bytes": 0,
+    "ordinary_xram_bytes": 2943,
+    "flash_stage_bytes": 64,
+    "physical_xram_bytes": 3007,
+    "stack_capacity_bytes": 167,
+    "roots": {
+      "_main": 103,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 5,
+      "_ak820_led_irq": 2
     },
-    {
-      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.map",
-      "sha256": "6674f5031e0d2fcf1ad7e9f8a68ea5eac1f2fb8dd6a7676ea0642dbd6177f5d2",
-      "bytes": 108150
-    },
-    {
-      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.mem",
-      "sha256": "4069682548c02a16d3d9640a3377ffd0d6179742f94a2e78b10220886b60a91e",
-      "bytes": 1205
-    },
-    {
-      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/parameter-spills-stack.json",
-      "sha256": "c8e4d82fa8553ce7a3e70c2aba1120d539cc0c3c38d8f0ba2c3057df94c2caef",
-      "bytes": 353496
-    }
-  ],
-  "source_manifest_sha256": "7c5d6c79189f523b528faaa86191bf07d4295d6fd6cf6da526648b56acef42c2",
-  "current_manifest_verification": {
-    "all_artifacts": 1867,
-    "all_source_and_toolchain_inputs": 499
-  },
-  "evidence": {
-    "measurements": {
-      "path": "audits/maximal-continuation-20261025/measurements.json",
-      "sha256": "5cc6941bd4a985f7c4bc1974d6a6c6ccd87dd68f856e1be8fc9db379d580df61"
-    },
-    "startup": {
-      "path": "audits/maximal-continuation-20261025/startup.json",
-      "sha256": "a5363d7abecaeb61f852e5f7ad9ec6366f6eaa03e963688f15f9ec3570713717"
-    },
-    "linked_components": {
-      "path": "audits/maximal-continuation-20261025/linked-components.json",
-      "sha256": "b50910881e1820cba884717839e0c88e3e82ce0afc8b0628038188c2ec6b2621"
-    },
-    "read_hook": {
-      "path": "audits/maximal-continuation-20261025/read-hook.json",
-      "sha256": "677164a030cf4b5b85041dd02c0b7d3f7226740ca72539e89cd53126d66c707b"
-    },
-    "work_startup": {
-      "path": "audits/maximal-continuation-20261025/work-startup.json",
-      "sha256": "48c9a87b7e1e0f8fdfd9895655891877bfbb009ae0d658ddb29192da6ec23c12"
-    },
-    "work_irq": {
-      "path": "audits/maximal-continuation-20261025/work-irq.json",
-      "sha256": "4d70aef867b9ed8aa3a02773a442659e656ecedd82368d966c68a4e2077fbcf0"
-    }
+    "artifacts": [
+      {
+        "path": "qmk-8051-ak820/.build/resume27-baseline26b/build-report.json",
+        "sha256": "54be197a3bb4012d62d0fb1a0983a4603debe8dfb9b5aecad111340a92029a8d",
+        "bytes": 1194419
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume27-baseline26b/ajazz_ak820_vial.ihx",
+        "sha256": "47400365dfe8e7e56fd46a548938ca8c9024467ca13120f506cb7213e9f7ef10",
+        "bytes": 107290
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume27-baseline26b/ajazz_ak820_vial.map",
+        "sha256": "ea501736c5e6fc3f42a97954b54e3c017fc99c6169ef0650933384496f35e0c6",
+        "bytes": 109889
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume27-baseline26b/ajazz_ak820_vial.mem",
+        "sha256": "4069682548c02a16d3d9640a3377ffd0d6179742f94a2e78b10220886b60a91e",
+        "bytes": 1205
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume27-baseline26b/parameter-spills-stack.json",
+        "sha256": "2006766ce4c8acaec83d4df9fd33715e95c277a9b8c103a3a69e7d76bdad835b",
+        "bytes": 353495
+      }
+    ],
+    "verified_artifacts": 1867,
+    "verified_source_and_toolchain_inputs": 499,
+    "historical_git_blob_inputs": [
+      "tmk_core/protocol/ch555/usb_ak820.c"
+    ],
+    "source_manifest_sha256": "08774df3ff41b13635c47538c3870755a4364d00b06e8007f60f583138f006cf",
+    "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f"
   },
   "catalog_control": {
-    "build": "resume26-work",
-    "code_bytes": 37545,
+    "label": "work",
+    "build": "resume27-classifier-work",
+    "configuration": {
+      "format": "ak820-build-configuration-1",
+      "profile": "work",
+      "optional_features": [
+        "nkro-control",
+        "one-shot",
+        "space-cadet",
+        "leader",
+        "dynamic-macros",
+        "os-indicators"
+      ],
+      "base_features": [
+        "six-layers",
+        "sixteen-vial-macros",
+        "eight-two-key-combos",
+        "compact-tap-hold",
+        "encoder-map",
+        "media-keys",
+        "nkro-reports",
+        "caps-word",
+        "repeat",
+        "alternate-repeat",
+        "grave-escape",
+        "tri-layer",
+        "rgb-effects",
+        "vialrgb-direct-ram"
+      ],
+      "nvm_schema": 532482,
+      "make_options": {
+        "AK820_COMPACT_TAP_DANCE": "no",
+        "AK820_COMPACT_KEY_OVERRIDE": "no",
+        "AK820_QMK_SETTINGS": "no",
+        "AK820_MAC_PC": "no",
+        "AK820_OS_INDICATORS": "yes",
+        "AK820_COMPACT_LEADER": "yes",
+        "AK820_NKRO_CONTROL": "yes",
+        "AK820_COMPACT_ONESHOT": "yes",
+        "AK820_COMPACT_SPACE_CADET": "yes",
+        "AK820_COMPACT_MOUSEKEY": "no",
+        "AK820_COMPACT_AUTOSHIFT": "no",
+        "AK820_COMPACT_GUI_LOCK": "no",
+        "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+        "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+      },
+      "runtime_qmk_settings": [],
+      "timing_ms": {
+        "combo": 40,
+        "tap_hold": 200,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "leader": 300,
+        "dynamic_macro_phase": 10
+      },
+      "release_approved": false
+    },
+    "code_bytes": 37470,
+    "code_low_bytes": 1741,
+    "code_main_bytes": 35729,
+    "main_highest_address": "0xbbbc",
+    "main_overflow_bytes": 0,
+    "main_trailing_free_bytes": 2883,
+    "ordinary_xram_bytes": 2490,
+    "flash_stage_bytes": 64,
     "physical_xram_bytes": 2554,
-    "main_highest_address": "0xbc07",
-    "main_trailing_free_bytes": 2808,
-    "conditional_stack_bound_bytes": 160,
     "stack_capacity_bytes": 171,
-    "conditional_margin_bytes": 11,
-    "released": false
+    "roots": {
+      "_main": 98,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 5,
+      "_ak820_led_irq": 2
+    },
+    "artifacts": [
+      {
+        "path": "qmk-8051-ak820/.build/resume27-classifier-work/build-report.json",
+        "sha256": "5b022fa8813a877f39b2da036a58f6daffdc42a0f0cef5cb10389ddb9f359fe2",
+        "bytes": 1073056
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume27-classifier-work/ajazz_ak820_vial.ihx",
+        "sha256": "a9a80c9ab97eb21b8959d5e8236c3a772a08d176e3d26c9ccba5ca6850078950",
+        "bytes": 89928
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume27-classifier-work/ajazz_ak820_vial.map",
+        "sha256": "458739145f7c2395fc3fbda8399079a1446f34078fc23cd144002be55adf3375",
+        "bytes": 102031
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume27-classifier-work/ajazz_ak820_vial.mem",
+        "sha256": "7f0304380afa7d873cf0c517325f45ea980f4e2d9d04d627c7286a886d2f2cc5",
+        "bytes": 1204
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume27-classifier-work/parameter-spills-stack.json",
+        "sha256": "8b13075fa58b2151d384950b0833b1025c5e404493fe497c707a2690c68a1932",
+        "bytes": 298870
+      }
+    ],
+    "verified_artifacts": 1737,
+    "verified_source_and_toolchain_inputs": 499,
+    "historical_git_blob_inputs": [],
+    "source_manifest_sha256": "40971908fbe80ee8c08736ee91cd979edbc8a04f6472c8ea10c69ca0e2177f4e",
+    "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+    "conditional_stack_bound_bytes": 160,
+    "conditional_margin_bytes": 11
+  },
+  "evidence": [
+    {
+      "path": "audits/maximal-pass27-20261025/baseline-context-review.md",
+      "sha256": "e53d4db9d33c5e1c7b6476254591766b5e10a956399d04b6412f066f317c6f1f",
+      "bytes": 3321
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/host-regression.jsonl",
+      "sha256": "a31ced23f5ae76e738d649f0fa28c504b226ba748cc48c6d8ae7c6f1ef8baff3",
+      "bytes": 1310
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/linked-checks.json",
+      "sha256": "02f6cf98000b003e0b7d5b6133d7d9988d0630b21ddeb5eebf904b01c7daf1bc",
+      "bytes": 36366
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/maximal-context.json",
+      "sha256": "94a6c30ba3a4b1d18e6f11c4dc2394100b76bded7ddcc19c5cefc98a660a96a4",
+      "bytes": 20432
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/read-hook.json",
+      "sha256": "ddd72f82bbc019110f07bb96c1117ebd0f863585383dc48f1dca8e2efaa0e029",
+      "bytes": 14139
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/review.md",
+      "sha256": "ef25e8162deb7cad41e3f6217bf082460491e87d20eee800cb44d7fe680ffe6e",
+      "bytes": 6814
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/source-context-review.md",
+      "sha256": "ed86aeba450c92ee4c5554855f3a972158c1c1fb708a359cee38b5cbd5b41408",
+      "bytes": 3921
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/startup.json",
+      "sha256": "ad99c86fd14883bfa0e9e2b6fb7452ac1ac75edf84f898d8db65dd46a7a51a17",
+      "bytes": 10448
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/work-context-review.md",
+      "sha256": "7dab7c524d5caa5141f5d89ca10c2f91fc291b5f406b27f169e10cdd990c7a85",
+      "bytes": 4096
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/work-context.json",
+      "sha256": "f351d4a52acea5c542ab8d76a2303842baccd88eca580755fc779c10bfdb91d5",
+      "bytes": 19744
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/work-irq.json",
+      "sha256": "e1e65e46a0b7f3d392deb7bd22d8c0a7d16d328c1f73eea1a1aa31952055fa39",
+      "bytes": 19194
+    },
+    {
+      "path": "audits/maximal-pass27-20261025/work-startup.json",
+      "sha256": "51a14d4b375005c38221c575bc3f90cfcbcb6b43fe32d82ac31bba89db4d8efc",
+      "bytes": 9925
+    }
+  ],
+  "measurements": {
+    "path": "audits/maximal-pass27-20261025/measurements.json",
+    "sha256": "696af0484c5d73258334cb20e1dd8efdd209e26fa04487022fc5b3bf6330423c"
   },
   "qualification_gates_open": [
-    "main CODE overflow 4394 bytes",
+    "main CODE overflow 4346 bytes",
     "complete OEM startup and IRQ routing/non-reentry contract",
     "opaque-writer and application-bank gates",
     "full configured functional regressions",
     "physical validation"
-  ],
-  "physical_device_commands": 0,
-  "installer_or_release_changes": false
+  ]
 }
