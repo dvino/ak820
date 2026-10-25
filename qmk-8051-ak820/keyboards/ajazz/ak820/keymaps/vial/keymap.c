@@ -3,6 +3,7 @@
 /* SDCC has no weak symbols; the pinned core omits this default hook. */
 void keyboard_post_init_user(void) {}
 
+#if !defined(AK820_COMPRESS_DEFAULT_KEYMAP) || defined(AK820_DEFAULT_KEYMAP_EXTRACT)
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = {
         { 0x0029, 0x0035, 0x002B, 0x0039, 0x00E1, 0x00E0, KC_NO, KC_NO },
@@ -41,6 +42,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         { KC_NO, RGB_MOD, RGB_RMOD, RGB_HUD, KC_NO, RGB_SPI, KC_NO, KC_NO },
     },
 };
+
+#endif
 
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },

@@ -1,6 +1,6 @@
 {
-  "label": "29",
-  "build": "resume29-getter-bounds",
+  "label": "30",
+  "build": "resume30-default-keymap",
   "configuration": {
     "format": "ak820-build-configuration-1",
     "profile": "maximal",
@@ -74,15 +74,16 @@
     },
     "release_approved": false
   },
-  "code_bytes": 44601,
+  "compress_default_keymap": true,
+  "code_bytes": 44400,
   "code_low_bytes": 1741,
-  "code_main_bytes": 42860,
-  "main_highest_address": "0xd797",
-  "main_overflow_bytes": 4248,
+  "code_main_bytes": 42659,
+  "main_highest_address": "0xd6ce",
+  "main_overflow_bytes": 4047,
   "main_trailing_free_bytes": 0,
-  "ordinary_xram_bytes": 2943,
+  "ordinary_xram_bytes": 2946,
   "flash_stage_bytes": 64,
-  "physical_xram_bytes": 3007,
+  "physical_xram_bytes": 3010,
   "stack_capacity_bytes": 167,
   "roots": {
     "_main": 103,
@@ -92,40 +93,57 @@
   },
   "artifacts": [
     {
-      "path": "qmk-8051-ak820/.build/resume29-getter-bounds/build-report.json",
-      "sha256": "62e9b5ec0db81a856b46e81b0dfaf39030538f322e57ea69aa4e9eec1c9d22d3",
-      "bytes": 1131672
+      "path": "qmk-8051-ak820/.build/resume30-default-keymap/build-report.json",
+      "sha256": "dae709aeb1bf353a9932584a9df737ac2c34d0f944cd871a573066fab5095258",
+      "bytes": 1136868
     },
     {
-      "path": "qmk-8051-ak820/.build/resume29-getter-bounds/ajazz_ak820_vial.ihx",
-      "sha256": "693fdcd928f2d84b32e19b858cdd6cce29b46d01ea5694403788da08bf3969f9",
-      "bytes": 106926
+      "path": "qmk-8051-ak820/.build/resume30-default-keymap/ajazz_ak820_vial.ihx",
+      "sha256": "e4f1d3f64583da25a189c048a9905213a926ca43ae005652ab98964ccc1d954f",
+      "bytes": 106440
     },
     {
-      "path": "qmk-8051-ak820/.build/resume29-getter-bounds/ajazz_ak820_vial.map",
-      "sha256": "e3386d6b3ebf8eabf1c8b265848f4bd80bbf63d9326070378e4e10fe40560ca6",
-      "bytes": 109850
+      "path": "qmk-8051-ak820/.build/resume30-default-keymap/ajazz_ak820_vial.map",
+      "sha256": "b5241a7003b2e781ab94a1d6e92714adf450791ac63ffef155dedb84ccce5084",
+      "bytes": 109917
     },
     {
-      "path": "qmk-8051-ak820/.build/resume29-getter-bounds/ajazz_ak820_vial.mem",
-      "sha256": "9cef678f06c81adfcb323c2e67f34c1f68b3e73160ce1d0a93c515656cb9d2a5",
+      "path": "qmk-8051-ak820/.build/resume30-default-keymap/ajazz_ak820_vial.mem",
+      "sha256": "77157c8f0b82247420e38100c556d25f0c6136553f7c82ae05b298a2dbeb541f",
       "bytes": 1205
     },
     {
-      "path": "qmk-8051-ak820/.build/resume29-getter-bounds/parameter-spills-stack.json",
-      "sha256": "6a2386bac0aae6828dc19b324076d121b915372ddc7dffe424f89fb8bbdc11f8",
-      "bytes": 352522
+      "path": "qmk-8051-ak820/.build/resume30-default-keymap/parameter-spills-stack.json",
+      "sha256": "77ead3c7810f5bb06f2124e31657dbaacea48bdcd5517dd1afd88d4ca5de343f",
+      "bytes": 353183
     }
   ],
   "verified_artifacts": 1867,
-  "verified_source_and_toolchain_inputs": 499,
-  "historical_git_blob_inputs": [],
-  "source_manifest_sha256": "dbd06f0ade377e223d79932b8e4c99de4b4c40f7786ef020c0c3abbfa28730a5",
-  "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
-  "context_certificate_provenance": "Byte-identical retained pass27 certificate; actual compiler ASM, tools, map and provenance revalidated; actual29 postlink audit rechecked.",
+  "verified_source_and_toolchain_inputs": 501,
+  "source_manifest_sha256": "3fa63c06748a69e750536a2ef7b472df758371be0f6191a3cd7ecc79b848f5bc",
+  "builder_sha256": "c8e0217af804f9069f71ba87d2a03e657c0f88d532ab139e1c96ceb02c01872f",
+  "default_generation": {
+    "resolved_words": 256,
+    "classes_bytes": 64,
+    "payload_bytes": 114,
+    "offsets_bytes": 32,
+    "bootstrap_sha256": "273e811b2cc5f759da10f83bcd0816069fdd88f718354a3dce73a99f02053efa",
+    "generation_sha256": "f1a3aa28671cc5f06e278f42fbaee52e81e0b4212198eca6ce5b8282d2480ae6",
+    "command_sha256": {
+      "dependency_command": "d61e3ee674ed6b223bfa77d6d20357db0685b4a1019c09b43aba21cf1bbbd8d6",
+      "bootstrap_command": "51f1b1aa4721d5556f26c588f6eaf7dea6f706d9f57326be1b9757dce874522d",
+      "final_command": "ba2dd8cb9591ab12321cdf79199ac55d787bd8f46718fe93684e016cb6b95fb6",
+      "final_dependency_command": "10e8746b42aa41dfa64c5f124dfdbd8d163b501456dfe1972e8e04d15a0fc337"
+    },
+    "bootstrap_dependency_count": 138,
+    "final_dependency_count": 139,
+    "linked_tables_exact": true,
+    "original_defaults_linked": false
+  },
+  "context_certificate_provenance": "Byte-identical retained pass27 certificate; actual compiler ASM, tools, map and provenance revalidated; actual30 postlink audit rechecked.",
   "conditional_stack_bound_bytes": 165,
   "conditional_margin_bytes": 2,
-  "format": "ak820-maximal-current-4",
+  "format": "ak820-maximal-current-5",
   "diagnostic_only": true,
   "installable": false,
   "profile": "maximal",
@@ -146,16 +164,16 @@
     ]
   ],
   "xram_limit_bytes": 3072,
-  "xram_remaining_bytes": 65,
-  "delta_from_retained28": {
-    "code_bytes": -37,
-    "physical_xram_bytes": 0,
+  "xram_remaining_bytes": 62,
+  "delta_from_same_source_control": {
+    "code_bytes": -201,
+    "physical_xram_bytes": 3,
     "stack_capacity_bytes": 0,
-    "main_overflow_bytes": -37
+    "main_overflow_bytes": -201
   },
-  "baseline28": {
-    "label": "28",
-    "build": "resume28-keymap-firewall",
+  "same_source_control": {
+    "label": "control",
+    "build": "resume30-default-keymap-control",
     "configuration": {
       "format": "ak820-build-configuration-1",
       "profile": "maximal",
@@ -229,11 +247,12 @@
       },
       "release_approved": false
     },
-    "code_bytes": 44638,
+    "compress_default_keymap": false,
+    "code_bytes": 44601,
     "code_low_bytes": 1741,
-    "code_main_bytes": 42897,
-    "main_highest_address": "0xd7bc",
-    "main_overflow_bytes": 4285,
+    "code_main_bytes": 42860,
+    "main_highest_address": "0xd797",
+    "main_overflow_bytes": 4248,
     "main_trailing_free_bytes": 0,
     "ordinary_xram_bytes": 2943,
     "flash_stage_bytes": 64,
@@ -247,42 +266,39 @@
     },
     "artifacts": [
       {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/build-report.json",
-        "sha256": "41fde4fb545608301e6bb51bf18f42e7496597d833d5eab70a8c8be32a4763c2",
-        "bytes": 1141314
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-control/build-report.json",
+        "sha256": "4ee664da449e2947f137e88822741a510891a60ad198f0072454f75e58f8bc0c",
+        "bytes": 1175141
       },
       {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/ajazz_ak820_vial.ihx",
-        "sha256": "87467a0fdae46f4e222de6968b6e1cb48d155bfca77f81363acb947a37e17d1b",
-        "bytes": 107024
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-control/ajazz_ak820_vial.ihx",
+        "sha256": "693fdcd928f2d84b32e19b858cdd6cce29b46d01ea5694403788da08bf3969f9",
+        "bytes": 106926
       },
       {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/ajazz_ak820_vial.map",
-        "sha256": "50fd2964380b9ae3c0d591b11a444c608472a2ce5a8107fe50577d9e843b09aa",
-        "bytes": 110012
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-control/ajazz_ak820_vial.map",
+        "sha256": "40ad1a31de1cc500bd25bf55a280c944670d2ab2f0ed9e610d7be59f09df0888",
+        "bytes": 110579
       },
       {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/ajazz_ak820_vial.mem",
-        "sha256": "d40dc9fbbbe51de3457ca71893573935ed7592dc58d749ae21a9f65639bafc81",
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-control/ajazz_ak820_vial.mem",
+        "sha256": "9cef678f06c81adfcb323c2e67f34c1f68b3e73160ce1d0a93c515656cb9d2a5",
         "bytes": 1205
       },
       {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/parameter-spills-stack.json",
-        "sha256": "25cf5f5811806f398851cda81337f8afa411217375fe2aff243c1086a30bfc14",
-        "bytes": 352734
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-control/parameter-spills-stack.json",
+        "sha256": "69a3c6096b13e6dbef92173adf3abfe25b37e78e2913511e927116ba12082021",
+        "bytes": 352531
       }
     ],
     "verified_artifacts": 1867,
     "verified_source_and_toolchain_inputs": 499,
-    "historical_git_blob_inputs": [
-      "quantum/dynamic_keymap.c"
-    ],
-    "source_manifest_sha256": "3e9046e7a2ed20c12f65ae2f905ada490c194168744855d2f19b14610b5b218e",
-    "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f"
+    "source_manifest_sha256": "6fe8d4b628abcf63be064fdc5b90e83eceae60d57da9aaa968d9b4dbd1b03d80",
+    "builder_sha256": "c8e0217af804f9069f71ba87d2a03e657c0f88d532ab139e1c96ceb02c01872f"
   },
-  "baseline28_work": {
-    "label": "28-work",
-    "build": "resume28-keymap-firewall-work",
+  "same_source_work_control": {
+    "label": "work-control",
+    "build": "resume30-default-keymap-work-control",
     "configuration": {
       "format": "ak820-build-configuration-1",
       "profile": "work",
@@ -338,115 +354,7 @@
       },
       "release_approved": false
     },
-    "code_bytes": 37392,
-    "code_low_bytes": 1741,
-    "code_main_bytes": 35651,
-    "main_highest_address": "0xbb6e",
-    "main_overflow_bytes": 0,
-    "main_trailing_free_bytes": 2961,
-    "ordinary_xram_bytes": 2490,
-    "flash_stage_bytes": 64,
-    "physical_xram_bytes": 2554,
-    "stack_capacity_bytes": 171,
-    "roots": {
-      "_main": 98,
-      "_ak820_timer_irq": 2,
-      "_USB_DeviceInterrupt": 5,
-      "_ak820_led_irq": 2
-    },
-    "artifacts": [
-      {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/build-report.json",
-        "sha256": "f56aa901b7800e72dbc5d020f3af8b654edb483d027f3dbd311b09f0363ffc08",
-        "bytes": 1024946
-      },
-      {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/ajazz_ak820_vial.ihx",
-        "sha256": "935a6aee27b9ec4fad2d4cab0d597e94d6bc5204f14b68c9e6a8f1f42739feff",
-        "bytes": 89760
-      },
-      {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/ajazz_ak820_vial.map",
-        "sha256": "fa81c96cc86c8d1263799af185f55ddefb416a8f4c749419692b0814a19e157f",
-        "bytes": 102348
-      },
-      {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/ajazz_ak820_vial.mem",
-        "sha256": "57c637e6f310c731e1f72758171d3279183ee5cc794016f9718c0b6a237b3b42",
-        "bytes": 1204
-      },
-      {
-        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/parameter-spills-stack.json",
-        "sha256": "7b095ca162288362d565b35fb91e62fbff6e4689dd5ac81fe681ffc27555c01b",
-        "bytes": 298155
-      }
-    ],
-    "verified_artifacts": 1737,
-    "verified_source_and_toolchain_inputs": 499,
-    "historical_git_blob_inputs": [
-      "quantum/dynamic_keymap.c"
-    ],
-    "source_manifest_sha256": "a901c04d3510027e4d5420ce3c9fa1e5d0a67e93f38907c1c4335f822ab422f5",
-    "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f"
-  },
-  "catalog_control": {
-    "label": "work",
-    "build": "resume29-getter-bounds-work",
-    "configuration": {
-      "format": "ak820-build-configuration-1",
-      "profile": "work",
-      "optional_features": [
-        "nkro-control",
-        "one-shot",
-        "space-cadet",
-        "leader",
-        "dynamic-macros",
-        "os-indicators"
-      ],
-      "base_features": [
-        "six-layers",
-        "sixteen-vial-macros",
-        "eight-two-key-combos",
-        "compact-tap-hold",
-        "encoder-map",
-        "media-keys",
-        "nkro-reports",
-        "caps-word",
-        "repeat",
-        "alternate-repeat",
-        "grave-escape",
-        "tri-layer",
-        "rgb-effects",
-        "vialrgb-direct-ram"
-      ],
-      "nvm_schema": 532482,
-      "make_options": {
-        "AK820_COMPACT_TAP_DANCE": "no",
-        "AK820_COMPACT_KEY_OVERRIDE": "no",
-        "AK820_QMK_SETTINGS": "no",
-        "AK820_MAC_PC": "no",
-        "AK820_OS_INDICATORS": "yes",
-        "AK820_COMPACT_LEADER": "yes",
-        "AK820_NKRO_CONTROL": "yes",
-        "AK820_COMPACT_ONESHOT": "yes",
-        "AK820_COMPACT_SPACE_CADET": "yes",
-        "AK820_COMPACT_MOUSEKEY": "no",
-        "AK820_COMPACT_AUTOSHIFT": "no",
-        "AK820_COMPACT_GUI_LOCK": "no",
-        "AK820_COMPACT_CTRL_GUI_SWAP": "no",
-        "AK820_COMPACT_DYNAMIC_MACRO": "yes"
-      },
-      "runtime_qmk_settings": [],
-      "timing_ms": {
-        "combo": 40,
-        "tap_hold": 200,
-        "os_indicator_lease": 3000,
-        "os_indicator_period": 4096,
-        "leader": 300,
-        "dynamic_macro_phase": 10
-      },
-      "release_approved": false
-    },
+    "compress_default_keymap": false,
     "code_bytes": 37361,
     "code_low_bytes": 1741,
     "code_main_bytes": 35620,
@@ -465,139 +373,321 @@
     },
     "artifacts": [
       {
-        "path": "qmk-8051-ak820/.build/resume29-getter-bounds-work/build-report.json",
-        "sha256": "9d06e39da9fae65fd8441c0ebde0fa5093f8b77863a06cee9f62e9844d35571c",
-        "bytes": 1086589
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work-control/build-report.json",
+        "sha256": "1cc48e2f9ec323811098e2afbc68906139e306e2ca394a4a4e62dc9aff7f541c",
+        "bytes": 1127267
       },
       {
-        "path": "qmk-8051-ak820/.build/resume29-getter-bounds-work/ajazz_ak820_vial.ihx",
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work-control/ajazz_ak820_vial.ihx",
         "sha256": "7127b0677552dd075d5dfffcd69469231a5f9dddc93983378a9c4ed27baa5f8f",
         "bytes": 89686
       },
       {
-        "path": "qmk-8051-ak820/.build/resume29-getter-bounds-work/ajazz_ak820_vial.map",
-        "sha256": "e0d3b2fbf2bf2d5b13b59a448a73c0cf889a68d3f3c9897d348058fc6e340c58",
-        "bytes": 102196
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work-control/ajazz_ak820_vial.map",
+        "sha256": "f699af2f7a7a4a8dd9c949824e9ed29788ce1de1fc29431c58dd30da8d5b9f04",
+        "bytes": 102880
       },
       {
-        "path": "qmk-8051-ak820/.build/resume29-getter-bounds-work/ajazz_ak820_vial.mem",
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work-control/ajazz_ak820_vial.mem",
         "sha256": "485001d6e3336a0eaeef8e539c6e1eba5cc33316990896af8ca73ff854748fb8",
         "bytes": 1204
       },
       {
-        "path": "qmk-8051-ak820/.build/resume29-getter-bounds-work/parameter-spills-stack.json",
-        "sha256": "67f0e9c93107bc5f285bb8c93887624823b1ef8147f778f6c70baae9db57ef9f",
-        "bytes": 297943
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work-control/parameter-spills-stack.json",
+        "sha256": "2c3e50153949edfc1f866e1f509bd6c253911a323293428bddaf6274be4bd7d4",
+        "bytes": 297952
       }
     ],
     "verified_artifacts": 1737,
     "verified_source_and_toolchain_inputs": 499,
-    "historical_git_blob_inputs": [],
-    "source_manifest_sha256": "6c6232f8e22f1571587c92fdac521182f8c4c0fe771e1beb939f15f4d64ae1f3",
-    "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
-    "context_certificate_provenance": "Byte-identical retained pass27 certificate; actual compiler ASM, tools, map and provenance revalidated; actual29 postlink audit rechecked.",
+    "source_manifest_sha256": "bf2664cea8fa297faa59f232b7f448162f55612218afb841372fdc835c8f1d8b",
+    "builder_sha256": "c8e0217af804f9069f71ba87d2a03e657c0f88d532ab139e1c96ceb02c01872f"
+  },
+  "catalog_control": {
+    "label": "work",
+    "build": "resume30-default-keymap-work",
+    "configuration": {
+      "format": "ak820-build-configuration-1",
+      "profile": "work",
+      "optional_features": [
+        "nkro-control",
+        "one-shot",
+        "space-cadet",
+        "leader",
+        "dynamic-macros",
+        "os-indicators"
+      ],
+      "base_features": [
+        "six-layers",
+        "sixteen-vial-macros",
+        "eight-two-key-combos",
+        "compact-tap-hold",
+        "encoder-map",
+        "media-keys",
+        "nkro-reports",
+        "caps-word",
+        "repeat",
+        "alternate-repeat",
+        "grave-escape",
+        "tri-layer",
+        "rgb-effects",
+        "vialrgb-direct-ram"
+      ],
+      "nvm_schema": 532482,
+      "make_options": {
+        "AK820_COMPACT_TAP_DANCE": "no",
+        "AK820_COMPACT_KEY_OVERRIDE": "no",
+        "AK820_QMK_SETTINGS": "no",
+        "AK820_MAC_PC": "no",
+        "AK820_OS_INDICATORS": "yes",
+        "AK820_COMPACT_LEADER": "yes",
+        "AK820_NKRO_CONTROL": "yes",
+        "AK820_COMPACT_ONESHOT": "yes",
+        "AK820_COMPACT_SPACE_CADET": "yes",
+        "AK820_COMPACT_MOUSEKEY": "no",
+        "AK820_COMPACT_AUTOSHIFT": "no",
+        "AK820_COMPACT_GUI_LOCK": "no",
+        "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+        "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+      },
+      "runtime_qmk_settings": [],
+      "timing_ms": {
+        "combo": 40,
+        "tap_hold": 200,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "leader": 300,
+        "dynamic_macro_phase": 10
+      },
+      "release_approved": false
+    },
+    "compress_default_keymap": true,
+    "code_bytes": 37170,
+    "code_low_bytes": 1741,
+    "code_main_bytes": 35429,
+    "main_highest_address": "0xba90",
+    "main_overflow_bytes": 0,
+    "main_trailing_free_bytes": 3183,
+    "ordinary_xram_bytes": 2493,
+    "flash_stage_bytes": 64,
+    "physical_xram_bytes": 2557,
+    "stack_capacity_bytes": 171,
+    "roots": {
+      "_main": 98,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 5,
+      "_ak820_led_irq": 2
+    },
+    "artifacts": [
+      {
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work/build-report.json",
+        "sha256": "5066d3af5a245923cea89fcf3321e5951bf1e2b2b77b2dec976f9ded24c3e253",
+        "bytes": 1091480
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work/ajazz_ak820_vial.ihx",
+        "sha256": "d872a93b2a7c3d9c1ddd49e6b33ae3efb5fbcc09b8d138e55197168d773566c5",
+        "bytes": 89196
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work/ajazz_ak820_vial.map",
+        "sha256": "f237cf2e65b896e85e4c171802783e186e4f47292d09223c623f18298f4905a9",
+        "bytes": 102199
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work/ajazz_ak820_vial.mem",
+        "sha256": "1f55105c058bd68fbddd5ed54d9948e1dd3a87d7b36d4f15d2de284bf867b413",
+        "bytes": 1204
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume30-default-keymap-work/parameter-spills-stack.json",
+        "sha256": "fc197cf2d72fa34c4ece950fae9fbab4aed5cca7cce88abc331e866686c78379",
+        "bytes": 298754
+      }
+    ],
+    "verified_artifacts": 1737,
+    "verified_source_and_toolchain_inputs": 501,
+    "source_manifest_sha256": "4c3e12e80fdd33978fa71e698add78c7456802ecc5fbb53b085248c4ccf6d92c",
+    "builder_sha256": "c8e0217af804f9069f71ba87d2a03e657c0f88d532ab139e1c96ceb02c01872f",
+    "default_generation": {
+      "resolved_words": 256,
+      "classes_bytes": 64,
+      "payload_bytes": 114,
+      "offsets_bytes": 32,
+      "bootstrap_sha256": "a9e24502ef6f47969ee72e0074324634d73d745be2410b63954624579004a1d4",
+      "generation_sha256": "e548c20d11d917159c64cfa854d47871849cda67581538794ce22e5f27ad6b3a",
+      "command_sha256": {
+        "dependency_command": "5482d5b0176d4052ef4b6662557a59e94be0a34873a051f0d7690a60cb03f374",
+        "bootstrap_command": "45b2571ae780052a2486e78f54bd9b04d2d6b37eafab4306c3b7ff6d8442e446",
+        "final_command": "17947c440841edcd6ca65202302606c48660c4037853b6375457719e8e8a9267",
+        "final_dependency_command": "5d1600f2e8450dda51fbea90b24880ac61e1d5fae8ef4ade7d04c588662813e8"
+      },
+      "bootstrap_dependency_count": 138,
+      "final_dependency_count": 139,
+      "linked_tables_exact": true,
+      "original_defaults_linked": false
+    },
+    "context_certificate_provenance": "Byte-identical retained pass27 certificate; actual compiler ASM, tools, map and provenance revalidated; actual30 postlink audit rechecked.",
     "conditional_stack_bound_bytes": 160,
     "conditional_margin_bytes": 11
   },
-  "work_code_delta_from_retained28": -31,
+  "work_code_delta_from_same_source_control": -191,
+  "bounded_passes_and_stop": {
+    "additional_passes_completed": 2,
+    "extra_pass1": "REJECTED: one event-chain candidate grows standalone CSEG 565 to 627; no integration/full build",
+    "extra_pass2": "NO_ELIGIBLE_WEIGHTY_VARIANT: no patch or compile; three specific loops total42/ideal sharing ceiling28 only",
+    "integrated_code_saving_bytes": 201,
+    "substantial_gain_reference_bytes": 512,
+    "conditional_stop": "Pause after recording and reviewing this packet; objective remains incomplete. No claim of a global compression minimum."
+  },
   "evidence": [
     {
-      "path": "audits/maximal-pass29-20261025/final-review.md",
-      "sha256": "3a32cb8f08f2f4692de77b271e8bb811d3aa825869237f5971c146d9e0e50ff4",
-      "bytes": 10011
+      "path": "audits/maximal-pass30-20261025/decoder-linked-README.md",
+      "sha256": "286eb3ab00f3ce59fc6a6ed2bd6964643bfe4511330afcfd16c998c838642c0e",
+      "bytes": 3228
     },
     {
-      "path": "audits/maximal-pass29-20261025/getter-linked-SHA256SUMS",
-      "sha256": "1630bb04a9c49e8eaabf7440d6f6424723f380918a86dca981290458c547c816",
-      "bytes": 9118
+      "path": "audits/maximal-pass30-20261025/decoder-linked-SHA256SUMS",
+      "sha256": "3daff05a4284a03d32ed0a64c4c8e350a29ff354aa13ff65b9ca02d78170167c",
+      "bytes": 2521
     },
     {
-      "path": "audits/maximal-pass29-20261025/getter-linked.json",
-      "sha256": "96410e0956aabb5a6cd15c364f8960f2d86a75b092c37c2dec8d74fe888666c0",
-      "bytes": 2216
+      "path": "audits/maximal-pass30-20261025/decoder-linked.json",
+      "sha256": "c331c5ed42e91f97e2c46ae4b809fab820e469a8273a62809cb1b88e7435d77f",
+      "bytes": 2121
     },
     {
-      "path": "audits/maximal-pass29-20261025/host-execution-context.json",
-      "sha256": "95b843a8bf5b902d3c6642d30385e55f4a33c952641ab7e1723637af57d40d5f",
-      "bytes": 1245
+      "path": "audits/maximal-pass30-20261025/external-evidence.json",
+      "sha256": "115c2f5a1665613c7ff492c4ea72811ff1772ed38684964033975c474e795406",
+      "bytes": 25938
     },
     {
-      "path": "audits/maximal-pass29-20261025/host-regression.jsonl",
-      "sha256": "13b9431f45eeb9e069566d244126833ce5fca9462df3806a45b6af7a992bdb87",
-      "bytes": 3144
+      "path": "audits/maximal-pass30-20261025/extra-pass1-event-SHA256SUMS",
+      "sha256": "b634f5cddd76cd9cc7b1be19e1cdd90d0ce0a2d987c771a5ecbd7b79b99586f9",
+      "bytes": 738
     },
     {
-      "path": "audits/maximal-pass29-20261025/initial-review.md",
-      "sha256": "ea9e0712f86e632d28e1bd0f83c3539db1cfebf0fe81d35d1a1f048df8a0aaca",
-      "bytes": 5826
+      "path": "audits/maximal-pass30-20261025/extra-pass1-event.json",
+      "sha256": "6dec65edb92248a9c0bc0713944b8e2f1690d65239cde10714b327901c918a0c",
+      "bytes": 4925
     },
     {
-      "path": "audits/maximal-pass29-20261025/linked-checks.json",
-      "sha256": "7e96832230661c2e28909e43e6da4013b3ed69f2d8224d7119b5a3caee980e3c",
-      "bytes": 36375
+      "path": "audits/maximal-pass30-20261025/extra-pass1-event.md",
+      "sha256": "c64ebe11d002392aa2d6f7615481d34b15232d67fce177c1712be217c5260fe8",
+      "bytes": 5073
     },
     {
-      "path": "audits/maximal-pass29-20261025/maximal-context.json",
+      "path": "audits/maximal-pass30-20261025/extra-pass2-protocol.json",
+      "sha256": "22f18a01cc9f56f07a12e1d1bceda9cffb7e473ba8ab95683d4ae6b6df8d5843",
+      "bytes": 19482
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/extra-pass2-protocol.md",
+      "sha256": "0e27a9b57b9edcd86f2bdd5c418dced7bcbb110a32927c4acfe3be72239eb1b8",
+      "bytes": 4328
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/final-review.md",
+      "sha256": "fd96a9d640d24bf7dca0f20ac9d9337c6dfff69113354cc20fc790bd8097284c",
+      "bytes": 13034
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/generation-fix.md",
+      "sha256": "59fe79a1ce8b870433251accb82bc69f38e5d3bb85a18beae4e006907a8de5de",
+      "bytes": 3286
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/host-check-0.log",
+      "sha256": "df3fed384cac67d52cee63c88989bfbd434c1c8298f05e0cbf12e192bb4074a1",
+      "bytes": 105
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/host-check-1.log",
+      "sha256": "1d215a419f9c4bb7bdb060ea6abf359620babc2bb46411fe1e9d0cb8725e2f70",
+      "bytes": 52
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/host-check-2.log",
+      "sha256": "b9b6eda927d94808c29c2a71f3b69decc097d8c19a928c75410380cf84d0aa4f",
+      "bytes": 318
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/host-checks.json",
+      "sha256": "1d819070d210d38ef860443bd5e32eb4cf5647fe5ed07f02cc4c10d1e4cbb7c1",
+      "bytes": 3588
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/implementation-review.md",
+      "sha256": "945c961043a400058f62e1f3342161028490263eb9e650cf205bfa4e14145f1f",
+      "bytes": 5943
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/initial-review.md",
+      "sha256": "a11ad89252456766c5876efecf41e0601fe25faf5a13e2cf5f5103432a7836d6",
+      "bytes": 4881
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/linked-checks.json",
+      "sha256": "2488a123d616aaff74d977c5a533910fdd279c26967f5c06430b64dad5f6a022",
+      "bytes": 36378
+    },
+    {
+      "path": "audits/maximal-pass30-20261025/maximal-context.json",
       "sha256": "94a6c30ba3a4b1d18e6f11c4dc2394100b76bded7ddcc19c5cefc98a660a96a4",
       "bytes": 20432
     },
     {
-      "path": "audits/maximal-pass29-20261025/prototype-report.md",
-      "sha256": "d625792ce170a536503a4487c7f08d44a12ffbd012bd98e972e265c7019dae9d",
-      "bytes": 6779
+      "path": "audits/maximal-pass30-20261025/prototype-review.md",
+      "sha256": "e670f521f3a0399342fc78fd0945f74ac76f207325bae612bb88f96a0775f4b9",
+      "bytes": 7448
     },
     {
-      "path": "audits/maximal-pass29-20261025/prototype-review.md",
-      "sha256": "d89770e28be64f504b0c8d10c6b913a375cde7dcb7d8281c33741541467c47df",
-      "bytes": 5282
+      "path": "audits/maximal-pass30-20261025/read-hook.json",
+      "sha256": "af92b32ade2a36e2629faa2341b25822026dd9ba6013d544b27cf12262bfabfe",
+      "bytes": 14147
     },
     {
-      "path": "audits/maximal-pass29-20261025/read-hook.json",
-      "sha256": "f9d9549ba519c010121ae04a91088fca51cce86c5d327d5c32a798b72d8676cb",
-      "bytes": 14145
-    },
-    {
-      "path": "audits/maximal-pass29-20261025/source-context-review.md",
+      "path": "audits/maximal-pass30-20261025/source-context-review.md",
       "sha256": "ed86aeba450c92ee4c5554855f3a972158c1c1fb708a359cee38b5cbd5b41408",
       "bytes": 3921
     },
     {
-      "path": "audits/maximal-pass29-20261025/startup.json",
-      "sha256": "07de2bcae0c41edb2576556edaf2216250c17de110a643cec445ff9ad017b687",
-      "bytes": 10451
+      "path": "audits/maximal-pass30-20261025/startup.json",
+      "sha256": "c2ac955a1bdf0ef0422ea5fa112ff9f7e16bc493f6a7f091df7da396b64bd8be",
+      "bytes": 10452
     },
     {
-      "path": "audits/maximal-pass29-20261025/verification-tools.json",
-      "sha256": "59fa34e344370a1ad30c3ee96812c769ebe2ce7b75300efbb9cf962d9f871813",
-      "bytes": 1891
+      "path": "audits/maximal-pass30-20261025/translation-unit-checks.json",
+      "sha256": "c91d60ec3128c3e3ba8c97735dea0f01b43839b7302760ea38c6eac716725c7c",
+      "bytes": 258
     },
     {
-      "path": "audits/maximal-pass29-20261025/work-context-review.md",
+      "path": "audits/maximal-pass30-20261025/work-context-review.md",
       "sha256": "7dab7c524d5caa5141f5d89ca10c2f91fc291b5f406b27f169e10cdd990c7a85",
       "bytes": 4096
     },
     {
-      "path": "audits/maximal-pass29-20261025/work-context.json",
+      "path": "audits/maximal-pass30-20261025/work-context.json",
       "sha256": "f351d4a52acea5c542ab8d76a2303842baccd88eca580755fc779c10bfdb91d5",
       "bytes": 19744
     },
     {
-      "path": "audits/maximal-pass29-20261025/work-irq.json",
-      "sha256": "4fe7bea3893e598661ee983e5c4fed3b8da5a5ffeaf3ff41cd9f1cccec516e3c",
+      "path": "audits/maximal-pass30-20261025/work-irq.json",
+      "sha256": "f31c0458e2d5c356ac271ffc80b57a5e986b211f356f2491f6b983f1ce556590",
       "bytes": 19194
     },
     {
-      "path": "audits/maximal-pass29-20261025/work-startup.json",
-      "sha256": "530c8ec01d4a6d9e562f6ed3e57303fd20f5a4df9aed3fddf96ac4c6d29d5342",
-      "bytes": 9928
+      "path": "audits/maximal-pass30-20261025/work-startup.json",
+      "sha256": "b4e334105266dbc6a74d12b5477ee3710d2c9e920201a6a0f207fbec2761b557",
+      "bytes": 9929
     }
   ],
   "measurements": {
-    "path": "audits/maximal-pass29-20261025/measurements.json",
-    "sha256": "460e5f9ff60d131bd902109f0a190d3e9054ad8f534a17df9b51807c71eb48da"
+    "path": "audits/maximal-pass30-20261025/measurements.json",
+    "sha256": "061484470c138ab8759d25c1996d4eeecf2c2028eb15e692fc91a33b9b6e8393"
   },
   "qualification_gates_open": [
-    "main CODE overflow 4248 bytes",
+    "main CODE overflow 4047 bytes",
     "complete OEM startup and IRQ routing/non-reentry contract",
     "opaque-writer and application-bank gates",
     "full configured functional regressions",

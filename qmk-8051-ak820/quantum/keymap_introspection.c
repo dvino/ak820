@@ -15,7 +15,21 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Key mapping
 
+#if defined(AK820_COMPRESS_DEFAULT_KEYMAP) && !defined(AK820_DEFAULT_KEYMAP_EXTRACT)
+#    if !defined(__SDCC) || !defined(__SDCC_MODEL_LARGE) || !defined(VIA_ENABLE)
+#        error Unsupported default-keymap compression configuration
+#    endif
+#    include "ak820_default_keymap.inc"
+#    define NUM_KEYMAP_LAYERS_RAW AK820_DEFAULT_LAYERS
+#else
 #define NUM_KEYMAP_LAYERS_RAW ((uint8_t)(sizeof(keymaps) / ((MATRIX_ROWS) * (MATRIX_COLS) * sizeof(uint16_t))))
+
+#ifdef AK820_DEFAULT_KEYMAP_EXTRACT
+const uint8_t __code ak820_default_metadata[] = {
+    MATRIX_ROWS, MATRIX_COLS, NUM_KEYMAP_LAYERS_RAW, sizeof(uint16_t), KC_NO, KC_TRNS
+};
+#endif
+#endif
 
 uint8_t keymap_layer_count_raw(void) {
     return NUM_KEYMAP_LAYERS_RAW;
@@ -34,10 +48,28 @@ _Static_assert(NUM_KEYMAP_LAYERS_RAW <= MAX_LAYER, "Number of keymap layers exce
 uint16_t keycode_at_keymap_location_raw(uint8_t layer_num, uint8_t row, uint8_t column) {
 //__attribute__((weak)) uint16_t keycode_at_keymap_location(uint8_t layer_num, uint8_t row, uint8_t column) {
     //ac_dprintf("layer:%x:row:%x:col:%x\n",layer_num,row,column);
+#if defined(AK820_COMPRESS_DEFAULT_KEYMAP) && !defined(AK820_DEFAULT_KEYMAP_EXTRACT)
+    uint8_t row_index, pos, i, kind, bits;
+    uint16_t value;
+    if (layer_num >= NUM_KEYMAP_LAYERS_RAW || row >= MATRIX_ROWS || column >= MATRIX_COLS) return KC_TRNS;
+    row_index = layer_num * MATRIX_ROWS + row;
+    pos = ak820_default_offsets[row_index];
+    for (i = 0;; ++i) {
+        bits = ak820_default_classes[(uint8_t)(row_index * 2 + (i >> 2))];
+        kind = (bits >> ((i & 3) * 2)) & 3;
+        if (i == column) break;
+        if (kind >= 2) pos += kind - 1;
+    }
+    if (kind < 2) return kind;
+    value = ak820_default_payload[pos];
+    if (kind == 3) value |= (uint16_t)ak820_default_payload[(uint8_t)(pos + 1)] << 8;
+    return value;
+#else
     if (layer_num < NUM_KEYMAP_LAYERS_RAW && row < MATRIX_ROWS && column < MATRIX_COLS) {
         return pgm_read_word(&keymaps[layer_num][row][column]);
     }
     return KC_TRNS;
+#endif
 }
 
 #ifndef VIA_ENABLE

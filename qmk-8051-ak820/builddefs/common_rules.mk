@@ -303,7 +303,20 @@ sdcc-objects: $(OBJ) $(MASTER_OUTPUT)/cflags.txt $(MASTER_OUTPUT)/ldflags.txt $(
 # keep option/value pairs such as repeated --disable-warning arguments intact.
 sdcc_unique_words = $(if $(strip $(1)),$(firstword $(1)) $(call sdcc_unique_words,$(if $(filter -D% -I%,$(firstword $(1))),$(filter-out $(firstword $(1)),$(1)),$(wordlist 2,$(words $(1)),$(1)))))
 
+ifeq ($(AK820_COMPRESS_DEFAULT_KEYMAP),yes)
+ifneq ($(KEYBOARD):$(KEYMAP):$(PLATFORM),ajazz/ak820:vial:MCS51)
+$(error Unsupported default-keymap compression target)
+endif
+override EXTRAFLAGS += -DAK820_COMPRESS_DEFAULT_KEYMAP
+.PHONY: ak820-default-keymap-force
+ak820-default-keymap-force:
+$(BUILD_DIR)/default-keymap/ak820_default_keymap.inc: ;
+endif
+
 define GEN_OBJRULE
+ifeq ($(AK820_COMPRESS_DEFAULT_KEYMAP),yes)
+$1/quantum/keymap_introspection.o: util/ak820_default_keymap.py ak820-default-keymap-force
+endif
 $1_INCFLAGS := $$(patsubst %,-I%,$$($1_INC))
 ifdef $1_CONFIG
 ifneq ($(PLATFORM),MCS51)
@@ -329,6 +342,9 @@ $1/%.o : %.c $1/%.d $1/cflags.txt $1/compiler.txt | $(BEGIN)
     endif
     ifneq ($$(VERBOSE_C_INCLUDE),)
 	$$(if $$(filter $$(notdir $$(VERBOSE_C_INCLUDE)),$$(notdir $$<)),$$(eval CC_EXEC += -H))
+    endif
+    ifeq ($(AK820_COMPRESS_DEFAULT_KEYMAP),yes)
+	$$(if $$(filter keymap_introspection.c,$$(notdir $$<)),$$(eval CC_EXEC := python3 util/ak820_default_keymap.py $$(CC_EXEC)))
     endif
 	$$(eval CMD := $$(CC_EXEC) -c $$($1_CFLAGS) $$(INIT_HOOK_CFLAGS) $$(GENDEPFLAGS) $$< -o $$@ && $$(MOVE_DEP))
 	$$(BUILD_CMD)

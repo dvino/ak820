@@ -1,0 +1,643 @@
+{
+  "status": "NO_ELIGIBLE_WEIGHTY_VARIANT",
+  "candidate_patch": null,
+  "full_build_run": false,
+  "component_compile_run": false,
+  "variant_count": 0,
+  "source_proof": [
+    {
+      "path": "quantum/via.c",
+      "frozen_sha256": "cc6bf250503981042e61037c87cdf3749cdf2114642561159b2c05d4a806f943",
+      "current_sha256": "cc6bf250503981042e61037c87cdf3749cdf2114642561159b2c05d4a806f943",
+      "current_matches_frozen": true
+    },
+    {
+      "path": "quantum/vial.c",
+      "frozen_sha256": "8691f5f43508b4ad7a19cb663979184f8cfb26deb8a7e3c2a06e58a04be76e48",
+      "current_sha256": "8691f5f43508b4ad7a19cb663979184f8cfb26deb8a7e3c2a06e58a04be76e48",
+      "current_matches_frozen": true
+    },
+    {
+      "path": "quantum/dynamic_keymap.c",
+      "frozen_sha256": "c97c3ea6511d51f246a9044679e418a3adcbc456022fa712f35c26c9e76a4a0b",
+      "current_sha256": "c97c3ea6511d51f246a9044679e418a3adcbc456022fa712f35c26c9e76a4a0b",
+      "current_matches_frozen": true
+    },
+    {
+      "path": "tmk_core/protocol/ch555/usb_ak820.c",
+      "frozen_sha256": "e72369aab695c9e9480de3fa7ca887343a84dfc48e68b44eaee510bfeeb91bd1",
+      "current_sha256": "e72369aab695c9e9480de3fa7ca887343a84dfc48e68b44eaee510bfeeb91bd1",
+      "current_matches_frozen": true
+    },
+    {
+      "path": "keyboards/ajazz/ak820/ak820_nvm.c",
+      "frozen_sha256": "ebe940c2354c7d8c015847519e422bb54770216fafdcdd39e5a107fe8631a789",
+      "current_sha256": "ebe940c2354c7d8c015847519e422bb54770216fafdcdd39e5a107fe8631a789",
+      "current_matches_frozen": true
+    },
+    {
+      "path": "keyboards/ajazz/ak820/ak820_macro.c",
+      "frozen_sha256": "8f4fe5f5cf8ee3b87a2b095f4ba4a372d3ab6daefadc6cf1699d3338c898aaa2",
+      "current_sha256": "8f4fe5f5cf8ee3b87a2b095f4ba4a372d3ab6daefadc6cf1699d3338c898aaa2",
+      "current_matches_frozen": true
+    }
+  ],
+  "input_hashes": {
+    "results.json": "58db5e764823c15f55662b247d6126ed6353c54d51c6b2c57dfb654d8be2a8b4",
+    "instructions.json": "6bc94283b1e699353e43f7460ff973a3d38271597a4d08416fcbbd26b4f2fbfe",
+    "protocol-boundaries.md": "364d10e38d118ba390b1eda33b91eebd72110f71fa03344c357f13facf2293ae"
+  },
+  "authenticated_listings": [
+    {
+      "path": "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max/qmk-8051-ak820/.build/resume29-getter-bounds/dce/protocol/ch555/usb_ak820.rst",
+      "sha256": "2126d9565717a74879a8ac1de8cf16278d36fcf161fe1eb299588514a2f868ef"
+    },
+    {
+      "path": "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max/qmk-8051-ak820/.build/resume29-getter-bounds/dce/quantum/via.rst",
+      "sha256": "c3bf5eda8fc448d245f0a8bc5f3dda2076a680917d97e726e384f010eb9d0fb6"
+    },
+    {
+      "path": "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max/qmk-8051-ak820/.build/resume29-getter-bounds/dce/quantum/vial.rst",
+      "sha256": "cf402b0ea6b96ed3368c88aaabb1c0c26971264d8f3b08fe00c5f7fc22fc9a16"
+    }
+  ],
+  "image29_ihx_sha256": "693fdcd928f2d84b32e19b858cdd6cce29b46d01ea5694403788da08bf3969f9",
+  "functions": [
+    {
+      "name": "quantum/vial.asm:_vial_handle_cmd",
+      "instruction_bytes": 1222,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 1222,
+      "patterns": {
+        "outlined_helper_call": {
+          "instruction_bytes": 249,
+          "sites": 83
+        },
+        "parameter_slot_reference": {
+          "instruction_bytes": 75,
+          "sites": 25
+        },
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 168,
+          "sites": 84
+        },
+        "inline_arithmetic_instruction": {
+          "instruction_bytes": 65,
+          "sites": 45
+        },
+        "register_save_restore": {
+          "instruction_bytes": 136,
+          "sites": 68
+        },
+        "B_write_possible_generic_pointer_tag_or_other": {
+          "instruction_bytes": 2,
+          "sites": 1
+        }
+      },
+      "incoming_static_calls": 1,
+      "affected_pattern_instruction_bytes_union": 371,
+      "outlined_helper_body": false
+    },
+    {
+      "name": "quantum/via.asm:_raw_hid_receive",
+      "instruction_bytes": 1271,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 1271,
+      "patterns": {
+        "outlined_helper_call": {
+          "instruction_bytes": 119,
+          "sites": 41
+        },
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 132,
+          "sites": 68
+        },
+        "inline_arithmetic_instruction": {
+          "instruction_bytes": 35,
+          "sites": 19
+        },
+        "parameter_slot_reference": {
+          "instruction_bytes": 69,
+          "sites": 23
+        },
+        "B_write_possible_generic_pointer_tag_or_other": {
+          "instruction_bytes": 6,
+          "sites": 3
+        },
+        "register_save_restore": {
+          "instruction_bytes": 28,
+          "sites": 14
+        }
+      },
+      "incoming_static_calls": 1,
+      "affected_pattern_instruction_bytes_union": 201,
+      "outlined_helper_body": false
+    },
+    {
+      "name": "quantum/dynamic_keymap.asm:_ak820_dynamic_read_buffer",
+      "instruction_bytes": 180,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 180,
+      "patterns": {
+        "outlined_helper_call": {
+          "instruction_bytes": 27,
+          "sites": 9
+        },
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 44,
+          "sites": 20
+        },
+        "parameter_slot_reference": {
+          "instruction_bytes": 18,
+          "sites": 6
+        },
+        "inline_arithmetic_instruction": {
+          "instruction_bytes": 12,
+          "sites": 12
+        },
+        "register_save_restore": {
+          "instruction_bytes": 24,
+          "sites": 12
+        }
+      },
+      "incoming_static_calls": 0,
+      "affected_pattern_instruction_bytes_union": 80,
+      "outlined_helper_body": false
+    },
+    {
+      "name": "quantum/dynamic_keymap.asm:_dynamic_keymap_macro_get_buffer",
+      "instruction_bytes": 76,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 76,
+      "patterns": {
+        "outlined_helper_call": {
+          "instruction_bytes": 24,
+          "sites": 8
+        },
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 33,
+          "sites": 15
+        },
+        "parameter_slot_reference": {
+          "instruction_bytes": 18,
+          "sites": 6
+        }
+      },
+      "incoming_static_calls": 1,
+      "affected_pattern_instruction_bytes_union": 33,
+      "outlined_helper_body": false
+    },
+    {
+      "name": "quantum/dynamic_keymap.asm:_dynamic_keymap_get_buffer",
+      "instruction_bytes": 55,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 55,
+      "patterns": {
+        "outlined_helper_call": {
+          "instruction_bytes": 15,
+          "sites": 5
+        },
+        "parameter_slot_reference": {
+          "instruction_bytes": 18,
+          "sites": 6
+        },
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 27,
+          "sites": 13
+        }
+      },
+      "incoming_static_calls": 1,
+      "affected_pattern_instruction_bytes_union": 27,
+      "outlined_helper_body": false
+    },
+    {
+      "name": "protocol/ch555/usb_ak820.asm:_ak820_usb_raw_send",
+      "instruction_bytes": 63,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 63,
+      "patterns": {
+        "outlined_helper_call": {
+          "instruction_bytes": 9,
+          "sites": 3
+        },
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 23,
+          "sites": 11
+        },
+        "parameter_slot_reference": {
+          "instruction_bytes": 9,
+          "sites": 3
+        },
+        "register_save_restore": {
+          "instruction_bytes": 4,
+          "sites": 2
+        }
+      },
+      "incoming_static_calls": 0,
+      "affected_pattern_instruction_bytes_union": 27,
+      "outlined_helper_body": false
+    },
+    {
+      "name": "protocol/ch555/usb_ak820.asm:_raw_request_is_nonpersistent",
+      "instruction_bytes": 161,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 161,
+      "patterns": {
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 8,
+          "sites": 4
+        },
+        "outlined_helper_call": {
+          "instruction_bytes": 18,
+          "sites": 6
+        },
+        "inline_arithmetic_instruction": {
+          "instruction_bytes": 8,
+          "sites": 4
+        }
+      },
+      "incoming_static_calls": 1,
+      "affected_pattern_instruction_bytes_union": 16,
+      "outlined_helper_body": false
+    },
+    {
+      "name": "ak820_nvm.asm:_ak820_nvm_end",
+      "instruction_bytes": 24,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 24,
+      "patterns": {
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 13,
+          "sites": 7
+        }
+      },
+      "incoming_static_calls": 6,
+      "affected_pattern_instruction_bytes_union": 13,
+      "outlined_helper_body": false
+    },
+    {
+      "name": "ak820_nvm.asm:_ak820_nvm_begin",
+      "instruction_bytes": 21,
+      "low_instruction_bytes": 0,
+      "main_instruction_bytes": 21,
+      "patterns": {
+        "DPTR_memory_or_address_instruction": {
+          "instruction_bytes": 8,
+          "sites": 4
+        }
+      },
+      "incoming_static_calls": 5,
+      "affected_pattern_instruction_bytes_union": 8,
+      "outlined_helper_body": false
+    }
+  ],
+  "residual_zero_fill_loops": [
+    {
+      "start": "0xc6d6",
+      "end_exclusive": "0xc6e4",
+      "instruction_bytes": 14,
+      "instructions": [
+        {
+          "site": 50902,
+          "bytes": "7c01",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\tr4,#0x01",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50904,
+          "bytes": "ec",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\ta,r4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50905,
+          "bytes": "24f5",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "add\ta,#0xff - 0x0a",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": [
+            "inline_arithmetic_instruction"
+          ]
+        },
+        {
+          "site": 50907,
+          "bytes": "4007",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "jc\t00128$",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50909,
+          "bytes": "ec",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\ta,r4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50910,
+          "bytes": "12537d",
+          "size": 3,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": {
+            "kind": "lcall",
+            "target": 21373
+          },
+          "asm": "lcall\t_ak820_outline_0027",
+          "area": "CSEG",
+          "target_labels": [
+            "MAP:ak820_settings:_ak820_outline_0027",
+            "ak820_settings.asm:_ak820_outline_0027"
+          ],
+          "categories": [
+            "outlined_helper_call"
+          ]
+        },
+        {
+          "site": 50913,
+          "bytes": "0c",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "inc\tr4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50914,
+          "bytes": "80f4",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "sjmp\t00152$",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        }
+      ]
+    },
+    {
+      "start": "0xc71c",
+      "end_exclusive": "0xc72a",
+      "instruction_bytes": 14,
+      "instructions": [
+        {
+          "site": 50972,
+          "bytes": "7c01",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\tr4,#0x01",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50974,
+          "bytes": "ec",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\ta,r4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50975,
+          "bytes": "24f5",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "add\ta,#0xff - 0x0a",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": [
+            "inline_arithmetic_instruction"
+          ]
+        },
+        {
+          "site": 50977,
+          "bytes": "4007",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "jc\t00131$",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50979,
+          "bytes": "ec",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\ta,r4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50980,
+          "bytes": "12537d",
+          "size": 3,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": {
+            "kind": "lcall",
+            "target": 21373
+          },
+          "asm": "lcall\t_ak820_outline_0027",
+          "area": "CSEG",
+          "target_labels": [
+            "MAP:ak820_settings:_ak820_outline_0027",
+            "ak820_settings.asm:_ak820_outline_0027"
+          ],
+          "categories": [
+            "outlined_helper_call"
+          ]
+        },
+        {
+          "site": 50983,
+          "bytes": "0c",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "inc\tr4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 50984,
+          "bytes": "80f4",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "sjmp\t00155$",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        }
+      ]
+    },
+    {
+      "start": "0xc7a0",
+      "end_exclusive": "0xc7ae",
+      "instruction_bytes": 14,
+      "instructions": [
+        {
+          "site": 51104,
+          "bytes": "7c01",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\tr4,#0x01",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 51106,
+          "bytes": "ec",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\ta,r4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 51107,
+          "bytes": "24f5",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "add\ta,#0xff - 0x0a",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": [
+            "inline_arithmetic_instruction"
+          ]
+        },
+        {
+          "site": 51109,
+          "bytes": "4007",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "jc\t00136$",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 51111,
+          "bytes": "ec",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "mov\ta,r4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 51112,
+          "bytes": "12537d",
+          "size": 3,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": {
+            "kind": "lcall",
+            "target": 21373
+          },
+          "asm": "lcall\t_ak820_outline_0027",
+          "area": "CSEG",
+          "target_labels": [
+            "MAP:ak820_settings:_ak820_outline_0027",
+            "ak820_settings.asm:_ak820_outline_0027"
+          ],
+          "categories": [
+            "outlined_helper_call"
+          ]
+        },
+        {
+          "site": 51115,
+          "bytes": "0c",
+          "size": 1,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "inc\tr4",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        },
+        {
+          "site": 51116,
+          "bytes": "80f4",
+          "size": 2,
+          "module": "quantum/vial.asm",
+          "function": "quantum/vial.asm:_vial_handle_cmd",
+          "transfer": null,
+          "asm": "sjmp\t00158$",
+          "area": "CSEG",
+          "target_labels": [],
+          "categories": []
+        }
+      ]
+    }
+  ],
+  "loop_total_bytes": 42,
+  "idealized_loop_sharing_ceiling_bytes": 28,
+  "ceiling_limit": "Only these three 14-byte loops; subtract calls/ABI preservation/decoder/tables. Not an upper bound on all possible protocol rewrites or a measured saving.",
+  "limitations": [
+    "Image29 listing costs are historical frozen-source evidence, not new current-profile linked costs.",
+    "No candidate exists, so differential tests, mutants, pinned SDCC component compilation and full image deltas are not applicable.",
+    "Whole functional, stack/IRQ, USB and durable-storage gates remain open."
+  ]
+}

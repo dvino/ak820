@@ -1,0 +1,78 @@
+{
+  "pass": true,
+  "scope": "Current integrated getter native ASan/UBSan 16777216 tuples plus generator7 tests; no hardware or full configured regression",
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network=none",
+        "--userns=host",
+        "--user",
+        "1001:1001",
+        "--mount",
+        "type=bind,src=/home/danil/ChatGPT/ak820-pass26b-restored-20261025,dst=/home/danil/ChatGPT/ak820-pass26b-restored-20261025,readonly",
+        "-w",
+        "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max",
+        "sha256:b41196ff4098d5b33786f23238a17ad1fb21b943a588076e085c4881e920d97d",
+        "python3",
+        "tests/ak820_default_keymap/test_generator.py"
+      ],
+      "returncode": 0,
+      "log": "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/default30-host-check-0.log",
+      "log_sha256": "df3fed384cac67d52cee63c88989bfbd434c1c8298f05e0cbf12e192bb4074a1"
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network=none",
+        "--userns=host",
+        "--user",
+        "1001:1001",
+        "--mount",
+        "type=bind,src=/home/danil/ChatGPT/ak820-pass26b-restored-20261025,dst=/home/danil/ChatGPT/ak820-pass26b-restored-20261025,readonly",
+        "-w",
+        "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max",
+        "sha256:b41196ff4098d5b33786f23238a17ad1fb21b943a588076e085c4881e920d97d",
+        "python3",
+        "tests/ak820_default_keymap/check_decoder.py",
+        "qmk-8051-ak820/.build/resume30-default-keymap/default-keymap/bootstrap.asm"
+      ],
+      "returncode": 0,
+      "log": "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/default30-host-check-1.log",
+      "log_sha256": "1d215a419f9c4bb7bdb060ea6abf359620babc2bb46411fe1e9d0cb8725e2f70"
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network=none",
+        "--userns=host",
+        "--user",
+        "1001:1001",
+        "--mount",
+        "type=bind,src=/home/danil/ChatGPT/ak820-pass26b-restored-20261025,dst=/home/danil/ChatGPT/ak820-pass26b-restored-20261025,readonly",
+        "-w",
+        "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max",
+        "sha256:b41196ff4098d5b33786f23238a17ad1fb21b943a588076e085c4881e920d97d",
+        "sh",
+        "-c",
+        "cc --version; sha256sum /usr/bin/gcc"
+      ],
+      "returncode": 0,
+      "log": "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/default30-host-check-2.log",
+      "log_sha256": "b9b6eda927d94808c29c2a71f3b69decc097d8c19a928c75410380cf84d0aa4f"
+    }
+  ],
+  "input_sha256": {
+    "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max/tests/ak820_default_keymap/test_generator.py": "6eb0f821d489b1c09c4477beca950f6e06aea557c65dd7bac27cc11e192f3b1e",
+    "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max/tests/ak820_default_keymap/check_decoder.py": "82993adac7a0d6b4bc08e3356cbabc8e51f58f623489fbee694be27decc85e81",
+    "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max/qmk-8051-ak820/util/ak820_default_keymap.py": "3e62d72deef20e0d40f9124fe097b3c8e4ff173e549d2ec3c909333c9fadc114",
+    "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max/qmk-8051-ak820/quantum/keymap_introspection.c": "37951e53e75862158899501303c487a893c32f0747622633cb5837f0a05f4ddf",
+    "/home/danil/ChatGPT/ak820-pass26b-restored-20261025/ak820-max/qmk-8051-ak820/.build/resume30-default-keymap/default-keymap/bootstrap.asm": "273e811b2cc5f759da10f83bcd0816069fdd88f718354a3dce73a99f02053efa"
+  }
+}

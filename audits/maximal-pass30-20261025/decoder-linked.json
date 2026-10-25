@@ -1,0 +1,79 @@
+{
+  "pass": true,
+  "shards": 4,
+  "cases_per_image": 275,
+  "valid_per_image": 256,
+  "invalid_per_image": 19,
+  "total_cpu_invocations": 550,
+  "image_sha256": [
+    "e4f1d3f64583da25a189c048a9905213a926ca43ae005652ab98964ccc1d954f",
+    "693fdcd928f2d84b32e19b858cdd6cce29b46d01ea5694403788da08bf3969f9"
+  ],
+  "cost_reset_default_lookup_component_only": {
+    "ticks": {
+      "decoder_min": 1212,
+      "decoder_max": 6192,
+      "decoder_sum_256": 946080,
+      "control_min": 936,
+      "control_max": 936,
+      "control_sum_256": 239616,
+      "delta_min": 276,
+      "delta_max": 5256,
+      "delta_sum_256": 706464,
+      "delta_mean": 2759.625
+    },
+    "instructions": {
+      "decoder_min": 66,
+      "decoder_max": 370,
+      "decoder_sum_256": 55572,
+      "control_min": 52,
+      "control_max": 52,
+      "control_sum_256": 13312,
+      "delta_min": 14,
+      "delta_max": 318,
+      "delta_sum_256": 42260,
+      "delta_mean": 165.078125
+    }
+  },
+  "raw_layer_count": {
+    "value": 2,
+    "cpu_executable": false,
+    "reason": "DCE eliminated keymap_layer_count_raw; bootstrap metadata and linked bounds prove two."
+  },
+  "occupied_code_preserved_all_shards": true,
+  "inputs_unchanged_all_shards": true,
+  "encoder": {
+    "bytes": 8,
+    "sha256": "4a295c1feb87ec3e09dd6e65b7d26cb546348419505648de68fadac2b716b57d",
+    "addresses": [
+      53287,
+      53698
+    ]
+  },
+  "led": {
+    "bytes": 164,
+    "sha256": "73482eb8ac888f3bd02b0f69811b507e6cf3dc6ea47212ec332bf58471ae443b",
+    "addresses": [
+      53295,
+      53706
+    ]
+  },
+  "tables": {
+    "classes": {
+      "address": 53459,
+      "bytes": 64,
+      "sha256": "6499532bbc05ec5dc852c9d3c345892a968030aff998db28790a616bb44c05d6"
+    },
+    "payload": {
+      "address": 53523,
+      "bytes": 114,
+      "sha256": "eed00f311bd8bfa9b02730d63b7648a9933d3905c5fd137b5fc5872751bd6cfa"
+    },
+    "offsets": {
+      "address": 53637,
+      "bytes": 32,
+      "sha256": "a87a0bb3f00cd947a4a25c026adbd11079d8dcba2be7f4b0826ef91559e435ab"
+    }
+  },
+  "runner_sha256": "f00607127e111b42efbdf30d690cf8950f01d10dc344a0ad5ac454dc49a5183e"
+}

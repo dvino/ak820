@@ -189,6 +189,7 @@ def main():
                    help='Verified foreground ACALL/AJMP relaxation; enabled by default for curated profiles')
     p.add_argument('--nvm-update-block-asm', action='store_true', help='Diagnostic separate-TU update kernel (default off)')
     p.add_argument('--nvm-read-block-asm', action='store_true', help='Diagnostic separate-TU read kernel (default off)')
+    p.add_argument('--compress-default-keymap', action='store_true', help='Compress compiler-resolved AK820 Vial defaults (default off)')
     p.add_argument('--keymap-words-asm', action='store_true', help='Experimental fixed-layout keymap word kernel (opt-in)')
     p.add_argument('--trim-parameter-spills', action='store_true', help='Experimental private first-argument spill folding (requires explicit source-context certificate)')
     p.add_argument('--parameter-spills-context', type=Path, help='Reviewed source-context certificate for private argument spills')
@@ -232,6 +233,8 @@ def main():
             '_USB_DeviceInterrupt', '_ak820_timer_irq', '_ak820_led_irq',
             '__mcs51_genXINIT',  # GSINIT3 fall-through, referenced by SDCC CRT
         })
+    if args.compress_default_keymap and (args.keyboard != 'ajazz/ak820' or args.keymap != 'vial' or args.sdcc_version != '4.6.0'):
+        raise ValueError('Default compression requires AK820 Vial and SDCC 4.6.0')
     root = Path(__file__).resolve().parents[1]
     build = args.build_dir if args.build_dir.is_absolute() else root/args.build_dir
     if not re.fullmatch(r'[A-Za-z0-9_/]+', args.keyboard) or not re.fullmatch(r'[A-Za-z0-9_]+', args.keymap):
@@ -281,6 +284,8 @@ def main():
     compile_flags = args.extra_flags + read_abi + update_abi
     if callee_saves:
         compile_flags += ' --callee-saves ' + ','.join(callee_saves)
+    if args.compress_default_keymap:
+        compile_flags += ' -DAK820_COMPRESS_DEFAULT_KEYMAP'
     if args.keyboard == 'ajazz/ak820':
         compile_flags += word_hook_abi_flag(callee_saves, args.extra_flags)
     qmk = str(args.qmk_bin.resolve()) if args.qmk_bin else shutil.which('qmk',path=env['PATH'])
@@ -292,6 +297,7 @@ def main():
         *(name+'='+value for name,value in selected['make_options'].items()),
         'AK820_NVM_UPDATE_BLOCK_ASM='+('yes' if args.nvm_update_block_asm else 'no'),
         'AK820_NVM_READ_BLOCK_ASM='+('yes' if args.nvm_read_block_asm else 'no'),
+        'AK820_COMPRESS_DEFAULT_KEYMAP='+('yes' if args.compress_default_keymap else 'no'),
         'AK820_KEYMAP_WORDS_ASM='+('yes' if args.keymap_words_asm else 'no'), '-j'+str(args.jobs)])
     obj = build/('obj_'+target)
     expected = (obj/'obj.txt').read_text().split()
@@ -457,6 +463,13 @@ def main():
     artifacts.extend(sorted(dce.rglob('*.rst')))
     source_records, dependency_evidence = collect_inputs(root, toolchain, build, expected, inputs_before)
     artifacts.extend(dependency_evidence)
+    if args.compress_default_keymap:
+        generation_files = sorted((build/'default-keymap').iterdir())
+        artifacts.extend(generation_files)
+        generator = root/'util/ak820_default_keymap.py'
+        if inputs_before.get(generator.resolve()) != sha(generator):
+            raise ValueError('Default generator changed during build')
+        source_records.append({'path':'util/ak820_default_keymap.py','origin':'source','sha256':sha(generator)})
     if parameter_result is not None:
         existing_source_paths={(r['origin'],r['path']) for r in source_records}
         for name in ('util/ak820_parameter_spills.py','util/ak820_register_saves.py','tests/ak820_stack/analyze.py'):
@@ -479,6 +492,7 @@ def main():
         'nvm_update_block_asm':args.nvm_update_block_asm,
         'nvm_read_block_asm':args.nvm_read_block_asm,
         'keymap_words_asm':args.keymap_words_asm,
+        'compress_default_keymap':args.compress_default_keymap,
         'parameter_spills_sha256':sha(root/'util/ak820_parameter_spills.py'),
         'parameter_spills': None if parameter_result is None else {
             'report':(build/'parameter-spills.json').relative_to(root).as_posix(),

@@ -1,0 +1,120 @@
+{
+  "baseline": {
+    "trace_sha256": "94684f07a310337882748152f3d2b7b7628279ab44710f88eeea53d6833418eb",
+    "bytes": 5546449,
+    "sdcc_command": [
+      "/repo/toolchains/sdcc-4.6.0/bin/sdcc",
+      "-mmcs51",
+      "--model-large",
+      "--opt-code-speed",
+      "--opt-code-size",
+      "--callee-saves",
+      "timer_read,timer_read32,ak820_nvm_ok,get_mods,get_weak_mods,matrix_get_row,readPin,eeprom_read_byte,eeprom_update_byte,ak820_flash_read,mDelaymS,get_repeat_key_count",
+      "-c",
+      "baseline.c"
+    ],
+    "sdcc_status": 0,
+    "areas": [
+      "A _CODE size 0 flags 0 addr 0",
+      "A RSEG size 0 flags 8 addr 0",
+      "A RSEG0 size 0 flags 8 addr 0",
+      "A RSEG1 size 0 flags 8 addr 0",
+      "A REG_BANK_0 size 8 flags 4 addr 0",
+      "A DSEG size 1 flags 0 addr 0",
+      "A ISEG size 0 flags 0 addr 0",
+      "A IABS size 0 flags 8 addr 0",
+      "A BSEG size 1 flags 80 addr 0",
+      "A PSEG size 0 flags 50 addr 0",
+      "A XSEG size 7 flags 40 addr 0",
+      "A XABS size 0 flags 48 addr 0",
+      "A XISEG size 0 flags 40 addr 0",
+      "A HOME size 0 flags 20 addr 0",
+      "A GSINIT0 size 0 flags 20 addr 0",
+      "A GSINIT1 size 0 flags 20 addr 0",
+      "A GSINIT2 size 0 flags 20 addr 0",
+      "A GSINIT3 size 0 flags 20 addr 0",
+      "A GSINIT4 size 0 flags 20 addr 0",
+      "A GSINIT5 size 0 flags 20 addr 0",
+      "A GSINIT size 0 flags 20 addr 0",
+      "A GSFINAL size 0 flags 20 addr 0",
+      "A CSEG size 235 flags 20 addr 0",
+      "A CONST size 0 flags 20 addr 0",
+      "A XINIT size 0 flags 20 addr 0",
+      "A CABS size 0 flags 28 addr 0"
+    ]
+  },
+  "candidate": {
+    "trace_sha256": "94684f07a310337882748152f3d2b7b7628279ab44710f88eeea53d6833418eb",
+    "bytes": 5546449,
+    "sdcc_command": [
+      "/repo/toolchains/sdcc-4.6.0/bin/sdcc",
+      "-mmcs51",
+      "--model-large",
+      "--opt-code-speed",
+      "--opt-code-size",
+      "--callee-saves",
+      "timer_read,timer_read32,ak820_nvm_ok,get_mods,get_weak_mods,matrix_get_row,readPin,eeprom_read_byte,eeprom_update_byte,ak820_flash_read,mDelaymS,get_repeat_key_count",
+      "-c",
+      "candidate.c"
+    ],
+    "sdcc_status": 0,
+    "areas": [
+      "A _CODE size 0 flags 0 addr 0",
+      "A RSEG size 0 flags 8 addr 0",
+      "A RSEG0 size 0 flags 8 addr 0",
+      "A RSEG1 size 0 flags 8 addr 0",
+      "A REG_BANK_0 size 8 flags 4 addr 0",
+      "A DSEG size 1 flags 0 addr 0",
+      "A ISEG size 0 flags 0 addr 0",
+      "A IABS size 0 flags 8 addr 0",
+      "A BSEG size 1 flags 80 addr 0",
+      "A PSEG size 0 flags 50 addr 0",
+      "A XSEG size 7 flags 40 addr 0",
+      "A XABS size 0 flags 48 addr 0",
+      "A XISEG size 0 flags 40 addr 0",
+      "A HOME size 0 flags 20 addr 0",
+      "A GSINIT0 size 0 flags 20 addr 0",
+      "A GSINIT1 size 0 flags 20 addr 0",
+      "A GSINIT2 size 0 flags 20 addr 0",
+      "A GSINIT3 size 0 flags 20 addr 0",
+      "A GSINIT4 size 0 flags 20 addr 0",
+      "A GSINIT5 size 0 flags 20 addr 0",
+      "A GSINIT size 0 flags 20 addr 0",
+      "A GSFINAL size 0 flags 20 addr 0",
+      "A CSEG size 273 flags 20 addr 0",
+      "A CONST size 0 flags 20 addr 0",
+      "A XINIT size 0 flags 20 addr 0",
+      "A CABS size 0 flags 28 addr 0"
+    ]
+  },
+  "no_zero_fallback": {
+    "killed": true,
+    "trace_sha256": "0af5870e3c437fb2bc318953f24738a0cede58fec038f706043acdcbf0b32e5f"
+  },
+  "wrong_update": {
+    "killed": true,
+    "trace_sha256": "7a26760a125fba34a73f0ad0b46c12d5ba57a6fd26fca397d1bced957d641730"
+  },
+  "missing_consumed_post": {
+    "killed": true,
+    "trace_sha256": "d34412b863c1dc6b8807368ae8b9d6fa3831d6f9e235a29e831d6b95c51c949e"
+  },
+  "cases": 12288,
+  "source_sha256": {
+    "git-bb91d89-action.c": "abb8e8d2a4a8624a5389e4f36f18f963143911dff0baa454ad8a693a8ff66c2f",
+    "git-bb91d89-quantum.c": "4e94c31d93b7bdad7eddf5b6269f2857681cefaa8969c6933737e049149b731d"
+  },
+  "scope": "actual extracted process_record/getter/wrapper; bounded mocked leaves; not full feature or hardware proof",
+  "sha256": {
+    "candidate-host.c": "3abc3e52736ba05328fce077c7c143b785dfe42cf13105b43c4aea9a642d1c01",
+    "baseline.c": "906bf4cc2417d926e7d9e0be8b4871fb6a758110d653b35a93bc7f0a56937708",
+    "candidate.patch": "9c9b562eb811ca7e055070eb5981ef6a56028810893b1187c7c31c703feabf8a",
+    "wrong_update.c": "46858de5377f1ccdfd74b2090e61725c98d1a9bf6c92225873578f93937fc1b1",
+    "source-action.c": "abb8e8d2a4a8624a5389e4f36f18f963143911dff0baa454ad8a693a8ff66c2f",
+    "no_zero_fallback.c": "902a424467c31acc7dc0327d4c079548c4e2af9badcdb75e87e40033781745d7",
+    "baseline-host.c": "5e5731bd3ecbc38dbd95b7ba5494fa309b00f54a06a07f50bc516a862559b0db",
+    "candidate.c": "0d128895b1f30a6d15e8524ad5243122dc71938b19d2c43801a86da3a2db31d9",
+    "source-quantum.c": "4e94c31d93b7bdad7eddf5b6269f2857681cefaa8969c6933737e049149b731d",
+    "missing_consumed_post.c": "7b0e89ff4c96bc36ff86e9601c9882e935ff0cc802668cbadb099b5dbc646d7a"
+  }
+}
