@@ -97,7 +97,8 @@ authorized on 2026-10-23; it does not authorize flashing.
 
 - Communicate with subagents in English: task assignments, clarifications, coordination messages, handoffs and result reports. Continue communicating with the owner in their chosen language.
 - The root lead coordinates ownership, integration, current-state checks and the evidence record. Keep each delegated task bounded and explicit about its owned files.
-- Use a fresh GPT-6 Luna agent at medium reasoning for limited implementation, documentation or build tasks. Use GPT-6.1 Sol at low reasoning only when a task needs complex reasoning about ABI, NVM, architecture or an independent review. The root lead may adjust this routing when the task requires it.
+- Use a fresh GPT-6 Luna agent at medium reasoning for limited implementation, documentation or build tasks. Use GPT-6.1 Sol at low reasoning only when a task needs complex reasoning about ABI, NVM, technical contracts or an independent review. The root lead may adjust this routing within these limits when the task requires it.
+- Use a fresh GPT-6.1 Sol agent at high reasoning for architecture and complex planning only as a last resort, when there is a real need for deeper analysis. Before delegation, record the unresolved question and why normal implementation or review cannot settle it. Do not use this route for routine work.
 - Start a fresh agent for a new bounded task or when the current context has grown. Give it a short, self-contained handoff with ownership, relevant current facts, required evidence and stop conditions. Do not fork the full conversation history for routine work.
 - Check task ownership before starting. Do not duplicate another agent's work, and do not run simultaneous builds that share a working tree or output paths.
 - Authors cannot independently approve their own code. Independent review covers code, documentation and verification evidence; resolve findings and record closure before commit.
