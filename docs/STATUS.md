@@ -14,14 +14,15 @@ run; it was not a failed firmware or installer test.
 
 ## Whole-program compression
 
-The current diagnostic image 27 retains all 14 optional modules and uses
-44,699 CODE and 3,007 physical XRAM bytes. It saves 48 linked CODE bytes against
-the exactly reproduced 26b. Main CODE still overflows by 4,346 bytes. The
-conditional stack estimate remains 165 of 167 bytes, with no IRAM overlay.
-Fresh linked stack, startup, classifier and bounded CPU checks pass within
-their stated scope. Full configured regressions remain blocked by CODE and
-the incomplete OEM startup/IRQ, bank and writer contracts. No device or release
-change was made. [Details](MAXIMUM-FUNCTIONALITY-STATUS.md).
+The current diagnostic image 28 retains all 14 optional modules and uses
+44,638 CODE and 3,007 physical XRAM bytes. It saves 61 linked CODE bytes against
+retained pass 27. Main CODE still overflows by 4,285 bytes. The conditional
+stack bound remains 165 of 167 bytes, with no IRAM overlay. Host differential
+and exact linked setter checks pass within their scope. Retained context
+certificates are revalidated; actual-image stack, startup and bounded CPU
+checks pass. Full configured regressions remain blocked by CODE and incomplete
+OEM startup/IRQ, bank and writer contracts. No device or release change was
+made. [Details](MAXIMUM-FUNCTIONALITY-STATUS.md).
 
 ## Companion-design beta
 

@@ -551,6 +551,31 @@ void dynamic_keymap_set_buffer(uint16_t offset, uint16_t size, uint8_t *data) {
 #ifndef VIAL_INSECURE
     /* Check whether it is trying to send a QK_BOOT keycode; only allow setting these if unlocked */
     if (!vial_unlocked) {
+#ifdef AK820_BOARD
+        uint8_t DYNAMIC_BUFFER_MEM *cursor = buffer;
+        uint8_t remaining = count;
+        if (offset % 2 != 0) {
+            uint8_t prior = eeprom_read_byte(target - 1);
+            if (prior == (QK_BOOT >> 8) && *cursor == (QK_BOOT & 0xFF))
+                *cursor = 0xFF;
+            ++cursor;
+            --remaining;
+        }
+        if ((offset + size) % 2 != 0) {
+            uint8_t following = eeprom_read_byte(target + count);
+            if (buffer[count - 1] == (QK_BOOT >> 8) && following == (QK_BOOT & 0xFF))
+                buffer[count - 1] = 0xFF;
+            --remaining;
+        }
+        while (remaining) {
+            if (cursor[0] == (QK_BOOT >> 8) && cursor[1] == (QK_BOOT & 0xFF)) {
+                cursor[0] = 0xFF;
+                cursor[1] = 0xFF;
+            }
+            cursor += 2;
+            remaining -= 2;
+        }
+#else
         /* how much of the input array we'll have to check in the loop */
         dynamic_buffer_size_t chk_offset = 0;
         dynamic_buffer_size_t chk_sz = count;
@@ -583,6 +608,7 @@ void dynamic_keymap_set_buffer(uint16_t offset, uint16_t size, uint8_t *data) {
                 buffer[i + 1] = 0xFF;
             }
         }
+#endif
     }
 #endif
 #endif

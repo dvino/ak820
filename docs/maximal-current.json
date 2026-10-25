@@ -1,6 +1,6 @@
 {
-  "label": "27",
-  "build": "resume27-classifier",
+  "label": "28",
+  "build": "resume28-keymap-firewall",
   "configuration": {
     "format": "ak820-build-configuration-1",
     "profile": "maximal",
@@ -74,11 +74,11 @@
     },
     "release_approved": false
   },
-  "code_bytes": 44699,
+  "code_bytes": 44638,
   "code_low_bytes": 1741,
-  "code_main_bytes": 42958,
-  "main_highest_address": "0xd7f9",
-  "main_overflow_bytes": 4346,
+  "code_main_bytes": 42897,
+  "main_highest_address": "0xd7bc",
+  "main_overflow_bytes": 4285,
   "main_trailing_free_bytes": 0,
   "ordinary_xram_bytes": 2943,
   "flash_stage_bytes": 64,
@@ -92,39 +92,40 @@
   },
   "artifacts": [
     {
-      "path": "qmk-8051-ak820/.build/resume27-classifier/build-report.json",
-      "sha256": "39cb250505417ee328c73af674649961eb1864f56de93d56c1082002188eb1a8",
-      "bytes": 1117209
+      "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/build-report.json",
+      "sha256": "41fde4fb545608301e6bb51bf18f42e7496597d833d5eab70a8c8be32a4763c2",
+      "bytes": 1141314
     },
     {
-      "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.ihx",
-      "sha256": "96b7e63eba3e30b2d598b0f52e19b23c7a07ff5363194f87d565d359ab5da7f3",
-      "bytes": 107170
+      "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/ajazz_ak820_vial.ihx",
+      "sha256": "87467a0fdae46f4e222de6968b6e1cb48d155bfca77f81363acb947a37e17d1b",
+      "bytes": 107024
     },
     {
-      "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.map",
-      "sha256": "5989dc6a02634556d36f13739517c99e6df95bbb9ab87127416bb5528632c37c",
-      "bytes": 109808
+      "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/ajazz_ak820_vial.map",
+      "sha256": "50fd2964380b9ae3c0d591b11a444c608472a2ce5a8107fe50577d9e843b09aa",
+      "bytes": 110012
     },
     {
-      "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.mem",
-      "sha256": "9b82ffeac123f52a36933123dec9104498f9de52f802c29e98a9d8f86d11f6ff",
+      "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/ajazz_ak820_vial.mem",
+      "sha256": "d40dc9fbbbe51de3457ca71893573935ed7592dc58d749ae21a9f65639bafc81",
       "bytes": 1205
     },
     {
-      "path": "qmk-8051-ak820/.build/resume27-classifier/parameter-spills-stack.json",
-      "sha256": "7d703b003f7d520df31986abf5f4c68446a41cfc31d517abfe631fb02169e380",
-      "bytes": 353464
+      "path": "qmk-8051-ak820/.build/resume28-keymap-firewall/parameter-spills-stack.json",
+      "sha256": "25cf5f5811806f398851cda81337f8afa411217375fe2aff243c1086a30bfc14",
+      "bytes": 352734
     }
   ],
   "verified_artifacts": 1867,
   "verified_source_and_toolchain_inputs": 499,
   "historical_git_blob_inputs": [],
-  "source_manifest_sha256": "4ea0085342545719864808c3dcac1a43e4363641743bd48c0423d7549186593b",
+  "source_manifest_sha256": "3e9046e7a2ed20c12f65ae2f905ada490c194168744855d2f19b14610b5b218e",
   "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+  "context_certificate_provenance": "Byte-identical retained pass27 certificate; actual compiler ASM, tools, map and provenance revalidated; actual28 postlink audit rechecked.",
   "conditional_stack_bound_bytes": 165,
   "conditional_margin_bytes": 2,
-  "format": "ak820-maximal-current-3",
+  "format": "ak820-maximal-current-4",
   "diagnostic_only": true,
   "installable": false,
   "profile": "maximal",
@@ -146,15 +147,15 @@
   ],
   "xram_limit_bytes": 3072,
   "xram_remaining_bytes": 65,
-  "delta_from_reproduced26b": {
-    "code_bytes": -48,
+  "delta_from_retained27": {
+    "code_bytes": -61,
     "physical_xram_bytes": 0,
     "stack_capacity_bytes": 0,
-    "main_overflow_bytes": -48
+    "main_overflow_bytes": -61
   },
-  "baseline26b": {
-    "label": "26b",
-    "build": "resume27-baseline26b",
+  "baseline27": {
+    "label": "27",
+    "build": "resume27-classifier",
     "configuration": {
       "format": "ak820-build-configuration-1",
       "profile": "maximal",
@@ -228,11 +229,11 @@
       },
       "release_approved": false
     },
-    "code_bytes": 44747,
+    "code_bytes": 44699,
     "code_low_bytes": 1741,
-    "code_main_bytes": 43006,
-    "main_highest_address": "0xd829",
-    "main_overflow_bytes": 4394,
+    "code_main_bytes": 42958,
+    "main_highest_address": "0xd7f9",
+    "main_overflow_bytes": 4346,
     "main_trailing_free_bytes": 0,
     "ordinary_xram_bytes": 2943,
     "flash_stage_bytes": 64,
@@ -246,41 +247,41 @@
     },
     "artifacts": [
       {
-        "path": "qmk-8051-ak820/.build/resume27-baseline26b/build-report.json",
-        "sha256": "54be197a3bb4012d62d0fb1a0983a4603debe8dfb9b5aecad111340a92029a8d",
-        "bytes": 1194419
+        "path": "qmk-8051-ak820/.build/resume27-classifier/build-report.json",
+        "sha256": "39cb250505417ee328c73af674649961eb1864f56de93d56c1082002188eb1a8",
+        "bytes": 1117209
       },
       {
-        "path": "qmk-8051-ak820/.build/resume27-baseline26b/ajazz_ak820_vial.ihx",
-        "sha256": "47400365dfe8e7e56fd46a548938ca8c9024467ca13120f506cb7213e9f7ef10",
-        "bytes": 107290
+        "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.ihx",
+        "sha256": "96b7e63eba3e30b2d598b0f52e19b23c7a07ff5363194f87d565d359ab5da7f3",
+        "bytes": 107170
       },
       {
-        "path": "qmk-8051-ak820/.build/resume27-baseline26b/ajazz_ak820_vial.map",
-        "sha256": "ea501736c5e6fc3f42a97954b54e3c017fc99c6169ef0650933384496f35e0c6",
-        "bytes": 109889
+        "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.map",
+        "sha256": "5989dc6a02634556d36f13739517c99e6df95bbb9ab87127416bb5528632c37c",
+        "bytes": 109808
       },
       {
-        "path": "qmk-8051-ak820/.build/resume27-baseline26b/ajazz_ak820_vial.mem",
-        "sha256": "4069682548c02a16d3d9640a3377ffd0d6179742f94a2e78b10220886b60a91e",
+        "path": "qmk-8051-ak820/.build/resume27-classifier/ajazz_ak820_vial.mem",
+        "sha256": "9b82ffeac123f52a36933123dec9104498f9de52f802c29e98a9d8f86d11f6ff",
         "bytes": 1205
       },
       {
-        "path": "qmk-8051-ak820/.build/resume27-baseline26b/parameter-spills-stack.json",
-        "sha256": "2006766ce4c8acaec83d4df9fd33715e95c277a9b8c103a3a69e7d76bdad835b",
-        "bytes": 353495
+        "path": "qmk-8051-ak820/.build/resume27-classifier/parameter-spills-stack.json",
+        "sha256": "7d703b003f7d520df31986abf5f4c68446a41cfc31d517abfe631fb02169e380",
+        "bytes": 353464
       }
     ],
     "verified_artifacts": 1867,
     "verified_source_and_toolchain_inputs": 499,
     "historical_git_blob_inputs": [
-      "tmk_core/protocol/ch555/usb_ak820.c"
+      "quantum/dynamic_keymap.c"
     ],
-    "source_manifest_sha256": "08774df3ff41b13635c47538c3870755a4364d00b06e8007f60f583138f006cf",
+    "source_manifest_sha256": "4ea0085342545719864808c3dcac1a43e4363641743bd48c0423d7549186593b",
     "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f"
   },
-  "catalog_control": {
-    "label": "work",
+  "baseline27_work": {
+    "label": "27-work",
     "build": "resume27-classifier-work",
     "configuration": {
       "format": "ak820-build-configuration-1",
@@ -382,80 +383,201 @@
     ],
     "verified_artifacts": 1737,
     "verified_source_and_toolchain_inputs": 499,
-    "historical_git_blob_inputs": [],
+    "historical_git_blob_inputs": [
+      "quantum/dynamic_keymap.c"
+    ],
     "source_manifest_sha256": "40971908fbe80ee8c08736ee91cd979edbc8a04f6472c8ea10c69ca0e2177f4e",
+    "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f"
+  },
+  "catalog_control": {
+    "label": "work",
+    "build": "resume28-keymap-firewall-work",
+    "configuration": {
+      "format": "ak820-build-configuration-1",
+      "profile": "work",
+      "optional_features": [
+        "nkro-control",
+        "one-shot",
+        "space-cadet",
+        "leader",
+        "dynamic-macros",
+        "os-indicators"
+      ],
+      "base_features": [
+        "six-layers",
+        "sixteen-vial-macros",
+        "eight-two-key-combos",
+        "compact-tap-hold",
+        "encoder-map",
+        "media-keys",
+        "nkro-reports",
+        "caps-word",
+        "repeat",
+        "alternate-repeat",
+        "grave-escape",
+        "tri-layer",
+        "rgb-effects",
+        "vialrgb-direct-ram"
+      ],
+      "nvm_schema": 532482,
+      "make_options": {
+        "AK820_COMPACT_TAP_DANCE": "no",
+        "AK820_COMPACT_KEY_OVERRIDE": "no",
+        "AK820_QMK_SETTINGS": "no",
+        "AK820_MAC_PC": "no",
+        "AK820_OS_INDICATORS": "yes",
+        "AK820_COMPACT_LEADER": "yes",
+        "AK820_NKRO_CONTROL": "yes",
+        "AK820_COMPACT_ONESHOT": "yes",
+        "AK820_COMPACT_SPACE_CADET": "yes",
+        "AK820_COMPACT_MOUSEKEY": "no",
+        "AK820_COMPACT_AUTOSHIFT": "no",
+        "AK820_COMPACT_GUI_LOCK": "no",
+        "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+        "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+      },
+      "runtime_qmk_settings": [],
+      "timing_ms": {
+        "combo": 40,
+        "tap_hold": 200,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "leader": 300,
+        "dynamic_macro_phase": 10
+      },
+      "release_approved": false
+    },
+    "code_bytes": 37392,
+    "code_low_bytes": 1741,
+    "code_main_bytes": 35651,
+    "main_highest_address": "0xbb6e",
+    "main_overflow_bytes": 0,
+    "main_trailing_free_bytes": 2961,
+    "ordinary_xram_bytes": 2490,
+    "flash_stage_bytes": 64,
+    "physical_xram_bytes": 2554,
+    "stack_capacity_bytes": 171,
+    "roots": {
+      "_main": 98,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 5,
+      "_ak820_led_irq": 2
+    },
+    "artifacts": [
+      {
+        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/build-report.json",
+        "sha256": "f56aa901b7800e72dbc5d020f3af8b654edb483d027f3dbd311b09f0363ffc08",
+        "bytes": 1024946
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/ajazz_ak820_vial.ihx",
+        "sha256": "935a6aee27b9ec4fad2d4cab0d597e94d6bc5204f14b68c9e6a8f1f42739feff",
+        "bytes": 89760
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/ajazz_ak820_vial.map",
+        "sha256": "fa81c96cc86c8d1263799af185f55ddefb416a8f4c749419692b0814a19e157f",
+        "bytes": 102348
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/ajazz_ak820_vial.mem",
+        "sha256": "57c637e6f310c731e1f72758171d3279183ee5cc794016f9718c0b6a237b3b42",
+        "bytes": 1204
+      },
+      {
+        "path": "qmk-8051-ak820/.build/resume28-keymap-firewall-work/parameter-spills-stack.json",
+        "sha256": "7b095ca162288362d565b35fb91e62fbff6e4689dd5ac81fe681ffc27555c01b",
+        "bytes": 298155
+      }
+    ],
+    "verified_artifacts": 1737,
+    "verified_source_and_toolchain_inputs": 499,
+    "historical_git_blob_inputs": [],
+    "source_manifest_sha256": "a901c04d3510027e4d5420ce3c9fa1e5d0a67e93f38907c1c4335f822ab422f5",
     "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+    "context_certificate_provenance": "Byte-identical retained pass27 certificate; actual compiler ASM, tools, map and provenance revalidated; actual28 postlink audit rechecked.",
     "conditional_stack_bound_bytes": 160,
     "conditional_margin_bytes": 11
   },
+  "work_code_delta_from_retained27": -78,
   "evidence": [
     {
-      "path": "audits/maximal-pass27-20261025/baseline-context-review.md",
-      "sha256": "e53d4db9d33c5e1c7b6476254591766b5e10a956399d04b6412f066f317c6f1f",
-      "bytes": 3321
+      "path": "audits/maximal-pass28-20261025/final-review.md",
+      "sha256": "ec7a04f577acaeec69c5cbf038b9889a3aa921ef5cfa5a723edd0212a36da0bb",
+      "bytes": 8406
     },
     {
-      "path": "audits/maximal-pass27-20261025/host-regression.jsonl",
-      "sha256": "a31ced23f5ae76e738d649f0fa28c504b226ba748cc48c6d8ae7c6f1ef8baff3",
-      "bytes": 1310
+      "path": "audits/maximal-pass28-20261025/host-regression.jsonl",
+      "sha256": "97245b773245b530316b7a3390951b279abb23c1abde636601cf3bf669ee43e9",
+      "bytes": 1721
     },
     {
-      "path": "audits/maximal-pass27-20261025/linked-checks.json",
-      "sha256": "02f6cf98000b003e0b7d5b6133d7d9988d0630b21ddeb5eebf904b01c7daf1bc",
-      "bytes": 36366
+      "path": "audits/maximal-pass28-20261025/keymap-linked.json",
+      "sha256": "6e3282608a04e63c3f8f85a923a49aa9b42b1e204280510855c680f14bffd2a0",
+      "bytes": 94471
     },
     {
-      "path": "audits/maximal-pass27-20261025/maximal-context.json",
+      "path": "audits/maximal-pass28-20261025/linked-checks.json",
+      "sha256": "4016d539bddda3499d16f435970771dc5f80b14c749a5cedeb16df813e2db28a",
+      "bytes": 36381
+    },
+    {
+      "path": "audits/maximal-pass28-20261025/maximal-context.json",
       "sha256": "94a6c30ba3a4b1d18e6f11c4dc2394100b76bded7ddcc19c5cefc98a660a96a4",
       "bytes": 20432
     },
     {
-      "path": "audits/maximal-pass27-20261025/read-hook.json",
-      "sha256": "ddd72f82bbc019110f07bb96c1117ebd0f863585383dc48f1dca8e2efaa0e029",
-      "bytes": 14139
+      "path": "audits/maximal-pass28-20261025/prototype-review.md",
+      "sha256": "7b9e05d58885b74bdd6d9345b80a1284d64e6c4a25bbdbf3bd9cd7fdbca95efb",
+      "bytes": 6121
     },
     {
-      "path": "audits/maximal-pass27-20261025/review.md",
-      "sha256": "ef25e8162deb7cad41e3f6217bf082460491e87d20eee800cb44d7fe680ffe6e",
-      "bytes": 6814
+      "path": "audits/maximal-pass28-20261025/read-hook.json",
+      "sha256": "2539525cfcdcb93ba5ab81cd0b7c5d64a1688366261476a27022e9f40317fb29",
+      "bytes": 14149
     },
     {
-      "path": "audits/maximal-pass27-20261025/source-context-review.md",
+      "path": "audits/maximal-pass28-20261025/source-context-review.md",
       "sha256": "ed86aeba450c92ee4c5554855f3a972158c1c1fb708a359cee38b5cbd5b41408",
       "bytes": 3921
     },
     {
-      "path": "audits/maximal-pass27-20261025/startup.json",
-      "sha256": "ad99c86fd14883bfa0e9e2b6fb7452ac1ac75edf84f898d8db65dd46a7a51a17",
-      "bytes": 10448
+      "path": "audits/maximal-pass28-20261025/source-cpu-review.md",
+      "sha256": "7893cca11497723b04afb7d05401167ec57d99c9c7c1b88f43065ed685a35b26",
+      "bytes": 7247
     },
     {
-      "path": "audits/maximal-pass27-20261025/work-context-review.md",
+      "path": "audits/maximal-pass28-20261025/startup.json",
+      "sha256": "eefd022ab100a8d4e664b32fd9fa70badeb972254cf54dbcea3bdd32dbf5c363",
+      "bytes": 10453
+    },
+    {
+      "path": "audits/maximal-pass28-20261025/work-context-review.md",
       "sha256": "7dab7c524d5caa5141f5d89ca10c2f91fc291b5f406b27f169e10cdd990c7a85",
       "bytes": 4096
     },
     {
-      "path": "audits/maximal-pass27-20261025/work-context.json",
+      "path": "audits/maximal-pass28-20261025/work-context.json",
       "sha256": "f351d4a52acea5c542ab8d76a2303842baccd88eca580755fc779c10bfdb91d5",
       "bytes": 19744
     },
     {
-      "path": "audits/maximal-pass27-20261025/work-irq.json",
-      "sha256": "e1e65e46a0b7f3d392deb7bd22d8c0a7d16d328c1f73eea1a1aa31952055fa39",
+      "path": "audits/maximal-pass28-20261025/work-irq.json",
+      "sha256": "533e44a62b1e6e2ae8112461276406f8aa0a8e4f7d698d73154e345e3206d076",
       "bytes": 19194
     },
     {
-      "path": "audits/maximal-pass27-20261025/work-startup.json",
-      "sha256": "51a14d4b375005c38221c575bc3f90cfcbcb6b43fe32d82ac31bba89db4d8efc",
-      "bytes": 9925
+      "path": "audits/maximal-pass28-20261025/work-startup.json",
+      "sha256": "9389e5689217532e1d71e7301cc5a061ac4fd985e088a01396e7bc1fc09a6119",
+      "bytes": 9930
     }
   ],
   "measurements": {
-    "path": "audits/maximal-pass27-20261025/measurements.json",
-    "sha256": "696af0484c5d73258334cb20e1dd8efdd209e26fa04487022fc5b3bf6330423c"
+    "path": "audits/maximal-pass28-20261025/measurements.json",
+    "sha256": "661cb281874529f80536ef381734eab51ece0e0e365d403e6818cbd480b09f0d"
   },
   "qualification_gates_open": [
-    "main CODE overflow 4346 bytes",
+    "main CODE overflow 4285 bytes",
     "complete OEM startup and IRQ routing/non-reentry contract",
     "opaque-writer and application-bank gates",
     "full configured functional regressions",
