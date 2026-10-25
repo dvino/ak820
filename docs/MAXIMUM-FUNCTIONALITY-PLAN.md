@@ -1,3 +1,5 @@
+Русский перевод: [Полный набор функций AK820](ru/MAXIMUM-FUNCTIONALITY-PLAN.md).
+
 # Fit the complete AK820 feature set
 
 ## Objective and fixed contracts
@@ -5,6 +7,8 @@
 The first candidate contains all 14 optional modules from `qmk-8051-ak820/util/ak820_profiles.py`, together with every existing base feature. It retains OS indicators, six layers, 16 Vial macros and their 8192-byte store, eight two-key Combos, eight Tap Dance and eight Key Override entries, both encoder directions, NKRO reports and control, and the existing runtime settings. Maximum means simultaneous functionality in one image. The nine-profile catalog is the control, not the endpoint.
 
 Keep USB descriptors, report formats, Vial/VIA command values, settings validation, NVM layout and journal recovery, update/unlock behavior, timing contracts, key ownership and release behavior unchanged. Preserve existing handling of corrupt rows, timer wrap, held modifiers, queue overflow, storage faults and transport timeouts. Compact representations are permitted only with equivalent externally observable behavior. Existing session-only modes must remain session-only. No protected flash region, loader callback, macro store or NVM region becomes executable space.
+
+Responsiveness must be preserved.
 
 The physical CODE windows remain `[0x28a0,0x3000)` and `[0x3027,0xc700)`. Their capacities are independent. The allocated XRAM limit is 3072 bytes with separate fixed DMA storage. Available IRAM and exact foreground/startup/IRQ stack bounds constrain every optimization. A size reduction that causes an unresolved stack path, overflow or protocol regression is rejected.
 
@@ -51,7 +55,7 @@ Optimize placement after each accepted source reduction. Select low-window conte
 
 ## Qualification and stopping rules
 
-For each final linked candidate: validate image identity and region placement; close startup, foreground and USB/timer/LED IRQ stack proof; run targeted tests and then the complete existing offline suites. Exercise all 14 modules enabled together, including adversarial combined key sequences, held-key cancellation, timing wrap, resource exhaustion, USB lock/unlock and malformed packet handling, NVM interruption/fault models, suspend/resume and OS indicator leases. CPU/host models do not establish physical timing, durable-device behavior or installed firmware state.
+For each final linked candidate: validate image identity and region placement; close startup, foreground and USB/timer/LED IRQ stack proof; run targeted tests and then the complete existing offline suites. Exercise all 14 modules enabled together, including adversarial combined key sequences, held-key cancellation, timing wrap, resource exhaustion, USB lock/unlock and malformed packet handling, NVM interruption/fault models, suspend/resume and OS indicator leases. Compare ordinary press/release and encoder input, plus simultaneous maximum-load input, against the baseline built with the same feature configuration and toolchain. Instruction counts and CPU-model ticks are bounded-component evidence; they do not establish end-to-end responsiveness. Measure the complete scan-loop interval, IRQ blocking, USB report latency and backlog separately. Do not convert simulator counts into real VS11 milliseconds without verified clock, wait-state, peripheral and scheduling evidence plus physical confirmation. Confirm on the complete path that added latency stays within the owner's preferred tolerance of a few milliseconds; exact latency remains open while unmeasured. CPU/host models do not establish physical timing, durable-device behavior or installed firmware state.
 
 Retain a ledger with source hash, profile switches, toolchain hash, artifact hashes, main/low bytes, XRAM, stack bound/capacity, linked savings from the prior control, regression state and review closure. Every substantive correction receives fresh independent review before commit. Update README/Status and relevant English/Russian technical documentation in the same implementation package without putting evidence details into the README introduction.
 
