@@ -75,6 +75,8 @@ Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lig
 
 ## Documentation and contributions
 
+The whole-program development target is described in the [compression plan](docs/MAXIMUM-FUNCTIONALITY-PLAN.md).
+
 [Documentation](docs/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI and releases](docs/CI.md) · [Build](docs/BUILD.md) · [Development](docs/DEVELOPMENT.md) · [Testing](docs/TESTING.md) · [Contributing](CONTRIBUTING.md)
 
 The companion application is maintained in [AK Configurator](https://github.com/dvino/ak-configurator). The [firmware handoff](web/docs/FIRMWARE-HANDOFF.md) describes its firmware contracts.

@@ -40,6 +40,8 @@ RELEASE_PROFILES = (
     'tap-dance', 'key-overrides', 'settings',
 )
 PROFILES = {
+    # Development-only union used to measure whole-program compression.
+    'maximal': tuple(SWITCHES),
     'work': ('nkro-control', 'one-shot', 'space-cadet', 'leader',
              'dynamic-macros', 'os-indicators'),
     'essential': ('nkro-control', 'one-shot', 'space-cadet', 'os-indicators'),

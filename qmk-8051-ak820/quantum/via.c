@@ -268,16 +268,9 @@ void raw_hid_receive(uint8_t *packet, uint8_t length) {
         }
         case id_get_keyboard_value: {
             switch (command_data[0]) {
-                case id_uptime: {
-                    uint32_t value  = timer_read32();
-                    command_data[1] = (value >> 24) & 0xFF;
-                    command_data[2] = (value >> 16) & 0xFF;
-                    command_data[3] = (value >> 8) & 0xFF;
-                    command_data[4] = value & 0xFF;
-                    break;
-                }
+                case id_uptime:
                 case id_layout_options: {
-                    uint32_t value  = via_get_layout_options();
+                    uint32_t value = command_data[0] == id_uptime ? timer_read32() : via_get_layout_options();
                     command_data[1] = (value >> 24) & 0xFF;
                     command_data[2] = (value >> 16) & 0xFF;
                     command_data[3] = (value >> 8) & 0xFF;
@@ -435,17 +428,14 @@ void raw_hid_receive(uint8_t *packet, uint8_t length) {
             command_data[1] = size & 0xFF;
             break;
         }
-        case id_dynamic_keymap_macro_get_buffer: {
-            uint16_t offset = (command_data[0] << 8) | command_data[1];
-            uint16_t size   = command_data[2]; // size <= 28
-            if (size <= 28)
-                dynamic_keymap_macro_get_buffer(offset, size, &command_data[3]);
-            break;
-        }
-        case id_dynamic_keymap_macro_set_buffer: {
+        case id_dynamic_keymap_macro_get_buffer:
+        case id_dynamic_keymap_macro_set_buffer:
+        case id_dynamic_keymap_get_buffer:
+        case id_dynamic_keymap_set_buffer: {
 #ifdef VIAL_ENABLE
-            /* Until keyboard is unlocked, don't allow changing macros */
-            if (!vial_unlocked) {
+            /* Only the macro setter requires unlock here. Preserve the
+             * ordinary keymap setter's existing per-key firewall. */
+            if (*command_id == id_dynamic_keymap_macro_set_buffer && !vial_unlocked) {
 #    ifdef AK820_BOARD
                 return;
 #    else
@@ -454,15 +444,31 @@ void raw_hid_receive(uint8_t *packet, uint8_t length) {
             }
 #endif
             uint16_t offset = (command_data[0] << 8) | command_data[1];
-            uint16_t size   = command_data[2]; // size <= 28
+            uint8_t size = command_data[2];
+            if (size > 28) {
 #ifdef AK820_BOARD
-            // No echoed success for malformed, incomplete-range or failed
-            // writes. The USB task releases the request for the host retry.
-            if (size > 28 || size > length - 4 || !dynamic_keymap_macro_set_buffer(offset, size, &command_data[3])) return;
-#else
-            if (size <= 28)
-                dynamic_keymap_macro_set_buffer(offset, size, &command_data[3]);
+                if (*command_id == id_dynamic_keymap_macro_set_buffer) return;
 #endif
+                break;
+            }
+            switch (*command_id) {
+                case id_dynamic_keymap_macro_get_buffer:
+                    dynamic_keymap_macro_get_buffer(offset, size, &command_data[3]);
+                    break;
+                case id_dynamic_keymap_macro_set_buffer:
+#ifdef AK820_BOARD
+                    if (size > length - 4 || !dynamic_keymap_macro_set_buffer(offset, size, &command_data[3])) return;
+#else
+                    dynamic_keymap_macro_set_buffer(offset, size, &command_data[3]);
+#endif
+                    break;
+                case id_dynamic_keymap_get_buffer:
+                    dynamic_keymap_get_buffer(offset, size, &command_data[3]);
+                    break;
+                default: /* id_dynamic_keymap_set_buffer */
+                    dynamic_keymap_set_buffer(offset, size, &command_data[3]);
+                    break;
+            }
             break;
         }
         case id_dynamic_keymap_macro_reset: {
@@ -474,20 +480,6 @@ void raw_hid_receive(uint8_t *packet, uint8_t length) {
         }
         case id_dynamic_keymap_get_layer_count: {
             command_data[0] = dynamic_keymap_get_layer_count();
-            break;
-        }
-        case id_dynamic_keymap_get_buffer: {
-            uint16_t offset = (command_data[0] << 8) | command_data[1];
-            uint16_t size   = command_data[2]; // size <= 28
-            if (size <= 28)
-                dynamic_keymap_get_buffer(offset, size, &command_data[3]);
-            break;
-        }
-        case id_dynamic_keymap_set_buffer: {
-            uint16_t offset = (command_data[0] << 8) | command_data[1];
-            uint16_t size   = command_data[2]; // size <= 28
-            if (size <= 28)
-                dynamic_keymap_set_buffer(offset, size, &command_data[3]);
             break;
         }
 #if defined(VIAL_ENABLE) && !defined(VIAL_INSECURE)

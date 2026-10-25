@@ -15,9 +15,18 @@ static struct td_slot td_slots[VIAL_TAP_DANCE_ENTRIES];
 static struct td_slot AK820_STATE_MEM *td_wait, *td_work;
 static vial_tap_dance_entry_t td_entry;
 static uint16_t td_time;
-/* Source mapping avoids a scan and variable-width bitmap operations. 255
- * means a consumed source whose release must remain suppressed. */
-static uint8_t td_map[TD_SOURCES];
+/* Values 0..7 select a slot; 8 means consumed until physical release. */
+#define TD_MAP_NONE 8
+static uint8_t td_map[(TD_SOURCES + 1) / 2];
+static uint8_t td_map_get(uint8_t id) {
+    uint8_t packed = td_map[id >> 1];
+    return (id & 1) ? packed >> 4 : packed & 15;
+}
+static void td_map_set(uint8_t id, uint8_t value) {
+    uint8_t *packed = td_map + (id >> 1);
+    if (id & 1) *packed = (*packed & 15) | ((value & 15) << 4);
+    else *packed = (*packed & 240) | (value & 15);
+}
 static keyrecord_t td_record;
 static uint8_t td_step;
 static bool ak820_td_invoking;
@@ -91,13 +100,13 @@ bool ak820_tap_dance_before(const keyevent_t AK820_STATE_MEM *event) {
         return true;
     }
     id = event->key.row * MATRIX_COLS + event->key.col;
-    if (td_map[id] == TD_NONE) {
-        if (!event->pressed) td_map[id] = 0;
+    if (td_map_get(id) == TD_MAP_NONE) {
+        if (!event->pressed) td_map_set(id, 0);
         return false;
     }
     if (event->pressed && td_wait && (td_wait->source != id || (td_wait->state & 3) == 2)) td_finish(true);
     id = event->key.row * MATRIX_COLS + event->key.col;
-    slot = td_slots + td_map[id];
+    slot = td_slots + td_map_get(id);
     if (slot->state && slot->source == id) {
         if (event->pressed) return !(slot->state & TD_DONE);
         slot->state &= ~TD_DOWN;
@@ -122,7 +131,7 @@ bool ak820_tap_dance_process(keyrecord_t AK820_STATE_MEM *record) {
     id = record->event.key.row * MATRIX_COLS + record->event.key.col;
     /* Only id remains live across finishing the old gesture. */
     if (td_wait && !(td_wait->state & TD_DOWN) && td_wait->source == id &&
-        record->keycode != (QK_TAP_DANCE | td_map[id])) td_finish(true);
+        record->keycode != (QK_TAP_DANCE | td_map_get(id))) td_finish(true);
     if ((record->keycode >> 8) != (QK_TAP_DANCE >> 8)) return true;
     index = (uint8_t)record->keycode;
     slot = td_slots + (index & 7);
@@ -134,10 +143,10 @@ bool ak820_tap_dance_process(keyrecord_t AK820_STATE_MEM *record) {
     slot->state = (slot->state & 3) + 1 + TD_DOWN;
     td_time = record->event.time;
     td_wait = slot;
-    td_map[id] = index;
+    td_map_set(id, index);
     return false;
 suppress:
-    td_map[id] = TD_NONE;
+    td_map_set(id, TD_MAP_NONE);
     return false;
 }
 void ak820_tap_dance_cancel(void) {

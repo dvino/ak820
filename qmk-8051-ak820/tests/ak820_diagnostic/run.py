@@ -13,7 +13,7 @@ with tempfile.TemporaryDirectory(prefix="ak820-diagnostic-") as temporary:
         "-fsanitize=address,undefined", "-fno-omit-frame-pointer",
         "-I" + str(ROOT / "keyboards/ajazz/ak820"),
         str(ROOT / "tests/ak820_diagnostic/nvm_harness.c"),
-        str(ROOT / "keyboards/ajazz/ak820/ak820_nvm.c"), "-o", str(binary),
+        str(ROOT / "keyboards/ajazz/ak820/ak820_nvm.c"), str(ROOT / "keyboards/ajazz/ak820/ak820_crc.c"), "-o", str(binary),
     ], check=True)
     env = os.environ.copy()
     env["ASAN_OPTIONS"] = "detect_leaks=0"

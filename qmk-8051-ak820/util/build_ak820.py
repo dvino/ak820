@@ -13,6 +13,7 @@ import json
 import os
 import re
 import shutil
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -20,6 +21,9 @@ from pathlib import Path
 from ak820_dce import optimize
 from ak820_outline_audit import outline_assembled
 import ak820_shortcalls as shortcalls
+import ak820_tailshare as tailshare
+import ak820_register_saves as register_saves
+import ak820_parameter_spills as parameter_spills
 from ak820_build_inputs import FORMAT as INPUT_FORMAT, collect_inputs, input_snapshot
 from ak820_profiles import DEFAULT_PROFILE, PROFILES, RELEASE_PROFILES, configuration
 
@@ -33,6 +37,55 @@ AK820_CALLEE_SAVES = (
     'ak820_flash_read', 'mDelaymS',
     'get_repeat_key_count',
 )
+
+
+def word_hook_abi_flag(callee_saves, extra_flags):
+    """Certify only the audited bank-zero word-hook ABI, never public APIs."""
+    public = {'dynamic_keymap_get_keycode', 'dynamic_keymap_set_keycode',
+              'dynamic_keymap_get_encoder', 'dynamic_keymap_set_encoder'}
+    names = set(callee_saves)
+    tokens = shlex.split(extra_flags)
+    for index, token in enumerate(tokens):
+        if token in ('--stack-auto', '--xstack', '--parms-in-bank1', '--all-callee-saves') or token.startswith('--sdcccall'):
+            raise ValueError('Unsupported AK820 word-hook ABI option: ' + token)
+        if token == '--callee-saves':
+            if index + 1 == len(tokens):
+                raise ValueError('Missing callee-saves names')
+            names.update(tokens[index + 1].split(','))
+        elif token.startswith('--callee-saves='):
+            names.update(token.split('=', 1)[1].split(','))
+        if 'AK820_WORD_HOOKS_PRESERVE_RN' in token:
+            raise ValueError('Word-hook ABI assertion is owned by the builder')
+    if public & {name.lstrip('_') for name in names}:
+        raise ValueError('AK820 word APIs must remain caller-clobbered')
+    if {'eeprom_read_byte', 'eeprom_update_byte'} <= set(callee_saves):
+        return ' -DAK820_WORD_HOOKS_PRESERVE_RN=1'
+    return ''
+
+
+def read_block_abi_flag(enabled, keyboard, version, callee_saves, extra_flags):
+    tokens = shlex.split(extra_flags)
+    if any('AK820_READ_HOOK_PRESERVES_RN' in t or 'AK820_NVM_READ_BLOCK_ASM' in t for t in tokens):
+        raise ValueError('Read kernel assertions and feature switch are owned by the builder')
+    if not enabled:
+        return ''
+    if keyboard != 'ajazz/ak820' or version != '4.6.0':
+        raise ValueError('Read kernel requires AK820 and pinned SDCC 4.6.0')
+    bad = ('--stack-auto', '--xstack', '--parms-in-bank1', '--all-callee-saves', '--model-small', '--model-medium', '--model-huge')
+    if any(t in bad or t.startswith('--sdcccall') for t in tokens):
+        raise ValueError('Unsupported read kernel ABI option')
+    names = set(callee_saves)
+    for i, token in enumerate(tokens):
+        if token == '--callee-saves':
+            if i+1 == len(tokens): raise ValueError('Missing callee-saves names')
+            names.update(tokens[i+1].split(','))
+        elif token.startswith('--callee-saves='):
+            names.update(token.split('=',1)[1].split(','))
+    if 'ak820_eeprom_read_block_xdata' in {n.lstrip('_') for n in names}:
+        raise ValueError('Read block API must remain caller-clobbered')
+    if 'eeprom_read_byte' not in callee_saves:
+        raise ValueError('Read kernel needs the audited preserving scalar hook')
+    return ' -DAK820_READ_HOOK_PRESERVES_RN=1'
 
 
 def integer(s):
@@ -98,23 +151,54 @@ def main():
     p.add_argument('--code-end', type=integer, default=0xc700)
     p.add_argument('--low-code-start', type=integer, default=0x28a0)
     p.add_argument('--low-code-end', type=integer, default=0x3000)
-    p.add_argument('--xram-start', type=integer, default=0x0400)
+    p.add_argument('--xram-start', type=integer, default=None,
+                   help='Ordinary XRAM start (AK820: 0x440; other targets: 0x400)')
     p.add_argument('--xram-end', type=integer, default=0x1000)
     p.add_argument('--root', action='append', default=[])
     p.add_argument('--build-id', type=integer, default=None, help='Stable Vial EEPROM schema identifier')
     p.add_argument('--extra-flags', default='--opt-code-size', help='Additional compiler flags; board config owns feature flags')
+    p.add_argument('--iram-overlay-diagnostic', type=Path, default=None, help='Opt-in external diagnostic integration directory; never production admission')
+    p.add_argument('--iram-overlay-certificate', type=Path)
+    p.add_argument('--iram-overlay-certificate-sha256')
     p.add_argument('--short-calls', action=argparse.BooleanOptionalAction, default=None,
                    help='Verified foreground ACALL/AJMP relaxation; enabled by default for curated profiles')
+    p.add_argument('--nvm-read-block-asm', action='store_true', help='Diagnostic separate-TU read kernel (default off)')
+    p.add_argument('--keymap-words-asm', action='store_true', help='Experimental fixed-layout keymap word kernel (opt-in)')
+    p.add_argument('--trim-parameter-spills', action='store_true', help='Experimental private first-argument spill folding (requires explicit source-context certificate)')
+    p.add_argument('--parameter-spills-context', type=Path, help='Reviewed source-context certificate for private argument spills')
+    p.add_argument('--trim-register-saves', action='store_true', help='Experimental conservative assembled register-save trimming')
+    p.add_argument('--outline-max-helpers', type=int, default=200, help='Maximum exact outliner helpers (default: 200)')
+    p.add_argument('--tail-share', action='store_true', help='Experimental exact RET tail sharing (opt-in; no added stack frame)')
     p.add_argument('--no-outline', action='store_true', help='Disable AK820 exact instruction outlining for comparison builds')
     p.add_argument('--no-callee-saves', action='store_true', help='Disable the audited AK820 callee-saves list for comparison builds')
     args = p.parse_args()
+    if args.xram_start is None:
+        args.xram_start = 0x440 if args.keyboard == 'ajazz/ak820' else 0x400
+    if args.trim_parameter_spills:
+        if args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0':
+            p.error('--trim-parameter-spills requires ajazz/ak820 and pinned SDCC 4.6.0')
+        if args.parameter_spills_context is None or not args.parameter_spills_context.is_file():
+            p.error('--trim-parameter-spills requires --parameter-spills-context FILE')
+        if [args.xram_start,args.xram_end] != [0x440,0x1000]:
+            p.error('--trim-parameter-spills requires ordinary XRAM 0x440..0x1000')
     selected = configuration(args.profile)
+    if args.keymap_words_asm and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
+        p.error('--keymap-words-asm requires ajazz/ak820 and pinned SDCC 4.6.0')
+    if args.keymap_words_asm and any(flag in shlex.split(args.extra_flags) for flag in
+                                    ('--model-small', '--model-medium', '--model-huge')):
+        p.error('--keymap-words-asm requires the large memory model')
+    if args.outline_max_helpers < 1:
+        p.error('--outline-max-helpers must be positive')
+    if args.trim_register_saves and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
+        p.error('--trim-register-saves requires ajazz/ak820 and SDCC 4.6.0')
     if args.short_calls is None:
         args.short_calls = args.profile in RELEASE_PROFILES
     if args.build_id is None:
         args.build_id = selected['nvm_schema']
     if args.short_calls and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
         raise ValueError('Short calls require the AK820 target and pinned SDCC 4.6.0')
+    if args.tail_share and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
+        raise ValueError('Tail sharing requires AK820 and pinned SDCC 4.6.0')
     if args.keyboard == 'ajazz/ak820':
         # These calls originate in the preserved OEM loader and are inserted
         # by the image packer, so application ASM cannot express their edges.
@@ -166,16 +250,21 @@ def main():
     target = args.keyboard.replace('/','_')+'_'+args.keymap
     relative_build = str(build.relative_to(root))
     callee_saves = AK820_CALLEE_SAVES if args.keyboard == 'ajazz/ak820' and not args.no_callee_saves else ()
-    compile_flags = args.extra_flags
+    read_abi = read_block_abi_flag(args.nvm_read_block_asm, args.keyboard, args.sdcc_version, callee_saves, args.extra_flags)
+    compile_flags = args.extra_flags + read_abi
     if callee_saves:
         compile_flags += ' --callee-saves ' + ','.join(callee_saves)
+    if args.keyboard == 'ajazz/ak820':
+        compile_flags += word_hook_abi_flag(callee_saves, args.extra_flags)
     qmk = str(args.qmk_bin.resolve()) if args.qmk_bin else shutil.which('qmk',path=env['PATH'])
     if not qmk:
         raise ValueError('QMK CLI unavailable')
     run('compile',['make','-r','-R','-f','builddefs/build_keyboard.mk','sdcc-objects',
         'KEYBOARD='+args.keyboard,'KEYMAP='+args.keymap,'QMK_BIN='+qmk,'SILENT=false','COLOR=false',
         'SKIP_GIT=yes','SKIP_VERSION=yes','BUILD_DIR='+relative_build,'EXTRAFLAGS='+compile_flags,
-        *(name+'='+value for name,value in selected['make_options'].items()), '-j'+str(args.jobs)])
+        *(name+'='+value for name,value in selected['make_options'].items()),
+        'AK820_NVM_READ_BLOCK_ASM='+('yes' if args.nvm_read_block_asm else 'no'),
+        'AK820_KEYMAP_WORDS_ASM='+('yes' if args.keymap_words_asm else 'no'), '-j'+str(args.jobs)])
     obj = build/('obj_'+target)
     expected = (obj/'obj.txt').read_text().split()
     if not expected or any(not name.endswith('.rel') or not (root/name).is_file() for name in expected):
@@ -197,10 +286,38 @@ def main():
     # The first assembly supplies exact instruction lengths/relocations. No
     # unoptimized image is linked, so it need not fit the final CODE window.
     assemble_tree(dce_input, 'assemble-input-' if apply_outlining else 'assemble-')
+    parameter_result = None
+    if args.trim_parameter_spills:
+        context_copy = build/'parameter-spills-context.json'
+        shutil.copyfile(args.parameter_spills_context.resolve(), context_copy)
+        parameter_input = build/'parameter-spills-input'
+        parameter_output = build/'parameter-spills-output'
+        dce_input.rename(parameter_input)
+        parameter_result = parameter_spills.prepare(root,obj,parameter_input,parameter_output,
+            build/'parameter-spills-metadata',context_copy,build/'parameter-spills.json',Path(sdcc),inputs_before)
+        assemble_tree(parameter_output,'assemble-parameter-spills-')
+        parameter_spills.verify_assembled(parameter_input,parameter_output,build/'parameter-spills.json',parameter_result)
+        shutil.copytree(parameter_output,dce_input)
+    register_result = None
+    if args.trim_register_saves:
+        register_input = build/'register-saves-input'
+        dce_input.rename(register_input)
+        register_output = build/'register-saves-output'
+        register_result = register_saves.prepare(register_input, register_output, build/'register-saves.json')
+        assemble_tree(register_output, 'assemble-register-saves-')
+        register_saves.verify_assembled(register_input, register_output, build/'register-saves.json', register_result)
+        shutil.copytree(register_output, dce_input)
     outlining = None
     if apply_outlining:
-        outlining = outline_assembled(dce_input, dce, max_helpers=200, min_saving=1)
+        outlining = outline_assembled(dce_input, dce, max_helpers=args.outline_max_helpers, min_saving=1)
         assemble_tree(dce, 'assemble-outlined-')
+    tail_result = None
+    if args.tail_share:
+        tail_input = build/'tailshare-input'
+        dce.rename(tail_input)
+        tail_result = tailshare.prepare(tail_input, dce, build/'tail-share.json')
+        assemble_tree(dce, 'assemble-tailshare-')
+        tailshare.verify_assembled(tail_input, dce, build/'tail-share.json', tail_result)
     ihx = build/(target+'.ihx')
     extra_link = []
     windows = [(args.code_start,args.code_end)]
@@ -230,6 +347,26 @@ def main():
     # Diagnostic images are never accepted firmware. Repeat the link with the
     # original strict memory limits and independently validate its final bytes.
     run('link',link_command(dce,ihx,args.code_end))
+    short_result = None
+    overlay_cert = None
+    overlay_result = None
+    if args.iram_overlay_diagnostic is not None:
+        if not args.iram_overlay_certificate or not args.iram_overlay_certificate_sha256:
+            raise ValueError('Overlay diagnostic requires exact certificate and hash')
+        sys.path.insert(0, str(args.iram_overlay_diagnostic.resolve()))
+        import integration as iram_overlay
+        iram_overlay.check_tools(Path(sdcc), Path(assembler))
+        if short_plan is not None:
+            short_result = shortcalls.finish(short_input,dce,build/'shortcalls/baseline.ihx',
+                ihx,short_plan,build/'short-calls.json')
+        overlay_cert = iram_overlay.prepare(build, args.iram_overlay_certificate,
+            args.iram_overlay_certificate_sha256, args.iram_overlay_diagnostic.parent/'ak820-iram-overlay-integration')
+        assemble_tree(dce, 'assemble-overlay-diagnostic-')
+        run('link-overlay-diagnostic', link_command(dce, ihx, args.code_end))
+        overlay_stack = build/'overlay-stack.json'
+        run('overlay-exact-stack', [sys.executable, str(root/'tests/ak820_stack/analyze.py'),
+            '--build-dir', str(build), '--output', str(overlay_stack)])
+        overlay_result = iram_overlay.finish(build, root/'tests/ak820_stack/analyze.py', overlay_cert, overlay_stack)
     data = ihex_data(ihx)
     invalid = [a for a in data if not any(lo<=a<hi for lo,hi in windows)]
     if invalid:
@@ -240,10 +377,15 @@ def main():
         raise ValueError('XRAM allocation outside permitted interval')
     if 'ERROR' in memory or 'No room' in memory:
         raise ValueError('Memory allocation failure')
-    short_result = None
-    if short_plan is not None:
+    if overlay_result is None and short_plan is not None:
         short_result = shortcalls.finish(short_input,dce,build/'shortcalls/baseline.ihx',
             ihx,short_plan,build/'short-calls.json')
+    if parameter_result is not None:
+        spill_stack = build/'parameter-spills-stack.json'
+        run('parameter-spills-postlink-stack',[sys.executable,str(root/'tests/ak820_stack/analyze.py'),
+            '--build-dir',str(build),'--output',str(spill_stack)])
+        parameter_spills.postlink_audit(root,build,build/'parameter-spills-context.json',
+            build/'parameter-spills.json',parameter_result,spill_stack)
     # This output is intentionally not padded to a device update payload.
     binary = ihx.with_suffix('.bin')
     binary.write_bytes(bytes(data.get(a,0xff) for a in range(min(data),max(data)+1)))
@@ -258,17 +400,81 @@ def main():
         artifacts.append(ihx.with_suffix('.noi'))
         artifacts.extend(sorted(dce.rglob('*.asm')))
         artifacts.extend(sorted(dce.rglob('*.rel')))
+    if tail_result is not None:
+        artifacts.append(build/'tail-share.json')
+        artifacts.extend(sorted((build/'tailshare-input').rglob('*.asm')))
+        artifacts.extend(sorted((build/'tailshare-input').rglob('*.lst')))
+        artifacts.extend(sorted(dce.rglob('*.asm')))
+    if register_result is not None:
+        artifacts.append(build/'register-saves.json')
+        for pattern in ('*.asm','*.lst','*.rel'):
+            artifacts.extend(sorted((build/'register-saves-input').rglob(pattern)))
+            artifacts.extend(sorted((build/'register-saves-output').rglob(pattern)))
+    if parameter_result is not None:
+        artifacts.extend([build/'parameter-spills.json',build/'parameter-spills-context.json',build/'parameter-spills-stack.json'])
+        artifacts.extend(sorted(path for path in (build/'parameter-spills-metadata').rglob('*') if path.is_file()))
+        for folder in ('parameter-spills-input','parameter-spills-output'):
+            for pattern in ('*.asm','*.lst','*.rel','*.sym'):
+                artifacts.extend(sorted((build/folder).rglob(pattern)))
+    if overlay_result is not None:
+        artifacts.extend([build/'overlay-link-diagnostic.json', build/'overlay-stack.json'])
+        artifacts.extend(sorted(path for path in (build/'overlay-proof-src').rglob('*') if path.is_file()))
+        artifacts.extend(sorted(dce.rglob('*.asm')))
     artifacts.extend(asm_paths)
+    if args.keyboard == 'ajazz/ak820':
+        allocation_paths = [build/'allocation'/'ak820_flash.asm', build/'allocation'/'ak820_flash.adb']
+        if any(not path.is_file() for path in allocation_paths):
+            raise ValueError('Missing compiler allocation metadata')
+        artifacts.extend(allocation_paths)
     artifacts.extend(sorted(dce.rglob('*.rst')))
     source_records, dependency_evidence = collect_inputs(root, toolchain, build, expected, inputs_before)
     artifacts.extend(dependency_evidence)
+    if parameter_result is not None:
+        existing_source_paths={(r['origin'],r['path']) for r in source_records}
+        for name in ('util/ak820_parameter_spills.py','util/ak820_register_saves.py','tests/ak820_stack/analyze.py'):
+            path=(root/name).resolve()
+            if inputs_before.get(path)!=sha(path):raise ValueError('Spill proof implementation changed during build: '+name)
+            if ('source',name) not in existing_source_paths:
+                source_records.append({'path':name,'origin':'source','sha256':sha(path)})
+    # Optional passes can retain the same final ASM artifact. Record each
+    # resolved file once so strict consumers reject real aliases, not our list.
+    artifacts = list(dict.fromkeys(path.resolve() for path in artifacts))
     report = {
         'configuration': selected,
         'keyboard':args.keyboard,'keymap':args.keymap,'compiler_version':version.strip(),
         'build_id':args.build_id,'skip_version':True,
+        'experimental_iram_overlay':overlay_result,
         'compiler_sha256':sha(Path(sdcc)), 'assembler_sha256':sha(Path(assembler)),
         'builder_sha256':sha(Path(__file__)), 'dce_sha256':sha(root/'util/ak820_dce.py'),
         'outliner_sha256':sha(root/'util/ak820_outline_audit.py'),
+        'outline_max_helpers':args.outline_max_helpers,
+        'nvm_read_block_asm':args.nvm_read_block_asm,
+        'keymap_words_asm':args.keymap_words_asm,
+        'parameter_spills_sha256':sha(root/'util/ak820_parameter_spills.py'),
+        'parameter_spills': None if parameter_result is None else {
+            'report':(build/'parameter-spills.json').relative_to(root).as_posix(),
+            'report_sha256':sha(build/'parameter-spills.json'),
+            'context_sha256':sha(build/'parameter-spills-context.json'),
+            'selected':len(parameter_result['selected']),
+            'object_saved_bytes':parameter_result['object_saved_bytes'],
+            'postlink_qualified':parameter_result['postlink_qualified'],
+            'linked_saved_bytes':None, 'extra_stack_bytes':0,
+        },
+        'register_saves_sha256':sha(root/'util/ak820_register_saves.py'),
+        'register_saves': None if register_result is None else {
+            'report':(build/'register-saves.json').relative_to(root).as_posix(),
+            'report_sha256':sha(build/'register-saves.json'),
+            'object_saved_bytes':register_result['object_saved_bytes'],
+            'linked_saved_bytes':None, 'extra_stack_bytes':0,
+        },
+        'tailshare_sha256':sha(root/'util/ak820_tailshare.py'),
+        'tail_share': None if tail_result is None else {
+            'report':(build/'tail-share.json').relative_to(root).as_posix(),
+            'report_sha256':sha(build/'tail-share.json'),
+            'estimated_object_saved_bytes':tail_result['estimated_object_saved_bytes'],
+            'object_saved_bytes':tail_result['object_saved_bytes'],
+            'linked_saved_bytes':None, 'extra_stack_bytes':0,
+        },
         'shortcalls_sha256':sha(root/'util/ak820_shortcalls.py'),
         'short_calls': None if short_result is None else {
             'algorithm':short_result['algorithm'], 'report':(build/'short-calls.json').relative_to(root).as_posix(),

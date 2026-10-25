@@ -7,6 +7,7 @@
  *    -Ikeyboards/ajazz/ak820/tests/include \
  *    -Ikeyboards/ajazz/ak820 keyboards/ajazz/ak820/tests/macro_powercut.c \
  *    keyboards/ajazz/ak820/ak820_macro.c keyboards/ajazz/ak820/ak820_nvm.c \
+ *    keyboards/ajazz/ak820/ak820_crc.c \
  *    -o /tmp/ak820-macro-test
  * ASAN_OPTIONS=detect_leaks=0 /tmp/ak820-macro-test
  */
@@ -202,6 +203,25 @@ static void parser_tests(void) {
     memset(expected, 'Z', MACRO_SIZE - 16); memset(expected + MACRO_SIZE - 16, 0, 16);
     write_chunks(expected, MACRO_SIZE);
     require(ak820_macro_ready() && !memcmp(flash_image + MACRO_BASE, expected, MACRO_SIZE), "all macro bytes usable without reserved last byte");
+
+    /* The public API also accepts calls larger than a HID packet or an8-bit
+     * counter. Validate, write and compare the entire supplied interval. */
+    fixture();
+    require(ak820_macro_write(0, MACRO_SIZE, expected), "single full-capacity call accepted");
+    require(ak820_macro_ready() && ak820_macro_length() == MACRO_SIZE &&
+            !memcmp(flash_image + MACRO_BASE, expected, MACRO_SIZE), "large call publishes all bytes");
+    before = operations;
+    require(ak820_macro_write(0, MACRO_SIZE, expected) && operations == before, "large retransmission avoids writes");
+    fixture();
+    expected[MACRO_SIZE - 1] = 'X';
+    require(!ak820_macro_write(0, MACRO_SIZE, expected) && !operations, "invalid final byte in large call rejected before writes");
+    memset(expected, 0, MACRO_SIZE);
+    require(ak820_macro_write(0, 16, expected), "empty stream for large padding");
+    before = operations;
+    expected[511] = 'X';
+    require(!ak820_macro_write(16, 512, expected) && operations == before, "large padding validates last byte");
+    expected[511] = 0;
+    require(ak820_macro_write(16, 512, expected) && operations == before, "large zero padding needs no writes");
 }
 
 int main(void) {

@@ -1,0 +1,60 @@
+# Fit the complete AK820 feature set
+
+## Objective and fixed contracts
+
+The first candidate contains all 14 optional modules from `qmk-8051-ak820/util/ak820_profiles.py`, together with every existing base feature. It retains OS indicators, six layers, 16 Vial macros and their 8192-byte store, eight two-key Combos, eight Tap Dance and eight Key Override entries, both encoder directions, NKRO reports and control, and the existing runtime settings. Maximum means simultaneous functionality in one image. The nine-profile catalog is the control, not the endpoint.
+
+Keep USB descriptors, report formats, Vial/VIA command values, settings validation, NVM layout and journal recovery, update/unlock behavior, timing contracts, key ownership and release behavior unchanged. Preserve existing handling of corrupt rows, timer wrap, held modifiers, queue overflow, storage faults and transport timeouts. Compact representations are permitted only with equivalent externally observable behavior. Existing session-only modes must remain session-only. No protected flash region, loader callback, macro store or NVM region becomes executable space.
+
+The physical CODE windows remain `[0x28a0,0x3000)` and `[0x3027,0xc700)`. Their capacities are independent. The allocated XRAM limit is 3072 bytes with separate fixed DMA storage. Available IRAM and exact foreground/startup/IRQ stack bounds constrain every optimization. A size reduction that causes an unresolved stack path, overflow or protocol regression is rejected.
+
+## Evidence already available
+
+The exploratory image with 39258 occupied CODE bytes is a partial feature image, not a full-feature baseline. Its linked instruction inventory ranks USB at 4757 bytes, dynamic keymap at 2809, NVM at 2072, RGB at 1961, VIA at 1773, Vial at 1677, action at 1558 and macro handling at 1487. These are useful priorities, not additive savings estimates. Current outlining and short calls already saved nominally 2756 and 220 bytes; neither amount is future headroom. Exact linked-image deltas determine progress.
+
+## Packet 1: make the full target measurable and close the proof gap
+
+1. Add a development-only `maximal` profile containing precisely all registry modules. Keep release/installable flags false and preserve the published catalog and installer bytes. Test registry completeness, explicit switches, settings schema and capability generation.
+2. Build it in an isolated checkout with pinned SDCC 4.6.0 and independent output paths. Retain complete compiler/listing/map/relocation evidence even if placement fails. An oversized diagnostic image must never be packaged as installable. Report both CODE windows, linked occupied bytes, code/constants/runtime helpers, IRAM/XRAM and stack capacity. Do not infer union cost from separate profiles.
+3. Close the existing unresolved indirect USB transfer in the exact-image stack analyzer. The exploratory failure at 0x63a6 is a dense switch with an unsigned request <= 11 guard, two frame POPs, split low/high ROM target tables, and JMP @A+DPTR after CLR A. Recognize that general instruction/data pattern, not its address, and enumerate all 12 targets. Decode the actual instruction sequence and all input bounds; prove the complete target set from checksummed code/table bytes and validated predecessor state. An inventory of a callback table alone is insufficient. Preserve failure on altered opcodes, missing entries, out-of-range input, writable/unproved pointers and incompatible register state. Add positive and adversarial fixtures for the new recognition rule. Do not whitelist a source symbol or suppress unresolved paths.
+4. Run the exact-image startup, foreground and all enabled IRQ checks before full firmware regressions. If a full union cannot be linked in physical space, label it an oversized measurement only; establish all transfer proofs on a legal representative with the same generated pattern, then repeat on the eventual legal union. No regression PASS can waive a missing exact-image proof.
+
+Deliverable: full-feature deficit ledger and complete blocker list, with hashes and commands. This packet creates no claimed firmware size saving. It provides the control for the following work.
+
+## Packet 2: optimize SDCC interfaces and memory access across the program
+
+Inspect linked listings across USB, dynamic keymap, VIA/Vial, NVM, macro, settings, event processing and RGB together. Count generic-pointer helpers, pointer-width conversion, repeated offset arithmetic, 16/32-bit arithmetic helpers, parameter-copy sequences and register preservation. Rank transformations by measured bytes affected and call multiplicity.
+
+Use concrete address-space-qualified interfaces for known CODE and XRAM buffers instead of generic pointers. Preserve generic public/native interfaces with narrow target-specific adapters where required. Narrow indices and lengths only after proving the complete range, including malformed host packets and sentinels. Share repeated endian decoding, bounds checks and fixed-buffer operations where the call cost is smaller than duplication. Keep checked arithmetic before narrowing. Evaluate selectively placing hot scalars in __data and one-bit flags in __bit; retain large arrays in __xdata. Moving data into direct IRAM consumes real stack capacity, so accept placement only after the all-feature IRQ/foreground bound remains within capacity. Avoid moving long-lived state into scarce direct IRAM merely to reduce MOVX code.
+
+Evaluate per-function calling-convention and callee-save choices from emitted code and the whole call graph. Include register-bank, PSW, DPTR, B and interrupt preservation; static parameter slots cannot be shared by interruptible or recursive callers. Do not enable a global ABI flag based on one successful function. Each ABI change requires all consumers, CPU differential checks and fresh exact-image stack/IRQ evidence.
+
+Deliverable: one independently reviewable transformation family per packet, measured against the current all-feature control and at least one catalog control. Record total linked delta, not a sum of local instruction changes.
+
+## Packet 3: replace repeated framework work with one compact board path
+
+Reduce common infrastructure before rewriting optional modules individually. Inspect USB control setup, raw-HID dispatch, VIA and Vial validation, dynamic table addressing, macro access and settings storage as one path. Centralize common checked offsets and response framing. Use compact tables for genuinely repeated command metadata only when table bytes plus decoder beat the current switches. Preserve command-specific lengths, rejected commands, locked-state restrictions, response contents and NVM fault outcomes.
+
+Evaluate one board-specific event context passed through the existing fixed processing order. Cache keycode, coordinates, layer/modifier state and event time when their current semantics permit it; avoid repeated dynamic keymap/NVM lookups and argument rebuilding. Preserve the order and consumption behavior of Combo, tapping, One Shot, Space Cadet, Auto Shift, Tap Dance, Key Overrides, Leader, Repeat, Dynamic Macros and ordinary action processing. Shared timers or state are allowed only if simultaneously active modules remain independent. Do not merge state because two modules were never enabled together in the old catalog. Measure representation compression: tapping source_state currently holds three flags per 130 sources and may fit three bitmaps (51 bytes) or packed nibbles (65 bytes); Tap Dance source mapping may fit 64 bytes instead of 128 when all sentinel/index states are proved. These are RAM opportunities, not predicted CODE savings. Preserve ownership counts in key_refs: a bitmap loses overlapping physical and synthetic owners. Preserve synthetic reentry rules; synchronous parameter contexts require a demonstrated nonreentry call graph.
+
+Review RGB state traversal and HSV conversion with the same method. Retain VialRGB Direct buffer semantics, effect timing and OS indication priority, lease expiry, refresh and fallback behavior. Repeated helper logic may be shared, but indicator state must not disappear to meet the budget.
+
+NVM journal and flash primitive rewrites come last within this packet. Preserve write ordering, checksums, dirty tracking, recovery selection and refusal after faults. Keep the existing durable format unless a separately specified migration is authorized; no format migration is needed merely to compress executable code.
+
+## Packet 4: selective assembly and linker-aware compression
+
+Only after C-level changes identify stable expensive primitives, compare small hand-written 8051 implementations of fixed-space copy/compare, endian access, bounded offset loops, bitmap operations and proven arithmetic bottlenecks. Specify each ABI explicitly: arguments, result, clobbers, register bank, flags, DPTR, stack delta and interrupt behavior. Keep a reference C implementation for native/differential tests. Exercise zero, maximum, overlap where supported, wrap, malformed lengths and IRQ interleavings. A smaller implementation with wider hidden clobbers is unacceptable.
+
+Re-run the outliner on the whole union after architectural changes. Evaluate newly repeated sequences, helper call depth and register/flag effects. Extend its allowlist only for proven position-independent, stack-safe sequences with exact byte verification and negative tests. Existing outliner savings remain in the baseline. Treat CSE, outlining and ABI gains as interacting, not additive.
+
+Optimize placement after each accepted source reduction. Select low-window contents from relocation-aware whole functions or approved fragments and recheck every short call against final 2 KiB page boundaries. A call may be short only when the final next-PC page and target page agree. Retain disassembly/byte audits for both windows and protected-region exclusion. Never solve overflow by moving CODE into NVM or loader space.
+
+## Qualification and stopping rules
+
+For each final linked candidate: validate image identity and region placement; close startup, foreground and USB/timer/LED IRQ stack proof; run targeted tests and then the complete existing offline suites. Exercise all 14 modules enabled together, including adversarial combined key sequences, held-key cancellation, timing wrap, resource exhaustion, USB lock/unlock and malformed packet handling, NVM interruption/fault models, suspend/resume and OS indicator leases. CPU/host models do not establish physical timing, durable-device behavior or installed firmware state.
+
+Retain a ledger with source hash, profile switches, toolchain hash, artifact hashes, main/low bytes, XRAM, stack bound/capacity, linked savings from the prior control, regression state and review closure. Every substantive correction receives fresh independent review before commit. Update README/Status and relevant English/Russian technical documentation in the same implementation package without putting evidence details into the README introduction.
+
+Continue until the complete union fits and passes, or every evidenced high-value transformation has been measured and rejected or accepted. Do not stop after gaining room for one or two modules. No finite experiment proves global mathematical minimum; describe the completed search and remaining uncertainty accurately. If the full set still does not fit, report exact remaining bytes and the tested whole-program alternatives. Retain all functionality by default. Present any reduced feature combination separately as a proposed fallback requiring an explicit product decision; it is not completion of this objective.
+
+No packet authorizes USB writes, bootloader transitions, resets, flashing, packaging as approved, publication or replacement of installer firmware. Source preparation, builds, static proof, CPU tests and physical acceptance remain separate states.

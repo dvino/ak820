@@ -1,0 +1,100 @@
+FUNCTION (_normal=0x3760c600) type (unsigned-int fixed) args (unsigned-int fixed)
+tree (0x3760c560) not decorated
+(null):0:{ L2:0 B2
+(null):0:  DECLARE SYMBOL (L1:0 B1 value=0x3760bb40) type (unsigned-int fixed)
+/research/adversaries-noasm.c:2:  RETURN (0x3760b960) type (unsigned-int fixed)
+/research/adversaries-noasm.c:2:    CAST (0x3760b8c0) from type (unsigned-int register) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:2:      ADD (0x3760b780) type (unsigned-int register)
+/research/adversaries-noasm.c:2:        SYMBOL (L1:0 B1 value=0x3760b250 @ 0x37609220) type (unsigned-int fixed)
+/research/adversaries-noasm.c:2:        CONSTANT (0x3760b6e0) value = 1, 0x1, 1.000000 type (const-int literal)
+(null):0:}
+FUNCTION (_volatile_parameter=0x37587b40) type (unsigned-int fixed) args (volatile-unsigned-int fixed)
+tree (0x37587df0) not decorated
+(null):0:{ L2:0 B4
+(null):0:  DECLARE SYMBOL (L1:0 B3 value=0x3762a960) type (volatile-unsigned-int fixed)
+/research/adversaries-noasm.c:3:  RETURN (0x37588dc0) type (unsigned-int fixed)
+/research/adversaries-noasm.c:3:    CAST (0x375892b0) from type (unsigned-int register) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:3:      ADD (0x375875d0) type (unsigned-int register)
+/research/adversaries-noasm.c:3:        SYMBOL (L1:0 B3 value=0x37622560 @ 0x37628890) type (volatile-unsigned-int fixed)
+/research/adversaries-noasm.c:3:        CONSTANT (0x37587260) value = 1, 0x1, 1.000000 type (const-int literal)
+(null):0:}
+FUNCTION (_volatile_pointee=0x375ce0b0) type (unsigned-int fixed) args (volatile-const-unsigned-char __xdata* fixed)
+tree (0x375ce420) not decorated
+(null):0:{ L2:0 B6
+(null):0:  DECLARE SYMBOL (L1:0 B5 p=0x37635f20) type (volatile-const-unsigned-char __xdata* fixed)
+/research/adversaries-noasm.c:4:  RETURN (0x375ccaf0) type (unsigned-int fixed)
+/research/adversaries-noasm.c:4:    OR (0x375ccd40) type (unsigned-int fixed)
+/research/adversaries-noasm.c:4:      CAST (0x375ca490) from type (volatile-const-unsigned-char __xdata) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:4:        ARRAY_OP (0x375c9730) type (volatile-const-unsigned-char __xdata)
+/research/adversaries-noasm.c:4:          SYMBOL (L1:0 B5 p=0x375a7470 @ 0x376331c0) type (volatile-const-unsigned-char __xdata* fixed)
+/research/adversaries-noasm.c:4:          CONSTANT (0x375c9080) value = 0, 0x0, 0.000000 type (const-int literal)
+/research/adversaries-noasm.c:4:      LEFT_SHIFT (0x375cd010) type (unsigned-int fixed)
+/research/adversaries-noasm.c:4:        CAST (0x375cb960) from type (volatile-const-unsigned-char __xdata) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:4:          ARRAY_OP (0x375cc0c0) type (volatile-const-unsigned-char __xdata)
+/research/adversaries-noasm.c:4:            SYMBOL (L1:0 B5 p=0x375cafb0 @ 0x376331c0) type (volatile-const-unsigned-char __xdata* fixed)
+/research/adversaries-noasm.c:4:            CONSTANT (0x375cc2e0) value = 1, 0x1, 1.000000 type (const-int literal)
+/research/adversaries-noasm.c:4:        CONSTANT (0x375cb540) value = 8, 0x8, 8.000000 type (const-int literal)
+(null):0:}
+FUNCTION (_plain_pointer=0x37653420) type (unsigned-int fixed) args (const-unsigned-char __xdata* fixed)
+tree (0x37653380) not decorated
+(null):0:{ L2:0 B8
+(null):0:  DECLARE SYMBOL (L1:0 B7 p=0x37651700) type (const-unsigned-char __xdata* fixed)
+/research/adversaries-noasm.c:5:  RETURN (0x37651520) type (unsigned-int fixed)
+/research/adversaries-noasm.c:5:    OR (0x37651480) type (unsigned-int fixed)
+/research/adversaries-noasm.c:5:      CAST (0x3764fe50) from type (const-unsigned-char __xdata) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:5:        ARRAY_OP (0x3764fd10) type (const-unsigned-char __xdata)
+/research/adversaries-noasm.c:5:          SYMBOL (L1:0 B7 p=0x37649ff0 @ 0x3764d660) type (const-unsigned-char __xdata* fixed)
+/research/adversaries-noasm.c:5:          CONSTANT (0x3764fc70) value = 0, 0x0, 0.000000 type (const-int literal)
+/research/adversaries-noasm.c:5:      LEFT_SHIFT (0x376513e0) type (unsigned-int fixed)
+/research/adversaries-noasm.c:5:        CAST (0x37650eb0) from type (const-unsigned-char __xdata) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:5:          ARRAY_OP (0x37650d70) type (const-unsigned-char __xdata)
+/research/adversaries-noasm.c:5:            SYMBOL (L1:0 B7 p=0x37650840 @ 0x3764d660) type (const-unsigned-char __xdata* fixed)
+/research/adversaries-noasm.c:5:            CONSTANT (0x37650cd0) value = 1, 0x1, 1.000000 type (const-int literal)
+/research/adversaries-noasm.c:5:        CONSTANT (0x37651340) value = 8, 0x8, 8.000000 type (const-int literal)
+(null):0:}
+FUNCTION (_volatile_pointer=0x376740a0) type (unsigned-int fixed) args (const-unsigned-char __xdata* volatile fixed)
+tree (0x37674000) not decorated
+(null):0:{ L2:0 B10
+(null):0:  DECLARE SYMBOL (L1:0 B9 p=0x37672380) type (const-unsigned-char __xdata* volatile fixed)
+/research/adversaries-noasm.c:6:  RETURN (0x376721a0) type (unsigned-int fixed)
+/research/adversaries-noasm.c:6:    OR (0x37672100) type (unsigned-int fixed)
+/research/adversaries-noasm.c:6:      CAST (0x37670ad0) from type (const-unsigned-char __xdata) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:6:        ARRAY_OP (0x37670990) type (const-unsigned-char __xdata)
+/research/adversaries-noasm.c:6:          SYMBOL (L1:0 B9 p=0x37661d70 @ 0x3766e8a0) type (const-unsigned-char __xdata* volatile fixed)
+/research/adversaries-noasm.c:6:          CONSTANT (0x376708f0) value = 0, 0x0, 0.000000 type (const-int literal)
+/research/adversaries-noasm.c:6:      LEFT_SHIFT (0x37672060) type (unsigned-int fixed)
+/research/adversaries-noasm.c:6:        CAST (0x37671b30) from type (const-unsigned-char __xdata) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:6:          ARRAY_OP (0x376719f0) type (const-unsigned-char __xdata)
+/research/adversaries-noasm.c:6:            SYMBOL (L1:0 B9 p=0x376714c0 @ 0x3766e8a0) type (const-unsigned-char __xdata* volatile fixed)
+/research/adversaries-noasm.c:6:            CONSTANT (0x37671950) value = 1, 0x1, 1.000000 type (const-int literal)
+/research/adversaries-noasm.c:6:        CONSTANT (0x37671fc0) value = 8, 0x8, 8.000000 type (const-int literal)
+(null):0:}
+FUNCTION (_leak=0x376944c0) type (void fixed) args (unsigned-int __xdata* fixed)
+tree (0x37694420) not decorated
+(null):0:{ L2:0 B12
+(null):0:  DECLARE SYMBOL (L1:0 B11 p=0x37693a20) type (unsigned-int __xdata* fixed)
+/research/adversaries-noasm.c:8:  ASSIGN(=) (0x37693840) type (unsigned-int __xdata* __xdata)
+/research/adversaries-noasm.c:8:    SYMBOL (L0:0 B0 escape=0x37686420 @ 0x37502150) type (unsigned-int __xdata* __xdata)
+/research/adversaries-noasm.c:8:    SYMBOL (L1:0 B11 p=0x376937a0 @ 0x376912a0) type (unsigned-int __xdata* fixed)
+(null):0:}
+FUNCTION (_escaped_parameter=0x376a3ef0) type (unsigned-int fixed) args (unsigned-int fixed)
+tree (0x376a3e50) not decorated
+(null):0:{ L2:0 B14
+(null):0:  DECLARE SYMBOL (L1:0 B13 value=0x376a3190) type (unsigned-int fixed)
+/research/adversaries-noasm.c:9:  CALL (0x3769ece0) type (void fixed)
+/research/adversaries-noasm.c:9:    SYMBOL (L0:0 B0 leak=0x3769b720 @ 0x37690be0) type (void function   ( unsigned-int __xdata* fixed) fixed)
+/research/adversaries-noasm.c:9:    ADDRESS_OF (0x3769ec40) type (unsigned-int __xdata* fixed)
+/research/adversaries-noasm.c:9:      SYMBOL (L1:0 B13 value=0x3769e5f0 @ 0x376a04b0) type (unsigned-int fixed)
+/research/adversaries-noasm.c:9:  RETURN (0x3769f190) type (unsigned-int fixed)
+/research/adversaries-noasm.c:9:    SYMBOL (L1:0 B13 value=0x3769f0f0 @ 0x376a04b0) type (unsigned-int fixed)
+(null):0:}
+FUNCTION (_macro_hidden_volatile=0x376b7300) type (unsigned-int fixed) args (volatile-unsigned-int fixed)
+tree (0x376b7260) not decorated
+(null):0:{ L2:0 B16
+(null):0:  DECLARE SYMBOL (L1:0 B15 value=0x376b6860) type (volatile-unsigned-int fixed)
+/research/adversaries-noasm.c:11:  RETURN (0x376b6680) type (unsigned-int fixed)
+/research/adversaries-noasm.c:11:    CAST (0x376b65e0) from type (unsigned-int register) to type (unsigned-int fixed)
+/research/adversaries-noasm.c:11:      ADD (0x376b64a0) type (unsigned-int register)
+/research/adversaries-noasm.c:11:        SYMBOL (L1:0 B15 value=0x3764ed60 @ 0x376b3ef0) type (volatile-unsigned-int fixed)
+/research/adversaries-noasm.c:11:        CONSTANT (0x376b6400) value = 1, 0x1, 1.000000 type (const-int literal)
+(null):0:}

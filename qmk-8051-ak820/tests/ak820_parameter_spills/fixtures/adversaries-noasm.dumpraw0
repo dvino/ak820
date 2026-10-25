@@ -1,0 +1,333 @@
+
+----------------------------------------------------------------
+Basic Block _entry (df:1 bb:0 lvl:0:1): loopDepth=0
+
+successors: _return 
+predecessors: 
+dominators: _entry 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l2:s0:k0:d0:s0:b2)	 _entry($2) :
+/research/adversaries-noasm.c(l2:s0:k1:d0:s0:b2)		proc _normal [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( unsigned-int fixed) fixed}
+/research/adversaries-noasm.c(l2:s0:k2:d0:s0:b2)	_normal_value_10000_1 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = recv _normal [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( unsigned-int fixed) fixed}
+/research/adversaries-noasm.c(l2:s0:k3:d0:s0:b2)		iTemp0 [k3 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = @[_normal_value_10000_1 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l2:s0:k4:d0:s0:b2)		iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int register)iTemp0 [k3 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+/research/adversaries-noasm.c(l2:s0:k5:d0:s0:b2)		iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} + 0x1 {unsigned-int literal}
+/research/adversaries-noasm.c(l2:s0:k6:d0:s0:b2)		iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+/research/adversaries-noasm.c(l2:s0:k7:d0:s0:b2)		ret iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+
+----------------------------------------------------------------
+Basic Block _return (df:2 bb:1 lvl:0:1): loopDepth=0
+
+successors: 
+predecessors: _entry 
+dominators: _entry _return 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l2:s0:k8:d0:s0:b2)	 _return($1) :
+/research/adversaries-noasm.c(l2:s0:k9:d0:s0:b2)		eproc _normal [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( unsigned-int fixed) fixed}
+
+----------------------------------------------------------------
+Basic Block _entry (df:1 bb:0 lvl:0:1): loopDepth=0
+
+successors: _return 
+predecessors: 
+dominators: _entry 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l3:s0:k0:d0:s0:b4)	 _entry($2) :
+/research/adversaries-noasm.c(l3:s0:k1:d0:s0:b4)		proc _volatile_parameter [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-unsigned-int fixed) fixed}
+/research/adversaries-noasm.c(l3:s0:k2:d0:s0:b4)	_volatile_parameter_value_10000_3 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-unsigned-int fixed} = recv _volatile_parameter [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-unsigned-int fixed) fixed}
+/research/adversaries-noasm.c(l3:s0:k3:d0:s0:b4)		iTemp0 [k3 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-unsigned-int fixed} = @[_volatile_parameter_value_10000_3 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-unsigned-int fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l3:s0:k4:d0:s0:b4)		iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int register)iTemp0 [k3 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-unsigned-int fixed}
+/research/adversaries-noasm.c(l3:s0:k5:d0:s0:b4)		iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} + 0x1 {unsigned-int literal}
+/research/adversaries-noasm.c(l3:s0:k6:d0:s0:b4)		iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+/research/adversaries-noasm.c(l3:s0:k7:d0:s0:b4)		ret iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+
+----------------------------------------------------------------
+Basic Block _return (df:2 bb:1 lvl:0:1): loopDepth=0
+
+successors: 
+predecessors: _entry 
+dominators: _entry _return 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l3:s0:k8:d0:s0:b4)	 _return($1) :
+/research/adversaries-noasm.c(l3:s0:k9:d0:s0:b4)		eproc _volatile_parameter [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-unsigned-int fixed) fixed}
+
+----------------------------------------------------------------
+Basic Block _entry (df:1 bb:0 lvl:0:1): loopDepth=0
+
+successors: _return 
+predecessors: 
+dominators: _entry 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l4:s0:k0:d0:s0:b6)	 _entry($2) :
+/research/adversaries-noasm.c(l4:s0:k1:d0:s0:b6)		proc _volatile_pointee [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-const-unsigned-char __xdata* fixed) fixed}
+/research/adversaries-noasm.c(l4:s0:k2:d0:s0:b6)	_volatile_pointee_p_10000_5 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} = recv _volatile_pointee [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-const-unsigned-char __xdata* fixed) fixed}
+/research/adversaries-noasm.c(l4:s0:k3:d0:s0:b6)		iTemp0 [k3 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} = @[_volatile_pointee_p_10000_5 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l4:s0:k4:d0:s0:b6)		iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register} = @[iTemp0 [k3 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l4:s0:k5:d0:s0:b6)		iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register}
+/research/adversaries-noasm.c(l4:s0:k6:d0:s0:b6)		iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} = @[_volatile_pointee_p_10000_5 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l4:s0:k7:d0:s0:b6)		iTemp4 [k7 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} = iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} + 0x1 {const-int literal}
+/research/adversaries-noasm.c(l4:s0:k8:d0:s0:b6)		iTemp5 [k8 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register} = @[iTemp4 [k7 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-const-unsigned-char __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l4:s0:k9:d0:s0:b6)		iTemp6 [k9 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp5 [k8 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register}
+/research/adversaries-noasm.c(l4:s0:k10:d0:s0:b6)		iTemp7 [k10 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp6 [k9 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} << 0x8 {const-int literal}
+/research/adversaries-noasm.c(l4:s0:k11:d0:s0:b6)		iTemp8 [k11 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} | iTemp7 [k10 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+/research/adversaries-noasm.c(l4:s0:k12:d0:s0:b6)		ret iTemp8 [k11 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+
+----------------------------------------------------------------
+Basic Block _return (df:2 bb:1 lvl:0:1): loopDepth=0
+
+successors: 
+predecessors: _entry 
+dominators: _entry _return 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l4:s0:k13:d0:s0:b6)	 _return($1) :
+/research/adversaries-noasm.c(l4:s0:k14:d0:s0:b6)		eproc _volatile_pointee [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-const-unsigned-char __xdata* fixed) fixed}
+
+----------------------------------------------------------------
+Basic Block _entry (df:1 bb:0 lvl:0:1): loopDepth=0
+
+successors: _return 
+predecessors: 
+dominators: _entry 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l5:s0:k0:d0:s0:b8)	 _entry($2) :
+/research/adversaries-noasm.c(l5:s0:k1:d0:s0:b8)		proc _plain_pointer [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( const-unsigned-char __xdata* fixed) fixed}
+/research/adversaries-noasm.c(l5:s0:k2:d0:s0:b8)	_plain_pointer_p_10000_7 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} = recv _plain_pointer [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( const-unsigned-char __xdata* fixed) fixed}
+/research/adversaries-noasm.c(l5:s0:k3:d0:s0:b8)		iTemp0 [k3 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} = @[_plain_pointer_p_10000_7 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l5:s0:k4:d0:s0:b8)		iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register} = @[iTemp0 [k3 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l5:s0:k5:d0:s0:b8)		iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register}
+/research/adversaries-noasm.c(l5:s0:k6:d0:s0:b8)		iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} = @[_plain_pointer_p_10000_7 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l5:s0:k7:d0:s0:b8)		iTemp4 [k7 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} = iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} + 0x1 {const-int literal}
+/research/adversaries-noasm.c(l5:s0:k8:d0:s0:b8)		iTemp5 [k8 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register} = @[iTemp4 [k7 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l5:s0:k9:d0:s0:b8)		iTemp6 [k9 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp5 [k8 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register}
+/research/adversaries-noasm.c(l5:s0:k10:d0:s0:b8)		iTemp7 [k10 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp6 [k9 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} << 0x8 {const-int literal}
+/research/adversaries-noasm.c(l5:s0:k11:d0:s0:b8)		iTemp8 [k11 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} | iTemp7 [k10 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+/research/adversaries-noasm.c(l5:s0:k12:d0:s0:b8)		ret iTemp8 [k11 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+
+----------------------------------------------------------------
+Basic Block _return (df:2 bb:1 lvl:0:1): loopDepth=0
+
+successors: 
+predecessors: _entry 
+dominators: _entry _return 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l5:s0:k13:d0:s0:b8)	 _return($1) :
+/research/adversaries-noasm.c(l5:s0:k14:d0:s0:b8)		eproc _plain_pointer [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( const-unsigned-char __xdata* fixed) fixed}
+
+----------------------------------------------------------------
+Basic Block _entry (df:1 bb:0 lvl:0:1): loopDepth=0
+
+successors: _return 
+predecessors: 
+dominators: _entry 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l6:s0:k0:d0:s0:b10)	 _entry($2) :
+/research/adversaries-noasm.c(l6:s0:k1:d0:s0:b10)		proc _volatile_pointer [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( const-unsigned-char __xdata* volatile fixed) fixed}
+/research/adversaries-noasm.c(l6:s0:k2:d0:s0:b10)	_volatile_pointer_p_10000_9 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} = recv _volatile_pointer [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( const-unsigned-char __xdata* volatile fixed) fixed}
+/research/adversaries-noasm.c(l6:s0:k3:d0:s0:b10)		iTemp0 [k3 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} = @[_volatile_pointer_p_10000_9 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l6:s0:k4:d0:s0:b10)		iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register} = @[iTemp0 [k3 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l6:s0:k5:d0:s0:b10)		iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register}
+/research/adversaries-noasm.c(l6:s0:k6:d0:s0:b10)		iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} = @[_volatile_pointer_p_10000_9 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l6:s0:k7:d0:s0:b10)		iTemp4 [k7 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} = iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} + 0x1 {const-int literal}
+/research/adversaries-noasm.c(l6:s0:k8:d0:s0:b10)		iTemp5 [k8 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register} = @[iTemp4 [k7 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char __xdata* volatile fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l6:s0:k9:d0:s0:b10)		iTemp6 [k9 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp5 [k8 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{const-unsigned-char register}
+/research/adversaries-noasm.c(l6:s0:k10:d0:s0:b10)		iTemp7 [k10 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp6 [k9 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} << 0x8 {const-int literal}
+/research/adversaries-noasm.c(l6:s0:k11:d0:s0:b10)		iTemp8 [k11 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} | iTemp7 [k10 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+/research/adversaries-noasm.c(l6:s0:k12:d0:s0:b10)		ret iTemp8 [k11 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+
+----------------------------------------------------------------
+Basic Block _return (df:2 bb:1 lvl:0:1): loopDepth=0
+
+successors: 
+predecessors: _entry 
+dominators: _entry _return 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l6:s0:k13:d0:s0:b10)	 _return($1) :
+/research/adversaries-noasm.c(l6:s0:k14:d0:s0:b10)		eproc _volatile_pointer [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( const-unsigned-char __xdata* volatile fixed) fixed}
+
+----------------------------------------------------------------
+Basic Block _entry (df:1 bb:0 lvl:0:1): loopDepth=0
+
+successors: _return 
+predecessors: 
+dominators: _entry 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l8:s0:k0:d0:s0:b12)	 _entry($2) :
+/research/adversaries-noasm.c(l8:s0:k1:d0:s0:b12)		proc _leak [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{void function   ( unsigned-int __xdata* fixed) fixed}
+/research/adversaries-noasm.c(l8:s0:k2:d0:s0:b12)	_leak_p_10000_11 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* fixed} = recv _leak [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{void function   ( unsigned-int __xdata* fixed) fixed}
+/research/adversaries-noasm.c(l8:s0:k3:d0:s0:b12)		iTemp0 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* fixed} = @[_leak_p_10000_11 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l8:s0:k4:d0:s0:b12)		iTemp1 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* fixed} := iTemp0 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* fixed}
+/research/adversaries-noasm.c(l8:s0:k5:d0:s0:b12)		_escape [k3 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* __xdata} := iTemp1 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* fixed}
+
+----------------------------------------------------------------
+Basic Block _return (df:2 bb:1 lvl:0:1): loopDepth=0
+
+successors: 
+predecessors: _entry 
+dominators: _entry _return 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l8:s0:k6:d0:s0:b12)	 _return($1) :
+/research/adversaries-noasm.c(l8:s0:k7:d0:s0:b12)		eproc _leak [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{void function   ( unsigned-int __xdata* fixed) fixed}
+
+----------------------------------------------------------------
+Basic Block _entry (df:1 bb:0 lvl:0:1): loopDepth=0
+
+successors: _return 
+predecessors: 
+dominators: _entry 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l9:s0:k0:d0:s0:b14)	 _entry($2) :
+/research/adversaries-noasm.c(l9:s0:k1:d0:s0:b14)		proc _escaped_parameter [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( unsigned-int fixed) fixed}
+/research/adversaries-noasm.c(l9:s0:k2:d0:s0:b14)	_escaped_parameter_value_10000_13 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = recv _escaped_parameter [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( unsigned-int fixed) fixed}
+/research/adversaries-noasm.c(l9:s0:k3:d0:s0:b14)		iTemp0 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* fixed} = &[_escaped_parameter_value_10000_13 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} , 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l9:s0:k4:d0:s0:b14)		send iTemp0 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int __xdata* fixed}{argreg = 1}
+/research/adversaries-noasm.c(l9:s0:k5:d0:s0:b14)		iTemp1 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{void fixed} = call _leak [k3 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{void function   ( unsigned-int __xdata* fixed) fixed}
+/research/adversaries-noasm.c(l9:s0:k6:d0:s0:b14)		iTemp2 [k7 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = @[_escaped_parameter_value_10000_13 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l9:s0:k7:d0:s0:b14)		ret iTemp2 [k7 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+
+----------------------------------------------------------------
+Basic Block _return (df:2 bb:1 lvl:0:1): loopDepth=0
+
+successors: 
+predecessors: _entry 
+dominators: _entry _return 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l9:s0:k8:d0:s0:b14)	 _return($1) :
+/research/adversaries-noasm.c(l9:s0:k9:d0:s0:b14)		eproc _escaped_parameter [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( unsigned-int fixed) fixed}
+
+----------------------------------------------------------------
+Basic Block _entry (df:1 bb:0 lvl:0:1): loopDepth=0
+
+successors: _return 
+predecessors: 
+dominators: _entry 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l11:s0:k0:d0:s0:b16)	 _entry($2) :
+/research/adversaries-noasm.c(l11:s0:k1:d0:s0:b16)		proc _macro_hidden_volatile [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-unsigned-int fixed) fixed}
+/research/adversaries-noasm.c(l11:s0:k2:d0:s0:b16)	_macro_hidden_volatile_value_10000_15 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-unsigned-int fixed} = recv _macro_hidden_volatile [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-unsigned-int fixed) fixed}
+/research/adversaries-noasm.c(l11:s0:k3:d0:s0:b16)		iTemp0 [k3 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-unsigned-int fixed} = @[_macro_hidden_volatile_value_10000_15 [k2 lr0:0 so:0]{ ia1 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-unsigned-int fixed} + 0x0 {const-unsigned-char literal}]
+/research/adversaries-noasm.c(l11:s0:k4:d0:s0:b16)		iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int register)iTemp0 [k3 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{volatile-unsigned-int fixed}
+/research/adversaries-noasm.c(l11:s0:k5:d0:s0:b16)		iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = iTemp1 [k4 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} + 0x1 {unsigned-int literal}
+/research/adversaries-noasm.c(l11:s0:k6:d0:s0:b16)		iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed} = (unsigned-int fixed)iTemp2 [k5 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+/research/adversaries-noasm.c(l11:s0:k7:d0:s0:b16)		ret iTemp3 [k6 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int fixed}
+
+----------------------------------------------------------------
+Basic Block _return (df:2 bb:1 lvl:0:1): loopDepth=0
+
+successors: 
+predecessors: _entry 
+dominators: _entry _return 
+
+defines bitVector :
+local defines bitVector :
+pointers Set bitvector :
+inExprs:
+outExprs:
+killedExprs:
+----------------------------------------------------------------
+/research/adversaries-noasm.c(l11:s0:k8:d0:s0:b16)	 _return($1) :
+/research/adversaries-noasm.c(l11:s0:k9:d0:s0:b16)		eproc _macro_hidden_volatile [k1 lr0:0 so:0]{ ia0 a2p0 re0 rm0 nos0 ru0 dp0 oe0 sdr0 myp0}{unsigned-int function   ( volatile-unsigned-int fixed) fixed}

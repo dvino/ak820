@@ -13,6 +13,6 @@ with tempfile.TemporaryDirectory(prefix='ak820-settings-') as tmp:
             command += ['-DAK820_COMPACT_AUTOSHIFT']
         command += ['-I', str(ROOT / 'keyboards/ajazz/ak820'),
                     str(ROOT / 'util/test_ak820_settings.c'),
-                    str(ROOT / 'keyboards/ajazz/ak820/ak820_settings.c'), '-o', str(binary)]
+                    str(ROOT / 'keyboards/ajazz/ak820/ak820_settings.c'), str(ROOT / 'keyboards/ajazz/ak820/ak820_crc.c'), '-o', str(binary)]
         subprocess.run(command, check=True)
         subprocess.run([str(binary)], check=True)

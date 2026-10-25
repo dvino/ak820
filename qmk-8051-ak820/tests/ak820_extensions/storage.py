@@ -7,7 +7,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 
 def function(source, name):
-    match = re.search(r'^(?:int|bool) ' + name + r'\([^\n]*\) \{', source, re.M)
+    match = re.search(r'^(?:static )?(?:int|bool|uint16_t) ' + name + r'\([^\n]*\) \{', source, re.M)
     if not match:
         raise RuntimeError('Missing production function: ' + name)
     end = source.index('{', match.start()) + 1
@@ -25,14 +25,17 @@ for name in ('vial_tap_dance_entry_t', 'vial_key_override_entry_t'):
         raise RuntimeError('Missing production type: ' + name)
     types.append(match.group())
 dynamic = (ROOT / 'quantum/dynamic_keymap.c').read_text()
-production = []
+production = [dynamic[dynamic.index('/* TD and KO retain'):dynamic.index('#ifdef VIAL_TAP_DANCE_ENABLE\n#ifdef AK820_COMPACT_TAP_DANCE\nint dynamic_keymap_get_tap_dance')]]
 for module in ('tap_dance', 'key_override'):
     source = (ROOT / f'keyboards/ajazz/ak820/ak820_{module}.c').read_text()
+    validator = function(source, f'ak820_{module}_valid')
     if module == 'key_override':
-        production += re.findall(r'^#define (?:basic\([^\n]*|ACTIVATIONS [^\n]*)', source, re.M)
-    production.append(function(source, f'ak820_{module}_valid'))
+        validator = '\n'.join(re.findall(r'^#define (?:basic\([^\n]*|ACTIVATIONS [^\n]*)', source, re.M)) + '\n' + validator
+    production.insert(0, '#ifdef AK820_COMPACT_' + module.upper() + '\n' + validator + '\n#endif')
+    production.append('#ifdef AK820_COMPACT_' + module.upper())
     for operation in ('get', 'set'):
         production.append(function(dynamic, f'dynamic_keymap_{operation}_{module}'))
+    production.append('#endif')
 
 fixture = r'''
 #include <assert.h>
@@ -97,19 +100,34 @@ cases = r'''
 } while(0)
 int main(void) {
  uint16_t endian=1; assert(*(uint8_t *)&endian==1);
+#ifdef AK820_COMPACT_TAP_DANCE
  vial_tap_dance_entry_t td={4,0x0105,224,0,200}, td_bad=td; td_bad.on_tap=1;
+#endif
+#ifdef AK820_COMPACT_KEY_OVERRIDE
  vial_key_override_entry_t ko={4,0x0105,1,2,0,2,0x87}, ko_bad=ko; ko_bad.trigger=1;
+#endif
+#ifdef AK820_COMPACT_TAP_DANCE
  TEST(vial_tap_dance_entry_t,tap_dance,AK820_TAP_DANCE_ADDR,td,td_bad);
+#endif
+#ifdef AK820_COMPACT_KEY_OVERRIDE
  TEST(vial_key_override_entry_t,key_override,AK820_KEY_OVERRIDE_ADDR,ko,ko_bad);
+#endif
  const uint16_t invalid[]={1,2,3,165,223,232,255,0x2004,0x5700,0xffff};
  for(unsigned i=0;i<sizeof invalid/sizeof *invalid;++i) {
+#ifdef AK820_COMPACT_TAP_DANCE
   td_bad=td;td_bad.on_tap=invalid[i];reset();assert(dynamic_keymap_set_tap_dance(0,&td_bad)==-1);assert(!clears&&!writes&&!flushes);
+#endif
+#ifdef AK820_COMPACT_KEY_OVERRIDE
   ko_bad=ko;ko_bad.replacement=invalid[i];reset();assert(dynamic_keymap_set_key_override(0,&ko_bad)==-1);assert(!clears&&!writes&&!flushes);
+#endif
  }
+#ifdef AK820_COMPACT_TAP_DANCE
  for(unsigned field=0;field<5;++field) {
   td_bad=td; ((uint16_t *)&td_bad)[field]=field==4?32768:0x5700;
   reset();assert(dynamic_keymap_set_tap_dance(0,&td_bad)==-1);assert(!clears&&!writes&&!flushes);
  }
+#endif
+#ifdef AK820_COMPACT_KEY_OVERRIDE
  for(unsigned field=0;field<4;++field) {
   ko_bad=ko;
   if(field==0)ko_bad.trigger=0x0104;
@@ -118,12 +136,17 @@ int main(void) {
   if(field==3)ko_bad.options=0x80;
   reset();assert(dynamic_keymap_set_key_override(0,&ko_bad)==-1);assert(!clears&&!writes&&!flushes);
  }
+#endif
  puts("compact TD/KO production storage: 8 padded slots, neighbors, validation, sanitization and NVM failure PASS (host model; no hardware durability)");
  return 0;
 }
 '''
-with tempfile.TemporaryDirectory(prefix='ak820-extension-storage-') as temp:
-    work = Path(temp)
-    (work / 'storage.c').write_text(fixture + '\n'.join(types + production) + cases)
-    subprocess.run(['cc','-std=c11','-O1','-g','-Wall','-Wextra','-Werror','-Wno-int-to-pointer-cast','-fsanitize=undefined','-fno-sanitize-recover=undefined','-I'+str(ROOT/'keyboards/ajazz/ak820'),str(work/'storage.c'),'-o',str(work/'storage')],check=True)
-    subprocess.run([str(work/'storage')],check=True)
+for modules in (('TAP_DANCE', 'KEY_OVERRIDE'), ('TAP_DANCE',), ('KEY_OVERRIDE',)):
+    with tempfile.TemporaryDirectory(prefix='ak820-extension-storage-') as temp:
+        work = Path(temp)
+        (work / 'storage.c').write_text(fixture + '\n'.join(types + production) + cases)
+        subprocess.run(['cc','-std=c11','-O1','-g','-Wall','-Wextra','-Werror','-Wno-int-to-pointer-cast','-fsanitize=undefined','-fno-sanitize-recover=undefined',
+                        *('-DAK820_COMPACT_' + module for module in modules),
+                        '-I'+str(ROOT/'keyboards/ajazz/ak820'),str(work/'storage.c'),'-o',str(work/'storage')],check=True)
+        print('Enabled: ' + ', '.join(modules), flush=True)
+        subprocess.run([str(work/'storage')],check=True)

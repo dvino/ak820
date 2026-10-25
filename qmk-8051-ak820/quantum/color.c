@@ -45,28 +45,37 @@ static uint8_t mulhi8(uint8_t x, uint8_t y) {
 }
 #endif
 
-#ifdef AK820_BOARD
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+/* Capture each needed HSV component before conversion or output writes. */
+void hsv_to_rgb_into(const HSV __xdata *input, bool use_cie, RGB __xdata *output) {
+#elif defined(AK820_BOARD)
 void hsv_to_rgb_into(HSV hsv, bool use_cie, RGB __xdata *output) {
 #else
 RGB hsv_to_rgb_impl(HSV hsv, bool use_cie) {
 #endif
     RGB      rgb;
     uint8_t  region, remainder, p, q, t;
-    uint8_t h, s, v;
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+    uint8_t h;
+    uint8_t s = input->s, v = input->v;
+#else
+    uint8_t h;
+    uint8_t s = hsv.s, v = hsv.v;
+#endif
 
-    if (hsv.s == 0) {
+    if (s == 0) {
 #ifdef USE_CIE1931_CURVE
         if (use_cie) {
-            rgb.r = rgb.g = rgb.b = pgm_read_byte(&CIE1931_CURVE[CIE_INDEX(hsv.v)]);
+            rgb.r = rgb.g = rgb.b = pgm_read_byte(&CIE1931_CURVE[CIE_INDEX(v)]);
         } else {
-            rgb.r = hsv.v;
-            rgb.g = hsv.v;
-            rgb.b = hsv.v;
+            rgb.r = v;
+            rgb.g = v;
+            rgb.b = v;
         }
 #else
-        rgb.r = hsv.v;
-        rgb.g = hsv.v;
-        rgb.b = hsv.v;
+        rgb.r = v;
+        rgb.g = v;
+        rgb.b = v;
 #endif
 #ifdef AK820_BOARD
         *output = rgb;
@@ -76,16 +85,15 @@ RGB hsv_to_rgb_impl(HSV hsv, bool use_cie) {
 #endif
     }
 
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+    h = input->h;
+#else
     h = hsv.h;
-    s = hsv.s;
+#endif
 #ifdef USE_CIE1931_CURVE
     if (use_cie) {
-        v = pgm_read_byte(&CIE1931_CURVE[CIE_INDEX(hsv.v)]);
-    } else {
-        v = hsv.v;
+        v = pgm_read_byte(&CIE1931_CURVE[CIE_INDEX(v)]);
     }
-#else
-    v = hsv.v;
 #endif
 
     uint16_t scaled = (uint16_t)h * 6;
@@ -142,7 +150,11 @@ RGB hsv_to_rgb_impl(HSV hsv, bool use_cie) {
  * typed output directly, avoiding SDCC's three-byte generic return pointer. */
 RGB hsv_to_rgb_impl(HSV hsv, bool use_cie) {
     RGB rgb;
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+    hsv_to_rgb_into(&hsv, use_cie, &rgb);
+#else
     hsv_to_rgb_into(hsv, use_cie, &rgb);
+#endif
     return rgb;
 }
 #endif

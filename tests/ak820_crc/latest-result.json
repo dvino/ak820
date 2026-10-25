@@ -1,0 +1,37 @@
+{
+  "result": "PASS",
+  "compiler": "SDCC : mcs51/z80/z180/r2k/r2ka/r3ka/r4k/r5k/r6k/sm83/tlcs90/ez80/z80n/r800/ds390/pic16/pic14/TININative/ds400/hc08/s08/stm8/pdk13/pdk14/pdk15/mos6502/mos65c02/f8/f8l TD- 4.6.0 #16555 (Linux)",
+  "crc_compile_flags": [
+    "-mmcs51",
+    "--model-large"
+  ],
+  "harness_compile_flags": [
+    "-mmcs51",
+    "--model-large"
+  ],
+  "cpu_command": [
+    "s51",
+    "-t",
+    "8051",
+    "-c",
+    "-",
+    "cpu.ihx"
+  ],
+  "cpu_stdin": "step 50000000\ndump xram 0x2000 0x2003\nquit\n",
+  "expected_xram_2000": "a5 00 04 a5",
+  "completed_differential_cases": 1024,
+  "abi_check": "PASS",
+  "buffer_canaries": "PASS",
+  "native_exhaustive_state_byte_transitions": 16777216,
+  "native_random_buffers": 25600,
+  "crc_instruction_bytes": 52,
+  "cpu_image_sha256": "cb8db7ef8a5481eec38d30293d03f65de5c99ab51b73d5b1bd1a95c2a68537b9",
+  "cpu_log_sha256": "3f099909cde137fadb1136d7344d54e3fbdf0d899126b3029a906a175e3673e6",
+  "source_sha256": {
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_crc.c": "22c3d9b55c33076c2d3001e393eae073ef014d4d2b0e444c75bf6662b4f69eae",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_crc.h": "adaa89aa17629e9e255e6ec91daff136c38d76a3a7480bc7f1dea69248537e43",
+    "tests/ak820_crc/cpu.c": "2ea47e15b22eefafac908da89bea4e87f46fe037c66754ef1f5dde17f31d15b4",
+    "tests/ak820_crc/native.c": "8c7d906c540bd202536a6d6645d61739f1dd2a8794d61c7c5ccdfdc2af69934a"
+  },
+  "device_tested": false
+}

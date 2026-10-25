@@ -14,7 +14,7 @@ fixture=r'''
 #include <string.h>
 #include <stdio.h>
 #define AK820_STATE_MEM
-#define MATRIX_ROWS 2
+#define MATRIX_ROWS 16
 #define MATRIX_COLS 8
 #define VIAL_TAP_DANCE_ENTRIES 8
 #define KC_A 4
@@ -44,7 +44,7 @@ static void reenter(void) {
     /* Model a nested callback with a new pending gesture. The outer dispatch
      * must keep its work slot and the new gesture must finish later. */
     td_slots[1].source=1;td_slots[1].state=TD_DOWN+1;
-    td_entry=fixture[1];td_wait=&td_slots[1];td_map[1]=1;
+    td_entry=fixture[1];td_wait=&td_slots[1];td_map_set(1,1);
     td_finish(false);
 }
 static uint16_t clock_now;
@@ -52,6 +52,10 @@ static void event(unsigned id,bool down,uint16_t code){keyrecord_t r={.event={.k
 static void fresh(void){ak820_tap_dance_cancel();memset(refs,0,sizeof refs);memset(downs,0,sizeof downs);memset(fixture,0,sizeof fixture);clock_now=100;cancel_on_down=false;reenter_on_down=false;fixture[0]=(vial_tap_dance_entry_t){4,5,6,7,200};fixture[1]=fixture[0];}
 static void expire(void){clock_now+=201;ak820_tap_dance_task(clock_now);}
 int main(void){
+const uint8_t expected_pattern[9]={0,1,2,3,4,5,6,7,8};uint8_t expected[TD_SOURCES];
+assert(sizeof(td_map)==(TD_SOURCES+1)/2);
+for(unsigned i=0;i<TD_SOURCES;i++){expected[i]=expected_pattern[i%9];td_map_set(i,expected[i]);}
+for(unsigned i=0;i<TD_SOURCES;i++)assert(td_map_get(i)==expected[i]);
 fresh();event(0,1,0x5700);event(0,0,0x5700);assert(!downs[4]);expire();assert(downs[4]==1&&!refs[4]);
 fresh();event(0,1,0x5700);expire();assert(refs[5]==1);event(0,0,4);assert(!refs[5]);
 fresh();event(0,1,0x5700);event(0,0,0x5700);event(0,1,0x5700);event(0,0,0x5700);expire();assert(downs[6]==1&&!refs[6]);

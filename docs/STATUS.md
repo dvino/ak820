@@ -12,6 +12,10 @@ and [asset checks](../audits/rc6/alpha3-release-20261024/published-assets-check.
 The duplicate tag run was cancelled after publication from that successful main
 run; it was not a failed firmware or installer test.
 
+## Whole-program compression
+
+The current diagnostic image 22 uses 45,461 CODE and 2,976 XRAM bytes. Main CODE overflows by 5,108 bytes; the conditional stack estimate is 165/156. The read-block kernel is enabled and IRAM overlay is disabled. The separate experiment 21c measured 169 stack bytes; combining the changes requires fresh proof. Full configured regressions remain blocked by CODE and the incomplete OEM IRQ contract. No device or release change was made. [Details](MAXIMUM-FUNCTIONALITY-STATUS.md).
+
 ## Companion-design beta
 
 `v0.6.0-beta.1` is being prepared as the nine-profile firmware baseline for companion design. The work source bundle is approved; native Windows/Linux package acceptance and publication are pending. The beta release is the first installable firmware baseline for the companion and includes standalone Windows and Linux x86_64 installers with SHA256 files and bilingual installation instructions. The installers target the exact `work` image (`652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880`, 40,386 CODE bytes, 2,676 XRAM bytes; stack bound 162/165). The other eight profiles remain catalog candidates and are not included in the installers. Beta firmware has not been tested on hardware. The installed alpha.3 firmware remains unchanged. The [acceptance record](../audits/rc6/beta1-release-20261025/acceptance.md) records the source integration, exact assets and independent review.

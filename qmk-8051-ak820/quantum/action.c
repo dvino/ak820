@@ -200,12 +200,57 @@ if (QS_oneshot_timeout > 0) {
 }
 
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+#if defined(__SDCC_MODEL_LARGE)
+_Static_assert(sizeof(keyevent_t) == 6, "event snapshot ABI");
+void ak820_action_exec(const keyevent_t __xdata *event) __naked {
+    event;
+    __asm
+        movx a,@dptr
+        mov r2,a
+        inc dptr
+        movx a,@dptr
+        mov r3,a
+        inc dptr
+        movx a,@dptr
+        mov r4,a
+        inc dptr
+        movx a,@dptr
+        mov r5,a
+        inc dptr
+        movx a,@dptr
+        mov r6,a
+        inc dptr
+        movx a,@dptr
+        mov r7,a
+        mov dptr,#_action_exec_PARM_1
+        mov a,r2
+        movx @dptr,a
+        inc dptr
+        mov a,r3
+        movx @dptr,a
+        inc dptr
+        mov a,r4
+        movx @dptr,a
+        inc dptr
+        mov a,r5
+        movx @dptr,a
+        inc dptr
+        mov a,r6
+        movx @dptr,a
+        inc dptr
+        mov a,r7
+        movx @dptr,a
+        ljmp _action_exec
+    __endasm;
+}
+#else
 void ak820_action_exec(const keyevent_t __xdata *event) {
     /* A named snapshot also avoids SDCC bug #4054: passing *event directly
      * by value dereferences it twice. Freeze it before any event callbacks. */
     keyevent_t snapshot = *event;
     action_exec(snapshot);
 }
+#endif
 #endif
 
 #ifdef SWAP_HANDS_ENABLE
@@ -391,6 +436,9 @@ void process_record(keyrecord_t AK820_RECORD_MEM *record_argument) {
 #endif
 }
 
+/* Used by the compact direct dispatcher before its definition below. */
+void register_mouse(uint8_t mouse_keycode, bool pressed);
+
 void process_record_handler(keyrecord_t AK820_RECORD_MEM *record_argument) {
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
     /* All retained AK820 records are model-large XDATA objects. The
@@ -399,6 +447,93 @@ void process_record_handler(keyrecord_t AK820_RECORD_MEM *record_argument) {
 #else
     keyrecord_t *record = record_argument;
 #endif
+#if defined(AK820_BOARD) && defined(LAYER_STATE_8BIT) && defined(NO_DEBUG) && defined(AK820_COMPACT_TAPPING) && defined(NO_ACTION_TAPPING) && defined(NO_ACTION_ONESHOT) && !defined(NO_ACTION_LAYER) && !defined(MAGIC_KEYCODE_ENABLE) && !defined(LEGACY_MAGIC_HANDLING) && !defined(SWAP_HANDS_ENABLE) && !defined(NO_ACTION_TAPPING_MODTAP_MODS) && !defined(NO_ACTION_TAPPING_TAP_TOGGLE_MO) && defined(EXTRAKEY_ENABLE) && (defined(COMBO_ENABLE) || defined(REPEAT_KEY_ENABLE))
+    /* The compact engines have already consumed MT/LT and One Shot. Decode
+     * the original keycode directly, retaining every leaf call and its order.
+     * Keep the raw action API below for callers with explicit action codes. */
+
+    uint16_t keycode = record->keycode;
+    if (!keycode) keycode = ak820_resolve_key(AK820_KEYPOS_VALUE(record->event.key), record->event.pressed);
+    uint8_t hi = keycode >> 8, lo = keycode, mods = 0, group, layer;
+    bool pressed = record->event.pressed;
+    if (!hi) {
+        if ((lo >= KC_A && lo <= KC_EXSEL) || (lo >= KC_LEFT_CTRL && lo <= KC_RIGHT_GUI) || lo == KC_TRANSPARENT) goto ordinary;
+        if (lo >= KC_SYSTEM_POWER && lo <= KC_LAUNCHPAD) {
+            if (record->keycode >= KC_SYSTEM_POWER && record->keycode <= KC_LAUNCHPAD) {
+                owned_usage_key((uint8_t)record->keycode, pressed);
+            } else if (lo <= KC_SYSTEM_WAKE) {
+                host_system_send(pressed ? KEYCODE2SYSTEM(lo) : 0);
+            } else {
+                host_consumer_send(pressed ? KEYCODE2CONSUMER(lo) : 0);
+            }
+            return;
+        }
+        if (lo >= KC_MS_UP && lo <= KC_MS_ACCEL2) register_mouse(lo, pressed);
+        return;
+    }
+    if (hi < 0x20) {
+        mods = hi & 15;
+        if (hi & 16) mods <<= 4;
+        goto ordinary;
+    }
+    if (hi < 0x50) return;
+    if (hi < 0x52) {
+        layer = ((hi & 1) << 3) | (lo >> 5);
+        mods = lo & 31;
+        if (mods & 16) mods <<= 4;
+        if (pressed) {
+            layer_hold_on(layer);
+            register_mods(mods);
+        } else {
+            unregister_mods(mods);
+            layer_hold_off(layer);
+        }
+        goto led;
+    }
+    if (hi != 0x52) return;
+    layer = lo & 31;
+    group = lo >> 5;
+    switch (group) {
+        case 0:
+            if (pressed) layer_state_set(layer < 8 ? (uint8_t)(1u << layer) : 0);
+            break;
+        case 1:
+            if (pressed) layer_hold_on(layer); else layer_hold_off(layer);
+            return;
+        case 2:
+            if (!pressed) default_layer_set(layer < 8 ? (uint8_t)(1u << layer) : 0);
+            break;
+        case 3:
+        case 6:
+            if (!pressed) layer_xor(layer < 8 ? (uint8_t)(1u << layer) : 0);
+            break;
+        case 5:
+            mods = layer & 15;
+            if (layer & 16) mods <<= 4;
+            lo = 0;
+            goto ordinary;
+        default:
+            return;
+    }
+led:
+    led_set(host_keyboard_leds());
+    return;
+ordinary:
+    if (pressed) {
+        if (mods) {
+            if (IS_MODIFIER_KEYCODE(lo) || lo == KC_NO) add_owned_mods(mods); else add_owned_weak_mods(mods);
+            send_keyboard_report();
+        }
+        register_code(lo);
+    } else {
+        unregister_code(lo);
+        if (mods) {
+            if (IS_MODIFIER_KEYCODE(lo) || lo == KC_NO) del_owned_mods(mods); else del_owned_weak_mods(mods);
+            send_keyboard_report();
+        }
+    }
+
+#else
     //dprint("process_record_handler");
 #if defined(COMBO_ENABLE) || defined(REPEAT_KEY_ENABLE)
     action_t action;
@@ -427,6 +562,7 @@ void process_record_handler(keyrecord_t AK820_RECORD_MEM *record_argument) {
     //ac_dprintf("raw action:%x\n",*((uint16_t *)&action));
 
     process_action(record, action);
+#endif
 }
 
 /**

@@ -18,12 +18,13 @@ import tempfile
 from ak820_linked_inventory import ihx_bytes, listing, page_eligible
 from ak820_outline_audit import LISTED
 
-ALGORITHM = 'foreground-short-transfers-v1'
+ALGORITHM = 'foreground-short-transfers-v2'
 # Keep hardware, boot, NVM, IRQ and USB control modules outside this scope.
 # color.c contains handwritten inline assembly and is explicitly excluded.
 FOREGROUND = frozenset({
     'ak820_tapping.asm', 'ak820_combo.asm', 'ak820_oneshot.asm',
-    'ak820_macro.asm', 'keyboards/ajazz/ak820/ak820_rgb.asm',
+    'ak820_macro.asm', 'ak820_settings.asm', 'ak820_tap_dance.asm',
+    'ak820_key_override.asm', 'keyboards/ajazz/ak820/ak820_rgb.asm',
     'protocol/report.asm', 'protocol/host.asm',
 })
 SYMBOL = re.compile(r'_[A-Za-z_$][\w$]*|\d+\$')
@@ -218,9 +219,9 @@ def select(baseline, symbols):
         for line, row in module.instructions.items():
             if row.opcode not in ('lcall', 'ljmp') or row.area != 'CSEG':
                 continue
-            if row.function.startswith('ak820_outline_') or 'ak820_outline_' in row.operand:
-                excluded['outline'] += 1
-                continue
+            # Outliner calls use the same immutable source identity and full
+            # relocated-edge checks as compiler calls. Scope belongs to the
+            # caller: a helper name never admits an excluded module/function.
             if not row.function or row.function in unsafe:
                 excluded['computed_or_pc_relative_function'] += 1
                 continue

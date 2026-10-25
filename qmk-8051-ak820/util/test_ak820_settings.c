@@ -50,6 +50,37 @@ int main(void) {
     v[0] = 55; assert(!ak820_settings_set(2, v, 2) && writes == 1 && clears == 1);
     assert(storage[AK820_SETTINGS_ADDR - 1] == 0xA5 && storage[AK820_SETTINGS_ADDR + AK820_SETTINGS_SIZE] == 0xA5);
     ak820_settings_init(); assert(ak820_settings_combo_term() == 55 && healthy);
+    /* Exhaust incoming values; accepted fields must pass startup validation.
+     * Invalid values must not cancel owners or enter persistence. */
+    {
+        static const uint8_t ids[] = {1, 2, 7, 18, 19,
+#ifdef AK820_COMPACT_AUTOSHIFT
+            4,
+#endif
+        };
+        unsigned field;
+        for (field = 0; field < sizeof(ids); ++field) {
+            unsigned long value;
+            for (value = 0; value <= 65535; ++value) {
+                unsigned before_writes = writes, before_clears = clears;
+                bool accepted = ids[field] == 1 ? (value & 255) < 16 :
+                    (ids[field] == 18 || ids[field] == 19) ? value <= 100 :
+                    value >= 1 && value <= 1000;
+                v[0] = value; v[1] = value >> 8;
+                assert(ak820_settings_set(ids[field], v, 2) == (accepted ? 0 : -1));
+                if (!accepted) {
+                    assert(writes == before_writes && clears == before_clears);
+                } else {
+                    assert(!ak820_settings_get(ids[field], out, sizeof(out)));
+                    assert(out[0] == v[0] && (ids[field] == 1 || out[1] == v[1]));
+                    ak820_settings_init();
+                    assert(healthy);
+                }
+            }
+        }
+    }
+    v[0] = 55; v[1] = 0;
+    assert(!ak820_settings_set(2, v, 2));
     fail_write = true; v[0] = 56;
     assert(ak820_settings_set(2, v, 2) == -1 && ak820_settings_combo_term() == 55);
     assert(ak820_settings_reset() == -1);

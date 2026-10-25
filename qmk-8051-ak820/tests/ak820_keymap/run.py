@@ -39,7 +39,7 @@ def main():
                    '-DEEPROM_CUSTOM', '-include', str(board / 'config.h'),
                    '-I' + str(board), '-I' + str(ROOT / 'platforms'),
                    '-I' + str(ROOT / 'drivers/eeprom'), str(work / 'host.c'),
-                   str(board / 'ak820_nvm.c'), str(board / 'ak820_macro.c'),
+                   str(board / 'ak820_nvm.c'), str(board / 'ak820_crc.c'), str(board / 'ak820_macro.c'),
                    str(ROOT / 'drivers/eeprom/eeprom_driver.c'), '-o', str(work / 'host')]
         subprocess.run(command, check=True)
         env = os.environ.copy()

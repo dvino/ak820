@@ -165,6 +165,8 @@ class Fixture:
         else:
             assert address % 64 == 0 and pointer % 64 == 0, event
             assert 0x400 <= pointer <= 0xFC0, event
+            if "_ak820_flash_stage" in self.fw.symbols:
+                assert pointer == self.fw.address("_ak820_flash_stage") == 0x400, event
             data, old = self.read("xram", pointer, 64), self.read("rom", address, 64)
             if self.partial_at == len(self.operations):
                 # Accepted command with bad physical readback: preserve a
@@ -309,10 +311,14 @@ def bounds(build, simulator, output):
                 assert fixture.read("sfr", 0x82, 1) == [0] and not fixture.operations
                 rejected.append([symbol, address])
         for address in (0xC700, 0xEF40):
+            if "_ak820_flash_stage" in fixture.fw.symbols:
+                fixture.write("_ak820_flash_stage", [0xDE] * 64)
             fixture.call("_ak820_flash_erase", address)
             fixture.call("_ak820_flash_program_page", address)
             assert fixture.read("sfr", 0x82, 1) == [1]
             assert fixture.read("rom", address, 64) == pattern
+            if "_ak820_flash_stage" in fixture.fw.symbols:
+                assert fixture.symbol("_ak820_flash_stage", 64) == pattern
             assert fixture.read("sfr", 0xA8, 1) == [0x80]
             assert fixture.read("sfr", 0xB1, 1)[0] & 8 == 0
         return fixture.finish(dict(rejected=rejected, aligned_dptr_checked_at_opcode=True))

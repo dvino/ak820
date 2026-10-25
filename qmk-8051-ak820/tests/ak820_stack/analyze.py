@@ -339,6 +339,50 @@ class Analyzer:
         targets += [self.code[low+i] | self.code[high+i] << 8 for i in range(maximum+1)]
         return targets
 
+    def guarded_pop_split_dispatch(self, pc):
+        """Prove the complete byte guard, two POPs and PC-relative split table.
+
+        Recognition starts only at CLR C. Neither a dispatch-body entry nor its
+        JMP acquires the guard's range fact. POP destinations must be registers,
+        preserving carry and the direct IRAM index until both MOVC reads.
+        """
+        lengths = (1,2,2,2,2,2,3,2,2,2,1,2,2,2,1,2,1,1)
+        rows, addresses, at = [], [], pc
+        for length in lengths:
+            row = self.peek_instruction(at)
+            if row is None or len(row) != length:
+                return None
+            rows.append(row); addresses.append(at); at += length
+        r = rows
+        if not (r[0] == b'\xc3' and r[1][0] == 0x74 and r[2][0] == 0x95
+                and r[2][1] < 0x80
+                and all(row[0] == 0xD0 and row[1] < 8 and row[1] != r[2][1]
+                        for row in r[3:5])
+                and r[5] == b'\x50\x03' and r[6][0] == 0x02
+                and r[7] == bytes((0xE5, r[2][1])) and r[8] == b'\xf5\xf0'
+                and r[9][0] == 0x24 and r[10] == b'\x83' and r[11] == b'\xf5\x82'
+                and r[12] == b'\xe5\xf0' and r[13][0] == 0x24
+                and r[14] == b'\x83' and r[15] == b'\xf5\x83'
+                and r[16] == b'\xe4' and r[17] == b'\x73'):
+            return None
+        count = r[1][1] + 1
+        if count - 1 + max(r[9][1], r[13][1]) > 255:
+            return None
+        low = addresses[10] + 1 + r[9][1]
+        high = addresses[14] + 1 + r[13][1]
+        # This idiom has adjacent low/high tables immediately after the JMP.
+        if low != at or high != low + count:
+            return None
+        table_bytes = set(range(low, high + count))
+        if any(slot not in self.code or slot in self.owners for slot in table_bytes):
+            return None
+        targets = [int.from_bytes(r[6][1:], 'big')] + [
+            self.code[low+i] | self.code[high+i] << 8 for i in range(count)]
+        if any(pc <= target < high + count or self.peek_instruction(target) is None
+               for target in targets):
+            return None
+        return {'targets': targets, 'stack_delta': -2, 'reachable': addresses}
+
     def short_dispatch(self, pc):
         """MOV Rn,A / ADD #-N / JC default / MOV A,Rn / double / DPTR table."""
         lengths = (1,2,2,1,1,3,1)
@@ -785,6 +829,12 @@ class Analyzer:
                 transitive.update(child['reachable'])
                 self.pointer_transfers[pc] = pointer
                 work.append((pointer['continuation'], height + pointer['height_after_return'], flags))
+                continue
+            pop_split = self.guarded_pop_split_dispatch(pc)
+            if pop_split is not None:
+                transitive.update(pop_split['reachable'])
+                work.extend((target, height + pop_split['stack_delta'], flags)
+                            for target in pop_split['targets'])
                 continue
             dispatch = self.split_dispatch(pc)
             if dispatch is not None:

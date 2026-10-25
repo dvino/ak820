@@ -135,7 +135,7 @@ def listing(path, image, module):
     return rows, labels
 
 
-def inventory(root, report_path):
+def inventory(root, report_path, *, ihx=None, map_file=None, reachability=None):
     root, report_path = Path(root).resolve(), Path(report_path).resolve()
     report = json.loads(report_path.read_text())
     entries = report['artifacts']
@@ -152,7 +152,20 @@ def inventory(root, report_path):
         if len(found) != 1:
             raise ValueError(f'Expected exactly one {suffix}')
         return found[0]
-    image_path, map_path, reach_path = one('.ihx'), one('.map'), one('reachability.json')
+    selected = (ihx, map_file, reachability)
+    explicit = any(value is not None for value in selected)
+    if explicit and not all(value is not None for value in selected):
+        raise ValueError('Explicit selection requires IHX, MAP and reachability paths')
+    def select(value, suffix):
+        # Require the exact manifest spelling, not aliases or unrecorded files.
+        if not isinstance(value, str) or value not in paths or not value.endswith(suffix):
+            raise ValueError(f'Selected {suffix} must name a report artifact')
+        return paths[value]
+    if explicit:
+        image_path, map_path, reach_path = [select(value, suffix) for value, suffix in
+                                          zip(selected, ('.ihx', '.map', 'reachability.json'))]
+    else:
+        image_path, map_path, reach_path = one('.ihx'), one('.map'), one('reachability.json')
     image = ihx_bytes(image_path)
     if len(image) != report['code_bytes'] or min(image) != report['code_min'] or max(image) != report['code_max_inclusive']:
         raise ValueError('Build report/image extent mismatch')
@@ -172,7 +185,11 @@ def inventory(root, report_path):
         if int(address,16) in image:
             labels.setdefault(int(address,16), []).append('MAP:'+module+':'+name)
     listing_paths = sorted(reach_path.parent.rglob('*.rst'))
+    if explicit and any(path.resolve() not in paths.values() for path in listing_paths):
+        raise ValueError('Selected listing tree contains an unrecorded listing')
     for path in listing_paths:
+        if not path.resolve().is_relative_to(root):
+            raise ValueError('Listing path escape')
         module = path.relative_to(reach_path.parent).with_suffix('.asm').as_posix()
         part, names = listing(path, image, module)
         rows.extend(part)
@@ -210,7 +227,12 @@ def inventory(root, report_path):
             'direct_transfers':transfers,
             'generic_helper_calls':[t for t in transfers if t['kind'] in ('lcall','acall') and any('__gptr' in name for name in t['target_labels'])],
             'reachability_summary':{k:reach.get(k) for k in ('modules','functions','retained','removed_count')},
-            'limitations':['Listing hashes bind this inventory snapshot, not the original build report: that report does not hash relocated listings.',
+            'selection':{'mode':'explicit' if explicit else 'unique-suffix',
+                         'ihx':image_path.relative_to(root).as_posix(),
+                         'map':map_path.relative_to(root).as_posix(),
+                         'reachability':reach_path.relative_to(root).as_posix()},
+            'limitations':[('Selected listings are authenticated build-report artifacts.' if explicit else
+              'Listing hashes bind this inventory snapshot, not the original build report: that report may not hash relocated listings.'),
               'Instruction spans are assembler-listed CODE rows with cycles, checked classic-8051 opcode lengths and matching IHX bytes; uncovered bytes include data, library code and missing listings.',
               'Function names are listing labels qualified by module; sizes count validated rows, not complete function extents. No ranking establishes complete function coverage.',
               'Direct transfers are byte-decoded only from covered rows. Computed jumps, loader entries, interrupt edges and external roots are not an exhaustive call graph.',
@@ -222,9 +244,12 @@ def main():
     parser.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1])
     parser.add_argument('--report',required=True,type=Path)
     parser.add_argument('--output',required=True,type=Path)
+    parser.add_argument('--ihx', help='Exact root-relative report artifact; requires --map and --reachability')
+    parser.add_argument('--map', dest='map_file', help='Exact root-relative MAP report artifact')
+    parser.add_argument('--reachability', help='Exact root-relative report artifact; its directory selects listings')
     args = parser.parse_args()
     try:
-        result = inventory(args.root,args.report)
+        result = inventory(args.root,args.report,ihx=args.ihx,map_file=args.map_file,reachability=args.reachability)
     except (ValueError,KeyError,OSError,TypeError) as exc:
         parser.exit(1,f'inventory refused: {exc}\n')
     args.output.write_text(json.dumps(result,indent=2)+'\n')

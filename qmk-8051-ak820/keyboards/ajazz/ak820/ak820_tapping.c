@@ -16,6 +16,10 @@
 #define SOURCE_ACTIVE 1
 #define SOURCE_BLOCKED 2
 #define SOURCE_HELD 4
+#define SOURCE_ONESHOT 8
+#define SOURCE_ONESHOT_USED 16
+#define SOURCE_STATE_BITS 5
+#define SOURCE_STATE_MASK ((1u << SOURCE_STATE_BITS) - 1)
 _Static_assert(SOURCE_BLOCKED == (SOURCE_ACTIVE << 1), "cancel active-to-blocked shift");
 #define NONE 255
 _Static_assert(SOURCES < NONE, "tap source index width");
@@ -27,7 +31,35 @@ _Static_assert(QK_MOD_TAP == 0x2000 && QK_LAYER_TAP_MAX == 0x4fff, "dual-role by
  * dual-role owner. BLOCKED survives cancellation until the physical release.
  * A release clears ACTIVE before downstream hooks; cancellation must not
  * infer a still-pressed source from HELD alone. */
-static uint8_t source_state[SOURCES];
+/* The full all-profile union uses five independent bits per physical source:
+ * ACTIVE/BLOCKED/HELD plus ONESHOT/ONESHOT_USED.  Keep all five, packed across
+ * byte boundaries, so One Shot and resolved dual-role state may coexist. */
+#define SOURCE_STATE_BYTES ((SOURCES * SOURCE_STATE_BITS + 7) / 8)
+static uint8_t source_state[SOURCE_STATE_BYTES];
+static uint8_t source_state_get(uint8_t id) {
+    uint16_t bit = (uint16_t)id * SOURCE_STATE_BITS;
+    uint8_t offset = bit & 7;
+    uint16_t pair = source_state[bit >> 3];
+    if (offset > 3) pair |= (uint16_t)source_state[(bit >> 3) + 1] << 8;
+    return (pair >> offset) & SOURCE_STATE_MASK;
+}
+static void source_state_set(uint8_t id, uint8_t state) {
+    uint16_t bit = (uint16_t)id * SOURCE_STATE_BITS;
+    uint8_t byte = bit >> 3, offset = bit & 7;
+    uint16_t pair = source_state[byte];
+    uint16_t mask = SOURCE_STATE_MASK;
+    if (offset > 3) {
+        pair |= (uint16_t)source_state[byte + 1] << 8;
+        mask <<= offset;
+        pair = (pair & ~mask) | (((uint16_t)(state & SOURCE_STATE_MASK)) << offset);
+        source_state[byte] = pair;
+        source_state[byte + 1] = pair >> 8;
+    } else {
+        mask <<= offset;
+        pair = (pair & ~mask) | (((uint16_t)(state & SOURCE_STATE_MASK)) << offset);
+        source_state[byte] = pair;
+    }
+}
 static uint8_t pending = NONE;
 static uint16_t pending_time, pending_code;
 
@@ -59,27 +91,27 @@ static void hold(uint16_t code, bool pressed) {
 static void commit_pending(void) {
     uint8_t id = pending;
     pending = NONE; /* A report callback cannot resurrect the decision. */
-    source_state[id] |= SOURCE_HELD;
+    source_state_set(id, source_state_get(id) | SOURCE_HELD);
     hold(pending_code, true);
 }
 bool ak820_tapping_before(const keyevent_t AK820_STATE_MEM *event) {
     uint8_t id = ak820_tapping_source(event->key);
 #ifdef VIAL_ENABLE
     if (vial_unlock_in_progress) {
-        if (IS_EVENT(*event) && id != NONE && !event->pressed) source_state[id] &= ~SOURCE_BLOCKED;
+        if (IS_EVENT(*event) && id != NONE && !event->pressed) source_state_set(id, source_state_get(id) & ~SOURCE_BLOCKED);
         return false;
     }
 #endif
     if (pending != NONE && ((uint16_t)(event->time - pending_time) >= AK820_TAPPING_TERM ||
         (IS_EVENT(*event) && event->pressed && (id == NONE || id != pending)))) commit_pending();
     if (IS_NOEVENT(*event) || id == NONE) return true;
-    if ((source_state[id] & SOURCE_BLOCKED)) {
-        if (!event->pressed) source_state[id] &= ~SOURCE_BLOCKED;
+    if ((source_state_get(id) & SOURCE_BLOCKED)) {
+        if (!event->pressed) source_state_set(id, source_state_get(id) & ~SOURCE_BLOCKED);
         return false;
     }
     /* Duplicate presses and unmatched releases cannot acquire/drop owners. */
-    if (event->pressed == ((source_state[id] & SOURCE_ACTIVE) != 0)) return false;
-    source_state[id] ^= SOURCE_ACTIVE;
+    if (event->pressed == ((source_state_get(id) & SOURCE_ACTIVE) != 0)) return false;
+    source_state_set(id, source_state_get(id) ^ SOURCE_ACTIVE);
     return true;
 }
 bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
@@ -125,8 +157,8 @@ bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
             send_keyboard_report();
         }
 #endif
-    } else if ((source_state[id] & SOURCE_HELD)) {
-        source_state[id] &= ~SOURCE_HELD;
+    } else if ((source_state_get(id) & SOURCE_HELD)) {
+        source_state_set(id, source_state_get(id) & ~SOURCE_HELD);
         hold(code, false);
     }
     return false;
@@ -134,16 +166,14 @@ bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
 void ak820_tapping_cancel(void) {
     pending = NONE;
     for (uint8_t i = 0; i < SOURCES; ++i) {
-        uint8_t state = source_state[i];
-        source_state[i] = (state & SOURCE_BLOCKED) | ((state & SOURCE_ACTIVE) << 1);
+        uint8_t state = source_state_get(i);
+        source_state_set(i, (state & SOURCE_BLOCKED) | ((state & SOURCE_ACTIVE) << 1));
     }
 }
 
 #ifdef AK820_COMPACT_ONESHOT
 /* One queued modifier set and one consuming source. While a consuming key
  * remains down, a new OSM works as a held modifier but cannot arm again. */
-#define SOURCE_ONESHOT 8
-#define SOURCE_ONESHOT_USED 16
 uint8_t ak820_oneshot_mods, ak820_oneshot_consumed;
 uint8_t ak820_oneshot_target = NONE;
 bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
@@ -165,17 +195,17 @@ bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
         mods = code & 15;
         if (code & 16) mods <<= 4;
         if (pressed) {
-            source_state[id] |= SOURCE_ONESHOT;
-            source_state[id] &= ~SOURCE_ONESHOT_USED;
-            if (ak820_oneshot_target != NONE) source_state[id] |= SOURCE_ONESHOT_USED;
+            source_state_set(id, source_state_get(id) | SOURCE_ONESHOT);
+            source_state_set(id, source_state_get(id) & ~SOURCE_ONESHOT_USED);
+            if (ak820_oneshot_target != NONE) source_state_set(id, source_state_get(id) | SOURCE_ONESHOT_USED);
             register_mods(mods);
-        } else if (source_state[id] & SOURCE_ONESHOT) {
-            if (!(source_state[id] & SOURCE_ONESHOT_USED)) {
+        } else if (source_state_get(id) & SOURCE_ONESHOT) {
+            if (!(source_state_get(id) & SOURCE_ONESHOT_USED)) {
                 add_owned_mods(mods & ~ak820_oneshot_mods);
                 ak820_oneshot_mods |= mods;
             }
             unregister_mods(mods);
-            source_state[id] &= ~(SOURCE_ONESHOT | SOURCE_ONESHOT_USED);
+            source_state_set(id, source_state_get(id) & ~(SOURCE_ONESHOT | SOURCE_ONESHOT_USED));
         }
         return false;
     }
@@ -183,7 +213,7 @@ bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
         !(code >= KC_LCTL && code <= KC_RGUI) &&
         !(code >= QK_TO && code <= QK_LAYER_TAP_TOGGLE_MAX)) {
         for (uint8_t i = 0; i < SOURCES; ++i)
-            if (source_state[i] & SOURCE_ONESHOT) source_state[i] |= SOURCE_ONESHOT_USED;
+            if (source_state_get(i) & SOURCE_ONESHOT) source_state_set(i, source_state_get(i) | SOURCE_ONESHOT_USED);
         if (ak820_oneshot_mods) {
             ak820_oneshot_consumed = ak820_oneshot_mods;
             ak820_oneshot_target = id;

@@ -11,6 +11,56 @@ SPEC.loader.exec_module(m)
 
 
 class InventoryTests(unittest.TestCase):
+    def test_explicit_stage_selection(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            contents = {'final/a.ihx': ':0101000022DC\n:00000001FF\n',
+                        'final/a.map': 'CSEG 00000100 00000001 = 1. bytes (CODE)\n',
+                        'final/dce/reachability.json': '{}',
+                        'final/dce/a.rst': '                                      1 \t.area CSEG (CODE)\n'
+                            '      000100 22               [24]    2 \tret\n',
+                        'proof/a.ihx': 'retained proof',
+                        'proof/a.map': 'retained map',
+                        'proof/dce/reachability.json': '{}',
+                        'proof/dce/a.rst': 'not a final listing'}
+            for name, content in contents.items():
+                path = root/name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content)
+            report = {'artifacts': [{'path': name, 'size': (root/name).stat().st_size,
+                                     'sha256': m.digest(root/name)} for name in contents],
+                      'code_bytes': 1, 'code_min': 256, 'code_max_inclusive': 256,
+                      'code_windows': [[256,512],[0,32]], 'code_window': [256,512],
+                      'code_main_bytes': 1, 'code_low_bytes': 0}
+            report_path = root/'report.json'
+            report_path.write_text(json.dumps(report))
+            selected = dict(ihx='final/a.ihx', map_file='final/a.map',
+                            reachability='final/dce/reachability.json')
+            with self.assertRaisesRegex(ValueError, 'exactly one .ihx'):
+                m.inventory(root, report_path)
+            result = m.inventory(root, report_path, **selected)
+            self.assertEqual(result['validated_listing_instruction_bytes'], 1)
+            self.assertEqual([e['path'] for e in result['listing_evidence']], ['final/dce/a.rst'])
+            for bad in ('../outside.ihx', 'final/../final/a.ihx', 'missing.ihx'):
+                with self.assertRaisesRegex(ValueError, 'report artifact'):
+                    m.inventory(root, report_path, **dict(selected, ihx=bad))
+            with self.assertRaisesRegex(ValueError, 'requires'):
+                m.inventory(root, report_path, ihx='final/a.ihx')
+            extra = root/'final/dce/unrecorded.rst'
+            extra.write_text('')
+            with self.assertRaisesRegex(ValueError, 'unrecorded listing'):
+                m.inventory(root, report_path, **selected)
+            extra.unlink()
+            # Legacy manifests with a unique image keep the original invocation.
+            legacy = dict(report, artifacts=[e for e in report['artifacts']
+                                            if e['path'].startswith('final/')])
+            report_path.write_text(json.dumps(legacy))
+            self.assertEqual(m.inventory(root, report_path)['occupied_bytes'], 1)
+            report_path.write_text(json.dumps(report))
+            (root/'proof/a.ihx').write_text('changed proof')
+            with self.assertRaisesRegex(ValueError, 'identity mismatch'):
+                m.inventory(root, report_path, **selected)
+
     def test_page_uses_short_instruction_pc(self):
         self.assertFalse(m.page_eligible(0x7fd,0x800))
         self.assertTrue(m.page_eligible(0x7fe,0x800))

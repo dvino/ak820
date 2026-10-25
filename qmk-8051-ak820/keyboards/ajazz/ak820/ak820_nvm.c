@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "ak820_nvm.h"
+#include "ak820_crc.h"
 #ifdef AK820_BOARD
 #include "ak820_macro.h"
 #endif
@@ -43,20 +44,8 @@ void ak820_nvm_diagnostic(uint8_t AK820_XDATA *out) {
     out[6] = first_failure_stage;
 }
 
-static uint16_t crc_byte(uint16_t crc, uint8_t value) {
-    uint8_t bit;
-    crc ^= (uint16_t)value << 8;
-    for (bit = 0; bit != 8; ++bit) {
-        crc = (crc & 0x8000u) ? (uint16_t)((crc << 1) ^ 0x1021u) : (uint16_t)(crc << 1);
-    }
-    return crc;
-}
-
 static uint16_t page_crc(void) {
-    uint16_t crc = 0xFFFFu;
-    uint8_t i;
-    for (i = 0; i != AK820_FLASH_PAGE; ++i) crc = crc_byte(crc, page_data[i]);
-    return crc;
+    return ak820_crc16(page_data, AK820_FLASH_PAGE);
 }
 
 static bool write_page(uint16_t address) {
@@ -182,17 +171,86 @@ static bool load_page(uint8_t page) {
     return true;
 }
 
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+_Static_assert(AK820_NVM_SIZE == 0x2800u && AK820_NVM_BASE == 0xc700u && AK820_FLASH_PAGE == 64u,
+               "scalar read assembly requires the fixed AK820 storage layout");
+/* DPTR offset -> DPL byte. Preserve every R0-R7; A/B/DPTR and arithmetic
+ * flags are scratch. The cache path saves only DPTR (two private stack bytes).
+ * The source body has no calls, IRAM indirect access, storage writes or bank
+ * changes. Outlining may add helpers; exact-image analysis counts their frames. */
+static uint8_t read_offset(uint16_t offset) __naked {
+    offset;
+    __asm
+        mov a,dph
+        clr c
+        subb a,#0x28
+        jc 00001$
+        mov dpl,#0
+        ret
+00001$:
+        jnb _page_valid,00002$
+        push dpl
+        push dph
+        mov a,dph
+        rl a
+        rl a
+        mov b,a
+        mov a,dpl
+        rl a
+        rl a
+        anl a,#3
+        orl a,b
+        mov b,a
+        mov dptr,#_cached_page
+        movx a,@dptr
+        xrl a,b
+        pop dph
+        pop dpl
+        jnz 00002$
+        mov a,dpl
+        anl a,#0x3f
+        add a,#_page_data
+        mov dpl,a
+        clr a
+        addc a,#(_page_data >> 8)
+        mov dph,a
+        movx a,@dptr
+        mov dpl,a
+        ret
+00002$:
+        mov a,dph
+        add a,#0xc7
+        mov dph,a
+        clr a
+        movc a,@a+dptr
+        mov dpl,a
+        ret
+    __endasm;
+}
+#else
 static uint8_t read_offset(uint16_t offset) {
     if (offset >= AK820_NVM_SIZE) return 0;
     if (page_valid && (offset / AK820_FLASH_PAGE) == cached_page)
         return page_data[offset % AK820_FLASH_PAGE];
     return ak820_flash_read(AK820_NVM_BASE + offset);
 }
+#endif
 
 #if defined(AK820_BOARD) || defined(AK820_NVM_SCALAR_TEST)
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+/* The generic pointer tag in B is ignored by the EEPROM address contract.
+ * Tail dispatch retains the original caller's return frame. */
+uint8_t eeprom_read_byte(const uint8_t *addr) __naked {
+    addr;
+    __asm
+        ljmp _read_offset
+    __endasm;
+}
+#else
 uint8_t eeprom_read_byte(const uint8_t *addr) {
     return read_offset((uint16_t)(uintptr_t)addr);
 }
+#endif
 
 #endif
 
@@ -226,6 +284,7 @@ void eeprom_write_block(const void *buf, void *addr, size_t len) {
     if (!batch_depth) ak820_nvm_flush();
 }
 
+#if !(defined(AK820_NVM_READ_BLOCK_ASM) && defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE))
 void ak820_eeprom_read_block_xdata(void AK820_XDATA *buf, const void *addr, size_t len) {
     uint16_t offset = (uint16_t)(uintptr_t)addr;
     uint8_t AK820_XDATA *out = (uint8_t AK820_XDATA *)buf;
@@ -235,6 +294,8 @@ void ak820_eeprom_read_block_xdata(void AK820_XDATA *buf, const void *addr, size
         ++offset;
     }
 }
+
+#endif
 
 void ak820_eeprom_write_block_xdata(const void AK820_XDATA *buf, void *addr, size_t len) {
     uint16_t offset = (uint16_t)(uintptr_t)addr;

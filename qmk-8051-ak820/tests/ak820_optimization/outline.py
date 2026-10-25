@@ -22,6 +22,7 @@ import sys
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE.parents[1] / "util"))
 import ak820_outline_audit as outlining
+from ak820_linked_inventory import OPCODE_LENGTHS
 _spec=importlib.util.spec_from_file_location("ak820_emitted_support",HERE.parent / "ak820_emitted/run.py")
 _module=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(_module)
 Firmware,memory=_module.Firmware,_module.memory
@@ -62,6 +63,41 @@ def relocate(instruction,symbols):
     return bytes(encoded)
 
 
+def flattened_helper(code, entry, expected):
+    """Match straight-line bytes through stack-neutral tail jumps only.
+
+    Tail sharing and final ACALL/AJMP relaxation run after outlining. Follow
+    actual image jump targets, never a source symbol allowlist. Calls, cycles,
+    missing bytes and any changed original instruction still fail.
+    """
+    pc, position, seen, output = entry, 0, set(), bytearray()
+    while position < len(expected):
+        state = pc, position
+        if state in seen or len(seen) > 4096:
+            raise ValueError("Cyclic or excessive helper tail chain")
+        seen.add(state)
+        op = code[pc]
+        if op == 0x02:
+            pc = (code[pc+1] << 8) | code[pc+2]
+            continue
+        if op & 0x1f == 0x01:
+            pc = ((pc+2) & 0xf800) | ((op & 0xe0) << 3) | code[pc+1]
+            continue
+        if op == 0x80:
+            delta = code[pc+1]
+            pc = pc+2+(delta if delta < 128 else delta-256)
+            continue
+        size = OPCODE_LENGTHS[expected[position]]
+        original = expected[position:position+size]
+        actual = bytes(code[pc+i] for i in range(size))
+        if len(original) != size or actual != original:
+            raise ValueError("Helper differs from original at " + hex(pc))
+        output.extend(actual)
+        position += size
+        pc += size
+    return bytes(output)
+
+
 def integrity(firmware,input_dce,manifest,suffix):
     blocks,_=outlining.parse_dce(input_dce,suffix)
     starts={(insn.module,insn.line+1):(block,index) for block in blocks for index,insn in enumerate(block)}
@@ -77,7 +113,7 @@ def integrity(firmware,input_dce,manifest,suffix):
             encoded=b"".join(relocate(i,locals_by_module[location["module"]]) for i in sequence)+bytes([0x22])
             if expected is None:expected=encoded
             assert encoded==expected,("Relocations disagree between callers",name,location)
-        actual=bytes(firmware.code[entry+i] for i in range(len(expected)))
+        actual=flattened_helper(firmware.code,entry,expected)
         assert actual==expected,("Linked helper differs from relocated original instructions",name,actual.hex(),expected.hex())
         expected_calls[name]=len(group["locations"])
         helpers.append({"name":name,"address":entry,"body":expected[:-1],"sites":len(group["locations"]),"saving":group["nominal_net_bytes"]})
@@ -85,12 +121,16 @@ def integrity(firmware,input_dce,manifest,suffix):
     for listing in sorted((firmware.build/"dce").rglob("*.rst")):
         for line in listing.read_text().splitlines():
             match=outlining.LISTED.match(line)
-            if not match or match[4].lower()!="lcall":continue
+            if not match or match[4].lower() not in {"lcall", "acall"}:continue
             target=match[5].strip()
             if target not in actual_calls:continue
             address=int(match[1],16);destination=firmware.address(target)
-            expected=bytes([0x12,destination>>8,destination&255])
-            assert bytes(firmware.code[address+i] for i in range(3))==expected
+            if match[4].lower() == "lcall":
+                expected=bytes([0x12,destination>>8,destination&255])
+            else:
+                assert ((address+2) & 0xf800) == (destination & 0xf800)
+                expected=bytes([0x11 | ((destination >> 3) & 0xe0), destination & 255])
+            assert bytes(firmware.code[address+i] for i in range(len(expected)))==expected
             actual_calls[target]+=1
     assert actual_calls==expected_calls,(actual_calls,expected_calls)
     for relative,digest in manifest.get("input_asm_sha256",{}).items():

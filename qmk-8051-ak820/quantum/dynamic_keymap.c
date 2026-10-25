@@ -205,6 +205,7 @@ void *dynamic_keymap_key_to_eeprom_address(uint8_t layer, uint8_t row, uint8_t c
     return ((uint8_t *)DYNAMIC_KEYMAP_EEPROM_ADDR) + (layer * MATRIX_ROWS * MATRIX_COLS * 2) + (row * MATRIX_COLS * 2) + (column * 2);
 }
 
+#if !defined(AK820_KEYMAP_WORDS_ASM) || !defined(AK820_BOARD) || !defined(__SDCC_mcs51) || !defined(__SDCC_MODEL_LARGE)
 uint16_t dynamic_keymap_get_keycode(uint8_t layer, uint8_t row, uint8_t column) {
     if (layer >= DYNAMIC_KEYMAP_LAYER_COUNT || row >= MATRIX_ROWS || column >= MATRIX_COLS) return KC_NO;
     uint8_t *address = dynamic_keymap_key_to_eeprom_address(layer, row, column);
@@ -221,12 +222,15 @@ void dynamic_keymap_set_keycode(uint8_t layer, uint8_t row, uint8_t column, uint
     eeprom_update_byte(address, (uint8_t)(keycode >> 8));
     eeprom_update_byte(address + 1, (uint8_t)(keycode & 0xFF));
 }
+#endif
+
 
 #ifdef ENCODER_MAP_ENABLE
 void *dynamic_keymap_encoder_to_eeprom_address(uint8_t layer, uint8_t encoder_id) {
     return ((uint8_t *)DYNAMIC_KEYMAP_ENCODER_EEPROM_ADDR) + (layer * NUM_ENCODERS * 2 * 2) + (encoder_id * 2 * 2);
 }
 
+#if !defined(AK820_KEYMAP_WORDS_ASM) || !defined(AK820_BOARD) || !defined(__SDCC_mcs51) || !defined(__SDCC_MODEL_LARGE)
 uint16_t dynamic_keymap_get_encoder(uint8_t layer, uint8_t encoder_id, bool clockwise) {
     if (layer >= DYNAMIC_KEYMAP_LAYER_COUNT || encoder_id >= NUM_ENCODERS) return KC_NO;
     uint8_t *address = dynamic_keymap_encoder_to_eeprom_address(layer, encoder_id);
@@ -243,6 +247,8 @@ void dynamic_keymap_set_encoder(uint8_t layer, uint8_t encoder_id, bool clockwis
     eeprom_update_byte(address + (clockwise ? 0 : 2), (uint8_t)(keycode >> 8));
     eeprom_update_byte(address + (clockwise ? 0 : 2) + 1, (uint8_t)(keycode & 0xFF));
 }
+#endif
+
 #endif // ENCODER_MAP_ENABLE
 
 #ifdef QMK_SETTINGS
@@ -263,22 +269,45 @@ void dynamic_keymap_set_qmk_settings(uint16_t offset, uint8_t value) {
 }
 #endif
 
+/* TD and KO retain separate validators and fixed ten-byte wire records.
+ * Select only compiled modules; no optional validator becomes a link dependency. */
+#if defined(AK820_COMPACT_TAP_DANCE) || defined(AK820_COMPACT_KEY_OVERRIDE)
+#define AK820_STORAGE_TAP_DANCE 0u
+#define AK820_STORAGE_KEY_OVERRIDE 1u
+static bool ak820_extension_valid(uint8_t kind, const void AK820_STATE_MEM *entry) {
+#ifdef AK820_COMPACT_TAP_DANCE
+    if (kind == AK820_STORAGE_TAP_DANCE) return ak820_tap_dance_valid((const vial_tap_dance_entry_t AK820_STATE_MEM *)entry);
+#endif
+#ifdef AK820_COMPACT_KEY_OVERRIDE
+    if (kind == AK820_STORAGE_KEY_OVERRIDE) return ak820_key_override_valid((const vial_key_override_entry_t AK820_STATE_MEM *)entry);
+#endif
+    return false;
+}
+static uint16_t ak820_extension_address(uint8_t kind, uint8_t index) {
+    return (kind == AK820_STORAGE_TAP_DANCE ? AK820_TAP_DANCE_ADDR : AK820_KEY_OVERRIDE_ADDR) + AK820_EXTENSION_OFFSET(index);
+}
+static int ak820_extension_get(uint8_t kind, uint8_t index, void AK820_STATE_MEM *entry) {
+    if (index >= AK820_EXTENSION_ENTRIES) return -1;
+    ak820_eeprom_read_block_xdata(entry, (const void *)ak820_extension_address(kind, index), AK820_EXTENSION_SLOT_SIZE);
+    if (!ak820_extension_valid(kind, entry)) memset(entry, 0, AK820_EXTENSION_SLOT_SIZE);
+    return 0;
+}
+static int ak820_extension_set(uint8_t kind, uint8_t index, const void AK820_STATE_MEM *entry) {
+    if (index >= AK820_EXTENSION_ENTRIES || !ak820_extension_valid(kind, entry) || !ak820_nvm_ok()) return -1;
+    clear_keyboard();
+    ak820_eeprom_update_block_xdata(entry, (void *)ak820_extension_address(kind, index), AK820_EXTENSION_SLOT_SIZE);
+    ak820_nvm_flush();
+    return ak820_nvm_ok() ? 0 : -1;
+}
+#endif
+
 #ifdef VIAL_TAP_DANCE_ENABLE
 #ifdef AK820_COMPACT_TAP_DANCE
 int dynamic_keymap_get_tap_dance(uint8_t index, vial_tap_dance_entry_t *buffer) {
-    vial_tap_dance_entry_t AK820_STATE_MEM *entry = (vial_tap_dance_entry_t AK820_STATE_MEM *)buffer;
-    if (index >= AK820_EXTENSION_ENTRIES) return -1;
-    ak820_eeprom_read_block_xdata(entry, (const void *)(VIAL_TAP_DANCE_EEPROM_ADDR + AK820_EXTENSION_OFFSET(index)), sizeof(*entry));
-    if (!ak820_tap_dance_valid(entry)) memset(entry, 0, sizeof(*entry));
-    return 0;
+    return ak820_extension_get(AK820_STORAGE_TAP_DANCE, index, (void AK820_STATE_MEM *)buffer);
 }
 int dynamic_keymap_set_tap_dance(uint8_t index, const vial_tap_dance_entry_t *buffer) {
-    const vial_tap_dance_entry_t AK820_STATE_MEM *entry = (const vial_tap_dance_entry_t AK820_STATE_MEM *)buffer;
-    if (index >= AK820_EXTENSION_ENTRIES || !ak820_tap_dance_valid(entry) || !ak820_nvm_ok()) return -1;
-    clear_keyboard();
-    ak820_eeprom_update_block_xdata(entry, (void *)(VIAL_TAP_DANCE_EEPROM_ADDR + AK820_EXTENSION_OFFSET(index)), sizeof(*entry));
-    ak820_nvm_flush();
-    return ak820_nvm_ok() ? 0 : -1;
+    return ak820_extension_set(AK820_STORAGE_TAP_DANCE, index, (const void AK820_STATE_MEM *)buffer);
 }
 #else
 int dynamic_keymap_get_tap_dance(uint8_t index, vial_tap_dance_entry_t *entry) {
@@ -364,19 +393,10 @@ int dynamic_keymap_set_combo(uint8_t index, const vial_combo_entry_t *buffer) {
 #ifdef VIAL_KEY_OVERRIDE_ENABLE
 #ifdef AK820_COMPACT_KEY_OVERRIDE
 int dynamic_keymap_get_key_override(uint8_t index, vial_key_override_entry_t *buffer) {
-    vial_key_override_entry_t AK820_STATE_MEM *entry = (vial_key_override_entry_t AK820_STATE_MEM *)buffer;
-    if (index >= AK820_EXTENSION_ENTRIES) return -1;
-    ak820_eeprom_read_block_xdata(entry, (const void *)(VIAL_KEY_OVERRIDE_EEPROM_ADDR + AK820_EXTENSION_OFFSET(index)), sizeof(*entry));
-    if (!ak820_key_override_valid(entry)) memset(entry, 0, sizeof(*entry));
-    return 0;
+    return ak820_extension_get(AK820_STORAGE_KEY_OVERRIDE, index, (void AK820_STATE_MEM *)buffer);
 }
 int dynamic_keymap_set_key_override(uint8_t index, const vial_key_override_entry_t *buffer) {
-    const vial_key_override_entry_t AK820_STATE_MEM *entry = (const vial_key_override_entry_t AK820_STATE_MEM *)buffer;
-    if (index >= AK820_EXTENSION_ENTRIES || !ak820_key_override_valid(entry) || !ak820_nvm_ok()) return -1;
-    clear_keyboard();
-    ak820_eeprom_update_block_xdata(entry, (void *)(VIAL_KEY_OVERRIDE_EEPROM_ADDR + AK820_EXTENSION_OFFSET(index)), sizeof(*entry));
-    ak820_nvm_flush();
-    return ak820_nvm_ok() ? 0 : -1;
+    return ak820_extension_set(AK820_STORAGE_KEY_OVERRIDE, index, (const void AK820_STATE_MEM *)buffer);
 }
 #else
 int dynamic_keymap_get_key_override(uint8_t index, vial_key_override_entry_t *entry) {

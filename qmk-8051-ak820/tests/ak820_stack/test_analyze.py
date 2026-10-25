@@ -68,6 +68,54 @@ class StackTests(unittest.TestCase):
             with self.subTest(pc=pc):
                 self.assertIsNone(m.Analyzer({**instructions,pc:bytes.fromhex(bad)},code).bound(0)['bound'])
 
+    def test_two_pop_guarded_split_dispatch(self):
+        for base in (0, 0x2340):
+            sequence = ['c0e0','c0f0','c3','7401','9516','d006','d005',
+                        '5003',f'02{base+96:04x}','e516','f5f0','240b','83',
+                        'f582','e5f0','2406','83','f583','e4','73']
+            rows, addresses, at = {}, [], base
+            for raw in sequence:
+                addresses.append(at); rows[at] = bytes.fromhex(raw); at += len(rows[at])
+            rows[base+80] = rows[base+96] = b'\x22'
+            code = {pc+i:v for pc,raw in rows.items() for i,v in enumerate(raw)}
+            code.update({at: (base+80)&255, at+1:(base+80)&255,
+                         at+2:(base+80)>>8, at+3:(base+80)>>8})
+            guard = addresses[2]
+            proof = m.Analyzer(rows,code).guarded_pop_split_dispatch(guard)
+            self.assertEqual(proof['stack_delta'], -2)
+            self.assertEqual(m.Analyzer(rows,code).bound(base)['bound'], 2)
+            for entry in (addresses[9], addresses[-1]):
+                self.assertIsNone(m.Analyzer(rows,code).bound(entry)['bound'])
+            # Each instruction contract is essential; register POPs may not
+            # overwrite the range index, carry, SP, accumulator or B.
+            for index, raw in ((2,'d3'), (3,'7402'), (4,'9517'), (5,'d016'),
+                               (5,'d081'), (5,'d0d0'), (6,'d0e0'), (6,'d0f0'),
+                               (7,'4003'), (7,'5004'), (9,'e517'), (10,'f582'),
+                               (11,'240c'), (12,'93'), (13,'f583'), (14,'e516'),
+                               (15,'24ff'), (16,'93'), (17,'f582'), (18,'00')):
+                with self.subTest(base=base,index=index,raw=raw):
+                    changed = {**rows, addresses[index]:bytes.fromhex(raw)}
+                    self.assertIsNone(m.Analyzer(changed,code).guarded_pop_split_dispatch(guard))
+                    self.assertIsNone(m.Analyzer(changed,code).bound(base)['bound'])
+            missing = dict(code); del missing[at+3]
+            self.assertIsNone(m.Analyzer(rows,missing).guarded_pop_split_dispatch(guard))
+            self.assertIsNone(m.Analyzer(rows,missing).bound(base)['bound'])
+            # Guard/body/table destinations cannot turn data into instructions.
+            for destination in (guard, addresses[9], at):
+                bad = {**code, at:destination&255, at+2:destination>>8}
+                self.assertIsNone(m.Analyzer(rows,bad).guarded_pop_split_dispatch(guard))
+            # Known instruction bytes cannot also serve as table data.
+            self.assertIsNone(m.Analyzer({**rows,at:b'\x22'},code)
+                              .guarded_pop_split_dispatch(guard))
+            # A table destination in the middle of a known instruction fails.
+            interior = base+97
+            bad = {**code, at:interior&255, at+2:interior>>8}
+            overlapping = {**rows, base+96:b'\x90\x00\x00'}
+            self.assertIsNone(m.Analyzer(overlapping,bad).guarded_pop_split_dispatch(guard))
+            # Entering with fewer than two saved bytes remains a failure.
+            for entry in (guard, addresses[1]):
+                self.assertIsNone(m.Analyzer(rows,code).bound(entry)['bound'])
+
     def test_register_split_dispatch_and_mutations(self):
         rows = {0:'ee', 1:'24fe', 3:'403b', 5:'ee', 6:'240a', 8:'83',
                 9:'f582', 11:'ee', 12:'2406', 14:'83', 15:'f583',

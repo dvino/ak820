@@ -125,7 +125,8 @@ bool ak820_macro_write(uint16_t offset, uint16_t size, const uint8_t *packet) {
              * Its entire tail is logically zero; only contiguous padding
              * is accepted. Nonzero trailing data cannot be acknowledged. */
             if (!covered || offset != covered || !ak820_macro_ready()) return false;
-            for (i = 0; i < size; ++i) if (data[i]) return false;
+            i = size;
+            while (i--) if (*data++) return false;
             covered = end;
             return true;
         }
@@ -143,7 +144,8 @@ bool ak820_macro_write(uint16_t offset, uint16_t size, const uint8_t *packet) {
             for (i = 0; i < offset; ++i) if (!parse_byte(&next, macro_byte(i))) return false;
         }
     }
-    for (i = 0; i < size; ++i) if (!parse_byte(&next, data[i])) return false;
+    i = size;
+    while (i--) if (!parse_byte(&next, *data++)) return false;
     complete = next.terminated == DYNAMIC_KEYMAP_MACRO_COUNT;
     if (!complete && end == DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE) return false;
 
@@ -153,7 +155,7 @@ bool ak820_macro_write(uint16_t offset, uint16_t size, const uint8_t *packet) {
         busy_write(1);
         if (!ak820_nvm_ok()) { ak820_nvm_end(); return false; }
     }
-    ak820_eeprom_write_block_xdata(data, (void *)(uintptr_t)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + offset), size);
+    ak820_eeprom_write_block_xdata((const uint8_t AK820_XDATA *)packet, (void *)(uintptr_t)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + offset), size);
     ak820_nvm_flush();
     if (complete && ak820_nvm_ok()) commit_length(end);
     ak820_nvm_end();

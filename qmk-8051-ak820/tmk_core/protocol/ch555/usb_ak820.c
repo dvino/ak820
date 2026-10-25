@@ -200,14 +200,20 @@ static uint16_t descriptor_select(uint8_t type, uint8_t index, uint16_t interfac
 
 static void control_setup(void) {
     uint8_t type = pD0_SETUP_REQ->bRequestType;
-    uint16_t value = pD0_SETUP_REQ->wValueL | ((uint16_t)pD0_SETUP_REQ->wValueH << 8);
+    uint8_t value_low = pD0_SETUP_REQ->wValueL;
+    uint8_t value_high = pD0_SETUP_REQ->wValueH;
     uint16_t index = pD0_SETUP_REQ->wIndexL | ((uint16_t)pD0_SETUP_REQ->wIndexH << 8);
     uint16_t length;
-    /* These predicates use this SETUP packet only. No branch tests them after
+    /* Byte fields avoid promoted 16-bit comparisons. Interface equality uses
+     * the full-width validity predicate before narrowing to the low byte.
+     * These predicates use this SETUP packet only. No branch tests them after
      * changing D0SetupLen, and this service is not reentrant. */
     __bit valid_interface = index < TOTAL_INTERFACES;
+    __bit keyboard_interface = valid_interface && (uint8_t)index == KEYBOARD_INTERFACE;
+    __bit raw_interface = valid_interface && (uint8_t)index == RAW_INTERFACE;
+    __bit shared_interface = valid_interface && (uint8_t)index == SHARED_INTERFACE;
     __bit zero_index = !index;
-    __bit zero_value = !value;
+    __bit zero_value = !(value_low | value_high);
     __bit zero_length;
     uint8_t endpoint;
     uint8_t i;
@@ -228,10 +234,10 @@ static void control_setup(void) {
     switch (D0SetupReqCode) {
         case USB_GET_DESCRIPTOR:
             if (type == 0x80 || type == 0x81) {
-                if (((value >> 8) == USB_DESCR_TYP_HID || (value >> 8) == USB_DESCR_TYP_REPORT) != (type == 0x81)) {
+                if ((value_high == USB_DESCR_TYP_HID || value_high == USB_DESCR_TYP_REPORT) != (type == 0x81)) {
                     control_stall(); return;
                 }
-                length = descriptor_select(value >> 8, value, index);
+                length = descriptor_select(value_high, value_low, index);
                 if (!length) { control_stall(); return; }
                 control_zlp = length < D0SetupLen && !(length & (DEF_ENDP0_SIZE - 1));
                 if (D0SetupLen > length) D0SetupLen = length;
@@ -240,26 +246,26 @@ static void control_setup(void) {
                 return;
             } else { control_stall(); return; }
         case USB_SET_ADDRESS:
-            if (type == 0x00 && zero_index && zero_length && value <= 127) {
-                D0SetupLen = value; /* applied after status-IN ACK */
+            if (type == 0x00 && zero_index && zero_length && !value_high && value_low <= 127) {
+                D0SetupLen = value_low; /* applied after status-IN ACK */
                 control_phase = CTRL_STATUS_IN;
             } else { control_stall(); return; }
             break;
         case USB_SET_CONFIGURATION: /* HID_SET_REPORT has the same request byte. */
-            if (type == 0x00 && zero_index && zero_length && value <= 1) {
+            if (type == 0x00 && zero_index && zero_length && !value_high && value_low <= 1) {
                 endpoints_reset();
-                D0UsbConfig = value;
-                USB_EnumStatus = value != 0;
+                D0UsbConfig = value_low;
+                USB_EnumStatus = value_low != 0;
                 keyboard_reset = 1;
                 control_phase = CTRL_STATUS_IN;
             } else if (type == 0x21 && D0UsbConfig) {
-                if (index == RAW_INTERFACE && value == 0x0200 && D0SetupLen == RAW_EPSIZE && raw_state == RAW_IDLE) {
+                if (raw_interface && (value_high == 2 && !value_low) && D0SetupLen == RAW_EPSIZE && raw_state == RAW_IDLE) {
                     raw_state = RAW_RX;
                     output_kind = OUTPUT_RAW;
-                } else if (index == KEYBOARD_INTERFACE && value == 0x0200 && D0SetupLen == 1) {
+                } else if (keyboard_interface && (value_high == 2 && !value_low) && D0SetupLen == 1) {
                     output_kind = OUTPUT_LED;
 #if defined(NKRO_ENABLE) && defined(SHARED_EP_ENABLE)
-                } else if (index == SHARED_INTERFACE && value == (0x0200 | REPORT_ID_NKRO) && D0SetupLen == 2) {
+                } else if (shared_interface && (value_high == 2 && value_low == REPORT_ID_NKRO) && D0SetupLen == 2) {
                     output_kind = OUTPUT_SHARED_LED;
                     output_report_id = REPORT_ID_NKRO;
 #endif
@@ -281,15 +287,15 @@ static void control_setup(void) {
                 D0_EP0T_L = 1;
                 control_phase = CTRL_STATUS_OUT;
             } else if (valid_interface && D0UsbConfig && type == 0x21 && zero_length) {
-                if (index == KEYBOARD_INTERFACE) keyboard_idle = value >> 8;
+                if (keyboard_interface) keyboard_idle = value_high;
                 control_phase = CTRL_STATUS_IN;
             } else { control_stall(); return; }
             break;
         case USB_SET_INTERFACE: /* DEF_USB_SET_PROTOCOL has the same request byte. */
             if (type == 0x01 && valid_interface && zero_value && zero_length && D0UsbConfig) {
                 control_phase = CTRL_STATUS_IN;
-            } else if (index == KEYBOARD_INTERFACE && D0UsbConfig && type == 0x21 && zero_length && value <= 1) {
-                keyboard_protocol = value;
+            } else if (keyboard_interface && D0UsbConfig && type == 0x21 && zero_length && !value_high && value_low <= 1) {
+                keyboard_protocol = value_low;
                 keyboard_reset = 1;
                 control_phase = CTRL_STATUS_IN;
             } else { control_stall(); return; }
@@ -309,7 +315,7 @@ static void control_setup(void) {
         case USB_CLEAR_FEATURE: /* HID_GET_REPORT has the same request byte. */
         case USB_SET_FEATURE: /* DEF_USB_GET_PROTOCOL has the same request byte. */
             if (zero_length && D0UsbConfig) {
-                if (type == 0x00 && value == 1 && zero_index) {
+                if (type == 0x00 && (!value_high && value_low == 1) && zero_index) {
                     if (D0SetupReqCode == USB_SET_FEATURE) USB_SleepStatus |= 1;
                     else USB_SleepStatus &= ~1;
                 } else if (type == 0x02 && zero_value && index >= 0x81 && index <= 0x83) {
@@ -320,28 +326,28 @@ static void control_setup(void) {
                 } else { control_stall(); return; }
                 control_phase = CTRL_STATUS_IN;
             } else if (type == 0xa1 && D0SetupReqCode == HID_GET_REPORT && D0UsbConfig && D0SetupLen) {
-                report_id = value;
-                if ((value >> 8) == 1 && index == KEYBOARD_INTERFACE && !report_id) {
+                report_id = value_low;
+                if (value_high == 1 && keyboard_interface && !report_id) {
                     length = KEYBOARD_EPSIZE;
                     offset = SNAPSHOT_KEYBOARD;
-                } else if ((value >> 8) == 1 && index == SHARED_INTERFACE &&
+                } else if (value_high == 1 && shared_interface &&
                            report_id < sizeof(shared_lengths) && shared_lengths[report_id]) {
                     length = shared_lengths[report_id];
                     offset = shared_offsets[report_id];
-                } else if ((value >> 8) == 1 && index == RAW_INTERFACE && !report_id) {
+                } else if (value_high == 1 && raw_interface && !report_id) {
                     length = D0SetupLen < RAW_EPSIZE ? D0SetupLen : RAW_EPSIZE;
                     for (i = 0; i < length; ++i) pD0_EP0_BUF[i] = pUSB_BUF_DEV0[UX_EP3_ADDR + i];
                     length = 0; /* data already copied */
-                } else if (value == 0x0200 && index == KEYBOARD_INTERFACE) {
+                } else if ((value_high == 2 && !value_low) && keyboard_interface) {
                     pD0_EP0_BUF[0] = KB_USB_SetReport;
                     length = 0;
                     D0SetupLen = 1;
-                } else if (value == (0x0200 | REPORT_ID_NKRO) && index == SHARED_INTERFACE) {
+                } else if ((value_high == 2 && value_low == REPORT_ID_NKRO) && shared_interface) {
                     pD0_EP0_BUF[0] = REPORT_ID_NKRO;
                     pD0_EP0_BUF[1] = KB_USB_SetReport;
                     length = 0;
                     if (D0SetupLen > 2) D0SetupLen = 2;
-                } else if (value == 0x0300 && index == RAW_INTERFACE) {
+                } else if ((value_high == 3 && !value_low) && raw_interface) {
                     /* Read-only EP0 Feature report, independent of Raw HID main-loop
                      * dispatch and EP3. Never flush NVM or change raw_state here. */
                     pD0_EP0_BUF[0] = 'A';
@@ -360,18 +366,18 @@ static void control_setup(void) {
                     /* The selected snapshot length is at most SHARED_EPSIZE (32).
                      * The full host length was clamped above before narrowing. */
                     for (i = 0; i < (uint8_t)D0SetupLen; ++i) pD0_EP0_BUF[i] = input_snapshot[offset + i];
-                } else if (index == RAW_INTERFACE && D0SetupLen > RAW_EPSIZE) D0SetupLen = RAW_EPSIZE;
+                } else if (raw_interface && D0SetupLen > RAW_EPSIZE) D0SetupLen = RAW_EPSIZE;
                 D0_EP0T_L = D0SetupLen;
                 control_phase = CTRL_STATUS_OUT;
-            } else if (index == KEYBOARD_INTERFACE && D0UsbConfig && type == 0xa1 && D0SetupReqCode == DEF_USB_GET_PROTOCOL && zero_value && D0SetupLen == 1) {
+            } else if (keyboard_interface && D0UsbConfig && type == 0xa1 && D0SetupReqCode == DEF_USB_GET_PROTOCOL && zero_value && D0SetupLen == 1) {
                 pD0_EP0_BUF[0] = keyboard_protocol;
                 D0_EP0T_L = 1;
                 control_phase = CTRL_STATUS_OUT;
             } else { control_stall(); return; }
             break;
         case DEF_USB_GET_IDLE:
-            if (valid_interface && D0UsbConfig && type == 0xa1 && !(value >> 8) && D0SetupLen == 1) {
-                pD0_EP0_BUF[0] = index == KEYBOARD_INTERFACE ? keyboard_idle : 0;
+            if (valid_interface && D0UsbConfig && type == 0xa1 && !value_high && D0SetupLen == 1) {
+                pD0_EP0_BUF[0] = keyboard_interface ? keyboard_idle : 0;
                 D0_EP0T_L = 1;
                 control_phase = CTRL_STATUS_OUT;
             } else { control_stall(); return; }

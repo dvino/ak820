@@ -87,7 +87,7 @@ class ShortCallTests(unittest.TestCase):
             (encoding(0x1100),0x1100,'unknown')):
             self.assertFalse(short.short_valid(0x1000,data,target,kind))
 
-    def test_selection_excludes_hardware_outline_and_computed_functions(self):
+    def test_selection_excludes_hardware_and_computed_functions(self):
         module=fixture()
         for name in ('ak820_flash.asm','ak820_nvm.asm','ak820_boot.asm','quantum/color.asm'):
             self.assertEqual(short.select({name:module},{})[0],[])
@@ -96,8 +96,45 @@ class ShortCallTests(unittest.TestCase):
         for opcode,operand in [('jmp','@a+dptr'),('movc','a,@a+pc')]:
             modified=fixture();modified.instructions[8]=instruction(0x1020,opcode,operand,data=b'\x73')
             self.assertEqual(short.select({'quantum/test.asm':modified},{})[0],[])
-        modified=fixture();modified.instructions[2]=instruction(0x1000,'lcall','_ak820_outline_0000')
-        self.assertEqual(short.select({'quantum/test.asm':modified},{})[0],[])
+
+    def test_explicit_foreground_modules_and_outline_calls_are_admitted(self):
+        for name in ('ak820_settings.asm','ak820_tap_dance.asm','ak820_key_override.asm'):
+            with self.subTest(module=name):
+                before=fixture();after=fixture()
+                for module in (before,after):
+                    module.source[2]='\tlcall\t_ak820_outline_0000\n'
+                    module.instructions[2]=instruction(0x1000,'lcall','_ak820_outline_0000')
+                    module.source[4]='; function ak820_outline_0000\n'
+                    module.source[5]='_ak820_outline_0000:\n'
+                    module.instructions[6]=instruction(0x1100,'ret','','ak820_outline_0000',b'\x22')
+                    module.labels={('f','_f'):0x1000,('ak820_outline_0000','_ak820_outline_0000'):0x1100}
+                candidates=short.select({name:before},{})[0]
+                self.assertEqual(len(candidates),1)
+                after.source[2]=short.rewrite(after.source[2],candidates[0])
+                after.instructions[2]=instruction(0x1000,'acall','_ak820_outline_0000',data=encoding(0x10ff))
+                after.instructions[3]=instruction(0x1002,'ret','',data=b'\x22')
+                after.instructions[6]=instruction(0x10ff,'ret','','ak820_outline_0000',b'\x22')
+                after.labels[('ak820_outline_0000','_ak820_outline_0000')]=0x10ff
+                self.assertEqual(short.verify({name:before},{name:after},{},{},candidates)
+                                 ['verified_control_flow_edges'],1)
+                after.instructions[2]=instruction(0x1000,'acall','_ak820_outline_0000',data=encoding(0x10fe))
+                with self.assertRaisesRegex(ValueError,'edge differs'):
+                    short.verify({name:before},{name:after},{},{},candidates)
+
+    def test_outline_name_does_not_bypass_scope_or_hazards(self):
+        module=fixture()
+        module.source[2]='\tlcall\t_ak820_outline_0000\n'
+        module.instructions[2]=instruction(0x1000,'lcall','_ak820_outline_0000')
+        symbols={'_ak820_outline_0000':0x1100}
+        for name in ('ak820_board.asm','ak820_nvm.asm','protocol/ch555/usb_ak820.asm',
+                     'ak820_settings_irq.asm','quantum/color.asm'):
+            self.assertEqual(short.select({name:module},symbols)[0],[])
+        candidate=short.select({'ak820_settings.asm':module},symbols)[0][0]
+        forged={**candidate,'module':'ak820_board.asm'}
+        with self.assertRaisesRegex(ValueError,'outside the verified scope'):
+            short.verify({'ak820_board.asm':module},{'ak820_board.asm':module},symbols,symbols,[forged])
+        module.instructions[8]=instruction(0x1020,'jmp','@a+dptr',data=b'\x73')
+        self.assertEqual(short.select({'ak820_settings.asm':module},symbols)[0],[])
 
     def test_full_name_symbols_disambiguate_truncated_map(self):
         with tempfile.TemporaryDirectory() as temporary:

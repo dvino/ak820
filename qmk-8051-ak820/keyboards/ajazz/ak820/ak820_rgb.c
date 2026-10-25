@@ -188,9 +188,13 @@ void rgb_matrix_task(void) {
         if (!frame_mode || !(LED_FLAG_KEYLIGHT & frame_flags)) {
             rgb_matrix_set_color(led_index, 0, 0, 0);
         } else {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+            if (frame_mode != RGB_MATRIX_VIALRGB_DIRECT) {
+#else
             if (frame_mode == RGB_MATRIX_VIALRGB_DIRECT) {
                 hsv = g_direct_mode_colors[led_index];
             } else {
+#endif
                 hsv.h = frame_hue;
                 hsv.s = frame_sat;
                 hsv.v = frame_val;
@@ -204,12 +208,20 @@ void rgb_matrix_task(void) {
                     hsv.v = age >= duration ? frame_val : ((uint16_t)frame_val * age) >> shift;
                 }
             }
-            /* This model-large local is XDATA. Pass a two-byte typed output
-             * pointer instead of SDCC's generic aggregate-return pointer. */
+            /* Model-large locals and direct colors are XDATA. Typed input
+             * avoids copying HSV through generic aggregate parameters. */
 #ifdef USE_CIE1931_CURVE
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+            hsv_to_rgb_into(frame_mode == RGB_MATRIX_VIALRGB_DIRECT ? &g_direct_mode_colors[led_index] : &hsv, frame_mode != RGB_MATRIX_BREATHING, &rgb);
+#else
             hsv_to_rgb_into(hsv, frame_mode != RGB_MATRIX_BREATHING, &rgb);
+#endif
+#else
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+            hsv_to_rgb_into(frame_mode == RGB_MATRIX_VIALRGB_DIRECT ? &g_direct_mode_colors[led_index] : &hsv, false, &rgb);
 #else
             hsv_to_rgb_into(hsv, false, &rgb);
+#endif
 #endif
             rgb_matrix_set_color(led_index, rgb.r, rgb.g, rgb.b);
         }

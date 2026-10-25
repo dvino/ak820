@@ -55,6 +55,15 @@ FOREGROUND_MODULES = {
     "ak820_combo.asm": None,
     "ak820_tap_dance.asm": None,
     "ak820_key_override.asm": None,
+    # Remaining board feature engines run in the foreground. USB lifecycle
+    # code may clear the OS mode byte, but never calls its waveform helpers.
+    "ak820_autoshift.asm": None,
+    "ak820_dynamic_macro.asm": None,
+    "ak820_leader.asm": None,
+    "ak820_macro.asm": None,
+    "ak820_oneshot.asm": None,
+    "ak820_os_indicators.asm": None,
+    "ak820_indicators.asm": None,
     "ak820_settings.asm": None,
     "ak820_board.asm": frozenset({
         "ak820_set_slot_rgb", "ak820_rgb_init", "ak820_rgb_set_color",

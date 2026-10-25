@@ -108,8 +108,13 @@ static void macro_one(uint8_t op,uint16_t code) {
 }
 static uint16_t usage(uint8_t key) {return key<KC_AUDIO_MUTE?KEYCODE2SYSTEM(key):KEYCODE2CONSUMER(key);}
 static uint16_t current_usage(uint8_t key) {return key<KC_AUDIO_MUTE?last_system:last_consumer;}
-static void clean(void) {for(unsigned i=0;i<USAGE_COUNT;i++)assert(!usage_refs[i]);assert(!usage_lengths[0]&&!usage_lengths[1]);for(unsigned i=0;i<=KC_EXSEL;i++)assert(!key_refs[i]);assert(!get_mods()&&!get_weak_mods()&&!layer_state&&pending==NONE);for(unsigned i=0;i<SOURCES;i++)assert(!(source_state[i]&(SOURCE_ACTIVE|SOURCE_HELD)));}
+static void clean(void) {for(unsigned i=0;i<USAGE_COUNT;i++)assert(!usage_refs[i]);assert(!usage_lengths[0]&&!usage_lengths[1]);for(unsigned i=0;i<=KC_EXSEL;i++)assert(!key_refs[i]);assert(!get_mods()&&!get_weak_mods()&&!layer_state&&pending==NONE);for(unsigned i=0;i<SOURCES;i++)assert(!(source_state_get(i)&(SOURCE_ACTIVE|SOURCE_HELD)));}
 int main(int argc,char **argv) {
+ assert(sizeof(source_state)==SOURCE_STATE_BYTES);
+ const uint8_t expected_pattern[4]={0,8,16,31};uint8_t expected[SOURCES];
+ for(unsigned i=0;i<SOURCES;i++){expected[i]=expected_pattern[i%4];source_state_set(i,expected[i]);}
+ for(unsigned i=0;i<SOURCES;i++)assert(source_state_get(i)==expected[i]);
+ assert(expected[127]==31&&expected[128]==0&&expected[129]==8);
  if(argc>1) {
   char op;unsigned a,b,c;reset();trace_mode=true;
   while(scanf(" %c",&op)==1) {
@@ -272,7 +277,7 @@ int main(int argc,char **argv) {
   for(unsigned i=0;i<300;i++){if(code<256)macro_one(SS_DOWN_CODE,code);else macro_one(VIAL_MACRO_EXT_DOWN,code);}
   if(reverse){event(1,0,40);if(code<256)macro_one(SS_UP_CODE,code);else macro_one(VIAL_MACRO_EXT_UP,code);}else{if(code<256)macro_one(SS_UP_CODE,code);else macro_one(VIAL_MACRO_EXT_UP,code);assert(get_mods()==before_mods&&get_weak_mods()==before_weak);event(1,0,40);}clean();
  }}
- reset();assign(0,0x2204);event(0,1,10);tick(210);cancel_during_pre_release=true;event(0,0,220);assert(!(source_state[0]&SOURCE_BLOCKED));event(0,1,230);tick(430);assert(get_mods()==2);event(0,0,440);clean();
+ reset();assign(0,0x2204);event(0,1,10);tick(210);cancel_during_pre_release=true;event(0,0,220);assert(!(source_state_get(0)&SOURCE_BLOCKED));event(0,1,230);tick(430);assert(get_mods()==2);event(0,0,440);clean();
  reset();assign(0,0x0204);event(0,1,10);caps_word_on();add_weak_mods(2);caps_word_off();assert(!weak_mods&&get_weak_mods()==2);event(0,0,20);clean();
  reset();assign(0,KC_LSFT);assign(1,KC_A);assign(2,QK_REPEAT_KEY);event(0,1,10);event(1,1,20);event(0,0,30);event(1,0,40);event(2,1,50);caps_word_on();add_weak_mods(2);caps_word_off();assert(!weak_mods&&get_weak_mods()==2);event(2,0,60);clean();
  reset();macro_one(VIAL_MACRO_EXT_DOWN,0x0204);caps_word_on();add_weak_mods(2);caps_word_off();assert(!weak_mods&&get_weak_mods()==2);macro_one(VIAL_MACRO_EXT_UP,0x0204);clean();

@@ -144,7 +144,9 @@ typedef struct PACKED {
 #    pragma pack(pop)
 #endif
 
-#ifdef AK820_BOARD
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+void hsv_to_rgb_into(const HSV __xdata *input, bool use_cie, RGB __xdata *output);
+#elif defined(AK820_BOARD)
 void hsv_to_rgb_into(HSV hsv, bool use_cie, RGB __xdata *output);
 #endif
 RGB hsv_to_rgb_impl(HSV hsv, bool use_cie);

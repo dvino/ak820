@@ -1,0 +1,81 @@
+{
+  "diagnostic_only": true,
+  "installable": false,
+  "profile": "maximal",
+  "module_count": 14,
+  "code_bytes": 45461,
+  "main_highest_address": "0xdaf3",
+  "main_deficit_bytes": 5108,
+  "physical_xram_bytes": 2976,
+  "ordinary_xram_bytes": 2912,
+  "flash_stage_bytes": 64,
+  "stack_capacity_bytes": 156,
+  "foreground_bound_bytes": 103,
+  "usb_bound_bytes": 5,
+  "timer_bound_bytes": 2,
+  "led_bound_bytes": 2,
+  "stack_estimate_bytes": 165,
+  "whole_program_qualified": false,
+  "artifacts": [
+    {
+      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/build-report.json",
+      "sha256": "28d6eb0375a5eb02d30f396eb7b24c526348b1c539ae99ae704750ac46c60962"
+    },
+    {
+      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/ajazz_ak820_vial.ihx",
+      "sha256": "576fd31f4ccbe85f722cf0837c688aee69c5a517694f5d8828bdc0a8d3067fe8"
+    },
+    {
+      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/ajazz_ak820_vial.map",
+      "sha256": "317e2a2ee77cadfad0c2f134cf9d1309ef987db864e192db62029161448f2cd4"
+    },
+    {
+      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/ajazz_ak820_vial.mem",
+      "sha256": "4ce8e9948097e945a0073dc39958f4b7ef4801595088c35f140a2dda2802769d"
+    },
+    {
+      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/parameter-spills-stack.json",
+      "sha256": "3f2b841847d916b05d5ddc6545684bbb14552810caa7be31b0cdac5935ef5841"
+    }
+  ],
+  "build": "maximal-read-22-oversized",
+  "keymap_words_asm": true,
+  "plan_completion_estimate_percent": 40,
+  "plan_completion_estimate_basis": "Approximate work-volume estimate on 2026-10-25; not firmware readiness",
+  "parameter_spills": {
+    "enabled": true,
+    "selected": 82,
+    "object_saved_bytes": 607,
+    "linked_saved_vs_19_bytes": 382,
+    "postlink_qualified": true,
+    "scope": "82 transformations in current22; linked_saved_vs_19 belongs to historical20 comparison"
+  },
+  "evidence": {
+    "startup": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/startup22.json",
+    "inventory": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/inventory22.json",
+    "hooks": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/hooks22/results.json",
+    "source_review": "ak-configurator-local-artifacts/maximal-optimization-20261025/read-rebase-fresh-review.md",
+    "linked_review": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/fresh-image-review.md",
+    "prior_iram_image": {
+      "build": "maximal-overlay-21c-oversized",
+      "stack_capacity_bytes": 169,
+      "code_bytes": 45499,
+      "archive": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass21/build21c.tar.gz",
+      "sha256": "07679419924b5cba284cb84525d5524903a61030b49380f93df5be8dc3dfa4df"
+    },
+    "build_archive": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/build22.tar.gz",
+    "build_archive_verification": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/build22-archive-verification.json",
+    "build_archive_sha256": "ac9b5dad4b12a9b179dcba096c9659d3510d93d3d6232fc139a54f1e772571cc"
+  },
+  "qualification_gates_open": [
+    "main CODE overflow 5108 bytes",
+    "conditional stack estimate165 exceeds capacity156; IRAM composition pending",
+    "complete OEM startup and IRQ routing/non-reentry contract",
+    "opaque-writer and application-bank gates",
+    "full configured functional regressions",
+    "physical validation"
+  ],
+  "builder_sha256": "a514203ba0285d98b8f75b2984cef757acb9e44c0debe671be5ac0479679d938",
+  "nvm_read_block_asm": true,
+  "iram_overlay_enabled": false
+}

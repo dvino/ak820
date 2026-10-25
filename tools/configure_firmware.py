@@ -102,10 +102,15 @@ def linked_symbols(mapfile):
                           Path(mapfile).read_text(), re.M)
     require(len(absolute) == 1, 'Missing or ambiguous absolute DMA symbol')
     symbols['_ak820_led_dma'] = int(absolute[0], 16)
+    stage = re.findall(r'^\s+([0-9A-Fa-f]{8})\s+_ak820_flash_stage\s+ak820_flash\s*$',
+                       Path(mapfile).read_text(), re.M)
+    require(len(stage) <= 1, 'Ambiguous absolute IAP stage symbol')
+    if stage:
+        symbols['_ak820_flash_stage'] = int(stage[0], 16)
     return symbols
 
 
-def check_absolute_xdata(report, build):
+def check_absolute_xdata(report, build, *, historical=False):
     declarations = []
     for relative in report['expected_objects']:
         path = (QMK / relative).with_suffix('.asm').resolve()
@@ -119,14 +124,42 @@ def check_absolute_xdata(report, build):
             if line.startswith('.area'):
                 xdata, absolute = 'XDATA' in line, 'ABS' in line
             elif xdata and line:
+                if re.fullmatch(r'[A-Za-z_$][\w$]*\s*==\s*(?:0x[0-9A-Fa-f]+|\d+|\.)', line):
+                    continue  # SDCC debug address equate; not a storage declaration.
                 match = re.fullmatch(r'([A-Za-z_][A-Za-z_0-9]*)\s*=\s*(0x[0-9A-Fa-f]+|\d+)', line)
                 if match:
                     declarations.append((path.name, match[1], int(match[2], 0)))
                 elif absolute:
                     raise ValueError('Unqualified absolute XDATA declaration: ' + line)
-    require(declarations == [('ak820_board.asm', '_ak820_led_dma', 0x200)],
+    expected = [('ak820_board.asm', '_ak820_led_dma', 0x200)]
+    if not historical:
+        expected.append(('ak820_flash.asm', '_ak820_flash_stage', 0x400))
+        stage_asm = [(QMK / relative).with_suffix('.asm') for relative in report['expected_objects']
+                     if Path(relative).stem == 'ak820_flash']
+        require(len(stage_asm) == 1, 'Missing or ambiguous IAP stage allocation')
+        metadata_asm = (build / 'allocation' / 'ak820_flash.asm').resolve()
+        metadata = metadata_asm.with_suffix('.adb')
+        require(metadata.is_relative_to(build) and metadata.is_file(), 'Missing IAP allocation metadata')
+        for path in (metadata_asm, metadata):
+            require(path.is_file(), 'Missing IAP allocation metadata')
+            records = [row for row in report['artifacts']
+                       if row.get('path') == path.relative_to(QMK).as_posix()]
+            require(len(records) == 1 and records[0].get('sha256') == sha(path) and
+                    records[0].get('size') == path.stat().st_size, 'Unbound IAP allocation metadata')
+        require(re.findall(r'^_ak820_flash_stage\s*=\s*(0x[0-9A-Fa-f]+|\d+)\s*$',
+                           metadata_asm.read_text(), re.M) == ['0x0400'],
+                'IAP allocation metadata address disagrees')
+        allocations = [line for line in metadata.read_text().splitlines()
+                       if line.startswith('S:') and '$ak820_flash_stage$' in line]
+        require(allocations == ['S:G$ak820_flash_stage$0_0$0({64}DA64d,SC:U),F,0,0'],
+                'IAP stage allocation extent is not exactly 64 bytes')
+    require(sorted(declarations) == sorted(expected),
             'Unqualified absolute XDATA object or hardware mapping')
-    return [{'symbol': '_ak820_led_dma', 'start': 0x200, 'reserved_end_exclusive': 0x400}]
+    result = [{'symbol': '_ak820_led_dma', 'start': 0x200, 'reserved_end_exclusive': 0x400}]
+    if not historical:
+        result.append({'symbol': '_ak820_flash_stage', 'start': 0x400,
+                       'reserved_end_exclusive': 0x440, 'bytes': 64})
+    return result
 
 
 def retained_static_symbols(report, build, code):
@@ -196,7 +229,7 @@ def check_feature_defines(report, build, selected):
         require(actual == expected, 'Compiler feature flag differs from profile: ' + feature)
 
 
-def memory_report(code, symbols, memory):
+def memory_report(code, symbols, memory, *, historical=False):
     """Validate allocated memory; deliberately do not infer a stack bound."""
     require(code and all(any(lo <= address < hi for lo, hi in WINDOWS) for address in code),
             'Linked CODE touches a protected address')
@@ -212,7 +245,10 @@ def memory_report(code, symbols, memory):
     require(len(matches) == 1, 'Missing external RAM allocation')
     start, end = (int(value, 16) for value in matches[0][:2])
     size, capacity = (int(value) for value in matches[0][2:])
-    require(start == 0x400 and end < 0x1000 and size == end - start + 1 and capacity == 3072,
+    ordinary_start = 0x400 if historical else 0x440
+    reserved = 0 if historical else 64
+    require(start == ordinary_start and start <= end < 0x1000 and size == end - start + 1 and
+            capacity == 3072 - reserved and size + reserved <= 3072,
             'External RAM exceeds the ordinary XRAM window')
     stack = re.findall(r'Stack starts at: 0x([0-9a-f]+) \(sp set to 0x([0-9a-f]+)\) with (\d+) bytes available', memory, re.I)
     require(len(stack) == 1, 'Missing linked stack allocation')
@@ -239,10 +275,17 @@ def memory_report(code, symbols, memory):
         require(0 <= base and 0 <= length and (not length or base + length <= stack_start),
                 'Static IRAM area exceeds the stack base: ' + area)
     require(symbols.get('_ak820_led_dma') == 0x200, 'LED DMA buffer moved')
-    require(symbols.get('s_XSEG') == start and symbols.get('s_XISEG', -1) +
-            symbols.get('l_XISEG', -1) == end + 1, 'MAP/MEM XRAM allocation disagrees')
+    require((historical and '_ak820_flash_stage' not in symbols) or
+            (not historical and symbols.get('_ak820_flash_stage') == 0x400), 'IAP stage moved or missing')
+    require(symbols.get('s_XSEG') == start and symbols.get('l_XSEG', -1) >= 0 and
+            symbols.get('l_XISEG', -1) >= 0 and
+            start + symbols['l_XSEG'] == symbols.get('s_XISEG') and
+            symbols['l_XSEG'] + symbols['l_XISEG'] == size and
+            symbols['s_XISEG'] + symbols['l_XISEG'] == end + 1,
+            'MAP/MEM XRAM allocation disagrees')
     return {'code_bytes': len(code), 'code_windows': windows,
-            'xram': {'start': start, 'end_inclusive': end, 'bytes': size, 'capacity': capacity},
+            'xram': {'start': start, 'end_inclusive': end, 'bytes': size, 'capacity': capacity,
+                     'reserved_bytes': reserved, 'total_bytes': size + reserved, 'physical_capacity': 3072},
             'internal_ram': {'static_bytes': stack_start, 'initial_sp': initial_sp,
                              'stack_capacity': stack_size, 'runtime_stack_bound': None,
                              'stack_margin': None, 'stack_qualified': False},
@@ -283,9 +326,10 @@ def inspect(build, toolchain):
             'Wrong target, saved schema or hardware claim')
     require(report.get('code_window') == [0x3027, 0xc700] and
             {tuple(window) for window in report.get('code_windows', [])} == set(WINDOWS) and
-            report.get('xram_window') == [0x400, 0x1000], 'Experimental linker windows cannot qualify')
+            report.get('xram_window') in ([0x400, 0x1000], [0x440, 0x1000]), 'Experimental linker windows cannot qualify')
     validate_inputs(report, QMK, toolchain)
     check_feature_defines(report, build, selected)
+    historical = report.get('xram_window') == [0x400, 0x1000]
     expected_flags = '--opt-code-size --callee-saves ' + ','.join(AK820_CALLEE_SAVES)
     require(report.get('compiler_sha256') == SDCC46_PINS['sdcc'] and
             report.get('assembler_sha256') == SDCC46_PINS['sdas8051'] and
@@ -298,8 +342,8 @@ def inspect(build, toolchain):
     symbols = linked_symbols(mapfile)
     validate_startup(code, symbols)
     check_feature_symbols(retained_static_symbols(report, build, code), selected, code)
-    resources = memory_report(code, symbols, mem.read_text())
-    resources['absolute_xram'] = check_absolute_xdata(report, build)
+    resources = memory_report(code, symbols, mem.read_text(), historical=historical)
+    resources['absolute_xram'] = check_absolute_xdata(report, build, historical=historical)
     require(resources['code_bytes'] == report.get('code_bytes'), 'CODE byte count disagrees')
     for window in resources['code_windows']:
         require(window['occupied_bytes'] == report.get('code_' + window['name'] + '_bytes'),

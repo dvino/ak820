@@ -4,6 +4,7 @@ from __future__ import annotations
 import copy
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -461,7 +462,7 @@ class MemoryTests(unittest.TestCase):
         cls.code = {0x28a0: 0, 0x2fff: 0, 0x3027: 0, 0xc6ff: 0}
 
     def test_both_windows_are_independent_and_capacity_is_not_a_bound(self):
-        result = config.memory_report(self.code, self.symbols, self.memory)
+        result = config.memory_report(self.code, self.symbols, self.memory, historical=True)
         self.assertEqual([row['trailing_free_bytes'] for row in result['code_windows']], [0, 0])
         self.assertIsNone(result['internal_ram']['runtime_stack_bound'])
         self.assertIsNone(result['internal_ram']['stack_margin'])
@@ -470,19 +471,75 @@ class MemoryTests(unittest.TestCase):
     def test_protected_byte_cannot_be_hidden_by_total_size(self):
         for address in (0x289f, 0x3000, 0x3026, 0xc700, 0xef00, 0xf000):
             with self.subTest(address=address), self.assertRaisesRegex(ValueError, 'protected'):
-                config.memory_report({**self.code, address: 0}, self.symbols, self.memory)
+                config.memory_report({**self.code, address: 0}, self.symbols, self.memory, historical=True)
 
     def test_stack_map_mismatch_static_overlap_and_paged_data_fail(self):
         for change in ({'s_SSEG': 0x50}, {'l_SSEG': 1}, {'l_PSEG': 1}, {'l_ISEG': 1},
                        {'s_OSEG': 250, 'l_OSEG': 8}, {'_ak820_led_dma': 0x400}):
             with self.subTest(change=change), self.assertRaises(ValueError):
-                config.memory_report(self.code, {**self.symbols, **change}, self.memory)
+                config.memory_report(self.code, {**self.symbols, **change}, self.memory, historical=True)
+
+    def test_current_ordinary_window_and_total_budget(self):
+        match = re.search(r'EXTERNAL RAM\s+0x([0-9a-f]+)\s+0x([0-9a-f]+)\s+(\d+)\s+(\d+)', self.memory, re.I)
+        memory = self.memory[:match.start()] + 'EXTERNAL RAM 0x0440 0x0fff 3008 3008' + self.memory[match.end():]
+        symbols = {**self.symbols, 's_XSEG': 0x440, 'l_XSEG': 3008, 's_XISEG': 0x1000, 'l_XISEG': 0,
+                   '_ak820_flash_stage': 0x400}
+        result = config.memory_report(self.code, symbols, memory)['xram']
+        self.assertEqual((result['bytes'], result['reserved_bytes'], result['total_bytes'],
+                          result['physical_capacity']), (3008, 64, 3072, 3072))
+        for changed in (memory.replace('0x0440', '0x0400'),
+                        memory.replace('0x0fff 3008', '0x1000 3009'),
+                        memory.replace('3008 3008', '3008 3072'),
+                        memory.replace('0x0fff 3008', '0x043f 0')):
+            with self.subTest(changed=changed), self.assertRaises(ValueError):
+                config.memory_report(self.code, symbols, changed)
+        for value in (0x3c0, 0x440, 0x1000, None):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                config.memory_report(self.code, {**symbols, '_ak820_flash_stage': value}, memory)
+        for change in ({'l_XSEG': 3009}, {'l_XSEG': -1}, {'l_XISEG': -1},
+                       {'s_XISEG': 0xfff}, {'s_XISEG': 0x1001}):
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                config.memory_report(self.code, {**symbols, **change}, memory)
+        with self.assertRaises(ValueError):
+            config.memory_report(self.code, self.symbols, self.memory)
+
+    def test_stage_requires_bound_compiler_allocation_extent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            build = root / 'build'
+            build.mkdir()
+            board = build / 'ak820_board.asm'
+            stage = build / 'ak820_flash.asm'
+            (build / 'allocation').mkdir()
+            metadata_asm = build / 'allocation/ak820_flash.asm'
+            metadata = metadata_asm.with_suffix('.adb')
+            board.write_text('.area XSEG (XDATA)\n_ak820_led_dma = 0x200\n')
+            valid = '.area XSEG (XDATA)\nG$ak820_flash_stage$0_0$0 == 0x0400\n_ak820_flash_stage = 0x400\n'
+            allocation = 'S:G$ak820_flash_stage$0_0$0({64}DA64d,SC:U),F,0,0\n'
+            def inspect(asm=valid, adb=allocation):
+                stage.write_text(asm)
+                metadata.write_text(adb)
+                metadata_asm.write_text(asm.replace("= 0x400", "= 0x0400"))
+                report = {'expected_objects': ['build/ak820_board.rel', 'build/ak820_flash.rel'],
+                          'artifacts': [{'path': path.relative_to(root).as_posix(),
+                                         'sha256': config.sha(path), 'size': path.stat().st_size}
+                                        for path in (board, stage, metadata_asm, metadata)]}
+                return config.check_absolute_xdata(report, build)
+            with patch.object(config, 'QMK', root):
+                self.assertEqual(inspect()[-1]['reserved_end_exclusive'], 0x440)
+                for asm, adb in ((valid.replace('= 0x400', '= 0x440'), allocation),
+                                 (valid + '_overlap = 0x420\n', allocation),
+                                 (valid, allocation.replace('{64}DA64d', '{65}DA65d')),
+                                 (valid, allocation.replace('{64}DA64d', '{63}DA63d')),
+                                 (valid, allocation + allocation), (valid, '')):
+                    with self.subTest(asm=asm, adb=adb), self.assertRaises(ValueError):
+                        inspect(asm, adb)
 
     def test_grid_corruption_fails(self):
         for memory in (self.memory.replace('0xf0:', '0xe0:'),
                        self.memory.replace('|S|S|S|S|', '|x|S|S|S|', 1)):
             with self.assertRaises(ValueError):
-                config.memory_report(self.code, self.symbols, memory)
+                config.memory_report(self.code, self.symbols, memory, historical=True)
 
 
 if __name__ == '__main__':

@@ -332,6 +332,10 @@ $1/%.o : %.c $1/%.d $1/cflags.txt $1/compiler.txt | $(BEGIN)
     endif
 	$$(eval CMD := $$(CC_EXEC) -c $$($1_CFLAGS) $$(INIT_HOOK_CFLAGS) $$(GENDEPFLAGS) $$< -o $$@ && $$(MOVE_DEP))
 	$$(BUILD_CMD)
+    ifeq ($(PLATFORM),MCS51)
+	$$(if $$(filter ak820_flash.c,$$(notdir $$<)),$$(eval CMD := mkdir -p $$(@D)/../allocation && $$(CC_EXEC) -S $$($1_CFLAGS) $$(INIT_HOOK_CFLAGS) --debug $$< -o $$(@D)/../allocation/ak820_flash.asm))
+	$$(if $$(filter ak820_flash.c,$$(notdir $$<)),$$(BUILD_CMD))
+    endif
     ifneq ($$(DUMP_C_MACROS),)
 	$$(eval CMD := $$(CC) -E -dM $$($1_CFLAGS) $$(INIT_HOOK_CFLAGS) $$(GENDEPFLAGS) $$<)
 	@$$(if $$(filter $$(notdir $$(DUMP_C_MACROS)),$$(notdir $$<)),$$(BUILD_CMD))

@@ -56,7 +56,9 @@ class OutliningGates(unittest.TestCase):
             self.assertTrue(outline.allowed(opcode,operands))
 
     def test_input_and_board_scope(self):
-        for module in ("ak820_tapping.asm", "ak820_combo.asm"):
+        for module in ("ak820_tapping.asm", "ak820_combo.asm", "ak820_autoshift.asm",
+                       "ak820_dynamic_macro.asm", "ak820_leader.asm", "ak820_macro.asm",
+                       "ak820_oneshot.asm", "ak820_os_indicators.asm", "ak820_indicators.asm"):
             self.assertTrue(outline.eligible_module(module, "foreground"))
         self.assertTrue(outline.eligible_module("ak820_board.asm", "ak820_rgb_set_color"))
         for function in ("ak820_led_irq", "ak820_board_init", "ak820_clock_init", "ak820_matrix_snapshot"):

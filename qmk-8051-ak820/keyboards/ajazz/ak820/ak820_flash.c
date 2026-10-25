@@ -6,11 +6,9 @@
 
 uint8_t AK820_XDATA ak820_flash_diagnostic[6];
 
-/* A 64-byte block program requires a 64-byte aligned XRAM buffer. The
- * over-allocation keeps this reservation inside the ordinary linker-managed
- * XRAM area without borrowing the loader, USB, LED DMA or stack memory. */
-static __xdata uint8_t block_storage[2 * AK820_FLASH_PAGE - 1];
-static uint8_t __xdata *block_data;
+/* Dedicated aligned IAP stage. The linker-managed XRAM begins at 0x0440,
+ * after this full 64-byte reservation; LED DMA ends at 0x0400. */
+__xdata __at(0x0400) uint8_t ak820_flash_stage[AK820_FLASH_PAGE];
 
 /* SDCC passes the first __xdata pointer in DPTR. Keep that value intact for
  * both the parameter-validity check and the IAP opcode, matching OEM 1230..
@@ -77,7 +75,7 @@ static bool flash_operation(uint16_t address, uint8_t value, uint8_t operation) 
         before = (uint8_t)(states >> 8);
         status = (uint8_t)states;
     } else {
-        uint16_t states = program_block(block_data);
+        uint16_t states = program_block(ak820_flash_stage);
         before = (uint8_t)(states >> 8);
         status = (uint8_t)states;
     }
@@ -110,21 +108,19 @@ bool ak820_flash_program(uint16_t address, uint8_t value) {
     if (address < AK820_NVM_BASE || address >= AK820_NVM_WRITE_END) return false;
     offset = address & (AK820_FLASH_PAGE - 1);
     page = address & ~(AK820_FLASH_PAGE - 1);
-    block_data = (uint8_t __xdata *)(((uint16_t)block_storage + AK820_FLASH_PAGE - 1) & ~(AK820_FLASH_PAGE - 1));
     /* The single-byte ROM_BUF_MOD=0x80 path has no OEM-backed programming
      * contract. Stage the complete current page and preserve every existing
      * bit, then use the same aligned-DPTR block path as program_page(). This
      * also preserves neighbours if the controller replaces its whole block.
      * Journal metadata is still verified before the separate commit call. */
-    for (i = 0; i != AK820_FLASH_PAGE; ++i) block_data[i] = ak820_flash_read(page + i);
-    block_data[offset] |= value;
+    for (i = 0; i != AK820_FLASH_PAGE; ++i) ak820_flash_stage[i] = ak820_flash_read(page + i);
+    ak820_flash_stage[offset] |= value;
     return flash_operation(page, 0, 0);
 }
 
 bool ak820_flash_program_page(uint16_t address, const uint8_t __xdata *data) {
     uint8_t i;
     if (address & (AK820_FLASH_PAGE - 1)) return false;
-    block_data = (uint8_t __xdata *)(((uint16_t)block_storage + AK820_FLASH_PAGE - 1) & ~(AK820_FLASH_PAGE - 1));
-    for (i = 0; i != AK820_FLASH_PAGE; ++i) block_data[i] = data[i];
+    for (i = 0; i != AK820_FLASH_PAGE; ++i) ak820_flash_stage[i] = data[i];
     return flash_operation(address, 0, 0);
 }

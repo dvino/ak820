@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 AK820_BOARD = yes
 CUSTOM_MATRIX = yes
-SRC += ak820_oneshot.c ak820_combo.c ak820_tapping.c ak820_board.c ak820_indicators.c matrix.c ak820_nvm.c ak820_flash.c ak820_timer.c ak820_boot.c ak820_macro.c ak820_startup.c
+SRC += ak820_oneshot.c ak820_combo.c ak820_tapping.c ak820_board.c ak820_indicators.c matrix.c ak820_crc.c ak820_nvm.c ak820_flash.c ak820_timer.c ak820_boot.c ak820_macro.c ak820_startup.c
 EEPROM_DRIVER = custom
 ENCODER_ENABLE = yes
 ENCODER_MAP_ENABLE = yes
@@ -107,4 +107,20 @@ AK820_QMK_SETTINGS ?= no
 ifeq ($(AK820_QMK_SETTINGS),yes)
     OPT_DEFS += -DAK820_QMK_SETTINGS
     SRC += ak820_settings.c
+endif
+
+# Fixed-layout word access; keep the existing C implementation as the control.
+AK820_KEYMAP_WORDS_ASM ?= no
+ifeq ($(AK820_KEYMAP_WORDS_ASM),yes)
+    OPT_DEFS += -DAK820_KEYMAP_WORDS_ASM
+    SRC += ak820_keymap_words.c
+endif
+
+# Diagnostic read kernel: explicit opt-in, separate translation unit.
+AK820_NVM_READ_BLOCK_ASM ?= no
+ifeq ($(AK820_NVM_READ_BLOCK_ASM),yes)
+    OPT_DEFS += -DAK820_NVM_READ_BLOCK_ASM
+    SRC += ak820_nvm_read_block.c
+else ifneq ($(AK820_NVM_READ_BLOCK_ASM),no)
+    $(error AK820_NVM_READ_BLOCK_ASM must be yes or no)
 endif

@@ -358,13 +358,28 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
 #ifdef VIAL_TAP_DANCE_ENABLE
             case dynamic_vial_tap_dance_get: {
                 uint8_t idx = msg[3];
+#if defined(AK820_COMPACT_TAP_DANCE) && defined(__SDCC_mcs51)
+                _Static_assert(_Alignof(vial_tap_dance_entry_t) == 1, "Direct packet adapter requires byte alignment");
+                /* The getter leaves an invalid index untouched. Preserve the
+                 * zero-filled reply, saving idx before its byte is cleared. */
+                for (uint8_t i = 1; i <= sizeof(vial_tap_dance_entry_t); ++i) msg[i] = 0;
+                msg[0] = dynamic_keymap_get_tap_dance(idx, (vial_tap_dance_entry_t AK820_STATE_MEM *)&msg[1]);
+#else
                 vial_tap_dance_entry_t td = { 0 };
                 msg[0] = dynamic_keymap_get_tap_dance(idx, &td);
                 memcpy(&msg[1], &td, sizeof(td));
+#endif
                 break;
             }
             case dynamic_vial_tap_dance_set: {
                 uint8_t idx = msg[3];
+#if defined(AK820_COMPACT_TAP_DANCE) && defined(__SDCC_mcs51)
+                _Static_assert(_Alignof(vial_tap_dance_entry_t) == 1, "Direct packet adapter requires byte alignment");
+                /* RAW_WORK owns this packet through synchronous clear/write/
+                 * reload. Compact validators only read the ten wire bytes;
+                 * never firewall them in place: SET echoes the request. */
+                msg[0] = dynamic_keymap_set_tap_dance(idx, (const vial_tap_dance_entry_t AK820_STATE_MEM *)&msg[4]);
+#else
                 vial_tap_dance_entry_t td;
                 memcpy(&td, &msg[4], sizeof(td));
 #ifndef AK820_COMPACT_TAP_DANCE
@@ -374,6 +389,7 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
                 td.on_tap_hold = vial_keycode_firewall(td.on_tap_hold);
 #endif
                 msg[0] = dynamic_keymap_set_tap_dance(idx, &td);
+#endif
                 reload_tap_dance();
                 break;
             }
@@ -399,19 +415,35 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
 #ifdef VIAL_KEY_OVERRIDE_ENABLE
             case dynamic_vial_key_override_get: {
                 uint8_t idx = msg[3];
+#if defined(AK820_COMPACT_KEY_OVERRIDE) && defined(__SDCC_mcs51)
+                _Static_assert(_Alignof(vial_key_override_entry_t) == 1, "Direct packet adapter requires byte alignment");
+                /* The getter leaves an invalid index untouched. Preserve the
+                 * zero-filled reply, saving idx before its byte is cleared. */
+                for (uint8_t i = 1; i <= sizeof(vial_key_override_entry_t); ++i) msg[i] = 0;
+                msg[0] = dynamic_keymap_get_key_override(idx, (vial_key_override_entry_t AK820_STATE_MEM *)&msg[1]);
+#else
                 vial_key_override_entry_t entry = { 0 };
                 msg[0] = dynamic_keymap_get_key_override(idx, &entry);
                 memcpy(&msg[1], &entry, sizeof(entry));
+#endif
                 break;
             }
             case dynamic_vial_key_override_set: {
                 uint8_t idx = msg[3];
+#if defined(AK820_COMPACT_KEY_OVERRIDE) && defined(__SDCC_mcs51)
+                _Static_assert(_Alignof(vial_key_override_entry_t) == 1, "Direct packet adapter requires byte alignment");
+                /* RAW_WORK owns this packet through synchronous clear/write/
+                 * reload. Compact validators only read the ten wire bytes;
+                 * never firewall them in place: SET echoes the request. */
+                msg[0] = dynamic_keymap_set_key_override(idx, (const vial_key_override_entry_t AK820_STATE_MEM *)&msg[4]);
+#else
                 vial_key_override_entry_t entry;
                 memcpy(&entry, &msg[4], sizeof(entry));
 #ifndef AK820_COMPACT_KEY_OVERRIDE
                 entry.replacement = vial_keycode_firewall(entry.replacement);
 #endif
                 msg[0] = dynamic_keymap_set_key_override(idx, &entry);
+#endif
                 if (!msg[0]) reload_key_override();
                 break;
             }
