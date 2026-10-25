@@ -14,7 +14,14 @@ run; it was not a failed firmware or installer test.
 
 ## Whole-program compression
 
-The current diagnostic image 22 uses 45,461 CODE and 2,976 XRAM bytes. Main CODE overflows by 5,108 bytes; the conditional stack estimate is 165/156. The read-block kernel is enabled and IRAM overlay is disabled. The separate experiment 21c measured 169 stack bytes; combining the changes requires fresh proof. Full configured regressions remain blocked by CODE and the incomplete OEM IRQ contract. No device or release change was made. [Details](MAXIMUM-FUNCTIONALITY-STATUS.md).
+The current diagnostic image 26b retains all 14 optional modules and uses
+44,747 CODE and 3,007 XRAM bytes. It saves 714 CODE bytes against the exactly
+reproduced image 22. Main CODE still overflows by 4,394 bytes. The conditional
+stack estimate is 165 of 167 available bytes, with no IRAM overlay. Fresh
+linked startup, application and bounded CPU checks pass within their stated
+assumptions. Full configured regressions remain blocked by CODE and the
+incomplete OEM startup/IRQ contract. No device or release change was made.
+[Details](MAXIMUM-FUNCTIONALITY-STATUS.md).
 
 ## Companion-design beta
 

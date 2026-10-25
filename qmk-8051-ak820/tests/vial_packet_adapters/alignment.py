@@ -13,7 +13,7 @@ root = Path(__file__).resolve().parents[2]
 header = (root / 'quantum/vial.h').read_text()
 vial = (root / 'quantum/vial.c').read_text()
 parts = ['#include <stdint.h>', '#ifndef __SDCC_mcs51', '#error Expected mcs51 compiler', '#endif']
-for module in ('tap_dance', 'key_override'):
+for module in ('tap_dance', 'key_override', 'combo'):
     typ = f'vial_{module}_entry_t'
     parts.append(re.search(r'typedef struct \{[^}]*\} ' + typ + ';', header).group())
     assertion = re.search(r'_Static_assert\(_Alignof\(' + typ + r'\)[^;]*;', vial).group()
@@ -25,4 +25,4 @@ with tempfile.TemporaryDirectory(prefix='vial-alignment-') as temp:
     source.write_text('\n'.join(parts))
     subprocess.run([sys.argv[1] if len(sys.argv) > 1 else 'sdcc', '-mmcs51', '--model-large',
                     '--std-sdcc11', '-c', str(source), '-o', str(Path(temp) / 'alignment.rel')], check=True)
-print('PASS: real SDCC mcs51 large-model exact TD/KO type alignment 1 and size 10')
+print('PASS: real SDCC mcs51 large-model exact TD/KO/Combo type alignment 1 and size 10')

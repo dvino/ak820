@@ -109,6 +109,27 @@ static void get_matrix_pos_for_led(uint16_t led, uint8_t VIALRGB_BUFFER *output)
 #endif
 }
 
+#ifdef AK820_BOARD
+static void fast_set_leds(uint8_t VIALRGB_BUFFER *args) {
+    /* The AK820 direct-fastset packet is fixed at VIAL_RAW_EPSIZE. After
+     * the two VIA bytes, args[0..29] are always available. */
+    _Static_assert(VIAL_RAW_EPSIZE == 32, "AK820 VialRGB fastset packet layout changed");
+    _Static_assert(RGB_MATRIX_LED_COUNT <= UINT8_MAX, "AK820 LED index must fit in one byte");
+    uint8_t first_index = args[0];
+    uint8_t num_leds = args[2];
+    if (args[1] || num_leds > (VIAL_RAW_EPSIZE - 5) / 3 || first_index >= RGB_MATRIX_LED_COUNT) return;
+    if (num_leds > RGB_MATRIX_LED_COUNT - first_index) num_leds = RGB_MATRIX_LED_COUNT - first_index;
+    HSV VIALRGB_BUFFER *color = &g_direct_mode_colors[first_index];
+    args += 3;
+    while (num_leds--) {
+        color->h = *args++;
+        color->s = *args++;
+        uint8_t val = *args++;
+        color->v = (val > RGB_MATRIX_MAXIMUM_BRIGHTNESS) ? RGB_MATRIX_MAXIMUM_BRIGHTNESS : val;
+        ++color;
+    }
+}
+#else
 static void fast_set_leds(uint8_t VIALRGB_BUFFER *args, uint8_t length) {
     /* Set multiple leds HSV, first 2 bytes are index of the first led, then number of leds, followed by HSV for the leds */
     /* we have 32-2-2-1=27 total bytes available, so can set up to 9 leds per packet */
@@ -131,6 +152,7 @@ static void fast_set_leds(uint8_t VIALRGB_BUFFER *args, uint8_t length) {
         color->v = (val > RGB_MATRIX_MAXIMUM_BRIGHTNESS) ? RGB_MATRIX_MAXIMUM_BRIGHTNESS : val;
     }
 }
+#endif
 #endif
 
 void vialrgb_get_value(uint8_t *data, uint8_t length) {
@@ -203,7 +225,11 @@ void vialrgb_set_value(uint8_t *data, uint8_t length) {
     }
 #ifdef RGB_MATRIX_EFFECT_VIALRGB_DIRECT
     case vialrgb_direct_fastset: {
+#ifdef AK820_BOARD
+        fast_set_leds(args);
+#else
         fast_set_leds(args, length - 2);
+#endif
         break;
     }
 #endif

@@ -88,6 +88,31 @@ def read_block_abi_flag(enabled, keyboard, version, callee_saves, extra_flags):
     return ' -DAK820_READ_HOOK_PRESERVES_RN=1'
 
 
+def update_block_abi_flag(enabled, keyboard, version, callee_saves, extra_flags):
+    tokens = shlex.split(extra_flags)
+    if any('AK820_READ_HOOK_PRESERVES_RN' in t or 'AK820_NVM_UPDATE_BLOCK_ASM' in t for t in tokens):
+        raise ValueError('Update kernel assertions and feature switch are owned by the builder')
+    if not enabled:
+        return ''
+    if keyboard != 'ajazz/ak820' or version != '4.6.0':
+        raise ValueError('Update kernel requires AK820 and pinned SDCC 4.6.0')
+    bad = ('--stack-auto', '--xstack', '--parms-in-bank1', '--all-callee-saves', '--model-small', '--model-medium', '--model-huge')
+    if any(t in bad or t.startswith('--sdcccall') or (t.startswith('--model-') and t != '--model-large') for t in tokens):
+        raise ValueError('Unsupported update kernel ABI option')
+    names = set(callee_saves)
+    for i, token in enumerate(tokens):
+        if token == '--callee-saves':
+            if i+1 == len(tokens): raise ValueError('Missing callee-saves names')
+            names.update(tokens[i+1].split(','))
+        elif token.startswith('--callee-saves='):
+            names.update(token.split('=',1)[1].split(','))
+    if 'ak820_eeprom_update_block_xdata' in {n.lstrip('_') for n in names}:
+        raise ValueError('Update block API must remain caller-clobbered')
+    if 'eeprom_read_byte' not in callee_saves:
+        raise ValueError('Update kernel needs the audited preserving scalar hook')
+    return ' -DAK820_READ_HOOK_PRESERVES_RN=1'
+
+
 def integer(s):
     return int(s, 0)
 
@@ -162,6 +187,7 @@ def main():
     p.add_argument('--iram-overlay-certificate-sha256')
     p.add_argument('--short-calls', action=argparse.BooleanOptionalAction, default=None,
                    help='Verified foreground ACALL/AJMP relaxation; enabled by default for curated profiles')
+    p.add_argument('--nvm-update-block-asm', action='store_true', help='Diagnostic separate-TU update kernel (default off)')
     p.add_argument('--nvm-read-block-asm', action='store_true', help='Diagnostic separate-TU read kernel (default off)')
     p.add_argument('--keymap-words-asm', action='store_true', help='Experimental fixed-layout keymap word kernel (opt-in)')
     p.add_argument('--trim-parameter-spills', action='store_true', help='Experimental private first-argument spill folding (requires explicit source-context certificate)')
@@ -251,7 +277,8 @@ def main():
     relative_build = str(build.relative_to(root))
     callee_saves = AK820_CALLEE_SAVES if args.keyboard == 'ajazz/ak820' and not args.no_callee_saves else ()
     read_abi = read_block_abi_flag(args.nvm_read_block_asm, args.keyboard, args.sdcc_version, callee_saves, args.extra_flags)
-    compile_flags = args.extra_flags + read_abi
+    update_abi = update_block_abi_flag(args.nvm_update_block_asm, args.keyboard, args.sdcc_version, callee_saves, args.extra_flags)
+    compile_flags = args.extra_flags + read_abi + update_abi
     if callee_saves:
         compile_flags += ' --callee-saves ' + ','.join(callee_saves)
     if args.keyboard == 'ajazz/ak820':
@@ -263,6 +290,7 @@ def main():
         'KEYBOARD='+args.keyboard,'KEYMAP='+args.keymap,'QMK_BIN='+qmk,'SILENT=false','COLOR=false',
         'SKIP_GIT=yes','SKIP_VERSION=yes','BUILD_DIR='+relative_build,'EXTRAFLAGS='+compile_flags,
         *(name+'='+value for name,value in selected['make_options'].items()),
+        'AK820_NVM_UPDATE_BLOCK_ASM='+('yes' if args.nvm_update_block_asm else 'no'),
         'AK820_NVM_READ_BLOCK_ASM='+('yes' if args.nvm_read_block_asm else 'no'),
         'AK820_KEYMAP_WORDS_ASM='+('yes' if args.keymap_words_asm else 'no'), '-j'+str(args.jobs)])
     obj = build/('obj_'+target)
@@ -448,6 +476,7 @@ def main():
         'builder_sha256':sha(Path(__file__)), 'dce_sha256':sha(root/'util/ak820_dce.py'),
         'outliner_sha256':sha(root/'util/ak820_outline_audit.py'),
         'outline_max_helpers':args.outline_max_helpers,
+        'nvm_update_block_asm':args.nvm_update_block_asm,
         'nvm_read_block_asm':args.nvm_read_block_asm,
         'keymap_words_asm':args.keymap_words_asm,
         'parameter_spills_sha256':sha(root/'util/ak820_parameter_spills.py'),

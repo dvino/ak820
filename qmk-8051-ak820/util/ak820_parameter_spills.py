@@ -20,7 +20,7 @@ import ak820_outline_audit as audit
 import ak820_register_saves as architecture
 from ak820_build_inputs import dependency_paths
 
-ALGORITHM='experimental-private-formal-spills-v1'
+ALGORITHM='experimental-private-formal-spills-v2'
 FORMAT='ak820-private-formal-context-1'
 IRQ_ROOTS=('_USB_DeviceInterrupt','_ak820_timer_irq','_ak820_led_irq')
 CONTRACT='valid-c-unescaped-nonvolatile-private-formal-v1'
@@ -165,6 +165,59 @@ def candidates(inv: Inventory):
      record={'module':f['module'],'function':f['name'],'object':obj,'width':width,'read_bytes':len(reads),'complete_reload':len(reads)==width,'private_unique_symbol_uses':private,'allocation':inv.allocs[obj],'references':refs,'entry':seq,'boundary_state_replacement_only':replacement,'old_bytes':oldbytes,'replacement_bytes':newbytes,'net_bytes':oldbytes-newbytes,'qualified':False}
      records.append(record)
     return records
+
+def following_dptr_overwrite(candidate, inv):
+    """Bounded DPTR kill proof; no liveness inference across an instruction."""
+    f=next(f for f in inv.functions if (f['module'],f['name'])==(candidate['module'],candidate['function']))
+    end=candidate['entry'][-1]
+    following=next((i for i in f['body'] if i['line']>end['line']),None)
+    if following is None:return None
+    lines=(inv.source/candidate['module']).read_text().splitlines()
+    # Every intervening semantic line is a barrier, including local labels,
+    # areas and directives which do not appear in the instruction inventory.
+    if any(line.split(';',1)[0].strip() for line in lines[end['line']:following['line']-1]):return None
+    if following['address']!=end['address']+len(bytes.fromhex(end['bytes'])):return None
+    if following['op']!='mov':return None
+    # Shrinking the prefix moves this instruction.  Accept only a bare C
+    # symbol or a fixed 16-bit literal: expressions involving the assembler's
+    # current-location counter (.) would change the value of the overwrite.
+    match=re.fullmatch(r'dptr,#(_[A-Za-z_]\w*|0[xX][0-9a-fA-F]{1,4}|[0-9]+)',following['args'])
+    if match is None:return None
+    immediate=match[1]
+    if not immediate.startswith('_'):
+        value=int(immediate,16 if immediate.lower().startswith('0x') else 10)
+        if value>0xffff:return None
+    encoded=bytes.fromhex(following['bytes'])
+    if len(encoded)!=3 or encoded[0]!=0x90:return None
+    return dict(following)
+
+
+def choose_emitted_replacement(candidate, inv):
+    """Retain the old prefix proof and state precisely where the new one holds.
+
+    The two prefix states can differ in DPL/DPH only. The unchanged 0x90
+    instruction reads neither value and writes both, so the states agree after
+    that instruction. Storage equivalence still requires the existing private
+    formal, valid-C and context proofs; interrupts must preserve DPTR.
+    """
+    baseline=candidate['boundary_state_replacement_only']
+    candidate['boundary_state_replacement_bytes']=candidate['replacement_bytes']
+    following=following_dptr_overwrite(candidate,inv)
+    candidate['emitted_replacement']=baseline[:-1] if following else list(baseline)
+    candidate['dptr_restore_elision']={
+        'admitted':following is not None,
+        'prefix_endpoint_equivalent':following is None,
+        'prefix_possible_differences':['dpl','dph'] if following else [],
+        'following_unchanged_overwrite':following,
+        'equivalence_point':'after following unchanged full DPTR overwrite' if following else 'prefix endpoint',
+        'proof':'Same non-DPTR state; identical 0x90 writes both DPTR bytes without reading incoming DPTR' if following else 'Original symbolic boundary-state proof',
+        'requires_irq_preserves_dptr':True,
+        'additional_object_saved_bytes':3 if following else 0,
+    }
+    if following:
+        candidate['replacement_bytes']-=3
+        candidate['net_bytes']+=3
+
 
 def strip_c_literals(text):
     output=[];n=0
@@ -448,7 +501,9 @@ def prepare(root,obj,source,target,metadata_dir,certificate_path,report_path,sdc
                 proved,detail=tail_private_access(c,inv)
                 if not proved:reason=detail
         if reason:rejected.append({'module':module,'function':c['function'],'reason':reason})
-        else:chosen.append(c)
+        else:
+            choose_emitted_replacement(c,inv)
+            chosen.append(c)
     shutil.copytree(source,target,ignore=shutil.ignore_patterns('*.rel','*.lst','*.rst','*.sym'))
     outputs={};changes=collections.defaultdict(list)
     for c in chosen:changes[c['module']].append(c)
@@ -459,7 +514,7 @@ def prepare(root,obj,source,target,metadata_dir,certificate_path,report_path,sdc
         for c in changes[module]:
             first,last=c['entry'][0]['line'],c['entry'][-1]['line'];region=set(range(first,last+1))
             if used&region:raise ValueError('Overlapping parameter spill windows')
-            used|=region;replacements[first]=(last,'\t'+'\n\t'.join(c['boundary_state_replacement_only'])+'\n')
+            used|=region;replacements[first]=(last,'\t'+'\n\t'.join(c['emitted_replacement'])+'\n')
         result=[];n=1
         while n<=len(lines):
             if n in replacements:

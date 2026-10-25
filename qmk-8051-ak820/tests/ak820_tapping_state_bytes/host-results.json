@@ -1,0 +1,171 @@
+{
+  "pass": true,
+  "fixture_config": {
+    "NO_RESET": true,
+    "ee_clear_limit": "Host clear branch only; production EEPROM-disable/reset path is not executed"
+  },
+  "level": "Host C/UBSan, production function bodies with hardware/user hooks stubbed",
+  "hardware_validated": false,
+  "coverage": {
+    "mt_masks": 32,
+    "lt_layers": 6,
+    "accepted_tap_bytes": 201,
+    "extra_same_namespace_pairs": 738,
+    "utility_extra_mask_release_cases": 1920,
+    "report_modes": [
+      "6KRO",
+      "NKRO"
+    ],
+    "tri_layer_mutable_target_sources": [
+      "matrix",
+      "encoder_cw",
+      "encoder_ccw",
+      "macro_role"
+    ],
+    "caps_word": [
+      "raw_cleanup_preserves_encoded_repeat_macro_weak_owners",
+      "idle_cleanup",
+      "MT_shift_hold_keeps_mode",
+      "MT_ctrl_next_key_ends_mode",
+      "LT_hold_and_resolved_layer_tap",
+      "MT_LT_capitalized_taps"
+    ],
+    "macro_interpreter": {
+      "stream_bytes": 8192,
+      "max_duplicate_basic_downs_per_stream": 2725,
+      "max_duplicate_extended_downs_per_stream": 2044,
+      "repeated_stream_execution": true,
+      "unmatched_up": true,
+      "tap_ascii_transient_owners": true,
+      "all_encoded_modifier_masks": true,
+      "generated_mt_lt_low_byte": true,
+      "cancel_aborts_before_later_output": true
+    }
+  },
+  "combos": {
+    "configured": true,
+    "report_modes": [
+      "6KRO",
+      "NKRO"
+    ],
+    "cases": [
+      "both_release_orders",
+      "shared_output_owner",
+      "repeat_learning_replay",
+      "modified_output_physical_ctrl",
+      "caps_word",
+      "cancel_pending_active",
+      "mt_interruption",
+      "lt_lookup_ordering"
+    ]
+  },
+  "negative_controls": [
+    {
+      "name": "grave-raw-owner",
+      "rejected": true
+    },
+    {
+      "name": "grave-physical-cache",
+      "rejected": true
+    },
+    {
+      "name": "caps-cleanup-consumes-owner",
+      "rejected": true
+    },
+    {
+      "name": "stale-derived-mask",
+      "rejected": true
+    },
+    {
+      "name": "cancel-blocks-released-source",
+      "rejected": true
+    },
+    {
+      "name": "macro-counter-wrap",
+      "rejected": true
+    },
+    {
+      "name": "macro-tap-consumes-down",
+      "rejected": true
+    },
+    {
+      "name": "early-hold",
+      "rejected": true
+    },
+    {
+      "name": "wrong-right-group",
+      "rejected": true
+    },
+    {
+      "name": "lost-release",
+      "rejected": true
+    },
+    {
+      "name": "premature-lookup",
+      "rejected": true
+    },
+    {
+      "name": "space-cadet-final-modifier-release-report",
+      "rejected": true
+    },
+    {
+      "name": "space-cadet-held-modifier-report",
+      "rejected": true
+    }
+  ],
+  "qmk_comparison": {
+    "eligible_traces": 156,
+    "intentional_differences": [
+      "older Shift release accepted immediately before later MT tap"
+    ]
+  },
+  "source_sha256": {
+    "quantum/action.c": "abb8e8d2a4a8624a5389e4f36f18f963143911dff0baa454ad8a693a8ff66c2f",
+    "quantum/action.h": "c6d589b0f7f4f424b5eb990aa2d58acfa96cc3480c99f0cdba06e62925aad5a1",
+    "quantum/action_layer.c": "ea0113057744251a9b58aa8e08588722a0a52cdf7a818f6eee9855c0ed655bd4",
+    "quantum/action_util.c": "b7e4c9a9068f28b9b4609c39e4803aa58e52ba948a49d65b658e57452ed0d729",
+    "quantum/dynamic_keymap.c": "bf87cfe03b43989000750bb5b4280fe209e30e68d8db672db73af60c28d5f73a",
+    "quantum/vial.c": "8691f5f43508b4ad7a19cb663979184f8cfb26deb8a7e3c2a06e58a04be76e48",
+    "quantum/send_string/send_string.c": "b4a91bd83d805321279b1f36d07e322e095fb74e030c4db64c04c1bb82dd0649",
+    "keyboards/ajazz/ak820/ak820_macro.c": "8f4fe5f5cf8ee3b87a2b095f4ba4a372d3ab6daefadc6cf1699d3338c898aaa2",
+    "quantum/keymap_common.c": "1a3e4697eb0ae2e0a88ac49e920869339cfb8719e70b37990bca58c5c7ebbe6e",
+    "quantum/quantum.c": "4e94c31d93b7bdad7eddf5b6269f2857681cefaa8969c6933737e049149b731d",
+    "quantum/repeat_key.c": "d477f09b3598d13a91ceed6fde314e5c43d7f3f3af3f43fc7a808ceb2b6645f2",
+    "quantum/tri_layer.c": "68fdc973e724c95035bf10ddf2f108e1941b754a28edf87f497ea1760fda49f2",
+    "quantum/process_keycode/process_repeat_key.c": "6dbf3ef15f053f858a6fd1a14bec7d56938796d3ad1381066f73c85831271847",
+    "quantum/process_keycode/process_tri_layer.c": "cda45e21feb713f36fa79c44de7b9adace8f4b7a929ca5439dadf0a6a4b099ea",
+    "keyboards/ajazz/ak820/ak820_combo.c": "309d0416ada76272c2633e407f75f2721610cf4b53c54a1840ec63748b214394",
+    "keyboards/ajazz/ak820/ak820_tapping.c": "f9dca4af93e3e6183fc865af4535617b6aaed9e4459f32e50c78aa8f905d7549",
+    "keyboards/ajazz/ak820/ak820_oneshot.c": "236951242fb2ab4f474848bc751e2627a44b4a618a5f970fa5775dd29a5d3256",
+    "keyboards/ajazz/ak820/config.h": "c093c63f28272de6e8bb13bf5204eb9fa43d4abab6009d9c9d19950117a6e760",
+    "tests/ak820_tapping/run.py": "bf7b440a115874e4d8846593741f1c0890c51a0c972c221ae378637ca7a8aefb",
+    "tests/ak820_tapping/harness.c": "028b40e4cf5bd11bbda134b5f331d4aa10fe8c9d107a8e3f5a086c8aee9ecc99",
+    "tests/ak820_tapping/differential.py": "35aeea2da02fee7387b7e83ce557ce1f9ca5ed657e4e0e8dbf01856ecfc6a7f9",
+    "tests/ak820_tapping/oracle.py": "3ffd296cbeaf3cfb0d7c4a0b67abc13f7d4fb30da002f74c608b4e94eec526ae",
+    "tests/ak820_tapping/oracle_harness.c": "104996c019628c7650e2247226163045622d9aa188abad0cf059c3ef3370d54b",
+    "quantum/action_tapping.c": "776ff1b6a81f3d156a7e874d9e7ee92102fdff8c6a5055acc94ef6edf607861f",
+    "tmk_core/protocol/report.c": "ce56d17a24740d701e3449dc84d4cfc11176dc4fb100bd27e05fe5c0bc01e42f",
+    "quantum/action_util.h": "023437abe8c0421e9d9dd46aeb1d5822137006f245429431cb74ef165e6732aa",
+    "quantum/action_layer.h": "eae3583f794aa9aeb1b51ce78c1e837c02e0d2f7430897bb724cb65341bf9245",
+    "quantum/tri_layer.h": "8e79aaf53bf2d17bfe372f236e69ff315e202535763ea83b4778524705a9da58",
+    "quantum/process_keycode/process_tri_layer.h": "16a99a136175b89206a210d6f85d2a57a420eed993fd24cdd3bae2261569b36d",
+    "keyboards/ajazz/ak820/ak820_tapping.h": "53cbeb47826596c81a254e158b250dfea29ed4822148e88f21f88cd58a2ed645",
+    "quantum/caps_word.c": "2631e90b7a73ac228f94597c3a08383242683dfeefc1aff2e799d7ca2fbdaf3b",
+    "quantum/process_keycode/process_caps_word.c": "8d4959dd036ff199419eea08323e5ff9b6fd834c7522d965b41bfeaa98fef51c",
+    "quantum/process_keycode/process_grave_esc.c": "db9dce28e06e68d67e0710fc3021647159892d61261ce31a4b813921444af5b3",
+    "quantum/process_keycode/process_grave_esc.h": "b8ba7d037a1a6fafbd03088ec2321e1eb28b8e864eac25923fcdbedd7a426ee2",
+    "tmk_core/protocol/report.h": "58cdee751eb8797743074b276e467efb126799e1c8f54ccaf6b761d7ea605d21",
+    "quantum/quantum_keycodes.h": "aee0f63e78752213736c7744e1ab8c506ade818efb32b2b0be9e4ad12ee7c3ee",
+    "quantum/keymap_common.h": "0286c9ff76149f8e32de9735b045beb3812c736b37bced398bafcbc28240dab5",
+    "quantum/keycode_config.h": "6b6bc79f75e5e05d61854508144a21e4246f01aa640f37609263417ba9d5dd38",
+    "tmk_core/protocol/host.h": "26d6d405bb52f3c5cb7b64cac0ed589018ff55e3a25a43eb87d2141d1a202bb3",
+    "quantum/repeat_key.h": "5f6243891bc4ec05b5f86499ae4b51d59d51a624c48fc16513d3359d92d35a1a",
+    "quantum/process_keycode/process_repeat_key.h": "9154163b377ade813980ebec694190f8c81beaf95234a85e14205ed16431538c",
+    "quantum/qmk_settings.h": "d0661e1ee9fef20fae240148400dd642259e73f955e43306b1e51ae2ffd8a3c2",
+    "quantum/caps_word.h": "1dea91c42c29c4d0f330097cea031cca4b67704f1c221bd8c29678c1ef11029b",
+    "quantum/process_keycode/process_caps_word.h": "f27f9e1aa802e7c3ffedd6c0f0dd7bb92151f57878cf71fb06fdc45755e3342f",
+    "platforms/timer.h": "2b4a2c428a22cd4602ed58098fb4d4c5f845d7ee4173243134e169d30ba8f683",
+    "quantum/send_string/send_string.h": "d2e962c81c6ebed1d66c5a55a25c76d522f04dd2e5fa79bb510450e1e0855c6f"
+  },
+  "limits": "No linked 8051 ABI or physical timing/USB/NVM proof. QMK comparisons use eligible short traces and a boundary output adapter; ownership and immediate release intentionally differ."
+}

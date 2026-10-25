@@ -124,3 +124,11 @@ ifeq ($(AK820_NVM_READ_BLOCK_ASM),yes)
 else ifneq ($(AK820_NVM_READ_BLOCK_ASM),no)
     $(error AK820_NVM_READ_BLOCK_ASM must be yes or no)
 endif
+
+AK820_NVM_UPDATE_BLOCK_ASM ?= no
+ifeq ($(AK820_NVM_UPDATE_BLOCK_ASM),yes)
+    OPT_DEFS += -DAK820_NVM_UPDATE_BLOCK_ASM
+    SRC += ak820_nvm_update_block.c
+else ifneq ($(AK820_NVM_UPDATE_BLOCK_ASM),no)
+    $(error AK820_NVM_UPDATE_BLOCK_ASM must be yes or no)
+endif

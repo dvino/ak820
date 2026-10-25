@@ -1,0 +1,1161 @@
+{
+  "format": "ak820-continuation-measurements-1",
+  "date": "2026-10-25",
+  "baseline_commit": "09330ab708e1eb3671571f63894c583e01743eef",
+  "collector_sha256": "d2a020eca78f9f89f0c7f46241e0d1a50deea43033810a9b9be89bb7b8b7bbf6",
+  "physical_code_windows": [
+    [
+      10400,
+      12288
+    ],
+    [
+      12327,
+      50944
+    ]
+  ],
+  "xram_limit_bytes": 3072,
+  "iram_overlay_enabled": false,
+  "current_label": "26b",
+  "builds": [
+    {
+      "label": "22-read-on",
+      "scope": "reproduced control",
+      "build": "resume22-read-on",
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "maximal",
+        "optional_features": [
+          "tap-dance",
+          "key-overrides",
+          "qmk-settings",
+          "mac-pc",
+          "os-indicators",
+          "leader",
+          "nkro-control",
+          "one-shot",
+          "space-cadet",
+          "mouse-keys",
+          "auto-shift",
+          "gui-lock",
+          "ctrl-gui-swap",
+          "dynamic-macros"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "nkro-reports",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "grave-escape",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "yes",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "yes",
+          "AK820_COMPACT_AUTOSHIFT": "yes",
+          "AK820_COMPACT_GUI_LOCK": "yes",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          4,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "mouse_cursor": 20,
+          "mouse_wheel": 80,
+          "auto_shift": 175,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "code_bytes": 45461,
+      "code_low_bytes": 1741,
+      "code_main_bytes": 43720,
+      "main_highest_address": "0xdaf3",
+      "main_overflow_bytes": 5108,
+      "main_trailing_free_bytes": 0,
+      "ordinary_xram_bytes": 2912,
+      "flash_stage_bytes": 64,
+      "physical_xram_bytes": 2976,
+      "stack_capacity_bytes": 156,
+      "roots": {
+        "_main": {
+          "bound": 103,
+          "unresolved": []
+        },
+        "_ak820_timer_irq": {
+          "bound": 2,
+          "unresolved": []
+        },
+        "_USB_DeviceInterrupt": {
+          "bound": 5,
+          "unresolved": []
+        },
+        "_ak820_led_irq": {
+          "bound": 2,
+          "unresolved": []
+        }
+      },
+      "builder_sha256": "a514203ba0285d98b8f75b2984cef757acb9e44c0debe671be5ac0479679d938",
+      "parameter_spills": {
+        "report": ".build/resume22-read-on/parameter-spills.json",
+        "report_sha256": "3abb84dc62199a76bd544c619bc55c520abeb9d362fb3762f9ba1089cba215a3",
+        "context_sha256": "5ef9515da0e78550a824626a42110b9579c1d6360b7a49c56fbb3e28ddb4e851",
+        "selected": 82,
+        "object_saved_bytes": 607,
+        "postlink_qualified": true,
+        "linked_saved_bytes": null,
+        "extra_stack_bytes": 0
+      },
+      "nvm_read_block_asm": true,
+      "nvm_update_block_asm": false,
+      "source_manifest_sha256": "984c1fb6d02d1952a135852d947088a3527b2d765342c5c10fcdfbef754a4917",
+      "current_full_manifest_verification": null,
+      "artifacts": [
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-on/build-report.json",
+          "sha256": "eb09407f23b6d371aed0ad001cc1ad95bcaf5c6dee8de6ea9753684d917c67a2",
+          "bytes": 1098629
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-on/ajazz_ak820_vial.ihx",
+          "sha256": "576fd31f4ccbe85f722cf0837c688aee69c5a517694f5d8828bdc0a8d3067fe8",
+          "bytes": 108982
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-on/ajazz_ak820_vial.map",
+          "sha256": "7c66bf182f858a9e0f6c3e1c2b0070007685754cc096f82e812de318f5aef934",
+          "bytes": 107757
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-on/ajazz_ak820_vial.mem",
+          "sha256": "4ce8e9948097e945a0073dc39958f4b7ef4801595088c35f140a2dda2802769d",
+          "bytes": 1163
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-on/parameter-spills-stack.json",
+          "sha256": "2882b2651417652af2a645efce9eff6f2f09a0dc9ea2623973421c1482934ef5",
+          "bytes": 359870
+        }
+      ]
+    },
+    {
+      "label": "22-read-off",
+      "scope": "same-source option control",
+      "build": "resume22-read-off",
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "maximal",
+        "optional_features": [
+          "tap-dance",
+          "key-overrides",
+          "qmk-settings",
+          "mac-pc",
+          "os-indicators",
+          "leader",
+          "nkro-control",
+          "one-shot",
+          "space-cadet",
+          "mouse-keys",
+          "auto-shift",
+          "gui-lock",
+          "ctrl-gui-swap",
+          "dynamic-macros"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "nkro-reports",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "grave-escape",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "yes",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "yes",
+          "AK820_COMPACT_AUTOSHIFT": "yes",
+          "AK820_COMPACT_GUI_LOCK": "yes",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          4,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "mouse_cursor": 20,
+          "mouse_wheel": 80,
+          "auto_shift": 175,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "code_bytes": 45499,
+      "code_low_bytes": 1741,
+      "code_main_bytes": 43758,
+      "main_highest_address": "0xdb19",
+      "main_overflow_bytes": 5146,
+      "main_trailing_free_bytes": 0,
+      "ordinary_xram_bytes": 2916,
+      "flash_stage_bytes": 64,
+      "physical_xram_bytes": 2980,
+      "stack_capacity_bytes": 156,
+      "roots": {
+        "_main": {
+          "bound": 103,
+          "unresolved": []
+        },
+        "_ak820_timer_irq": {
+          "bound": 2,
+          "unresolved": []
+        },
+        "_USB_DeviceInterrupt": {
+          "bound": 5,
+          "unresolved": []
+        },
+        "_ak820_led_irq": {
+          "bound": 2,
+          "unresolved": []
+        }
+      },
+      "builder_sha256": "a514203ba0285d98b8f75b2984cef757acb9e44c0debe671be5ac0479679d938",
+      "parameter_spills": {
+        "report": ".build/resume22-read-off/parameter-spills.json",
+        "report_sha256": "295ab577cfbfc497c2063237720cf01d4dbea1de867dcdbfbdf60e6f067959e1",
+        "context_sha256": "5ef9515da0e78550a824626a42110b9579c1d6360b7a49c56fbb3e28ddb4e851",
+        "selected": 82,
+        "object_saved_bytes": 607,
+        "postlink_qualified": true,
+        "linked_saved_bytes": null,
+        "extra_stack_bytes": 0
+      },
+      "nvm_read_block_asm": false,
+      "nvm_update_block_asm": false,
+      "source_manifest_sha256": "b996261df318edd8c636f9817da4260d0567a431f89ec07f3c93cadd5d0cddeb",
+      "current_full_manifest_verification": null,
+      "artifacts": [
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-off/build-report.json",
+          "sha256": "c4dce90574d8b39e3802068fe9d69dcfdad6f2d4a0eec55f0f5f4b981a16ccff",
+          "bytes": 1028084
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-off/ajazz_ak820_vial.ihx",
+          "sha256": "a1625130e4fd05cadcf14953749e45bdf6248a315086891d74fc4ce4faae3cf1",
+          "bytes": 109070
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-off/ajazz_ak820_vial.map",
+          "sha256": "69d52ab59b27abffe492194be744af60f1b5f50141db755c0a5cc7e942136198",
+          "bytes": 107646
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-off/ajazz_ak820_vial.mem",
+          "sha256": "893e6d700000cf73fcabc27a2f83aef2c88a44e70d944ad70d573a5486335c06",
+          "bytes": 1163
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume22-read-off/parameter-spills-stack.json",
+          "sha256": "f0ecc727bbad54282e108a85f29dfa5a76dcdd266977e2e4c9cef47379a9a0af",
+          "bytes": 360005
+        }
+      ]
+    },
+    {
+      "label": "23",
+      "scope": "measured intermediate; not selected",
+      "build": "resume23-packets-update",
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "maximal",
+        "optional_features": [
+          "tap-dance",
+          "key-overrides",
+          "qmk-settings",
+          "mac-pc",
+          "os-indicators",
+          "leader",
+          "nkro-control",
+          "one-shot",
+          "space-cadet",
+          "mouse-keys",
+          "auto-shift",
+          "gui-lock",
+          "ctrl-gui-swap",
+          "dynamic-macros"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "nkro-reports",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "grave-escape",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "yes",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "yes",
+          "AK820_COMPACT_AUTOSHIFT": "yes",
+          "AK820_COMPACT_GUI_LOCK": "yes",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          4,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "mouse_cursor": 20,
+          "mouse_wheel": 80,
+          "auto_shift": 175,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "code_bytes": 45165,
+      "code_low_bytes": 1741,
+      "code_main_bytes": 43424,
+      "main_highest_address": "0xd9cb",
+      "main_overflow_bytes": 4812,
+      "main_trailing_free_bytes": 0,
+      "ordinary_xram_bytes": 2896,
+      "flash_stage_bytes": 64,
+      "physical_xram_bytes": 2960,
+      "stack_capacity_bytes": 165,
+      "roots": {
+        "_main": {
+          "bound": 103,
+          "unresolved": []
+        },
+        "_ak820_timer_irq": {
+          "bound": 2,
+          "unresolved": []
+        },
+        "_USB_DeviceInterrupt": {
+          "bound": 5,
+          "unresolved": []
+        },
+        "_ak820_led_irq": {
+          "bound": 2,
+          "unresolved": []
+        }
+      },
+      "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+      "parameter_spills": {
+        "report": ".build/resume23-packets-update/parameter-spills.json",
+        "report_sha256": "b17edb7cf0bdeb46c9e9f522dbfbaf9b9ec26b59778c96a488250100cb2ad519",
+        "context_sha256": "5ef9515da0e78550a824626a42110b9579c1d6360b7a49c56fbb3e28ddb4e851",
+        "selected": 82,
+        "object_saved_bytes": 607,
+        "postlink_qualified": true,
+        "linked_saved_bytes": null,
+        "extra_stack_bytes": 0
+      },
+      "nvm_read_block_asm": true,
+      "nvm_update_block_asm": true,
+      "source_manifest_sha256": "ab39f8402f5a57010d881c3f59114639d0f11ead7cf85ae73c42df5d4ef5c1c4",
+      "current_full_manifest_verification": null,
+      "artifacts": [
+        {
+          "path": "qmk-8051-ak820/.build/resume23-packets-update/build-report.json",
+          "sha256": "5e2b7fa495862c8aef181e20d0f43535d442d73f2bc52b7b71ee004b7364aad5",
+          "bytes": 1080286
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume23-packets-update/ajazz_ak820_vial.ihx",
+          "sha256": "e8346963f662214991bb21c00995dc6cb585bc5b91560ef64713c0cb1e31a3e2",
+          "bytes": 108282
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume23-packets-update/ajazz_ak820_vial.map",
+          "sha256": "0103213c8cc48ad22eea167710833c60de4c9b6863a6b1a28175363deab99ade",
+          "bytes": 108325
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume23-packets-update/ajazz_ak820_vial.mem",
+          "sha256": "f5093f5df0b678fe06cf20c403488cb18793eba9a063a8078c1dab7c4c56fb1a",
+          "bytes": 1205
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume23-packets-update/parameter-spills-stack.json",
+          "sha256": "ad612939381943f1b40c41964041fd1463d49b8f9856c5ae664c44361b9385c0",
+          "bytes": 356588
+        }
+      ]
+    },
+    {
+      "label": "24",
+      "scope": "measured intermediate",
+      "build": "resume24-fixed-led",
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "maximal",
+        "optional_features": [
+          "tap-dance",
+          "key-overrides",
+          "qmk-settings",
+          "mac-pc",
+          "os-indicators",
+          "leader",
+          "nkro-control",
+          "one-shot",
+          "space-cadet",
+          "mouse-keys",
+          "auto-shift",
+          "gui-lock",
+          "ctrl-gui-swap",
+          "dynamic-macros"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "nkro-reports",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "grave-escape",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "yes",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "yes",
+          "AK820_COMPACT_AUTOSHIFT": "yes",
+          "AK820_COMPACT_GUI_LOCK": "yes",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          4,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "mouse_cursor": 20,
+          "mouse_wheel": 80,
+          "auto_shift": 175,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "code_bytes": 45173,
+      "code_low_bytes": 1741,
+      "code_main_bytes": 43432,
+      "main_highest_address": "0xd9d3",
+      "main_overflow_bytes": 4820,
+      "main_trailing_free_bytes": 0,
+      "ordinary_xram_bytes": 2897,
+      "flash_stage_bytes": 64,
+      "physical_xram_bytes": 2961,
+      "stack_capacity_bytes": 167,
+      "roots": {
+        "_main": {
+          "bound": 103,
+          "unresolved": []
+        },
+        "_ak820_timer_irq": {
+          "bound": 2,
+          "unresolved": []
+        },
+        "_USB_DeviceInterrupt": {
+          "bound": 5,
+          "unresolved": []
+        },
+        "_ak820_led_irq": {
+          "bound": 2,
+          "unresolved": []
+        }
+      },
+      "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+      "parameter_spills": {
+        "report": ".build/resume24-fixed-led/parameter-spills.json",
+        "report_sha256": "b87050c88bf13db3c48aebfb5426ef8ad1e63c5daf84ae6e2ebd0fbe3b555e34",
+        "context_sha256": "5ef9515da0e78550a824626a42110b9579c1d6360b7a49c56fbb3e28ddb4e851",
+        "selected": 82,
+        "object_saved_bytes": 607,
+        "postlink_qualified": true,
+        "linked_saved_bytes": null,
+        "extra_stack_bytes": 0
+      },
+      "nvm_read_block_asm": true,
+      "nvm_update_block_asm": true,
+      "source_manifest_sha256": "b2f89ae7d944a8626dc6fc9864f3c686918001e93ae188601384f01fad240e71",
+      "current_full_manifest_verification": null,
+      "artifacts": [
+        {
+          "path": "qmk-8051-ak820/.build/resume24-fixed-led/build-report.json",
+          "sha256": "c7dc5e0b1267b7dadf663e0d00cd4c7f705e5111d9bddc88077b0f0ce54101b5",
+          "bytes": 1056181
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume24-fixed-led/ajazz_ak820_vial.ihx",
+          "sha256": "de51636c207e5bab74047764f52d0f887aae8030047be7a22caba86776f6e59b",
+          "bytes": 108298
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume24-fixed-led/ajazz_ak820_vial.map",
+          "sha256": "ec5bbc9346edee07fe6acc5c5c534c913fb3b606dea70d46c9a4e091b41c03b9",
+          "bytes": 107912
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume24-fixed-led/ajazz_ak820_vial.mem",
+          "sha256": "c9f251e88beab839b0d2bdbbc29b4a119bf1add61b5e8e54abdb5bb166bf3df2",
+          "bytes": 1205
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume24-fixed-led/parameter-spills-stack.json",
+          "sha256": "0ab69176c433746dbd54ee0a734c711600d59fbfbcccde8552b41b6ac567ed37",
+          "bytes": 356628
+        }
+      ]
+    },
+    {
+      "label": "25",
+      "scope": "measured intermediate",
+      "build": "resume25-dptr",
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "maximal",
+        "optional_features": [
+          "tap-dance",
+          "key-overrides",
+          "qmk-settings",
+          "mac-pc",
+          "os-indicators",
+          "leader",
+          "nkro-control",
+          "one-shot",
+          "space-cadet",
+          "mouse-keys",
+          "auto-shift",
+          "gui-lock",
+          "ctrl-gui-swap",
+          "dynamic-macros"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "nkro-reports",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "grave-escape",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "yes",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "yes",
+          "AK820_COMPACT_AUTOSHIFT": "yes",
+          "AK820_COMPACT_GUI_LOCK": "yes",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          4,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "mouse_cursor": 20,
+          "mouse_wheel": 80,
+          "auto_shift": 175,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "code_bytes": 45056,
+      "code_low_bytes": 1741,
+      "code_main_bytes": 43315,
+      "main_highest_address": "0xd95e",
+      "main_overflow_bytes": 4703,
+      "main_trailing_free_bytes": 0,
+      "ordinary_xram_bytes": 2897,
+      "flash_stage_bytes": 64,
+      "physical_xram_bytes": 2961,
+      "stack_capacity_bytes": 167,
+      "roots": {
+        "_main": {
+          "bound": 103,
+          "unresolved": []
+        },
+        "_ak820_timer_irq": {
+          "bound": 2,
+          "unresolved": []
+        },
+        "_USB_DeviceInterrupt": {
+          "bound": 5,
+          "unresolved": []
+        },
+        "_ak820_led_irq": {
+          "bound": 2,
+          "unresolved": []
+        }
+      },
+      "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+      "parameter_spills": {
+        "report": ".build/resume25-dptr/parameter-spills.json",
+        "report_sha256": "a584c8be6f29d7e1825da7ee0a658dd3682c7bcb29407959001280125a5df605",
+        "context_sha256": "5ef9515da0e78550a824626a42110b9579c1d6360b7a49c56fbb3e28ddb4e851",
+        "selected": 82,
+        "object_saved_bytes": 727,
+        "postlink_qualified": true,
+        "linked_saved_bytes": null,
+        "extra_stack_bytes": 0
+      },
+      "nvm_read_block_asm": true,
+      "nvm_update_block_asm": true,
+      "source_manifest_sha256": "d9287a9a2ec643b687459565e1b1cf5bf8597d648f68ab6410c160334a47a95e",
+      "current_full_manifest_verification": null,
+      "artifacts": [
+        {
+          "path": "qmk-8051-ak820/.build/resume25-dptr/build-report.json",
+          "sha256": "9bd4f6e9c3a966e34a7f08d77b00b1fad255c589827e22b8e0a54c232a2d00e2",
+          "bytes": 1032076
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume25-dptr/ajazz_ak820_vial.ihx",
+          "sha256": "756322db61cfb0f545118828d52c0a70557d8585819d2bae05f1f7dff978a4fa",
+          "bytes": 108004
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume25-dptr/ajazz_ak820_vial.map",
+          "sha256": "2049aead13776661334103e043a2991556c47def05c74182616efe4e3157d622",
+          "bytes": 107628
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume25-dptr/ajazz_ak820_vial.mem",
+          "sha256": "9f51e3041a0aa50a1e9b70b37de467fd4e50b59aa739250addcb2365bdbed33e",
+          "bytes": 1205
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume25-dptr/parameter-spills-stack.json",
+          "sha256": "03156287aed3d3d3e48f61df44fa7a216a78cff1682b2f47417499e7bb1ce2d4",
+          "bytes": 355963
+        }
+      ]
+    },
+    {
+      "label": "26b",
+      "scope": "current oversized diagnostic",
+      "build": "resume26b-state-bytes",
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "maximal",
+        "optional_features": [
+          "tap-dance",
+          "key-overrides",
+          "qmk-settings",
+          "mac-pc",
+          "os-indicators",
+          "leader",
+          "nkro-control",
+          "one-shot",
+          "space-cadet",
+          "mouse-keys",
+          "auto-shift",
+          "gui-lock",
+          "ctrl-gui-swap",
+          "dynamic-macros"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "nkro-reports",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "grave-escape",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "yes",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "yes",
+          "AK820_COMPACT_AUTOSHIFT": "yes",
+          "AK820_COMPACT_GUI_LOCK": "yes",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          4,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "mouse_cursor": 20,
+          "mouse_wheel": 80,
+          "auto_shift": 175,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "code_bytes": 44747,
+      "code_low_bytes": 1741,
+      "code_main_bytes": 43006,
+      "main_highest_address": "0xd829",
+      "main_overflow_bytes": 4394,
+      "main_trailing_free_bytes": 0,
+      "ordinary_xram_bytes": 2943,
+      "flash_stage_bytes": 64,
+      "physical_xram_bytes": 3007,
+      "stack_capacity_bytes": 167,
+      "roots": {
+        "_main": {
+          "bound": 103,
+          "unresolved": []
+        },
+        "_ak820_timer_irq": {
+          "bound": 2,
+          "unresolved": []
+        },
+        "_USB_DeviceInterrupt": {
+          "bound": 5,
+          "unresolved": []
+        },
+        "_ak820_led_irq": {
+          "bound": 2,
+          "unresolved": []
+        }
+      },
+      "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+      "parameter_spills": {
+        "report": ".build/resume26b-state-bytes/parameter-spills.json",
+        "report_sha256": "10ac947dba22dbbc9b83bc99a40b29177e7d806ad9628e811e193de9c149d2db",
+        "context_sha256": "5ef9515da0e78550a824626a42110b9579c1d6360b7a49c56fbb3e28ddb4e851",
+        "selected": 82,
+        "object_saved_bytes": 727,
+        "postlink_qualified": true,
+        "linked_saved_bytes": null,
+        "extra_stack_bytes": 0
+      },
+      "nvm_read_block_asm": true,
+      "nvm_update_block_asm": true,
+      "source_manifest_sha256": "7c5d6c79189f523b528faaa86191bf07d4295d6fd6cf6da526648b56acef42c2",
+      "current_full_manifest_verification": {
+        "all_artifacts": 1867,
+        "all_source_and_toolchain_inputs": 499
+      },
+      "artifacts": [
+        {
+          "path": "qmk-8051-ak820/.build/resume26b-state-bytes/build-report.json",
+          "sha256": "47f7a54498ff21dd3fba38c9d159eb5b8f974f22c8d3b613acc2ff973c3cdd18",
+          "bytes": 1136918
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.ihx",
+          "sha256": "47400365dfe8e7e56fd46a548938ca8c9024467ca13120f506cb7213e9f7ef10",
+          "bytes": 107290
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.map",
+          "sha256": "6674f5031e0d2fcf1ad7e9f8a68ea5eac1f2fb8dd6a7676ea0642dbd6177f5d2",
+          "bytes": 108150
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.mem",
+          "sha256": "4069682548c02a16d3d9640a3377ffd0d6179742f94a2e78b10220886b60a91e",
+          "bytes": 1205
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26b-state-bytes/parameter-spills-stack.json",
+          "sha256": "c8e4d82fa8553ce7a3e70c2aba1120d539cc0c3c38d8f0ba2c3057df94c2caef",
+          "bytes": 353496
+        }
+      ]
+    },
+    {
+      "label": "work-bootstrap",
+      "scope": "trim-off context bootstrap",
+      "build": "resume26-work-bootstrap",
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "work",
+        "optional_features": [
+          "nkro-control",
+          "one-shot",
+          "space-cadet",
+          "leader",
+          "dynamic-macros",
+          "os-indicators"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "nkro-reports",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "grave-escape",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532482,
+        "make_options": {
+          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_KEY_OVERRIDE": "no",
+          "AK820_QMK_SETTINGS": "no",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "code_bytes": 38047,
+      "code_low_bytes": 1741,
+      "code_main_bytes": 36306,
+      "main_highest_address": "0xbdfd",
+      "main_overflow_bytes": 0,
+      "main_trailing_free_bytes": 2306,
+      "ordinary_xram_bytes": 2490,
+      "flash_stage_bytes": 64,
+      "physical_xram_bytes": 2554,
+      "stack_capacity_bytes": 171,
+      "roots": null,
+      "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+      "parameter_spills": null,
+      "nvm_read_block_asm": true,
+      "nvm_update_block_asm": true,
+      "source_manifest_sha256": "c2286fc4ec874099f2bdb43dec4e7344d694c27f820e3b7d747e76239ac30c48",
+      "current_full_manifest_verification": null,
+      "artifacts": [
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work-bootstrap/build-report.json",
+          "sha256": "31b817867506e8371db5869edc14bd0325335cfbb4a858cb0e252248faca16e3",
+          "bytes": 867188
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work-bootstrap/ajazz_ak820_vial.ihx",
+          "sha256": "989f0107297818755a10dc156bbffd01899c7264aca44876e4f718cd246bb1e7",
+          "bytes": 91346
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work-bootstrap/ajazz_ak820_vial.map",
+          "sha256": "ded6d0963dd15ee7510e0dd7bbb41260394dde02d0157b2e7ec38430f9f14479",
+          "bytes": 100098
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work-bootstrap/ajazz_ak820_vial.mem",
+          "sha256": "9a6bda7ebb881168b84e58ae4a120063a580e55b1b86ffcf8d487e3cf6a7c9d7",
+          "bytes": 1204
+        }
+      ]
+    },
+    {
+      "label": "work",
+      "scope": "current catalog control; not released",
+      "build": "resume26-work",
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "work",
+        "optional_features": [
+          "nkro-control",
+          "one-shot",
+          "space-cadet",
+          "leader",
+          "dynamic-macros",
+          "os-indicators"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "nkro-reports",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "grave-escape",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532482,
+        "make_options": {
+          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_KEY_OVERRIDE": "no",
+          "AK820_QMK_SETTINGS": "no",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "code_bytes": 37545,
+      "code_low_bytes": 1741,
+      "code_main_bytes": 35804,
+      "main_highest_address": "0xbc07",
+      "main_overflow_bytes": 0,
+      "main_trailing_free_bytes": 2808,
+      "ordinary_xram_bytes": 2490,
+      "flash_stage_bytes": 64,
+      "physical_xram_bytes": 2554,
+      "stack_capacity_bytes": 171,
+      "roots": {
+        "_main": {
+          "bound": 98,
+          "unresolved": []
+        },
+        "_ak820_timer_irq": {
+          "bound": 2,
+          "unresolved": []
+        },
+        "_USB_DeviceInterrupt": {
+          "bound": 5,
+          "unresolved": []
+        },
+        "_ak820_led_irq": {
+          "bound": 2,
+          "unresolved": []
+        }
+      },
+      "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+      "parameter_spills": {
+        "report": ".build/resume26-work/parameter-spills.json",
+        "report_sha256": "c2e10e13240dbff3658c484a639645caa343e921d4a5bc55fd70a5801c3e1185",
+        "context_sha256": "b59ed1451f90cf290532271179895864be822aa5273ece9ea562bf33b2ef50a9",
+        "selected": 70,
+        "object_saved_bytes": 661,
+        "postlink_qualified": true,
+        "linked_saved_bytes": null,
+        "extra_stack_bytes": 0
+      },
+      "nvm_read_block_asm": true,
+      "nvm_update_block_asm": true,
+      "source_manifest_sha256": "cfce8341afaf75952fdae09662b3fd51f1154e7d11011fb65a2618a59f723aee",
+      "current_full_manifest_verification": {
+        "all_artifacts": 1737,
+        "all_source_and_toolchain_inputs": 499
+      },
+      "artifacts": [
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work/build-report.json",
+          "sha256": "26ae176f47c147f56c3c5473b646483ad56321e5948257f5ef4d501e66e56eda",
+          "bytes": 970728
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work/ajazz_ak820_vial.ihx",
+          "sha256": "a55253c26af1d82a3dd4173297cb9e6cb33209539b251c876f8e36bd4e079c35",
+          "bytes": 90114
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work/ajazz_ak820_vial.map",
+          "sha256": "dc2d68a8fc39a41533391571387a294336f72417f81d8dce554b304a40518e2f",
+          "bytes": 99475
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work/ajazz_ak820_vial.mem",
+          "sha256": "75c23e7610d64e8ab175fa94b174299358bfd7a1ab20f616f51b6e7c7ee888ae",
+          "bytes": 1204
+        },
+        {
+          "path": "qmk-8051-ak820/.build/resume26-work/parameter-spills-stack.json",
+          "sha256": "f420942f0e7271c7d66fa25c3c3884d91a66f67c9266cf38179ea0d84aaf71e6",
+          "bytes": 298889
+        }
+      ]
+    }
+  ],
+  "delta_from_reproduced22": {
+    "code_bytes": -714,
+    "physical_xram_bytes": 31,
+    "stack_capacity_bytes": 11,
+    "main_overflow_bytes": -714
+  },
+  "failed_attempts": [
+    {
+      "build": "resume26-state-bytes",
+      "reason": "Empty dce-input staging directory existed after rename; copytree rejected it. Fresh26b completed without weakening guards."
+    }
+  ],
+  "whole_program_qualified": false,
+  "hardware_validated": false,
+  "full_configured_regressions": "blocked by maximal CODE and incomplete OEM startup/IRQ, bank and opaque-writer contracts",
+  "physical_device_commands": 0,
+  "installer_or_release_changes": false
+}

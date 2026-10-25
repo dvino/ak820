@@ -335,7 +335,7 @@ int dynamic_keymap_set_tap_dance(uint8_t index, const vial_tap_dance_entry_t *en
 #ifdef VIAL_COMBO_ENABLE
 int dynamic_keymap_get_combo(uint8_t index, vial_combo_entry_t *buffer) {
 #ifdef AK820_COMPACT_COMBO
-    /* Every board caller passes a model-large automatic XDATA entry. */
+    /* Every board caller passes XDATA storage. */
     vial_combo_entry_t AK820_STATE_MEM *entry = (vial_combo_entry_t AK820_STATE_MEM *)buffer;
 #else
     vial_combo_entry_t *entry = buffer;

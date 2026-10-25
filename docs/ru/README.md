@@ -80,7 +80,7 @@ Tap Dance, Key Overrides и QMK Settings. В [руководстве профи�
 исходников, следуйте разделу [Сборка](BUILD.md). Сборка использует Linux/WSL,
 Python 3.11+ и закреплённый SDCC 4.6.0.
 
-[План сжатия всей прошивки](../MAXIMUM-FUNCTIONALITY-PLAN.md) описывает цель разработки.
+[План сжатия всей прошивки](../MAXIMUM-FUNCTIONALITY-PLAN.md) описывает цель разработки. Текущие результаты и оставшиеся ограничения приведены в [отчёте о сжатии](MAXIMUM-FUNCTIONALITY-STATUS.md).
 
 [Документация](INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI и выпуски](CI.md) · [Сборка](BUILD.md) · [Разработка](DEVELOPMENT.md) ·
 [Проверки](TESTING.md) · [Участие](CONTRIBUTING.md).

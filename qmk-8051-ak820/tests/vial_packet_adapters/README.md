@@ -41,7 +41,7 @@ memory and input snapshots, without modifying the Raw packet. Compact TD
 reload is a no-op. `ak820_key_override_reload()` cancels engine state and reads
 records into its private `entries` array. Neither reload retains a packet
 pointer or dispatches a packet callback. GET has no clear callback. These
-properties permit direct packet slices for compact TD/KO only on
+properties permit direct packet slices for compact TD/KO and Combo GET only on
 `__SDCC_mcs51`. Each direct GET and SET branch additionally requires the actual
 record type's `_Alignof` to equal 1. Native and other targets use aligned local
 structures and `memcpy`; compact validation semantics are preserved, while
@@ -52,8 +52,7 @@ GET slice as a multi-byte structure. Byte-only dereferencing alone does not
 make an underaligned typed pointer conversion valid in ISO C; the target guard
 and type-alignment assertion are required even when validators use bytes. GET saves its index
 before clearing output bytes 1 through 10, preserving zero output for invalid
-indices. SET preserves all request bytes except status byte 0. Combo retains
-its separate firewall and storage format.
+indices. SET preserves all request bytes except status byte 0. Combo SET retains its local copy, separate firewall and storage format.
 
 ## Real compiler alignment check
 
@@ -69,3 +68,29 @@ assertions and compiles them with real SDCC mcs51, large model. It proves those
 types have alignment 1 and size 10 in that compiler configuration. This is a
 standalone ABI check; it does not compile the production adapters or establish
 firmware behavior, code size, device operation, or host acceptance.
+
+## Combo GET comparison
+
+Run `python3 qmk-8051-ak820/tests/vial_packet_adapters/combo.py` from the
+repository root. The before parser comes from immutable commit `09330ab`;
+that commit must remain available locally. The test compares its GET and SET
+cases with the current production cases. SET is also required to remain
+textually unchanged. Production Combo storage functions and the validator are
+extracted into the host model.
+
+Both native fallback and the packed SDCC alignment model pass 32,768 cases
+each: both commands, all 256 indices, eight valid/corrupt records, four fault
+states and locked/unlocked operation. The records include boot output, bad
+markers/version, duplicate inputs and empty entries. Comparisons include all
+32 response bytes, modeled storage bytes, reloaded cache, NVM health and
+ordered clear/read/write/flush/reload traces. Clear and reload use model
+callbacks; this does not execute the physical keyboard or actual flash.
+
+The source change removes only the Combo GET local copy on the compact SDCC
+path. It saves the request index before zeroing reply bytes 1 through 10.
+Storage validation, marker removal, invalid-index status and every other
+reply byte retain the before behavior. SET remains unchanged because its
+firewall edits a local temporary while the response echoes the request. No
+wire or durable format changes are made. No full-image size saving, complete
+linked stack/IRQ qualification or runtime device result is established by
+this comparison. Full-link measurement and independent review remain pending.

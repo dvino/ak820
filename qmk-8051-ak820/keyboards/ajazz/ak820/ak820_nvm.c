@@ -317,6 +317,7 @@ void ak820_eeprom_write_block_xdata(const void AK820_XDATA *buf, void *addr, siz
     if (!batch_depth) ak820_nvm_flush();
 }
 
+#ifndef AK820_NVM_UPDATE_BLOCK_ASM
 void ak820_eeprom_update_block_xdata(const void AK820_XDATA *buf, void *addr, size_t len) {
     const uint8_t AK820_XDATA *source = (const uint8_t AK820_XDATA *)buf;
     uint16_t offset = (uint16_t)(uintptr_t)addr;
@@ -328,6 +329,7 @@ void ak820_eeprom_update_block_xdata(const void AK820_XDATA *buf, void *addr, si
         }
     }
 }
+#endif
 
 void eeprom_driver_erase(void) {
     uint8_t page;

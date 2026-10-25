@@ -1,81 +1,141 @@
 {
+  "format": "ak820-maximal-current-2",
   "diagnostic_only": true,
   "installable": false,
   "profile": "maximal",
   "module_count": 14,
-  "code_bytes": 45461,
-  "main_highest_address": "0xdaf3",
-  "main_deficit_bytes": 5108,
-  "physical_xram_bytes": 2976,
-  "ordinary_xram_bytes": 2912,
+  "build": "resume26b-state-bytes",
+  "baseline_commit": "09330ab708e1eb3671571f63894c583e01743eef",
+  "code_bytes": 44747,
+  "code_low_bytes": 1741,
+  "code_main_bytes": 43006,
+  "main_highest_address": "0xd829",
+  "physical_xram_bytes": 3007,
+  "ordinary_xram_bytes": 2943,
   "flash_stage_bytes": 64,
-  "stack_capacity_bytes": 156,
+  "stack_capacity_bytes": 167,
+  "builder_sha256": "8848758c279e27eaf3c76697f10caf6c657bca171114130e37fbdf138e1d426f",
+  "main_deficit_bytes": 4394,
+  "physical_code_windows": [
+    [
+      10400,
+      12288
+    ],
+    [
+      12327,
+      50944
+    ]
+  ],
+  "xram_limit_bytes": 3072,
+  "xram_remaining_bytes": 65,
   "foreground_bound_bytes": 103,
   "usb_bound_bytes": 5,
   "timer_bound_bytes": 2,
   "led_bound_bytes": 2,
+  "unresolved_root_paths": 0,
+  "crt_main_entry_frame_bytes": 2,
+  "irq_wrapper_bytes_each": 17,
+  "distinct_source_irq_bound_bytes": 60,
   "stack_estimate_bytes": 165,
+  "conditional_stack_margin_bytes": 2,
   "whole_program_qualified": false,
+  "hardware_validated": false,
+  "parameter_spills": {
+    "report": ".build/resume26b-state-bytes/parameter-spills.json",
+    "report_sha256": "10ac947dba22dbbc9b83bc99a40b29177e7d806ad9628e811e193de9c149d2db",
+    "context_sha256": "5ef9515da0e78550a824626a42110b9579c1d6360b7a49c56fbb3e28ddb4e851",
+    "selected": 82,
+    "object_saved_bytes": 727,
+    "postlink_qualified": true,
+    "linked_saved_bytes": null,
+    "extra_stack_bytes": 0
+  },
+  "nvm_read_block_asm": true,
+  "nvm_update_block_asm": true,
+  "keymap_words_asm": true,
+  "iram_overlay_enabled": false,
+  "delta_from_reproduced22": {
+    "code_bytes": -714,
+    "physical_xram_bytes": 31,
+    "stack_capacity_bytes": 11,
+    "main_overflow_bytes": -714
+  },
   "artifacts": [
     {
-      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/build-report.json",
-      "sha256": "28d6eb0375a5eb02d30f396eb7b24c526348b1c539ae99ae704750ac46c60962"
+      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/build-report.json",
+      "sha256": "47f7a54498ff21dd3fba38c9d159eb5b8f974f22c8d3b613acc2ff973c3cdd18",
+      "bytes": 1136918
     },
     {
-      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/ajazz_ak820_vial.ihx",
-      "sha256": "576fd31f4ccbe85f722cf0837c688aee69c5a517694f5d8828bdc0a8d3067fe8"
+      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.ihx",
+      "sha256": "47400365dfe8e7e56fd46a548938ca8c9024467ca13120f506cb7213e9f7ef10",
+      "bytes": 107290
     },
     {
-      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/ajazz_ak820_vial.map",
-      "sha256": "317e2a2ee77cadfad0c2f134cf9d1309ef987db864e192db62029161448f2cd4"
+      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.map",
+      "sha256": "6674f5031e0d2fcf1ad7e9f8a68ea5eac1f2fb8dd6a7676ea0642dbd6177f5d2",
+      "bytes": 108150
     },
     {
-      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/ajazz_ak820_vial.mem",
-      "sha256": "4ce8e9948097e945a0073dc39958f4b7ef4801595088c35f140a2dda2802769d"
+      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/ajazz_ak820_vial.mem",
+      "sha256": "4069682548c02a16d3d9640a3377ffd0d6179742f94a2e78b10220886b60a91e",
+      "bytes": 1205
     },
     {
-      "path": "qmk-8051-ak820/.build/maximal-read-22-oversized/parameter-spills-stack.json",
-      "sha256": "3f2b841847d916b05d5ddc6545684bbb14552810caa7be31b0cdac5935ef5841"
+      "path": "qmk-8051-ak820/.build/resume26b-state-bytes/parameter-spills-stack.json",
+      "sha256": "c8e4d82fa8553ce7a3e70c2aba1120d539cc0c3c38d8f0ba2c3057df94c2caef",
+      "bytes": 353496
     }
   ],
-  "build": "maximal-read-22-oversized",
-  "keymap_words_asm": true,
-  "plan_completion_estimate_percent": 40,
-  "plan_completion_estimate_basis": "Approximate work-volume estimate on 2026-10-25; not firmware readiness",
-  "parameter_spills": {
-    "enabled": true,
-    "selected": 82,
-    "object_saved_bytes": 607,
-    "linked_saved_vs_19_bytes": 382,
-    "postlink_qualified": true,
-    "scope": "82 transformations in current22; linked_saved_vs_19 belongs to historical20 comparison"
+  "source_manifest_sha256": "7c5d6c79189f523b528faaa86191bf07d4295d6fd6cf6da526648b56acef42c2",
+  "current_manifest_verification": {
+    "all_artifacts": 1867,
+    "all_source_and_toolchain_inputs": 499
   },
   "evidence": {
-    "startup": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/startup22.json",
-    "inventory": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/inventory22.json",
-    "hooks": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/hooks22/results.json",
-    "source_review": "ak-configurator-local-artifacts/maximal-optimization-20261025/read-rebase-fresh-review.md",
-    "linked_review": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/fresh-image-review.md",
-    "prior_iram_image": {
-      "build": "maximal-overlay-21c-oversized",
-      "stack_capacity_bytes": 169,
-      "code_bytes": 45499,
-      "archive": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass21/build21c.tar.gz",
-      "sha256": "07679419924b5cba284cb84525d5524903a61030b49380f93df5be8dc3dfa4df"
+    "measurements": {
+      "path": "audits/maximal-continuation-20261025/measurements.json",
+      "sha256": "5cc6941bd4a985f7c4bc1974d6a6c6ccd87dd68f856e1be8fc9db379d580df61"
     },
-    "build_archive": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/build22.tar.gz",
-    "build_archive_verification": "ak-configurator-local-artifacts/maximal-optimization-20261025/resume-pass22/build22-archive-verification.json",
-    "build_archive_sha256": "ac9b5dad4b12a9b179dcba096c9659d3510d93d3d6232fc139a54f1e772571cc"
+    "startup": {
+      "path": "audits/maximal-continuation-20261025/startup.json",
+      "sha256": "a5363d7abecaeb61f852e5f7ad9ec6366f6eaa03e963688f15f9ec3570713717"
+    },
+    "linked_components": {
+      "path": "audits/maximal-continuation-20261025/linked-components.json",
+      "sha256": "b50910881e1820cba884717839e0c88e3e82ce0afc8b0628038188c2ec6b2621"
+    },
+    "read_hook": {
+      "path": "audits/maximal-continuation-20261025/read-hook.json",
+      "sha256": "677164a030cf4b5b85041dd02c0b7d3f7226740ca72539e89cd53126d66c707b"
+    },
+    "work_startup": {
+      "path": "audits/maximal-continuation-20261025/work-startup.json",
+      "sha256": "48c9a87b7e1e0f8fdfd9895655891877bfbb009ae0d658ddb29192da6ec23c12"
+    },
+    "work_irq": {
+      "path": "audits/maximal-continuation-20261025/work-irq.json",
+      "sha256": "4d70aef867b9ed8aa3a02773a442659e656ecedd82368d966c68a4e2077fbcf0"
+    }
+  },
+  "catalog_control": {
+    "build": "resume26-work",
+    "code_bytes": 37545,
+    "physical_xram_bytes": 2554,
+    "main_highest_address": "0xbc07",
+    "main_trailing_free_bytes": 2808,
+    "conditional_stack_bound_bytes": 160,
+    "stack_capacity_bytes": 171,
+    "conditional_margin_bytes": 11,
+    "released": false
   },
   "qualification_gates_open": [
-    "main CODE overflow 5108 bytes",
-    "conditional stack estimate165 exceeds capacity156; IRAM composition pending",
+    "main CODE overflow 4394 bytes",
     "complete OEM startup and IRQ routing/non-reentry contract",
     "opaque-writer and application-bank gates",
     "full configured functional regressions",
     "physical validation"
   ],
-  "builder_sha256": "a514203ba0285d98b8f75b2984cef757acb9e44c0debe671be5ac0479679d938",
-  "nvm_read_block_asm": true,
-  "iram_overlay_enabled": false
+  "physical_device_commands": 0,
+  "installer_or_release_changes": false
 }

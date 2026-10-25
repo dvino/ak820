@@ -397,9 +397,17 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
 #ifdef VIAL_COMBO_ENABLE
             case dynamic_vial_combo_get: {
                 uint8_t idx = msg[3];
+#if defined(AK820_COMPACT_COMBO) && defined(__SDCC_mcs51)
+                _Static_assert(_Alignof(vial_combo_entry_t) == 1, "Direct packet adapter requires byte alignment");
+                /* Save idx before clearing its request byte. Invalid indices
+                 * leave the entry untouched, so retain the zero-filled reply. */
+                for (uint8_t i = 1; i <= sizeof(vial_combo_entry_t); ++i) msg[i] = 0;
+                msg[0] = dynamic_keymap_get_combo(idx, (vial_combo_entry_t AK820_STATE_MEM *)&msg[1]);
+#else
                 vial_combo_entry_t entry = { { 0 }, 0 };
                 msg[0] = dynamic_keymap_get_combo(idx, &entry);
                 memcpy(&msg[1], &entry, sizeof(entry));
+#endif
                 break;
             }
             case dynamic_vial_combo_set: {
