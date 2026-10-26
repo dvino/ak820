@@ -113,3 +113,24 @@ All ten exact program policy identities equal HEAD; runtime and firmware source 
 | typing | `32c6275283bd705d3ff05bc7fb7d3d80bef1388abc6d624ac40e2082a26e4e7c` |
 
 No actionable finding remains open. Exact committed-source admission, fresh CI reproduction, native package checks, downloaded public assets and publication identity remain required after this offline approval. Hardware validation remains false. Reviewer physical device commands: zero.
+
+## CI assembly interpreter correction: current approval
+
+Decision: PASS for all ten exact refreshed policies. Independent structural comparison against HEAD found only the workflow source entry SHA256 and size changed in each policy. Exact program identities, host files, safety, packing and qualification bindings are unchanged. All 25,026 input hashes in the retained precommit receipt were independently checked against actual files with zero mismatches. All ten substantive profile checks passed; the receipt defers only committed inputs and independent review records. Its SHA256 is `4d323872a8153ca0ac40e19840fe766d93a5b826e75fdf4ffa1a45856935ce51`. Test-source snapshot remains `a469c44707139d70f4541d9018716e6eb6bc19628b4f99de8030a34d8e7283fe`.
+
+All ten current program review records were authored after this inspection and passed production `validate_policy` against their current host files and actual packing receipt. The independent decision covers the bounded launcher correction and preservation of previously qualified programs. It grants no hardware or publication acceptance.
+
+| Profile | Exact policy SHA256 |
+| --- | --- |
+| code | `f961ec307552e206c787edfc284568ec1077aa276e3b2d5b039b35dcba2948e5` |
+| creative | `f256726330103400fc36e7c54f1840a8bca3d9f5b2f15d86220f3c3573f6d8f2` |
+| game | `a750eaada2d7402c591b5b73809f98fcf8e30f4bac09a5507cf0af9120d09049` |
+| main | `60161aa9b1eab79e824850eb70c363e5532828eb389c8ac116a517ffd3777713` |
+| mmo | `12d0b604f095606a84fe979dfbf7cf48248d621cb0ef1fadb6d81b7f1f77ef18` |
+| multios | `28c610c6424eb4a81bedf5cd2f105ffce12a3fa8ef2868420dc299add695c16f` |
+| onehand | `dfc0285de7312c8bab5d2c49e9b45618bb0a165a965f6df3c6bc7582a6c05443` |
+| pointer | `c6947b9c0b48fb5d5b13b83f9882c75cc072d09866daba991ea643b44b8016d0` |
+| shortcuts | `68441baec6f7f8b7bd17995e39770874d2b3774bab246b513738f2466c9c6b0c` |
+| typing | `513033f9170e35f3aa09ea972fae5b28b984c60b7fbc89c6409f4a00380a961c` |
+
+This table supersedes all earlier policy tables, which remain historical. The command mismatch and authentic archive replay are recorded in [CI assembly command review](../../ci-assembly-command-20261026/independent-review.md). Exact committed admission, fresh successful CI assembly, native package validation and publication identity remain required. No firmware build or physical device command was performed by this review.

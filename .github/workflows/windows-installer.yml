@@ -204,7 +204,7 @@ jobs:
           done
       - name: Assemble all independently authorized profile bundles
         run: >-
-          python tools/build_ci_release.py
+          "$(readlink -f qmk-8051-ak820/.venv/bin/python)" tools/build_ci_release.py
           --all-profiles
           --builds-root qmk-8051-ak820/.build/ci-profiles
           --policies-root ci/profiles
