@@ -38,18 +38,64 @@ def zip_map(path):
             if i.filename in out: fail('duplicate ZIP member: '+i.filename)
             out[i.filename]=z.read(i)
         return out
-def tar_map(path):
+def tar_contents(path):
+    """Resolve archive links to regular bytes/modes without filesystem links."""
     with tarfile.open(path,'r:gz') as t:
-        out={}
+        members={}
         for m in t.getmembers():
-            safe_name(m.name.rstrip('/'))
-            if m.isdir(): continue
-            if not m.isfile(): fail('non-regular tar member: '+m.name)
-            if m.name in out: fail('duplicate tar member: '+m.name)
-            f=t.extractfile(m)
-            if f is None: fail('unreadable tar member: '+m.name)
-            out[m.name]=f.read()
-        return out
+            name=m.name.rstrip('/') if m.isdir() else m.name
+            p=safe_name(name)
+            if str(p)!=name: fail('non-canonical tar member: '+m.name)
+            if name in members: fail('duplicate tar member: '+name)
+            if not (m.isdir() or m.isfile() or m.issym() or m.islnk()):
+                fail('special tar member: '+name)
+            members[name]=m
+        # A file/link cannot also serve as an archive directory.
+        for name in members:
+            for parent in PurePosixPath(name).parents:
+                if str(parent) in members and not members[str(parent)].isdir():
+                    fail('non-directory tar ancestor: '+str(parent))
+        directories={str(parent) for name in members for parent in PurePosixPath(name).parents}
+        directories.update(name for name,m in members.items() if m.isdir())
+        resolved={}
+        def resolve(name, active):
+            if name in resolved: return resolved[name]
+            if name in active: fail('tar link cycle: '+name)
+            m=members.get(name)
+            if m is None: fail('missing tar link target: '+name)
+            if m.isdir(): fail('tar link target is directory: '+name)
+            if m.isfile():
+                f=t.extractfile(m)
+                if f is None: fail('unreadable tar member: '+name)
+                value=(f.read(),m.mode)
+            else:
+                target=m.linkname
+                if not target or target.startswith('/') or '\\' in target or '\x00' in target:
+                    fail('unsafe tar link target: '+repr(target))
+                # Walk before normalizing: missing/../file and file/../file
+                # are broken POSIX paths and must not become valid flat files.
+                parts=list(PurePosixPath(name).parent.parts) if m.issym() else []
+                components=target.split('/')
+                for index,component in enumerate(components):
+                    if component in ('','.'): continue
+                    if component=='..':
+                        if not parts: fail('escaping tar link target: '+target)
+                        parts.pop()
+                    else:
+                        parts.append(component)
+                    current='/'.join(parts) or '.'
+                    if index<len(components)-1 and current not in directories:
+                        fail('non-directory tar link traversal: '+current)
+                target='/'.join(parts)
+                safe_name(target)
+                value=resolve(target,active|{name})
+            resolved[name]=value
+            return value
+        for name,m in members.items():
+            if not m.isdir(): resolve(name,set())
+        return ({n:v[0] for n,v in resolved.items()}, {n:v[1] for n,v in resolved.items()})
+def tar_map(path):
+    return tar_contents(path)[0]
 def check_sidecar(root, name):
     data=(root/(name+'.sha256')).read_text(encoding='ascii').strip()
     m=re.fullmatch(r'([0-9a-fA-F]{64})\s+\*?'+re.escape(name),data)
@@ -65,8 +111,7 @@ def check_safe_extract(files, dest, modes=None):
         out.write_bytes(data)
         if modes and name in modes: out.chmod(modes[name] & 0o777)
 def tar_modes(path):
-    with tarfile.open(path,'r:gz') as t:
-        return {m.name:m.mode for m in t.getmembers() if m.isfile()}
+    return tar_contents(path)[1]
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--assets',required=True,type=Path)

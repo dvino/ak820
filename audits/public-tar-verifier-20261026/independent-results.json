@@ -1,0 +1,155 @@
+{
+  "verifier_sha256": "a1067f53779b82d73de322be32b1848f1f5bb755fbc637b760cc0836d6031a5f",
+  "cases": [
+    {
+      "case": "relative-sibling",
+      "result": "PASS accepted; regular bytes/modes checked"
+    },
+    {
+      "case": "parent-relative",
+      "result": "PASS accepted; regular bytes/modes checked"
+    },
+    {
+      "case": "hard-root-relative",
+      "result": "PASS accepted; regular bytes/modes checked"
+    },
+    {
+      "case": "real-directory-dotdot",
+      "result": "PASS accepted; regular bytes/modes checked"
+    },
+    {
+      "case": "forward-chain",
+      "result": "PASS accepted; regular bytes/modes checked"
+    },
+    {
+      "case": "absolute-member",
+      "result": "PASS rejected",
+      "reason": "unsafe archive path: '/escape'"
+    },
+    {
+      "case": "parent-member",
+      "result": "PASS rejected",
+      "reason": "unsafe archive path: '../escape'"
+    },
+    {
+      "case": "dot-member",
+      "result": "PASS rejected",
+      "reason": "non-canonical tar member: p/./x"
+    },
+    {
+      "case": "double-slash-member",
+      "result": "PASS rejected",
+      "reason": "non-canonical tar member: p//x"
+    },
+    {
+      "case": "duplicate-file",
+      "result": "PASS rejected",
+      "reason": "duplicate tar member: p/x"
+    },
+    {
+      "case": "duplicate-directory",
+      "result": "PASS rejected",
+      "reason": "duplicate tar member: p"
+    },
+    {
+      "case": "directory-file-collision",
+      "result": "PASS rejected",
+      "reason": "duplicate tar member: p"
+    },
+    {
+      "case": "absolute-sym",
+      "result": "PASS rejected",
+      "reason": "unsafe tar link target: '/etc/passwd'"
+    },
+    {
+      "case": "absolute-hard",
+      "result": "PASS rejected",
+      "reason": "unsafe tar link target: '/etc/passwd'"
+    },
+    {
+      "case": "escape-sym",
+      "result": "PASS rejected",
+      "reason": "escaping tar link target: ../../escape"
+    },
+    {
+      "case": "escape-hard",
+      "result": "PASS rejected",
+      "reason": "escaping tar link target: ../escape"
+    },
+    {
+      "case": "backslash-target",
+      "result": "PASS rejected",
+      "reason": "unsafe tar link target: '..\\\\escape'"
+    },
+    {
+      "case": "missing-sym",
+      "result": "PASS rejected",
+      "reason": "missing tar link target: p/absent"
+    },
+    {
+      "case": "missing-hard",
+      "result": "PASS rejected",
+      "reason": "missing tar link target: p/absent"
+    },
+    {
+      "case": "self-cycle",
+      "result": "PASS rejected",
+      "reason": "tar link cycle: p/a"
+    },
+    {
+      "case": "mixed-cycle",
+      "result": "PASS rejected",
+      "reason": "tar link cycle: p/a"
+    },
+    {
+      "case": "directory-target",
+      "result": "PASS rejected",
+      "reason": "tar link target is directory: p"
+    },
+    {
+      "case": "directory-alias-child",
+      "result": "PASS rejected",
+      "reason": "non-directory tar ancestor: alias"
+    },
+    {
+      "case": "file-ancestor",
+      "result": "PASS rejected",
+      "reason": "non-directory tar ancestor: p"
+    },
+    {
+      "case": "link-ancestor",
+      "result": "PASS rejected",
+      "reason": "non-directory tar ancestor: p"
+    },
+    {
+      "case": "fifo",
+      "result": "PASS rejected",
+      "reason": "special tar member: p/fifo"
+    },
+    {
+      "case": "char-device",
+      "result": "PASS rejected",
+      "reason": "special tar member: p/dev"
+    },
+    {
+      "case": "empty-target",
+      "result": "PASS rejected",
+      "reason": "unsafe tar link target: ''"
+    },
+    {
+      "case": "missing-component-dotdot",
+      "result": "PASS rejected",
+      "reason": "non-directory tar link traversal: p/missing"
+    },
+    {
+      "case": "file-component-dotdot",
+      "result": "PASS rejected",
+      "reason": "non-directory tar link traversal: p/file"
+    },
+    {
+      "case": "hard-missing-component",
+      "result": "PASS rejected",
+      "reason": "non-directory tar link traversal: p/missing"
+    }
+  ]
+}
