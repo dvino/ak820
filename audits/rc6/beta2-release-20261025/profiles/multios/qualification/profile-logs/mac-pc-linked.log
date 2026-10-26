@@ -1,0 +1,1384 @@
+{
+  "level": "linked SDCC image in generic C52 CPU simulator; hardware/USB/IRQ behavior unverified",
+  "ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+  "tests": [
+    {
+      "name": "held-physical-modifiers-follow-output-swap",
+      "pass": true,
+      "observations": {
+        "before": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "swapped-held-both-sides": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gui-owner-release-leaves-swapped-alt": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "letter-with-swapped-alt": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "alt-owner-release": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gui-alone-swaps-to-alt": [
+          4,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all-released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "before": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "swapped-held-both-sides": [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gui-owner-release-leaves-swapped-alt": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "letter-with-swapped-alt": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "alt-owner-release": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gui-alone-swaps-to-alt": [
+          4,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all-released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 120,
+      "tested_stack_bytes": 36,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "right-alt-and-gui-map-independently",
+      "pass": true,
+      "observations": {
+        "right-alt": [
+          64,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mac-right-gui": [
+          128,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both-owners": [
+          192,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gui-owner-only": [
+          64,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "clean": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "right-alt": [
+          64,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mac-right-gui": [
+          128,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "both-owners": [
+          192,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gui-owner-only": [
+          64,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "clean": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 123,
+      "tested_stack_bytes": 39,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "swap-toggle-normal-held-owner",
+      "pass": true,
+      "observations": {
+        "alt": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "swap": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "swap-up": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle-off": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle-up": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle-on": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle-up-again": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "normal": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "normal-up": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "owner-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "alt": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "swap": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "swap-up": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle-off": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle-up": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle-on": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "toggle-up-again": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "normal": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "normal-up": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "owner-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 123,
+      "tested_stack_bytes": 39,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "oneshot-alt-is-swapped-only-at-output",
+      "pass": true,
+      "observations": {
+        "queue": [
+          4
+        ],
+        "queued-output": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-down": [
+          4
+        ],
+        "control-up": [
+          4
+        ],
+        "mapped-queued-output": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "consumer": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "consumed": [
+          0
+        ],
+        "all-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "queue": [
+          4
+        ],
+        "queued-output": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-down": [
+          4
+        ],
+        "control-up": [
+          4
+        ],
+        "mapped-queued-output": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "consumer": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "consumed": [
+          0
+        ],
+        "all-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 123,
+      "tested_stack_bytes": 39,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "oneshot-held-osm-survives-swap-tap",
+      "pass": true,
+      "observations": {
+        "osm-down": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-down": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-up": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "osm-up-queues": [
+          4
+        ],
+        "queued-owner-remapped": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "consumer": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "consumed": [
+          0
+        ],
+        "all-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "osm-down": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-down": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-up": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "osm-up-queues": [
+          4
+        ],
+        "queued-owner-remapped": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "consumer": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "consumed": [
+          0
+        ],
+        "all-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 123,
+      "tested_stack_bytes": 39,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "disabled-nkro-stale-bit-follows-output-swaps",
+      "pass": true,
+      "observations": {
+        "nkro-control-disabled": [
+          0,
+          0
+        ],
+        "stale-bit": [
+          128,
+          0
+        ],
+        "physical-ctrl": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ctrl-gui-swap": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mac-pc-swap-keeps-physical-ctrl-projection": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "controls-up": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "alt-owner-composes-before-ctrl-gui": [
+          9,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ctrl-owner-up-leaves-transformed-alt": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "alt-owner-up": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "nkro-control-disabled": [
+          0,
+          0
+        ],
+        "stale-bit": [
+          128,
+          0
+        ],
+        "physical-ctrl": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ctrl-gui-swap": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mac-pc-swap-keeps-physical-ctrl-projection": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "controls-up": [
+          8,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "alt-owner-composes-before-ctrl-gui": [
+          9,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ctrl-owner-up-leaves-transformed-alt": [
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "alt-owner-up": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 123,
+      "tested_stack_bytes": 39,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "mod-tap-held-gui-owner-swaps-and-releases",
+      "pass": true,
+      "observations": {
+        "pending": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held-gui": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held-swapped-alt": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "pending": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held-gui": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "held-swapped-alt": [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "released": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "all-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 123,
+      "tested_stack_bytes": 39,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "alt-gui-control-is-not-repeat-history",
+      "pass": true,
+      "observations": {
+        "letter": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "letter-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-down": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat-letter": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "letter": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "letter-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-down": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "control-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat-letter": [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "repeat-up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 136,
+      "tested_stack_bytes": 52,
+      "fixture_auto_shift": "not-compiled"
+    },
+    {
+      "name": "macro-gui-owner-follows-output-swap",
+      "checks": [
+        {
+          "label": "clean-report_report",
+          "actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "hid_send_trace": [
+        [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "outgoing_report_address": 2884,
+      "outgoing_pointer_checks": [
+        [
+          68,
+          11
+        ],
+        [
+          68,
+          11
+        ]
+      ],
+      "extra_callback_trace": [],
+      "macro_fixtures": [
+        {
+          "logical_length": 22,
+          "stream_sha256": "b560ce2688374cbfd8117abad15c897502a70b48ed88a4b31f89824546ce461c",
+          "grammar_validated": true,
+          "busy": 0,
+          "metadata_address": 52976,
+          "stream_address": 52992
+        }
+      ],
+      "macro_clock_samples": [
+        88956
+      ],
+      "event_clock_samples": [
+        61608,
+        41928
+      ],
+      "max_event_clocks": 61608,
+      "simulated_clocks": 450468,
+      "peak_sp": 108,
+      "tested_stack_bytes": 24,
+      "fixture_auto_shift": "not-compiled",
+      "pass": true,
+      "expected_hid_send_trace": [
+        [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "mac-mode-survives-resume-cleanup",
+      "pass": true,
+      "observations": {
+        "mac-held": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "resume-clears-owner": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new-alt-still-mapped": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "mac-held": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "resume-clears-owner": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "new-alt-still-mapped": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "release": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "outgoing_report_address": null,
+      "outgoing_pointer_checks": [],
+      "peak_sp": 98,
+      "tested_stack_bytes": 14,
+      "fixture_auto_shift": "not-compiled"
+    }
+  ],
+  "hardware_validated": false,
+  "pass": true
+}

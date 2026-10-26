@@ -1,0 +1,9 @@
+In file included from tests/ak820_usb/test_usb.c:7:
+tests/ak820_usb/../../tmk_core/protocol/ch555/usb_ak820.c: In function ‘raw_request_is_nonpersistent’:
+tests/ak820_usb/../../tmk_core/protocol/ch555/usb_ak820.c:579:27: warning: comparison is always true due to limited range of data type [-Wtype-limits]
+  579 |         if (raw_buffer[1] >= vial_get_keyboard_id && raw_buffer[1] <= vial_qmk_settings_get && raw_buffer[1] != vial_set_encoder)
+      |                           ^~
+tests/ak820_usb/../../tmk_core/protocol/ch555/usb_ak820.c:582:34: warning: comparison is always true due to limited range of data type [-Wtype-limits]
+  582 |             return raw_buffer[2] >= dynamic_vial_get_number_of_entries && raw_buffer[2] <= dynamic_vial_key_override_get &&
+      |                                  ^~
+PASS: production AK820 USB/descriptor sources: stale RX_LEN, ordered two-ACK SETUP, UTF-16 strings, EP0 segmentation, HID control, Raw32 ownership/reset, original-request recovery whitelist, persistence gate, read-only FD00/FD01 and EP0 AKBT diagnostics

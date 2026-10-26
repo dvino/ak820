@@ -1,0 +1,567 @@
+SPILL_FORENSIC_ARCHIVE /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 1 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-1
+RUN RUNTIME startup
+RUN RUNTIME irq
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 2 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-2
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools/installer -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/00.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/01.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/02.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/03.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/04.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/05.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/06.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/07.txt
+RUN /tmp/buildenv/bin/python tools/check_docs.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/08.txt
+RUN /tmp/buildenv/bin/python tests/ak820_usb/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/09.txt
+RUN /tmp/buildenv/bin/python tests/ak820_keymap/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/10.txt
+RUN /tmp/buildenv/bin/python tests/ak820_caps_word/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/11.txt
+RUN /tmp/buildenv/bin/python tests/ak820_macro_guard/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/12.txt
+RUN /tmp/buildenv/bin/python tests/ak820_diagnostic/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/13.txt
+RUN /tmp/buildenv/bin/python tests/ak820_optimization/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/14.txt
+RUN /tmp/buildenv/bin/python tests/ak820_rgb/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/15.txt
+RUN /tmp/buildenv/bin/python tests/ak820_via_decode/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/16.txt
+RUN /tmp/buildenv/bin/python tests/ak820_combo/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/17.txt
+RUN /tmp/buildenv/bin/python tests/ak820_bounded/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/18.txt
+RUN /tmp/buildenv/bin/python tests/ak820_tapping/run.py --negative-controls --output /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/tapping-host.json
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/19.txt
+RUN /tmp/buildenv/bin/python tests/ak820_features/run.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/ak820_features
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/20.txt
+RUN /tmp/buildenv/bin/python tests/ak820_unlock/run.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/ak820_unlock
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/21.txt
+RUN /tmp/buildenv/bin/python tests/ak820_tri_layer/run.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/ak820_tri_layer
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/22.txt
+RUN /tmp/buildenv/bin/python tests/ak820_iap/run.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/ak820_iap --iap-fault-profile guarded-erase
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/23.txt
+RUN /tmp/buildenv/bin/python tests/ak820_rgb/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/rgb
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/24.txt
+RUN /tmp/buildenv/bin/python tests/ak820_bounded/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/bounded
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/25.txt
+RUN /tmp/buildenv/bin/python tests/ak820_tapping/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/tapping
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/26.txt
+RUN /tmp/buildenv/bin/python tests/ak820_combo/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/combo
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/qualification-logs-kagyal8u/27.txt
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 3 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-3
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 4 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-4
+RUN PROFILE gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 5 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-5
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 6 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-6
+RUN PROFILE firmware-matrix-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 7 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-7
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 8 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-8
+RUN PROFILE catalog-bundle-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 9 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-9
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 10 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-10
+RUN PROFILE settings-catalog-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 11 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-11
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 12 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-12
+RUN PROFILE capability-catalog-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 13 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-13
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 14 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-14
+RUN PROFILE outline-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 15 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-15
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 16 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-16
+RUN PROFILE short-call-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 17 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-17
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 18 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-18
+RUN PROFILE core-compact-host
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 19 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-19
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 20 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-20
+RUN PROFILE core-compact-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 21 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-21
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 22 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-22
+RUN PROFILE emitted-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 23 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-23
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 24 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-24
+RUN PROFILE transport-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 25 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-25
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 26 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-26
+RUN PROFILE stack-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 27 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-27
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 28 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-28
+RUN PROFILE runtime-safety-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 29 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-29
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 30 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-30
+RUN PROFILE delay-abi
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 31 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-31
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 32 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-32
+RUN PROFILE startup-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 33 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-33
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 34 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-34
+RUN PROFILE startup-stack
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 35 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-35
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 36 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-36
+RUN PROFILE irq-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 37 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-37
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 38 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-38
+RUN PROFILE release-safety-gates
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 39 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-39
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 40 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-40
+RUN PROFILE outline-integrity
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 41 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-41
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 42 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-42
+RUN PROFILE vialrgb-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 43 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-43
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 44 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-44
+RUN PROFILE one-shot-host
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 45 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-45
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 46 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-46
+RUN PROFILE one-shot-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 47 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-47
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 48 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-48
+RUN PROFILE key-overrides-host
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 49 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-49
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 50 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-50
+RUN PROFILE key-overrides-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 51 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-51
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 52 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-52
+RUN PROFILE qmk-settings-host
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 53 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-53
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 54 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-54
+RUN PROFILE qmk-settings-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 55 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-55
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 56 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-56
+RUN PROFILE leader-host
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 57 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-57
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 58 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-58
+RUN PROFILE leader-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 59 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-59
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 60 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-60
+RUN PROFILE os-indicators-host
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 61 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-61
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 62 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-62
+RUN PROFILE os-indicators-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 63 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-63
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 64 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-64
+RUN PROFILE dynamic-macro-host
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 65 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-65
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 66 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-66
+RUN PROFILE dynamic-macro-linked
+{"modules": 77, "functions": 693, "retained": 448, "removed_count": 245}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-b-20261025/qmk-8051-ak820/.build/next-code-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 67 [] /tmp/ak820-scratch/ak820-spill-forensic-bc0fe1cd60e647798c5a53b4951d157f/call-67
+{
+  "format": "ak820-configured-build-1",
+  "configuration": {
+    "format": "ak820-build-configuration-1",
+    "profile": "code",
+    "optional_features": [
+      "one-shot",
+      "leader",
+      "dynamic-macros",
+      "os-indicators",
+      "qmk-settings",
+      "key-overrides",
+      "space-cadet",
+      "grave-escape"
+    ],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "tri-layer",
+      "rgb-effects",
+      "grave-escape"
+    ],
+    "nvm_schema": 532483,
+    "make_options": {
+      "AK820_NKRO": "no",
+      "AK820_GRAVE_ESCAPE": "yes",
+      "AK820_VIALRGB_DIRECT": "no",
+      "AK820_COMPACT_TAP_DANCE": "no",
+      "AK820_COMPACT_KEY_OVERRIDE": "yes",
+      "AK820_QMK_SETTINGS": "yes",
+      "AK820_MAC_PC": "no",
+      "AK820_OS_INDICATORS": "yes",
+      "AK820_COMPACT_LEADER": "yes",
+      "AK820_NKRO_CONTROL": "no",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "yes",
+      "AK820_COMPACT_MOUSEKEY": "no",
+      "AK820_COMPACT_AUTOSHIFT": "no",
+      "AK820_COMPACT_GUI_LOCK": "no",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+    },
+    "runtime_qmk_settings": [
+      1,
+      2,
+      7,
+      18,
+      19
+    ],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200,
+      "os_indicator_lease": 3000,
+      "os_indicator_period": 4096,
+      "leader": 300,
+      "dynamic_macro_phase": 10
+    },
+    "release_approved": false
+  },
+  "identity": {
+    "profile": "code",
+    "configuration_sha256": "2d4f585fbff28bd58478aab56a0a50e9f322d7bc3b58bdb9c41247f4fb06635f",
+    "ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+    "map_sha256": "b63005aa9068a1bc9b43df06e8fcc26b7f0c514face1edb28985221229b6b2a9",
+    "mem_sha256": "c112b06dfd78b67560b87bb92c938d234c2c063f7504d914146f691a36bc12d7",
+    "build_report_sha256": "db1834132af74138ba5f02359523dc4dc2644ed7582c24b337164e2e6f61c954",
+    "source_manifest_sha256": "6596691c9d6f153c5178fbc4d3e6405c015153e4755d9e6433bdd75f03c60ad7",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "nvm_schema": 532483
+  },
+  "short_calls": {
+    "algorithm": "foreground-short-transfers-v2",
+    "report": ".build/next-code-release2-certified/short-calls.json",
+    "report_sha256": "407ff5acac6b4c774a5cb9a3232cc9700c0edb95aa01173d4b3cc0861cd54e20",
+    "selected": 479,
+    "saved_bytes": 479
+  },
+  "optimization": {
+    "contract": "ak820-audited-pass30-1",
+    "reports": {
+      "parameter_spills": "0699cef2e3415c53edac691f65ca9b07f9989f1daab1b2a4350e8249b633b913",
+      "register_saves": "399bf47b014abeaf2683d5f8fcc1400cf514010160ca15f87bac9ecb441f040b",
+      "tail_share": "d488133ee06d857824fad2db1c95889d59f02014deeca77a84fa7626874a8eb0"
+    }
+  },
+  "resources": {
+    "code_bytes": 39779,
+    "code_windows": [
+      {
+        "name": "low",
+        "start": 10400,
+        "end_exclusive": 12288,
+        "occupied_bytes": 1741,
+        "highest_address": 12140,
+        "trailing_free_bytes": 147
+      },
+      {
+        "name": "main",
+        "start": 12327,
+        "end_exclusive": 50944,
+        "occupied_bytes": 38038,
+        "highest_address": 50369,
+        "trailing_free_bytes": 574
+      }
+    ],
+    "xram": {
+      "start": 1088,
+      "end_inclusive": 3459,
+      "bytes": 2372,
+      "capacity": 3008,
+      "reserved_bytes": 64,
+      "total_bytes": 2436,
+      "physical_capacity": 3072
+    },
+    "internal_ram": {
+      "static_bytes": 84,
+      "initial_sp": 83,
+      "stack_capacity": 172,
+      "runtime_stack_bound": 160,
+      "stack_margin": 12,
+      "stack_qualified": true
+    },
+    "protected_windows_clear": true,
+    "absolute_xram": [
+      {
+        "symbol": "_ak820_led_dma",
+        "start": 512,
+        "reserved_end_exclusive": 1024
+      },
+      {
+        "symbol": "_ak820_flash_stage",
+        "start": 1024,
+        "reserved_end_exclusive": 1088,
+        "bytes": 64
+      }
+    ]
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "offline_tests_passed": true,
+  "release_approved": false,
+  "release_blockers": [
+    "No approved installer/settings transition for this feature identity.",
+    "No independent release approval for this image and source."
+  ],
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "source": {
+    "commit": "feeff6fe6dfc98fa2f3857849adb0a446bb93dc3",
+    "dirty": true
+  },
+  "runtime_analysis": {
+    "format": "ak820-runtime-safety-1",
+    "passed": true,
+    "identity": {
+      "profile": "code",
+      "configuration_sha256": "2d4f585fbff28bd58478aab56a0a50e9f322d7bc3b58bdb9c41247f4fb06635f",
+      "ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "map_sha256": "b63005aa9068a1bc9b43df06e8fcc26b7f0c514face1edb28985221229b6b2a9",
+      "mem_sha256": "c112b06dfd78b67560b87bb92c938d234c2c063f7504d914146f691a36bc12d7",
+      "build_report_sha256": "db1834132af74138ba5f02359523dc4dc2644ed7582c24b337164e2e6f61c954",
+      "source_manifest_sha256": "6596691c9d6f153c5178fbc4d3e6405c015153e4755d9e6433bdd75f03c60ad7",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "nvm_schema": 532483
+    },
+    "source_files": {
+      "tools/configure_firmware.py": "406b8135bb3f85c12ca6163eed15eb8376129cdfb3795d2af6c1f8f2a6682340",
+      "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+      "qmk-8051-ak820/tests/ak820_stack/analyze.py": "4cb2689c1c55af93fa0c7aaf5371cc4aba485159321ec0a54a4468d51d62f690",
+      "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+      "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+      "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+      "qmk-8051-ak820/tests/ak820_iap/run.py": "fc97a63d72fe8166312e10ab5dd0e7a3f1a087535411bfb011ffcfe7b9b78c33",
+      "qmk-8051-ak820/tests/ak820_emitted/run.py": "3ec8a5f5faaeb451d0e2ba2b51c0af8dc320896215eaacc912815d0648a19c03",
+      "qmk-8051-ak820/util/ak820_linked_inventory.py": "b2cd080da7dcce101105c9a3ed1e22aa35fab63b26d6d0d1628428f61dd189b1",
+      "qmk-8051-ak820/util/pack_ak820.py": "d392ed795cf34f3c0e1a2e58e07b5a35f1e14500c5bd91c6bcaccfd4f9a7cc7c"
+    },
+    "root_bounds": {
+      "_main": 98,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 5,
+      "_ak820_led_irq": 2
+    },
+    "unresolved_roots": [],
+    "foreground_bound": 98,
+    "main_entry_frame_bound": 2,
+    "pre_main_bound": 2,
+    "irq_bound": 60,
+    "stack_bound": 160,
+    "stack_capacity": 172,
+    "stack_margin": 12,
+    "whole_program_stack_qualified": true,
+    "release_approved": false,
+    "hardware_validated": false,
+    "physical_device_commands": 0,
+    "limits": [
+      "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+      "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+      "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+      "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+      "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+    ],
+    "reports": {
+      "foreground": {
+        "path": "runtime-stack.json",
+        "sha256": "1eb963545b6ffb890c67d698210b810cbead9feb500f9787dcb0cb5e2665c84e"
+      },
+      "startup": {
+        "path": "runtime-safety/startup.json",
+        "sha256": "0748790e401eb9bf6f512f254d43caf3da0c9ea86a86ebfcf1903e34669b7d22"
+      },
+      "irq": {
+        "path": "runtime-safety/irq/results.json",
+        "sha256": "e287d2472f313ab5367855006d51493fadb36ebf906942beccf72049bd6ae300"
+      }
+    },
+    "logs": {
+      "startup": "72b4e223f443cee939cbde5ee1d57108ea75e48d17c20748f721c7dc218b7836",
+      "irq": "e287d2472f313ab5367855006d51493fadb36ebf906942beccf72049bd6ae300"
+    },
+    "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+  },
+  "qualification": {
+    "sha256": "5574188eb59e372c6d22afaa7ac8ae049b6cb0f607ded290dc011945bc3fe3b7",
+    "suites": 28,
+    "unit_tests": {
+      "run": 331,
+      "skipped": 0
+    }
+  },
+  "profile_tests": {
+    "sha256": "4fc65f777941704e7f1392e38abe7f0e6be09fd7dc01586ed2f6d55ffe0751e7",
+    "suites": [
+      "gates",
+      "firmware-matrix-gates",
+      "catalog-bundle-gates",
+      "settings-catalog-gates",
+      "capability-catalog-gates",
+      "outline-gates",
+      "short-call-gates",
+      "core-compact-host",
+      "core-compact-linked",
+      "emitted-linked",
+      "transport-linked",
+      "stack-gates",
+      "runtime-safety-gates",
+      "delay-abi",
+      "startup-gates",
+      "startup-stack",
+      "irq-gates",
+      "release-safety-gates",
+      "outline-integrity",
+      "vialrgb-linked",
+      "one-shot-host",
+      "one-shot-linked",
+      "key-overrides-host",
+      "key-overrides-linked",
+      "qmk-settings-host",
+      "qmk-settings-linked",
+      "leader-host",
+      "leader-linked",
+      "os-indicators-host",
+      "os-indicators-linked",
+      "dynamic-macro-host",
+      "dynamic-macro-linked"
+    ],
+    "source_files_sha256": "a469c44707139d70f4541d9018716e6eb6bc19628b4f99de8030a34d8e7283fe"
+  }
+}

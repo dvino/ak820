@@ -1,0 +1,584 @@
+SPILL_FORENSIC_ARCHIVE /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 1 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-1
+RUN RUNTIME startup
+RUN RUNTIME irq
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 2 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-2
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools/installer -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/00.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/01.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/02.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/03.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/04.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/05.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/06.txt
+RUN /tmp/buildenv/bin/python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/07.txt
+RUN /tmp/buildenv/bin/python tools/check_docs.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/08.txt
+RUN /tmp/buildenv/bin/python tests/ak820_usb/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/09.txt
+RUN /tmp/buildenv/bin/python tests/ak820_keymap/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/10.txt
+RUN /tmp/buildenv/bin/python tests/ak820_caps_word/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/11.txt
+RUN /tmp/buildenv/bin/python tests/ak820_macro_guard/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/12.txt
+RUN /tmp/buildenv/bin/python tests/ak820_diagnostic/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/13.txt
+RUN /tmp/buildenv/bin/python tests/ak820_optimization/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/14.txt
+RUN /tmp/buildenv/bin/python tests/ak820_rgb/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/15.txt
+RUN /tmp/buildenv/bin/python tests/ak820_via_decode/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/16.txt
+RUN /tmp/buildenv/bin/python tests/ak820_combo/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/17.txt
+RUN /tmp/buildenv/bin/python tests/ak820_bounded/run.py
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/18.txt
+RUN /tmp/buildenv/bin/python tests/ak820_tapping/run.py --negative-controls --output /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/tapping-host.json
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/19.txt
+RUN /tmp/buildenv/bin/python tests/ak820_features/run.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/ak820_features
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/20.txt
+RUN /tmp/buildenv/bin/python tests/ak820_unlock/run.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/ak820_unlock
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/21.txt
+RUN /tmp/buildenv/bin/python tests/ak820_tri_layer/run.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/ak820_tri_layer
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/22.txt
+RUN /tmp/buildenv/bin/python tests/ak820_iap/run.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/ak820_iap --iap-fault-profile guarded-erase
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/23.txt
+RUN /tmp/buildenv/bin/python tests/ak820_rgb/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/rgb
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/24.txt
+RUN /tmp/buildenv/bin/python tests/ak820_bounded/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/bounded
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/25.txt
+RUN /tmp/buildenv/bin/python tests/ak820_tapping/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/tapping
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/26.txt
+RUN /tmp/buildenv/bin/python tests/ak820_combo/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified --s51 /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/combo
+PASS /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/qualification-logs-eiojfkdn/27.txt
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 3 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-3
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 4 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-4
+RUN PROFILE gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 5 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-5
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 6 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-6
+RUN PROFILE firmware-matrix-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 7 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-7
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 8 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-8
+RUN PROFILE catalog-bundle-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 9 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-9
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 10 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-10
+RUN PROFILE settings-catalog-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 11 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-11
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 12 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-12
+RUN PROFILE capability-catalog-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 13 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-13
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 14 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-14
+RUN PROFILE outline-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 15 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-15
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 16 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-16
+RUN PROFILE short-call-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 17 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-17
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 18 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-18
+RUN PROFILE core-compact-host
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 19 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-19
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 20 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-20
+RUN PROFILE core-compact-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 21 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-21
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 22 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-22
+RUN PROFILE emitted-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 23 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-23
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 24 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-24
+RUN PROFILE transport-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 25 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-25
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 26 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-26
+RUN PROFILE stack-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 27 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-27
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 28 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-28
+RUN PROFILE runtime-safety-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 29 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-29
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 30 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-30
+RUN PROFILE delay-abi
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 31 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-31
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 32 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-32
+RUN PROFILE startup-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 33 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-33
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 34 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-34
+RUN PROFILE startup-stack
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 35 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-35
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 36 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-36
+RUN PROFILE irq-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 37 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-37
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 38 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-38
+RUN PROFILE release-safety-gates
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 39 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-39
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 40 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-40
+RUN PROFILE outline-integrity
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 41 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-41
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 42 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-42
+RUN PROFILE vialrgb-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 43 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-43
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 44 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-44
+RUN PROFILE nkro-control-host
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 45 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-45
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 46 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-46
+RUN PROFILE nkro-control-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 47 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-47
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 48 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-48
+RUN PROFILE one-shot-host
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 49 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-49
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 50 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-50
+RUN PROFILE one-shot-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 51 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-51
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 52 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-52
+RUN PROFILE tap-dance-host
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 53 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-53
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 54 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-54
+RUN PROFILE tap-dance-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 55 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-55
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 56 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-56
+RUN PROFILE qmk-settings-host
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 57 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-57
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 58 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-58
+RUN PROFILE qmk-settings-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 59 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-59
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 60 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-60
+RUN PROFILE os-indicators-host
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 61 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-61
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 62 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-62
+RUN PROFILE os-indicators-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 63 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-63
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 64 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-64
+RUN PROFILE dynamic-macro-host
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 65 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-65
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 66 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-66
+RUN PROFILE dynamic-macro-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 67 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-67
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 68 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-68
+RUN PROFILE gui-lock-host
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 69 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-69
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 70 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-70
+RUN PROFILE gui-lock-linked
+{"modules": 75, "functions": 689, "retained": 446, "removed_count": 243}
+SPILL_CAPTURE_EXCEPTION quantum/keymap_introspection.asm ValueError Source changed during capture: /home/danil/ChatGPT/ak820-beta2-qualified-a-20261025/qmk-8051-ak820/.build/next-mmo-release2-certified/default-keymap/ak820_default_keymap.inc
+SPILL_FORENSIC_COMPARE 71 [] /tmp/ak820-scratch/ak820-spill-forensic-e39cc36098d347a6adacd0b24a0725a0/call-71
+{
+  "format": "ak820-configured-build-1",
+  "configuration": {
+    "format": "ak820-build-configuration-1",
+    "profile": "mmo",
+    "optional_features": [
+      "one-shot",
+      "dynamic-macros",
+      "os-indicators",
+      "qmk-settings",
+      "vialrgb-direct",
+      "nkro",
+      "nkro-control",
+      "gui-lock",
+      "tap-dance"
+    ],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "tri-layer",
+      "rgb-effects",
+      "nkro-reports",
+      "vialrgb-direct-ram"
+    ],
+    "nvm_schema": 532483,
+    "make_options": {
+      "AK820_NKRO": "yes",
+      "AK820_GRAVE_ESCAPE": "no",
+      "AK820_VIALRGB_DIRECT": "yes",
+      "AK820_COMPACT_TAP_DANCE": "yes",
+      "AK820_COMPACT_KEY_OVERRIDE": "no",
+      "AK820_QMK_SETTINGS": "yes",
+      "AK820_MAC_PC": "no",
+      "AK820_OS_INDICATORS": "yes",
+      "AK820_COMPACT_LEADER": "no",
+      "AK820_NKRO_CONTROL": "yes",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "no",
+      "AK820_COMPACT_MOUSEKEY": "no",
+      "AK820_COMPACT_AUTOSHIFT": "no",
+      "AK820_COMPACT_GUI_LOCK": "yes",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+    },
+    "runtime_qmk_settings": [
+      1,
+      2,
+      7,
+      18,
+      19
+    ],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200,
+      "os_indicator_lease": 3000,
+      "os_indicator_period": 4096,
+      "dynamic_macro_phase": 10
+    },
+    "release_approved": false
+  },
+  "identity": {
+    "profile": "mmo",
+    "configuration_sha256": "cf68d9d04302601272a8228bac76b7fb3b5cc809224a0322b27f959785eb3a83",
+    "ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+    "map_sha256": "a596a1d43c5ae297cfd8139e3dce77f9e688bbba9e23095d29b46ee939b3e4d6",
+    "mem_sha256": "370421495d40d2c4f1eceb1d1da823c780568aa3d1bf6b4dfabe65e640077672",
+    "build_report_sha256": "fa6d14c4734b16fa6c2bff70cac36e01e90adb66ddc200252bbfea7795fda246",
+    "source_manifest_sha256": "257dae4a61ed756748beabe9e61b9f598d5eca746947331a8a626981fd9da24b",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "nvm_schema": 532483
+  },
+  "short_calls": {
+    "algorithm": "foreground-short-transfers-v2",
+    "report": ".build/next-mmo-release2-certified/short-calls.json",
+    "report_sha256": "9bf7356be26cbba30d24dc3b1deb0d44e99678c1582a60665a4c675ff707774b",
+    "selected": 472,
+    "saved_bytes": 472
+  },
+  "optimization": {
+    "contract": "ak820-audited-pass30-1",
+    "reports": {
+      "parameter_spills": "6e502ed439d14713c4c8acaa6c89b1a00360de2335fd206fd25f2835eb28f4a9",
+      "register_saves": "09bd98dd7cdf8ab9b5c124ac42fcda4f1ce7e99c170b30f5b1bec65f38ba5012",
+      "tail_share": "b17026ee9ec39d9041eac05646312bf44584888489a4218cc4cec73aced4a281"
+    }
+  },
+  "resources": {
+    "code_bytes": 39884,
+    "code_windows": [
+      {
+        "name": "low",
+        "start": 10400,
+        "end_exclusive": 12288,
+        "occupied_bytes": 1741,
+        "highest_address": 12140,
+        "trailing_free_bytes": 147
+      },
+      {
+        "name": "main",
+        "start": 12327,
+        "end_exclusive": 50944,
+        "occupied_bytes": 38143,
+        "highest_address": 50474,
+        "trailing_free_bytes": 469
+      }
+    ],
+    "xram": {
+      "start": 1088,
+      "end_inclusive": 3792,
+      "bytes": 2705,
+      "capacity": 3008,
+      "reserved_bytes": 64,
+      "total_bytes": 2769,
+      "physical_capacity": 3072
+    },
+    "internal_ram": {
+      "static_bytes": 89,
+      "initial_sp": 88,
+      "stack_capacity": 167,
+      "runtime_stack_bound": 164,
+      "stack_margin": 3,
+      "stack_qualified": true
+    },
+    "protected_windows_clear": true,
+    "absolute_xram": [
+      {
+        "symbol": "_ak820_led_dma",
+        "start": 512,
+        "reserved_end_exclusive": 1024
+      },
+      {
+        "symbol": "_ak820_flash_stage",
+        "start": 1024,
+        "reserved_end_exclusive": 1088,
+        "bytes": 64
+      }
+    ]
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "offline_tests_passed": true,
+  "release_approved": false,
+  "release_blockers": [
+    "No approved installer/settings transition for this feature identity.",
+    "No independent release approval for this image and source."
+  ],
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "source": {
+    "commit": "feeff6fe6dfc98fa2f3857849adb0a446bb93dc3",
+    "dirty": true
+  },
+  "runtime_analysis": {
+    "format": "ak820-runtime-safety-1",
+    "passed": true,
+    "identity": {
+      "profile": "mmo",
+      "configuration_sha256": "cf68d9d04302601272a8228bac76b7fb3b5cc809224a0322b27f959785eb3a83",
+      "ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "map_sha256": "a596a1d43c5ae297cfd8139e3dce77f9e688bbba9e23095d29b46ee939b3e4d6",
+      "mem_sha256": "370421495d40d2c4f1eceb1d1da823c780568aa3d1bf6b4dfabe65e640077672",
+      "build_report_sha256": "fa6d14c4734b16fa6c2bff70cac36e01e90adb66ddc200252bbfea7795fda246",
+      "source_manifest_sha256": "257dae4a61ed756748beabe9e61b9f598d5eca746947331a8a626981fd9da24b",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "nvm_schema": 532483
+    },
+    "source_files": {
+      "tools/configure_firmware.py": "406b8135bb3f85c12ca6163eed15eb8376129cdfb3795d2af6c1f8f2a6682340",
+      "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+      "qmk-8051-ak820/tests/ak820_stack/analyze.py": "4cb2689c1c55af93fa0c7aaf5371cc4aba485159321ec0a54a4468d51d62f690",
+      "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+      "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+      "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+      "qmk-8051-ak820/tests/ak820_iap/run.py": "fc97a63d72fe8166312e10ab5dd0e7a3f1a087535411bfb011ffcfe7b9b78c33",
+      "qmk-8051-ak820/tests/ak820_emitted/run.py": "3ec8a5f5faaeb451d0e2ba2b51c0af8dc320896215eaacc912815d0648a19c03",
+      "qmk-8051-ak820/util/ak820_linked_inventory.py": "b2cd080da7dcce101105c9a3ed1e22aa35fab63b26d6d0d1628428f61dd189b1",
+      "qmk-8051-ak820/util/pack_ak820.py": "d392ed795cf34f3c0e1a2e58e07b5a35f1e14500c5bd91c6bcaccfd4f9a7cc7c"
+    },
+    "root_bounds": {
+      "_main": 102,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 5,
+      "_ak820_led_irq": 2
+    },
+    "unresolved_roots": [],
+    "foreground_bound": 102,
+    "main_entry_frame_bound": 2,
+    "pre_main_bound": 2,
+    "irq_bound": 60,
+    "stack_bound": 164,
+    "stack_capacity": 167,
+    "stack_margin": 3,
+    "whole_program_stack_qualified": true,
+    "release_approved": false,
+    "hardware_validated": false,
+    "physical_device_commands": 0,
+    "limits": [
+      "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+      "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+      "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+      "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+      "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+    ],
+    "reports": {
+      "foreground": {
+        "path": "runtime-stack.json",
+        "sha256": "9053b58aad04674b5c6f1ed2b91b7cf4233e7c85bb8fcbdca391f5eddb9ddd8e"
+      },
+      "startup": {
+        "path": "runtime-safety/startup.json",
+        "sha256": "450dc55979eeaccf9f8cb1a616389ad9e04bf00f41ac116f08d6ef1e68919667"
+      },
+      "irq": {
+        "path": "runtime-safety/irq/results.json",
+        "sha256": "e28caf715b1436ef64629d6d4d57eaa4be1906ca5d4cc50752d4ca0ea82d14b2"
+      }
+    },
+    "logs": {
+      "startup": "b492f06e63651a5e4812c1deacd33d2a2338e2524d13cad39ae4be08609288d7",
+      "irq": "e28caf715b1436ef64629d6d4d57eaa4be1906ca5d4cc50752d4ca0ea82d14b2"
+    },
+    "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+  },
+  "qualification": {
+    "sha256": "0dbf3e7be921184df00b1c0e7629348397f7403b843a4d78d3f01aa6556fde8d",
+    "suites": 28,
+    "unit_tests": {
+      "run": 331,
+      "skipped": 0
+    }
+  },
+  "profile_tests": {
+    "sha256": "25a81dbfc26d076e7fbc55f9966a5e83b743bf51bd69d60a93a57322b9f89ec7",
+    "suites": [
+      "gates",
+      "firmware-matrix-gates",
+      "catalog-bundle-gates",
+      "settings-catalog-gates",
+      "capability-catalog-gates",
+      "outline-gates",
+      "short-call-gates",
+      "core-compact-host",
+      "core-compact-linked",
+      "emitted-linked",
+      "transport-linked",
+      "stack-gates",
+      "runtime-safety-gates",
+      "delay-abi",
+      "startup-gates",
+      "startup-stack",
+      "irq-gates",
+      "release-safety-gates",
+      "outline-integrity",
+      "vialrgb-linked",
+      "nkro-control-host",
+      "nkro-control-linked",
+      "one-shot-host",
+      "one-shot-linked",
+      "tap-dance-host",
+      "tap-dance-linked",
+      "qmk-settings-host",
+      "qmk-settings-linked",
+      "os-indicators-host",
+      "os-indicators-linked",
+      "dynamic-macro-host",
+      "dynamic-macro-linked",
+      "gui-lock-host",
+      "gui-lock-linked"
+    ],
+    "source_files_sha256": "a469c44707139d70f4541d9018716e6eb6bc19628b4f99de8030a34d8e7283fe"
+  }
+}
