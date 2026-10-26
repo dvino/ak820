@@ -626,7 +626,8 @@
         "os-indicators",
         "qmk-settings",
         "key-overrides",
-        "vialrgb-direct"
+        "vialrgb-direct",
+        "auto-shift"
       ],
       "configuration": {
         "format": "ak820-build-configuration-1",
@@ -638,7 +639,8 @@
           "os-indicators",
           "qmk-settings",
           "key-overrides",
-          "vialrgb-direct"
+          "vialrgb-direct",
+          "auto-shift"
         ],
         "base_features": [
           "six-layers",
@@ -669,7 +671,7 @@
           "AK820_COMPACT_ONESHOT": "yes",
           "AK820_COMPACT_SPACE_CADET": "no",
           "AK820_COMPACT_MOUSEKEY": "no",
-          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_AUTOSHIFT": "yes",
           "AK820_COMPACT_GUI_LOCK": "no",
           "AK820_COMPACT_CTRL_GUI_SWAP": "no",
           "AK820_COMPACT_DYNAMIC_MACRO": "yes"
@@ -677,6 +679,7 @@
         "runtime_qmk_settings": [
           1,
           2,
+          4,
           7,
           18,
           19
@@ -687,12 +690,14 @@
           "os_indicator_lease": 3000,
           "os_indicator_period": 4096,
           "leader": 300,
+          "auto_shift": 175,
           "dynamic_macro_phase": 10
         },
         "release_approved": false
       },
       "features": [
         "alternate-repeat",
+        "auto-shift",
         "caps-word",
         "compact-tap-hold",
         "dynamic-macros",

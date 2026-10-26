@@ -1,0 +1,180 @@
+{
+  "assets_dir": "/workspace/scratch/772c1403f0df/ak820/.build/beta3-release-assets",
+  "commands": [
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--help"
+      ],
+      "exit_code": 0,
+      "label": "help",
+      "output": "usage: ak820.py [-h]\n                [--profile {main,game,mmo,typing,code,pointer,onehand,creative,shortcuts,multios}]\n                {diagnose,setup,udev,prepare,install,verify,check-device,recover,update-prepared,backup,restore,update}\n                ...\n\nAK820 Linux/Windows installer. No command: HID enumeration only.\n\npositional arguments:\n  {diagnose,setup,udev,prepare,install,verify,check-device,recover,update-prepared,backup,restore,update}\n    diagnose            List HID interfaces without opening devices, reset or\n                        firmware writes\n    setup               Local Python environment and hidapi; no USB access\n    udev                Configure Linux device access without USB reset\n    prepare             Create personal permanent/recovery session without\n                        reset/erase/flash\n    install             Fresh OEM backup, explicit confirmations, permanent\n                        install, typing and CODE readback\n    verify              Verify release files and approval entirely offline; no\n                        HID access\n    check-device        Check running firmware without writing settings\n    recover             Restore personal OEM backup from an existing loader;\n                        no reset sent\n    update-prepared     Reviewed RC6 repair; fresh physical Esc + left Ctrl\n                        consent\n    backup              Validated local settings backup\n    restore             Validated local settings restore\n    update              Validated local settings update\n\noptions:\n  -h, --help            show this help message and exit\n  --profile {main,game,mmo,typing,code,pointer,onehand,creative,shortcuts,multios}\n                        Exact installer profile (default: main)\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "main",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:main",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.005973Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.005973Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "game",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:game",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.126506Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.126506Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "mmo",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:mmo",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.265599Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.265599Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "typing",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:typing",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.386792Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.386792Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "code",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:code",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.516698Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.516698Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "pointer",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:pointer",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.645409Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.645409Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "onehand",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:onehand",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.763829Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.763829Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "creative",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:creative",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.906536Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203211.906536Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "shortcuts",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:shortcuts",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203212.090195Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203212.090195Z-verify-logs.zip\n"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-verify-pre0khxw/AK820-Python/tools/installer/ak820.py",
+        "--profile",
+        "multios",
+        "verify"
+      ],
+      "exit_code": 0,
+      "label": "verify:multios",
+      "output": "Release files and independent approval match their checksums. Your device backup is made during preparation.\nVerification was entirely offline; hidapi was not loaded and USB was not opened.\n\nSession folder: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203212.203276Z-verify\nDiagnostic archive: /tmp/ak820-beta3-verify-pre0khxw/AK820-Python/host/runs/20261026T203212.203276Z-verify-logs.zip\n"
+    }
+  ],
+  "execution_scope": "offline --help and verify only; no setup, diagnose, device, or write command",
+  "hardware_validated": false,
+  "packages": [
+    {
+      "checksum_file_sha256": "9544e5d56235e17c02634abe92177bbed6ecf55b3bc962559b8c6aad21583260",
+      "file": "AK820-Windows.zip",
+      "sha256": "5c255415c4671665619a7d11b781ffeac062e2adfaeab397c19e6726fd83595c",
+      "size_bytes": 4534004
+    },
+    {
+      "checksum_file_sha256": "9dc9ffaeffd9f7e47c3d7efa4153931fc6c8b607877c55a5da3846c485ecbcee",
+      "file": "AK820-Linux-x86_64.tar.gz",
+      "sha256": "a8dc3fd3a0aaf0caace130f9c229eee7ae442f732bee8c051c05125568c113ff",
+      "size_bytes": 4384411
+    },
+    {
+      "checksum_file_sha256": "4d859c93fd027e0c4bd4dc0dae9cc398bd2a44548da2a4b35bbc810e324ab8cf",
+      "file": "AK820-Beta3-Catalog.zip",
+      "sha256": "25a5d3f0363cb91f77804456efa3ebe3a1de93e9c0afef81bbc837cfd4b6338c",
+      "size_bytes": 5568674
+    }
+  ],
+  "payload": {
+    "catalog_archive_file_count": 231,
+    "file_count": 246,
+    "linux_archive_file_count": 246,
+    "linux_payload_sha256": "2445e07291b3e3ad829485b8c83a385f4e38c6cc1ceb5b9a56e425cf9263a0ba",
+    "uncompressed_bytes": 24405475,
+    "windows_archive_file_count": 246,
+    "windows_payload_sha256": "2445e07291b3e3ad829485b8c83a385f4e38c6cc1ceb5b9a56e425cf9263a0ba"
+  },
+  "physical_device_commands": 0,
+  "profiles_verified": [
+    "main",
+    "game",
+    "mmo",
+    "typing",
+    "code",
+    "pointer",
+    "onehand",
+    "creative",
+    "shortcuts",
+    "multios"
+  ],
+  "status": "PASS"
+}

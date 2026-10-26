@@ -44,9 +44,12 @@ all ten original-root measurements, checked permanent and trial packing and
 recovery bytes, and completed the full settings-transition matrix. The frozen
 installer suite passed 186 tests with zero skips; its source and log hashes are
 in [settings-run.json](settings-run.json). Independent generated-policy admission
-is recorded in [the final review](final-generated-admission-review.md). Final
-platform package assembly follows from the reviewed committed inputs and is
-recorded separately. Earlier build reports and interrupted preparation attempts
+is recorded in [the final review](final-generated-admission-review.md). All ten
+approved bundles completed canonical assembly from commit
+`d4dbc624d546dbb4f2c132ef60cd165759c84e31`; the
+[assembly run](assembly-run.json) records the archive identity. The final Python
+packages passed [archive and extracted CLI verification](final-package-verification.json).
+Earlier build reports and interrupted preparation attempts
 are diagnostic or superseded evidence; they do not qualify the final source
 manifest.
 
@@ -78,6 +81,8 @@ fixtures; they do not prove a physical settings restore.
 | [Final policy admission](final-generated-admission-review.md) | Exact frozen source, image, packing and transition bindings before committed assembly |
 | [Delivery helper review](delivery-helpers-review.md) | Committed source synchronization and an independent Git bundle import with explicit prerequisite and object-absence checks |
 | [Outer delivery preflight](outer-delivery-preflight-review.md) | Exact package inventory, archive and checksum bindings, and fresh output records |
+| [Catalog refresh review](module-catalog-review.md) | Derived main metadata matches the unchanged registry; profile compositions, prose and qualified inputs are preserved |
+| [Final delivery review](delivery-verification-review.md) | Actual firmware and Python archives, retained assembly evidence, source identities and delivery labels |
 | [Python payload smoke](python-payload-smoke.md) | Real staged CLI import and `--help`, excluded GUI inputs and guide links; a minimal smoke payload |
 | [Historical CI inputs](historical-ci-inputs.json) | Authenticated previous candidate artifacts and exact retained image identities |
 
@@ -136,8 +141,12 @@ The original compilation reports remain build history. The qualification
 inventory identifies the current archives and the exact requalification reports.
 
 The [retained helper sources](delivery-helper-sources.json) preserve the exact
-reviewed delivery scripts. Their preflight reviews cover code; execution and
-final package checks are recorded separately after committed assembly.
+reviewed delivery scripts. Their preflight reviews cover code; actual execution
+is recorded in [the package build](package-build-run.json) and
+[final package verification](final-package-verification.json). All eleven
+extracted CLI commands passed: help and offline verification for each profile.
+Windows and Linux payload bytes match; the Linux launcher is executable. The
+archives exclude standalone GUI installers, their runtimes and private ROMs.
 
 The [first committed assembly](assembly-initial-run.json) stopped before producing
 a release bundle because the shared compiler path resolved outside the worker
@@ -147,6 +156,22 @@ keeps the original path for qualification checks and uses an ordinary local copy
 for canonical assembly. All 4197 files in each [local copy](assembly-toolchain-copies.json)
 match the original toolchain. Firmware, qualification evidence and program
 policies are unchanged; canonical checks remain active.
+
+The subsequent assembly passed in 527.665 seconds. Its complete original
+worker reports, logs and aggregate catalogs are retained in
+[the assembly report archive](assembly-linked-reports.json), with every file
+checked against the actual output. The committed-source synchronization
+receipts are [the initial synchronization](committed-origin-sync.json) and
+[the audit-only correction](assembly-correction-sync.json).
+
+The [first package attempt](package-build-initial-run.json) rejected stale
+derived metadata for `main`. The [catalog refresh](module-catalog-refresh.json)
+adds its already-prepared Auto Shift configuration to the description catalog.
+The registry, all ten compositions, descriptive text, qualified source files
+and 22 Python host payload files are unchanged. Final catalog assets include
+this separately reviewed metadata correction; approved firmware and host files
+still identify the assembly source commit above. The final Git snapshot also
+contains the catalog correction and completed delivery reports.
 
 No USB, bootloader, reset or flash commands were sent. Static bounds, host tests
 and CPU models do not verify physical USB timing, added LED interrupt timing,

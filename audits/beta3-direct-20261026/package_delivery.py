@@ -93,7 +93,8 @@ def main():
     for name in ('firmware-bundle.zip', 'firmware-bundle.zip.sha256'):
         add('firmware/' + name, args.assembled / name)
     for name in ('final-generated-admission-review.md', 'delivery-verification-review.md',
-                 'final-package-verification.json', 'assembly-run.json'):
+                 'final-package-verification.json', 'assembly-run.json',
+                 'module-catalog-refresh.json', 'module-catalog-review.md'):
         add('verification/' + name, audit / name)
     add('verification/bundle-verification.json', args.bundle_verification)
     qualified = json.loads((audit / 'final-qualification.json').read_bytes())
@@ -123,8 +124,8 @@ verification/ содержит результаты проверки готов�
 Полные исходники и машинные доказательства сохранены в Git bundle,
 который предоставляется рядом с этим архивом: {args.bundle.name}
 
-Исходный коммит сборки пакетов: {args.source_commit}
-Итоговая вершина Git с отчётами: {head}
+Исходный коммит одобренных образов прошивки и файлов Python: {args.source_commit}
+Итоговая вершина Git с каталогом выпуска и отчётами: {head}
 База инкрементального bundle: {BASE}
 
 В существующем репозитории с этой базой:
@@ -141,9 +142,15 @@ package and its checksum in release/, then follow the included English or
 Russian installation guide. No standalone GUI installer/runtime is included.
 The companion application is separate. Verification is offline; no hardware
 validation, GitHub publication or device flashing is claimed.
+Firmware images and Python host files were approved from source commit
+{args.source_commit}. The final Git HEAD {head} contains the release catalog
+and reports, including a metadata-only catalog correction; firmware and Python
+host files are unchanged by that correction.
 '''.encode('utf-8')
     manifest = {'format': 'ak820-beta3-delivery-manifest-1', 'tag': 'v0.6.0-beta.3',
-                'git': {'base': BASE, 'source_commit': args.source_commit, 'head': head,
+                'git': {'base': BASE, 'source_commit': args.source_commit,
+                        'source_scope': 'Approved firmware images and Python host files; excludes the later metadata-only web/module-descriptions.json catalog correction.',
+                        'head': head,
                         'bundle': args.bundle.name, 'bundle_sha256': sha(bundle),
                         'bundle_size': len(bundle), 'branch': 'codex/beta3-direct-w'},
                 'hardware_validated': False, 'physical_device_commands': 0,
