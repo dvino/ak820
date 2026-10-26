@@ -33,7 +33,7 @@ English source of truth: [Project status](../STATUS.md).
 охватывает 130 автономных случаев: десять переходов профиля в себя и 120
 явно перечисленных переходов вперёд. Для источников alpha.2, alpha.3 и beta.1
 `work` указан переход в каждый профиль beta.2; между профилями beta.2 разрешены
-только проверенные переходы. [Запись исправления alpha.3](../../audits/rc6/beta2-release-20261025/alpha3-transition-fix.json)
+только проверенные переходы. [Запись исправления alpha.3](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/audits/rc6/beta2-release-20261025/alpha3-transition-fix.json)
 связывает исторические IHX `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`
 и CODE `01f0f7a979d8cfa8217b3bba333758ae3509cf7f3f8e35fbffb1ed034b808e5d`;
 в ней записаны десять автономных переносов из alpha.3 и отдельные проверки
@@ -56,8 +56,7 @@ English source of truth: [Project status](../STATUS.md).
 Объём ревью и найденные замечания
 записаны в [итоговом отчёте ревью
 выпуска](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/audits/rc6/beta2-release-20261025/final-release-review.md).
-Текущие задания публикации в native CI имеют статус CANCELLED, пока
-исправление перехода из alpha.3 не включено. Команды по USB для beta.2
+Публикация отражается на [странице выпуска](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.2). Команды по USB для beta.2
 не отправлялись. Не проверены физические
 задержки USB, LED DMA, реальные сбои flash, потеря
 питания, сохранность после отключения питания
