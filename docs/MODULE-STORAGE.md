@@ -2,15 +2,16 @@
 
 # Module settings storage
 
-Schema `0x082003` adds typed settings for the curated `tap-dance`, `key-overrides`
-and `settings` profiles. Their historical `full-*` aliases remain available in
-the low-level CLI. The other six curated profiles and the normal host packaging
-default use schema `0x082002`.
-No schema03 image is added to the installer approval list by this change.
+All ten current beta.2 profiles use NVM schema `0x082003`. The low-level packer API defaults to legacy schema `0x082002` unless a target
+schema is selected explicitly. The beta.2 profile build selects schema `0x082003`;
+the low-level API default does not change its format.
+The schema adds typed storage for eight Tap Dance entries, eight Key Override
+entries and QMK Settings.
 
 The six keymap layers, encoder table at `0x640`, eight ten-byte Combos at
 `0x658`, macro metadata at `0x7f0` and macro buffer at `0x800..0x27ff`
-keep their schema02 layout. All addresses are relative to NVM.
+keep their prior layout. The extension addresses below are relative to NVM.
+Header addresses and encoding are unchanged.
 
 | Field | Address | Encoding |
 | --- | --- | --- |
@@ -38,32 +39,34 @@ Other rows require trigger `0x04..0xa4`, replacement KC_NO or a modified
 basic keycode with low byte `0x04..0xa4`, a layer mask of 1–63 and options
 with at least one of bits 0–2. Option bit 6 is forbidden.
 
-## Host migration and backup
+## Profiles, migration and backup
+
+Every profile stores all eight Tap Dance rows, all eight Key Override rows and
+the QMK Settings record. QMK Settings are available in all ten profiles. Tap
+Dance is active only in `mmo`, `onehand`, `creative` and `shortcuts`. Key
+Overrides are active in `main`, `game`, `typing`, `code`, `pointer`, `shortcuts`
+and `multios`; they are inactive in `mmo`, `onehand` and `creative`. Storage in an
+inactive table is retained, but the installer does not read or restore its
+values as active settings. It will stop before writing if a backup contains
+inactive values that cannot be reproduced by the target.
 
 `pack.migrate_vial_nvm(..., target_build_id=pack.EXTENSION_BUILD_ID)` explicitly
-initializes schema03 from schema01 or schema02. Schema02 fields, including
-nonempty Combos, are copied. Existing schema01 macro capacity checks still
-apply. Schema03 copies remain byte exact; downgrade to schema02 fails.
-`pack` and `verify_payload` also require an explicit target for schema03.
-The normal release packaging command retains schema02 defaults.
+initializes schema `0x082003` from schema `0x082001` or `0x082002`. Schema02
+fields, including nonempty Combos, are copied. Existing schema01 macro capacity
+checks still apply. Copies already using schema03 remain byte exact; downgrade
+to schema02 is rejected. Low-level `pack` and `verify_payload` also require an
+explicit target to produce schema03. The ordinary low-level packaging default
+remains schema02.
 
-Backup format `ak820-settings-backup-2` includes a complete typed `extensions`
-object. It requires exact reviewed image hashes and schema03 profile metadata
-(`extensions_version: 1`, `combos_version: 1`, and a supported profile name).
-The declared features must match `ak820_profiles.configuration(profile)` exactly.
-Each of the three schema03 profiles enables only its named extension. Export checks getters only
-for enabled modules and checks the exact advertised table counts and settings IDs.
-Restore rejects differences in inactive tables or inaccessible settings before
-writing any field. All typed storage remains part of the backup.
-The existing release pins are unchanged. Duplicate, missing and unknown typed
-JSON fields fail validation. Legacy backups may initialize only empty/default
-extension targets. Schema03 backups cannot restore to schema02.
+The installer uses typed backup format `ak820-settings-backup-2` for these
+profiles. It includes all extension tables and settings, and checks exact image
+hashes and profile metadata. Declared features must match the selected profile.
+Legacy `ak820-settings-backup-1` backups can initialize extension storage only
+when target tables are empty and QMK Settings are at defaults. A schema03
+backup cannot be restored to schema02. The approved profile image identities
+and offline transition limits are in [Status](STATUS.md).
 
-DeviceAPI uses existing Vial dynamic entry commands for table rows and QMK
-Settings query/get/set/reset commands for settings. Writes still require the
-explicit write-enabled adapter and the restore workflow's physical unlock.
-Every new setter checks its ACK, getter and full NVM readback, including
-neighboring bytes. Failure stops the operation without retry or recovery.
-Settings operations that already match the effective defaults preserve a blank
-zero or erased record and verify the original bytes without writing.
-These host checks do not prove physical key behavior or power-loss persistence.
+Direct RGB palette values and volatile module state are not part of the backup.
+A value that the target cannot reproduce stops restore before its first write.
+These format checks do not establish physical key behavior or persistence after
+power loss.

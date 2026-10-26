@@ -21,7 +21,7 @@ links image identities and results. The [packing
 preflight](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/audits/rc6/beta2-release-20261025/packing-preflight.json)
 records offline package checks; the [transition
 preflight](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/audits/rc6/beta2-release-20261025/transition-preflight.json)
-covers 120 offline settings-transition cases.
+covers 130 offline cases: ten same-profile cases and 120 explicit forward edges. Sources alpha.2, alpha.3 and beta.1 `work` each have a listed path to all ten beta.2 profiles; paths between beta.2 profiles are limited to the reviewed edges. The [alpha.3 correction record](../audits/rc6/beta2-release-20261025/alpha3-transition-fix.json) binds historical IHX `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18` and CODE `01f0f7a979d8cfa8217b3bba333758ae3509cf7f3f8e35fbffb1ed034b808e5d`; it records ten offline alpha.3 restore plans and separate nondefault fixtures. Unsupported or unlisted transitions are rejected. These checks do not validate hardware behavior.
 
 | Profile | CODE bytes | Stack bound |
 | --- | ---: | ---: |
@@ -38,9 +38,9 @@ covers 120 offline settings-transition cases.
 
 See the [final release review
 record](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/audits/rc6/beta2-release-20261025/final-release-review.md)
-for review scope and recorded findings. The [beta.2 release
-page](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.2) is the location for
-packages and checksums. No USB commands were sent for beta.2. USB timing,
+for review scope and recorded findings. Current native CI publication jobs are
+CANCELLED while the alpha.3 transition correction is incorporated. No USB
+commands were sent for beta.2. USB timing,
 LED DMA, physical flash faults, power loss, retention after power removal and manual
 GUI behavior remain untested. Hardware acceptance is unvalidated.
 

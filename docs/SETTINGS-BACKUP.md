@@ -2,35 +2,44 @@
 
 # Settings backup and restore
 
-The installer can save supported settings to a private folder, restore
-them, or carry them through a supported firmware update. It uses existing Vial
-commands; the firmware does not need a separate backup protocol.
+The installer saves supported settings to a private folder, restores them, or
+carries them through a supported firmware update. It uses existing Vial
+commands; the firmware has no separate backup protocol.
 
 ## Supported firmware and migration
 
-The installer accepts six exact reviewed image profiles.
-[Status](STATUS.md) identifies the current release and installed image.
-It checks both the application and firmware already in the keyboard before
-writing. Same-build restore and approved forward migrations are supported;
-downgrades and unknown builds are rejected.
+The current beta.2 installer profiles are `main`, `game`, `mmo`, `typing`,
+`code`, `pointer`, `onehand`, `creative`, `shortcuts` and `multios`. The exact
+profile images and approved transitions are listed in [Status](STATUS.md).
+The installer checks the application and firmware before writing. It accepts
+same-image restore and only exact whitelisted forward transitions. Downgrades,
+unknown images and unlisted profile-to-profile transitions are rejected.
+
+The offline transition set includes alpha.2, alpha.3 and beta.1 `work` as
+sources to each of the ten beta.2 profiles, plus the reviewed transitions
+between beta.2 profiles. It does not promise that every saved value exists or
+can be reproduced by every target profile. Unsupported keycodes, inactive
+Tap Dance or Key Override entries, unavailable QMK Settings, or Direct RGB
+values that cannot be reproduced stop restore before the first settings write.
 
 Older firmware has no Combo settings, so its backup has no Combo section. A
 Combo-enabled backup records all eight slots, including empty ones. A malformed
 or unsupported Combo version stops backup or restore before settings are
 written. An older backup can be restored to Combo-enabled firmware only when
-all eight target slots are empty; the restore leaves them empty. Restoring a
-Combo-enabled backup applies all eight saved slots, so an empty slot clears the
-matching target slot. Firmware without Combo support rejects a backup that
-contains Combos. See [Combo behavior](COMBOS.md) for supported entries.
+all eight target slots are empty; they remain empty. A Combo-enabled backup
+applies all eight saved slots, so an empty slot clears the matching target
+slot. Firmware without Combo support rejects a backup that contains Combos.
+See [Combo behavior](COMBOS.md) for supported entries.
 
 ## Commands
 
-Run the source installer as `AK820.sh` on Linux or `AK820.cmd` on Windows:
+Run the source installer as `AK820.sh` on Linux or `AK820.cmd` on Windows.
+Select an exact profile with `--profile`; the default is `main`:
 
 ```sh
-./AK820.sh backup --session OEM_DIR --output NEW_DIR
-./AK820.sh restore --session OEM_DIR --backup BACKUP_DIR
-./AK820.sh update --session OEM_DIR --backup-dir NEW_DIR
+./AK820.sh --profile main backup --session OEM_DIR --output NEW_DIR
+./AK820.sh --profile main restore --session OEM_DIR --backup BACKUP_DIR
+./AK820.sh --profile main update --session OEM_DIR --backup-dir NEW_DIR
 ```
 
 Each command needs a valid OEM recovery session. The installer uses it to
@@ -56,22 +65,25 @@ readback, stop; do not retry or restore blindly.
 
 A backup includes 498 key assignments across six layers, 12 encoder
 assignments, 16 macros, layout options and supported RGB settings. Combo-enabled
-firmware also saves all eight Combo slots. The installer checks the saved files
-before completing the backup.
+firmware also saves all eight Combo slots. Beta.2 schema `0x082003` backups
+use typed format `ak820-settings-backup-2` and include the complete extension
+tables and QMK Settings data, including stored tables for modules inactive in
+the selected profile. Saving those tables does not activate the modules during
+restore. Legacy backups use `ak820-settings-backup-1`; they can initialize a
+beta.2 target's extension storage only when its tables are empty and settings
+are at defaults. The installer checks saved files before completing a backup.
 
-Connect only one supported keyboard. Its Vial identifier identifies the model,
-not a unique unit. Reads do not freeze the firmware: keep configuration tools
-closed and do not change settings during a backup. Repeated reads check for
-changes but cannot guarantee an atomic snapshot. A mismatch stops the operation.
+Connect only one supported keyboard. Its Vial identifier identifies the
+model, not a unique unit. Reads do not freeze the firmware: keep configuration
+tools closed and do not change settings during a backup. Repeated reads check
+for changes but cannot guarantee an atomic snapshot. A mismatch stops the
+operation.
 
 The backup does not include the Direct RGB palette, temporary lighting state,
-animation position, held keys or a running macro's position. For installer-approved
-release images, separate One Shot, Mouse Keys, Tap Dance and Key Overrides
-settings are unsupported. Restore stops before writing
-when a value cannot be reproduced with supported settings commands.
+animation position, held keys or a running macro's position. Restore stops
+before writing when a saved value cannot be reproduced with supported settings
+commands.
 
 Exact image identities and current validation results are recorded in
-[Status](STATUS.md).
-
-Development schema03 has a separate typed backup contract for module settings;
-see [Module storage](MODULE-STORAGE.md). The approved installer image list is unchanged.
+[Status](STATUS.md). The typed storage layout and migration rules are in
+[Module storage](MODULE-STORAGE.md).

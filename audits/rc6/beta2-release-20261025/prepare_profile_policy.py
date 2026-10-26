@@ -50,7 +50,7 @@ def main():
     packing = json.loads((AUDIT / 'packing-preflight.json').read_text())
     transitions = json.loads((AUDIT / 'transition-preflight.json').read_text())
     require(packing['offline_only'] and packing['physical_device_commands'] == 0, "Preparation input check failed: packing['offline_only'] and packing['physical_device_commands'] == 0")
-    require(len(transitions['cases']) == 120 and all(c['passed'] for c in transitions['cases']), "Preparation input check failed: len(transitions['cases']) == 120 and all(c['passed'] for c in transitions['cases'])")
+    require(len(transitions['cases']) == 130 and all(c['passed'] for c in transitions['cases']), "Preparation input check failed: len(transitions['cases']) == 130 and all(c['passed'] for c in transitions['cases'])")
     tests = []
     if args.settings_run:
         test = json.loads(args.settings_run.read_text())
@@ -74,7 +74,7 @@ def main():
             pack = next(p for p in packing['profiles'] if p['profile'] == profile)
             require(pack['build']['ihx_sha256'] == ihx, "Preparation input check failed: pack['build']['ihx_sha256'] == ihx")
             cases = [c for c in transitions['cases'] if c['target_profile'] == profile]
-            require(len(cases) == 12 and all(c['target'] == ihx for c in cases), "Preparation input check failed: len(cases) == 12 and all(c['target'] == ihx for c in cases)")
+            require(len(cases) == 13 and all(c['target'] == ihx for c in cases), "Preparation input check failed: len(cases) == 13 and all(c['target'] == ihx for c in cases)")
             alpha = next(c for c in cases if c['source_case'] == 'alpha2-saved-rom')
             evidence = AUDIT / 'profiles' / profile
             evidence.mkdir(parents=True, exist_ok=True)

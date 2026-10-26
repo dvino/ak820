@@ -15,6 +15,11 @@ import ak820_profiles as profiles
 from ak820_release_manifest import host_manifest
 GROUPS = {'a':('main','game','mmo','creative'),'b':('typing','code','multios'),'c':('pointer','onehand','shortcuts')}
 ORDER = ('main','game','mmo','typing','code','pointer','onehand','creative','shortcuts','multios')
+HISTORICAL_SOURCES = {
+    'alpha2-saved-rom': ('f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e', '6ff7b1653925da7dc12bdb6f7ef5fc1dc4319c5b931def50c68b9cf45c4054d7'),
+    'alpha3-packed': ('d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18', '01f0f7a979d8cfa8217b3bba333758ae3509cf7f3f8e35fbffb1ed034b808e5d'),
+    'beta1-work-packed': ('652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880', 'a7ad972f47acff20f3492ed846f5c6ca0825d43de263f26cc9328069a27cdd10'),
+}
 A = R/'audits/rc6/beta2-release-20261025'
 seen = {}
 PRECOMMIT = False
@@ -160,7 +165,7 @@ def check_profile(p,g,snapshot,packing,matrix,catalog):
     stage(out,'safety',proof)
     def transitions():
         pack=next(x for x in packing['profiles'] if x['profile']==p); cases=[c for c in matrix['cases'] if c['target_profile']==p]
-        need(len(cases)==12 and len({c['source_case'] for c in cases})==12,'transition source cases incomplete/duplicate')
+        need(len(cases)==13 and len({c['source_case'] for c in cases})==13,'transition source cases incomplete/duplicate')
         need(all(c['passed'] is True and c['target']==ident['ihx_sha256'] and c['offline_only'] is True and c['physical_device_commands']==0 for c in cases),'transition scope/image/failure')
         alpha=next(c for c in cases if c['source_case']=='alpha2-saved-rom'); need([alpha[k] for k in ('key_count','encoder_count','combo_count')]==[498,12,8],'alpha2 counts differ')
         need(all(pack['build'].get(k)==ident[k] for k in ('profile','ihx_sha256','map_sha256','mem_sha256','configuration_sha256','compiler_sha256','nvm_schema')),'packing build identity differs')
@@ -185,7 +190,7 @@ def check_profile(p,g,snapshot,packing,matrix,catalog):
         receipt=load(directory/'packing-validation.json'); rp=receipt['packing']
         need(pack['recovery_byte_equal'] is True and rp['recovery_byte_equal'] is True and rp['install_modes']==['permanent','trial'],'packing mode/recovery differs')
         need(rp['permanent']==pack['permanent'] and rp['images']['ak820-vial-trial.bin']==pack['trial'] and rp['images']['restore-native.bin']['sha256']==pack['recovery_sha256'] and rp['images']['restore-native.bin']['size']==pack['permanent']['size'],'packing images differ')
-        return {'cases':12,'settings_code_sha256':pack['settings_code_sha256']}
+        return {'cases':13,'settings_code_sha256':pack['settings_code_sha256']}
     stage(out,'transitions_packing_catalog',transitions)
     def review():
         policy=load(directory/'release-policy.json'); receipt=(directory/'packing-validation.json').read_bytes(); raw=(directory/'program-review.md').read_bytes(); record=ci._review_record(raw)
@@ -205,7 +210,23 @@ def main():
     def global_inputs():
         packing=load(A/'packing-preflight.json'); matrix=load(A/'transition-preflight.json'); catalog=load(R/'tools/installer/settings-catalog.json')
         need(packing['offline_only'] is True and packing['physical_device_commands']==0 and packing['hardware_validated'] is False,'packing scope differs')
-        need(len(matrix['cases'])==120 and all(c['passed'] is True for c in matrix['cases']),'full transition matrix incomplete')
+        need(len(catalog.get('historical_sources',[]))==3,'catalog historical source count differs')
+        need(all(set(x)=={'ihx_sha256','code_sha256'} for x in catalog['historical_sources']),'catalog historical source record shape differs')
+        actual_history={(x.get('ihx_sha256'),x.get('code_sha256')) for x in catalog['historical_sources']}
+        need(actual_history==set(HISTORICAL_SOURCES.values()),'catalog historical source identities differ')
+        expected_edges=set()
+        for source in ORDER:
+            source_hash=catalog['profiles'][ORDER.index(source)]['identity']['ihx_sha256']
+            for target in ORDER:
+                target_hash=catalog['profiles'][ORDER.index(target)]['identity']['ihx_sha256']
+                expected_edges.add((source,source_hash,target,target_hash))
+        for source_case,(source_hash,_code_hash) in HISTORICAL_SOURCES.items():
+            for target in ORDER:
+                target_hash=catalog['profiles'][ORDER.index(target)]['identity']['ihx_sha256']
+                expected_edges.add((source_case,source_hash,target,target_hash))
+        actual_edges={(c.get('source_case'),c.get('source'),c.get('target_profile'),c.get('target')) for c in matrix['cases']}
+        need(len(matrix['cases'])==130 and len(actual_edges)==130 and actual_edges==expected_edges,'full transition edge set incomplete, duplicated, or contains an unexpected edge')
+        need(all(c['passed'] is True for c in matrix['cases']),'full transition matrix contains failed case')
         need(tuple(x['profile'] for x in catalog['profiles'])==ORDER,'catalog profile order differs')
         need(len(packing['profiles'])==10 and {x['profile'] for x in packing['profiles']}==set(ORDER),'packing profile set differs')
         return packing,matrix,catalog

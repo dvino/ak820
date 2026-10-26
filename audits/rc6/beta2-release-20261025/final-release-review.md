@@ -86,3 +86,30 @@ The correction closes the missing-log issue at staged-source inspection. Program
 The previous policy-hash table and its precommit receipt describe the earlier `64ac8b210453d261b78f00938666e6ab05644342` snapshot. They are historical after the CI link correction. The current independent decision and exact policy-hash table are in [CI CRC link review](ci-host-crc-link-review.md). That review supersedes the earlier hashes and grants genuine approval to all ten refreshed policies.
 
 Only the two missing CRC link inputs and their workflow hash records changed. The 280-file test-source snapshot, ten exact firmware programs and their completed runtime, regression, transition and packing evidence remain unchanged. The new external precommit check passed all substantive evidence gates for all ten profiles; actual refreshed review records passed production authorization and a separate policy-byte-hash check. Committed admission, successful CI reproduction, native packages and publication still require their own receipts. Hardware remains unvalidated; this review performed zero physical device commands.
+
+## Alpha.3 transition correction: current policy approval
+
+Previous policy tables and the CI CRC link review describe earlier snapshots. The current independent decision is [Alpha.3 correction review](alpha3-independent-review.md). Its ten exact policy hashes supersede those earlier hashes.
+
+## Final refreshed evidence and approval
+
+Decision: PASS for the bounded alpha.3 correction and all ten exact refreshed offline program policies. This decision supersedes the pending statement above and all previous policy-hash tables. Earlier reviews remain historical evidence.
+
+The reviewed precommit result SHA256 is `0b9b4a73d90cf11db974240795f47f5828860387de633c1106bc1934a6b823f3`. It reports all substantive gates passed globally and for every profile; overall passed remains false solely for deferred committed-input admission and genuine review records. The 25,026-file evidence inventory and test-source snapshot `a469c44707139d70f4541d9018716e6eb6bc19628b4f99de8030a34d8e7283fe` remain unchanged. The refreshed 69-settings and 261-host successful logs were inspected; their retained log hashes and every recorded source/catalog hash match current bytes. The syntax/documentation receipt records 345 Python files, three shell files, nine warnings, 77 documents with zero failures and successful actionlint.
+
+All ten exact program policy identities equal HEAD; runtime and firmware source are unchanged. Refreshed policies bind the corrected catalog, 130-case transition evidence, actual successful settings log and current bilingual documentation. Genuine review records were authored only after substantive evidence inspection, and all ten passed production `validate_policy` against the actual host manifest and packing receipt. No new implementation or evidence-producing source was authored by this reviewer.
+
+| Profile | Exact policy SHA256 |
+| --- | --- |
+| code | `eee6b89382436f5fc86214614326e185f666901f92d874cea041f0c11f6012ba` |
+| creative | `6d6998c8a475a05b657ced4861ec5ae26a77ddc30b87daeb03f6cd4e6457cacf` |
+| game | `5f4faf94cf1b9bf5d059c8cb6d7df9f75d448746493f3b04e2b6c4634e198c2d` |
+| main | `47b4072aba7c2ad68bf6de89c276526ac1a3e596ebb2ed123af2c1bac4b080eb` |
+| mmo | `54554ba462cc3197a1c24a65ce2241bc0b6584ad839907ea4e0604a6f91d6061` |
+| multios | `48998b60aa24c9b9efec50e73717c2f457ead464a0decdfdeee5071813fd50b2` |
+| onehand | `39c8a024ef0714beb6c5309336ae957455ef837f7f5ad226cc7d3497479a6602` |
+| pointer | `7a6cb9baa257f08dc7a734be7b618d2d60862308c982d2f4631cc281cd0d3ada` |
+| shortcuts | `4c680bd71f9ad207bcb9e5b7e3019abe3a635fbf01a701479d3bc6f8f4a0b095` |
+| typing | `32c6275283bd705d3ff05bc7fb7d3d80bef1388abc6d624ac40e2082a26e4e7c` |
+
+No actionable finding remains open. Exact committed-source admission, fresh CI reproduction, native package checks, downloaded public assets and publication identity remain required after this offline approval. Hardware validation remains false. Reviewer physical device commands: zero.
