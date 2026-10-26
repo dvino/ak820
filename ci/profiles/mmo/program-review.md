@@ -6,7 +6,7 @@
   "hardware_validated": false,
   "ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
   "physical_device_commands": 0,
-  "policy_sha256": "be941485e3680aeb29948fe926f80547ff9ed58d7c6f497a66482a487b056c7a",
+  "policy_sha256": "f76ed3cff0463e313ac802d3fdfee7e24ec53fdf57fbb3aa0de2af50505352a6",
   "profile": "mmo",
   "review_report": "audits/rc6/beta2-release-20261025/final-release-review.md",
   "scope": "Independent source, exact linked image, foreground/startup/IRQ bounds, complete offline regression, settings transitions and packing evidence. Committed admission, CI reproduction, native packages and publication remain separate.",

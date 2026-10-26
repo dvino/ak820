@@ -6,7 +6,7 @@
   "hardware_validated": false,
   "ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
   "physical_device_commands": 0,
-  "policy_sha256": "c15d8ec5d05238767d0dd604ca58c80d3190ca6e0034f69e1f39a187b9d18d25",
+  "policy_sha256": "11b0bee1efeaf3b66d12d1eb58894ead85151f9bf33dae5bde3dc2f35bba9253",
   "profile": "game",
   "review_report": "audits/rc6/beta2-release-20261025/final-release-review.md",
   "scope": "Independent source, exact linked image, foreground/startup/IRQ bounds, complete offline regression, settings transitions and packing evidence. Committed admission, CI reproduction, native packages and publication remain separate.",

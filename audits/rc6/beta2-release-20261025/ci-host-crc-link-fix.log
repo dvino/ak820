@@ -1,0 +1,22 @@
+Workspace checkout: /home/danil/ChatGPT/ak820-beta2-20261025 (mounted /repo:ro)
+Working directory: /repo/qmk-8051-ak820
+Image: ak820-nkro-study-env:local, Debian 12, cc 12.2.0
+Docker network: none
+TMPDIR: /tmpbig
+Output mount: /out and /audit, backed by /mnt/storage/Temp/ak820-beta2-20261025/ci-host-crc-models
+
+NVM compile command (same compiler flags and source list as workflow, with output in mounted /out):
+cc -std=c11 -O1 -g -Wall -Wextra -Werror -Wno-clobbered -fsanitize=address,undefined -fno-omit-frame-pointer -Ikeyboards/ajazz/ak820 keyboards/ajazz/ak820/tests/nvm_powercut.c keyboards/ajazz/ak820/ak820_nvm.c keyboards/ajazz/ak820/ak820_crc.c -o /out/nvm-powercut
+Compile exit: 0
+Run command: /out/nvm-powercut
+Run exit: 0
+PASS: 10944 power-cut cases plus persistence, batching, retry, bounds, cross-page checks
+
+Macro compile command (same compiler flags and source list as workflow, with output in mounted /out):
+cc -std=c11 -O1 -g -Wall -Wextra -Werror -Wno-clobbered -fsanitize=address,undefined -fno-omit-frame-pointer -Wno-int-to-pointer-cast -DAK820_BOARD= -Ikeyboards/ajazz/ak820/tests/include -Ikeyboards/ajazz/ak820 keyboards/ajazz/ak820/tests/macro_powercut.c keyboards/ajazz/ak820/ak820_macro.c keyboards/ajazz/ak820/ak820_nvm.c keyboards/ajazz/ak820/ak820_crc.c -o /out/macro-powercut
+Compile exit: 0
+Run command: /out/macro-powercut
+Run exit: 0
+PASS: Vial6 grammar/split/bounds/retry/restart/full-capacity checks; 25088 upload power cuts across 2 erase orders
+
+Both binaries were built from the read-only checkout, with the existing workflow ASan and UBSan flags intact. No USB or physical device was used.

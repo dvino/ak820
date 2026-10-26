@@ -6,7 +6,7 @@
   "hardware_validated": false,
   "ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
   "physical_device_commands": 0,
-  "policy_sha256": "a3c1b1cc4e6acb9b9a9c161e33630074c7e1eaa7436156446011fa5305874325",
+  "policy_sha256": "67abebf54abd93079126481e602400071d3f307cb5dd3cc4a83a84b8d8766ae7",
   "profile": "code",
   "review_report": "audits/rc6/beta2-release-20261025/final-release-review.md",
   "scope": "Independent source, exact linked image, foreground/startup/IRQ bounds, complete offline regression, settings transitions and packing evidence. Committed admission, CI reproduction, native packages and publication remain separate.",

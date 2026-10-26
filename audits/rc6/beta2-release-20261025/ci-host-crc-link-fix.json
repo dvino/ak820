@@ -1,0 +1,42 @@
+{
+  "change": {
+    "file": ".github/workflows/windows-installer.yml",
+    "scope": "Add keyboards/ajazz/ak820/ak820_crc.c to both shared host-model compile commands",
+    "workflow_sha256": "303487a6fd0441643cfefd67aef07592f5ee476fcffb68106500b3bf0acde57a",
+    "other_source_or_flag_changes": false
+  },
+  "previous_ci": {
+    "run_id": "40255129448",
+    "job_id": "121355226331",
+    "passed_conditions": {
+      "host_tool_tests": 261,
+      "compiler_tests": 3,
+      "compiler_capture_tests": 18
+    },
+    "failure": "NVM host power-loss model link: undefined reference to ak820_crc16 from ak820_nvm.c:48"
+  },
+  "local_verification": {
+    "image": "ak820-nkro-study-env:local",
+    "image_id": "sha256:b41196ff4098d5b33786f23238a17ad1fb21b943a588076e085c4881e920d97d",
+    "os": "Debian GNU/Linux 12 (bookworm)",
+    "compiler": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "network": "disabled",
+    "repository_mount": "read-only",
+    "tmpdir": "/tmpbig",
+    "output_root": "/mnt/storage/Temp/ak820-beta2-20261025/ci-host-crc-models",
+    "nvm_compile_exit": 0,
+    "nvm_run_exit": 0,
+    "nvm_result": "PASS: 10944 power-cut cases plus persistence, batching, retry, bounds, cross-page checks",
+    "macro_compile_exit": 0,
+    "macro_run_exit": 0,
+    "macro_result": "PASS: Vial6 grammar/split/bounds/retry/restart/full-capacity checks; 25088 upload power cuts across 2 erase orders",
+    "usb_or_physical_device_tested": false
+  },
+  "sha256": {
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_crc.c": "0874e2964d63a4e6b2306187759cdf343d4fbc73ee92497e43ae7368bb918b59",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_nvm.c": "ebe940c2354c7d8c015847519e422bb54770216fafdcdd39e5a107fe8631a789",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_macro.c": "8f4fe5f5cf8ee3b87a2b095f4ba4a372d3ab6daefadc6cf1699d3338c898aaa2",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/tests/nvm_powercut.c": "9a808a7dcc09e43611b111379780465566d64914b7beba605652d6f39d5433db",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/tests/macro_powercut.c": "c3a5f662535a1282fd39974188546566bf99bfb17fd69bc0b2966a695fae0018"
+  }
+}
