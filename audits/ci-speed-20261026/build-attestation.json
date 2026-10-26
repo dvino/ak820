@@ -1,0 +1,124 @@
+{
+  "format": "ak820-ci-build-attestation-1",
+  "source_commit": "59b4ba09261b416974a6c3c6cdcb3d78e42039a0",
+  "build": {
+    "ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+    "map_sha256": "8ddd62d86a840e174fa367bfa9dcf3ba9396876647f1e62a435709ee0b105ac1",
+    "mem_sha256": "37249ff08627f83d20dee2d9772b6c37f242903e58fc415036dd3343c756c13a",
+    "build_report_sha256": "6fd3f64a811957326b94ee105bb4bcaf95d45be9927362a927ed4fae13d8946b"
+  },
+  "policy_sha256": "b5c3bc28f8f9ea211237c36352eb4d776003c1925049a271762021a5e631968d",
+  "program_review_sha256": "cba94240ec83e45a65d962f928b812561fd79a4d8ad51b4a77f255858495b7f1",
+  "qualification_sha256": "ee6cc45a91860efda8ddfd4aff342f56f1ab717a060ee3eb82fc3b7f07703ab6",
+  "host_files": {
+    "AK820.cmd": {
+      "size": 1149,
+      "sha256": "dddbfaad0da2f79d3353bd2238eae323db53b0a066736c7743e84a845b77aaa0"
+    },
+    "AK820.sh": {
+      "size": 515,
+      "sha256": "9a8ebbc2ed64d2d0ac6ea7f4d1251d5de630c8af78465dee3acfdc833b4528fb"
+    },
+    "qmk-8051-ak820/util/ak820_ci_authorization.py": {
+      "size": 14511,
+      "sha256": "da9f487b214e23c66cb88b436ea42b5025a61de03ea43153fa354172b89a6032"
+    },
+    "qmk-8051-ak820/util/ak820_diagnose.py": {
+      "size": 14347,
+      "sha256": "4833247da16ab7557eca9ae67d0fda9f5952d406f68aead4407baf40bac771b8"
+    },
+    "qmk-8051-ak820/util/ak820_extension_settings.py": {
+      "size": 4191,
+      "sha256": "89bd2be1774ee3d3cdd7d53d023ff93d9498d184673b378dd979887c6ca21339"
+    },
+    "qmk-8051-ak820/util/ak820_profiles.py": {
+      "size": 11360,
+      "sha256": "d86bb313a4beb53cdb81cadc17c4dace81ba47dbb42fb1a9ad5670a238f0639c"
+    },
+    "qmk-8051-ak820/util/ak820_release_manifest.py": {
+      "size": 2787,
+      "sha256": "a1cfbc444607119eda9e1facbb3a7401b199961b42f40d5d93e1e17ba3944820"
+    },
+    "qmk-8051-ak820/util/ak820_tool.py": {
+      "size": 23134,
+      "sha256": "87229c0fb92dcbbcc0d60f3d75ed43f459647c5a0fccf7cc57e0dd36bb884f0b"
+    },
+    "qmk-8051-ak820/util/native_macro_import.py": {
+      "size": 2499,
+      "sha256": "572f153de6ec9a71eefa8fd87c5ba2bd7da602619131e3ec66fa63d9a742b07f"
+    },
+    "qmk-8051-ak820/util/pack_ak820.py": {
+      "size": 27210,
+      "sha256": "d392ed795cf34f3c0e1a2e58e07b5a35f1e14500c5bd91c6bcaccfd4f9a7cc7c"
+    },
+    "qmk-8051-ak820/util/prepare_ak820_trial.py": {
+      "size": 6340,
+      "sha256": "c6eccf3dae1eecf9449cab71b2d12786129235968066156a40991764dacd40a2"
+    },
+    "tools/ak820_device_protocol.py": {
+      "size": 28975,
+      "sha256": "1e4018b75793ecd27876e4b72ad733511f01356a59d7a800868f5dd2ea25137b"
+    },
+    "tools/build_ci_release.py": {
+      "size": 35490,
+      "sha256": "5d88cd4435ad7f6827649b7057a15dc79b393d93fd856c2b9436ee8f118f7acc"
+    },
+    "tools/build_linux_installer.py": {
+      "size": 8214,
+      "sha256": "d4cbab8efec02ab47d70b229f34ec695f2b1b85c06d6a0c74742e9af603545d2"
+    },
+    "tools/build_release_bundle.py": {
+      "size": 13621,
+      "sha256": "428058ae243bfc716d2890fabefd5af8210a88058f79fa9e047d145ee5b2771d"
+    },
+    "tools/build_windows_installer.py": {
+      "size": 11757,
+      "sha256": "af5d0c0085e28aa2dc4c0dc8be9392ea3697fd08838b4f339306a82db4c326d6"
+    },
+    "tools/installer/70-ak820.rules": {
+      "size": 339,
+      "sha256": "f0b85bb730963057350a6a9cfe35e1f17e2859a5bfbcebfce9fccaa6534a3a52"
+    },
+    "tools/installer/ak820.py": {
+      "size": 57815,
+      "sha256": "45461adb311e634f44d94af7295e7cbda08a79470b3b9c34a145ec130297b17c"
+    },
+    "tools/installer/gui.py": {
+      "size": 23179,
+      "sha256": "87192b4982e876fad76f38c7eb8b500521e7dd942c4e11fea5a8d9c4546cf38b"
+    },
+    "tools/installer/i18n.py": {
+      "size": 21250,
+      "sha256": "94901c2826c7936410f9e799518c4a6ccdff7d1800f10784d03d81c53dc45dd5"
+    },
+    "tools/installer/profile-catalog.json": {
+      "size": 7176,
+      "sha256": "c37ef159ad685d211e3e19509183346b65143431964cf2dd4b76e8d6b3becf5d"
+    },
+    "tools/installer/requirements-build-linux.txt": {
+      "size": 451,
+      "sha256": "34661fb47f32cc9c7151b7e22f91ddb416edd3bdacdff6cf3bf1693d3825993e"
+    },
+    "tools/installer/requirements-build-windows.txt": {
+      "size": 235,
+      "sha256": "fe92377176d05e83a805899a51be8569cfc63768609bae64c543641f9d715bd5"
+    },
+    "tools/installer/requirements.txt": {
+      "size": 15,
+      "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4"
+    },
+    "tools/installer/settings-catalog.json": {
+      "size": 2525336,
+      "sha256": "93cb88220260b3f3cd0f619e95084064819b9a05022d1521808a15f49e7686d7"
+    },
+    "tools/installer/settings_backup.py": {
+      "size": 48481,
+      "sha256": "1353bc56e16db36d48545b2712c6971910201da8797dd140df1a153a3a2472b2"
+    },
+    "tools/installer/settings_workflow.py": {
+      "size": 12798,
+      "sha256": "739b941cb1724fdf08b9fb5d798adec507260c22a2d97cdcd02ce7f1247bb26f"
+    }
+  },
+  "hardware_validated": false
+}

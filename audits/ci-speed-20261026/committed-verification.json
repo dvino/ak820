@@ -1,0 +1,92 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "tools/build_ci_release.py",
+        "--build-dir",
+        "qmk-8051-ak820/.build/ci-speed-final/multios",
+        "--qualification",
+        "qmk-8051-ak820/.build/ci-speed-final/multios/qualification.json",
+        "--policy",
+        "ci/profiles/multios/release-policy.json",
+        "--program-review",
+        "ci/profiles/multios/program-review.md",
+        "--packing-receipt",
+        "ci/profiles/multios/packing-validation.json",
+        "--output",
+        "dist/ci-speed-multios",
+        "--toolchain",
+        "toolchains/sdcc-4.6.0",
+        "--source-commit",
+        "59b4ba09261b416974a6c3c6cdcb3d78e42039a0"
+      ],
+      "exit_code": 0,
+      "name": "assembly",
+      "result": {
+        "archive": "/workspace/scratch/e775c22051ed/ak820/dist/ci-speed-multios.zip",
+        "archive_sha256": "37af6ff4ec5e2b3037a4f34f9639b36e587198d3c5c881e48ec8ed677f36791b",
+        "directory": "/workspace/scratch/e775c22051ed/ak820/dist/ci-speed-multios",
+        "full_rom_included": false,
+        "hardware_validated": false,
+        "manifest_sha256": "fe069a54600ef3a829b03223e1d0b06d6be8a715ed8a71b55984c683a5e65b7d",
+        "packing_receipt_reused": true,
+        "private_oem_inputs_included": false,
+        "trial_only": false
+      },
+      "seconds": 2.273,
+      "source_commit": "59b4ba09261b416974a6c3c6cdcb3d78e42039a0"
+    },
+    {
+      "catalog": {
+        "format": "ak820-development-capability-catalog-1",
+        "hardware_validated": false,
+        "profiles": [
+          "multios"
+        ],
+        "project_verified": true
+      },
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "tools/build_capability_catalog.py",
+        "--build-dir",
+        "qmk-8051-ak820/.build/ci-speed-final/multios",
+        "--toolchain",
+        "toolchains/sdcc-4.6.0",
+        "--output",
+        "qmk-8051-ak820/.build/ci-speed-final-capability.json"
+      ],
+      "exit_code": 0,
+      "name": "catalog",
+      "seconds": 24.634,
+      "source_commit": "59b4ba09261b416974a6c3c6cdcb3d78e42039a0"
+    }
+  ],
+  "committed_source_admission_profiles": [
+    "multios"
+  ],
+  "files": {
+    "build-attestation.json": {
+      "sha256": "d1e8aa123cb4a86c74c26f4c4a325ab84d4507fa6d92edd163890ed130e7fb54",
+      "size": 4948
+    },
+    "capability-multios.json": {
+      "sha256": "3946d206279d361aef01d5d873db99d3109968cfb949561c003116738d7e828a",
+      "size": 11405
+    },
+    "committed-assembly.txt": {
+      "sha256": "798fe6525e20b8d288389d864a9d74fa5b9c434638d92cdccf2fdf20a959ce16",
+      "size": 496
+    },
+    "committed-catalog.txt": {
+      "sha256": "2f99db96bc020165713190bef2e585ed58d118f37e8b02c8d76a39a8afbc68af",
+      "size": 104
+    }
+  },
+  "format": "ak820-ci-speed-committed-verification-1",
+  "hardware_validated": false,
+  "native_package_builds_completed": false,
+  "physical_device_commands": 0,
+  "source_commit": "59b4ba09261b416974a6c3c6cdcb3d78e42039a0",
+  "ten_profile_github_run_completed": false
+}

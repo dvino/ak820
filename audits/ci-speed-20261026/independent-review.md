@@ -48,3 +48,13 @@ The current test-source snapshot was independently recomputed as `bd8ce77746a7de
 ## Limits and remaining gates
 
 Fresh local firmware qualification covers multios only. The other profiles retain their previously reviewed exact programs and safety witnesses. Full ten-profile GitHub qualification, native Windows/Linux package builds, publication and committed-source admission have not been established by this review. Production committed-source checks must run after commit. Existing qualification reuse rejects the changed Python sources. No new physical device behavior is proved; hardware remains unvalidated and no device commands were sent.
+
+## Committed admission follow-up, 2026-10-26
+
+PASS for the evidence-only follow-up. This section closes the earlier pending committed-source admission for multios only. The reviewed implementation and policies are committed as `59b4ba09261b416974a6c3c6cdcb3d78e42039a0`; that commit was independently checked against current HEAD. Worktree changes at follow-up review were confined to this audit directory. No implementation, policy, test or program-review changes are part of this follow-up.
+
+The original single-profile assembler reports exit code zero in 2.273 seconds, producing the authorized offline multios bundle. The independent review checked the attestation's source commit, exact policy and program-review digests, qualification digest, host manifest, IHX/MAP/MEM/build-report identities, and byte equality of copied policy, review, qualification, receipt and attestation files. The produced archive and installer manifest match their recorded SHA256 values. All four copied-file size/hash records in `committed-verification.json` match current bytes.
+
+Capability catalog revalidation reports exit code zero in 24.634 seconds. The retained catalog contains exactly the final multios build identity; its configuration, runtime, base-qualification and supplemental-suite evidence hashes match the retained reports. Hardware validation and flashing authorization remain false. The README follow-up accurately describes this limited admission.
+
+This follow-up approves retaining and committing the observed offline evidence. Full ten-profile GitHub qualification, native Windows/Linux package builds, publication and hardware validation remain unproved. It does not extend committed-source admission to the other nine profiles or authorize any device operation. No source tests were repeated, and no device commands were sent during this review.

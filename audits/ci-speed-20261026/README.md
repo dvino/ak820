@@ -66,3 +66,16 @@ A full ten-profile GitHub run and native Windows/Linux package builds have not
 been rerun here. The first CI run after import must still qualify all ten
 profiles and pass both native package jobs. Existing qualification-reuse rules
 reject reuse across these Python source changes. No device commands were sent.
+
+## Committed source admission
+
+After independent approval, the implementation and source policies were committed
+as `59b4ba09261b416974a6c3c6cdcb3d78e42039a0`. The unchanged single-profile
+release assembler accepted the fresh `multios` image, committed source and
+independent policy, and produced an authorized offline package. The capability
+catalog also revalidated its exact image, runtime proofs, base logs and all
+supplemental logs. Both commands passed; see [committed verification](committed-verification.json)
+and [build attestation](build-attestation.json). This closes the multios committed
+admission left pending in the earlier local record. It does not establish a
+ten-profile GitHub or native package run. The follow-up evidence commit changes
+only this audit directory.
