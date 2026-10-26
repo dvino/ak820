@@ -1,0 +1,1178 @@
+{
+  "format": "ak820-ci-baseline-timings-1",
+  "repository": "dvino/ak820",
+  "run_id": 40268741259,
+  "run_url": "https://github.com/dvino/ak820/actions/runs/40268741259",
+  "source_commit": "4a1fcff046da09071700b730b1db5982ce427deb",
+  "started_at": "2026-10-26T04:22:28Z",
+  "completed_at": "2026-10-26T05:46:34Z",
+  "duration_seconds": 5046,
+  "evidence_endpoint": "https://api.github.com/repos/dvino/ak820/actions/runs/40268741259/jobs?per_page=100",
+  "jobs": [
+    {
+      "id": 121396751662,
+      "name": "Linux syntax and shared host checks",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121396751662",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:22:32Z",
+      "completed_at": "2026-10-26T04:23:41Z",
+      "duration_seconds": 69,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:22:34Z",
+          "completed_at": "2026-10-26T04:22:40Z",
+          "duration_seconds": 6
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:22:41Z",
+          "completed_at": "2026-10-26T04:22:59Z",
+          "duration_seconds": 18
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:22:59Z",
+          "completed_at": "2026-10-26T04:23:13Z",
+          "duration_seconds": 14
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:13Z",
+          "completed_at": "2026-10-26T04:23:19Z",
+          "duration_seconds": 6
+        },
+        {
+          "name": "Run all host tool unit tests",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:22Z",
+          "completed_at": "2026-10-26T04:23:33Z",
+          "duration_seconds": 11
+        }
+      ]
+    },
+    {
+      "id": 121397059506,
+      "name": "Qualify firmware (main)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059506",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:43Z",
+      "completed_at": "2026-10-26T05:15:46Z",
+      "duration_seconds": 3123,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:45Z",
+          "completed_at": "2026-10-26T04:23:51Z",
+          "duration_seconds": 6
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:52Z",
+          "completed_at": "2026-10-26T04:24:09Z",
+          "duration_seconds": 17
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:09Z",
+          "completed_at": "2026-10-26T04:24:22Z",
+          "duration_seconds": 13
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:22Z",
+          "completed_at": "2026-10-26T04:24:31Z",
+          "duration_seconds": 9
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:31Z",
+          "completed_at": "2026-10-26T05:15:36Z",
+          "duration_seconds": 3065
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:15:36Z",
+          "completed_at": "2026-10-26T05:15:42Z",
+          "duration_seconds": 6
+        }
+      ]
+    },
+    {
+      "id": 121397059517,
+      "name": "Qualify firmware (pointer)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059517",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:44Z",
+      "completed_at": "2026-10-26T05:05:59Z",
+      "duration_seconds": 2535,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:47Z",
+          "completed_at": "2026-10-26T04:23:55Z",
+          "duration_seconds": 8
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:57Z",
+          "completed_at": "2026-10-26T04:24:41Z",
+          "duration_seconds": 44
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:41Z",
+          "completed_at": "2026-10-26T04:24:52Z",
+          "duration_seconds": 11
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:52Z",
+          "completed_at": "2026-10-26T04:24:58Z",
+          "duration_seconds": 6
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:58Z",
+          "completed_at": "2026-10-26T05:05:48Z",
+          "duration_seconds": 2450
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:05:48Z",
+          "completed_at": "2026-10-26T05:05:53Z",
+          "duration_seconds": 5
+        }
+      ]
+    },
+    {
+      "id": 121397059535,
+      "name": "Qualify firmware (shortcuts)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059535",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:44Z",
+      "completed_at": "2026-10-26T05:15:55Z",
+      "duration_seconds": 3131,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:47Z",
+          "completed_at": "2026-10-26T04:23:55Z",
+          "duration_seconds": 8
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:57Z",
+          "completed_at": "2026-10-26T04:24:15Z",
+          "duration_seconds": 18
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:15Z",
+          "completed_at": "2026-10-26T04:24:28Z",
+          "duration_seconds": 13
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:28Z",
+          "completed_at": "2026-10-26T04:24:35Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:35Z",
+          "completed_at": "2026-10-26T05:15:42Z",
+          "duration_seconds": 3067
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:15:42Z",
+          "completed_at": "2026-10-26T05:15:48Z",
+          "duration_seconds": 6
+        }
+      ]
+    },
+    {
+      "id": 121397059546,
+      "name": "Qualify firmware (multios)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059546",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:43Z",
+      "completed_at": "2026-10-26T05:22:50Z",
+      "duration_seconds": 3547,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:45Z",
+          "completed_at": "2026-10-26T04:23:52Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:53Z",
+          "completed_at": "2026-10-26T04:24:12Z",
+          "duration_seconds": 19
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:12Z",
+          "completed_at": "2026-10-26T04:24:26Z",
+          "duration_seconds": 14
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:26Z",
+          "completed_at": "2026-10-26T04:24:33Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:33Z",
+          "completed_at": "2026-10-26T05:22:39Z",
+          "duration_seconds": 3486
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:22:39Z",
+          "completed_at": "2026-10-26T05:22:45Z",
+          "duration_seconds": 6
+        }
+      ]
+    },
+    {
+      "id": 121397059550,
+      "name": "Qualify firmware (mmo)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059550",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:44Z",
+      "completed_at": "2026-10-26T05:16:53Z",
+      "duration_seconds": 3189,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:46Z",
+          "completed_at": "2026-10-26T04:23:56Z",
+          "duration_seconds": 10
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:00Z",
+          "completed_at": "2026-10-26T04:24:19Z",
+          "duration_seconds": 19
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:19Z",
+          "completed_at": "2026-10-26T04:24:33Z",
+          "duration_seconds": 14
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:33Z",
+          "completed_at": "2026-10-26T04:24:39Z",
+          "duration_seconds": 6
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:39Z",
+          "completed_at": "2026-10-26T05:16:40Z",
+          "duration_seconds": 3121
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:16:40Z",
+          "completed_at": "2026-10-26T05:16:47Z",
+          "duration_seconds": 7
+        }
+      ]
+    },
+    {
+      "id": 121397059579,
+      "name": "Qualify firmware (typing)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059579",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:44Z",
+      "completed_at": "2026-10-26T05:19:30Z",
+      "duration_seconds": 3346,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:47Z",
+          "completed_at": "2026-10-26T04:23:57Z",
+          "duration_seconds": 10
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:01Z",
+          "completed_at": "2026-10-26T04:24:30Z",
+          "duration_seconds": 29
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:30Z",
+          "completed_at": "2026-10-26T04:24:43Z",
+          "duration_seconds": 13
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:43Z",
+          "completed_at": "2026-10-26T04:24:50Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:50Z",
+          "completed_at": "2026-10-26T05:19:19Z",
+          "duration_seconds": 3269
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:19:19Z",
+          "completed_at": "2026-10-26T05:19:24Z",
+          "duration_seconds": 5
+        }
+      ]
+    },
+    {
+      "id": 121397059604,
+      "name": "Qualify firmware (game)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059604",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:44Z",
+      "completed_at": "2026-10-26T05:18:08Z",
+      "duration_seconds": 3264,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:45Z",
+          "completed_at": "2026-10-26T04:23:52Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:54Z",
+          "completed_at": "2026-10-26T04:24:13Z",
+          "duration_seconds": 19
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:13Z",
+          "completed_at": "2026-10-26T04:24:27Z",
+          "duration_seconds": 14
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:27Z",
+          "completed_at": "2026-10-26T04:24:35Z",
+          "duration_seconds": 8
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:35Z",
+          "completed_at": "2026-10-26T05:17:58Z",
+          "duration_seconds": 3203
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:17:58Z",
+          "completed_at": "2026-10-26T05:18:04Z",
+          "duration_seconds": 6
+        }
+      ]
+    },
+    {
+      "id": 121397059613,
+      "name": "Qualify firmware (creative)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059613",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:44Z",
+      "completed_at": "2026-10-26T04:52:08Z",
+      "duration_seconds": 1704,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:47Z",
+          "completed_at": "2026-10-26T04:23:54Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:56Z",
+          "completed_at": "2026-10-26T04:24:13Z",
+          "duration_seconds": 17
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:13Z",
+          "completed_at": "2026-10-26T04:24:21Z",
+          "duration_seconds": 8
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:25Z",
+          "completed_at": "2026-10-26T04:51:58Z",
+          "duration_seconds": 1653
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:51:58Z",
+          "completed_at": "2026-10-26T04:52:03Z",
+          "duration_seconds": 5
+        }
+      ]
+    },
+    {
+      "id": 121397059633,
+      "name": "Qualify firmware (code)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059633",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:44Z",
+      "completed_at": "2026-10-26T05:16:01Z",
+      "duration_seconds": 3137,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:46Z",
+          "completed_at": "2026-10-26T04:23:55Z",
+          "duration_seconds": 9
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:57Z",
+          "completed_at": "2026-10-26T04:24:14Z",
+          "duration_seconds": 17
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:14Z",
+          "completed_at": "2026-10-26T04:24:28Z",
+          "duration_seconds": 14
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:28Z",
+          "completed_at": "2026-10-26T04:24:35Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:35Z",
+          "completed_at": "2026-10-26T05:15:48Z",
+          "duration_seconds": 3073
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:15:48Z",
+          "completed_at": "2026-10-26T05:15:54Z",
+          "duration_seconds": 6
+        }
+      ]
+    },
+    {
+      "id": 121397059681,
+      "name": "Qualify firmware (onehand)",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121397059681",
+      "conclusion": "success",
+      "started_at": "2026-10-26T04:23:44Z",
+      "completed_at": "2026-10-26T05:18:34Z",
+      "duration_seconds": 3290,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:47Z",
+          "completed_at": "2026-10-26T04:23:53Z",
+          "duration_seconds": 6
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:23:54Z",
+          "completed_at": "2026-10-26T04:24:12Z",
+          "duration_seconds": 18
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:12Z",
+          "completed_at": "2026-10-26T04:24:26Z",
+          "duration_seconds": 14
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:26Z",
+          "completed_at": "2026-10-26T04:24:33Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Build and qualify one pinned release profile",
+          "conclusion": "success",
+          "started_at": "2026-10-26T04:24:33Z",
+          "completed_at": "2026-10-26T05:18:23Z",
+          "duration_seconds": 3230
+        },
+        {
+          "name": "Preserve final image and complete bootstrap provenance",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:18:23Z",
+          "completed_at": "2026-10-26T05:18:29Z",
+          "duration_seconds": 6
+        }
+      ]
+    },
+    {
+      "id": 121412429710,
+      "name": "Revalidate and assemble all ten profiles",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121412429710",
+      "conclusion": "success",
+      "started_at": "2026-10-26T05:22:53Z",
+      "completed_at": "2026-10-26T05:44:54Z",
+      "duration_seconds": 1321,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:22:55Z",
+          "completed_at": "2026-10-26T05:23:04Z",
+          "duration_seconds": 9
+        },
+        {
+          "name": "Install native build tools",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:23:05Z",
+          "completed_at": "2026-10-26T05:23:23Z",
+          "duration_seconds": 18
+        },
+        {
+          "name": "Install pinned SDCC and LUFA sources",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:23:23Z",
+          "completed_at": "2026-10-26T05:23:39Z",
+          "duration_seconds": 16
+        },
+        {
+          "name": "Set up the pinned QMK build environment",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:23:39Z",
+          "completed_at": "2026-10-26T05:23:45Z",
+          "duration_seconds": 6
+        },
+        {
+          "name": "Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:23:45Z",
+          "completed_at": "2026-10-26T05:23:50Z",
+          "duration_seconds": 5
+        },
+        {
+          "name": "Restore all ten complete build trees at their original checkout paths",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:23:50Z",
+          "completed_at": "2026-10-26T05:24:06Z",
+          "duration_seconds": 16
+        },
+        {
+          "name": "Assemble all independently authorized profile bundles",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:24:06Z",
+          "completed_at": "2026-10-26T05:44:49Z",
+          "duration_seconds": 1243
+        }
+      ]
+    },
+    {
+      "id": 121418439721,
+      "name": "Native Windows package build and smoke",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121418439721",
+      "conclusion": "success",
+      "started_at": "2026-10-26T05:44:56Z",
+      "completed_at": "2026-10-26T05:45:56Z",
+      "duration_seconds": 60,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:44:59Z",
+          "completed_at": "2026-10-26T05:45:11Z",
+          "duration_seconds": 12
+        },
+        {
+          "name": "Install pinned package build requirements",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:45:16Z",
+          "completed_at": "2026-10-26T05:45:25Z",
+          "duration_seconds": 9
+        },
+        {
+          "name": "Build and smoke-test approved package",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:45:28Z",
+          "completed_at": "2026-10-26T05:45:50Z",
+          "duration_seconds": 22
+        }
+      ]
+    },
+    {
+      "id": 121418439734,
+      "name": "Native Linux x86_64 package build and smoke",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121418439734",
+      "conclusion": "success",
+      "started_at": "2026-10-26T05:44:57Z",
+      "completed_at": "2026-10-26T05:46:34Z",
+      "duration_seconds": 97,
+      "long_steps": [
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:44:58Z",
+          "completed_at": "2026-10-26T05:45:05Z",
+          "duration_seconds": 7
+        },
+        {
+          "name": "Install native Linux package dependencies",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:45:08Z",
+          "completed_at": "2026-10-26T05:45:35Z",
+          "duration_seconds": 27
+        },
+        {
+          "name": "Install pinned build requirements with HIDRAW backend",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:45:35Z",
+          "completed_at": "2026-10-26T05:45:47Z",
+          "duration_seconds": 12
+        },
+        {
+          "name": "Build and smoke-test approved Linux package",
+          "conclusion": "success",
+          "started_at": "2026-10-26T05:45:48Z",
+          "completed_at": "2026-10-26T05:46:29Z",
+          "duration_seconds": 41
+        }
+      ]
+    },
+    {
+      "id": 121418909618,
+      "name": "Publish tagged version from main",
+      "url": "https://github.com/dvino/ak820/actions/runs/40268741259/job/121418909618",
+      "conclusion": "skipped",
+      "started_at": "2026-10-26T05:46:34Z",
+      "completed_at": "2026-10-26T05:46:34Z",
+      "duration_seconds": 0,
+      "long_steps": []
+    }
+  ],
+  "profile_intervals": [
+    {
+      "profile": "multios",
+      "job_id": 121397059546,
+      "suite_count": 37,
+      "first_marker": {
+        "at": "2026-10-26T04:31:17.1715241Z",
+        "suite": "gates"
+      },
+      "last_marker": {
+        "at": "2026-10-26T05:21:56.7234261Z",
+        "suite": "ctrl-gui-linked"
+      },
+      "minimum_seconds": 81.615,
+      "median_seconds": 83.513,
+      "intervals": [
+        {
+          "suite": "gates",
+          "started_at": "2026-10-26T04:31:17.1715241Z",
+          "next_suite_at": "2026-10-26T04:32:41.7168030Z",
+          "seconds": 84.545
+        },
+        {
+          "suite": "firmware-matrix-gates",
+          "started_at": "2026-10-26T04:32:41.7168030Z",
+          "next_suite_at": "2026-10-26T04:34:04.0788990Z",
+          "seconds": 82.362
+        },
+        {
+          "suite": "catalog-bundle-gates",
+          "started_at": "2026-10-26T04:34:04.0788990Z",
+          "next_suite_at": "2026-10-26T04:35:26.1680752Z",
+          "seconds": 82.09
+        },
+        {
+          "suite": "settings-catalog-gates",
+          "started_at": "2026-10-26T04:35:26.1680752Z",
+          "next_suite_at": "2026-10-26T04:37:09.6705808Z",
+          "seconds": 103.502
+        },
+        {
+          "suite": "capability-catalog-gates",
+          "started_at": "2026-10-26T04:37:09.6705808Z",
+          "next_suite_at": "2026-10-26T04:38:32.1217215Z",
+          "seconds": 82.451
+        },
+        {
+          "suite": "outline-gates",
+          "started_at": "2026-10-26T04:38:32.1217215Z",
+          "next_suite_at": "2026-10-26T04:39:56.0607910Z",
+          "seconds": 83.939
+        },
+        {
+          "suite": "short-call-gates",
+          "started_at": "2026-10-26T04:39:56.0607910Z",
+          "next_suite_at": "2026-10-26T04:41:17.8870341Z",
+          "seconds": 81.827
+        },
+        {
+          "suite": "core-compact-host",
+          "started_at": "2026-10-26T04:41:17.8870341Z",
+          "next_suite_at": "2026-10-26T04:42:41.6973415Z",
+          "seconds": 83.81
+        },
+        {
+          "suite": "core-compact-linked",
+          "started_at": "2026-10-26T04:42:41.6973415Z",
+          "next_suite_at": "2026-10-26T04:44:04.5439194Z",
+          "seconds": 82.846
+        },
+        {
+          "suite": "emitted-linked",
+          "started_at": "2026-10-26T04:44:04.5439194Z",
+          "next_suite_at": "2026-10-26T04:45:26.7374049Z",
+          "seconds": 82.194
+        },
+        {
+          "suite": "transport-linked",
+          "started_at": "2026-10-26T04:45:26.7374049Z",
+          "next_suite_at": "2026-10-26T04:46:50.3235238Z",
+          "seconds": 83.586
+        },
+        {
+          "suite": "stack-gates",
+          "started_at": "2026-10-26T04:46:50.3235238Z",
+          "next_suite_at": "2026-10-26T04:48:11.9380050Z",
+          "seconds": 81.615
+        },
+        {
+          "suite": "runtime-safety-gates",
+          "started_at": "2026-10-26T04:48:11.9380050Z",
+          "next_suite_at": "2026-10-26T04:49:33.6829593Z",
+          "seconds": 81.744
+        },
+        {
+          "suite": "delay-abi",
+          "started_at": "2026-10-26T04:49:33.6829593Z",
+          "next_suite_at": "2026-10-26T04:50:55.8694375Z",
+          "seconds": 82.187
+        },
+        {
+          "suite": "startup-gates",
+          "started_at": "2026-10-26T04:50:55.8694375Z",
+          "next_suite_at": "2026-10-26T04:52:18.1692013Z",
+          "seconds": 82.3
+        },
+        {
+          "suite": "startup-stack",
+          "started_at": "2026-10-26T04:52:18.1692013Z",
+          "next_suite_at": "2026-10-26T04:53:41.2665336Z",
+          "seconds": 83.097
+        },
+        {
+          "suite": "irq-gates",
+          "started_at": "2026-10-26T04:53:41.2665336Z",
+          "next_suite_at": "2026-10-26T04:55:04.8475217Z",
+          "seconds": 83.581
+        },
+        {
+          "suite": "release-safety-gates",
+          "started_at": "2026-10-26T04:55:04.8475217Z",
+          "next_suite_at": "2026-10-26T04:56:27.2314521Z",
+          "seconds": 82.384
+        },
+        {
+          "suite": "outline-integrity",
+          "started_at": "2026-10-26T04:56:27.2314521Z",
+          "next_suite_at": "2026-10-26T04:57:50.2738582Z",
+          "seconds": 83.042
+        },
+        {
+          "suite": "vialrgb-linked",
+          "started_at": "2026-10-26T04:57:50.2738582Z",
+          "next_suite_at": "2026-10-26T04:59:19.4027077Z",
+          "seconds": 89.129
+        },
+        {
+          "suite": "one-shot-host",
+          "started_at": "2026-10-26T04:59:19.4027077Z",
+          "next_suite_at": "2026-10-26T05:00:57.3483858Z",
+          "seconds": 97.946
+        },
+        {
+          "suite": "one-shot-linked",
+          "started_at": "2026-10-26T05:00:57.3483858Z",
+          "next_suite_at": "2026-10-26T05:02:21.3677200Z",
+          "seconds": 84.019
+        },
+        {
+          "suite": "key-overrides-host",
+          "started_at": "2026-10-26T05:02:21.3677200Z",
+          "next_suite_at": "2026-10-26T05:03:44.8803895Z",
+          "seconds": 83.513
+        },
+        {
+          "suite": "key-overrides-linked",
+          "started_at": "2026-10-26T05:03:44.8803895Z",
+          "next_suite_at": "2026-10-26T05:05:09.3119406Z",
+          "seconds": 84.431
+        },
+        {
+          "suite": "qmk-settings-host",
+          "started_at": "2026-10-26T05:05:09.3119406Z",
+          "next_suite_at": "2026-10-26T05:06:32.5327330Z",
+          "seconds": 83.221
+        },
+        {
+          "suite": "qmk-settings-linked",
+          "started_at": "2026-10-26T05:06:32.5327330Z",
+          "next_suite_at": "2026-10-26T05:07:56.8668764Z",
+          "seconds": 84.334
+        },
+        {
+          "suite": "leader-host",
+          "started_at": "2026-10-26T05:07:56.8668764Z",
+          "next_suite_at": "2026-10-26T05:09:21.1664154Z",
+          "seconds": 84.3
+        },
+        {
+          "suite": "leader-linked",
+          "started_at": "2026-10-26T05:09:21.1664154Z",
+          "next_suite_at": "2026-10-26T05:10:45.6144519Z",
+          "seconds": 84.448
+        },
+        {
+          "suite": "os-indicators-host",
+          "started_at": "2026-10-26T05:10:45.6144519Z",
+          "next_suite_at": "2026-10-26T05:12:10.0612404Z",
+          "seconds": 84.447
+        },
+        {
+          "suite": "os-indicators-linked",
+          "started_at": "2026-10-26T05:12:10.0612404Z",
+          "next_suite_at": "2026-10-26T05:13:33.0393444Z",
+          "seconds": 82.978
+        },
+        {
+          "suite": "mac-pc-host",
+          "started_at": "2026-10-26T05:13:33.0393444Z",
+          "next_suite_at": "2026-10-26T05:14:55.6398123Z",
+          "seconds": 82.6
+        },
+        {
+          "suite": "mac-pc-linked",
+          "started_at": "2026-10-26T05:14:55.6398123Z",
+          "next_suite_at": "2026-10-26T05:16:19.5184141Z",
+          "seconds": 83.879
+        },
+        {
+          "suite": "dynamic-macro-host",
+          "started_at": "2026-10-26T05:16:19.5184141Z",
+          "next_suite_at": "2026-10-26T05:17:48.2818721Z",
+          "seconds": 88.763
+        },
+        {
+          "suite": "dynamic-macro-linked",
+          "started_at": "2026-10-26T05:17:48.2818721Z",
+          "next_suite_at": "2026-10-26T05:19:13.1079522Z",
+          "seconds": 84.826
+        },
+        {
+          "suite": "ctrl-gui-host",
+          "started_at": "2026-10-26T05:19:13.1079522Z",
+          "next_suite_at": "2026-10-26T05:20:35.0921998Z",
+          "seconds": 81.985
+        },
+        {
+          "suite": "ctrl-gui-flags",
+          "started_at": "2026-10-26T05:20:35.0921998Z",
+          "next_suite_at": "2026-10-26T05:21:56.7234261Z",
+          "seconds": 81.631
+        }
+      ],
+      "note": "Intervals include the preceding suite and full inspection after it plus full inspection before the next suite; not isolated suite runtimes."
+    },
+    {
+      "profile": "creative",
+      "job_id": 121397059613,
+      "suite_count": 32,
+      "first_marker": {
+        "at": "2026-10-26T04:28:03.3561527Z",
+        "suite": "gates"
+      },
+      "last_marker": {
+        "at": "2026-10-26T04:51:34.9427509Z",
+        "suite": "dynamic-macro-linked"
+      },
+      "minimum_seconds": 43.177,
+      "median_seconds": 44.688,
+      "intervals": [
+        {
+          "suite": "gates",
+          "started_at": "2026-10-26T04:28:03.3561527Z",
+          "next_suite_at": "2026-10-26T04:28:47.7313260Z",
+          "seconds": 44.375
+        },
+        {
+          "suite": "firmware-matrix-gates",
+          "started_at": "2026-10-26T04:28:47.7313260Z",
+          "next_suite_at": "2026-10-26T04:29:31.1790484Z",
+          "seconds": 43.448
+        },
+        {
+          "suite": "catalog-bundle-gates",
+          "started_at": "2026-10-26T04:29:31.1790484Z",
+          "next_suite_at": "2026-10-26T04:30:14.3890838Z",
+          "seconds": 43.21
+        },
+        {
+          "suite": "settings-catalog-gates",
+          "started_at": "2026-10-26T04:30:14.3890838Z",
+          "next_suite_at": "2026-10-26T04:31:07.8134350Z",
+          "seconds": 53.424
+        },
+        {
+          "suite": "capability-catalog-gates",
+          "started_at": "2026-10-26T04:31:07.8134350Z",
+          "next_suite_at": "2026-10-26T04:31:51.8849811Z",
+          "seconds": 44.071
+        },
+        {
+          "suite": "outline-gates",
+          "started_at": "2026-10-26T04:31:51.8849811Z",
+          "next_suite_at": "2026-10-26T04:32:36.8596169Z",
+          "seconds": 44.975
+        },
+        {
+          "suite": "short-call-gates",
+          "started_at": "2026-10-26T04:32:36.8596169Z",
+          "next_suite_at": "2026-10-26T04:33:20.7940791Z",
+          "seconds": 43.935
+        },
+        {
+          "suite": "core-compact-host",
+          "started_at": "2026-10-26T04:33:20.7940791Z",
+          "next_suite_at": "2026-10-26T04:34:05.4566182Z",
+          "seconds": 44.662
+        },
+        {
+          "suite": "core-compact-linked",
+          "started_at": "2026-10-26T04:34:05.4566182Z",
+          "next_suite_at": "2026-10-26T04:34:49.5001335Z",
+          "seconds": 44.044
+        },
+        {
+          "suite": "emitted-linked",
+          "started_at": "2026-10-26T04:34:49.5001335Z",
+          "next_suite_at": "2026-10-26T04:35:35.1584898Z",
+          "seconds": 45.658
+        },
+        {
+          "suite": "transport-linked",
+          "started_at": "2026-10-26T04:35:35.1584898Z",
+          "next_suite_at": "2026-10-26T04:36:20.9166569Z",
+          "seconds": 45.758
+        },
+        {
+          "suite": "stack-gates",
+          "started_at": "2026-10-26T04:36:20.9166569Z",
+          "next_suite_at": "2026-10-26T04:37:04.6691359Z",
+          "seconds": 43.753
+        },
+        {
+          "suite": "runtime-safety-gates",
+          "started_at": "2026-10-26T04:37:04.6691359Z",
+          "next_suite_at": "2026-10-26T04:37:48.1657604Z",
+          "seconds": 43.496
+        },
+        {
+          "suite": "delay-abi",
+          "started_at": "2026-10-26T04:37:48.1657604Z",
+          "next_suite_at": "2026-10-26T04:38:32.8448382Z",
+          "seconds": 44.679
+        },
+        {
+          "suite": "startup-gates",
+          "started_at": "2026-10-26T04:38:32.8448382Z",
+          "next_suite_at": "2026-10-26T04:39:17.7914958Z",
+          "seconds": 44.947
+        },
+        {
+          "suite": "startup-stack",
+          "started_at": "2026-10-26T04:39:17.7914958Z",
+          "next_suite_at": "2026-10-26T04:40:02.1831780Z",
+          "seconds": 44.392
+        },
+        {
+          "suite": "irq-gates",
+          "started_at": "2026-10-26T04:40:02.1831780Z",
+          "next_suite_at": "2026-10-26T04:40:45.5468290Z",
+          "seconds": 43.363
+        },
+        {
+          "suite": "release-safety-gates",
+          "started_at": "2026-10-26T04:40:45.5468290Z",
+          "next_suite_at": "2026-10-26T04:41:28.7238342Z",
+          "seconds": 43.177
+        },
+        {
+          "suite": "outline-integrity",
+          "started_at": "2026-10-26T04:41:28.7238342Z",
+          "next_suite_at": "2026-10-26T04:42:12.8730175Z",
+          "seconds": 44.15
+        },
+        {
+          "suite": "vialrgb-linked",
+          "started_at": "2026-10-26T04:42:12.8730175Z",
+          "next_suite_at": "2026-10-26T04:43:01.4551914Z",
+          "seconds": 48.582
+        },
+        {
+          "suite": "one-shot-host",
+          "started_at": "2026-10-26T04:43:01.4551914Z",
+          "next_suite_at": "2026-10-26T04:43:56.6838829Z",
+          "seconds": 55.228
+        },
+        {
+          "suite": "one-shot-linked",
+          "started_at": "2026-10-26T04:43:56.6838829Z",
+          "next_suite_at": "2026-10-26T04:44:42.9453537Z",
+          "seconds": 46.262
+        },
+        {
+          "suite": "tap-dance-host",
+          "started_at": "2026-10-26T04:44:42.9453537Z",
+          "next_suite_at": "2026-10-26T04:45:29.6259688Z",
+          "seconds": 46.68
+        },
+        {
+          "suite": "tap-dance-linked",
+          "started_at": "2026-10-26T04:45:29.6259688Z",
+          "next_suite_at": "2026-10-26T04:46:16.5109917Z",
+          "seconds": 46.885
+        },
+        {
+          "suite": "qmk-settings-host",
+          "started_at": "2026-10-26T04:46:16.5109917Z",
+          "next_suite_at": "2026-10-26T04:47:00.6546548Z",
+          "seconds": 44.144
+        },
+        {
+          "suite": "qmk-settings-linked",
+          "started_at": "2026-10-26T04:47:00.6546548Z",
+          "next_suite_at": "2026-10-26T04:47:46.6482496Z",
+          "seconds": 45.994
+        },
+        {
+          "suite": "leader-host",
+          "started_at": "2026-10-26T04:47:46.6482496Z",
+          "next_suite_at": "2026-10-26T04:48:31.4202975Z",
+          "seconds": 44.772
+        },
+        {
+          "suite": "leader-linked",
+          "started_at": "2026-10-26T04:48:31.4202975Z",
+          "next_suite_at": "2026-10-26T04:49:16.7190207Z",
+          "seconds": 45.299
+        },
+        {
+          "suite": "os-indicators-host",
+          "started_at": "2026-10-26T04:49:16.7190207Z",
+          "next_suite_at": "2026-10-26T04:50:02.4599394Z",
+          "seconds": 45.74
+        },
+        {
+          "suite": "os-indicators-linked",
+          "started_at": "2026-10-26T04:50:02.4599394Z",
+          "next_suite_at": "2026-10-26T04:50:47.1477086Z",
+          "seconds": 44.688
+        },
+        {
+          "suite": "dynamic-macro-host",
+          "started_at": "2026-10-26T04:50:47.1477086Z",
+          "next_suite_at": "2026-10-26T04:51:34.9427509Z",
+          "seconds": 47.795
+        }
+      ],
+      "note": "Intervals include the preceding suite and full inspection after it plus full inspection before the next suite; not isolated suite runtimes."
+    }
+  ],
+  "code_paths": [
+    "tools/configure_firmware.py: run_profile_tests() invokes inspect() before and after each suite.",
+    "tools/configure_firmware.py: inspect() invokes check_pass30(), replaying DCE, parameter spills with SDCC metadata recapture, register saves, tailshare and outlining.",
+    "tools/build_ci_release.py: settings_matrix_from_builds() -> firmware_matrix.measured_row() -> configure_firmware.inspect() once per profile.",
+    "tools/build_ci_release.py: capability_catalog.catalog() -> build_capability_catalog.inspect_entry() -> configure_firmware.inspect() twice per profile.",
+    "Assembly logs contain 30 DCE summary records, matching three full inspections for each of ten profiles."
+  ],
+  "qualification_compilation_markers": {
+    "profile": "multios",
+    "job_id": 121397059546,
+    "build_command_started_at": "2026-10-26T04:24:33.5393781Z",
+    "bootstrap_image_reported_at": "2026-10-26T04:25:02.7748693Z",
+    "final_image_reported_at": "2026-10-26T04:25:55.5692774Z",
+    "note": "Approximately 82 seconds from the build command start to final image report; remainder of build/qualify step is validation and tests."
+  }
+}

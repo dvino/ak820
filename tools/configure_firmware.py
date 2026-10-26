@@ -8,14 +8,17 @@ and interrupt bounds must fit its stack. Release approval remains separate.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import subprocess
 import sys
+import time
 
 ROOT = Path(__file__).resolve().parents[1]
 QMK = ROOT / 'qmk-8051-ak820'
@@ -115,7 +118,8 @@ def check_absolute_xdata(report, build, *, historical=False):
     for relative in report['expected_objects']:
         path = (QMK / relative).with_suffix('.asm').resolve()
         require(path.is_relative_to(build) and path.is_file(), 'Compiler ASM escapes build directory')
-        records = [row for row in report['artifacts'] if row.get('path') == path.relative_to(QMK).as_posix()]
+        artifact_name = path.relative_to(QMK).as_posix()
+        records = [row for row in report['artifacts'] if row.get('path') == artifact_name]
         require(len(records) == 1 and records[0].get('sha256') == sha(path) and
                 records[0].get('size') == path.stat().st_size, 'Unbound compiler ASM')
         xdata = absolute = False
@@ -142,8 +146,9 @@ def check_absolute_xdata(report, build, *, historical=False):
         require(metadata.is_relative_to(build) and metadata.is_file(), 'Missing IAP allocation metadata')
         for path in (metadata_asm, metadata):
             require(path.is_file(), 'Missing IAP allocation metadata')
+            artifact_name = path.relative_to(QMK).as_posix()
             records = [row for row in report['artifacts']
-                       if row.get('path') == path.relative_to(QMK).as_posix()]
+                       if row.get('path') == artifact_name]
             require(len(records) == 1 and records[0].get('sha256') == sha(path) and
                     records[0].get('size') == path.stat().st_size, 'Unbound IAP allocation metadata')
         require(re.findall(r'^_ak820_flash_stage\s*=\s*(0x[0-9A-Fa-f]+|\d+)\s*$',
@@ -324,7 +329,119 @@ def check_short_calls(report, build, image):
     return summary
 
 
+_PASS30_CACHE = {}
+_PASS30_TREES = (
+    'obj_ajazz_ak820_vial', 'default-keymap', 'parameter-spills-metadata',
+    'parameter-spills-input', 'parameter-spills-output',
+    'register-saves-input', 'register-saves-output', 'dce-input', 'dce',
+    'tailshare-input', 'shortcalls-input',
+)
+
+
+def _pass30_snapshot(report, build, toolchain):
+    """Hash replay inputs, including directory membership and external proofs.
+
+    Do not use mtimes or a saved success receipt: each reuse reads the bytes
+    again. Regression logs/results are deliberately outside this closure.
+    The broad source inventory also detects newly shadowing include files.
+    """
+    records = {}
+
+    def record(path):
+        path = Path(os.path.abspath(path))
+        key = str(path)
+        if key in records:
+            return
+        info = path.lstat()
+        resolved = path.resolve(strict=True)
+        kind = stat.S_IFMT(info.st_mode)
+        if path.is_file():
+            value = (str(resolved), kind, stat.S_IMODE(info.st_mode), sha(path))
+        elif path.is_dir():
+            value = (str(resolved), kind, 'directory')
+        else:
+            raise ValueError('Unsupported replay input: ' + key)
+        records[key] = value
+
+    def tree(directory, *, source=False):
+        # Record absent trees too, so a newly added input cannot hit the cache.
+        if not directory.exists() and not directory.is_symlink():
+            records[str(directory)] = ('missing',)
+            return
+        require(not directory.is_symlink(),
+                'Replay input directory must not be a symlink: ' + str(directory))
+        record(directory)
+        ignored = {'.git', '.build', '.venv', 'venv', '__pycache__'} if source else set()
+        for parent, directories, files in os.walk(directory):
+            directories[:] = sorted(name for name in directories if name not in ignored and
+                                    not (source and Path(parent, name).absolute() == build))
+            for name in sorted(directories + files):
+                record(Path(parent) / name)
+                # os.walk does not traverse directory links. A proof/source
+                # directory link must therefore never produce a cache hit.
+                require(not (Path(parent, name).is_symlink() and Path(parent, name).is_dir()),
+                        'Replay input directory must not be a symlink: ' + str(Path(parent, name)))
+
+    record(build / 'build-report.json')
+    for item in report.get('artifacts', []):
+        record(QMK / item['path'])
+    for name in _PASS30_TREES:
+        tree(build / name)
+    # Both mappings can refer outside this build, especially to the diagnostic
+    # bootstrap used to establish the protected interrupt/source context.
+    generation = load_json(build / 'default-keymap/generation.json')
+    context = load_json(build / 'parameter-spills-context.json')
+    record(build / 'parameter-spills-context.json')
+    for dependencies in (generation.get('dependencies', {}),
+                         generation.get('final_dependencies', {}),
+                         context.get('provenance_sha256', {})):
+        for name in dependencies:
+            record(Path(name))
+    for item in report.get('sources', []):
+        root = {'source': QMK, 'toolchain': toolchain}[item['origin']]
+        record(root / item['path'].replace('\\', '/'))
+    tree(QMK, source=True)
+    tree(ROOT / 'tools', source=True)
+    tree(toolchain / 'share/sdcc/include')
+    tree(toolchain / 'share/sdcc/lib/large')
+    for name in ('sdcc', 'sdcpp', 'sdas8051', 'sdld', 'sdar', 'packihx', 's51'):
+        record(toolchain / 'bin' / name)
+    return hashlib.sha256(canonical({'report': report, 'inputs': records,
+                                     'cwd': os.getcwd(), 'environment': dict(os.environ)})).hexdigest()
+
+
 def check_pass30(report, build, toolchain):
+    """Replay once per unchanged input closure in this Python process.
+
+    Every inspect still validates the compiler, sources, artifacts, linked
+    instructions and memory. Only the expensive deterministic transform replay
+    is memoized. Nothing is accepted from a disk cache or another CI run.
+    """
+    key = (Path(build).resolve(), Path(toolchain).resolve())
+    try:
+        before = _pass30_snapshot(report, *key)
+    except (OSError, ValueError, KeyError, TypeError):
+        # A malformed/incomplete input or a directory link is never a cache
+        # candidate. Preserve the original validator's admission and errors.
+        _PASS30_CACHE.pop(key, None)
+        return _replay_pass30(report, *key)
+    cached = _PASS30_CACHE.get(key)
+    if cached is not None and cached[0] == before:
+        return copy.deepcopy(cached[1])
+    _PASS30_CACHE.pop(key, None)
+    started = time.monotonic()
+    result = _replay_pass30(report, *key)
+    require(_pass30_snapshot(report, *key) == before,
+            'Pass30 inputs changed during replay')
+    # Ten release profiles fit comfortably. Bound memory for long-lived callers.
+    if len(_PASS30_CACHE) >= 16:
+        _PASS30_CACHE.pop(next(iter(_PASS30_CACHE)))
+    _PASS30_CACHE[key] = (before, copy.deepcopy(result))
+    print(f'PASS30 replay {key[0].name}: {time.monotonic() - started:.3f}s', flush=True)
+    return result
+
+
+def _replay_pass30(report, build, toolchain):
     """Replay the finite audited transform chain; never accept arbitrary flags.
 
     Temporary proof outputs leave the saved build untouched. Spill replay uses
@@ -860,22 +977,29 @@ def run_profile_tests(name, build, toolchain, identity):
     records = []
     test_env = dict(os.environ, AK820_SDCC_BIN=str((Path(toolchain) / 'bin').resolve()))
     for identifier, cwd, command in profile_test_plan(name, build, toolchain):
+        started = time.monotonic()
         before = inspect(build, toolchain)['identity']
         require(before == identity, 'Build changed before profile tests')
         log = output / (identifier + '.log')
         print('RUN PROFILE', identifier, flush=True)
+        test_started = time.monotonic()
         with log.open('w') as stream:
             result = subprocess.run(command, cwd=cwd, stdout=stream, stderr=subprocess.STDOUT,
                                     env=test_env)
+        test_seconds = time.monotonic() - test_started
         after = inspect(build, toolchain)['identity']
         records.append({'id': identifier, 'cwd': str(cwd), 'command': command,
                         'exit_code': result.returncode, 'log_sha256': sha(log),
+                        'seconds': round(time.monotonic() - started, 3),
+                        'test_seconds': round(test_seconds, 3),
                         'build_before': before, 'build_after': after})
         report = {'format': 'ak820-profile-tests-1', 'profile': name, 'identity': identity,
                   'source_files': sources, 'tests': records, 'hardware_validated': False,
                   'physical_device_commands': 0, 'passed': False}
         (output / 'results.json').write_bytes(canonical(report))
         require(result.returncode == 0 and before == after == identity, 'Profile suite failed: ' + identifier)
+        print(f'PASS PROFILE {identifier}: {records[-1]["seconds"]:.3f}s '
+              f'(test {test_seconds:.3f}s)', flush=True)
     require(test_source_snapshot() == sources, 'Test sources changed during profile qualification')
     report['passed'] = True
     validate_profile_tests(report, name, identity, build, toolchain)

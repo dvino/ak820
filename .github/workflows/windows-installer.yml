@@ -155,6 +155,7 @@ jobs:
           name: ak820-qualified-profile-${{ matrix.profile }}
           path: ${{ runner.temp }}/profile-${{ matrix.profile }}.tar.gz
           if-no-files-found: error
+          compression-level: 0
           retention-days: 30
 
       - name: Preserve partial profile evidence after failure
@@ -172,6 +173,7 @@ jobs:
           name: ak820-failed-profile-evidence-${{ matrix.profile }}
           path: ${{ runner.temp }}/failed-profile-${{ matrix.profile }}.tar.gz
           if-no-files-found: error
+          compression-level: 0
           retention-days: 30
 
   linux-assembly:
@@ -327,7 +329,8 @@ jobs:
           done
       - name: Assemble all independently authorized profile bundles
         run: >-
-          "$(readlink -f qmk-8051-ak820/.venv/bin/python)" tools/build_ci_release.py
+          "$(readlink -f qmk-8051-ak820/.venv/bin/python)" tools/ci_parallel_assembly.py
+          --validation-workers 4
           --all-profiles
           --builds-root qmk-8051-ak820/.build/ci-profiles
           --policies-root ci/profiles
@@ -396,6 +399,7 @@ jobs:
             dist/AK820-Windows.zip
             dist/AK820-Windows.zip.sha256
           if-no-files-found: error
+          compression-level: 0
           retention-days: 30
 
   linux-package:
@@ -455,6 +459,7 @@ jobs:
             dist/AK820-Linux-x86_64.tar.gz
             dist/AK820-Linux-x86_64.tar.gz.sha256
           if-no-files-found: error
+          compression-level: 0
           retention-days: 30
 
   publish:

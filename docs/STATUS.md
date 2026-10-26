@@ -2,6 +2,25 @@
 
 # Project status
 
+## CI validation time, 2026-10-26
+
+The release workflow reuses successful transform checks while all inputs remain
+identical and runs the first assembly inspections in four processes. Every
+inspection rehashes the inputs; firmware tests and release checks still run.
+See [CI and releases](https://github.com/dvino/ak820/blob/main/docs/CI.md).
+
+A fresh local `multios` build and qualification completed in 7 minutes 4 seconds:
+28 base suites, 331 unit tests with no skips, and 37 supplemental suites passed.
+The exact IHX remained unchanged; the whole-program stack bound is 160/171 bytes.
+Shared host discovery passed 281 tests. A separate inspection benchmark measured
+22.974 seconds cold and 2.454 seconds with unchanged inputs. The previous
+[GitHub run](https://github.com/dvino/ak820/actions/runs/40268741259) took
+84 minutes 6 seconds overall, including 58 minutes 6 seconds for the `multios`
+build/qualification command. These are different hosts, not an end-to-end CI
+speedup measurement. A new ten-profile GitHub run and native package builds
+remain to be run. No device commands were sent. Evidence and review are in
+`audits/ci-speed-20261026/`.
+
 ## Beta.2: ten profiles
 
 Beta.2 contains ten profiles: `main`, `game`, `mmo`, `typing`, `code`, `pointer`,

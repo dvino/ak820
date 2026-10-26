@@ -77,7 +77,7 @@ Use [Configuration](docs/CONFIGURATION.md) to remap keys, layers, macros and lig
 
 The whole-program development target is described in the [compression plan](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/MAXIMUM-FUNCTIONALITY-PLAN.md). Current results and remaining limits are in [compression status](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/MAXIMUM-FUNCTIONALITY-STATUS.md).
 
-[Documentation](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI and releases](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/CI.md) · [Build](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/BUILD.md) · [Development](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/DEVELOPMENT.md) · [Testing](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/TESTING.md) · [Contributing](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/CONTRIBUTING.md)
+[Documentation](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI and releases](https://github.com/dvino/ak820/blob/main/docs/CI.md) · [Build](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/BUILD.md) · [Development](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/DEVELOPMENT.md) · [Testing](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/TESTING.md) · [Contributing](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/CONTRIBUTING.md)
 
 The companion application is maintained in [AK Configurator](https://github.com/dvino/ak-configurator). The [firmware handoff](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/docs/FIRMWARE-HANDOFF.md) describes its firmware contracts.
 

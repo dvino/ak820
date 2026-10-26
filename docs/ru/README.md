@@ -84,7 +84,7 @@ Python 3.11+ и закреплённый SDCC 4.6.0.
 
 [План сжатия всей прошивки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/MAXIMUM-FUNCTIONALITY-PLAN.md) описывает цель разработки. Текущие результаты и оставшиеся ограничения приведены в [отчёте о сжатии](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/MAXIMUM-FUNCTIONALITY-STATUS.md).
 
-[Документация](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI и выпуски](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/CI.md) · [Сборка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/BUILD.md) · [Разработка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/DEVELOPMENT.md) ·
+[Документация](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI и выпуски](https://github.com/dvino/ak820/blob/main/docs/ru/CI.md) · [Сборка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/BUILD.md) · [Разработка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/DEVELOPMENT.md) ·
 [Проверки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/TESTING.md) · [Участие](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/CONTRIBUTING.md).
 
 Приложение-компаньон ведётся в [AK Configurator](https://github.com/dvino/ak-configurator). [Контракты прошивки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/docs/ru/FIRMWARE-HANDOFF.md) описывают основу интеграции.

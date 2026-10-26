@@ -5,9 +5,8 @@
 The [release workflow](../.github/workflows/windows-installer.yml) runs on branch
 pushes, pull requests, version tags and manual launches. Its current source path
 builds the ten [profiles](profiles/README.md), with `main` as default. All ten
-use schema03. This describes configured checks, not a completed beta.2 release.
-Published beta.1 on 2026-10-25 had nine catalog profiles and standalone installers
-for exact `work`. Artifact and hardware results belong in [Status](STATUS.md).
+use schema03. Published artifacts and hardware results are recorded separately
+in [Status](STATUS.md).
 
 ## Firmware and installer jobs
 
@@ -55,6 +54,28 @@ needs its own matching manifest and approval. Packaging verifies collected
 inputs inside both GUI and CLI applications. Windows performs native startup
 smokes; Linux uses Ubuntu 22.04 x86_64/glibc 2.35 and Xvfb. CLI help, offline
 verification and Tk startup do not open USB or prove interactive device behavior.
+
+## Validation time
+
+The expensive pass30 transform replay runs once per unchanged build in a
+validation session. Release assembly uses `tools/ci_parallel_assembly.py` with
+`--validation-workers 4` for the first inspections. Workers return successful
+results through memory to the parent, which runs the original assembler and
+rehashes every input before reuse. `--validation-workers 1` uses the same
+checks serially. The original `tools/build_ci_release.py` remains usable. Later inspections hash the complete replay inputs again before
+reusing that result. The snapshot covers source and checker files, intermediate
+file contents and directory membership, compiler tools, headers and libraries,
+default-keymap dependencies, bootstrap provenance, and the process environment.
+It uses file contents, not modification times. Changed or unsupported inputs
+run the full validator again; a failed replay cannot create a cache entry.
+
+This cache stays in the current job's processes. It is not uploaded, restored
+from disk, or shared between CI runs. Each new job still performs its own first
+replay. A worker failure stops assembly. All other
+image, source, memory, runtime, test-log and release-policy checks still run.
+Regression logs are outside the replay inputs; creating them does not require
+recompiling the same proof. Profile logs record total and test-only time per
+suite. ZIP and gzip artifacts upload without a second compression pass.
 
 ## Catalogs and evidence
 

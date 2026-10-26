@@ -1,0 +1,23 @@
+{
+  "command": [
+    "python3",
+    "tools/build_ci_profiles.py",
+    "--profile",
+    "multios",
+    "--builds-root",
+    "qmk-8051-ak820/.build/ci-speed-final",
+    "--bootstrap-root",
+    "qmk-8051-ak820/.build/ci-speed-bootstrap-final",
+    "--toolchain",
+    "toolchains/sdcc-4.6.0",
+    "--qmk-bin",
+    "qmk-8051-ak820/.venv/bin/qmk",
+    "--python",
+    "qmk-8051-ak820/.venv/bin/python",
+    "--report",
+    "qmk-8051-ak820/.build/ci-speed-final.json"
+  ],
+  "exit_code": 0,
+  "seconds": 424.183,
+  "sanitizers_disabled": false
+}
