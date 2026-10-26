@@ -34,13 +34,13 @@ PUBLIC_GUIDES = (
     *(f'docs/ru/profiles/{profile}.md' for profile in
       ('main', 'game', 'mmo', 'typing', 'code', 'pointer', 'onehand', 'creative', 'shortcuts', 'multios')),
     *(f'docs/{name}.md' for name in (
-      'FEATURES', 'CONFIGURATION', 'INSTALL', 'COMBOS', 'SETTINGS-BACKUP',
+      'FEATURES', 'CONFIGURATION', 'INSTALL', 'COMBOS', 'SETTINGS-BACKUP', 'DIRECT',
       'BUILD-PROFILES', 'MODULE-MATRIX', 'STATUS', 'COMPACT-MOUSE-KEYS', 'COMPACT_AUTOSHIFT',
       'TAP-HOLD', 'GUI-CONTROL', 'COMPACT-DYNAMIC-MACROS', 'COMPACT-LEADER',
       'INDICATORS', 'MAC-PC', 'COMPACT-TAP-DANCE', 'COMPACT-KEY-OVERRIDES',
       'QMK-SETTINGS', 'MODULE-STORAGE')),
     *(f'docs/ru/{name}.md' for name in (
-      'FEATURES', 'CONFIGURATION', 'INSTALL', 'COMBOS', 'SETTINGS-BACKUP',
+      'FEATURES', 'CONFIGURATION', 'INSTALL', 'COMBOS', 'SETTINGS-BACKUP', 'DIRECT',
       'BUILD-PROFILES', 'MODULE-MATRIX', 'STATUS', 'COMPACT-MOUSE-KEYS', 'COMPACT_AUTOSHIFT',
       'TAP-HOLD', 'GUI-CONTROL', 'COMPACT-DYNAMIC-MACROS', 'COMPACT-LEADER',
       'INDICATORS', 'MAC-PC', 'COMPACT-TAP-DANCE', 'COMPACT-KEY-OVERRIDES',

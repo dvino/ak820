@@ -1,0 +1,33 @@
+{
+  "pass": true,
+  "limits": "Host C semantics with sanitizers; actual SDCC/8051 ABI requires emitted.py and ak820_emitted tests.",
+  "tests": [
+    {
+      "name": "color",
+      "pass": true,
+      "summary": "PASS: all 16777216 HSV colors, with and without CIE (33554432 cases), exactly match RC4."
+    }
+  ],
+  "source_sha256": {
+    "keyboards/ajazz/ak820/config.h": "c093c63f28272de6e8bb13bf5204eb9fa43d4abab6009d9c9d19950117a6e760",
+    "quantum/color.c": "a84c62b09a4ebfe3d06dbe71f763dd687d9f624817c88a84fbf315865433fd51",
+    "quantum/keymap_common.h": "0286c9ff76149f8e32de9735b045beb3812c736b37bced398bafcbc28240dab5",
+    "quantum/led_tables.c": "550636874a6e60384cabc1dfea711a9e7c8c7f824b4cc935f36468cde0f6b51c",
+    "tests/ak820_optimization/buffers_harness.c": "0c8ee5cc76ad79def08b056a9a525705ca7651aad70f3b6661e159acc07a54d5",
+    "tests/ak820_optimization/callee.py": "7507e5fb259de882e54331261eb71c78304e69ea77a87116277bb208221fa42c",
+    "tests/ak820_optimization/color_harness.c": "19b9af241500d51eab44c2d0b6a8269b8d740196675c15eeea18c081bbc96a95",
+    "tests/ak820_optimization/emitted.py": "30099e926c1c780b2f1eb47e0c8fcb82b5e6df19619fd428f591e44e1fa06ff3",
+    "tests/ak820_optimization/fixtures/color_rc4.c": "b1b6258f1b409d47a252fc34ded4a58a6403a96f22777a704cbb456447b3ec3b",
+    "tests/ak820_optimization/fixtures/debounce_rc4.c": "be15060d96fc03cddcff90f45d86b51122d6c218e1cf103c5c4e5dd0d0ee8cbe",
+    "tests/ak820_optimization/fixtures/keycode_decoder_rc4.c": "0952776e1cd478ec0a58a66e1cd61fd9ccf4694da2bb59208ccb4b92c2c88c00",
+    "tests/ak820_optimization/fixtures/macro_playback_rc4.c": "76a34b809e4008258ca6348fa8ba2c1b1d84521afef73b96ecb0f761fa8f1d11",
+    "tests/ak820_optimization/fixtures/report_rc4.c": "88a9d8dfdbf5a9bc95e6443198a1365515089aa85016ac04aebf41be624e4a6f",
+    "tests/ak820_optimization/harness.c": "a758e80f4605a05fc6084a05586500e796644c908561e68733262dd6e87d60ab",
+    "tests/ak820_optimization/macro_harness.c": "1410eb7d5012d595bd4988094e7f93ec2f8c4064852bcf8c046f1526d775eef9",
+    "tests/ak820_optimization/outline.py": "8ec4ab0a6dfc3fc71480527528fe5b7305f177a3cf061d6ffee464d721799373",
+    "tests/ak820_optimization/outline_integrity.py": "6d9f4ccb07abe8e515543ecdd0378c1a415c9ded6c4c7f55cf3d3b3e24ac6548",
+    "tests/ak820_optimization/outline_integrity_unit.py": "42c4b3c06754dd26afa97b55175440c1c7824f4cb927ee06de376569dbebd3d5",
+    "tests/ak820_optimization/outline_unit.py": "f0574c64061298abab60160ae0dfe3ddc6d5e3c6e36acf405694f7cec8864510",
+    "tests/ak820_optimization/run.py": "71e6e4841da0a5b33a32697bc0279c9e7ba9e7ee6dd8628841bf8809ae4bc88b"
+  }
+}

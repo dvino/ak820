@@ -1,0 +1,402 @@
+{
+  "flashing_authorized": false,
+  "format": "ak820-development-capability-catalog-1",
+  "hardware_validated": false,
+  "images": [
+    {
+      "build_identity": {
+        "build_report_sha256": "b5f2ad06f883e8af86892634fee0fd36112d377707ce4fe678518b00098f4f47",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "302a07fb1d23e411077fa492d266aac6561d33d1beb7c5316ce23574bdd49861",
+        "ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+        "map_sha256": "b41f7d63286ec4da78ca870b4995f0bc6b5bff763e8fc7954fc0e458b19aac23",
+        "mem_sha256": "feef725ef6f57080cbf4b348c6e4da38df1399a0134e8d8c68ea32da5e6d7fc3",
+        "nvm_schema": 532483,
+        "profile": "main",
+        "source_manifest_sha256": "49238b07919ab4532d1fbb08eedbeabdbd86ce5a38c9e7c91666ae2ab67ef4c2"
+      },
+      "code_identity": {
+        "algorithm": "sha256-code-windows-zero-v1",
+        "covered_bytes": 40505,
+        "fill_byte": 0,
+        "ranges": [
+          {
+            "end_exclusive": 12288,
+            "start": 10400
+          },
+          {
+            "end_exclusive": 50944,
+            "start": 12327
+          }
+        ],
+        "sha256": "a1488f52be950ce18a7997bbd8562ea4e057f017575f96aed945d922b9b7b217"
+      },
+      "compatible_transitions": [],
+      "direct": {
+        "available": true,
+        "capabilities": 3,
+        "commit": "logical-palette; display-publication-may-be-pending",
+        "count": 82,
+        "encoding": "HSV8",
+        "mapping": 1,
+        "maximum_brightness": 160,
+        "physical_display_verified": false,
+        "read_chunk": 7,
+        "runtime_negotiation_required": true,
+        "storage": "RAM-only",
+        "timeout_ms": 1000,
+        "upload_chunk": 8,
+        "version": 1
+      },
+      "evidence_sha256": {
+        "base_suites": "0b02f9c87f6647fd0855397878f26d28df34b451d38a1b32f2f05484bd495f31",
+        "configuration": "2da834f2fa3cdf8abff51de7a02149cf60de220e202e8addd682ed85f1a4903e",
+        "runtime": "54a7bb4f4b66e8753d000b1efc46fdd6cdb03c1ce9e836176a6e0e9be12a59d0",
+        "supplemental_suites": "aade122fd1f9114b4826f5c82a3ba9b8088ac2c2b26c4c3b9da19231fb2c5026"
+      },
+      "features": [
+        "alternate-repeat",
+        "auto-shift",
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "key-overrides",
+        "leader",
+        "media-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tri-layer",
+        "vialrgb-direct",
+        "vialrgb-direct-ram"
+      ],
+      "fixed_limits": {
+        "combos": 8,
+        "encoders": 1,
+        "key_overrides": 8,
+        "layers": 6,
+        "macro_bytes": 8192,
+        "macros": 16,
+        "rgb_leds": 82,
+        "rgb_maximum_brightness": 160,
+        "tap_dance": 8
+      },
+      "flashing_authorized": false,
+      "hardware_validated": false,
+      "model": "ajazz/ak820",
+      "module_storage": {
+        "address_space": "NVM-relative",
+        "format": "ak820-module-storage-contract-1",
+        "limits": {
+          "key_overrides": {
+            "callbacks": false,
+            "first_matching_row_wins": true,
+            "layer_mask": [
+              1,
+              63
+            ],
+            "maximum_captured_triggers": 1,
+            "runtime_enablement_persisted": false
+          },
+          "qmk_settings": {
+            "delays_apply_to": [
+              "tap_code",
+              "tap_code16"
+            ],
+            "delays_do_not_apply_to": [
+              "compact-tap-hold",
+              "space-cadet",
+              "tap-dance",
+              "vial-macro-down-up"
+            ],
+            "tap_dance_term_uses_qsid7": false
+          },
+          "tap_dance": {
+            "explicit_term_ms": [
+              1,
+              32767
+            ],
+            "maximum_gesture_presses": 2,
+            "maximum_waiting_gestures": 1,
+            "physical_sources_only": true,
+            "special_action_outputs": false,
+            "term_zero_default_ms": 200
+          }
+        },
+        "migration": {
+          "accepted_source_schemas": [
+            532481,
+            532482,
+            532483
+          ],
+          "explicit_target_required": true,
+          "macro_capacity_check_required": true,
+          "preserves": [
+            "source-keymap-layers",
+            "source-encoder-map",
+            "schema02-nonempty-combos",
+            "published-macros"
+          ],
+          "schema01_new_layers": "transparent",
+          "schema03_downgrade_supported": false
+        },
+        "modules": {
+          "key_overrides": {
+            "codec": "ak820_extension_settings.validate_entry",
+            "enabled": true,
+            "enabled_entries": 8,
+            "entry_bytes": 10,
+            "entry_offsets": [
+              1856,
+              1866,
+              1876,
+              1886,
+              1896,
+              1906,
+              1920,
+              1930
+            ],
+            "stored_entries": 8,
+            "wire_get_operation": 5,
+            "wire_set_operation": 6
+          },
+          "qmk_settings": {
+            "enabled": true,
+            "enabled_qsids": [
+              1,
+              2,
+              4,
+              7,
+              18,
+              19
+            ],
+            "fields": [
+              {
+                "consumer_key_filter": null,
+                "consumers": [
+                  "grave-escape"
+                ],
+                "default": 0,
+                "enabled": true,
+                "encoding": "uint8",
+                "maximum": 15,
+                "minimum": 0,
+                "name": "grave_escape_flags",
+                "offset": 1709,
+                "qsid": 1,
+                "stored": true,
+                "width_bytes": 1
+              },
+              {
+                "consumer_key_filter": null,
+                "consumers": [
+                  "two-key-combos"
+                ],
+                "default": 40,
+                "enabled": true,
+                "encoding": "uint16-le",
+                "maximum": 1000,
+                "minimum": 1,
+                "name": "combo_term_ms",
+                "offset": 1710,
+                "qsid": 2,
+                "stored": true,
+                "width_bytes": 2
+              },
+              {
+                "consumer_key_filter": null,
+                "consumers": [
+                  "compact-auto-shift"
+                ],
+                "default": 175,
+                "enabled": true,
+                "encoding": "uint16-le",
+                "maximum": 1000,
+                "minimum": 1,
+                "name": "auto_shift_timeout_ms",
+                "offset": 1718,
+                "qsid": 4,
+                "stored": true,
+                "width_bytes": 2
+              },
+              {
+                "consumer_key_filter": null,
+                "consumers": [
+                  "compact-mod-tap",
+                  "compact-layer-tap",
+                  "space-cadet"
+                ],
+                "default": 200,
+                "enabled": true,
+                "encoding": "uint16-le",
+                "maximum": 1000,
+                "minimum": 1,
+                "name": "tapping_term_ms",
+                "offset": 1712,
+                "qsid": 7,
+                "stored": true,
+                "width_bytes": 2
+              },
+              {
+                "consumer_key_filter": "except-caps-lock",
+                "consumers": [
+                  "tap_code",
+                  "tap_code16"
+                ],
+                "default": 0,
+                "enabled": true,
+                "encoding": "uint16-le",
+                "maximum": 100,
+                "minimum": 0,
+                "name": "tap_code_delay_ms",
+                "offset": 1714,
+                "qsid": 18,
+                "stored": true,
+                "width_bytes": 2
+              },
+              {
+                "consumer_key_filter": "caps-lock",
+                "consumers": [
+                  "tap_code",
+                  "tap_code16"
+                ],
+                "default": 80,
+                "enabled": true,
+                "encoding": "uint16-le",
+                "maximum": 100,
+                "minimum": 0,
+                "name": "caps_lock_delay_ms",
+                "offset": 1716,
+                "qsid": 19,
+                "stored": true,
+                "width_bytes": 2
+              }
+            ],
+            "record_offset": 1704,
+            "stored_record_bytes": 24,
+            "wire_commands": {
+              "get": 10,
+              "query": 9,
+              "reset": 12,
+              "set": 11
+            }
+          },
+          "tap_dance": {
+            "codec": "ak820_extension_settings.validate_entry",
+            "enabled": false,
+            "enabled_entries": 0,
+            "entry_bytes": 10,
+            "entry_offsets": [
+              1728,
+              1738,
+              1748,
+              1758,
+              1768,
+              1778,
+              1792,
+              1802
+            ],
+            "stored_entries": 8,
+            "wire_get_operation": 1,
+            "wire_set_operation": 2
+          }
+        },
+        "physical_behavior_verified": false,
+        "power_loss_persistence_verified": false,
+        "restore": {
+          "backup_format": "ak820-settings-backup-2",
+          "exact_reviewed_image_required": true,
+          "failure_action": "stop-without-retry",
+          "inactive_data": "preserve; reject differences before any write",
+          "legacy_target_extensions": "require empty tables and default settings",
+          "write_authorization_granted": false
+        },
+        "schema": 532483
+      },
+      "profile": "main",
+      "project_verified": true,
+      "release_approved": false,
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          },
+          {
+            "bytes": 64,
+            "reserved_end_exclusive": 1088,
+            "start": 1024,
+            "symbol": "_ak820_flash_stage"
+          }
+        ],
+        "code_bytes": 40466,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12281,
+            "name": "low",
+            "occupied_bytes": 1882,
+            "start": 10400,
+            "trailing_free_bytes": 6
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50915,
+            "name": "main",
+            "occupied_bytes": 38584,
+            "start": 12327,
+            "trailing_free_bytes": 28
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 73,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 182,
+          "stack_margin": 22,
+          "stack_qualified": true,
+          "static_bytes": 74
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2858,
+          "capacity": 3008,
+          "end_inclusive": 3945,
+          "physical_capacity": 3072,
+          "reserved_bytes": 64,
+          "start": 1088,
+          "total_bytes": 2922
+        }
+      },
+      "runtime_qmk_settings": [
+        1,
+        2,
+        4,
+        7,
+        18,
+        19
+      ],
+      "settings_schema": 532483,
+      "settings_writes_authorized": false,
+      "status": "development",
+      "timing_ms": {
+        "auto_shift": 175,
+        "combo": 40,
+        "dynamic_macro_phase": 10,
+        "leader": 300,
+        "os_indicator_lease": 3000,
+        "os_indicator_period": 4096,
+        "tap_hold": 200
+      }
+    }
+  ],
+  "release_approved": false,
+  "settings_writes_authorized": false,
+  "status": "development-only"
+}

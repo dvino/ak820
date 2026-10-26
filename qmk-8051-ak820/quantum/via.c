@@ -232,10 +232,14 @@ __attribute__((weak)) void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
 // possibly modified with returned values.
 void raw_hid_receive(uint8_t *packet, uint8_t length) {
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
-    /* The AK820 USB transport owns this fixed XDATA packet buffer. */
-    uint8_t __xdata *data = (uint8_t __xdata *)packet;
-    uint8_t __xdata *command_id = &data[0];
-    uint8_t __xdata *command_data = &data[1];
+    /* The sole target transport calls with its fixed 32-byte XDATA buffer.
+     * Reject other pointers before using fixed addresses in this parser. */
+    extern __xdata uint8_t raw_buffer[32];
+    if (packet != raw_buffer || length != 32) return;
+#    define data raw_buffer
+#    define command_id (&raw_buffer[0])
+#    define command_data (&raw_buffer[1])
+#    define length 32
 #else
     uint8_t *data = packet;
     uint8_t *command_id = &data[0];
@@ -516,6 +520,13 @@ skip:
     // (i.e. returning state to the host, or the unhandled state).
     raw_hid_send(data, length);
 }
+
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+#    undef length
+#    undef data
+#    undef command_id
+#    undef command_data
+#endif
 
 #if defined(VIA_QMK_BACKLIGHT_ENABLE)
 

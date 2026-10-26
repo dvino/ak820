@@ -127,8 +127,8 @@ class MatrixTests(unittest.TestCase):
     def test_settings_hash_covers_contiguous_packed_code(self):
         import pack_ak820 as pack
         captured = {}
-        def helper(configuration, ihx, code, definition):
-            captured.update(configuration=configuration, ihx=ihx, code=code, definition=definition)
+        def helper(configuration, ihx, code, definition, **capabilities):
+            captured.update(configuration=configuration, ihx=ihx, code=code, definition=definition, **capabilities)
             return captured
         settings = SimpleNamespace(catalog_settings_identity=helper, canonical=lambda value: b'definition')
         payload = bytes((index % 251 for index in range(pack.APP_END - pack.APP_START)))
@@ -141,12 +141,14 @@ class MatrixTests(unittest.TestCase):
                     patch.object(pack, 'read_ihex', return_value={}), \
                     patch.object(pack, 'read_symbols', return_value={}), \
                     patch.object(pack, 'pack', return_value=payload) as packed, \
-                    patch.object(pack, 'verify_payload'):
+                    patch.object(pack, 'verify_payload'), \
+                    patch('build_capability_catalog.direct_contract', return_value={'available': True}):
                 result = matrix.settings_identity(Path(tmp), fresh, native)
             validate.assert_called_once_with(b'native')
             self.assertFalse(packed.call_args.args[4])
             self.assertEqual(result['code'], pack.digest(payload[:pack.CODE_END - pack.APP_START]))
             self.assertEqual(result['ihx'], 'linked-hash')
+            self.assertEqual(result['direct_protocol'], 1)
 
     def test_matrix_does_not_modify_measurement(self):
         measured = matrix.default_row('main')

@@ -13,6 +13,7 @@ difference.
 | Set up two-key shortcuts | [Combos](COMBOS.md) |
 | Use Caps Word, Repeat, Grave Escape and Tri Layer | [Key actions](CONFIGURATION.md) |
 | Set up macros and RGB effects | [Configuration](CONFIGURATION.md) |
+| Read or update the Direct palette | [Direct palette](DIRECT.md) |
 | Save or restore settings | [Settings backup](SETTINGS-BACKUP.md) |
 | Understand Mod-Tap and Layer-Tap behavior | [Mod-Tap and Layer-Tap](TAP-HOLD.md) |
 | Use One Shot, Space Cadet and NKRO controls | [Configuration](CONFIGURATION.md) |

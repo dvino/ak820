@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "audits/beta3-direct-20261026",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "unit_tests": {
+    "run": 4,
+    "skipped": 0
+  },
+  "scope": "Mocked temporary-root negative controls only; no original running build or qualification producer invoked",
+  "physical_device_commands": 0,
+  "log_sha256": "2881bf2566fd5d4dc60db091ca19c94269a9617ea718e75948bd80b0935c30db",
+  "source_files": {
+    "prepare_release.py": "f5b09cb533327c03599622105c160e6e835ae0af0c3957852dad06e41bf6c270",
+    "measure_origin.py": "114c3eb7262eaadba6800a1b54b432765141fac82091b416e655be76ee2ed80e",
+    "test_measure_origin.py": "e9e5e4c5d1bdac7c491740592ec01d4220ee16dae3dfee6b0e09d21c6ebc557d",
+    "test_prepare_paths.py": "674c79a03efdfa1d8fafd66a3cd2a7ee8780acbd5156f919ea400967fa320cb5"
+  }
+}

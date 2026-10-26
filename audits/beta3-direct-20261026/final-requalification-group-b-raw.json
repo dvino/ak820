@@ -1,0 +1,149 @@
+{
+  "format": "beta3-admission-requalification-group-b-1",
+  "source_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb",
+  "profiles": [
+    {
+      "profile": "typing",
+      "status": "PASS",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/b/tools/configure_firmware.py",
+        "qualify",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/b/qmk-8051-ak820/.build/beta3-release/typing",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 415.424,
+      "log": "/tmp/ak820-beta3-isolated/b/work-logs/beta3-admission-typing.log",
+      "log_sha256": "25d97f743c7b988bb2871a6c6d45158d20bc2a75f1d8432cfc7b9b65cdbce562",
+      "runtime_test_count": 28,
+      "unit_tests_run": 351,
+      "unit_tests_skipped": 0,
+      "profile_gate_pass_count": 34,
+      "linked_outputs": {
+        "ajazz_ak820_vial.mem": "167edfba9634e439016d4c5d03a88695ac733d9a141c1e757b7c6c59f39101b5",
+        "build-report.json": "ce6ec320984002527be6c03cb75e68d3fd66b7bef29f4cc85665503f69c958c0",
+        "ajazz_ak820_vial.ihx": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+        "ajazz_ak820_vial.map": "8727cbd05955eb92e78258f76d41d66c065f9e4c014bea90bf498ece8dd2ae45"
+      },
+      "build_unchanged": true,
+      "identity_snapshot": {
+        "configuration-report.json": "fd07e0b16a0ee834dfcd6ceec65637fad015fd7c8e3878429e4129df949873d9",
+        "qualification.json": "2c44daef8c02d303f801e19911c5ba519c386a26c4cc66fd65713073953a8707",
+        "build-report.json": "ce6ec320984002527be6c03cb75e68d3fd66b7bef29f4cc85665503f69c958c0"
+      },
+      "central_copy": {
+        "file_count": 6032,
+        "whole_tree_equal": true,
+        "tree_sha256": "4d556d9e688ab7bc4cf3287a3ce97e99a9ce7091695a72279c8b0aa55b44dd42"
+      }
+    },
+    {
+      "profile": "code",
+      "status": "PASS",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/b/tools/configure_firmware.py",
+        "qualify",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/b/qmk-8051-ak820/.build/beta3-release/code",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 426.031,
+      "log": "/tmp/ak820-beta3-isolated/b/work-logs/beta3-admission-code.log",
+      "log_sha256": "c1ff09a9be4b2ae2d3d889315963e2f66b7c846d34e8d487486ad429bc36aa4e",
+      "runtime_test_count": 28,
+      "unit_tests_run": 351,
+      "unit_tests_skipped": 0,
+      "profile_gate_pass_count": 32,
+      "linked_outputs": {
+        "ajazz_ak820_vial.mem": "ab1811b8ab306e72dc47a9267bcad9952d8fba8b4a1241da89c5059f779cc2a9",
+        "build-report.json": "4388cf77abc6fb4b576f4d03765a56c25df062f68a4f263a47bf4afa7b892bf6",
+        "ajazz_ak820_vial.ihx": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+        "ajazz_ak820_vial.map": "005ea427568a6cff218162d3c284a30cc22eaa31192981a2394b999f4129ac43"
+      },
+      "build_unchanged": true,
+      "identity_snapshot": {
+        "configuration-report.json": "a289b89e16a9d3ebb30ddb6daa002c5145f6440c51afb6305a4f38ed74e597bc",
+        "qualification.json": "bb54af34990c92d615a6acf97feafc86660b776fa3649234f6e9e748926e0eae",
+        "build-report.json": "4388cf77abc6fb4b576f4d03765a56c25df062f68a4f263a47bf4afa7b892bf6"
+      },
+      "central_copy": {
+        "file_count": 5976,
+        "whole_tree_equal": true,
+        "tree_sha256": "8edd993414bdc0a893e94c28d61a658bf9ce4109e38b382173826ce4fc8f42ae"
+      }
+    },
+    {
+      "profile": "multios",
+      "status": "PASS",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/b/tools/configure_firmware.py",
+        "qualify",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/b/qmk-8051-ak820/.build/beta3-release/multios",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 404.831,
+      "log": "/tmp/ak820-beta3-isolated/b/work-logs/beta3-admission-multios.log",
+      "log_sha256": "13cf6630babea93ab50d282dca0cc80b3e94cd9f4a8a22044ecf8237f93e4480",
+      "runtime_test_count": 28,
+      "unit_tests_run": 351,
+      "unit_tests_skipped": 0,
+      "profile_gate_pass_count": 37,
+      "linked_outputs": {
+        "ajazz_ak820_vial.mem": "298717105f3b2ee92f2434d8d1076bac8e8160083e6f9e9fc6320b48abd923d4",
+        "build-report.json": "d6588eed4415e6b8e684f7d0ba0e541cd4506504d4b98c44ff7eb458c0c1f9d4",
+        "ajazz_ak820_vial.ihx": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+        "ajazz_ak820_vial.map": "b64acff8fd5eb8cccfdd89b1d022d4cd3dd67540da2ca39b111363eb86abc01c"
+      },
+      "build_unchanged": true,
+      "identity_snapshot": {
+        "configuration-report.json": "8488b5d3a14ac5fe39b5a83d2a44bd80e5767c2a0fa0e0b0caf71c1cda4224be",
+        "qualification.json": "75c161fa78ea4bf8068fa08afea76b05cf09cdd9b005b8801d01e979f08db7b5",
+        "build-report.json": "d6588eed4415e6b8e684f7d0ba0e541cd4506504d4b98c44ff7eb458c0c1f9d4"
+      },
+      "central_copy": {
+        "file_count": 6403,
+        "whole_tree_equal": true,
+        "tree_sha256": "d36d1bf91b488e6cf2b2d3fb8f74f127a331ef9a3d7884379a0119a9cefde49c"
+      }
+    }
+  ],
+  "initial_path_typo_attempt": {
+    "profile": "typing",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/ak820-beta3-isolated/b/qmk-8051-ak820/tools/configure_firmware.py",
+      "qualify",
+      "--build-dir",
+      "/tmp/ak820-beta3-isolated/b/qmk-8051-ak820/.build/beta3-release/typing",
+      "--toolchain",
+      "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0"
+    ],
+    "exit_code": 2,
+    "duration_seconds": 0.012,
+    "log_sha256": "17d6d00ab7784549db1f96646e192869f3a369455e379a274bd2e562ad9c80e1",
+    "linked_outputs_unchanged": true,
+    "linked_before": {
+      "ajazz_ak820_vial.mem": "167edfba9634e439016d4c5d03a88695ac733d9a141c1e757b7c6c59f39101b5",
+      "build-report.json": "ce6ec320984002527be6c03cb75e68d3fd66b7bef29f4cc85665503f69c958c0",
+      "ajazz_ak820_vial.ihx": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "ajazz_ak820_vial.map": "8727cbd05955eb92e78258f76d41d66c065f9e4c014bea90bf498ece8dd2ae45"
+    },
+    "linked_after": {
+      "ajazz_ak820_vial.mem": "167edfba9634e439016d4c5d03a88695ac733d9a141c1e757b7c6c59f39101b5",
+      "build-report.json": "ce6ec320984002527be6c03cb75e68d3fd66b7bef29f4cc85665503f69c958c0",
+      "ajazz_ak820_vial.ihx": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "ajazz_ak820_vial.map": "8727cbd05955eb92e78258f76d41d66c065f9e4c014bea90bf498ece8dd2ae45"
+    }
+  },
+  "qualification_passed": true
+}

@@ -33,6 +33,9 @@ extern HSV g_direct_mode_colors[RGB_MATRIX_LED_COUNT];
 static AK820_FLAG suspended;
 static AK820_FLAG dirty;
 static AK820_FLAG rendering;
+#ifndef VIALRGB_NO_DIRECT
+static AK820_FLAG direct_rendering;
+#endif
 static uint16_t changed_at;
 static uint16_t frame_at;
 static uint16_t phase;
@@ -65,6 +68,42 @@ static void age_reactive(void) {
     }
 }
 
+#if defined(__SDCC_mcs51)
+/* Exact byte saturation with the large-model parameter ABI. Keep R0..R7
+ * intact: SDCC's same-unit call analysis cannot infer inline-assembly GPR
+ * clobbers. A, B and DPTR are the fixed call scratch; no stack is needed. */
+static uint8_t add_sat(uint8_t x, uint8_t y) __naked {
+    x; y;
+    __asm
+        mov b,dpl
+        mov dptr,#_add_sat_PARM_2
+        movx a,@dptr
+        add a,b
+        jnc 00940$
+        mov a,#255
+00940$:
+        mov dpl,a
+        ret
+    __endasm;
+}
+
+static uint8_t sub_sat(uint8_t x, uint8_t y) __naked {
+    x; y;
+    __asm
+        mov b,dpl
+        mov dptr,#_sub_sat_PARM_2
+        movx a,@dptr
+        xch a,b
+        clr c
+        subb a,b
+        jnc 00941$
+        clr a
+00941$:
+        mov dpl,a
+        ret
+    __endasm;
+}
+#else
 static uint8_t add_sat(uint8_t x, uint8_t y) {
     uint8_t sum = (uint8_t)(x + y);
     return sum < x ? 255 : sum;
@@ -73,6 +112,7 @@ static uint8_t add_sat(uint8_t x, uint8_t y) {
 static uint8_t sub_sat(uint8_t x, uint8_t y) {
     return x < y ? 0 : x - y;
 }
+#endif
 
 static void mark_dirty(void) {
     dirty = true;
@@ -126,20 +166,6 @@ void rgb_matrix_set_color_all(uint8_t r, uint8_t g, uint8_t b) {
     ak820_rgb_set_color_all(r, g, b);
 }
 
-/* FastLED/QMK's piecewise sine approximation, expressed using C only. */
-static uint8_t sine8(uint8_t theta) {
-    static const uint8_t coefficients[8] = {0, 49, 49, 41, 90, 27, 117, 10};
-    uint8_t offset = theta;
-    uint8_t section, fraction, value;
-    if (theta & 0x40) offset = 255 - offset;
-    offset &= 0x3f;
-    fraction = offset & 15;
-    if (theta & 0x40) ++fraction;
-    section = (offset >> 4) * 2;
-    value = coefficients[section] + (((uint16_t)coefficients[section + 1] * fraction) >> 4);
-    return (theta & 0x80) ? 128 - value : 128 + value;
-}
-
 #ifdef USE_CIE1931_CURVE
 /* Interpolate once per breathing frame, before HSV conversion. Other effects
  * retain the existing compact curve. Runtime brightness is clamped to 160,
@@ -166,6 +192,19 @@ void rgb_matrix_task(void) {
     RGB rgb;
     age_reactive();
     if (dirty && timer_elapsed(changed_at) >= 1000) eeconfig_update_rgb_matrix();
+#ifndef VIALRGB_NO_DIRECT
+    ak820_direct_tick();
+    if (ak820_direct_state == AK820_DIRECT_QUEUED || ak820_direct_state == AK820_DIRECT_PUBLISH) return;
+    if (ak820_direct_state == AK820_DIRECT_RENDER) {
+        if (!direct_rendering) {
+            led_index = 0;
+            direct_rendering = true;
+        }
+        rendering = true;
+    } else if (direct_rendering) {
+        direct_rendering = rendering = false;
+    }
+#endif
     if (!rendering) {
         if (timer_elapsed(frame_at) < RGB_MATRIX_LED_FLUSH_LIMIT) return;
         frame_at = timer_read();
@@ -177,7 +216,7 @@ void rgb_matrix_task(void) {
         frame_val = rgb_matrix_config.hsv.v;
         frame_flags = rgb_matrix_config.flags;
         if (frame_mode == RGB_MATRIX_BREATHING) {
-            frame_val = ((uint16_t)frame_val * sine8(frame_phase - 64)) >> 8;
+            frame_val = ((uint16_t)frame_val * ak820_breathing_wave(frame_phase - 64)) >> 8;
 #ifdef USE_CIE1931_CURVE
             frame_val = breathing_cie(frame_val);
 #endif
@@ -188,8 +227,22 @@ void rgb_matrix_task(void) {
     end = led_index + 8;
     if (end > RGB_MATRIX_LED_COUNT) end = RGB_MATRIX_LED_COUNT;
     while (led_index < end) {
+#ifndef VIALRGB_NO_DIRECT
+        if (direct_rendering) {
+            /* In-place HSV->RGB conversion reuses the upload buffer. Legacy
+             * fastset may change the active palette while this frozen frame
+             * is prepared; it cannot change this source or the old DMA. */
+            HSV VIALRGB_BUFFER *color = (HSV VIALRGB_BUFFER *)ak820_direct_stage + led_index;
+#if defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+            hsv_to_rgb_into(color, true, &rgb);
+#else
+            hsv_to_rgb_into(*color, true, &rgb);
+#endif
+            color->h = rgb.r; color->s = rgb.g; color->v = rgb.b;
+        } else
+#endif
         if (!frame_mode || !(LED_FLAG_KEYLIGHT & frame_flags)) {
-            rgb_matrix_set_color(led_index, 0, 0, 0);
+            ak820_rgb_set_color(led_index, 0, 0, 0);
         } else {
 #if defined(VIALRGB_NO_DIRECT)
             if (1) {
@@ -232,12 +285,22 @@ void rgb_matrix_task(void) {
             hsv_to_rgb_into(hsv, false, &rgb);
 #endif
 #endif
-            rgb_matrix_set_color(led_index, rgb.r, rgb.g, rgb.b);
+            ak820_rgb_set_color(led_index, rgb.r, rgb.g, rgb.b);
         }
         ++led_index;
     }
     if (led_index == RGB_MATRIX_LED_COUNT) {
-        /* Colors are already published to the board's live DMA buffer. */
+#ifndef VIALRGB_NO_DIRECT
+        if (direct_rendering) {
+            /* Publish only at a complete electrical scan boundary. The IRQ
+             * owns staging until the last row has consumed it. */
+            ak820_direct_state = !suspended && rgb_matrix_config.enable &&
+                                 rgb_matrix_config.mode == RGB_MATRIX_VIALRGB_DIRECT &&
+                                 (rgb_matrix_config.flags & LED_FLAG_KEYLIGHT)
+                                     ? AK820_DIRECT_QUEUED : AK820_DIRECT_DONE;
+            direct_rendering = false;
+        }
+#endif
         rendering = false;
     }
 }
@@ -260,6 +323,10 @@ void rgb_matrix_set_suspend_state(bool state) {
     suspended = state;
     rendering = false;
     clear_reactive();
+#ifndef VIALRGB_NO_DIRECT
+    if (state) ak820_direct_cancel();
+    direct_rendering = false;
+#endif
     if (state) {
         rgb_matrix_set_color_all(0, 0, 0);
     }

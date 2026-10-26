@@ -48,15 +48,23 @@ class ReleaseSafetyTests(unittest.TestCase):
                     'emitted_contracts': {'compiler_register_bank': 0, 'shared_helper_masked_init_calls': [1], 'nonoverlay_allocations': [1]}},
             'transition': {'format': 'ak820-settings-transition-1', 'passed': True, 'offline_only': True,
                            'physical_device_commands': 0, 'target': {'ihx_sha256': ihx, 'schema': 532482, 'optional_features': self.configuration['optional_features']},
-                           'source_images': ['synthetic old image'], 'tests': [{'exit_code': 0}]}}
+                           'source_images': [gate.ALPHA2_IHX_SHA256], 'tests': [{'exit_code': 0}]}}
 
         transition = self.data['transition']
         log = self.write('evidence/transition.log', b'synthetic successful log')
-        preflight = self.write('evidence/preflight.json', b'synthetic preflight evidence')
         transition['tests'][0].update(source_files={name: record['sha256'] for name, record in sources.items()},
                                      log_path='evidence/transition.log', log_sha256=log['sha256'])
-        transition['actual_alpha2_preflight'] = dict(passed=True, key_count=498, encoder_count=12, combo_count=8,
-                                                    result_path='evidence/preflight.json', result_sha256=preflight['sha256'])
+        self.alpha = dict(passed=True, offline_only=True, physical_device_commands=0,
+                          key_count=498, encoder_count=12, combo_count=0,
+                          source=gate.ALPHA2_IHX_SHA256, source_case='alpha2-saved-rom',
+                          target=ihx, target_profile=self.configuration['profile'],
+                          combo_restore=copy.deepcopy(gate.ALPHA2_COMBO_RESTORE))
+        self.refresh_alpha()
+
+    def refresh_alpha(self):
+        record = self.write('evidence/preflight.json', json.dumps(self.alpha).encode())
+        self.data['transition']['actual_alpha2_preflight'] = dict(
+            self.alpha, result_path='evidence/preflight.json', result_sha256=record['sha256'])
 
     def write(self, name, data):
         path = self.root / name
@@ -90,6 +98,8 @@ class ReleaseSafetyTests(unittest.TestCase):
         self.configuration.clear()
         self.configuration.update(configuration('work'))
         self.data['transition']['target']['optional_features'] = self.configuration['optional_features']
+        self.alpha['target_profile'] = 'work'
+        self.refresh_alpha()
         self.assertEqual(self.validate()['stack_bound'], 93)
 
     def test_reject_unreviewed_profile(self):
@@ -168,6 +178,49 @@ class ReleaseSafetyTests(unittest.TestCase):
     def test_reject_changed_preflight(self):
         self.write('evidence/preflight.json', b'changed')
         with self.assertRaisesRegex(ValueError, 'preflight evidence changed'): self.validate()
+
+    def test_positive_alpha2_preserves_target_combos(self):
+        self.assertEqual(self.alpha['combo_restore']['plan_combo_entries'], None)
+        self.assertEqual(self.validate()['stack_bound'], 93)
+
+    def test_reject_alpha2_wrong_identity(self):
+        for key, value in (('source', '0' * 64), ('target', '0' * 64),
+                           ('target_profile', 'other'), ('source_case', 'other')):
+            with self.subTest(key=key):
+                original = self.alpha[key]
+                self.alpha[key] = value
+                self.refresh_alpha()
+                with self.assertRaisesRegex(ValueError, 'source/target'): self.validate()
+                self.alpha[key] = original
+        self.refresh_alpha()
+        self.data['transition']['source_images'] = ['other image']
+        with self.assertRaisesRegex(ValueError, 'source/target'): self.validate()
+
+    def test_reject_alpha2_invalid_preservation_plan(self):
+        for key, value in (('combo_count', 8), ('combo_count', False),
+                           ('key_count', 497), ('encoder_count', 11),
+                           ('physical_device_commands', False), ('offline_only', False),
+                           ('combo_restore', None), ('combo_restore', {}),
+                           ('combo_restore', dict(gate.ALPHA2_COMBO_RESTORE, source_combos_version=1)),
+                           ('combo_restore', dict(gate.ALPHA2_COMBO_RESTORE, plan_combo_entries=[])),
+                           ('combo_restore', dict(gate.ALPHA2_COMBO_RESTORE, target_policy='overwrite'))):
+            with self.subTest(key=key, value=value):
+                original = self.alpha[key]
+                self.alpha[key] = value
+                self.refresh_alpha()
+                with self.assertRaisesRegex(ValueError, 'preservation'): self.validate()
+                self.alpha[key] = original
+
+    def test_reject_alpha2_evidence_wrapper_disagreement(self):
+        self.data['transition']['actual_alpha2_preflight']['target'] = '0' * 64
+        with self.assertRaisesRegex(ValueError, 'content differs'): self.validate()
+
+    def test_reject_alpha2_malformed_evidence_with_matching_hash(self):
+        for content in (b'not JSON', b'[]', b'{"passed": true, "passed": true}'):
+            with self.subTest(content=content):
+                record = self.write('evidence/preflight.json', content)
+                self.data['transition']['actual_alpha2_preflight']['result_sha256'] = record['sha256']
+                with self.assertRaises(ValueError): self.validate()
 
     def test_inspected_identity_binding(self):
         sys.path.insert(0, str(ROOT / 'tools'))

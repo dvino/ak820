@@ -18,6 +18,7 @@ extern const led_point_t AK820_RGB_CODE ak820_led_points[RGB_MATRIX_LED_COUNT];
 /* The compact renderer binds this board directly. No callback stack ABI. */
 void ak820_rgb_set_color(uint8_t index, uint8_t r, uint8_t g, uint8_t b);
 void ak820_rgb_set_color_all(uint8_t r, uint8_t g, uint8_t b);
+uint8_t ak820_breathing_wave(uint8_t phase);
 #endif
 
 #define AK820_SCAN_ROWS 16

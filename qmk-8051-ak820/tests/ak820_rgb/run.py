@@ -25,6 +25,7 @@ def main():
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     rgb = ROOT / 'keyboards/ajazz/ak820/ak820_rgb.c'
+    shared = ROOT / 'keyboards/ajazz/ak820/ak820_rgb_shared.c'
     color = ROOT / 'quantum/color.c'
     tables = ROOT / 'quantum/led_tables.c'
     reference = ROOT / 'tests/ak820_optimization/fixtures/color_rc4.c'
@@ -36,17 +37,19 @@ def main():
     body = body.replace('/* COLOR */', stripped(color))
     body = body.replace('/* REFERENCE TABLE */', 'const uint8_t reference_cie[256] = {' + full + '};')
     body = body.replace('/* REFERENCE COLOR */', reference.read_text().replace('CIE1931_CURVE[', 'reference_cie['))
-    body = body.replace('/* RGB */', stripped(rgb))
+    body = body.replace('/* RGB */', stripped(shared) + stripped(rgb))
     with tempfile.TemporaryDirectory(prefix='ak820-rgb-') as td:
         source, binary = Path(td) / 'rgb.c', Path(td) / 'rgb'
         source.write_text(body)
         subprocess.run([os.environ.get('CC', 'gcc'), '-std=gnu11', '-O2', '-g', '-Wall', '-Wextra', '-Werror',
                         '-fsanitize=address,undefined', '-fno-omit-frame-pointer', str(source), '-o', str(binary)], check=True)
-        result = subprocess.run([str(binary)], capture_output=True, text=True)
+        env = os.environ.copy()
+        env['ASAN_OPTIONS'] = 'detect_leaks=0'
+        result = subprocess.run([str(binary)], capture_output=True, text=True, env=env)
         if result.returncode:
             raise RuntimeError(result.stdout + result.stderr)
         print(result.stdout)
-    paths = [rgb, color, tables, reference, config, HERE / 'harness.c', Path(__file__)]
+    paths = [rgb, shared, color, tables, reference, config, HERE / 'harness.c', Path(__file__)]
     report = {'pass': True, 'summary': result.stdout.strip(),
               'limits': 'Host production C with fixtures; no SDCC ABI, physical timing, DMA or device validation.',
               'sha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}

@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "audits/beta3-direct-20261026",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "log_sha256": "df4a82b579ee2b1a45651ec8953017a3d19dd4277b943d12cbca3fefb9196597",
+  "physical_device_commands": 0,
+  "scope": "Temporary-root boundary and mocked negative controls, archive byte preservation and exact-image Direct metadata forwarding. Actual alpha2 preservation and complete transition matrix are checked separately with canonical plans.",
+  "source_files": {
+    "assemble_origins.py": "c1171ab75e5787c1d0f896fbdfd770807048f6e149e136488f4f51f841b586da",
+    "capture_settings_tests.py": "3a33ec9a15aa496ed8734bf9756f1c8d2c5cee2c0becb6d9eddf6a491f2a4baa",
+    "check_module_matrix.py": "3fb3df897f17d71e91c6007fafdd0277511212a23226fac84415e67812e36ca4",
+    "measure_origin.py": "e8e366c04d7bd27dde984489aafa2bd31cd6091c9110d3d627571abb40c71bca",
+    "prepare_release.py": "601d858f2d7aae81cd09508955e808c6f063082b939fb23a7da28320f80becfe",
+    "test_assemble_origins.py": "ced2063964eeac011b159b38e40f42fcf8683fb87e288c10787abb0249b22181",
+    "test_measure_origin.py": "6f1a9ea687840af5c90b1b805ed3ea9cf13ca9b52caacf062c183ab0d38e2413",
+    "test_prepare_direct_fixture.py": "b39908226c69fc911f381c6af81b1e51e189702c352e1f9b6762a528e9ed4a0e",
+    "test_prepare_paths.py": "674c79a03efdfa1d8fafd66a3cd2a7ee8780acbd5156f919ea400967fa320cb5"
+  },
+  "unit_tests": {
+    "run": 14,
+    "skipped": 0
+  }
+}

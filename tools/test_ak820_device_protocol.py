@@ -132,7 +132,7 @@ class ProtocolTests(unittest.TestCase):
             bytes((253, 2))+bytes(30),  # unknown FD subcommand
             bytes((254, 5))+bytes(30),  # unknown FE subcommand
             bytes((4, 6, 0, 0))+bytes(28),  # invalid layer
-            bytes((8, 0x45))+bytes(30),  # unknown VialRGB command
+            bytes((8, 0x48))+bytes(30),  # unknown VialRGB command
             bytes((15, 0, 0, 29))+bytes(28),  # oversized macro chunk
             bytes((7, 0x40))+bytes(30),  # forbidden RGB setter family
             bytes((253, 0, 0, 0, 28))+bytes(27),  # FD read >27-byte transfer
@@ -164,6 +164,128 @@ class ProtocolTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     operation()
         self.assertEqual(raw.requests, [])
+
+
+class DirectRaw(Raw):
+    def __init__(self):
+        super().__init__()
+        self.generation, self.state, self.coverage, self.ident = 4, 0, 0, 0
+        self.palette = bytes((12,34,56))*82
+        self.stale, self.bad_ack, self.fail_chunk = 0, False, False
+        self.change_at = None
+
+    def raw(self, packet):
+        self.requests.append(packet)
+        reply = bytearray(packet)
+        if packet[:2] == b'\x08\x45':
+            reply[2:14] = b'AD'+bytes((1,3,82,1,1,160,7,8,232,3))
+        elif packet[:2] == b'\x08\x47':
+            reply[2:11] = bytes((self.state,self.coverage))+self.ident.to_bytes(2,'little')+self.generation.to_bytes(4,'little')+b'\x03'
+        elif packet[:2] == b'\x08\x46':
+            first,count = packet[6:8]
+            if first == self.change_at:
+                self.change_at = None
+                self.generation += 1
+                self.palette = bytes((90,80,70))*82
+            if self.stale:
+                self.generation += 1
+                self.stale -= 1
+            status = 0 if int.from_bytes(packet[2:6],'little') == self.generation else 3
+            reply[2:10] = bytes((status,first,count,3))+self.generation.to_bytes(4,'little')
+            reply[10:10+3*count] = self.palette[3*first:3*(first+count)]
+        elif packet[0] == 7:
+            reply[2] = 0
+            if packet[1] == 0x43:
+                self.ident = int.from_bytes(packet[4:6],'little')
+                self.state,self.coverage = 1,0
+                self.stage = bytearray()
+            elif packet[1] == 0x44:
+                if self.fail_chunk: reply[2] = 1
+                else:
+                    self.coverage += packet[5]
+                    self.stage.extend(packet[6:6+3*packet[5]])
+            elif packet[1] == 0x45:
+                self.generation += 1
+                self.state = 2
+                self.palette = bytes(self.stage)
+            elif packet[1] == 0x46: self.state = 6
+            if self.bad_ack: reply[31] = 1
+        return bytes(reply)
+
+
+class DirectTests(unittest.TestCase):
+    def api(self, writes=False):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        raw = DirectRaw()
+        api = protocol.DeviceAPI({},Path(temporary.name),lambda:raw,allow_writes=writes)
+        self.addCleanup(api.close)
+        return api,raw
+
+    def test_snapshot_actual_palette_and_no_writes(self):
+        api,raw = self.api()
+        snapshot = api.direct_snapshot()
+        self.assertEqual(snapshot['hsv_hex'],raw.palette.hex())
+        self.assertEqual(snapshot['flags'],3)
+        self.assertTrue(all(packet[0] == 8 for packet in raw.requests))
+        self.assertEqual(len([p for p in raw.requests if p[1] == 0x46]),12)
+
+    def test_stale_snapshot_restarts_and_bounded_failure(self):
+        api,raw = self.api()
+        raw.stale = 1
+        self.assertEqual(api.direct_snapshot()['generation'],5)
+        raw.stale = 10
+        with self.assertRaisesRegex(ValueError,'bounded snapshot'): api.direct_snapshot()
+
+    def test_old_image_unavailable(self):
+        api,raw = self.api()
+        api.app = Raw()
+        self.assertIsNone(api.direct_snapshot())
+        self.assertIsNone(api.direct_status())
+
+    def test_full_frame_requires_explicit_writes(self):
+        api,raw = self.api()
+        with self.assertRaisesRegex(ValueError,'Writes are disabled'):
+            api.set_direct_frame(raw.palette,frame_id=9,expected_generation=4)
+        self.assertEqual(raw.requests,[])
+
+    def test_commit_accepts_pending_publication(self):
+        api,raw = self.api(True)
+        result = api.set_direct_frame(raw.palette,frame_id=9,expected_generation=4)
+        self.assertEqual(result['state'],2)
+        self.assertEqual(result['generation'],5)
+        self.assertEqual([p[5] for p in raw.requests if p[:2] == b'\x07\x44'],[8]*10+[2])
+
+    def test_upload_normalizes_brightness_without_mutating_caller_bytes(self):
+        api,raw = self.api(True)
+        source = bytearray(bytes((1,2,255))*82)
+        before = bytes(source)
+        api.set_direct_frame(bytes(source), frame_id=9, expected_generation=4)
+        chunks = [p for p in raw.requests if p[:2] == b'\x07\x44']
+        transmitted = b''.join(p[6:6+3*p[5]] for p in chunks)
+        self.assertEqual(transmitted, bytes((1,2,160))*82)
+        self.assertEqual(bytes(source), before)
+
+    def test_chunk_failure_stops_without_commit_or_abort(self):
+        api,raw = self.api(True)
+        raw.fail_chunk = True
+        with self.assertRaisesRegex(ValueError,'status 1'):
+            api.set_direct_frame(raw.palette,frame_id=9,expected_generation=4)
+        self.assertNotIn(0x45,[p[1] for p in raw.requests if p[0] == 7])
+        self.assertNotIn(0x46,[p[1] for p in raw.requests if p[0] == 7])
+
+    def test_ack_corruption_stops(self):
+        api,raw = self.api(True)
+        raw.bad_ack = True
+        with self.assertRaisesRegex(ValueError,'ACK mismatch'):
+            api.set_direct_frame(raw.palette,frame_id=9,expected_generation=4)
+
+    def test_partial_old_generation_is_discarded_on_concurrent_change(self):
+        api,raw = self.api()
+        raw.change_at = 7
+        snapshot = api.direct_snapshot()
+        self.assertEqual(snapshot['generation'],5)
+        self.assertEqual(snapshot['hsv_hex'],bytes((90,80,70)).hex()*82)
 
 
 if __name__ == '__main__':

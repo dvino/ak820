@@ -27,8 +27,9 @@
 #endif
 
 #ifndef AK820_USB_HOST_TEST
-#    define EP_RESPONSE(ep) (*((volatile uint8_t __xdata *)(0x2200u + (ep))))
-#    define EP_LENGTH(ep) (*((volatile uint8_t __xdata *)(0x2208u + (ep))))
+/* All dynamic endpoint accesses use a byte inside the 0x22 MMIO page. */
+#    define EP_RESPONSE(ep) (*((volatile uint8_t __xdata *)(0x2200u | (uint8_t)(ep))))
+#    define EP_LENGTH(ep) (*((volatile uint8_t __xdata *)(0x2200u | (uint8_t)(8u + (ep)))))
 #    define ACK_TRANSFER() (D0_STATUS = 0)
 #    define ACK_RESET() (USB_IF = bUX_IF_BUS_RST)
 #    define ACK_SUSPEND() (USB_IF = bUX_IF_SUSPEND)
@@ -61,7 +62,7 @@ enum { CTRL_IDLE, CTRL_DATA_IN, CTRL_STATUS_OUT, CTRL_STATUS_IN, CTRL_DATA_OUT }
 enum { OUTPUT_NONE, OUTPUT_RAW, OUTPUT_LED, OUTPUT_SHARED_LED };
 
 static volatile __xdata uint8_t raw_state;
-static __xdata uint8_t raw_buffer[RAW_EPSIZE];
+__xdata uint8_t raw_buffer[RAW_EPSIZE];
 static bool raw_reply_without_nvm; /* main only; classified before handler edits */
 static volatile __xdata uint8_t keyboard_reset;
 /* Keep each report independently: EP2 multiplexes several report IDs. */
@@ -530,7 +531,8 @@ bool ak820_usb_send(uint8_t endpoint, const uint8_t __xdata *report, uint8_t len
     if (!USB_EnumStatus || (EP_RESPONSE(endpoint) & MASK_UEP_X_RES) != UEP_X_RES_NAK ||
         (endpoint == RAW_IN_EPNUM && raw_state != RAW_WORK)) { EA = saved_ea; return false; }
     for (i = 0; i < length; ++i) {
-        pUSB_BUF_DEV0[((uint16_t)endpoint << 6) + i] = report[i];
+        /* Endpoint 1..3 and length <=64 keep the buffer offset <=255. */
+        pUSB_BUF_DEV0[(uint8_t)((endpoint << 6) + i)] = report[i];
         if (offset != SNAPSHOT_SIZE) input_snapshot[offset + i] = report[i];
     }
     EP_LENGTH(endpoint) = length;
@@ -600,6 +602,12 @@ void ak820_usb_raw_task(void) {
     if (!USB_EnumStatus || raw_state != RAW_READY) { EA = saved_ea; return; }
     raw_state = RAW_WORK;
     EA = saved_ea;
+#if defined(VIALRGB_ENABLE) && !defined(VIALRGB_NO_DIRECT)
+    if (ak820_direct_request()) {
+        /* Direct RAM reads/uploads never enter or flush an NVM transaction. */
+        ak820_usb_send(RAW_IN_EPNUM, raw_buffer, RAW_EPSIZE);
+    } else
+#endif
     if (raw_buffer[0] == 0xfd && raw_buffer[1] == 0) {
         /* Read-only diagnostic extension for full-ROM backup and verification.
          * FD 00 addr_hi addr_lo count, followed by at most 27 code bytes. */

@@ -9,8 +9,9 @@ these are complete compositions, not arbitrary toggles. Historical names remain
 for reproduction; historical Typing uses `legacy-typing` in current builds.
 
 Beta.2 is published. The beta.3 source adds Caps Word Combo output, macro
-Layer-Tap and Auto Shift in main. All ten local images have passed qualification;
-publication remains on hold. See [Status](STATUS.md) for artifact and hardware state.
+Layer-Tap, Auto Shift in `main`, Direct snapshots and complete-frame updates,
+and the GUI-lock W pulse. Qualification, release and hardware state are
+recorded in [Status](STATUS.md).
 
 ## Configurator
 
@@ -27,25 +28,20 @@ settings the selected image cannot represent. See the
 [requirements](../web/docs/REQUIREMENTS.md), [plan](../web/docs/PLAN.md) and
 [development catalog](DEVELOPMENT-CATALOG.md).
 
-## Next firmware work
+## Next work
 
-- Read the current Direct palette from the keyboard, with a coherent snapshot
-  across USB packets. This requires a firmware protocol change; application-side
-  color caches cannot supply the actual state.
-- Apply a complete Direct frame atomically. Stage and validate all LED values
-  before commit; incomplete or interrupted uploads must leave the active frame
-  unchanged. Define the renderer/DMA publication boundary as well as the palette
-  swap. Existing fastset packets do not provide this guarantee.
-- Try to fit the GUI-lock W pulse alongside that work: a smooth 2000 ms cycle,
-  disabled lock by default, and any nonbase active/default layer overriding W to
-  full brightness. Keep Caps and OS indications independent. Main must retain
-  Auto Shift; do not silently remove modules to make room. The previous pulse
-  candidates overflowed main by 600 bytes and game by 160 bytes.
+- Integrate the firmware contracts into the separate AK Configurator project.
+  The companion should identify the exact image before showing controls, read
+  the Direct palette as one coherent snapshot, and submit complete frames through
+  the begin/chunk/commit protocol. A partial upload must not replace the active
+  palette. The firmware handoff documents the protocol.
+- Validate Direct color conversion and LED publication on supported hardware.
+  Host-side and source checks do not establish physical LED behavior.
+- Continue hardware validation of the W indicator, including GUI lock timing,
+  active and default layer priority, suspend and resume.
 
-The detailed continuation instructions are kept in a local handoff outside Git.
-New exact-image CODE, XRAM, startup, foreground and IRQ bounds are required after
-these changes, before full regressions. No release or device write is authorized
-by this plan.
+Future functions still require exact-image resource and runtime evidence
+before release review.
 
 ## Current module limits
 

@@ -1,0 +1,519 @@
+{
+  "format": "ak820-beta3-final-builds-1",
+  "profiles": [
+    {
+      "profile": "creative",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/a/tools/build_ci_profiles.py",
+        "--profile",
+        "creative",
+        "--builds-root",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release",
+        "--bootstrap-root",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release-bootstrap",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0",
+        "--qmk-bin",
+        "/workspace/scratch/772c1403f0df/ak820/qmk-8051-ak820/.venv/bin/qmk",
+        "--python",
+        "/workspace/scratch/772c1403f0df/ak820/qmk-8051-ak820/.venv/bin/python",
+        "--report",
+        "/tmp/ak820-beta3-isolated/a/work-logs/beta3-release-creative-build.json"
+      ],
+      "exit_code": 0,
+      "seconds": 509.535,
+      "log": "/tmp/ak820-beta3-isolated/a/work-logs/beta3-release-creative.log",
+      "log_sha256": "18db06d32adf28cf4e8b4fece10d0b4161731639a557bc3148c73f647167a707",
+      "identity": {
+        "build_report_sha256": "2edd8c8a7f070932a17a7da2eec45f46e1f8ccaad4cf88a4a8e93543ec483cc3",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "5cfa943a1037567c8f924e59dcffd65c7ba6833b9555039aa0995256821b99ad",
+        "ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+        "map_sha256": "be428967e5aad9efa9b56df5af42b44b0400469f42e224f3d379ab773bbadeb3",
+        "mem_sha256": "645980852ff7442faddbfda4efd12a02ff16fed7c81290d305da9b422ef7c5c2",
+        "nvm_schema": 532483,
+        "profile": "creative",
+        "source_manifest_sha256": "548ce17ac13346d7f6dc66810891b57145c150464d6d084120aa4d975818c684"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          },
+          {
+            "bytes": 64,
+            "reserved_end_exclusive": 1088,
+            "start": 1024,
+            "symbol": "_ak820_flash_stage"
+          }
+        ],
+        "code_bytes": 39903,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12281,
+            "name": "low",
+            "occupied_bytes": 1882,
+            "start": 10400,
+            "trailing_free_bytes": 6
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50352,
+            "name": "main",
+            "occupied_bytes": 38021,
+            "start": 12327,
+            "trailing_free_bytes": 591
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 72,
+          "runtime_stack_bound": 164,
+          "stack_capacity": 183,
+          "stack_margin": 19,
+          "stack_qualified": true,
+          "static_bytes": 73
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2869,
+          "capacity": 3008,
+          "end_inclusive": 3956,
+          "physical_capacity": 3072,
+          "reserved_bytes": 64,
+          "start": 1088,
+          "total_bytes": 2933
+        }
+      },
+      "base": {
+        "run": 351,
+        "skipped": 0
+      },
+      "profile_suites": [
+        "gates",
+        "firmware-matrix-gates",
+        "catalog-bundle-gates",
+        "settings-catalog-gates",
+        "capability-catalog-gates",
+        "outline-gates",
+        "short-call-gates",
+        "core-compact-host",
+        "core-compact-linked",
+        "emitted-linked",
+        "transport-linked",
+        "stack-gates",
+        "runtime-safety-gates",
+        "delay-abi",
+        "startup-gates",
+        "startup-stack",
+        "irq-gates",
+        "release-safety-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "one-shot-host",
+        "one-shot-linked",
+        "tap-dance-host",
+        "tap-dance-linked",
+        "qmk-settings-host",
+        "qmk-settings-linked",
+        "leader-host",
+        "leader-linked",
+        "os-indicators-host",
+        "os-indicators-linked",
+        "dynamic-macro-host",
+        "dynamic-macro-linked"
+      ],
+      "prior_ihx_unchanged": null
+    },
+    {
+      "profile": "mmo",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/a/tools/configure_firmware.py",
+        "build",
+        "--profile",
+        "mmo",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0",
+        "--qmk-bin",
+        "/workspace/scratch/772c1403f0df/ak820/qmk-8051-ak820/.venv/bin/qmk",
+        "--python",
+        "/workspace/scratch/772c1403f0df/ak820/qmk-8051-ak820/.venv/bin/python",
+        "--parameter-spills-context",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-qualified-bootstrap/mmo/parameter-spills-context.json",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/mmo"
+      ],
+      "exit_code": 0,
+      "seconds": 482.462,
+      "log": "/tmp/ak820-beta3-isolated/a/work-logs/beta3-release-mmo.log",
+      "log_sha256": "8b9fd1ea8b1809c1d80311092b7cf91634daf011df24549e86fc560ca62eeed1",
+      "identity": {
+        "build_report_sha256": "720e657193e72cbe241ea8e554fa4403c30d2931e42a22ac3c4051b9fd82e06c",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "cf68d9d04302601272a8228bac76b7fb3b5cc809224a0322b27f959785eb3a83",
+        "ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+        "map_sha256": "b3c32755e78eadc77075940bdb0857f6e3769b9813a7b7de840ec2ecb762a222",
+        "mem_sha256": "8a82f60b72ee0cea8a268c2e48d0821b48a2681d2b50b1ac7c0b656f7a7dc438",
+        "nvm_schema": 532483,
+        "profile": "mmo",
+        "source_manifest_sha256": "c137428565dc0408c0fbb3b47cc63e4e737a32c83be3a71196e1e4dd08475d0d"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          },
+          {
+            "bytes": 64,
+            "reserved_end_exclusive": 1088,
+            "start": 1024,
+            "symbol": "_ak820_flash_stage"
+          }
+        ],
+        "code_bytes": 40343,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12281,
+            "name": "low",
+            "occupied_bytes": 1882,
+            "start": 10400,
+            "trailing_free_bytes": 6
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50792,
+            "name": "main",
+            "occupied_bytes": 38461,
+            "start": 12327,
+            "trailing_free_bytes": 151
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 75,
+          "runtime_stack_bound": 164,
+          "stack_capacity": 180,
+          "stack_margin": 16,
+          "stack_qualified": true,
+          "static_bytes": 76
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2935,
+          "capacity": 3008,
+          "end_inclusive": 4022,
+          "physical_capacity": 3072,
+          "reserved_bytes": 64,
+          "start": 1088,
+          "total_bytes": 2999
+        }
+      },
+      "base": {
+        "run": 351,
+        "skipped": 0
+      },
+      "profile_suites": [
+        "gates",
+        "firmware-matrix-gates",
+        "catalog-bundle-gates",
+        "settings-catalog-gates",
+        "capability-catalog-gates",
+        "outline-gates",
+        "short-call-gates",
+        "core-compact-host",
+        "core-compact-linked",
+        "emitted-linked",
+        "transport-linked",
+        "stack-gates",
+        "runtime-safety-gates",
+        "delay-abi",
+        "startup-gates",
+        "startup-stack",
+        "irq-gates",
+        "release-safety-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "nkro-control-host",
+        "nkro-control-linked",
+        "one-shot-host",
+        "one-shot-linked",
+        "tap-dance-host",
+        "tap-dance-linked",
+        "qmk-settings-host",
+        "qmk-settings-linked",
+        "os-indicators-host",
+        "os-indicators-linked",
+        "dynamic-macro-host",
+        "dynamic-macro-linked",
+        "gui-lock-host",
+        "gui-lock-linked"
+      ],
+      "prior_ihx_unchanged": null
+    },
+    {
+      "profile": "main",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/a/tools/configure_firmware.py",
+        "build",
+        "--profile",
+        "main",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0",
+        "--qmk-bin",
+        "/workspace/scratch/772c1403f0df/ak820/qmk-8051-ak820/.venv/bin/qmk",
+        "--python",
+        "/workspace/scratch/772c1403f0df/ak820/qmk-8051-ak820/.venv/bin/python",
+        "--parameter-spills-context",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-qualified-bootstrap/main/parameter-spills-context.json",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/main"
+      ],
+      "exit_code": 0,
+      "seconds": 495.209,
+      "log": "/tmp/ak820-beta3-isolated/a/work-logs/beta3-release-main.log",
+      "log_sha256": "bade69bfd219d443363214156a57f35d0f8190561df1db0ba1f3f79f29a6aed5",
+      "identity": {
+        "build_report_sha256": "b5f2ad06f883e8af86892634fee0fd36112d377707ce4fe678518b00098f4f47",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "302a07fb1d23e411077fa492d266aac6561d33d1beb7c5316ce23574bdd49861",
+        "ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+        "map_sha256": "b41f7d63286ec4da78ca870b4995f0bc6b5bff763e8fc7954fc0e458b19aac23",
+        "mem_sha256": "feef725ef6f57080cbf4b348c6e4da38df1399a0134e8d8c68ea32da5e6d7fc3",
+        "nvm_schema": 532483,
+        "profile": "main",
+        "source_manifest_sha256": "49238b07919ab4532d1fbb08eedbeabdbd86ce5a38c9e7c91666ae2ab67ef4c2"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          },
+          {
+            "bytes": 64,
+            "reserved_end_exclusive": 1088,
+            "start": 1024,
+            "symbol": "_ak820_flash_stage"
+          }
+        ],
+        "code_bytes": 40466,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12281,
+            "name": "low",
+            "occupied_bytes": 1882,
+            "start": 10400,
+            "trailing_free_bytes": 6
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50915,
+            "name": "main",
+            "occupied_bytes": 38584,
+            "start": 12327,
+            "trailing_free_bytes": 28
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 73,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 182,
+          "stack_margin": 22,
+          "stack_qualified": true,
+          "static_bytes": 74
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2858,
+          "capacity": 3008,
+          "end_inclusive": 3945,
+          "physical_capacity": 3072,
+          "reserved_bytes": 64,
+          "start": 1088,
+          "total_bytes": 2922
+        }
+      },
+      "base": {
+        "run": 351,
+        "skipped": 0
+      },
+      "profile_suites": [
+        "gates",
+        "firmware-matrix-gates",
+        "catalog-bundle-gates",
+        "settings-catalog-gates",
+        "capability-catalog-gates",
+        "outline-gates",
+        "short-call-gates",
+        "core-compact-host",
+        "core-compact-linked",
+        "emitted-linked",
+        "transport-linked",
+        "stack-gates",
+        "runtime-safety-gates",
+        "delay-abi",
+        "startup-gates",
+        "startup-stack",
+        "irq-gates",
+        "release-safety-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "one-shot-host",
+        "one-shot-linked",
+        "auto-shift-host",
+        "auto-shift-linked",
+        "key-overrides-host",
+        "key-overrides-linked",
+        "qmk-settings-host",
+        "qmk-settings-linked",
+        "leader-host",
+        "leader-linked",
+        "os-indicators-host",
+        "os-indicators-linked",
+        "dynamic-macro-host",
+        "dynamic-macro-linked"
+      ],
+      "prior_ihx_unchanged": true
+    },
+    {
+      "profile": "game",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/a/tools/configure_firmware.py",
+        "build",
+        "--profile",
+        "game",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0",
+        "--qmk-bin",
+        "/workspace/scratch/772c1403f0df/ak820/qmk-8051-ak820/.venv/bin/qmk",
+        "--python",
+        "/workspace/scratch/772c1403f0df/ak820/qmk-8051-ak820/.venv/bin/python",
+        "--parameter-spills-context",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-qualified-bootstrap/game/parameter-spills-context.json",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game"
+      ],
+      "exit_code": 0,
+      "seconds": 437.719,
+      "log": "/tmp/ak820-beta3-isolated/a/work-logs/beta3-release-game.log",
+      "log_sha256": "66f0e1759dbd861f631d84b627ae3a1a3b6276aca45c1a7459ad9dd83dc8173f",
+      "identity": {
+        "build_report_sha256": "602112e4aedc02b116a0ca655f9cfc19e8840ee613627963f01b10d409ee9cf6",
+        "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+        "configuration_sha256": "0e94ff00e43e3b3088ab944df8b0b9487365fc0b06f29891b8f16d256eab461a",
+        "ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+        "map_sha256": "424ce3127567aa841a23477d9df0bcfc7ed0792d3d7c7235c73474558bac0432",
+        "mem_sha256": "cdf5be41506939c28e15be2f3830c5af50d11f43a894f03ebd3736e0351990e0",
+        "nvm_schema": 532483,
+        "profile": "game",
+        "source_manifest_sha256": "5a36b263e41762088044b4f384f1c52f62bec0994c458258222c890693a7b6b7"
+      },
+      "resources": {
+        "absolute_xram": [
+          {
+            "reserved_end_exclusive": 1024,
+            "start": 512,
+            "symbol": "_ak820_led_dma"
+          },
+          {
+            "bytes": 64,
+            "reserved_end_exclusive": 1088,
+            "start": 1024,
+            "symbol": "_ak820_flash_stage"
+          }
+        ],
+        "code_bytes": 40462,
+        "code_windows": [
+          {
+            "end_exclusive": 12288,
+            "highest_address": 12281,
+            "name": "low",
+            "occupied_bytes": 1882,
+            "start": 10400,
+            "trailing_free_bytes": 6
+          },
+          {
+            "end_exclusive": 50944,
+            "highest_address": 50911,
+            "name": "main",
+            "occupied_bytes": 38580,
+            "start": 12327,
+            "trailing_free_bytes": 32
+          }
+        ],
+        "internal_ram": {
+          "initial_sp": 78,
+          "runtime_stack_bound": 160,
+          "stack_capacity": 177,
+          "stack_margin": 17,
+          "stack_qualified": true,
+          "static_bytes": 79
+        },
+        "protected_windows_clear": true,
+        "xram": {
+          "bytes": 2932,
+          "capacity": 3008,
+          "end_inclusive": 4019,
+          "physical_capacity": 3072,
+          "reserved_bytes": 64,
+          "start": 1088,
+          "total_bytes": 2996
+        }
+      },
+      "base": {
+        "run": 351,
+        "skipped": 0
+      },
+      "profile_suites": [
+        "gates",
+        "firmware-matrix-gates",
+        "catalog-bundle-gates",
+        "settings-catalog-gates",
+        "capability-catalog-gates",
+        "outline-gates",
+        "short-call-gates",
+        "core-compact-host",
+        "core-compact-linked",
+        "emitted-linked",
+        "transport-linked",
+        "stack-gates",
+        "runtime-safety-gates",
+        "delay-abi",
+        "startup-gates",
+        "startup-stack",
+        "irq-gates",
+        "release-safety-gates",
+        "outline-integrity",
+        "vialrgb-linked",
+        "nkro-control-host",
+        "nkro-control-linked",
+        "one-shot-host",
+        "one-shot-linked",
+        "key-overrides-host",
+        "key-overrides-linked",
+        "qmk-settings-host",
+        "qmk-settings-linked",
+        "os-indicators-host",
+        "os-indicators-linked",
+        "dynamic-macro-host",
+        "dynamic-macro-linked",
+        "gui-lock-host",
+        "gui-lock-linked"
+      ],
+      "prior_ihx_unchanged": true
+    }
+  ],
+  "passed": true,
+  "physical_device_commands": 0,
+  "hardware_validated": false
+}

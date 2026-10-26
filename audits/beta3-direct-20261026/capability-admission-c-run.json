@@ -1,0 +1,111 @@
+{
+  "format": "ak820-beta3-capability-admission-run-1",
+  "group": "c",
+  "profiles": [
+    "pointer",
+    "onehand",
+    "shortcuts"
+  ],
+  "snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "/tmp/ak820-beta3-isolated/c/tools/build_capability_catalog.py",
+    "--build-dir",
+    "/tmp/ak820-beta3-isolated/c/qmk-8051-ak820/.build/beta3-release/pointer",
+    "--build-dir",
+    "/tmp/ak820-beta3-isolated/c/qmk-8051-ak820/.build/beta3-release/onehand",
+    "--build-dir",
+    "/tmp/ak820-beta3-isolated/c/qmk-8051-ak820/.build/beta3-release/shortcuts",
+    "--toolchain",
+    "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0",
+    "--output",
+    "/tmp/ak820-beta3-isolated/c/work-logs/beta3-admission-capabilities.json"
+  ],
+  "cwd": "/tmp/ak820-beta3-isolated/c",
+  "exit_code": 0,
+  "duration_seconds": 96.182872,
+  "stdout_sha256": "d1c411e31a35c2d7e3c775c3d23194841d1bd57996829d3d3d91635a0c1fb0d9",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "log_path": "/tmp/ak820-beta3-isolated/c/work-logs/beta3-admission-capabilities.log",
+  "log_sha256": "10356ec19a85db830fc56daa7a6ff8cd36b9ab1b87f082de485fa690afc9677c",
+  "origin_catalog_path": "/tmp/ak820-beta3-isolated/c/work-logs/beta3-admission-capabilities.json",
+  "catalog_sha256": "38820fa1de55b264332a5124f0a9d55e8342b0de73290f792b8ccda13ca4cf05",
+  "central_catalog_path": "/workspace/scratch/772c1403f0df/ak820/audits/beta3-direct-20261026/origin-capabilities/admission-c.json",
+  "central_catalog_sha256": "38820fa1de55b264332a5124f0a9d55e8342b0de73290f792b8ccda13ca4cf05",
+  "validation": {
+    "exactly_three_intended_rows": true,
+    "profiles": [
+      "onehand",
+      "pointer",
+      "shortcuts"
+    ],
+    "unique_CODE_identities": true,
+    "unique_IHX_identities": true,
+    "global_and_entry_development_release_hardware_device_write_flags_false": true,
+    "project_verified_true": true,
+    "Direct_unavailable": true,
+    "IHX_MAP_MEM_build_report_unchanged": true,
+    "device_commands": 0
+  },
+  "protected_file_sha256": {
+    "pointer/ajazz_ak820_vial.ihx": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+    "pointer/ajazz_ak820_vial.map": "b2709e0a7d03531e3f1ee770d53e950a890875c5324439c9bb8c992c8c6ebca4",
+    "pointer/ajazz_ak820_vial.mem": "6a9f15b43167a67ea13e0b93cbf88cb0069269036e115f455dea85867ec45c8f",
+    "pointer/build-report.json": "a04db816ca54f1ddb08b58740f38f612746decbef88d582838ea59354791a4e6",
+    "onehand/ajazz_ak820_vial.ihx": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+    "onehand/ajazz_ak820_vial.map": "01b82da570a5e86d73145bee22969386040812debda4edc68d76ab4e48d503a6",
+    "onehand/ajazz_ak820_vial.mem": "a12f489f2ea4711f7091f00d79fd9070ea5c96c3cb97dcf4e476f52d05712332",
+    "onehand/build-report.json": "9d39617c6bd4839ab261b31d5274c1d13febf17c6f398a4819a9fdc9fb23532e",
+    "shortcuts/ajazz_ak820_vial.ihx": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+    "shortcuts/ajazz_ak820_vial.map": "f10459e568e7e8fd1ed4d5b1bd33b7ca64336afec6aef4372df51d4f6020f72e",
+    "shortcuts/ajazz_ak820_vial.mem": "583d871c193143eb3f4c609da6648d66a1df6be1501c86d4a0d666ebd4a20f85",
+    "shortcuts/build-report.json": "dbe462363198cef948d49821d2001ad08639080de13d5c927573dbc723209183"
+  },
+  "tree_comparison_before": {
+    "pointer": {
+      "origin_file_count": 6468,
+      "central_file_count": 6468,
+      "origin_tree_sha256": "7f66d0a2afc9e56d845723d3a7f276056b1131325acca7d1b10930db0d230508",
+      "central_tree_sha256": "7f66d0a2afc9e56d845723d3a7f276056b1131325acca7d1b10930db0d230508",
+      "equal": true
+    },
+    "onehand": {
+      "origin_file_count": 5530,
+      "central_file_count": 5530,
+      "origin_tree_sha256": "fdb7b5afdcc6ca649090758a1c7bafa26277668e520f7bbe37fdec3e96ee69e7",
+      "central_tree_sha256": "fdb7b5afdcc6ca649090758a1c7bafa26277668e520f7bbe37fdec3e96ee69e7",
+      "equal": true
+    },
+    "shortcuts": {
+      "origin_file_count": 6807,
+      "central_file_count": 6807,
+      "origin_tree_sha256": "5d266188e51a359db71d59b9cfaba6508fac24a44a6c724be8aeb39a28a59598",
+      "central_tree_sha256": "5d266188e51a359db71d59b9cfaba6508fac24a44a6c724be8aeb39a28a59598",
+      "equal": true
+    }
+  },
+  "tree_comparison_after": {
+    "pointer": {
+      "origin_file_count": 6468,
+      "central_file_count": 6468,
+      "origin_tree_sha256": "7f66d0a2afc9e56d845723d3a7f276056b1131325acca7d1b10930db0d230508",
+      "central_tree_sha256": "7f66d0a2afc9e56d845723d3a7f276056b1131325acca7d1b10930db0d230508",
+      "equal": true
+    },
+    "onehand": {
+      "origin_file_count": 5530,
+      "central_file_count": 5530,
+      "origin_tree_sha256": "fdb7b5afdcc6ca649090758a1c7bafa26277668e520f7bbe37fdec3e96ee69e7",
+      "central_tree_sha256": "fdb7b5afdcc6ca649090758a1c7bafa26277668e520f7bbe37fdec3e96ee69e7",
+      "equal": true
+    },
+    "shortcuts": {
+      "origin_file_count": 6807,
+      "central_file_count": 6807,
+      "origin_tree_sha256": "5d266188e51a359db71d59b9cfaba6508fac24a44a6c724be8aeb39a28a59598",
+      "central_tree_sha256": "5d266188e51a359db71d59b9cfaba6508fac24a44a6c724be8aeb39a28a59598",
+      "equal": true
+    }
+  },
+  "device_commands": 0
+}

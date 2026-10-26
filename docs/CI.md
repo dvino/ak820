@@ -48,12 +48,10 @@ closed; creating a linked image alone does not satisfy this gate.
 
 Assembly also exports the capability catalog from those exact CI builds. Publication uses this catalog and the measured firmware matrix, so path-dependent MAP and report hashes refer to the approved CI files. It does not replace them with hashes from local builds.
 
-The Windows and Linux jobs download that same run's bundles, check their source
-commit and stage them in `releases/beta3/<profile>`. Every selectable profile
-needs its own matching manifest and approval. Packaging verifies collected
-inputs inside both GUI and CLI applications. Windows performs native startup
-smokes; Linux uses Ubuntu 22.04 x86_64/glibc 2.35 and Xvfb. CLI help, offline
-verification and Tk startup do not open USB or prove interactive device behavior.
+The assembly job produces approved firmware bundles. The tagged release job
+checks their source commit, copies all ten profiles to `releases/beta3`, builds
+the Python Windows and Linux x86_64 packages and companion catalog, and checks
+the published package checksums. It does not build standalone GUI installers.
 
 ## Validation time
 
@@ -102,17 +100,15 @@ authorize a device write. Changed source or host bytes require renewed evidence.
 Only a qualifying SemVer tag on a checked commit in `main` can publish after
 required jobs pass. Branch pushes, pull requests and manual checks produce
 artifacts without publishing. Only the publication job receives write access.
-Local tests do not create tags or releases. Standalone Windows/Linux packages,
-SHA256 files and EN/RU instructions remain required release assets. Exact
-publication results are recorded separately in Status.
+Local tests do not create tags or releases. Release assets use Python scripts
+for Windows and Linux x86_64, matching SHA256 files and English and Russian
+instructions. Exact publication results are recorded separately in Status.
 
 Required workflow job names are:
 
 - `Linux syntax and shared host checks`.
 - `Qualify firmware (<profile>)` — all ten profiles.
 - `Revalidate and assemble all ten profiles`.
-- `Native Windows package build and smoke`.
-- `Native Linux x86_64 package build and smoke`.
 
 For local syntax and document checks, run `python tools/ci_checks.py` and
 `python tools/check_docs.py`. To qualify an existing completed current image:

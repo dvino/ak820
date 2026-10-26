@@ -24,8 +24,13 @@ The linked runner calls the retained private journal helper in an existing
 SDCC image. It checks 2,304 single-byte mutations against a literal valid header,
 reads the Boolean return from DPL and reports the exercised helper stack peak.
 It supports both the earlier generic pointer and the private XDATA pointer.
-A fixture-overlap check stops the run if linked data reaches its simulated
-XRAM buffer. The runner changes simulated memory only.
+The nine-byte simulated XRAM buffer starts immediately after all retained
+XDATA areas in the exact linked map, including initialized XDATA. The map's
+end must agree with the memory report. The whole buffer must fit inside
+ordinary XRAM, 0x0440 through 0x0fff, above the fixed native, LED DMA and IAP
+stage reservations. Missing bounds, conflicting reports or insufficient space
+stop the run. Results record the areas, fixture bounds and image/map hashes.
+The runner changes simulated memory only.
 
 Host agreement, linked CPU execution and stack capacity are separate evidence.
 These checks do not prove electrical flash durability, real peripheral timing,

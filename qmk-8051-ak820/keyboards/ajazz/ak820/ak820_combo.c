@@ -19,7 +19,11 @@
 static struct { uint8_t a, b; uint16_t output; } combos[VIAL_COMBO_ENTRIES];
 static keyrecord_t saved;
 static uint8_t first = NONE, second = NONE;
+#if defined(__SDCC_mcs51)
+static __bit active;
+#else
 static bool active;
+#endif
 
 bool ak820_combo_valid(const vial_combo_entry_t AK820_STATE_MEM *entry) {
     if (entry->input[2] || entry->input[3]) return false;

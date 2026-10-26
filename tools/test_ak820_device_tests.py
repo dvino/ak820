@@ -82,6 +82,7 @@ class RawFixture:
                 if packet[2:4] == b'\0\0': reply[2:6] = b'\1\0\2\0'
             elif sub == 68: reply[2:7] = bytes((packet[2], 0, 4, packet[2]//8, packet[2]%8))
             elif sub == 65: reply[2:8] = self.rgb_mode
+            elif sub == 69: pass  # older image: extension request remains untouched
             else: raise AssertionError('Unknown RGB getter')
         else: raise AssertionError('Unexpected fixture command '+packet.hex())
         return bytes(reply)

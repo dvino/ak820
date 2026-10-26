@@ -148,7 +148,7 @@ def _supported_keycodes(features, macro_layer_tap):
                  and (macro_layer_tap or not macro_layer_tap_keycode(code)))
 
 
-def catalog_settings_identity(configuration, ihx_sha256, code_sha256, definition_sha256, *, combo_actions=('caps-word-toggle',), macro_layer_tap=True):
+def catalog_settings_identity(configuration, ihx_sha256, code_sha256, definition_sha256, *, combo_actions=('caps-word-toggle',), macro_layer_tap=True, direct_protocol=None):
     """Describe a measured packed image; this grants no release/write approval.
 
     CODE is SHA256 of permanent packed bytes [APP_START:CODE_END], including
@@ -157,21 +157,23 @@ def catalog_settings_identity(configuration, ihx_sha256, code_sha256, definition
     """
     config = ak820_profiles.validate_configuration(configuration)
     return _settings_identity(config, ihx_sha256, code_sha256, definition_sha256,
-                              combo_actions=combo_actions, macro_layer_tap=macro_layer_tap)
+                              combo_actions=combo_actions, macro_layer_tap=macro_layer_tap, direct_protocol=direct_protocol)
 
 
-def _settings_identity(config, ihx_sha256, code_sha256, definition_sha256, *, combo_actions, macro_layer_tap):
+def _settings_identity(config, ihx_sha256, code_sha256, definition_sha256, *, combo_actions, macro_layer_tap, direct_protocol=None):
     require(all(_sha(v) for v in (ihx_sha256, code_sha256, definition_sha256)),
             'Invalid settings image digest')
     require(type(combo_actions) in (list, tuple) and list(combo_actions) in ([], ['caps-word-toggle']),
             'Unknown Combo action capability')
     require(type(macro_layer_tap) is bool, 'Invalid macro layer tap capability')
     features = config['optional_features']
+    require(direct_protocol is None or (type(direct_protocol) is int and direct_protocol == 1 and 'vialrgb-direct' in features), 'Invalid Direct exact-image capability')
     return {'ihx_sha256': ihx_sha256, 'code_sha256': code_sha256,
             'definition_sha256': definition_sha256, 'nvm_schema': config['nvm_schema'],
             'profile': config['profile'], 'features': sorted(features),
             'supported_keycodes': list(_supported_keycodes(tuple(sorted(features)), macro_layer_tap)),
             'macro_layer_tap': macro_layer_tap,
+            **({'direct_protocol': 1} if direct_protocol == 1 else {}),
             'combo_actions': list(combo_actions), 'combos_version': 1, 'extensions_version': 1 if config['nvm_schema'] == extensions.SCHEMA else None}
 
 
@@ -201,7 +203,7 @@ def _catalog_images(catalog):
         config = validator(row.get('configuration'))
         expected = _settings_identity(config, value.get('ihx_sha256'),
                                              value.get('code_sha256'), value.get('definition_sha256'),
-                                             combo_actions=value.get('combo_actions', []), macro_layer_tap=value.get('macro_layer_tap', False))
+                                             combo_actions=value.get('combo_actions', []), macro_layer_tap=value.get('macro_layer_tap', False), direct_protocol=value.get('direct_protocol'))
         compared = {'combo_actions': [], 'macro_layer_tap': False, **value}
         require(canonical(compared) == canonical(expected), 'Settings identity fields/features/keycodes differ from configuration')
         require(row.get('profile') == config['profile'] and row.get('identity', {}).get('ihx_sha256') == value['ihx_sha256']
@@ -251,7 +253,7 @@ def _profile_images(profile):
         if 'supported_keycodes' in image:
             config = _image_configuration(image)
             expected = _settings_identity(config, image.get('ihx_sha256'), image.get('code_sha256'),
-                                                 image.get('definition_sha256'), combo_actions=image.get('combo_actions', []), macro_layer_tap=image.get('macro_layer_tap', False))
+                                                 image.get('definition_sha256'), combo_actions=image.get('combo_actions', []), macro_layer_tap=image.get('macro_layer_tap', False), direct_protocol=image.get('direct_protocol'))
             compared = {'combo_actions': [], 'macro_layer_tap': False,
                         **{k: v for k, v in image.items() if k != '_configuration'}}
             require(canonical(compared) == canonical({**expected, 'build_id': expected['nvm_schema']}),
@@ -382,7 +384,7 @@ def _combo_capable(profile, identity=None):
     return version == 1
 
 
-def settings_from_nvm(nvm, rgb_mode, *, combos=False):
+def settings_from_nvm(nvm, rgb_mode, *, combos=False, direct_capable=False):
     schema = int.from_bytes(nvm[37:40], 'little')
     metadata = pack.validate_nvm(nvm, schema)
     length = metadata['published_macro_length']
@@ -401,7 +403,10 @@ def settings_from_nvm(nvm, rgb_mode, *, combos=False):
                        'data_hex': stream.hex(), 'commands': macro_commands(stream)},
             'rgb': {'saved_config_hex': nvm[24:32].hex(), 'current_mode_hex': rgb_mode.hex(),
                     'saved_source': 'NVM[24:32]', 'current_source': 'VialRGB 0x08/0x41'},
-            'limitations': LIMITATIONS}
+            'limitations': ([
+                'Direct HSV palette is RAM-only; a separate direct-ram.json sidecar is required to recover it.',
+                'Current RGB flags are sampled separately from NVM and the palette generation.',
+                *LIMITATIONS[2:]] if direct_capable else LIMITATIONS)}
     if schema == extensions.SCHEMA:
         result['extensions'] = extensions.from_nvm(nvm)
     if combos:
@@ -456,7 +461,7 @@ def capture_settings(api, profile):
     current = bytes.fromhex(rgb['mode_hex'])
     require(current == rgb_wire(nvm[24:32], image=image),
             'RGB RAM and saved NVM differ; save the intended settings explicitly before export')
-    settings = settings_from_nvm(nvm, current, combos=_combo_capable(profile, _rom_identity(rom, profile)['ihx_sha256']))
+    settings = settings_from_nvm(nvm, current, combos=_combo_capable(profile, _rom_identity(rom, profile)['ihx_sha256']), direct_capable=image.get('direct_protocol') == 1)
     _check_getters(api, settings, _rom_identity(rom, profile))
     require(api.read_nvm() == nvm, 'NVM changed during getters; export is not a firmware freeze')
     require(api.rgb_mode() == current, 'RGB changed during export')
@@ -486,6 +491,14 @@ def export_settings(api, output, profile):
         files = {'settings.json': canonical(settings), 'before-full-rom.bin': rom,
                  'saved-nvm.bin': nvm, 'read-log.jsonl': read_log, '.gitignore': b'*\n'}
         source_image = _rom_identity(rom, profile)
+        if source_image.get('direct_protocol') == 1:
+            palette = api.direct_snapshot()
+            require(palette is not None, 'Exact image Direct capability unavailable at runtime')
+            files['direct-ram.json'] = canonical(validate_direct_palette(palette))
+            api.trace.flush()
+            with Path(api.trace.name).open('rb') as trace:
+                trace.seek(trace_start)
+                files['read-log.jsonl'] = trace.read()
         manifest = {'format': FORMAT_V2 if source_image['build_id'] == extensions.SCHEMA else FORMAT, 'created_utc': datetime.now(timezone.utc).isoformat(),
                     'device': DEVICE, 'definition_sha256': profile['definition_sha256'],
                     'nvm_schema': source_image['build_id'], 'source_build_id': source_image['build_id'],
@@ -550,9 +563,13 @@ def validate_backup(path, profile, expected_identity=None):
     require(manifest.get('counts') == {'layers': 6, 'physical_keys': 83, 'assignments': 498,
                                      'encoder_assignments': 12, 'macros': 16, 'macro_capacity': 8192},
             'Backup dimensions differ')
-    require(isinstance(manifest.get('files'), dict) and set(manifest['files']) == set(FILES),
+    require(isinstance(manifest.get('files'), dict) and set(manifest['files']) in (set(FILES), set(FILES) | {'direct-ram.json'}),
             'Unexpected backup files')
-    files = {name: _read_file(path, name, limit) for name, limit in FILES.items()}
+    limits = dict(FILES)
+    if 'direct-ram.json' in manifest['files']:
+        require(image.get('direct_protocol') == 1, 'RAM palette requires exact-image Direct capability')
+        limits['direct-ram.json'] = 4096
+    files = {name: _read_file(path, name, limit) for name, limit in limits.items()}
     for name, data in files.items():
         require(manifest['files'][name] == _record(data), 'Backup hash/size mismatch: ' + name)
     require(_read_file(path, 'manifest.json', 65536) == raw, 'Backup manifest changed during read')
@@ -561,7 +578,7 @@ def validate_backup(path, profile, expected_identity=None):
     validate_rom(rom, profile, (source_ihx, source_code))
     require(nvm == rom[pack.NVM_START:pack.NVM_END], 'Saved NVM differs from the full ROM')
     settings = _json(files['settings.json'])
-    expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32], image=image), combos=_combo_capable(profile, source_ihx))
+    expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32], image=image), combos=_combo_capable(profile, source_ihx), direct_capable=image.get('direct_protocol') == 1)
     for item in expected['keys'] + expected['encoders']:
         if macro_layer_tap_keycode(item['keycode']):
             require(image_keycode_supported(item['keycode'], image,
@@ -577,7 +594,9 @@ def validate_backup(path, profile, expected_identity=None):
         _validate_combo_actions(expected['combos'], image)
     require(canonical(settings) == canonical(expected), 'Settings JSON differs from validated NVM or RGB contract')
     return {'path': path, 'identity': identity, 'manifest': manifest, 'settings': expected,
-            'rom': rom, 'nvm': nvm, 'source_identity': (source_ihx, source_code)}
+            'rom': rom, 'nvm': nvm, 'source_identity': (source_ihx, source_code),
+            **({'direct_ram': validate_direct_palette(_json(files['direct-ram.json']))}
+               if 'direct-ram.json' in files else {})}
 
 
 def macro_layer_tap_keycode(code):
@@ -758,7 +777,7 @@ def plan_restore(backup, profile, target_nvm=None):
     return {'extension_features': target_features, 'extension_data': extension_data, 'combo_entries': combo_entries, 'key_count': 498, 'encoder_count': 12, 'macro_chunks': chunks,
             'rgb_saved_mode': selected_rgb, 'rgb_effective_mode': rgb_wire(raw, image=source_image),
             'rgb_saved_config': translated_rgb_config(raw, source_image, target_image),
-            'limitations': list(LIMITATIONS) + (['Runtime NKRO mode and pending One Shot modifiers are volatile; not restored.']
+            'limitations': list(settings['limitations']) + (['Runtime NKRO mode and pending One Shot modifiers are volatile; not restored.']
                 if target_features else []), 'requires_physical_unlock': True}
 
 
@@ -789,6 +808,7 @@ def verify_restore(api, backup, profile):
             _rom_identity(rom, profile)['code_sha256'] == expected_target[1],
             'Final running firmware differs from the selected target image')
     expected_settings = dict(backup['settings'])
+    expected_settings['limitations'] = actual['limitations']
     images = _profile_images(profile)
     rgb = translated_rgb_config(backup['nvm'][24:32], images[backup['source_identity'][0]],
                                 images[profile['ihx_sha256']])
@@ -923,4 +943,42 @@ def restore_settings(api, backup, profile, before_write=None, *, target_backup=N
     durable('final settings')
     result = verify_restore(api, backup, profile)
     result.update(writes=writes, target_backup=str(target_backup['path']))
+    return result
+
+
+def validate_direct_palette(value):
+    """Validate a separate volatile palette; ROM bytes cannot reconstruct it."""
+    require(type(value) is dict and set(value) == {'format','capability','generation','flags','hsv_hex'}
+            and value['format'] == 'ak820-direct-ram-1', 'Invalid Direct RAM backup')
+    require(type(value['flags']) is int and 0 <= value['flags'] <= 7, 'Invalid Direct RAM flags')
+    expected = {'version': 1, 'capabilities': 3, 'count': 82, 'encoding': 'HSV8',
+                'mapping': 1, 'maximum_brightness': 160, 'read_chunk': 7,
+                'upload_chunk': 8, 'timeout_ms': 1000}
+    require(canonical(value['capability']) == canonical(expected), 'Direct RAM capability mismatch')
+    require(type(value['generation']) is int and 0 <= value['generation'] <= 0xffffffff,
+            'Invalid Direct RAM generation')
+    require(type(value['hsv_hex']) is str and len(value['hsv_hex']) == 492,
+            'Invalid Direct RAM colors')
+    raw = bytes.fromhex(value['hsv_hex'])
+    require(raw.hex() == value['hsv_hex'] and all(v <= 160 for v in raw[2::3]), 'Invalid Direct RAM HSV')
+    return value
+
+
+def restore_direct_palette(api, backup, profile, *, frame_id):
+    """Explicit separate RAM restore; no mode selection, EEPROM save or retry."""
+    require(api.allow_writes, 'Writes are disabled for this DeviceAPI instance')
+    backup = validate_backup(backup['path'], profile, backup['identity'])
+    palette = validate_direct_palette(backup.get('direct_ram'))
+    image = _profile_images(profile)[profile['ihx_sha256']]
+    require(image.get('direct_protocol') == 1, 'Target exact image lacks Direct RAM contract')
+    # Validate live CODE before issuing any write, using the existing exact-image check.
+    rom = api.read_code(0,65536)
+    validate_rom(rom, profile, (profile['ihx_sha256'], profile['code_sha256']))
+    require(api.direct_info() == palette['capability'], 'Target Direct runtime capability mismatch')
+    current = api.direct_snapshot()
+    require(current is not None, 'Target Direct palette unavailable')
+    result = api.set_direct_frame(bytes.fromhex(palette['hsv_hex']), frame_id=frame_id,
+                                  expected_generation=current['generation'])
+    actual = api.direct_snapshot()
+    require(actual is not None and actual['hsv_hex'] == palette['hsv_hex'], 'Direct RAM restore readback differs')
     return result

@@ -16,6 +16,7 @@
 #include "ak820_nvm.h"
 #ifdef RGB_MATRIX_ENABLE
 #    include "rgb_matrix.h"
+#    include "vialrgb.h"
 #endif
 
 volatile uint8_t keyboard_idle;
@@ -120,6 +121,9 @@ void protocol_pre_task(void) {
 #endif
     }
     if (ak820_usb_take_keyboard_reset()) {
+#if defined(RGB_MATRIX_ENABLE) && !defined(VIALRGB_NO_DIRECT)
+        ak820_direct_cancel();
+#endif
         pending_reports = 0;
         memset(&last_keyboard_report, 0, sizeof(last_keyboard_report));
         last_keyboard_time = timer_read();

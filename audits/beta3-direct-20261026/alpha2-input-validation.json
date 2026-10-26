@@ -1,0 +1,47 @@
+{
+  "backup_manifest_sha256": "0b1684136e4d39d398ebf2097d99917abf0bd5e92c46385f87998e7a8abf7029",
+  "backup_scope": "Offline-derived full-ROM fixture; no device capture or getter validation",
+  "compatible_image_count": 27,
+  "counts": {
+    "assignments": 498,
+    "encoder_assignments": 12,
+    "layers": 6,
+    "macro_capacity": 8192,
+    "macros": 16,
+    "physical_keys": 83
+  },
+  "format": "ak820-historical-saved-rom-validation-1",
+  "hardware_validated": false,
+  "historical_catalog_sha256": "058d7b73b8baf009a784ce81d1faa6d8a488b0159aa164fea92650ffe936f4ab",
+  "limitations": [
+    "Offline backup validation only; no device or getter validation.",
+    "No transition policy, candidate catalog or installation approval generated."
+  ],
+  "offline_only": true,
+  "passed": true,
+  "physical_device_commands": 0,
+  "provenance_record": "audits/beta3-direct-20261026/alpha2-input-provenance.json",
+  "source_identity": {
+    "build_id": 532482,
+    "code_sha256": "6ff7b1653925da7dc12bdb6f7ef5fc1dc4319c5b931def50c68b9cf45c4054d7",
+    "ihx_sha256": "f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e"
+  },
+  "source_rom": {
+    "sha256": "56b2de776924c48bda6d08a2604edc8ab94f24e5ec7365f7b584c0fe7dd70fc5",
+    "size": 65536
+  },
+  "source_scope": "Offline-derived backup from actual archived full-ROM capture; no fresh getter capture or live read validation",
+  "target_profile_identity": {
+    "code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+    "ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+    "schema": 532483
+  },
+  "validation": {
+    "derived_rom_byte_equal": true,
+    "load_profile_passed": true,
+    "make_backup_validate_backup_passed": true,
+    "repeat_validate_backup_with_manifest_pin_passed": true,
+    "source_rom_unchanged": true,
+    "validate_rom_passed": true
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "current_files": {
+    "capture_settings_tests.py": "3a33ec9a15aa496ed8734bf9756f1c8d2c5cee2c0becb6d9eddf6a491f2a4baa",
+    "check_module_matrix.py": "3fb3df897f17d71e91c6007fafdd0277511212a23226fac84415e67812e36ca4",
+    "measure_origin.py": "e8e366c04d7bd27dde984489aafa2bd31cd6091c9110d3d627571abb40c71bca",
+    "prepare_release.py": "601d858f2d7aae81cd09508955e808c6f063082b939fb23a7da28320f80becfe",
+    "test_measure_origin.py": "6f1a9ea687840af5c90b1b805ed3ea9cf13ca9b52caacf062c183ab0d38e2413",
+    "test_prepare_direct_fixture.py": "b39908226c69fc911f381c6af81b1e51e189702c352e1f9b6762a528e9ed4a0e",
+    "test_prepare_paths.py": "674c79a03efdfa1d8fafd66a3cd2a7ee8780acbd5156f919ea400967fa320cb5"
+  },
+  "format": "ak820-beta3-preparation-reuse-1",
+  "historical_catalog_sha256": "058d7b73b8baf009a784ce81d1faa6d8a488b0159aa164fea92650ffe936f4ab",
+  "independent_approval_generated": false,
+  "independent_review": "audits/beta3-direct-20261026/metadata-final-review.md",
+  "independent_reviews": [
+    "audits/beta3-direct-20261026/metadata-final-review.md",
+    "audits/beta3-direct-20261026/direct-fixture-review.md",
+    "audits/beta3-direct-20261026/alpha2-admission-review.md"
+  ],
+  "original_copies": {
+    "capture_settings_tests.py": "3a33ec9a15aa496ed8734bf9756f1c8d2c5cee2c0becb6d9eddf6a491f2a4baa",
+    "check_module_matrix.py": "3fb3df897f17d71e91c6007fafdd0277511212a23226fac84415e67812e36ca4",
+    "measure_origin.py": "114c3eb7262eaadba6800a1b54b432765141fac82091b416e655be76ee2ed80e",
+    "prepare_release.py": "f5b09cb533327c03599622105c160e6e835ae0af0c3957852dad06e41bf6c270",
+    "test_measure_origin.py": "e9e5e4c5d1bdac7c491740592ec01d4220ee16dae3dfee6b0e09d21c6ebc557d",
+    "test_prepare_paths.py": "674c79a03efdfa1d8fafd66a3cd2a7ee8780acbd5156f919ea400967fa320cb5"
+  },
+  "physical_device_commands": 0,
+  "qualification_execution": "Final builds and qualification use original roots; unchanged absolute dependency and command-path checks remain enabled.",
+  "reviewed_changes": {
+    "measure_origin.py": "Resolve child output and pinned shared toolchain paths before invoking the unchanged canonical validators.",
+    "prepare_release.py": "Derive Direct-capable settings limitation metadata from the exact ROM image and exact alpha2 zero-write Combo preservation from the validated source capability and actual restore plan. No palette or Combo writes are fabricated; canonical backup/plan validation remains required.",
+    "test_measure_origin.py": "Assert normalized child arguments with a real toolchain symlink.",
+    "test_prepare_direct_fixture.py": "Focused forwarding coverage with mocked parsers/validators; private canonical roundtrips are separate evidence."
+  },
+  "upstream_audit": "audits/caps-word-combo-20261026"
+}

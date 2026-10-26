@@ -757,5 +757,79 @@ class ComboTests(unittest.TestCase):
         self.assertEqual(len(raw.writes), 1)
 
 
+class DirectBackupTests(unittest.TestCase):
+    setUp = SettingsTests.setUp
+    api = SettingsTests.api
+    def palette(self):
+        return {'format':'ak820-direct-ram-1','generation':8,'flags':3,'hsv_hex':bytes((1,2,3)).hex()*82,
+                'capability':{'version':1,'capabilities':3,'count':82,'encoding':'HSV8',
+                'mapping':1,'maximum_brightness':160,'read_chunk':7,'upload_chunk':8,'timeout_ms':1000}}
+
+    def capable(self):
+        self.profile['compatible_images'] = {self.profile['ihx_sha256']:{
+            'ihx_sha256':self.profile['ihx_sha256'],'code_sha256':self.profile['code_sha256'],
+            'build_id':p.BUILD_ID,'direct_protocol':1}}
+
+    def test_separate_palette_sidecar_preserves_settings_contract(self):
+        self.capable()
+        api,raw = self.api()
+        with patch.object(api,'direct_snapshot',return_value=self.palette()):
+            saved=settings.export_settings(api,self.root/'direct',self.profile)
+        self.assertEqual(saved['direct_ram'],self.palette())
+        self.assertNotIn('direct_ram',saved['settings'])
+        self.assertEqual(raw.writes,[])
+        self.assertIn('direct-ram.json',saved['manifest']['files'])
+
+    def test_exact_capability_requires_runtime_support(self):
+        self.capable()
+        api,_ = self.api()
+        with patch.object(api,'direct_snapshot',return_value=None):
+            with self.assertRaisesRegex(ValueError,'unavailable at runtime'):
+                settings.export_settings(api,self.root/'no-direct',self.profile)
+        self.assertFalse((self.root/'no-direct').exists())
+
+    def test_typed_palette_rejects_invalid_values(self):
+        for field,value in (('generation',True),('hsv_hex','00'),('capability',{})):
+            palette=self.palette();palette[field]=value
+            with self.assertRaises(ValueError):settings.validate_direct_palette(palette)
+        palette=self.palette();palette['hsv_hex']=bytes((1,2,161)).hex()*82
+        with self.assertRaises(ValueError):settings.validate_direct_palette(palette)
+
+    def test_ram_restore_requires_writes_before_any_io(self):
+        api,raw=self.api()
+        with self.assertRaisesRegex(ValueError,'Writes are disabled'):
+            settings.restore_direct_palette(api,{},self.profile,frame_id=3)
+        self.assertEqual(raw.writes,[])
+
+    def test_ram_restore_matches_exact_capabilities_and_uses_fresh_generation(self):
+        self.capable()
+        api,raw=self.api(writes=True)
+        palette=self.palette()
+        with patch.object(api,'direct_snapshot',return_value=palette):
+            saved=settings.export_settings(api,self.root/'restore-direct',self.profile)
+        fresh={**palette,'generation':41}
+        with patch.object(api,'direct_info',return_value=palette['capability']), \
+                patch.object(api,'direct_snapshot',side_effect=[fresh,palette]), \
+                patch.object(api,'set_direct_frame',return_value={'state':2}) as setter:
+            self.assertEqual(settings.restore_direct_palette(api,saved,self.profile,frame_id=9),{'state':2})
+        setter.assert_called_once_with(bytes.fromhex(palette['hsv_hex']),frame_id=9,expected_generation=41)
+        with patch.object(api,'direct_info',return_value={}), \
+                patch.object(api,'set_direct_frame') as setter:
+            with self.assertRaisesRegex(ValueError,'runtime capability mismatch'):
+                settings.restore_direct_palette(api,saved,self.profile,frame_id=10)
+            setter.assert_not_called()
+
+    def test_direct_exact_image_metadata_rejects_non_direct_profile(self):
+        direct = settings.catalog_settings_identity(settings.ak820_profiles.configuration('main'),
+            '1'*64,'2'*64,'3'*64,direct_protocol=1)
+        self.assertEqual(direct['direct_protocol'],1)
+        old = settings.catalog_settings_identity(settings.ak820_profiles.configuration('main'),
+            '1'*64,'2'*64,'3'*64)
+        self.assertNotIn('direct_protocol',old)
+        with self.assertRaisesRegex(ValueError,'Invalid Direct'):
+            settings.catalog_settings_identity(settings.ak820_profiles.configuration('typing'),
+                '1'*64,'2'*64,'3'*64,direct_protocol=1)
+
+
 if __name__ == '__main__':
     unittest.main()

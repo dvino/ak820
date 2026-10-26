@@ -124,11 +124,21 @@ class DeviceAPI:
             require(packet[1] < 6 and packet[2] < 16 and packet[3] < 6 and zero_tail(6), 'Malformed key setter')
         elif command == 7:
             write = True
-            require(sub == 0x41 and zero_tail(8), 'Unknown or malformed RGB setter')
+            if sub == 0x41:
+                require(zero_tail(8), 'Malformed RGB setter')
+            elif sub == 0x43:
+                require(packet[2] == 1 and packet[3] == 82 and any(packet[4:6]) and zero_tail(10), 'Malformed Direct begin')
+            elif sub == 0x44:
+                require(any(packet[2:4]) and 1 <= packet[5] <= 8 and packet[4] <= 82-packet[5]
+                        and zero_tail(6+3*packet[5]), 'Malformed Direct chunk')
+            else:
+                require(sub in (0x45, 0x46) and any(packet[2:4]) and zero_tail(4), 'Unknown or malformed Direct setter')
         elif command == 8:
-            require(sub in (0x40, 0x41, 0x42, 0x43, 0x44), 'Unknown VialRGB getter')
-            if sub in (0x40, 0x41, 0x43): require(zero_tail(2), 'Malformed VialRGB getter')
+            require(sub in (0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47), 'Unknown VialRGB getter')
+            if sub in (0x40, 0x41, 0x43, 0x45, 0x47): require(zero_tail(2), 'Malformed VialRGB getter')
             elif sub == 0x42: require(zero_tail(4), 'Malformed VialRGB effect query')
+            elif sub == 0x46:
+                require(1 <= packet[7] <= 7 and packet[6] <= 82-packet[7] and zero_tail(8), 'Malformed Direct read')
             else: require(packet[2] < 82 and packet[3] == 0 and zero_tail(4), 'Malformed VialRGB LED query')
         elif command == 9:
             write = True
@@ -570,3 +580,96 @@ class DeviceAPI:
         return {'effects': effects, 'leds': leds, 'mode_hex': mode.hex(), 'info_hex': info[:3].hex(),
                 'saved_rgb_config_hex': nvm[24:32].hex(),
                 'RAM_matches_saved_hsv_speed': mode[2:] == bytes((nvm[28], nvm[25], nvm[26], nvm[27]))}
+
+    def direct_info(self):
+        """Negotiate actual Direct support; untouched old-image replies are unavailable."""
+        reply = self.exchange(self.packet(8, 0x45))
+        require(reply[:2] == b'\x08\x45', 'Direct info header mismatch')
+        if reply[2:4] != b'AD':
+            return None
+        require(reply[4:12] == bytes((1, 3, 82, 1, 1, 160, 7, 8))
+                and int.from_bytes(reply[12:14], 'little') == 1000, 'Unsupported Direct capability contract')
+        return {'version': 1, 'capabilities': 3, 'count': 82, 'encoding': 'HSV8',
+                'mapping': 1, 'maximum_brightness': 160, 'read_chunk': 7,
+                'upload_chunk': 8, 'timeout_ms': 1000}
+
+    def direct_status(self):
+        if self.direct_info() is None:
+            return None
+        return self._direct_status()
+
+    def _direct_status(self):
+        reply = self.exchange(self.packet(8, 0x47))
+        require(reply[:2] == b'\x08\x47' and reply[2] <= 6 and reply[3] <= 82
+                and not reply[10] & ~7, 'Malformed Direct status')
+        return {'state': reply[2], 'coverage': reply[3],
+                'frame_id': int.from_bytes(reply[4:6], 'little'),
+                'generation': int.from_bytes(reply[6:10], 'little'), 'flags': reply[10]}
+
+    def direct_snapshot(self, *, attempts=3):
+        require(type(attempts) is int and 1 <= attempts <= 3, 'Invalid Direct snapshot attempt bound')
+        info = self.direct_info()
+        if info is None:
+            return None
+        for _ in range(attempts):
+            generation = self._direct_status()['generation']
+            hsv = bytearray()
+            for first in range(0, 82, 7):
+                count = min(7, 82-first)
+                reply = self.exchange(self.packet(8, 0x46, *generation.to_bytes(4, 'little'), first, count))
+                require(reply[:2] == b'\x08\x46' and reply[3:5] == bytes((first,count))
+                        and not reply[5] & ~7, 'Malformed Direct read response')
+                actual = int.from_bytes(reply[6:10], 'little')
+                if reply[2] == 3:
+                    break
+                require(reply[2] == 0 and actual == generation, 'Direct read failed or generation mismatch')
+                hsv.extend(reply[10:10+count*3])
+            else:
+                status = self._direct_status()
+                if status['generation'] == generation:
+                    require(all(v <= 160 for v in hsv[2::3]), 'Direct palette brightness outside limit')
+                    return {'format': 'ak820-direct-ram-1', 'capability': info,
+                            'generation': generation, 'flags': status['flags'], 'hsv_hex': hsv.hex()}
+        raise ValueError('Direct palette changed during bounded snapshot')
+
+    def _direct_set(self, command, payload):
+        self._require_writes()
+        packet = self.packet(7, command, *payload)
+        reply = self.exchange(packet)
+        require(reply[:2] == packet[:2] and reply[3:] == packet[3:], 'Direct setter ACK mismatch')
+        require(reply[2] == 0, 'Direct setter failed: status ' + str(reply[2]))
+        return True
+
+    def direct_abort(self, frame_id):
+        self._require_writes()
+        require(type(frame_id) is int and 1 <= frame_id <= 65535, 'Invalid Direct frame ID')
+        require(self.direct_info() is not None, 'Direct unavailable')
+        return self._direct_set(0x46, frame_id.to_bytes(2, 'little'))
+
+    def set_direct_frame(self, hsv, *, frame_id, expected_generation):
+        """Commit a full RAM frame; clamp each V byte to negotiated maximum 160.
+
+        Input bytes are never modified. Success means accepted; display may be pending.
+
+        Failures stop immediately. No automatic abort, retry or legacy fastset.
+        """
+        self._require_writes()
+        require(isinstance(hsv, bytes) and len(hsv) == 246, 'Direct frame requires 82 HSV triples')
+        require(type(frame_id) is int and 1 <= frame_id <= 65535, 'Invalid Direct frame ID')
+        require(type(expected_generation) is int and 0 <= expected_generation <= 0xffffffff, 'Invalid Direct generation')
+        require(self.direct_info() is not None, 'Direct unavailable')
+        # Firmware clamps V to 160 before ACKing each upload chunk. Normalize
+        # locally so strict ACK equality compares against the transmitted data.
+        hsv = bytes(value if index % 3 != 2 else min(value, 160)
+                    for index, value in enumerate(hsv))
+        ident = frame_id.to_bytes(2, 'little')
+        self._direct_set(0x43, bytes((1,82)) + ident + expected_generation.to_bytes(4,'little'))
+        for first in range(0,82,8):
+            count = min(8,82-first)
+            self._direct_set(0x44, ident + bytes((first,count)) + hsv[first*3:(first+count)*3])
+        self._direct_set(0x45, ident)
+        status = self._direct_status()
+        require(status['frame_id'] == frame_id and status['coverage'] == 82
+                and status['generation'] == (expected_generation+1) & 0xffffffff
+                and status['state'] in (2,3,4,5), 'Direct commit status mismatch')
+        return status

@@ -287,12 +287,16 @@ def rgb(fw: Firmware) -> dict:
         commands += fw.frame(200) + fw.dump("solid_after_direct_rejected", "xram", fw.led_address(0), 4)
     # Seed a known live color through the public API, so the sleep
     # regression is independent of whether HSV rendering itself is working.
-    commands += fw.write("_rgb_matrix_set_color_PARM_2", [60]) + fw.write("_rgb_matrix_set_color_PARM_3", [30])
-    commands += fw.write("_rgb_matrix_set_color_PARM_4", [10]) + fw.call("_rgb_matrix_set_color", 0)
+    # The compact renderer calls the byte-index board API directly. The
+    # unused generic int-index wrapper may be removed from this linked image.
+    setter = "_rgb_matrix_set_color" if "_rgb_matrix_set_color" in fw.symbols else "_ak820_rgb_set_color"
+    commands += fw.write(setter + "_PARM_2", [60]) + fw.write(setter + "_PARM_3", [30])
+    commands += fw.write(setter + "_PARM_4", [10]) + fw.call(setter, 0)
     commands += fw.dump("before_sleep", "xram", fw.led_address(0), 4)
     commands += fw.dump("bounds_before", "xram", fw.address("_ak820_led_dma"), 512)
-    for invalid in (0xffff, 0x8000, 82, 255, 256, 32767):
-        commands += fw.call("_rgb_matrix_set_color", invalid)
+    if "_rgb_matrix_set_color" in fw.symbols:
+        for invalid in (0xffff, 0x8000, 82, 255, 256, 32767):
+            commands += fw.call("_rgb_matrix_set_color", invalid)
     for invalid in (82, 255):
         commands += fw.call("_ak820_rgb_set_color", invalid)
     commands += fw.dump("bounds_after", "xram", fw.address("_ak820_led_dma"), 512)

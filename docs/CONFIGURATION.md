@@ -221,9 +221,11 @@ Adjust supported RGB settings through VialRGB; changes apply in RAM.
 Supported modes are solid color, breathing, color cycle, horizontal color
 cycle, VialRGB Direct and Solid Reactive Simple. Use Vial's lighting controls
 or assign the available RGB keycodes to keys. Brightness, color and speed are
-global settings. Direct mode lets you set individual LED colors; those colors
-are kept in temporary memory and are lost when the keyboard restarts. The
-global lighting settings are saved.
+global settings. Direct uses an 82-entry HSV8 palette in RAM. Its protocol can
+read a coherent snapshot and apply a complete frame; it does not enable or
+select RGB mode, and the palette is lost when the keyboard restarts. See the
+[Direct palette guide](DIRECT.md) for host API and restore details. Global
+lighting settings are saved separately.
 
 In Solid Reactive Simple, pressing a key lights its LED and starts that LED's
 fade. Each press fades independently; holding the key does not keep it lit, and

@@ -1,7 +1,10 @@
 import hashlib
 import json
+import posixpath
+import re
 from pathlib import Path
 import tempfile
+import tarfile
 import unittest
 from unittest.mock import patch
 import zipfile
@@ -84,6 +87,20 @@ class BundleValidationTests(unittest.TestCase):
 
 
 class PromotionTests(unittest.TestCase):
+    def assert_packaged_markdown_links_resolve(self, members, prefix):
+        files = {name[len(prefix):] for name in members if name.startswith(prefix)}
+        for name in sorted(files):
+            if not name.lower().endswith('.md'):
+                continue
+            content = members[prefix + name].decode('utf-8')
+            for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)', content):
+                if re.match(r'\w+:', target) or target.startswith('#'):
+                    continue
+                local = target.split('#', 1)[0]
+                resolved = posixpath.normpath(posixpath.join(posixpath.dirname(name), local))
+                if not resolved.startswith('../'):
+                    self.assertIn(resolved, files, f'{name} links to absent {target}')
+
     profiles = assets.RELEASE_PROFILES
 
     @staticmethod
@@ -159,7 +176,9 @@ class PromotionTests(unittest.TestCase):
         for name in assets.guide_files():
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text('# public guide\n', encoding='utf-8')
+            # Real guide text makes the archive link-closure check catch a
+            # missing guide newly referenced by another public document.
+            path.write_bytes((Path(__file__).resolve().parents[1] / name).read_bytes())
         (root / 'tools/installer').mkdir(parents=True)
         (root / 'tools/installer/profile-catalog.json').write_text('{}')
         settings_catalog = {'format': firmware_matrix.FORMAT, 'profiles': settings_rows,
@@ -185,6 +204,10 @@ class PromotionTests(unittest.TestCase):
                          for feature in sorted(feature_ids)], 'profiles': module_profiles}
         (root / 'web/module-descriptions.json').write_bytes(assets.canonical(module_descriptions))
         (root / 'web/capability-catalog.json').write_bytes(assets.canonical(capability_catalog))
+        for name in assets.PYTHON_PACKAGE_FILES:
+            path = root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if not path.exists(): path.write_bytes(('fixture:' + name).encode())
         return bundles_root, tuple(contexts), matrix, settings_catalog, capability_catalog
 
     def test_build_emits_exact_ten_bundles_and_full_public_dependency_closure(self):
@@ -199,6 +222,35 @@ class PromotionTests(unittest.TestCase):
             archive = output / 'AK820-Beta3-Catalog.zip'
             self.assertEqual((output / 'AK820-Beta3-Catalog.zip.sha256').read_text().split()[0],
                              assets.sha(archive.read_bytes()))
+            for package_name in ('AK820-Windows.zip', 'AK820-Linux-x86_64.tar.gz'):
+                package = output / package_name
+                checksum = output / (package_name + '.sha256')
+                self.assertEqual(checksum.read_text().split()[0], assets.sha(package.read_bytes()))
+            with zipfile.ZipFile(output / 'AK820-Windows.zip') as zf:
+                package_members = zf.namelist()
+                self.assertIn('AK820-Python/AK820.cmd', package_members)
+                self.assertIn('AK820-Python/INSTALL-en.md', package_members)
+                self.assertIn('AK820-Python/INSTALL-ru.md', package_members)
+                self.assertIn('AK820-Python/releases/beta3/main/firmware/application.ihx', package_members)
+                self.assertFalse(any(name.endswith('.exe') for name in package_members))
+                self.assertFalse(any(name.endswith(('/gui.py', '/build_windows_installer.py',
+                    '/build_linux_installer.py', '/requirements-build-windows.txt',
+                    '/requirements-build-linux.txt')) for name in package_members))
+                package_payload = {name: zf.read(name) for name in package_members}
+            self.assert_packaged_markdown_links_resolve(package_payload, 'AK820-Python/')
+            with tarfile.open(output / 'AK820-Linux-x86_64.tar.gz', 'r:gz') as tf:
+                package_members = tf.getnames()
+                self.assertIn('AK820-Python/AK820.sh', package_members)
+                self.assertIn('AK820-Python/INSTALL-en.md', package_members)
+                self.assertIn('AK820-Python/INSTALL-ru.md', package_members)
+                self.assertIn('AK820-Python/releases/beta3/main/firmware/application.ihx', package_members)
+                self.assertFalse(any(name.endswith('.exe') for name in package_members))
+                self.assertFalse(any(name.endswith(('/gui.py', '/build_windows_installer.py',
+                    '/build_linux_installer.py', '/requirements-build-windows.txt',
+                    '/requirements-build-linux.txt')) for name in package_members))
+                package_payload = {name: tf.extractfile(name).read()
+                                   for name in package_members if tf.getmember(name).isfile()}
+            self.assert_packaged_markdown_links_resolve(package_payload, 'AK820-Python/')
             with zipfile.ZipFile(archive) as zf:
                 members = {name: zf.read(name) for name in zf.namelist()}
             descriptor = json.loads(members['release-catalog.json'])

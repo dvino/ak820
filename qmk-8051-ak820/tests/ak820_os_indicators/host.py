@@ -11,7 +11,7 @@ def main():
     parser.add_argument('--output',required=True,type=Path)
     args=parser.parse_args()
     runs=[]
-    for flags in ([],['--os-indicators'],['--os-indicators','--without-mouse'],['--os-indicators','--mac-pc']):
+    for flags in ([],['--os-indicators'],['--os-indicators','--without-mouse'],['--os-indicators','--mac-pc'],['--os-indicators','--gui-lock']):
         p=subprocess.run([sys.executable,str(ROOT/'tests/ak820_usb/run.py'),*flags],text=True,capture_output=True)
         runs.append({'flags':flags,'pass':p.returncode==0,'stdout':p.stdout,'stderr':p.stderr})
     result={'level':'host production C with ASan/UBSan; no hardware validation','tests':runs,'pass':all(r['pass'] for r in runs)}

@@ -23,7 +23,7 @@ static uint8_t td_map_get(uint8_t id) {
     return (id & 1) ? packed >> 4 : packed & 15;
 }
 static void td_map_set(uint8_t id, uint8_t value) {
-    uint8_t *packed = td_map + (id >> 1);
+    uint8_t AK820_STATE_MEM *packed = td_map + (id >> 1);
     if (id & 1) *packed = (*packed & 15) | ((value & 15) << 4);
     else *packed = (*packed & 240) | (value & 15);
 }

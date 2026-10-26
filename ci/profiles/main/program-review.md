@@ -4,14 +4,14 @@
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "b6040e965dfa30a22049bec5591ff7ab074a89000d973f22f9f3b08736a33031",
+  "ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
   "physical_device_commands": 0,
-  "policy_sha256": "25fb85c2b65643c68484e73e337e74eff03f4190ecb612861fbfc42d43d1139c",
+  "policy_sha256": "b29496ebc2afcb3cadcdb87b24765e7be2a7200adc3e64def68fe0c0bc23e141",
   "profile": "main",
-  "review_report": "audits/caps-word-combo-20261026/final-generated-admission-review.md",
-  "scope": "Independent source and generated-data review: exact-image canonical original-root measurements, current source hashes, runtime witnesses, packing and offline settings transitions. Source push only; no release or hardware validation.",
+  "review_report": "audits/beta3-direct-20261026/final-generated-admission-review.md",
+  "scope": "Independent exact-image offline release preparation and admission for canonical original-root assembly from committed reviewed inputs. Covers frozen source, qualification, runtime stack/startup/IRQ, packing and settings plans. No hardware validation, device operation, publication or completed package assembly is claimed.",
   "status": "passed",
-  "symbols_sha256": "9747bf2f134c8957db7be11cc773ca736f36a9a7e874a93baef218a48355d064",
-  "test_source_snapshot_sha256": "6c1ccb04abb429fd93f9521fcb3a7aa3433b30d785b3728e0964ff878c47721c"
+  "symbols_sha256": "bac7781cb22b738ba8699e6afb786b1c166ce7bc271c7434234473e0f3b6fa2b",
+  "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
 }
 ```

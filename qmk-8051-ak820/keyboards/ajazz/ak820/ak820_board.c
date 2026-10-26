@@ -17,6 +17,10 @@
 #include "config.h"
 #include "ak820_board.h"
 #include "ch555.h"
+#if defined(RGB_MATRIX_ENABLE) && !defined(VIALRGB_NO_DIRECT)
+#    include "vialrgb.h"
+void ak820_direct_publish_row(void) __naked;
+#endif
 
 #if !defined(__SDCC_mcs51)
 #    error "AK820 board driver requires the SDCC MCS51 target"
@@ -109,7 +113,20 @@ void ak820_led_irq(void) __naked {
         mov 0xc7, #0x02
         mov 0xc6, #0x00
 00001$:
+#if defined(RGB_MATRIX_ENABLE) && !defined(VIALRGB_NO_DIRECT)
+        lcall _ak820_direct_publish_row
+#endif
         lcall 00010$
+#if defined(RGB_MATRIX_ENABLE) && !defined(VIALRGB_NO_DIRECT)
+        ; Release staging only after the last row's native transfer.
+        cjne r6, #0x0f, 00003$
+        mov dptr, #_ak820_direct_state
+        movx a, @dptr
+        cjne a, #4, 00003$
+        mov a, #5
+        movx @dptr, a
+00003$:
+#endif
 
         ; Native D5ED..D617, only the sample XRAM address is relocated.
         mov 0xc1, #0xff
@@ -267,6 +284,94 @@ void ak820_led_irq(void) __naked {
     __endasm;
 }
 
+#if defined(RGB_MATRIX_ENABLE) && !defined(VIALRGB_NO_DIRECT)
+/* Inverse of AK820_RGB_SLOT_MAP, checked by linked tests. 255 means an
+ * unmapped slot, including the independent C/W/OS indicators. */
+static const __code uint8_t ak820_rgb_led_for_slot[128] = {
+    0,14,29,44,58,72,255,255,1,15,30,45,255,73,255,255,
+    2,16,31,46,59,74,255,255,3,17,32,47,60,255,255,255,
+    4,18,33,48,61,255,255,255,5,19,34,49,62,75,255,255,
+    6,20,35,50,63,255,255,255,7,21,36,51,64,255,255,255,
+    8,22,37,52,65,255,255,255,9,23,38,53,66,76,255,255,
+    10,24,39,54,67,77,255,255,11,25,40,55,68,78,255,255,
+    12,26,41,255,255,255,255,255,255,27,42,56,69,79,255,255,
+    255,255,13,57,70,80,255,255,255,28,43,71,255,81,255,255
+};
+
+/* r6 is the current native scan row. All scratch registers are already
+ * preserved by the immutable OEM wrapper. There is no C call or static
+ * parameter in this path, and the native 32-MOVX block is unchanged. */
+void ak820_direct_publish_row(void) __naked {
+    __asm
+        mov dptr, #_ak820_direct_state
+        movx a, @dptr
+        cjne a, #3, 00901$
+        mov a, r6
+        jnz 00909$
+        mov a, #4
+        movx @dptr, a
+00901$:
+        cjne a, #4, 00909$
+        mov a, r6
+        rl a
+        rl a
+        rl a
+        mov r5, a
+        mov r7, #8
+00902$:
+        mov dptr, #_ak820_rgb_led_for_slot
+        mov a, r5
+        movc a, @a+dptr
+        cjne a, #0xff, 00903$
+        sjmp 00908$
+00903$:
+        mov b, #3
+        mul ab
+        add a, #<(_ak820_direct_stage)
+        mov dpl, a
+        clr a
+        addc a, #>(_ak820_direct_stage)
+        mov dph, a
+        movx a, @dptr
+        mov r2, a
+        inc dptr
+        movx a, @dptr
+        mov r3, a
+        inc dptr
+        movx a, @dptr
+        mov r4, a
+        mov a, r5
+        mov b, #4
+        mul ab
+        mov dpl, a
+        mov a, b
+        add a, #2
+        mov dph, a
+        mov a, r2
+        orl a, r3
+        orl a, r4
+        jz 00904$
+        mov a, #0xff
+00904$:
+        movx @dptr, a
+        inc dptr
+        mov a, r2
+        movx @dptr, a
+        inc dptr
+        mov a, r3
+        movx @dptr, a
+        inc dptr
+        mov a, r4
+        movx @dptr, a
+00908$:
+        inc r5
+        djnz r7, 00902$
+00909$:
+        ret
+    __endasm;
+}
+#endif
+
 bool ak820_matrix_snapshot(uint8_t *rows) {
     uint8_t row;
     uint8_t value;
@@ -297,24 +402,57 @@ bool ak820_matrix_snapshot(uint8_t *rows) {
     return changed;
 }
 
-void ak820_set_slot_rgb(uint8_t slot, uint8_t r, uint8_t g, uint8_t b) {
-    uint16_t offset;
-    uint8_t irq_enabled;
-    if (slot >= AK820_SCAN_ROWS * AK820_SCAN_COLS) {
-        return;
-    }
-    offset = (uint16_t)slot * 4;
-    irq_enabled = IE_EX & 0x20;
-    IE_PWM_I2C = 0;
-    /* Native DD75 copies intensity and3 components unchanged to the DMA
-     * buffer. All-zero intensity makes an unused LED slot dark. */
-    ak820_led_dma[offset]     = (r | g | b) ? 0xff : 0;
-    ak820_led_dma[offset + 1] = r;
-    ak820_led_dma[offset + 2] = g;
-    ak820_led_dma[offset + 3] = b;
-    if (irq_enabled) {
-        IE_PWM_I2C = 1;
-    }
+void ak820_set_slot_rgb(uint8_t slot, uint8_t r, uint8_t g, uint8_t b) __naked {
+    _Static_assert(AK820_SCAN_ROWS * AK820_SCAN_COLS == 128 && AK820_LED_DMA_ADDRESS == 0x0200,
+                   "Compact slot writer requires the native 128-slot DMA layout");
+    slot; r; g; b;
+    /* Large-model ABI: slot in DPL, colors in XDATA parameter slots. Preserve
+     * the LED IRQ enable in carry across four MOVX writes; MOV/INC DPTR do not
+     * change carry, and other IRQ wrappers restore PSW. No whole-frame mask,
+     * calls, static scratch or stack use. Native DD75 intensity is retained. */
+    __asm
+        mov a,dpl
+        jnb acc.7,00930$
+        ret
+00930$:
+        mov r7,a
+        mov dptr,#_ak820_set_slot_rgb_PARM_2
+        movx a,@dptr
+        mov r2,a
+        mov dptr,#_ak820_set_slot_rgb_PARM_3
+        movx a,@dptr
+        mov r3,a
+        mov dptr,#_ak820_set_slot_rgb_PARM_4
+        movx a,@dptr
+        mov r4,a
+        mov a,r7
+        add a,acc
+        add a,acc
+        mov dpl,a
+        mov a,#2
+        addc a,#0
+        mov dph,a
+        mov a,r2
+        orl a,r3
+        orl a,r4
+        jz 00931$
+        mov a,#0xff
+00931$:
+        mov c,_IE_PWM_I2C
+        clr _IE_PWM_I2C
+        movx @dptr,a
+        inc dptr
+        mov a,r2
+        movx @dptr,a
+        inc dptr
+        mov a,r3
+        movx @dptr,a
+        inc dptr
+        mov a,r4
+        movx @dptr,a
+        mov _IE_PWM_I2C,c
+        ret
+    __endasm;
 }
 
 #ifdef RGB_MATRIX_ENABLE
