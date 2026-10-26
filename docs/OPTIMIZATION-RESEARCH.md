@@ -1,3 +1,5 @@
+Русский перевод: [Исследования оптимизации](ru/OPTIMIZATION-RESEARCH.md).
+
 # Optimization research
 
 Primary sources checked online on 2026-10-25. Ideas are separated from measured
@@ -91,3 +93,12 @@ linked saving is claimed. Exact inputs, tool hashes, timings and section sizes
 are retained externally in `ak820-allocator-sweep20/REPORT.md` and
 `ak820-allocator-sweep20/results/results.json`. The screen does not establish
 results for the unmeasured units.
+
+## Compiler metadata capture
+
+The spill proof reads SDCC's syntax tree (AST) from stdout. Diagnostics from
+stderr are retained in a separate file. Both logs are included in the capture
+hashes. Merging the streams can insert a warning inside an AST function header
+and cause a missing-function rejection. Source, type, compiler ASM and postlink
+checks remain mandatory. A changed capture tool requires fresh builds and
+exact-image qualification.

@@ -123,7 +123,7 @@
     },
     {
       "id": "nkro-reports",
-      "kind": "base",
+      "kind": "optional",
       "title": {
         "en": "NKRO reports",
         "ru": "NKRO-отчёты"
@@ -203,7 +203,7 @@
     },
     {
       "id": "grave-escape",
-      "kind": "base",
+      "kind": "optional",
       "title": {
         "en": "Grave Escape",
         "ru": "Grave Escape"
@@ -263,22 +263,22 @@
     },
     {
       "id": "vialrgb-direct-ram",
-      "kind": "base",
+      "kind": "optional",
       "title": {
         "en": "VialRGB Direct",
         "ru": "VialRGB Direct"
       },
       "summary": {
-        "en": "Adjust supported RGB settings through VialRGB; changes apply in RAM.",
-        "ru": "Меняйте поддерживаемые настройки RGB через VialRGB; изменения действуют в RAM."
+        "en": "Stream per-LED colors from compatible PC software through VialRGB Direct.",
+        "ru": "Передавайте отдельные цвета светодиодов из совместимой программы на компьютере через VialRGB Direct."
       },
       "guide": {
         "en": "../docs/CONFIGURATION.md#lighting",
         "ru": "../docs/ru/CONFIGURATION.md#подсветка"
       },
       "limits": {
-        "en": "Direct mode stores changes in RAM; persistent lighting settings are not provided here.",
-        "ru": "В режиме Direct изменения хранятся в RAM; постоянное хранение подсветки здесь не предусмотрено."
+        "en": "Included only in selected profiles. Frames stay in RAM. Global RGB mode, color, brightness and speed remain available without Direct.",
+        "ru": "Есть только в выбранных профилях. Кадры хранятся в RAM. Без Direct сохраняется общее управление режимом RGB, цветом, яркостью и скоростью."
       }
     },
     {
@@ -357,8 +357,8 @@
         "ru": "../docs/ru/COMPACT-LEADER.md"
       },
       "limits": {
-        "en": "One physical prefix and one basic selector; no dictionary or encoder/virtual prefix.",
-        "ru": "Один физический префикс и один основной селектор; нет словаря и энкодерного/виртуального префикса."
+        "en": "Physical prefix, then 1–0 or A–F within 300 ms selects one of 16 persistent Vial macros; no arbitrary sequence dictionary.",
+        "ru": "После физического префикса клавиша 1–0 или A–F в течение 300 мс выбирает один из 16 сохраняемых макросов Vial; произвольного словаря последовательностей нет."
       }
     },
     {
@@ -397,8 +397,8 @@
         "ru": "../docs/ru/COMPACT_AUTOSHIFT.md"
       },
       "limits": {
-        "en": "Fixed threshold; only documented physical basic keys; several QMK actions excluded.",
-        "ru": "Фиксированный порог; поддерживаются только описанные физические обычные клавиши; некоторые действия QMK исключены."
+        "en": "Only documented physical basic keys; the default 175 ms threshold can be changed with QMK Settings. Several QMK actions are excluded.",
+        "ru": "Только описанные физические обычные клавиши; порог по умолчанию 175 мс меняется через QMK Settings. Некоторые действия QMK исключены."
       }
     },
     {
@@ -560,215 +560,1162 @@
         "en": "Only enumerated QSIDs are supported; extension storage schema 03.",
         "ru": "Поддерживается только заданный набор QSIDs; схема расширенного хранения 03."
       }
+    },
+    {
+      "id": "nkro",
+      "kind": "optional",
+      "title": {
+        "en": "NKRO reports",
+        "ru": "NKRO-отчёты"
+      },
+      "summary": {
+        "en": "The keyboard can report multiple simultaneous keys using NKRO.",
+        "ru": "Клавиатура может передавать несколько одновременно нажатых клавиш в режиме NKRO."
+      },
+      "guide": {
+        "en": "../docs/CONFIGURATION.md#key-actions",
+        "ru": "../docs/ru/CONFIGURATION.md#действия-клавиш"
+      },
+      "limits": {
+        "en": "Report format depends on the selected profile and host support.",
+        "ru": "Формат отчёта зависит от профиля и поддержки со стороны компьютера."
+      }
+    },
+    {
+      "id": "vialrgb-direct",
+      "kind": "optional",
+      "title": {
+        "en": "VialRGB Direct",
+        "ru": "VialRGB Direct"
+      },
+      "summary": {
+        "en": "Stream per-LED colors from compatible PC software through VialRGB Direct.",
+        "ru": "Передавайте отдельные цвета светодиодов из совместимой программы на компьютере через VialRGB Direct."
+      },
+      "guide": {
+        "en": "../docs/CONFIGURATION.md#lighting",
+        "ru": "../docs/ru/CONFIGURATION.md#подсветка"
+      },
+      "limits": {
+        "en": "Included only in selected profiles. Frames stay in RAM. Global RGB mode, color, brightness and speed remain available without Direct.",
+        "ru": "Есть только в выбранных профилях. Кадры хранятся в RAM. Без Direct сохраняется общее управление режимом RGB, цветом, яркостью и скоростью."
+      }
     }
   ],
   "profiles": [
     {
-      "id": "work",
+      "id": "main",
+      "profile": "main",
       "default": true,
       "title": {
-        "en": "Work",
-        "ru": "Работа"
+        "en": "Main",
+        "ru": "Универсальный"
       },
       "summary": {
-        "en": "Everyday work with Leader and temporary macros.",
-        "ru": "Повседневная работа с Leader и временными макросами."
+        "en": "Universal reference configuration.",
+        "ru": "Повседневная работа: настройки, замены сочетаний, оба вида макросов и Direct."
       },
       "purpose": {
-        "en": "Recommended general-purpose profile. Adds Leader and two temporary Dynamic Macro slots, with OS indicator support. Mouse Keys and Mac/PC mapping are not included.",
-        "ru": "Рекомендуемый профиль общего назначения. Добавляет Leader и два временных слота динамических макросов, а также управление индикатором OS. Mouse Keys и перестановки для Mac/PC нет."
+        "en": "Universal reference configuration.",
+        "ru": "Повседневная работа: настройки, замены сочетаний, оба вида макросов и Direct."
       },
       "optional_features": [
-        "nkro-control",
         "one-shot",
-        "space-cadet",
         "leader",
         "dynamic-macros",
-        "os-indicators"
+        "os-indicators",
+        "qmk-settings",
+        "key-overrides",
+        "vialrgb-direct"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "main",
+        "optional_features": [
+          "one-shot",
+          "leader",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "key-overrides",
+          "vialrgb-direct"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "no",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "yes",
+          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "no",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "no",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "key-overrides",
+        "leader",
+        "media-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tri-layer",
+        "vialrgb-direct",
+        "vialrgb-direct-ram"
       ]
     },
     {
-      "id": "essential",
+      "id": "game",
+      "profile": "game",
       "default": false,
       "title": {
-        "en": "Essentials",
-        "ru": "Основной набор"
+        "en": "Game",
+        "ru": "Игры"
       },
       "summary": {
-        "en": "Core typing controls with OS indicator support.",
-        "ru": "Основные функции набора текста и управление индикатором OS."
+        "en": "Games with NKRO, GUI lock and Direct.",
+        "ru": "NKRO и блокировка Win; Direct сохраняется. Leader убран, чтобы не запускать команды-префиксы во время игры."
       },
       "purpose": {
-        "en": "A compact everyday option with NKRO control, One Shot and Space Cadet.",
-        "ru": "Компактный профиль на каждый день: управление NKRO, One Shot и Space Cadet."
+        "en": "Games with NKRO, GUI lock and Direct.",
+        "ru": "NKRO и блокировка Win; Direct сохраняется. Leader убран, чтобы не запускать команды-префиксы во время игры."
       },
       "optional_features": [
-        "nkro-control",
         "one-shot",
-        "space-cadet",
-        "os-indicators"
+        "dynamic-macros",
+        "os-indicators",
+        "qmk-settings",
+        "key-overrides",
+        "vialrgb-direct",
+        "nkro",
+        "nkro-control",
+        "gui-lock"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "game",
+        "optional_features": [
+          "one-shot",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "key-overrides",
+          "vialrgb-direct",
+          "nkro",
+          "nkro-control",
+          "gui-lock"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects",
+          "nkro-reports",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "yes",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "yes",
+          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "no",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "no",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "yes",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "gui-lock",
+        "key-overrides",
+        "media-keys",
+        "nkro",
+        "nkro-control",
+        "nkro-reports",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tri-layer",
+        "vialrgb-direct",
+        "vialrgb-direct-ram"
+      ]
+    },
+    {
+      "id": "mmo",
+      "profile": "mmo",
+      "default": false,
+      "title": {
+        "en": "Mmo",
+        "ru": "Много игровых назначений"
+      },
+      "summary": {
+        "en": "Multi-action game bindings; Tap Dance replaces Key Overrides.",
+        "ru": "Tap Dance даёт четыре базовых/модифицированных действия на слот; NKRO, блокировка Win и Direct сохраняются. Key Overrides обменивается на Tap Dance ради выбранного состава."
+      },
+      "purpose": {
+        "en": "Multi-action game bindings; Tap Dance replaces Key Overrides.",
+        "ru": "Tap Dance даёт четыре базовых/модифицированных действия на слот; NKRO, блокировка Win и Direct сохраняются. Key Overrides обменивается на Tap Dance ради выбранного состава."
+      },
+      "optional_features": [
+        "one-shot",
+        "dynamic-macros",
+        "os-indicators",
+        "qmk-settings",
+        "vialrgb-direct",
+        "nkro",
+        "nkro-control",
+        "gui-lock",
+        "tap-dance"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "mmo",
+        "optional_features": [
+          "one-shot",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "vialrgb-direct",
+          "nkro",
+          "nkro-control",
+          "gui-lock",
+          "tap-dance"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects",
+          "nkro-reports",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "yes",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "yes",
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "no",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "no",
+          "AK820_NKRO_CONTROL": "yes",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "no",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "yes",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "gui-lock",
+        "media-keys",
+        "nkro",
+        "nkro-control",
+        "nkro-reports",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tap-dance",
+        "tri-layer",
+        "vialrgb-direct",
+        "vialrgb-direct-ram"
       ]
     },
     {
       "id": "typing",
+      "profile": "typing",
       "default": false,
       "title": {
         "en": "Typing",
         "ru": "Набор текста"
       },
       "summary": {
-        "en": "Adds Auto Shift for supported keys.",
-        "ru": "Добавляет Auto Shift для поддерживаемых клавиш."
+        "en": "Text entry with Auto Shift and Space Cadet.",
+        "ru": "Auto Shift для поддерживаемых клавиш и Shift/скобки через Space Cadet. Встроенные RGB-эффекты сохраняются, Direct уступает место функциям ввода."
       },
       "purpose": {
-        "en": "Use when holding supported letter or number keys should produce their shifted form.",
-        "ru": "Подходит, если удержание поддерживаемых букв и цифр должно вводить вариант с Shift."
+        "en": "Text entry with Auto Shift and Space Cadet.",
+        "ru": "Auto Shift для поддерживаемых клавиш и Shift/скобки через Space Cadet. Встроенные RGB-эффекты сохраняются, Direct уступает место функциям ввода."
       },
       "optional_features": [
-        "nkro-control",
         "one-shot",
-        "space-cadet",
+        "leader",
+        "dynamic-macros",
+        "os-indicators",
+        "qmk-settings",
+        "key-overrides",
         "auto-shift",
-        "os-indicators"
-      ]
-    },
-    {
-      "id": "mouse",
-      "default": false,
-      "title": {
-        "en": "Mouse",
-        "ru": "Мышь"
+        "space-cadet"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "typing",
+        "optional_features": [
+          "one-shot",
+          "leader",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "key-overrides",
+          "auto-shift",
+          "space-cadet"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "no",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "no",
+          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "no",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "yes",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          4,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "auto_shift": 175,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
       },
-      "summary": {
-        "en": "Adds pointer movement, scrolling and mouse buttons.",
-        "ru": "Добавляет перемещение указателя, прокрутку и кнопки мыши."
-      },
-      "purpose": {
-        "en": "Use keyboard keys to control pointer movement and scrolling.",
-        "ru": "Управляйте указателем и прокруткой с помощью клавиш."
-      },
-      "optional_features": [
-        "nkro-control",
-        "one-shot",
-        "space-cadet",
-        "mouse-keys",
-        "os-indicators"
-      ]
-    },
-    {
-      "id": "mouse-typing",
-      "default": false,
-      "title": {
-        "en": "Mouse and typing",
-        "ru": "Мышь и набор текста"
-      },
-      "summary": {
-        "en": "Combines mouse controls with Auto Shift and GUI lock.",
-        "ru": "Сочетает управление мышью с Auto Shift и блокировкой GUI."
-      },
-      "purpose": {
-        "en": "For users who need keyboard mouse actions and shifted output from supported held keys.",
-        "ru": "Для управления мышью с клавиатуры и ввода вариантов с Shift долгим нажатием поддерживаемых клавиш."
-      },
-      "optional_features": [
-        "nkro-control",
-        "one-shot",
-        "space-cadet",
-        "mouse-keys",
+      "features": [
+        "alternate-repeat",
         "auto-shift",
-        "gui-lock",
-        "os-indicators"
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "key-overrides",
+        "leader",
+        "media-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "space-cadet",
+        "tri-layer"
       ]
     },
     {
-      "id": "system",
+      "id": "code",
+      "profile": "code",
       "default": false,
       "title": {
-        "en": "System keys",
-        "ru": "Системные сочетания"
+        "en": "Code",
+        "ru": "Код и терминал"
       },
       "summary": {
-        "en": "Adds GUI lock and temporary Ctrl/GUI and Mac/PC mappings.",
-        "ru": "Добавляет блокировку GUI и временные перестановки Ctrl/GUI и Alt/GUI для Mac/PC."
+        "en": "Manual-shift coding with Space Cadet and Grave Escape.",
+        "ru": "Space Cadet для скобок, Grave Escape для совмещённой Esc/обратной кавычки. Автоматический Shift не включён; Direct уступает место этим функциям."
       },
       "purpose": {
-        "en": "Use to adapt modifier output for Windows, Linux or macOS. All mappings reset on restart.",
-        "ru": "Для настройки модификаторов в Windows, Linux и macOS. Перестановки сбрасываются при перезапуске."
+        "en": "Manual-shift coding with Space Cadet and Grave Escape.",
+        "ru": "Space Cadet для скобок, Grave Escape для совмещённой Esc/обратной кавычки. Автоматический Shift не включён; Direct уступает место этим функциям."
       },
       "optional_features": [
-        "nkro-control",
         "one-shot",
+        "leader",
+        "dynamic-macros",
+        "os-indicators",
+        "qmk-settings",
+        "key-overrides",
         "space-cadet",
-        "gui-lock",
-        "ctrl-gui-swap",
-        "mac-pc",
-        "os-indicators"
+        "grave-escape"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "code",
+        "optional_features": [
+          "one-shot",
+          "leader",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "key-overrides",
+          "space-cadet",
+          "grave-escape"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects",
+          "grave-escape"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "no",
+          "AK820_GRAVE_ESCAPE": "yes",
+          "AK820_VIALRGB_DIRECT": "no",
+          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "no",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "yes",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "grave-escape",
+        "grave-escape",
+        "key-overrides",
+        "leader",
+        "media-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "space-cadet",
+        "tri-layer"
       ]
     },
     {
-      "id": "tap-dance",
+      "id": "pointer",
+      "profile": "pointer",
       "default": false,
       "title": {
-        "en": "Tap Dance",
-        "ru": "Tap Dance"
+        "en": "Pointer",
+        "ru": "Управление курсором"
       },
       "summary": {
-        "en": "Adds eight configurable tap and hold entries.",
-        "ru": "Добавляет восемь настраиваемых действий на нажатие и удержание."
+        "en": "Keyboard pointer control with macros and Leader retained.",
+        "ru": "Mouse Keys добавляет курсор, прокрутку и кнопки мыши. Leader и макросы сохраняются; Direct уступает место управлению курсором."
       },
       "purpose": {
-        "en": "Choose different supported keyboard actions for taps, holds and repeated taps.",
-        "ru": "Назначайте разные поддерживаемые действия для нажатия, удержания и повторных нажатий."
+        "en": "Keyboard pointer control with macros and Leader retained.",
+        "ru": "Mouse Keys добавляет курсор, прокрутку и кнопки мыши. Leader и макросы сохраняются; Direct уступает место управлению курсором."
       },
       "optional_features": [
-        "nkro-control",
         "one-shot",
-        "space-cadet",
+        "leader",
+        "dynamic-macros",
+        "os-indicators",
+        "qmk-settings",
+        "key-overrides",
+        "mouse-keys"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "pointer",
+        "optional_features": [
+          "one-shot",
+          "leader",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "key-overrides",
+          "mouse-keys"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "no",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "no",
+          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "no",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "no",
+          "AK820_COMPACT_MOUSEKEY": "yes",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "mouse_cursor": 20,
+          "mouse_wheel": 80,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "key-overrides",
+        "leader",
+        "media-keys",
+        "mouse-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tri-layer"
+      ]
+    },
+    {
+      "id": "onehand",
+      "profile": "onehand",
+      "default": false,
+      "title": {
+        "en": "Onehand",
+        "ru": "Меньше перемещений руки"
+      },
+      "summary": {
+        "en": "Reduced-reach pointer and basic tap/hold bindings.",
+        "ru": "Mouse Keys, One Shot и Tap Dance для управления указателем и нескольких действий на доступных клавишах. Key Overrides и Direct уступают место этому набору."
+      },
+      "purpose": {
+        "en": "Reduced-reach pointer and basic tap/hold bindings.",
+        "ru": "Mouse Keys, One Shot и Tap Dance для управления указателем и нескольких действий на доступных клавишах. Key Overrides и Direct уступают место этому набору."
+      },
+      "optional_features": [
+        "one-shot",
+        "leader",
+        "dynamic-macros",
+        "os-indicators",
+        "qmk-settings",
+        "mouse-keys",
         "tap-dance"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "onehand",
+        "optional_features": [
+          "one-shot",
+          "leader",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "mouse-keys",
+          "tap-dance"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "no",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "no",
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "no",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "no",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "no",
+          "AK820_COMPACT_MOUSEKEY": "yes",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "mouse_cursor": 20,
+          "mouse_wheel": 80,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "leader",
+        "media-keys",
+        "mouse-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tap-dance",
+        "tri-layer"
       ]
     },
     {
-      "id": "key-overrides",
+      "id": "creative",
+      "profile": "creative",
       "default": false,
       "title": {
-        "en": "Key Overrides",
-        "ru": "Подмена клавиш"
+        "en": "Creative",
+        "ru": "Монтаж и графика"
       },
       "summary": {
-        "en": "Adds eight modifier-based key replacement rules.",
-        "ru": "Добавляет восемь правил подмены клавиш по модификаторам."
+        "en": "Application shortcut keys with Direct and runtime recording.",
+        "ru": "Tap Dance для одиночных/двойных нажатий и удержаний с базовыми клавишами и модификаторами; сохранены Direct и запись макросов. Key Overrides обменивается на Tap Dance."
       },
       "purpose": {
-        "en": "Replace a selected key when the configured modifier and layer conditions match.",
-        "ru": "Заменяйте выбранную клавишу при совпадении заданных условий модификатора и слоя."
+        "en": "Application shortcut keys with Direct and runtime recording.",
+        "ru": "Tap Dance для одиночных/двойных нажатий и удержаний с базовыми клавишами и модификаторами; сохранены Direct и запись макросов. Key Overrides обменивается на Tap Dance."
       },
       "optional_features": [
-        "nkro-control",
         "one-shot",
-        "space-cadet",
-        "key-overrides"
+        "leader",
+        "dynamic-macros",
+        "os-indicators",
+        "qmk-settings",
+        "vialrgb-direct",
+        "tap-dance"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "creative",
+        "optional_features": [
+          "one-shot",
+          "leader",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "vialrgb-direct",
+          "tap-dance"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects",
+          "vialrgb-direct-ram"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "no",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "yes",
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "no",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "no",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "no",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "leader",
+        "media-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tap-dance",
+        "tri-layer",
+        "vialrgb-direct",
+        "vialrgb-direct-ram"
       ]
     },
     {
-      "id": "settings",
+      "id": "shortcuts",
+      "profile": "shortcuts",
       "default": false,
       "title": {
-        "en": "Settings",
-        "ru": "Настройки"
+        "en": "Shortcuts",
+        "ru": "Подготовленные команды"
       },
       "summary": {
-        "en": "Adds a small set of saved timing and behavior settings.",
-        "ru": "Добавляет небольшой набор сохраняемых параметров времени и поведения."
+        "en": "Prepared persistent commands and modifier overrides.",
+        "ru": "Сохранены Key Overrides, Leader и 16 заранее заданных макросов Vial; добавлен Tap Dance для базовых действий. Direct и запись макросов на лету убраны."
       },
       "purpose": {
-        "en": "Adjust supported Combo, tap-hold, Grave Escape and related values through Vial.",
-        "ru": "Меняйте поддерживаемые параметры Combo, нажатия/удержания, Grave Escape и другие настройки через Vial."
+        "en": "Prepared persistent commands and modifier overrides.",
+        "ru": "Сохранены Key Overrides, Leader и 16 заранее заданных макросов Vial; добавлен Tap Dance для базовых действий. Direct и запись макросов на лету убраны."
       },
       "optional_features": [
-        "nkro-control",
         "one-shot",
-        "space-cadet",
-        "qmk-settings"
+        "leader",
+        "os-indicators",
+        "qmk-settings",
+        "key-overrides",
+        "tap-dance"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "shortcuts",
+        "optional_features": [
+          "one-shot",
+          "leader",
+          "os-indicators",
+          "qmk-settings",
+          "key-overrides",
+          "tap-dance"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "no",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "no",
+          "AK820_COMPACT_TAP_DANCE": "yes",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "no",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "no",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "no",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+          "AK820_COMPACT_DYNAMIC_MACRO": "no"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "eight-two-key-combos",
+        "encoder-map",
+        "key-overrides",
+        "leader",
+        "media-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tap-dance",
+        "tri-layer"
+      ]
+    },
+    {
+      "id": "multios",
+      "profile": "multios",
+      "default": false,
+      "title": {
+        "en": "Multios",
+        "ru": "Несколько ОС"
+      },
+      "summary": {
+        "en": "Modifier switching between host workflows with built-in lighting.",
+        "ru": "Mac/PC и обмен Ctrl/GUI для переключения модификаторов; OS-индикатор сохраняется. Используются встроенные RGB-эффекты."
+      },
+      "purpose": {
+        "en": "Modifier switching between host workflows with built-in lighting.",
+        "ru": "Mac/PC и обмен Ctrl/GUI для переключения модификаторов; OS-индикатор сохраняется. Используются встроенные RGB-эффекты."
+      },
+      "optional_features": [
+        "one-shot",
+        "leader",
+        "dynamic-macros",
+        "os-indicators",
+        "qmk-settings",
+        "key-overrides",
+        "mac-pc",
+        "ctrl-gui-swap"
+      ],
+      "configuration": {
+        "format": "ak820-build-configuration-1",
+        "profile": "multios",
+        "optional_features": [
+          "one-shot",
+          "leader",
+          "dynamic-macros",
+          "os-indicators",
+          "qmk-settings",
+          "key-overrides",
+          "mac-pc",
+          "ctrl-gui-swap"
+        ],
+        "base_features": [
+          "six-layers",
+          "sixteen-vial-macros",
+          "eight-two-key-combos",
+          "compact-tap-hold",
+          "encoder-map",
+          "media-keys",
+          "caps-word",
+          "repeat",
+          "alternate-repeat",
+          "tri-layer",
+          "rgb-effects"
+        ],
+        "nvm_schema": 532483,
+        "make_options": {
+          "AK820_NKRO": "no",
+          "AK820_GRAVE_ESCAPE": "no",
+          "AK820_VIALRGB_DIRECT": "no",
+          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_KEY_OVERRIDE": "yes",
+          "AK820_QMK_SETTINGS": "yes",
+          "AK820_MAC_PC": "yes",
+          "AK820_OS_INDICATORS": "yes",
+          "AK820_COMPACT_LEADER": "yes",
+          "AK820_NKRO_CONTROL": "no",
+          "AK820_COMPACT_ONESHOT": "yes",
+          "AK820_COMPACT_SPACE_CADET": "no",
+          "AK820_COMPACT_MOUSEKEY": "no",
+          "AK820_COMPACT_AUTOSHIFT": "no",
+          "AK820_COMPACT_GUI_LOCK": "no",
+          "AK820_COMPACT_CTRL_GUI_SWAP": "yes",
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+        },
+        "runtime_qmk_settings": [
+          1,
+          2,
+          7,
+          18,
+          19
+        ],
+        "timing_ms": {
+          "combo": 40,
+          "tap_hold": 200,
+          "os_indicator_lease": 3000,
+          "os_indicator_period": 4096,
+          "leader": 300,
+          "dynamic_macro_phase": 10
+        },
+        "release_approved": false
+      },
+      "features": [
+        "alternate-repeat",
+        "caps-word",
+        "compact-tap-hold",
+        "ctrl-gui-swap",
+        "dynamic-macros",
+        "eight-two-key-combos",
+        "encoder-map",
+        "key-overrides",
+        "leader",
+        "mac-pc",
+        "media-keys",
+        "one-shot",
+        "os-indicators",
+        "qmk-settings",
+        "repeat",
+        "rgb-effects",
+        "six-layers",
+        "sixteen-vial-macros",
+        "tri-layer"
       ]
     }
   ]

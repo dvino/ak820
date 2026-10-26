@@ -1,0 +1,60 @@
+{
+  "format": "ak820-independent-input-review-1",
+  "recorded_utc": "2026-10-25T20:54:16.971532+00:00",
+  "scope": "Independent source review and offline host checks only; no release or installation approval",
+  "source_sha256": {
+    "qmk-8051-ak820/util/pack_ak820.py": "d392ed795cf34f3c0e1a2e58e07b5a35f1e14500c5bd91c6bcaccfd4f9a7cc7c",
+    "qmk-8051-ak820/tests/ak820_emitted/run.py": "10e48b2d6beb3a78df5764d4553aa21a71c592644c4a39f7e697042dcbfa18ea",
+    "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_rgb.c": "dd07f58a1c7194ba2122bb7c57cba8951e0cdd59cd79d32a534263a505e9376f",
+    "qmk-8051-ak820/tests/ak820_rgb/harness.c": "fb2e4a83da75232bdee8bd385e0547c14327cfb108e65b021257e901ee7dee1e",
+    "qmk-8051-ak820/tests/ak820_vialrgb/linked.py": "a019dbc682d933066648b22dee69319be686d353e8bb2101df638a8074aab865",
+    "qmk-8051-ak820/util/ak820_default_keymap.py": "db221db22d1c4108f4bc22197b7acdc6ef11dfab585f6dcdfca1c6b72084607c",
+    "qmk-8051-ak820/tests/ak820_package/test_default_keymaps.py": "9c1cc36669f5e3e65570ede9ef7bc3f986ed8d332519c50037358492803be067"
+  },
+  "checks": [
+    {
+      "command": "docker run --rm --network none --user 898:898 -v /home/danil/ChatGPT/ak820-beta2-20261025:/home/danil/ChatGPT/ak820-beta2-20261025 -w /home/danil/ChatGPT/ak820-beta2-20261025 ak820-nkro-study-env:local /tmp/buildenv/bin/python qmk-8051-ak820/tests/ak820_rgb/run.py",
+      "exit_code": 0,
+      "observed_stdout": "PASS breathing: 69 levels (previous 20), phase step 2 (previous 8), red full-CIE error 1, color-matrix error 1; PASS reactive slot/chord/timing/wrap/transitions/Direct; 16777216 compact HSV cases; max channel error v<=160: 8",
+      "additional_assertion": "65536 add_sat operand pairs completed before the reported renderer checks"
+    },
+    {
+      "command": "python -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_default_keymaps.py -v",
+      "exit_code": 0,
+      "observed_summary": "Ran 8 tests in 0.006s; OK"
+    }
+  ],
+  "device_access": false,
+  "firmware_builds": false,
+  "additional_source_review": {
+    "scope": "Original core module selection and strict pass30 inspector; no installer/docs approval",
+    "source_sha256": {
+      "tools/configure_firmware.py": "406b8135bb3f85c12ca6163eed15eb8376129cdfb3795d2af6c1f8f2a6682340",
+      "tools/test_configure_firmware.py": "10798085d7a6a34ea82549fb5494619d72450467e5c0e4486c037926ca23a4b1",
+      "qmk-8051-ak820/util/build_ak820.py": "5d6e4f9eacab8bfe5e2b6e34f376f5825e60eba3a5c9b60900755bee3fd7bc01",
+      "qmk-8051-ak820/util/ak820_profiles.py": "d86bb313a4beb53cdb81cadc17c4dace81ba47dbb42fb1a9ad5670a238f0639c",
+      "qmk-8051-ak820/keyboards/ajazz/ak820/rules.mk": "0b6ff8a2c92de84249a775e6afd41eeea0b43444555d96ef2b60cade35f652a9",
+      "qmk-8051-ak820/quantum/rgb_matrix/animations/rgb_matrix_effects.inc": "a803d72f383db337a443a9b9f9388a3c8d8f3dd92f5a1dc057aa6ab5045552ac"
+    },
+    "result": "No required source corrections found; fresh build inspection remains separate",
+    "check": {
+      "command": "PYTHONPATH=tools python -m unittest tools/test_configure_firmware.py",
+      "exit_code": 0,
+      "observed_summary": "Ran 38 tests in 0.625s; OK"
+    },
+    "firmware_builds": false
+  },
+  "manifest_path_source_review": {
+    "source": "qmk-8051-ak820/util/ak820_release_safety.py",
+    "sha256": "db53ead65536668319c183a870c7ff449f2850ae4f8b97d57f06a667afbd58ba",
+    "result": "No defect found in manifest_name: exact current profile path is mandatory; historical witness remains separate; no fallback",
+    "offline_check": "All ten current profile witness names, historical work witness and three invalid names checked; passed",
+    "related_suite": {
+      "command": "PYTHONPATH=tools python -m unittest tools/test_release_safety.py",
+      "tests": 24,
+      "passed": 23,
+      "errors": 1,
+      "error": "test_ci_policy_requires_safety_manifest_sources_and_witnesses fixture omitted newly required tools/build_ci_profiles.py; reported to root; no implementation correction made"
+    }
+  }
+}

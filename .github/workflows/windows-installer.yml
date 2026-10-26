@@ -16,9 +16,9 @@ concurrency:
 
 jobs:
   linux-regression:
-    name: Linux syntax, host, CPU, and pinned firmware build
+    name: Linux syntax and shared host checks
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -61,13 +61,8 @@ jobs:
         run: python -B -m unittest discover -s tools -p 'test_*.py' -v
       - name: Check compiler version selection
         run: python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_compiler -p 'test_*.py' -v
-      - name: Build and qualify pinned work firmware application
-        run: >-
-          python tools/configure_firmware.py build --profile work
-          --toolchain toolchains/sdcc-4.6.0
-          --qmk-bin qmk-8051-ak820/.venv/bin/qmk
-          --python qmk-8051-ak820/.venv/bin/python
-          --build-dir qmk-8051-ak820/.build/ci
+      - name: Check compiler metadata capture contracts
+        run: python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_parameter_spills -p 'test_*.py' -v
       - name: Run NVM host power-loss model
         working-directory: qmk-8051-ak820
         run: |
@@ -77,7 +72,7 @@ jobs:
             keyboards/ajazz/ak820/tests/nvm_powercut.c \
             keyboards/ajazz/ak820/ak820_nvm.c \
             -o "$RUNNER_TEMP/nvm-powercut"
-          "$RUNNER_TEMP/nvm-powercut" | tee .build/ci/nvm-powercut.log
+          "$RUNNER_TEMP/nvm-powercut" | tee "$RUNNER_TEMP/nvm-powercut.log"
       - name: Run macro storage host power-loss model
         working-directory: qmk-8051-ak820
         run: |
@@ -89,51 +84,144 @@ jobs:
             keyboards/ajazz/ak820/ak820_macro.c \
             keyboards/ajazz/ak820/ak820_nvm.c \
             -o "$RUNNER_TEMP/macro-powercut"
-          "$RUNNER_TEMP/macro-powercut" | tee .build/ci/macro-powercut.log
-      - name: Assemble public bundle from this CI build
-        run: >-
-          python tools/build_ci_release.py
-          --build-dir "$GITHUB_WORKSPACE/qmk-8051-ak820/.build/ci"
-          --qualification qmk-8051-ak820/.build/ci/qualification.json
-          --policy ci/release-policy.json
-          --program-review ci/program-review.md
-          --packing-receipt ci/packing-receipt.json
-          --output dist/firmware-bundle
-          --toolchain toolchains/sdcc-4.6.0
-          --source-commit "$GITHUB_SHA"
+          "$RUNNER_TEMP/macro-powercut" | tee "$RUNNER_TEMP/macro-powercut.log"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: ak820-linked-application-not-flashable
+          name: ak820-shared-host-models
           path: |
-            qmk-8051-ak820/.build/ci/qualification.json
-            qmk-8051-ak820/.build/ci/configuration-report.json
-            qmk-8051-ak820/.build/ci/runtime-stack.json
-            qmk-8051-ak820/.build/ci/runtime-stack.log
-            qmk-8051-ak820/.build/ci/profile-tests/**
-            qmk-8051-ak820/.build/ci/ajazz_ak820_vial.ihx
-            qmk-8051-ak820/.build/ci/ajazz_ak820_vial.map
-            qmk-8051-ak820/.build/ci/ajazz_ak820_vial.mem
-            qmk-8051-ak820/.build/ci/build-report.json
-            qmk-8051-ak820/.build/ci/qualification-logs-*/**
-            qmk-8051-ak820/.build/ci/nvm-powercut.log
-            qmk-8051-ak820/.build/ci/macro-powercut.log
+            ${{ runner.temp }}/nvm-powercut.log
+            ${{ runner.temp }}/macro-powercut.log
           if-no-files-found: warn
           retention-days: 30
+
+  linux-profile:
+    name: Qualify firmware (${{ matrix.profile }})
+    needs: linux-regression
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [main, game, mmo, typing, code, pointer, onehand, creative, shortcuts, multios]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: qmk-8051-ak820/requirements-ak820-build.txt
+      - name: Install native build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes build-essential libudev-dev libusb-1.0-0-dev
+      - name: Install pinned SDCC and LUFA sources
+        run: |
+          python tools/install_sdcc46_toolchain.py
+          python tools/install_lufa_dependency.py --fetch
+      - name: Set up the pinned QMK build environment
+        working-directory: qmk-8051-ak820
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements-ak820-build.txt
+      - name: Build and qualify one pinned release profile
+        run: >-
+          python tools/build_ci_profiles.py
+          --profile "${{ matrix.profile }}"
+          --builds-root qmk-8051-ak820/.build/ci-profiles
+          --bootstrap-root qmk-8051-ak820/.build/ci-profile-bootstrap
+          --toolchain toolchains/sdcc-4.6.0
+          --qmk-bin qmk-8051-ak820/.venv/bin/qmk
+          --python qmk-8051-ak820/.venv/bin/python
+          --report qmk-8051-ak820/.build/ci-profile-builds-${{ matrix.profile }}.json
+      - name: Preserve final image and complete bootstrap provenance
+        if: success()
+        run: >-
+          tar -czf "$RUNNER_TEMP/profile-${{ matrix.profile }}.tar.gz"
+          qmk-8051-ak820/.build/ci-profiles/${{ matrix.profile }}
+          qmk-8051-ak820/.build/ci-profile-bootstrap/${{ matrix.profile }}
+          qmk-8051-ak820/.build/ci-profile-builds-${{ matrix.profile }}.json
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ak820-qualified-profile-${{ matrix.profile }}
+          path: ${{ runner.temp }}/profile-${{ matrix.profile }}.tar.gz
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Preserve partial profile evidence after failure
+        if: ${{ failure() || cancelled() }}
+        run: |
+          if [ -d qmk-8051-ak820/.build ]; then
+            tar -czf "$RUNNER_TEMP/failed-profile-${{ matrix.profile }}.tar.gz" qmk-8051-ak820/.build
+          else
+            printf 'Build did not create an output directory. See job logs.\n' > "$RUNNER_TEMP/no-build-output.txt"
+            tar -czf "$RUNNER_TEMP/failed-profile-${{ matrix.profile }}.tar.gz" -C "$RUNNER_TEMP" no-build-output.txt
+          fi
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ failure() || cancelled() }}
+        with:
+          name: ak820-failed-profile-evidence-${{ matrix.profile }}
+          path: ${{ runner.temp }}/failed-profile-${{ matrix.profile }}.tar.gz
+          if-no-files-found: error
+          retention-days: 30
+
+  linux-assembly:
+    name: Revalidate and assemble all ten profiles
+    needs: [linux-regression, linux-profile]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: qmk-8051-ak820/requirements-ak820-build.txt
+      - name: Install native build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes build-essential libudev-dev libusb-1.0-0-dev
+      - name: Install pinned SDCC and LUFA sources
+        run: |
+          python tools/install_sdcc46_toolchain.py
+          python tools/install_lufa_dependency.py --fetch
+      - name: Set up the pinned QMK build environment
+        working-directory: qmk-8051-ak820
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements-ak820-build.txt
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: ak820-qualified-profile-*
+          path: ${{ runner.temp }}/qualified-profiles
+          merge-multiple: true
+      - name: Restore all ten complete build trees at their original checkout paths
+        run: |
+          for profile in main game mmo typing code pointer onehand creative shortcuts multios; do
+            tar -xzf "$RUNNER_TEMP/qualified-profiles/profile-$profile.tar.gz"
+          done
+      - name: Assemble all independently authorized profile bundles
+        run: >-
+          python tools/build_ci_release.py
+          --all-profiles
+          --builds-root qmk-8051-ak820/.build/ci-profiles
+          --policies-root ci/profiles
+          --settings-catalog tools/installer/settings-catalog.json
+          --output dist/ci-firmware
+          --toolchain toolchains/sdcc-4.6.0
+          --source-commit "$GITHUB_SHA"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: success()
         with:
           name: ak820-fresh-ci-firmware
           path: |
-            dist/firmware-bundle/**
-            dist/firmware-bundle.zip
-            dist/firmware-bundle.zip.sha256
+            dist/ci-firmware/**
           if-no-files-found: error
           retention-days: 30
 
   windows-package:
     name: Native Windows package build and smoke
-    needs: linux-regression
+    needs: linux-assembly
     runs-on: windows-2022
     timeout-minutes: 30
     steps:
@@ -156,24 +244,18 @@ jobs:
         env:
           SOURCE_COMMIT: ${{ github.sha }}
         run: |
-          $bundle = Resolve-Path dist/ci-firmware/firmware-bundle
-          $attestation = Get-Content "$bundle/reports/build-attestation.json" -Raw | ConvertFrom-Json
-          if ($attestation.source_commit -cne $env:SOURCE_COMMIT) {
-            throw "Firmware bundle source commit $($attestation.source_commit) does not match $env:SOURCE_COMMIT"
-          }
           if ((git rev-parse HEAD).Trim() -cne $env:SOURCE_COMMIT) {
             throw "Windows checkout does not match firmware source commit $env:SOURCE_COMMIT"
           }
-          $checksumLine = Get-Content dist/ci-firmware/firmware-bundle.zip.sha256 -Raw
-          if ($checksumLine -notmatch '^([0-9a-f]{64})  firmware-bundle\.zip\s*$') {
-            throw 'Fresh firmware checksum file has an unexpected format'
+          $catalog = Get-Content tools/installer/profile-catalog.json -Raw | ConvertFrom-Json
+          foreach ($profile in $catalog.profiles) {
+            $bundle = Resolve-Path "dist/ci-firmware/profiles/$($profile.id)"
+            $attestation = Get-Content "$bundle/reports/build-attestation.json" -Raw | ConvertFrom-Json
+            if ($attestation.source_commit -cne $env:SOURCE_COMMIT) { throw "Stale CI bundle: $($profile.id)" }
+            $target = "releases/beta2/$($profile.id)"
+            New-Item $target -ItemType Directory -Force | Out-Null
+            Copy-Item "$bundle/*" $target -Recurse -Force
           }
-          $actualHash = (Get-FileHash dist/ci-firmware/firmware-bundle.zip -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actualHash -cne $Matches[1]) { throw 'Fresh firmware ZIP checksum failed' }
-          Remove-Item releases/rc6 -Recurse -Force
-          New-Item releases/rc6 -ItemType Directory | Out-Null
-          Copy-Item "$bundle/*" releases/rc6 -Recurse
-          Copy-Item "$bundle/approved-release.json" tools/installer/approved-release.json -Force
       - name: Build and smoke-test approved package
         run: python tools/build_windows_installer.py --output dist/AK820-Windows
       - name: Write package checksum
@@ -193,7 +275,7 @@ jobs:
 
   linux-package:
     name: Native Linux x86_64 package build and smoke
-    needs: linux-regression
+    needs: linux-assembly
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     steps:
@@ -220,17 +302,19 @@ jobs:
         env:
           SOURCE_COMMIT: ${{ github.sha }}
         run: |
-          (cd dist/ci-firmware && sha256sum --check firmware-bundle.zip.sha256)
           python - <<'PYTHON'
           import json, os, shutil, subprocess
           from pathlib import Path
-          bundle = Path('dist/ci-firmware/firmware-bundle')
-          attestation = json.loads((bundle / 'reports/build-attestation.json').read_text())
-          if attestation['source_commit'] != os.environ['SOURCE_COMMIT'] or subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip() != os.environ['SOURCE_COMMIT']:
+          if subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip() != os.environ['SOURCE_COMMIT']:
               raise SystemExit('Linux checkout and firmware source commit differ')
-          shutil.rmtree('releases/rc6')
-          shutil.copytree(bundle, 'releases/rc6')
-          shutil.copyfile(bundle / 'approved-release.json', 'tools/installer/approved-release.json')
+          catalog = json.loads(Path('tools/installer/profile-catalog.json').read_text())
+          for profile in catalog['profiles']:
+              bundle = Path('dist/ci-firmware/profiles') / profile['id']
+              attestation = json.loads((bundle / 'reports/build-attestation.json').read_text())
+              if attestation['source_commit'] != os.environ['SOURCE_COMMIT']:
+                  raise SystemExit('Stale CI bundle: ' + profile['id'])
+              target = Path('releases/beta2') / profile['id']
+              shutil.copytree(bundle, target)
           PYTHON
       - name: Run Linux packaging regressions
         run: python -B -m unittest discover -s tools -p test_build_linux_installer.py
@@ -250,7 +334,7 @@ jobs:
 
   publish:
     name: Publish tagged version from main
-    needs: [linux-regression, windows-package, linux-package]
+    needs: [linux-assembly, windows-package, linux-package]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -284,51 +368,54 @@ jobs:
           git merge-base --is-ancestor "$SOURCE_COMMIT" refs/remotes/origin/main
           (cd dist/windows && sha256sum --check AK820-Windows.zip.sha256)
           (cd dist/linux && sha256sum --check AK820-Linux-x86_64.tar.gz.sha256)
-          (cd dist/firmware && sha256sum --check firmware-bundle.zip.sha256)
           python - <<'PY'
-          import hashlib, json, os, tarfile, zipfile
+          import hashlib, json, os, tarfile, zipfile, shutil
           from pathlib import Path
-          bundle = Path('dist/firmware/firmware-bundle')
-          attestation = json.loads((bundle / 'reports/build-attestation.json').read_text(encoding='utf-8'))
-          if attestation.get('source_commit') != os.environ['SOURCE_COMMIT']:
-              raise SystemExit('firmware bundle source commit mismatch')
-          manifest = json.loads((bundle / 'installer-release.json').read_text(encoding='utf-8'))
+          catalog = json.loads(Path('tools/installer/profile-catalog.json').read_text())
+          bundles = {}
+          for profile in catalog['profiles']:
+              bundle = Path('dist/firmware/profiles') / profile['id']
+              attestation = json.loads((bundle / 'reports/build-attestation.json').read_text(encoding='utf-8'))
+              if attestation.get('source_commit') != os.environ['SOURCE_COMMIT']:
+                  raise SystemExit('firmware bundle source commit mismatch: ' + profile['id'])
+              bundles[profile['id']] = bundle
+          shutil.copytree('dist/firmware/profiles', 'releases/beta2')
           with zipfile.ZipFile('dist/windows/AK820-Windows.zip') as package:
               for app in ('AK820', 'AK820-cli'):
                   prefix = f'AK820-Windows/{app}/_internal/'
-                  checks = ['installer-release.json', *manifest['files']]
-                  checks.extend(['approved-release.json'])
-                  for name in checks:
-                      if name == 'approved-release.json':
-                          source = bundle / name
-                          packaged = prefix + 'tools/installer/approved-release.json'
-                      else:
-                          source = bundle / name
-                          packaged = prefix + 'releases/rc6/' + name
-                      expected = hashlib.sha256(source.read_bytes()).hexdigest()
-                      actual = hashlib.sha256(package.read(packaged)).hexdigest()
-                      if actual != expected:
-                          raise SystemExit(f'{app} package does not contain fresh CI input: {name}')
+                  for profile, bundle in bundles.items():
+                    manifest = json.loads((bundle / 'installer-release.json').read_text())
+                    checks = [(bundle / 'installer-release.json', f'releases/beta2/{profile}/installer-release.json')]
+                    checks.extend((bundle / name, f'releases/beta2/{profile}/' + name) for name in manifest['files'])
+                    checks.append((bundle / 'approved-release.json', f'releases/beta2/{profile}/approved-release.json'))
+                    for source, packaged in checks:
+                      if hashlib.sha256(package.read(prefix + packaged)).hexdigest() != hashlib.sha256(source.read_bytes()).hexdigest():
+                        raise SystemExit(f'{app} package input mismatch: {profile}/{source.name}')
           with tarfile.open('dist/linux/AK820-Linux-x86_64.tar.gz', 'r:gz') as package:
               for app in ('AK820', 'AK820-cli'):
                   prefix = f'AK820-Linux-x86_64/{app}/_internal/'
-                  for name in ['installer-release.json', *manifest['files'], 'approved-release.json']:
-                      source = bundle / name
-                      packaged = prefix + ('tools/installer/approved-release.json' if name == 'approved-release.json' else 'releases/rc6/' + name)
-                      member = package.getmember(packaged)
-                      if not member.isfile():
-                          raise SystemExit('Linux approved input is not a regular file')
-                      with package.extractfile(member) as stream:
-                          actual = hashlib.sha256(stream.read()).hexdigest()
+                  for profile, bundle in bundles.items():
+                    manifest = json.loads((bundle / 'installer-release.json').read_text())
+                    checks = [(bundle / 'installer-release.json', f'releases/beta2/{profile}/installer-release.json')]
+                    checks.extend((bundle / name, f'releases/beta2/{profile}/' + name) for name in manifest['files'])
+                    checks.append((bundle / 'approved-release.json', f'releases/beta2/{profile}/approved-release.json'))
+                    for source, packaged in checks:
+                      member = package.getmember(prefix + packaged)
+                      if not member.isfile(): raise SystemExit('Linux approved input is not a regular file')
+                      with package.extractfile(member) as stream: actual = hashlib.sha256(stream.read()).hexdigest()
                       if actual != hashlib.sha256(source.read_bytes()).hexdigest():
-                          raise SystemExit(f'{app} Linux package does not contain fresh CI input: {name}')
+                        raise SystemExit(f'{app} Linux package input mismatch: {profile}/{source.name}')
           PY
+      - name: Use catalogs measured from the approved CI images
+        run: |
+          cp dist/firmware/reports/firmware-matrix.json web/firmware-matrix.json
+          cp dist/firmware/reports/capability-catalog.json web/capability-catalog.json
       - name: Install pinned external sources for catalog verification
         run: python tools/install_lufa_dependency.py --fetch
       - name: Prepare companion catalogs and installation guides
         run: >-
           python tools/build_beta_release_assets.py
-          --bundle dist/firmware/firmware-bundle
+          --bundles-root releases/beta2
           --output dist/catalog
           --tag "${{ github.ref_name }}"
       - name: Create GitHub release
@@ -342,13 +429,13 @@ jobs:
             dist/windows/AK820-Windows.zip dist/windows/AK820-Windows.zip.sha256
             dist/linux/AK820-Linux-x86_64.tar.gz dist/linux/AK820-Linux-x86_64.tar.gz.sha256
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
-            dist/catalog/AK820-Beta1-Catalog.zip dist/catalog/AK820-Beta1-Catalog.zip.sha256
+            dist/catalog/AK820-Beta2-Catalog.zip dist/catalog/AK820-Beta2-Catalog.zip.sha256
             dist/catalog/firmware-matrix.json dist/catalog/capability-catalog.json
             dist/catalog/module-descriptions.json dist/catalog/release-catalog.json
             dist/catalog/release-manifest.json dist/catalog/SHA256SUMS
             dist/catalog/INSTALL-en.md dist/catalog/INSTALL-ru.md
             --title "AK820 $RELEASE_TAG"
-            --notes-file ci/beta1-release-notes.md
+            --notes-file ci/beta2-release-notes.md
           )
           if [[ "$RELEASE_PRERELEASE" == true ]]; then
             gh release create "${args[@]}" --verify-tag --prerelease

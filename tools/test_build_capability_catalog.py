@@ -13,10 +13,27 @@ config = catalog.configured
 
 
 class CatalogTests(unittest.TestCase):
+    def test_ten_current_profile_contracts_use_main_default_and_schema03(self):
+        names = ('main', 'game', 'mmo', 'typing', 'code', 'pointer',
+                 'onehand', 'creative', 'shortcuts', 'multios')
+        self.assertEqual(config.profiles.RELEASE_PROFILES, names)
+        self.assertEqual(config.profiles.DEFAULT_PROFILE, 'main')
+        for name in names:
+            selected = config.profiles.configuration(name)
+            self.assertEqual(selected['nvm_schema'], config.profiles.EXTENSION_SCHEMA)
+            contract = catalog.module_contract(selected, {'tap_dance': 8, 'key_overrides': 8})
+            for feature, module in (('tap-dance', 'tap_dance'), ('key-overrides', 'key_overrides')):
+                self.assertEqual(contract['modules'][module]['enabled_entries'],
+                                 8 if feature in selected['optional_features'] else 0)
+            self.assertEqual(contract['modules']['qmk_settings']['enabled_qsids'],
+                             [1,2,4,7,18,19] if name == 'typing' else [1,2,7,18,19])
+            self.assertFalse(contract['restore']['write_authorization_granted'])
+            self.assertFalse(contract['physical_behavior_verified'])
+
     def test_individual_module_contracts_are_capability_aware(self):
         limits={'tap_dance':8,'key_overrides':8}
-        for name,td,ko,qsids in (('full-tap-dance',8,0,[]),
-                ('full-key-overrides',0,8,[]), ('full-qmk-settings',0,0,[1,2,7,18,19])):
+        for name,td,ko,qsids in (('creative',8,0,[1,2,7,18,19]),
+                ('main',0,8,[1,2,7,18,19]), ('onehand',8,0,[1,2,7,18,19])):
             with self.subTest(name=name):
                 contract=catalog.module_contract(config.profiles.configuration(name),limits)
                 modules=contract['modules']
@@ -36,7 +53,7 @@ class CatalogTests(unittest.TestCase):
                     for offset in modules[module]['entry_offsets']:
                         self.assertEqual(offset//64,(offset+9)//64)
 
-    def test_schema02_has_no_extension_storage_or_enabled_settings(self):
+    def test_explicit_legacy_schema02_has_no_extension_storage_or_enabled_settings(self):
         contract=catalog.module_contract(config.profiles.configuration('full'),{'tap_dance':8,'key_overrides':8})
         self.assertEqual(contract['modules']['tap_dance']['stored_entries'],0)
         self.assertEqual(contract['modules']['qmk_settings']['fields'],[])
@@ -92,7 +109,7 @@ class CatalogTests(unittest.TestCase):
             image.write_bytes(b'other image')
             with self.assertRaisesRegex(ValueError, 'Artifact changed'):
                 config.artifact(report, build, 'ihx')
-        selected = copy.deepcopy(config.profiles.configuration('standard'))
+        selected = copy.deepcopy(config.profiles.configuration('main'))
         selected['optional_features'] = ['os-indicators']
         with self.assertRaises(ValueError):
             config.profiles.validate_configuration(selected)
@@ -104,11 +121,11 @@ class CatalogTests(unittest.TestCase):
             path.write_text(json.dumps({'format': 'ak820-offline-tests-1', 'passed': True}))
             with self.assertRaises(ValueError):
                 config.validate_tests(path, {'ihx_sha256': 'x', 'map_sha256': 'y'})
-            report = {'format': 'ak820-profile-tests-1', 'profile': 'standard',
+            report = {'format': 'ak820-profile-tests-1', 'profile': 'main',
                       'identity': {}, 'passed': True, 'hardware_validated': False,
                       'physical_device_commands': 0, 'tests': []}
             with self.assertRaisesRegex(ValueError, 'omitted or duplicated'):
-                config.validate_profile_tests(report, 'standard', {}, build, Path('/tools'))
+                config.validate_profile_tests(report, 'main', {}, build, Path('/tools'))
 
     def test_runtime_evidence_cannot_be_replaced_by_summary_pass(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -135,8 +152,8 @@ class EntryEvidenceTests(unittest.TestCase):
         self.source_sha = config.sha(self.source)
         self.identity = {key + '_sha256': config.sha(self.build / ('ajazz_ak820_vial.' + key))
                          for key in ('ihx', 'map', 'mem')}
-        self.identity['profile'] = 'standard'
-        self.inspected = {'format': config.FORMAT, 'configuration': config.profiles.configuration('standard'),
+        self.identity['profile'] = 'main'
+        self.inspected = {'format': config.FORMAT, 'configuration': config.profiles.configuration('main'),
             'identity': self.identity, 'short_calls': None,
             'resources': {'internal_ram': {'stack_capacity': 166, 'initial_sp': 89}},
             'hardware_validated': False, 'physical_device_commands': 0, 'release_approved': False,
@@ -172,10 +189,10 @@ class EntryEvidenceTests(unittest.TestCase):
         self.inspect_patch.start(); self.addCleanup(self.inspect_patch.stop)
         self.code_patch = patch.object(config, 'diagnostic_build', return_value={0x28a0: 2, 0x3027: 0x22})
         self.code_patch.start(); self.addCleanup(self.code_patch.stop)
-        profile = {'format': 'ak820-profile-tests-1', 'profile': 'standard', 'identity': self.identity,
+        profile = {'format': 'ak820-profile-tests-1', 'profile': 'main', 'identity': self.identity,
             'passed': True, 'hardware_validated': False, 'physical_device_commands': 0,
             'source_files': config.test_source_snapshot(), 'tests': []}
-        for identifier, cwd, command in config.profile_test_plan('standard', self.build, self.toolchain):
+        for identifier, cwd, command in config.profile_test_plan('main', self.build, self.toolchain):
             log = self.build / 'profile-tests' / (identifier + '.log'); log.parent.mkdir(exist_ok=True)
             log.write_text('Ran 1 test in 0.001s\n\nOK\n')
             profile['tests'].append({'id': identifier, 'cwd': str(cwd), 'command': command,

@@ -1,0 +1,62 @@
+{
+  "format": "ak820-beta1-assets-check-1",
+  "status": "passed",
+  "source_commit": "bef20f89d3da01d770767919bc7c8fc3c3a1a808",
+  "ihx_sha256": "652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880",
+  "checks": {
+    "asset_sha256_files": "passed",
+    "archive_paths_and_links": "passed",
+    "firmware_attestation": "passed",
+    "manifest_files": "passed",
+    "official_bundle_validation": "passed",
+    "windows_and_linux_collected_inputs": "passed",
+    "native_architecture": "passed",
+    "installation_instructions": "passed",
+    "nine_profile_catalog_hash_closure": "passed",
+    "only_work_installable": "passed"
+  },
+  "assets": {
+    "firmware-bundle.zip": {
+      "path": "/home/danil/Documents/git/ak820/.build-release-beta1-assets/firmware/firmware-bundle.zip",
+      "sha256": "d5429dbf7ad84e6c6c6b21da555cc360f2444a682aa2730d5df5efc68fb396be"
+    },
+    "AK820-Windows.zip": {
+      "path": "/home/danil/Documents/git/ak820/.build-release-beta1-assets/windows/AK820-Windows.zip",
+      "sha256": "6370ed8a0eb7750debe65925d57c63dd1da99a3cd98b8be97b6fb54feb5c8976"
+    },
+    "AK820-Linux-x86_64.tar.gz": {
+      "path": "/home/danil/Documents/git/ak820/.build-release-beta1-assets/linux/AK820-Linux-x86_64.tar.gz",
+      "sha256": "f8163fb1e3c014341c549ceeafd1a5f388131d8f7b26609a1486a2e93e0d8508"
+    },
+    "AK820-Beta1-Catalog.zip": {
+      "path": "/home/danil/Documents/git/ak820/.build-release-beta1-assets/catalog/AK820-Beta1-Catalog.zip",
+      "sha256": "ccf180581fd092a8180940b3af4445c548c6f4f1a195277f32e20c3fcefdea06"
+    }
+  },
+  "installer_manifest_sha256": "b2239648809b6b8907089b4ce36e43ed25a0a677605b8cb41c272ab545e8a076",
+  "release_safety_proof_sha256": "83eb57275f1d06c73a6b3f7038a66d0bfbb52ce6587df170f021ed0f1ce2ec4e",
+  "manifest_files": 13,
+  "host_files": 25,
+  "packages": {
+    "windows": {
+      "apps": [
+        "AK820",
+        "AK820-cli"
+      ],
+      "architecture": "PE AMD64"
+    },
+    "linux": {
+      "apps": [
+        "AK820",
+        "AK820-cli"
+      ],
+      "architecture": "ELF64 x86_64"
+    }
+  },
+  "linux_cli_smoke": "passed",
+  "install_instructions": [
+    "docs/INSTALL.md",
+    "docs/ru/INSTALL.md"
+  ],
+  "device_access": "none"
+}

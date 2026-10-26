@@ -13,6 +13,10 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "util"))
+from pack_ak820 import factory_keymaps
 
 
 def memory(space: str, address: int, data) -> str:
@@ -69,6 +73,30 @@ class Firmware:
         self.auto_shift = auto_shift
         self.output.mkdir(parents=True, exist_ok=True)
 
+    def compiled_feature(self, feature: str) -> bool:
+        """Read the exact image's configuration and check its linked footprint."""
+        report = json.loads((self.build / "build-report.json").read_text())
+        for filename in ("ajazz_ak820_vial.ihx", "ajazz_ak820_vial.map"):
+            digest = hashlib.sha256((self.build / filename).read_bytes()).hexdigest()
+            rows = [row for row in report["artifacts"] if Path(row["path"]).name == filename]
+            if len(rows) != 1 or rows[0]["sha256"] != digest:
+                raise ValueError(f"Feature configuration is not bound to linked artifact: {filename}")
+        enabled = feature in report["configuration"]["optional_features"]
+        if feature == "vialrgb-direct":
+            retained = "_g_direct_mode_colors" in self.symbols
+            if retained and self.symbol_sizes.get("_g_direct_mode_colors") != 82 * 3:
+                raise ValueError("Unexpected linked Direct buffer size")
+        elif feature == "nkro":
+            width = self.symbol_sizes.get("_actual_keyboard_report")
+            if width not in (8, 32):
+                raise ValueError(f"Unexpected linked keyboard report size: {width}")
+            retained = width == 32
+        else:
+            raise ValueError(f"Unsupported compiled feature check: {feature}")
+        if enabled != retained:
+            raise ValueError(f"Configured feature differs from linked footprint: {feature}")
+        return enabled
+
     def address(self, name: str) -> int:
         if name not in self.symbols:
             raise ValueError(f"Required retained symbol is absent: {name}")
@@ -108,7 +136,7 @@ class Firmware:
                     f"fill xram {self.address('_ak820_led_dma'):#x} {self.address('_ak820_led_dma') + 511:#x} 0"]
         # CRT runs, but main/board init does not: fake peripherals never claim
         # to implement the actual oscillator, flash, IRQ or USB controller.
-        keymap = bytes(self.code[self.address("_keymaps") + index] for index in range(512))
+        keymap = factory_keymaps(self.code, self.symbols)
         nvm = bytearray(512)
         for index in range(0, 512, 2):
             nvm[index:index + 2] = keymap[index:index + 2][::-1]
@@ -235,14 +263,28 @@ def rgb(fw: Firmware) -> dict:
     # Stable AK820 compact RGB config: enabled, solid=1, Direct=5. At V=80
     # the enabled CIE1931 curve produces 18. Pure red tests a nonzero result;
     # Direct adds grayscale, pure blue and a final-index green LED.
+    has_direct = fw.compiled_feature("vialrgb-direct")
     commands = fw.initialize() + fw.write("_rgb_matrix_config", [5, 0, 255, 80, 96, 255, 0, 0])
     commands += fw.frame(100) + fw.dump("solid", "xram", fw.led_address(0), 4)
-    direct = bytearray(82 * 3)
-    direct[:6] = bytes([0, 0, 80, 170, 255, 80])
-    direct[-3:] = bytes([85, 255, 80])
-    commands += fw.write("_g_direct_mode_colors", direct) + fw.call("_rgb_matrix_mode_noeeprom", 5) + fw.frame(200)
-    for index in (0, 1, 2, 81):
-        commands += fw.dump(f"direct_{index}", "xram", fw.led_address(index), 4)
+    if has_direct:
+        direct = bytearray(82 * 3)
+        direct[:6] = bytes([0, 0, 80, 170, 255, 80])
+        direct[-3:] = bytes([85, 255, 80])
+        commands += fw.write("_g_direct_mode_colors", direct) + fw.call("_rgb_matrix_mode_noeeprom", 5) + fw.frame(200)
+        for index in (0, 1, 2, 81):
+            commands += fw.dump(f"direct_{index}", "xram", fw.led_address(index), 4)
+    else:
+        # Vial Direct mode ID 1 must not resolve to a usable effect. Exercise
+        # production conversion in the linked image, then verify solid survives.
+        commands += fw.call("_vialrgb_id_to_qmk_id", 1) + fw.dump("direct_rejected", "sfr", 0x82, 2)
+        commands += fw.dump("disabled_direct_config_before", "xram", fw.address("_rgb_matrix_config"), 8)
+        commands += fw.dump("disabled_direct_dma_before", "xram", fw.address("_ak820_led_dma"), 512)
+        packet = [0, 0x42, 0, 0, 1, 85, 255, 80] + [0] * 24
+        commands += fw.write("_raw_buffer", packet) + fw.write("_vialrgb_set_value_PARM_2", [32])
+        commands += fw.call("_vialrgb_set_value", fw.address("_raw_buffer"))
+        commands += fw.dump("disabled_direct_config_after", "xram", fw.address("_rgb_matrix_config"), 8)
+        commands += fw.dump("disabled_direct_dma_after", "xram", fw.address("_ak820_led_dma"), 512)
+        commands += fw.frame(200) + fw.dump("solid_after_direct_rejected", "xram", fw.led_address(0), 4)
     # Seed a known live color through the public API, so the sleep
     # regression is independent of whether HSV rendering itself is working.
     commands += fw.write("_rgb_matrix_set_color_PARM_2", [60]) + fw.write("_rgb_matrix_set_color_PARM_3", [30])
@@ -269,12 +311,22 @@ def rgb(fw: Firmware) -> dict:
     actual['invalid_indices_preserve_dma'] = (fw.extract(log, 'bounds_before', fw.address('_ak820_led_dma'), 512) ==
                                              fw.extract(log, 'bounds_after', fw.address('_ak820_led_dma'), 512))
     expected['invalid_indices_preserve_dma'] = True
-    for prefix, indices in (("direct", (0, 1, 2, 81)), ("resume", (0, 1, 81))):
+    if not has_direct:
+        actual["direct_rejected"] = fw.extract(log, "direct_rejected", 0x82, 2)
+        expected["direct_rejected"] = [0, 0]
+        for region, symbol, count in (("config", "_rgb_matrix_config", 8), ("dma", "_ak820_led_dma", 512)):
+            actual[f"disabled_direct_preserves_{region}"] = (
+                fw.extract(log, f"disabled_direct_{region}_before", fw.address(symbol), count) ==
+                fw.extract(log, f"disabled_direct_{region}_after", fw.address(symbol), count))
+            expected[f"disabled_direct_preserves_{region}"] = True
+        actual["solid_after_direct_rejected"] = fw.extract(log, "solid_after_direct_rejected", fw.led_address(0), 4)
+        expected["solid_after_direct_rejected"] = [255, 18, 0, 0]
+    for prefix, indices in ((("direct", (0, 1, 2, 81)), ("resume", (0, 1, 81))) if has_direct else (("resume", (0, 1, 81)),)):
         colors = {0: [255, 18, 18, 18], 1: [255, 0, 0, 18], 2: [0, 0, 0, 0], 81: [255, 0, 18, 0]}
         for index in indices:
             label = f"{prefix}_{index}"
             actual[label] = fw.extract(log, label, fw.led_address(index), 4)
-            expected[label] = colors[index]
+            expected[label] = colors[index] if has_direct else [255, 18, 0, 0]
     for label in ("sleep_immediate", "sleep_rendered"):
         actual[label + "_nonzero_bytes"] = sum(value != 0 for value in fw.extract(log, label, fw.address("_ak820_led_dma"), 512))
         expected[label + "_nonzero_bytes"] = 0
@@ -282,7 +334,7 @@ def rgb(fw: Firmware) -> dict:
         actual[label] = fw.extract(log, label, fw.address("_usb_device_state"), 1)
         expected[label] = [value]
     return {"name": "rgb_solid_direct_suspend_resume", "pass": actual == expected, "observations": actual,
-            "expected": expected, **stack}
+            "expected": expected, "compiled_direct": has_direct, **stack}
 
 
 def main() -> None:

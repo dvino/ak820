@@ -19,22 +19,29 @@ includes Python and hidapi. For source-based installer use, see the separate
 setup below. Create the firmware build environment:
 
 ```sh
-cd qmk-8051-ak820
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements-ak820-build.txt
-.venv/bin/python util/build_ak820.py \
-  --sdcc-version 4.6.0 \
-  --toolchain ../toolchains/sdcc-4.6.0 \
-  --qmk-bin .venv/bin/qmk \
-  --build-dir .build/local-1
+python3 -m venv qmk-8051-ak820/.venv
+qmk-8051-ak820/.venv/bin/python -m pip install -r qmk-8051-ak820/requirements-ak820-build.txt
+qmk-8051-ak820/.venv/bin/python tools/configure_firmware.py build \
+  --profile main \
+  --toolchain toolchains/sdcc-4.6.0 \
+  --qmk-bin qmk-8051-ak820/.venv/bin/qmk \
+  --python qmk-8051-ak820/.venv/bin/python \
+  --parameter-spills-context /path/to/reviewed-context.json \
+  --build-dir qmk-8051-ak820/.build/local-1
 ```
 
 For a control build with SDCC 4.4, install it with
 `python3 tools/install_sdcc44_toolchain.py` from the repository root, then use
 `--sdcc-version 4.4.0 --toolchain ../toolchains/sdcc-4.4.0 --profile standard`
 in the QMK directory. This explicitly selects a historical control profile;
-the curated default `work` enables short calls, which require SDCC 4.6.0.
+the current default `main` enables short calls, which require SDCC 4.6.0.
 Keep each compiler local and out of Git.
+
+The context path above is a required local input, not a file supplied by the
+repository. It must bind this source, pinned tools and protected interrupt
+modules; keep its seed evidence unchanged. The [CI producer](../tools/build_ci_profiles.py)
+creates fresh per-profile context for the ten-profile build path. A missing or
+stale context stops the current build. See [Build profiles](BUILD-PROFILES.md).
 
 Use a fresh build directory. The builder rejects an existing directory and
 records the actual compiler dependency closure, source/tool hashes, commands,
@@ -58,15 +65,21 @@ file length or source size.
 
 ## Feature profiles
 
-Use the [profile guide](BUILD-PROFILES.md) to choose one of nine curated
-packages. `work` is the default; curated packages use short calls automatically
-with the pinned SDCC 4.6.0 compiler. The low-level command above links the image
-and records its inputs. `tools/configure_firmware.py build` additionally checks
-resource placement, proves stack and interrupt bounds, and runs the full offline
-regression suites against that image. See
-the [module matrix](MODULE-MATRIX.md) for package compatibility and measured size. The published alpha.3 image remains fixed
-to its reviewed source identity. All current profile sources have changed since
-that release; these builds are not release-qualified or flashing recommendations.
+The [profile catalog](profiles/README.md) defines ten fixed compositions with
+`main` as default. All ten use schema `0x082003`. The command above selects the
+audited pass30 chain: compressed defaults, short calls, NVM read/update and
+keymap-word ASM, parameter/register save removal, tail sharing and outlining
+with a 400-helper limit. Inspection checks exact flags, sources, pinned tools
+and every saved transform proof. Ordinary XRAM is `[0x440,0x1000)`; the preceding
+64 bytes remain reserved for flash staging.
+
+The configurator checks placement and the exact-image foreground, startup and
+interrupt bounds before full offline regressions. Source profiles and
+unmeasured catalog rows do not qualify an image. See the [module matrix](MODULE-MATRIX.md)
+and [Status](STATUS.md) for the distinction between source, qualification and
+published artifacts. Published beta.1 on 2026-10-25 remains a nine-profile
+catalog with standalone installers for its exact `work` image; this description
+does not announce beta.2 publication or device validation.
 
 The build uses the compact instruction outliner with a fixed opcode and module
 allowlist. `--no-outline` and `--no-callee-saves` provide comparison builds.
@@ -89,31 +102,24 @@ python3 tools/build_release_bundle.py \
   --oem-reference-dir /path/to/private-oem-references \
   --toolchain toolchains/sdcc-4.6.0 \
   --builder-source qmk-8051-ak820/util/build_ak820.py \
-  --output releases/rc6-new
+  --output dist/local-main-bundle
 ```
 
 `docs/REVIEW.md` indexes review evidence; it is not the exact-build approval
 record. Bundle assembly does not authorize device operations. A changed source
-or host input invalidates earlier evidence. Integrate the reviewed bundle under
-`releases/rc6`, the installer's fixed bundle location, before running installer
-verification or packaging either platform.
+or host input invalidates earlier evidence. Current installer selection uses `tools/installer/profile-catalog.json`. Each
+profile needs its complete approved bundle under `releases/beta2/<profile>`,
+including its own `approved-release.json`. The all-profile CI assembler writes
+these bundles under `dist/ci-firmware/profiles`; packaging stages them at the
+selected paths. Missing or mismatched approval blocks packaging.
 
-## Select a published firmware bundle for source use
+## Published source releases
 
-A source checkout retains an older `releases/rc6` bundle. Building the firmware
-or running `setup` does not replace it. To use the source installer for a
-published release, start with a clean checkout of that release tag and download
-`firmware-bundle.zip` plus its SHA256 file from the same release. Check the
-checksum before extraction, using the method in [Install](INSTALL.md) with the
-firmware bundle's filenames.
-
-Extract the ZIP into a new `firmware-bundle` directory. Its `firmware`, `reports`
-and other files are directly inside that directory. Copy its full contents into
-`releases/rc6`, then copy `firmware-bundle/approved-release.json` to
-`tools/installer/approved-release.json`. Keep the bundle complete; do not mix
-files from different releases. Run the source launcher's `verify` below before
-using any device command. The approved manifest checks the selected files
-against that exact release and host source.
+For published beta.1, use a clean checkout of its exact tag and follow that
+tag's installation instructions. Its `releases/rc6` layout and single `work`
+installer are historical. Do not mix that bundle or its approval with current
+host code or a different profile. Current source verification requires the
+selected profile's complete approved inputs; building alone does not supply them.
 
 ## Source installer setup
 
@@ -190,8 +196,8 @@ native Tk UI smoke, not an interactive usability check. The output contains
 paths. Review both JSON reports and the ZIP before distribution. The build does
 not enumerate USB, test a physical keyboard or flash firmware. OEM references,
 personal backups, and runtime sessions are excluded.
-GitHub Actions builds and checks every branch push and pull request. Version tags publish the reviewed Windows and Linux packages after the firmware,
-Windows and Linux checks pass. Both packages use firmware built by the same Linux
-CI run. Tags on commits in main publish the firmware bundle, Windows ZIP and
-Linux tarball. See
-[CI and releases](CI.md) for triggers, artifacts and the reproducible-build policy.
+GitHub Actions prepares all ten profiles through `tools/build_ci_profiles.py`.
+The all-profile assembler checks independent policy and exact-image evidence
+before writing `dist/ci-firmware/profiles`. Windows and Linux packages must use
+those same approved bundles. See [CI and releases](CI.md) for publication gates;
+a source change or a local test does not publish a release.

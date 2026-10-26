@@ -56,4 +56,4 @@ Shift, обработчики отдельных клавиш, повтор пр
 следуют основным принципам [документации QMK Auto Shift](https://docs.qmk.fm/features/auto_shift).
 
 Результаты проверок и ограничения разработки приведены в
-[техническом отчёте](../../audits/rc6/compact-runtime-20261024/README.md).
+[техническом отчёте](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/audits/rc6/compact-runtime-20261024/README.md).

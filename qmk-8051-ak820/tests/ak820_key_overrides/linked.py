@@ -73,9 +73,14 @@ def storage_api(t, operation, index, expected_status=0):
 
 def cases(fw):
     results=[]
-    for nkro in (False, True):
-        t=setup(fw,'ko-output-and-overlap-'+str(nkro),options=0xa7)
-        if nkro:t.commands += fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1])
+    has_nkro=fw.compiled_feature('nkro')
+    for request_nkro in (False, True):
+        # A persisted NKRO bit cannot enable code omitted from this image.
+        nkro=request_nkro and has_nkro
+        name='ko-output-and-overlap-'+str(request_nkro)
+        if request_nkro and not has_nkro:name='ko-disabled-nkro-stale-bit-overlap'
+        t=setup(fw,name,options=0xa7)
+        if request_nkro:t.commands += fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1])
         t.event((0,1),1,100);t.event((0,0),1,110);t.output('replacement',0,[5],nkro)
         t.event((0,2),1,120);t.event((0,0),0,130);t.output('independent-owner',2,[5],nkro)
         t.event((0,2),0,140);t.event((0,1),0,150);t.output('empty',0,[],nkro)

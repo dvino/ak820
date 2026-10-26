@@ -218,7 +218,7 @@ class WireDevice:
                 reply[2:8] = mode.to_bytes(2, 'little') + bytes((self.ram_rgb[4], *self.ram_rgb[1:4]))
             elif sub == 66:
                 after = int.from_bytes(packet[2:4], 'little')
-                values = [i for i in (1, 2, 6, 13, 14, 31) if i > after]
+                values = [i for i in sorted(set(self.mode_ids.values())) if i > after]
                 reply[2:] = b''.join(i.to_bytes(2, 'little') for i in values).ljust(30, b'\xff')
             elif sub == 67:
                 reply[2:4] = b'R\0'

@@ -23,6 +23,67 @@ from ak820_release_manifest import HOST_FILES
 
 FORMAT = 'ak820-windows-package-v1'
 
+# User-facing guide closure for the standalone installer. Keep this explicit:
+# never discover Markdown by walking the repository, which also contains
+# private audits and development notes.
+PUBLIC_GUIDES = (
+    'README.md', 'docs/ru/README.md',
+    'docs/profiles/README.md', 'docs/ru/profiles/README.md',
+    *(f'docs/profiles/{profile}.md' for profile in
+      ('main', 'game', 'mmo', 'typing', 'code', 'pointer', 'onehand', 'creative', 'shortcuts', 'multios')),
+    *(f'docs/ru/profiles/{profile}.md' for profile in
+      ('main', 'game', 'mmo', 'typing', 'code', 'pointer', 'onehand', 'creative', 'shortcuts', 'multios')),
+    *(f'docs/{name}.md' for name in (
+      'FEATURES', 'CONFIGURATION', 'INSTALL', 'COMBOS', 'SETTINGS-BACKUP',
+      'BUILD-PROFILES', 'MODULE-MATRIX', 'STATUS', 'COMPACT-MOUSE-KEYS', 'COMPACT_AUTOSHIFT',
+      'TAP-HOLD', 'GUI-CONTROL', 'COMPACT-DYNAMIC-MACROS', 'COMPACT-LEADER',
+      'INDICATORS', 'MAC-PC', 'COMPACT-TAP-DANCE', 'COMPACT-KEY-OVERRIDES',
+      'QMK-SETTINGS', 'MODULE-STORAGE')),
+    *(f'docs/ru/{name}.md' for name in (
+      'FEATURES', 'CONFIGURATION', 'INSTALL', 'COMBOS', 'SETTINGS-BACKUP',
+      'BUILD-PROFILES', 'MODULE-MATRIX', 'STATUS', 'COMPACT-MOUSE-KEYS', 'COMPACT_AUTOSHIFT',
+      'TAP-HOLD', 'GUI-CONTROL', 'COMPACT-DYNAMIC-MACROS', 'COMPACT-LEADER',
+      'INDICATORS', 'MAC-PC', 'COMPACT-TAP-DANCE', 'COMPACT-KEY-OVERRIDES',
+      'QMK-SETTINGS', 'MODULE-STORAGE')),
+    'web/docs/OS-INDICATOR-PROTOCOL.md',
+    'web/docs/ru/OS-INDICATOR-PROTOCOL.md',
+)
+
+# Images embedded by the public English and Russian READMEs. Keep these paths
+# explicit so package inventory never admits arbitrary repository binaries.
+PUBLIC_ASSETS = (
+    'docs/images/banner.webp', 'docs/images/pcb.webp',
+    'docs/images/controller.webp', 'docs/images/pcb-markings.webp',
+)
+
+
+def guide_files():
+    """Return the fixed guide and README image allowlists after strict checks."""
+    for name in (*PUBLIC_GUIDES, *PUBLIC_ASSETS):
+        path = Path(name)
+        allowed_root = (path.parts[0] == 'docs' or name == 'README.md' or name in (
+            'web/docs/OS-INDICATOR-PROTOCOL.md',
+            'web/docs/ru/OS-INDICATOR-PROTOCOL.md',
+        ))
+        if path.is_absolute() or '..' in path.parts or not allowed_root:
+            raise ValueError('Unsafe public guide path: ' + name)
+        source = ROOT / path
+        current = ROOT
+        has_symlink = False
+        for part in path.parts:
+            current = current / part
+            has_symlink |= current.is_symlink()
+        if has_symlink or not source.is_file():
+            raise ValueError('Missing or unsafe public guide: ' + name)
+        if name in PUBLIC_GUIDES:
+            try:
+                source.read_text(encoding='utf-8')
+            except UnicodeError as error:
+                raise ValueError('Invalid UTF-8 public guide: ' + name) from error
+        elif source.suffix.lower() != '.webp':
+            raise ValueError('Invalid public guide asset type: ' + name)
+    return [*PUBLIC_GUIDES, *PUBLIC_ASSETS]
+
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -34,14 +95,20 @@ def sha256(path: Path) -> str:
 
 def package_files():
     """Return the explicit release/host allowlist; never scan personal data."""
-    manifest = ak820.load_release(approved=True)
-    if manifest.get('install_modes') != ['permanent', 'trial']:
-        raise ValueError('Standalone permanent installer requires a newly reviewed permanent-capable release')
-    relative_bundle = ak820.BUNDLE.relative_to(ROOT)
     names = set(HOST_FILES)
-    names.update((relative_bundle / name).as_posix() for name in manifest['files'])
-    names.add((relative_bundle / 'installer-release.json').as_posix())
-    names.add('tools/installer/approved-release.json')
+    names.update(guide_files())
+    contexts = ak820.release_contexts(approved=True)
+    if not contexts:
+        raise ValueError('No approved profiles are available for standalone packaging')
+    for context in contexts:
+        manifest = context.manifest
+        if manifest.get('install_modes') != ['permanent', 'trial']:
+            raise ValueError('Standalone permanent installer requires every selectable profile to support permanent install')
+        relative_bundle = context.bundle.relative_to(ROOT)
+        relative_approval = context.approval.relative_to(ROOT)
+        names.update((relative_bundle / name).as_posix() for name in manifest['files'])
+        names.add((relative_bundle / 'installer-release.json').as_posix())
+        names.add(relative_approval.as_posix())
     for name in names:
         path = Path(name)
         if path.is_absolute() or '..' in path.parts or not path.parts or path.parts[0] in ('evidence', 'host'):
@@ -114,11 +181,16 @@ def write_package(output: Path, archive: Path, names: list[str], initial_hashes:
     shutil.copyfile(ROOT / 'AK820.cmd', output / 'AK820.cmd')
     if sha256(output / 'AK820.cmd') != initial_hashes['AK820.cmd']:
         raise RuntimeError('Copied launcher does not match the approved input')
+    release_contexts = ak820.release_contexts(approved=True)
+    release_reports = {}
+    for context in release_contexts:
+        manifest_name = (context.bundle.relative_to(ROOT) / 'installer-release.json').as_posix()
+        release_reports[context.profile] = {'manifest': manifest_name,
+            'manifest_sha256': initial_hashes[manifest_name]}
     report = {
         'format': FORMAT,
         'platform': {'system': 'Windows', 'python': sys.version.split()[0], 'pyinstaller': '6.16.0'},
-        'release': {'manifest': 'releases/rc6/installer-release.json',
-                    'manifest_sha256': initial_hashes['releases/rc6/installer-release.json']},
+        'releases': release_reports,
         'approved_inputs': initial_hashes,
         'collected_inputs': collected,
         'apps': {'gui_exe_sha256': sha256(gui_exe), 'cli_exe_sha256': sha256(cli_exe)},

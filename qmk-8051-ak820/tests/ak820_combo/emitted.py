@@ -66,7 +66,8 @@ def dispatch(t,op,index=0,data=(),label='reply',expected=None):
 
 def cases(fw):
     tests=[]
-    for nkro in (False,True):
+    options=json.loads((fw.build/'build-report.json').read_text())['configuration']['make_options']
+    for nkro in ((False,True) if options.get('AK820_NKRO')=='yes' else (False,)):
         for order in ((0,1),(1,0)):
             for release in ((0,1),(1,0)):
                 p=lambda mod=0,*k:report(nkro,mod,*k)

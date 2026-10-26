@@ -11,7 +11,7 @@ from pathlib import Path
 import re
 
 import pack_ak820
-from ak820_profiles import validate_configuration
+from ak820_profiles import RELEASE_PROFILES, validate_configuration
 
 ROOT = Path(__file__).resolve().parents[2]
 REQUIRED_SOURCES = frozenset((
@@ -79,13 +79,20 @@ def number(value, name):
     return value
 
 
+def manifest_name(configuration):
+    """Select a mandatory exact-profile witness; never fall back if absent."""
+    selected = validate_configuration(configuration)
+    name = selected['profile']
+    return ('ci/profiles/' + name + '/release-safety.json'
+            if name in RELEASE_PROFILES else 'ci/release-safety.json')
+
+
 def validate(report, root=ROOT):
     root = Path(root)
-    manifest = safe_path(root, 'ci/release-safety.json')
+    configuration = report.get('configuration')
+    manifest = safe_path(root, manifest_name(configuration))
     proof = load(manifest)
     require(proof.get('format') == 'ak820-release-safety-1', 'unknown witness manifest')
-    configuration = report.get('configuration')
-    validate_configuration(configuration)
     require(configuration == proof.get('program', {}).get('configuration'),
             'configuration differs from the reviewed exact image')
     optional = configuration['optional_features']

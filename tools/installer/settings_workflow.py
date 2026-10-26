@@ -19,17 +19,18 @@ def emit(host, stage, purpose, **fields):
         host.PROGRESS(stage, {'purpose': purpose, **fields})
 
 
-def prepare(host, log, source):
+def prepare(host, log, source, *, release_context=None):
     """Validate and copy OEM recovery inputs before opening any USB handle."""
-    release = host.load_release(approved=True)
+    release_context = release_context or host.release_context(approved=True)
+    release = host.load_release(approved=True, context=release_context)
     session, native = host.copy_recovery(log, Path(source))
-    profile = settings.load_profile(host.BUNDLE, native)
-    target, plan = host.prepare_trial(log, native, image='permanent')
-    _, payload, copied = host.transport.session_image(target, 'permanent')
+    profile = settings.load_profile(release_context.bundle, native, trusted_catalog=trusted_catalog(host, release_context))
+    target, plan = host.prepare_trial(log, native, image='permanent', context=release_context)
+    _, payload, copied = host.transport.session_image(target, 'permanent', target_build_id=release_context.nvm_schema)
     host.require(copied == native and payload == profile['payload'],
                  'Reconstructed target differs from the supported settings profile')
-    paths = [host.APPROVAL, host.BUNDLE / 'installer-release.json']
-    paths += [host.BUNDLE / name for name in release['files']]
+    paths = [release_context.approval, release_context.bundle / 'installer-release.json']
+    paths += [release_context.bundle / name for name in release['files']]
     paths += [host.ROOT / name for name in release['host_files']]
     paths += [host.ROOT / 'tools/installer/settings_workflow.py',
               host.ROOT / 'tools/installer/settings_backup.py']
@@ -39,16 +40,30 @@ def prepare(host, log, source):
     paths += [host.RECOVERY_REFERENCE / name for name in ('stock-full.bin', 'native-installed.bin')]
     pins = {path: host.sha(path.read_bytes()) for path in paths}
     return {'source': Path(source), 'recovery': session, 'native': native,
-            'profile': profile, 'target': target, 'plan': plan, 'pins': pins}
+            'release_context': release_context, 'profile': profile, 'target': target, 'plan': plan, 'pins': pins}
+
+
+def trusted_catalog(host, release_context):
+    if release_context.profile == 'legacy':
+        return None
+    import json
+    path = host.ROOT / 'tools/installer/settings-catalog.json'
+    host.require(path.is_file(), 'Exact settings catalog missing; settings operations blocked')
+    # load_release already verified this file through the approved host manifest.
+    host.require('tools/installer/settings-catalog.json' in release_context.manifest['host_files'],
+                 'Settings catalog is not bound to approved host code')
+    return json.loads(path.read_text(encoding='utf-8'))
 
 
 def revalidate(host, context):
-    host.load_release(approved=True)
+    release_context = context['release_context']
+    host.load_release(approved=True, context=release_context)
     for session in (context['source'], context['recovery']):
         _, _, native = host.transport.session_image(session, 'restore')
         host.require(native == context['native'], 'OEM recovery inputs changed')
-    profile = settings.load_profile(host.BUNDLE, context['native'])
-    _, payload, native = host.transport.session_image(context['target'], 'permanent')
+    profile = settings.load_profile(release_context.bundle, context['native'], trusted_catalog=trusted_catalog(host, release_context))
+    manifest, payload, native = host.transport.session_image(context['target'], 'permanent', target_build_id=release_context.nvm_schema)
+    host.require_session_release(manifest, release_context)
     host.require(payload == context['profile']['payload'] == profile['payload'] and
                  native == context['native'], 'Approved update inputs changed')
 
@@ -158,6 +173,8 @@ def restore(host, log, hid, context, backup_path, *, target_backup=None):
 
 
 def describe(context, saved, plan, purpose):
+    print('Profile:', context['release_context'].profile)
+    print('Linked image SHA256:', context['profile']['ihx_sha256'])
     print('Operation: ' + purpose + '. Backup: ' + str(saved['path']), flush=True)
     print('Exact firmware SHA256: ' + context['plan']['sha256'], flush=True)
     print('Preserves 498 key assignments, 12 encoder assignments, supported layout options, '
@@ -215,6 +232,7 @@ def update(host, log, hid, context, output):
             log.record('device_mutation_attempt', command='loader_erase_flash')
             emit(host, 'flashing', 'update')
     host.transport.flash(context['target'], 'permanent', False, False,
+                         target_build_id=context['release_context'].nvm_schema,
                          reference_dir=host.RECOVERY_REFERENCE, loader_descriptor=loader,
                          host_update_snapshot={'payload_sha256': context['plan']['sha256'],
                                                'backup_sha256': host.sha(context['native'])},

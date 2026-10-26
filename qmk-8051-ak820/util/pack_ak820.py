@@ -86,6 +86,46 @@ def code_bytes(data,address,count):
         raise ValueError('Missing compiled constant data') from e
 
 
+
+def factory_keymaps(data, symbols):
+    """Decode the two compiled default layers into 256 little-endian keys."""
+    names = ('_ak820_default_classes', '_ak820_default_offsets',
+             '_ak820_default_payload')
+    compressed = [name in symbols for name in names]
+    if '_keymaps' in symbols:
+        if any(compressed):
+            raise ValueError('Ambiguous compiled default keymaps')
+        return code_bytes(data, symbols['_keymaps'], 512)
+    if not all(compressed):
+        raise ValueError('Missing compressed default keymap tables')
+    classes = code_bytes(data, symbols[names[0]], 64)
+    offsets = code_bytes(data, symbols[names[1]], 32)
+    cursor, keys = 0, []
+    for row in range(32):
+        if offsets[row] != cursor:
+            raise ValueError('Non-contiguous default keymap payload')
+        for col in range(8):
+            kind = (classes[row * 2 + col // 4] >> ((col % 4) * 2)) & 3
+            if kind < 2:
+                value = kind
+            else:
+                raw = code_bytes(data, symbols[names[2]] + cursor, kind - 1)
+                value = int.from_bytes(raw, 'little')
+                if value < (2 if kind == 2 else 256):
+                    raise ValueError('Non-canonical default keymap encoding')
+                cursor += kind - 1
+            keys.append(value)
+    if cursor > 255:
+        raise ValueError('Default keymap payload exceeds byte offsets')
+    ranges = [(symbols[names[0]], 64), (symbols[names[1]], 32),
+              (symbols[names[2]], cursor)]
+    for index, (start, count) in enumerate(ranges):
+        for other, size in ranges[index + 1:]:
+            if count and size and max(start, other) < min(start + count, other + size):
+                raise ValueError('Overlapping default keymap tables')
+    return struct.pack('<256H', *keys)
+
+
 def action(record, stock_default=None):
     if len(record)!=3:
         raise ValueError('Invalid native action length')
@@ -283,7 +323,7 @@ def migrate_vial_nvm(nvm, source_build_id, *, target_build_id=BUILD_ID):
 def migrate(live,data,symbols):
     factory = validate_native(live) == 'factory'
     # EEPROM keycodes are big endian, compiled uint16_t constants little endian.
-    keys=struct.unpack('<256H',code_bytes(data,symbols['_keymaps'],512))
+    keys=struct.unpack('<256H',factory_keymaps(data,symbols))
     encoders=struct.unpack('<4H',code_bytes(data,symbols['_encoder_map'],8))
     nvm=empty_nvm()
     nvm[3]=1
@@ -347,7 +387,7 @@ def validate_startup(data, symbols):
         raise ValueError('Missing linked AK820 startup contract symbols')
     source, destination, length = (symbols[name] for name in ('s_XINIT', 's_XISEG', 'l_XINIT'))
     if (symbols['l_PSEG'] != 0 or length != symbols['l_XISEG'] or
-            symbols['s_XSEG'] != 0x0400 or
+            symbols['s_XSEG'] not in (0x0400, 0x0440) or
             destination != symbols['s_XSEG'] + symbols['l_XSEG'] or
             destination + length > 0x1000):
         raise ValueError('Unsupported startup XRAM/PSEG layout')
@@ -367,10 +407,16 @@ def pack(data,symbols,stock,nvm,trial, *, target_build_id=BUILD_ID):
         raise ValueError('Incorrect settings/reference size')
     validate_native(stock)
     validate_nvm(nvm, target_build_id)
-    required=['__sdcc_gsinit_startup','_USB_DeviceInterrupt','_ak820_timer_irq','_ak820_led_irq','_keymaps','_encoder_map']
+    required=['__sdcc_gsinit_startup','_USB_DeviceInterrupt','_ak820_timer_irq','_ak820_led_irq','_encoder_map']
     for name in required:
         if name not in symbols or symbols[name] not in data:
             raise ValueError('Missing reachable symbol '+name)
+    if '_keymaps' not in symbols:
+        factory_keymaps(data, symbols)
+    elif any(name in symbols for name in ('_ak820_default_classes', '_ak820_default_offsets', '_ak820_default_payload')):
+        raise ValueError('Ambiguous compiled default keymaps')
+    elif symbols['_keymaps'] not in data:
+        raise ValueError('Missing reachable symbol _keymaps')
     if code_bytes(data,CODE_START,3)!=ljmp(symbols['__sdcc_gsinit_startup']):
         raise ValueError('Unexpected SDCC CRT entry instruction')
     validate_startup(data, symbols)

@@ -1,0 +1,48 @@
+{
+  "format": "ak820-spill-capture-defect-1",
+  "scope": "Pinned SDCC metadata capture; no firmware build or hardware operation",
+  "iteration": 176,
+  "preceding_target_captures_passed": 175,
+  "module": "quantum/dynamic_keymap.asm",
+  "function": "_ak820_extension_address",
+  "capture_succeeded": true,
+  "source_proof": {
+    "passed": false,
+    "reason": "Missing/ambiguous AST function identity"
+  },
+  "canonical_compiler_asm_matches_original": true,
+  "cause": "stderr warning bytes were merged into AST stdout, splitting FUNCTION into F plus warning block plus UNCTION",
+  "failed_header_lines": [
+    163,
+    166
+  ],
+  "hashes": {
+    "compiler_sdcc": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "capture_module": "cfb43d3ccaf73ec27183c65eb142a6fc8263a1bf2df8694e0650fa822dd0c9f0",
+    "primary_source_quantum_dynamic_keymap_c": "c97c3ea6511d51f246a9044679e418a3adcbc456022fa712f35c26c9e76a4a0b",
+    "preprocessed_input": "54c4beb3d633d4e4e8462a7049219db7983bc074382cabf467437a8905effebd",
+    "captured_asm": "432cd5d3128df619c72d2be77b7c0686caf22da21f663a2d9112bf0dabc00353",
+    "captured_ast": "2190bed042cd8bd0e59f7f41a2393bf5df5cb13ed874abe6a7713466010bf595",
+    "captured_typed_raw": "13141494f0c04cad391c4be10070a7813466a6b1a7e2c169c70efc66fefeb9d2",
+    "frozen_original_asm": "62a0ec25bf36b6d970df50ccb51ea0399dfbf56588a7c3f1150b705529fe1837",
+    "archive_sha256sums": "f4fe7901708229e560219f411863491db55fccbb652fa8b64b270cf54862aa5d"
+  },
+  "separate_stream_experiment": {
+    "compiler_returncode": 0,
+    "canonical_asm_matches_original": true,
+    "source_proof_passed": true,
+    "stdout_ast_bytes": 139845,
+    "stderr_warning_bytes": 2926,
+    "stdout_ast_sha256": "48990e087bfdb3586ccf8fc583d65b188bdca591553105b1e8916f140e439217",
+    "stderr_warnings_sha256": "e8074fac34a0e2207d9e354f501589b72818c32c358945486eac50707d533e25",
+    "same_preprocessed_input_as_failure": true
+  },
+  "diagnostic_only": {
+    "in_memory_removal_of_exact_warning_block_restores_source_proof": true,
+    "saved_ast_not_edited": true,
+    "no_gate_or_artifact_replacement": true
+  },
+  "sealed_archive": "/mnt/storage/Temp/ak820-beta2-20261025/failure-evidence/spill-capture-20261026",
+  "physical_device_commands": 0,
+  "hardware_qualified": false
+}

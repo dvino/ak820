@@ -59,3 +59,5 @@ SDCC 4.6.0 `s51` comparison passed 1,024 cases (2,048 executions). Simulator
 SHA256: `61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd`.
 The command script, complete CPU log and `results.json` are retained in the
 external `continuation-artifacts/dptr-component-final` evidence directory.
+
+Compiler capture keeps the AST from stdout and diagnostics from stderr in separate, hash-bound files. AST parsing remains strict; missing or duplicate function identities and failed compiler exits reject the capture.

@@ -39,21 +39,23 @@ USB VID:PID `320F:505B` — дополнительный признак, а не
 ## Возможности
 
 Прошивка поддерживает шесть редактируемых слоёв, отдельные действия энкодера
-для каждого слоя, 16 макросов Vial, двухклавишные Combo, мультимедийные и
-системные клавиши, NKRO-отчёты, Caps Word, Repeat и Alt Repeat, Grave Escape,
-Tri Layer, Mod-Tap и Layer-Tap, RGB-подсветку и VialRGB Direct. Индикатор **C**
-следует состоянию Caps Lock, а **W** показывает активный слой выше нулевого.
-[Каталог функций](FEATURES.md) описывает каждую функцию и её ограничения.
+для каждого слоя, 16 сохраняемых макросов Vial, восемь двухклавишных Combo,
+мультимедийные и системные клавиши, Caps Word, Repeat и Alt Repeat, Tri Layer,
+Mod-Tap и Layer-Tap, встроенные эффекты RGB. Индикатор **C** следует Caps Lock,
+а **W** показывает активный слой выше нулевого.
 
-Дополнительные модули собраны в девять именованных профилей исходников. Профиль
-`work` выбран по умолчанию и добавляет Leader, динамические макросы и управление
-индикатором OS. Mouse Keys и режим Mac/PC в него не входят. Другие пакеты
-предназначены для Auto Shift, управления мышью, системных сочетаний модификаторов,
-Tap Dance, Key Overrides и QMK Settings. В [руководстве профилей](BUILD-PROFILES.md)
-описано назначение пакетов, а [матрица совместимости и размера](MODULE-MATRIX.md)
-сравнивает их функции и ресурсы.
+Все функции одновременно не помещаются в память контроллера. Поэтому доступны
+десять модульных [профилей](profiles/README.md) с разным набором функций.
+Профиль по умолчанию `main` добавляет One Shot, Leader, две временные записи
+макросов, восемь Key Overrides, QMK Settings, управление OS от компьютера и
+VialRGB Direct. В других профилях часть модулей заменена на NKRO и блокировку
+Win/Command, Tap Dance, Auto Shift, Space Cadet, Grave Escape, Mouse Keys или
+обмен модификаторов.
 
-Первая [бета прошивки](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1) предоставляет девять готовых профилей и данные о возможностях для приложения-компаньона [AK Configurator](https://github.com/dvino/ak-configurator). Сравнение профилей приведено в [матрице модулей](MODULE-MATRIX.md). В бета-выпуск входят отдельные установщики для Windows и Linux x86_64 с точным образом `work`; остальные восемь профилей остаются кандидатами каталога. Результаты проверок и аппаратные ограничения приведены в [статусе](STATUS.md).
+Установщик для Windows и Linux поддерживает выбор профиля, пока приложение
+[AK Configurator](https://github.com/dvino/ak-configurator) ещё разрабатывается.
+Доступные выпуски и аппаратные ограничения приведены в [статусе](STATUS.md),
+описания функций — в [каталоге](FEATURES.md).
 
 ## Отказ от ответственности
 
@@ -65,7 +67,7 @@ Tap Dance, Key Overrides и QMK Settings. В [руководстве профи�
 
 В пределах, допускаемых применимым законодательством, авторы и участники
 проекта не несут ответственности за ущерб и убытки от использования проекта
-или невозможности его использовать. См. разделы 15–17 [LICENSE](../../LICENSE).
+или невозможности его использовать. См. разделы 15–17 [LICENSE](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/LICENSE).
 
 ## Начало работы
 
@@ -77,16 +79,16 @@ Tap Dance, Key Overrides и QMK Settings. В [руководстве профи�
 [Сохранение настроек](SETTINGS-BACKUP.md).
 
 [Настройка](CONFIGURATION.md) описывает Vial. Чтобы собрать прошивку из
-исходников, следуйте разделу [Сборка](BUILD.md). Сборка использует Linux/WSL,
+исходников, следуйте разделу [Сборка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/BUILD.md). Сборка использует Linux/WSL,
 Python 3.11+ и закреплённый SDCC 4.6.0.
 
-[План сжатия всей прошивки](../MAXIMUM-FUNCTIONALITY-PLAN.md) описывает цель разработки. Текущие результаты и оставшиеся ограничения приведены в [отчёте о сжатии](MAXIMUM-FUNCTIONALITY-STATUS.md).
+[План сжатия всей прошивки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/MAXIMUM-FUNCTIONALITY-PLAN.md) описывает цель разработки. Текущие результаты и оставшиеся ограничения приведены в [отчёте о сжатии](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/MAXIMUM-FUNCTIONALITY-STATUS.md).
 
-[Документация](INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI и выпуски](CI.md) · [Сборка](BUILD.md) · [Разработка](DEVELOPMENT.md) ·
-[Проверки](TESTING.md) · [Участие](CONTRIBUTING.md).
+[Документация](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI и выпуски](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/CI.md) · [Сборка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/BUILD.md) · [Разработка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/DEVELOPMENT.md) ·
+[Проверки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/TESTING.md) · [Участие](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/CONTRIBUTING.md).
 
-Приложение-компаньон ведётся в [AK Configurator](https://github.com/dvino/ak-configurator). [Контракты прошивки](../../web/docs/ru/FIRMWARE-HANDOFF.md) описывают основу интеграции.
+Приложение-компаньон ведётся в [AK Configurator](https://github.com/dvino/ak-configurator). [Контракты прошивки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/docs/ru/FIRMWARE-HANDOFF.md) описывают основу интеграции.
 
 Английская документация — источник правды, русская — перевод. Оригинальный
 код проекта распространяется по GPL-3.0-only, лицензии сторонних компонентов
-сохраняются. См. [лицензирование](LICENSING.md) и корневой [LICENSE](../../LICENSE).
+сохраняются. См. [лицензирование](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/LICENSING.md) и корневой [LICENSE](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/LICENSE).

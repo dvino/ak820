@@ -15,6 +15,7 @@ import re
 import shutil
 import sys
 import subprocess
+import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,8 +25,10 @@ sys.path.insert(0, str(ROOT / 'tools'))
 
 import ak820_diagnose as diagnostic
 import ak820_ci_authorization as authorization
+import ak820_release_safety as release_safety
 import build_release_bundle as release
-from ak820_profiles import require_release_qualification
+import build_capability_catalog as capability_catalog
+from ak820_profiles import require_release_qualification, validate_configuration
 from ak820_release_manifest import RELEASE, MANIFEST_FORMAT, host_manifest
 
 PUBLIC_FILES = (
@@ -162,12 +165,12 @@ def _validate_policy_sources(policy: dict, report: dict) -> None:
             raise ValueError('Build source is absent from the reviewed policy: ' + name)
     required = set(host_manifest(ROOT)) | {
         '.github/workflows/windows-installer.yml', 'tools/ci_checks.py',
-        'tools/test_keyboard.py', 'tools/build_ci_release.py',
+        'tools/test_keyboard.py', 'tools/build_ci_release.py', 'tools/build_ci_profiles.py',
     }
     if 'configuration' in report:
         # The independent policy must bind the safety review itself, including
         # its pinned witnesses. An uncommitted replacement is not a new review.
-        safety_name = 'ci/release-safety.json'
+        safety_name = release_safety.manifest_name(report.get('configuration'))
         safety = load_json(ROOT / safety_name)
         required.add(safety_name)
         required.update(safety.get('source_files', {}))
@@ -207,7 +210,7 @@ def _qualification(report: dict, path: Path, ihx: Path, mapfile: Path, toolchain
 
 def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
              program_review_path: Path, packing_receipt_path: Path, output: Path,
-             toolchain: Path, source_commit: str) -> dict:
+             toolchain: Path, source_commit: str, *, expected_profile: str | None = None) -> dict:
     _validate_source_commit(source_commit)
     original_inputs = (policy_path, program_review_path, packing_receipt_path)
     for path in original_inputs:
@@ -234,9 +237,16 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
     ihx, mapfile, mem = (build_dir / f'ajazz_ak820_vial.{ext}' for ext in ('ihx', 'map', 'mem'))
     report = load_json(report_path)
     require_release_qualification(report)
+    actual_profile = report.get('configuration', {}).get('profile')
+    if expected_profile is not None and actual_profile != expected_profile:
+        raise ValueError(f'Build profile mismatch: expected {expected_profile}, got {actual_profile}')
+    configuration = validate_configuration(report.get('configuration'))
+    if expected_profile is not None and configuration['profile'] not in release_profile_names():
+        raise ValueError('Build configuration is outside the release profile catalog')
     if report.get('keyboard') != 'ajazz/ak820' or report.get('keymap') != 'vial':
         raise ValueError('Wrong firmware build target')
-    if report.get('build_id') != release.packer.BUILD_ID or report.get('hardware_validated') is not False:
+    if (report.get('build_id') != configuration['nvm_schema']
+            or report.get('hardware_validated') is not False):
         raise ValueError('Unexpected build schema or hardware-validation claim')
     diagnostic.diagnostic_build(ihx, mapfile, report_path)
     for artifact in (ihx, mapfile, mem):
@@ -254,6 +264,10 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
     receipt_bytes, review_bytes = packing_receipt_path.read_bytes(), program_review_path.read_bytes()
     current_host = host_manifest(ROOT)
     authorization.validate_policy(policy, current_host, receipt_bytes, review_bytes)
+    if (type(policy['program'].get('schema')) is not int
+            or policy['program']['schema'] != report.get('build_id')
+            or policy['program']['schema'] != configuration['nvm_schema']):
+        raise ValueError('Reviewed program schema differs from the actual build')
     _validate_policy_sources(policy, report)
     policy_source_snapshot = {name: sha(ROOT / name) for name in policy['source_files']}
     if _review_record(review_bytes).get('policy_sha256') != digest(policy_bytes):
@@ -365,25 +379,241 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
             'private_oem_inputs_included': False, 'full_rom_included': False}
 
 
+def release_profile_names() -> tuple[str, ...]:
+    import ak820_profiles
+    names = tuple(ak820_profiles.RELEASE_PROFILES)
+    expected = ('main','game','mmo','typing','code','pointer','onehand','creative','shortcuts','multios')
+    if names != expected:
+        raise ValueError('Release profile order differs from the reviewed ten-profile catalog')
+    return names
+
+
+def reproducible_identity(build: Path, measured_identity: dict) -> dict:
+    """Bind a catalog row to linked content without path-dependent reports.
+
+    The caller must obtain measured_identity from a fresh inspect of build.
+    Keep raw artifact hashes in that inspection and its qualification reports.
+    """
+    fields = ('profile', 'configuration_sha256', 'ihx_sha256',
+              'compiler_sha256', 'nvm_schema')
+    if not isinstance(measured_identity, dict) or any(
+            not isinstance(measured_identity.get(field), str) or not measured_identity[field]
+            for field in fields if field != 'nvm_schema') or type(
+                measured_identity.get('nvm_schema')) is not int:
+        raise ValueError('Measured build lacks a reproducible identity field')
+    if (any(not re.fullmatch(r'[0-9a-f]{64}', measured_identity[field])
+            for field in ('configuration_sha256', 'ihx_sha256', 'compiler_sha256'))
+            or not re.fullmatch(r'[a-z0-9-]+', measured_identity['profile'])
+            or measured_identity['nvm_schema'] not in (authorization.pack.BUILD_ID,
+                                                        authorization.pack.EXTENSION_BUILD_ID)
+            or measured_identity['profile'] not in release_profile_names()):
+        raise ValueError('Measured build has an invalid reproducible identity field')
+    mapfile = build / 'ajazz_ak820_vial.map'
+    if not mapfile.is_file() or mapfile.is_symlink():
+        raise ValueError('Missing or unsafe MAP for reproducible identity')
+    return {**{field: measured_identity[field] for field in fields},
+            'symbols_sha256': authorization.symbols_sha256(mapfile)}
+
+
+def settings_matrix_from_builds(builds_root: Path, toolchain: Path,
+                                settings_catalog_path: Path) -> tuple[dict, dict]:
+    """Rebuild measured rows from every exact configured image and bind static settings contracts.
+
+    The CODE identities in settings-catalog.json are generated during source
+    preparation with the protected local OEM reference. CI remeasures linked
+    identities and qualification, then requires every catalog entry to match
+    that exact IHX and configuration before any installer manifest is emitted.
+    """
+    import firmware_matrix
+    import ak820_profiles
+    sys.path.insert(0, str(ROOT / 'tools/installer'))
+    import settings_backup
+    names = release_profile_names()
+    catalog = load_json(settings_catalog_path)
+    if (catalog.get('format') != firmware_matrix.FORMAT or
+            not isinstance(catalog.get('settings_transitions'), list) or
+            not isinstance(catalog.get('profiles'), list)):
+        raise ValueError('Settings catalog is not a trusted firmware matrix')
+    catalog_entries = catalog['profiles']
+    if (not all(isinstance(row, dict) for row in catalog_entries)
+            or tuple(row.get('profile') for row in catalog_entries) != names):
+        raise ValueError('Settings catalog must contain exactly ten unique profiles in catalog order')
+    catalog_rows = {row['profile']: row for row in catalog_entries}
+    catalog_images = settings_backup._catalog_images(catalog)
+    builds = {}
+    measured = {}
+    for name in names:
+        build = builds_root / name
+        if not build.is_dir() or build.is_symlink():
+            raise ValueError('Missing or unsafe profile build directory: ' + name)
+        row = firmware_matrix.measured_row(build, toolchain)
+        if (row.get('profile') != name or row.get('configuration') != ak820_profiles.configuration(name) or
+                row.get('measurement_status') != 'linked-memory-pass' or
+                row.get('runtime_status') != 'exact-image-pass' or
+                row.get('offline_tests_status') != 'exact-image-pass'):
+            raise ValueError('Profile lacks complete exact-image qualification: ' + name)
+        approved = catalog_rows[name]
+        identity = approved.get('settings_identity')
+        catalog_identity = approved.get('reproducible_identity')
+        static_artifact_identity = approved.get('identity')
+        measured_identity = reproducible_identity(build, row.get('identity'))
+        if (not isinstance(identity, dict) or not isinstance(catalog_identity, dict) or
+                catalog_identity != measured_identity or
+                not isinstance(static_artifact_identity, dict) or
+                static_artifact_identity.get('ihx_sha256') != measured_identity['ihx_sha256'] or
+                static_artifact_identity.get('nvm_schema') != measured_identity['nvm_schema'] or
+                measured_identity['profile'] != name or
+                approved.get('release_approved') is not False or approved.get('installable') is not False or
+                identity.get('ihx_sha256') != row.get('identity', {}).get('ihx_sha256') or
+                identity.get('nvm_schema') != ak820_profiles.configuration(name)['nvm_schema'] or
+                approved.get('configuration') != row.get('configuration')):
+            raise ValueError('Static settings contract does not bind the measured profile: ' + name)
+        row['reproducible_identity'] = measured_identity
+        row['settings_identity'] = identity
+        row['settings_status'] = 'exact-image-contract'
+        builds[name] = build
+        measured[name] = row
+    identities = [row['identity']['ihx_sha256'] for row in measured.values()]
+    if len(identities) != len(set(identities)):
+        raise ValueError('Release profiles do not have unique exact image identities')
+    historical = {source['ihx_sha256'] for source in catalog.get('historical_sources', [])}
+    if set(catalog_images) != set(identities) | historical:
+        raise ValueError('Settings catalog does not contain exactly the measured and pinned historical identities')
+    result = firmware_matrix.matrix(measured)
+    result['settings_transitions'] = catalog['settings_transitions']
+    if 'historical_sources' in catalog:
+        result['historical_sources'] = catalog['historical_sources']
+    if any(row.get('release_approved') is not False or row.get('installable') is not False
+           for row in result['profiles']):
+        raise ValueError('Measured candidate matrix must remain unapproved until bundle gates pass')
+    return result, builds
+
+
+def assemble_profiles(builds_root: Path, policies_root: Path, output_root: Path,
+                      toolchain: Path, source_commit: str,
+                      settings_catalog_path: Path | None = None) -> dict:
+    """Assemble ten separately authorized profile bundles as one atomic output.
+
+    Every profile carries its own committed exact-image policy, review and
+    packing receipt. The existing single-image assembly gate validates each
+    one without replacing its policy or approval checks.
+    """
+    names = release_profile_names()
+    _validate_source_commit(source_commit)
+    builds_root = builds_root.resolve()
+    policies_root = policies_root.resolve()
+    output_root = output_root.absolute()
+    toolchain = toolchain.resolve()
+    settings_catalog_path = (settings_catalog_path or ROOT / 'tools/installer/settings-catalog.json').resolve()
+    if not builds_root.is_relative_to(SOURCE.resolve()) or not policies_root.is_relative_to(ROOT.resolve()):
+        raise ValueError('Profile builds and policy inputs must remain inside the repository')
+    if not output_root.is_relative_to(ROOT.resolve()) or output_root.exists() or output_root.is_symlink():
+        raise ValueError('Choose a fresh profile-release output inside the repository')
+    if not settings_catalog_path.is_file() or settings_catalog_path.is_symlink():
+        raise ValueError('Missing or unsafe committed settings catalog')
+    _require_committed_input(settings_catalog_path, 'Settings catalog')
+    matrix, builds = settings_matrix_from_builds(builds_root, toolchain, settings_catalog_path)
+    inputs = {}
+    for profile in names:
+        profile_dir = policies_root / profile
+        if not profile_dir.is_dir() or profile_dir.is_symlink():
+            raise ValueError('Missing or unsafe profile authorization directory: ' + profile)
+        files = {'policy': profile_dir / 'release-policy.json',
+                 'review': profile_dir / 'program-review.md',
+                 'receipt': profile_dir / 'packing-validation.json'}
+        for label, path in files.items():
+            if not path.is_file() or path.is_symlink():
+                raise ValueError(f'Missing or unsafe {profile} {label}')
+            _require_committed_input(path, f'{profile} {label}')
+        inputs[profile] = files
+
+    capabilities = capability_catalog.catalog([builds[name] for name in names], toolchain)
+    output_root.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.' + output_root.name + '.stage-', dir=output_root.parent) as temporary:
+        stage = Path(temporary) / output_root.name
+        profiles_dir = stage / 'profiles'
+        profiles_dir.mkdir(parents=True)
+        reports_dir = stage / 'reports'
+        reports_dir.mkdir()
+        write_json(reports_dir / 'firmware-matrix.json', matrix)
+        write_json(reports_dir / 'capability-catalog.json', capabilities)
+        write_json(reports_dir / 'settings-catalog-attestation.json', {
+            'format': 'ak820-ci-settings-catalog-check-1',
+            'settings_catalog_sha256': sha(settings_catalog_path),
+            'profiles': {name: matrix['profiles'][index]['identity']['ihx_sha256']
+                         for index, name in enumerate(names)},
+            'hardware_validated': False, 'physical_device_commands': 0,
+        })
+        results = {}
+        for profile in names:
+            build = builds[profile]
+            paths = inputs[profile]
+            destination = profiles_dir / profile
+            qualification = build / 'qualification.json'
+            results[profile] = assemble(build, qualification, paths['policy'], paths['review'],
+                                        paths['receipt'], destination, toolchain, source_commit,
+                                        expected_profile=profile)
+            # Per-profile ZIPs are retained separately from the deployable
+            # ten-profile archive, avoiding archive files in the profile tree.
+            profile_archive = Path(results[profile]['archive'])
+            archive_dir = stage / 'profile-archives'
+            archive_dir.mkdir(exist_ok=True)
+            profile_archive.rename(archive_dir / (profile + '.zip'))
+            Path(results[profile]['archive'] + '.sha256').unlink(missing_ok=True)
+        archive = stage / 'firmware-bundle.zip'
+        checksum = stage / 'firmware-bundle.zip.sha256'
+        with zipfile.ZipFile(archive, 'x', compression=zipfile.ZIP_DEFLATED) as package:
+            for path in sorted(profiles_dir.rglob('*')):
+                if not path.is_file():
+                    continue
+                entry = zipfile.ZipInfo(path.relative_to(stage).as_posix(), (1980, 1, 1, 0, 0, 0))
+                entry.compress_type = zipfile.ZIP_DEFLATED
+                entry.external_attr = 0o100644 << 16
+                package.writestr(entry, path.read_bytes())
+        checksum.write_text(f'{sha(archive)}  firmware-bundle.zip\n', encoding='ascii')
+        if _git_head() != source_commit:
+            raise ValueError('Committed source changed while assembling profile releases')
+        if output_root.exists() or output_root.is_symlink():
+            raise ValueError('Profile-release output appeared during assembly')
+        stage.rename(output_root)
+    return {'output': str(output_root), 'profiles': list(names),
+            'archive': str(output_root / 'firmware-bundle.zip'),
+            'archive_sha256': sha(output_root / 'firmware-bundle.zip'),
+            'all_profile_approvals_written': True, 'hardware_validated': False}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--build-dir', required=True, type=Path)
-    parser.add_argument('--qualification', required=True, type=Path)
-    parser.add_argument('--policy', required=True, type=Path)
-    parser.add_argument('--program-review', required=True, type=Path)
-    parser.add_argument('--packing-receipt', required=True, type=Path)
-    parser.add_argument('--output', required=True, type=Path)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--all-profiles', action='store_true',
+                      help='Assemble ten independently authorized exact-profile bundles')
+    mode.add_argument('--build-dir', type=Path)
+    parser.add_argument('--qualification', type=Path)
+    parser.add_argument('--policy', type=Path)
+    parser.add_argument('--program-review', type=Path)
+    parser.add_argument('--packing-receipt', type=Path)
+    parser.add_argument('--output', type=Path)
+    parser.add_argument('--builds-root', type=Path)
+    parser.add_argument('--policies-root', type=Path, default=ROOT / 'ci/profiles')
+    parser.add_argument('--settings-catalog', type=Path, default=ROOT / 'tools/installer/settings-catalog.json')
     parser.add_argument('--toolchain', type=Path, default=Path('toolchains/sdcc-4.6.0'))
     parser.add_argument('--source-commit', required=True)
     args = parser.parse_args()
-    result = assemble(args.build_dir if args.build_dir.is_absolute() else ROOT / args.build_dir,
-                      args.qualification if args.qualification.is_absolute() else ROOT / args.qualification,
-                      args.policy if args.policy.is_absolute() else ROOT / args.policy,
-                      args.program_review if args.program_review.is_absolute() else ROOT / args.program_review,
-                      args.packing_receipt if args.packing_receipt.is_absolute() else ROOT / args.packing_receipt,
-                      args.output if args.output.is_absolute() else ROOT / args.output,
-                      args.toolchain if args.toolchain.is_absolute() else ROOT / args.toolchain,
-                      args.source_commit)
+    def rooted(path):
+        return path if path.is_absolute() else ROOT / path
+    if args.all_profiles:
+        if args.builds_root is None or args.output is None:
+            parser.error('--all-profiles requires --builds-root and --output')
+        result = assemble_profiles(rooted(args.builds_root), rooted(args.policies_root),
+                                   rooted(args.output), rooted(args.toolchain), args.source_commit,
+                                   rooted(args.settings_catalog))
+    else:
+        if any(path is None for path in (args.qualification, args.policy, args.program_review,
+                                          args.packing_receipt, args.output)):
+            parser.error('Single-profile mode requires --qualification, --policy, --program-review, --packing-receipt, and --output')
+        result = assemble(rooted(args.build_dir), rooted(args.qualification), rooted(args.policy),
+                          rooted(args.program_review), rooted(args.packing_receipt), rooted(args.output),
+                          rooted(args.toolchain), args.source_commit)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

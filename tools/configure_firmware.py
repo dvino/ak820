@@ -33,7 +33,7 @@ from ak820_runtime_safety import combine as combine_runtime_safety
 
 FORMAT = 'ak820-configured-build-1'
 WINDOWS = ((0x28a0, 0x3000), (0x3027, 0xc700))
-SYMBOLS = {'tap-dance': '_ak820_tap_dance_process', 'key-overrides': '_ak820_key_override_process', 'qmk-settings': '_ak820_settings_set', 'os-indicators': '_ak820_os_indicator_value', 'leader': '_ak820_leader_process', 'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
+SYMBOLS = {'grave-escape': '_process_grave_esc', 'tap-dance': '_ak820_tap_dance_process', 'key-overrides': '_ak820_key_override_process', 'qmk-settings': '_ak820_settings_set', 'os-indicators': '_ak820_os_indicator_value', 'leader': '_ak820_leader_process', 'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
            'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process',
            'dynamic-macros': '_ak820_dynamic_macro_process'}
 STATIC_BITS = {'gui-lock': '_gui_disabled', 'ctrl-gui-swap': '_ctrl_gui_swapped', 'mac-pc': '_ak820_mac_mode'}
@@ -228,6 +228,15 @@ def check_feature_defines(report, build, selected):
         expected = ['-D' + define] if feature in selected['optional_features'] else []
         require(actual == expected, 'Compiler feature flag differs from profile: ' + feature)
 
+    for feature, define, enabled in (
+            ('nkro', 'NKRO_ENABLE', True), ('grave-escape', 'GRAVE_ESC_ENABLE', True),
+            ('vialrgb-direct', 'VIALRGB_NO_DIRECT', False)):
+        actual = [token for token in tokens if re.match(r'^-[DU]' + define + r'(?:=|$)', token)]
+        expected = ['-D' + define] if (feature in selected['optional_features']) == enabled else []
+        require(actual == expected, 'Compiler core feature flag differs from profile: ' + feature)
+    require(not any('AK820_DIAG_' in token or 'AK820_OMIT_' in token for token in tokens),
+            'Diagnostic feature switches cannot qualify')
+
 
 def memory_report(code, symbols, memory, *, historical=False):
     """Validate allocated memory; deliberately do not infer a stack bound."""
@@ -315,6 +324,179 @@ def check_short_calls(report, build, image):
     return summary
 
 
+def check_pass30(report, build, toolchain):
+    """Replay the finite audited transform chain; never accept arbitrary flags.
+
+    Temporary proof outputs leave the saved build untouched. Spill replay uses
+    pinned SDCC to recapture typed metadata from the source-bound inputs.
+    """
+    import copy
+    import tempfile
+    import ak820_dce as dce
+    import ak820_default_keymap as defaults
+    import ak820_parameter_spills as spills
+    import ak820_register_saves as registers
+    import ak820_tailshare as tails
+    import ak820_outline_audit as outlines
+    from ak820_build_inputs import input_snapshot
+    expected_flags = ('--opt-code-size -DAK820_READ_HOOK_PRESERVES_RN=1'
+                      ' -DAK820_READ_HOOK_PRESERVES_RN=1 --callee-saves ' +
+                      ','.join(AK820_CALLEE_SAVES) +
+                      ' -DAK820_COMPRESS_DEFAULT_KEYMAP -DAK820_WORD_HOOKS_PRESERVE_RN=1')
+    require(report.get('compiler_extra_flags') == expected_flags and
+            report.get('audited_callee_saves') == list(AK820_CALLEE_SAVES) and
+            report.get('outline_max_helpers') == 400 and
+            report.get('experimental_iram_overlay') is None and
+            report.get('xram_window') == [0x440, 0x1000] and
+            all(report.get(option) is True for option in
+                ('compress_default_keymap', 'nvm_read_block_asm',
+                 'nvm_update_block_asm', 'keymap_words_asm')) and
+            isinstance(report.get('short_calls'), dict),
+            'Unqualified pass30 compiler/ABI/transform configuration')
+    # Every consumed intermediate must belong to the build report. This also
+    # rejects duplicate records, traversal, symlink escape and stale proofs.
+    bound = {}
+    for row in report.get('artifacts', []):
+        name = row.get('path')
+        require(isinstance(name, str) and '\\' not in name, 'Invalid pass30 artifact path')
+        path = (QMK / name).resolve()
+        require(path.is_relative_to(build) and path not in bound and path.is_file() and
+                sha(path) == row.get('sha256') and path.stat().st_size == row.get('size'),
+                'Unbound or changed pass30 artifact: ' + name)
+        bound[path] = row
+    def saved(path):
+        path = Path(path).resolve()
+        require(path in bound, 'Missing pass30 proof artifact: ' + str(path))
+        return path
+    def tree(directory, suffixes=('.asm', '.lst', '.rel')):
+        paths = {p.relative_to(directory).as_posix(): saved(p)
+                 for p in directory.rglob('*') if p.suffix in suffixes}
+        require(bool(paths), 'Missing pass30 intermediate tree: ' + str(directory))
+        return paths
+    def same_asm(first, second):
+        a = {p.relative_to(first).as_posix(): sha(p) for p in first.rglob('*.asm')}
+        b = {p.relative_to(second).as_posix(): sha(p) for p in second.rglob('*.asm')}
+        require(bool(a) and a == b, 'Pass30 transformation chain differs')
+    for field, module in (('builder', 'build_ak820'), ('dce', 'ak820_dce'),
+                          ('outliner', 'ak820_outline_audit'),
+                          ('parameter_spills', 'ak820_parameter_spills'),
+                          ('register_saves', 'ak820_register_saves'),
+                          ('tailshare', 'ak820_tailshare')):
+        require(report.get(field + '_sha256') == sha(QMK / 'util' / (module + '.py')),
+                'Pass30 implementation differs: ' + module)
+    obj = build / 'obj_ajazz_ak820_vial'
+    compiled = saved(obj / 'cflags.txt').read_text().split()
+    for define in ('AK820_COMPRESS_DEFAULT_KEYMAP', 'AK820_KEYMAP_WORDS_ASM',
+                   'AK820_NVM_READ_BLOCK_ASM', 'AK820_NVM_UPDATE_BLOCK_ASM'):
+        require(compiled.count('-D' + define) == 1, 'Missing audited kernel define: ' + define)
+    require(compiled.count('-DAK820_WORD_HOOKS_PRESERVE_RN=1') == 1 and
+            compiled.count('-DAK820_READ_HOOK_PRESERVES_RN=1') == 1,
+            'Compiled kernel ABI assertions differ')
+    generation = load_json(saved(build / 'default-keymap/generation.json'))
+    bootstrap = saved(build / 'default-keymap/bootstrap.asm')
+    include = saved(build / 'default-keymap/ak820_default_keymap.inc')
+    require(generation.get('compiler_sha256') == SDCC46_PINS['sdcc'] and
+            generation.get('generator_sha256') == sha(QMK / 'util/ak820_default_keymap.py') and
+            generation.get('bootstrap_sha256') == sha(bootstrap) and
+            generation.get('include_sha256') == sha(include) and
+            generation.get('final_tables_verified') is True and
+            include.read_text() == defaults.generate(bootstrap.read_text()),
+            'Default keymap generation differs')
+    final_keymaps = [p for name, p in tree(obj, ('.asm',)).items()
+                    if name.endswith('/keymap_introspection.asm')]
+    require(len(final_keymaps) == 1, 'Missing compiler default-keymap output')
+    defaults.verify_final(final_keymaps[0].read_text(), bootstrap.read_text())
+    for key in ('dependencies', 'final_dependencies'):
+        require(isinstance(generation.get(key), dict) and generation[key],
+                'Missing default generator dependencies')
+        for name, digest in generation[key].items():
+            path = Path(name).resolve()
+            require((path.is_relative_to(QMK.resolve()) or path.is_relative_to(toolchain)) and
+                    path.is_file() and sha(path) == digest, 'Default generator input changed')
+    summaries = {}
+    with tempfile.TemporaryDirectory(prefix='ak820-pass30-proof-') as temporary:
+        temporary = Path(temporary)
+        roots = ['_USB_DeviceInterrupt', '__mcs51_genXINIT', '_ak820_led_irq', '_ak820_timer_irq']
+        require(report.get('external_roots') == roots, 'Pass30 external roots differ')
+        dce.optimize(obj, temporary / 'dce', roots)
+        same_asm(temporary / 'dce', build / 'parameter-spills-input')
+        for field, source, target, module in (
+                ('parameter_spills', 'parameter-spills-input', 'parameter-spills-output', spills),
+                ('register_saves', 'register-saves-input', 'register-saves-output', registers),
+                ('tail_share', 'tailshare-input', 'shortcalls-input', tails)):
+            summary = report.get(field)
+            require(isinstance(summary, dict), 'Missing pass30 transform: ' + field)
+            proof_path = saved(QMK / summary.get('report', ''))
+            require(summary.get('report_sha256') == sha(proof_path), 'Pass30 report hash differs')
+            proof = load_json(proof_path)
+            source, target = build / source, build / target
+            tree(source)
+            tree(target)
+            replay_path = temporary / (field + '.json')
+            replay_target = temporary / field
+            if module is spills:
+                certificate = saved(build / 'parameter-spills-context.json')
+                require(summary.get('context_sha256') == sha(certificate) and
+                        proof.get('context_sha256') == sha(certificate) and
+                        proof.get('algorithm') == spills.ALGORITHM, 'Spill context or algorithm differs')
+                manifest_path = saved(build / 'parameter-spills-metadata/manifest.json')
+                require(proof.get('metadata_manifest_sha256') == sha(manifest_path),
+                        'Spill typed metadata manifest differs')
+                manifest = load_json(manifest_path)
+                require(manifest.get('compiler_sha256') == SDCC46_PINS['sdcc'],
+                        'Spill metadata compiler differs')
+                for metadata in manifest.get('modules', {}).values():
+                    require(metadata.get('compiler_sha256') == SDCC46_PINS['sdcc'] and
+                            metadata.get('flags') == spills.compiler_flags(obj),
+                            'Spill metadata compiler flags differ')
+                    for name, digest in metadata.get('files_sha256', {}).items():
+                        require(sha(saved(build / 'parameter-spills-metadata' / name)) == digest,
+                                'Saved spill typed metadata changed')
+                replay = spills.prepare(QMK, obj, source, replay_target,
+                    temporary / 'metadata', certificate, replay_path,
+                    toolchain / 'bin/sdcc', input_snapshot(QMK, toolchain))
+                for key in ('selected', 'rejected', 'input_sha256', 'output_sha256',
+                            'nominal_object_saved_bytes', 'extra_stack_bytes'):
+                    require(replay[key] == proof.get(key), 'Spill source/type/opcode proof differs: ' + key)
+                require(summary.get('selected') == len(proof['selected']), 'Spill selection summary differs')
+                require(proof.get('postlink_qualified') is True and
+                        summary.get('postlink_qualified') is True,
+                        'Missing exact-image spill postlink qualification')
+            else:
+                replay = module.prepare(source, replay_target, replay_path)
+                for key, value in replay.items():
+                    require(value == proof.get(key), 'Transform replay differs: ' + field + '/' + key)
+            same_asm(replay_target, target)
+            checked = copy.deepcopy(proof)
+            module.verify_assembled(source, target, replay_path, checked)
+            require(checked == proof, 'Saved assembled proof differs: ' + field)
+            if module is spills:
+                stack_path = saved(build / 'parameter-spills-stack.json')
+                spills.postlink_audit(QMK, build, certificate, replay_path, checked, stack_path)
+                require(checked == proof, 'Saved spill postlink proof differs')
+            require(summary.get('object_saved_bytes') == proof.get('object_saved_bytes') and
+                    summary.get('extra_stack_bytes') == 0,
+                    'Pass30 saved-byte or stack summary differs')
+            summaries[field] = sha(proof_path)
+        # The replayed stages must be adjacent, without an unrecorded rewrite.
+        same_asm(build / 'parameter-spills-output', build / 'register-saves-input')
+        same_asm(build / 'register-saves-output', build / 'dce-input')
+        tree(build / 'dce-input')
+        outlined = temporary / 'outlined'
+        replay = outlines.outline_assembled(build / 'dce-input', outlined, max_helpers=400, min_saving=1)
+        require(replay == load_json(saved(build / 'dce/outlining.json')), 'Outlining replay differs')
+        same_asm(outlined, build / 'tailshare-input')
+        summary = report.get('outlining', {})
+        require(summary.get('report') == (build / 'dce/outlining.json').relative_to(QMK).as_posix() and
+                summary.get('algorithm') == replay['algorithm'] and
+                summary.get('helpers') == len(replay['selected_exact']) and
+                summary.get('call_sites') == sum(row['occurrences'] for row in replay['selected_exact']) and
+                summary.get('nominal_saved_bytes') == replay['selected_nominal_net_bytes'] and
+                summary.get('extra_stack_bytes') == replay['extra_stack_bytes'],
+                'Outlining summary differs')
+    return {'contract': 'ak820-audited-pass30-1', 'reports': summaries}
+
+
 def inspect(build, toolchain):
     build, toolchain = Path(build).resolve(), validate_tools(toolchain)
     require(build.is_relative_to(QMK.resolve()), 'Build must be beneath the QMK source root')
@@ -332,14 +514,27 @@ def inspect(build, toolchain):
     historical = report.get('xram_window') == [0x400, 0x1000]
     expected_flags = '--opt-code-size --callee-saves ' + ','.join(AK820_CALLEE_SAVES)
     require(report.get('compiler_sha256') == SDCC46_PINS['sdcc'] and
-            report.get('assembler_sha256') == SDCC46_PINS['sdas8051'] and
-            report.get('compiler_extra_flags') == expected_flags and
-            report.get('audited_callee_saves') == list(AK820_CALLEE_SAVES) and
-            isinstance(report.get('outlining'), dict), 'Unqualified compiler/ABI/transform configuration')
+            report.get('assembler_sha256') == SDCC46_PINS['sdas8051'], 'Unqualified compiler tools')
+    if selected['profile'] in profiles.RELEASE_PROFILES:
+        optimization = check_pass30(report, build, toolchain)
+    else:
+        require(report.get('compiler_extra_flags') == expected_flags and
+                report.get('audited_callee_saves') == list(AK820_CALLEE_SAVES) and
+                isinstance(report.get('outlining'), dict), 'Unqualified compiler/ABI/transform configuration')
+        optimization = {'contract': 'historical-baseline'}
     ihx, mapfile, mem = (artifact(report, build, suffix) for suffix in ('ihx', 'map', 'mem'))
     short_summary = check_short_calls(report, build, ihx)
     code = diagnostic_build(ihx, mapfile, report_path)
     symbols = linked_symbols(mapfile)
+    if selected['profile'] in profiles.RELEASE_PROFILES:
+        for symbol in ('_ak820_eeprom_read_block_xdata', '_ak820_eeprom_update_block_xdata',
+                       '_dynamic_keymap_get_keycode', '_dynamic_keymap_set_keycode',
+                       '_dynamic_keymap_get_encoder', '_dynamic_keymap_set_encoder'):
+            require(symbol in symbols and symbols[symbol] in code, 'Missing audited ASM kernel: ' + symbol)
+    direct_allocations = re.findall(r'^D:\s+([0-9A-Fa-f]{8})\s+_g_direct_mode_colors\s+vialrgb\s*$',
+                                    mapfile.read_text(), re.M)
+    require(len(direct_allocations) == (1 if 'vialrgb-direct' in selected['optional_features'] else 0),
+            'Compiled Direct allocation differs from profile')
     validate_startup(code, symbols)
     check_feature_symbols(retained_static_symbols(report, build, code), selected, code)
     resources = memory_report(code, symbols, mem.read_text(), historical=historical)
@@ -354,7 +549,7 @@ def inspect(build, toolchain):
                 'build_report_sha256': sha(report_path), 'source_manifest_sha256': source_manifest_sha,
                 'compiler_sha256': report['compiler_sha256'], 'nvm_schema': selected['nvm_schema']}
     return {'format': FORMAT, 'configuration': selected, 'identity': identity,
-            'short_calls': short_summary,
+            'short_calls': short_summary, 'optimization': optimization,
             'resources': resources, 'hardware_validated': False, 'physical_device_commands': 0,
             'offline_tests_passed': False, 'release_approved': False,
             'release_blockers': list(RELEASE_BLOCKERS),
@@ -720,10 +915,12 @@ def main(argv=None):
     sub.add_parser('list', help='List explicit combinations and deferred options')
     build = sub.add_parser('build', help='Build and test a development profile')
     selection = build.add_mutually_exclusive_group()
-    selection.add_argument('--profile', choices=tuple(profiles.PROFILES), help='Named profile; defaults to work')
+    selection.add_argument('--profile', choices=tuple(profiles.PROFILES), help='Named profile; defaults to main')
     selection.add_argument('--features', nargs='*', help='Explicit optional feature names; empty selects standard')
     build.add_argument('--short-calls', action=argparse.BooleanOptionalAction, default=None,
                        help='Verified foreground ACALL/AJMP relaxation; default for curated profiles')
+    build.add_argument('--parameter-spills-context', type=Path,
+                       help='Fresh reviewed source/IRQ context required for the audited release transform chain')
     build.add_argument('--build-dir', type=Path, required=True)
     build.add_argument('--toolchain', type=Path, default=ROOT / 'toolchains/sdcc-4.6.0')
     build.add_argument('--qmk-bin', type=Path, default=QMK / '.venv/bin/qmk')
@@ -757,6 +954,14 @@ def main(argv=None):
         command = [str(args.python.resolve()), str(QMK / 'util/build_ak820.py'),
                    '--profile', name, '--toolchain', str(toolchain),
                    '--qmk-bin', str(args.qmk_bin.resolve()), '--build-dir', str(directory)]
+        if name in profiles.RELEASE_PROFILES:
+            require(args.short_calls is not False, 'Release profiles require audited short calls')
+            require(args.parameter_spills_context is not None and args.parameter_spills_context.is_file(),
+                    'Release profiles require --parameter-spills-context FILE for this source/IRQ context')
+            command += ['--compress-default-keymap', '--nvm-update-block-asm', '--nvm-read-block-asm',
+                        '--keymap-words-asm', '--trim-parameter-spills', '--parameter-spills-context',
+                        str(args.parameter_spills_context.resolve()), '--trim-register-saves',
+                        '--tail-share', '--outline-max-helpers', '400']
         if args.short_calls is not None:
             command.append('--short-calls' if args.short_calls else '--no-short-calls')
         subprocess.run(command, cwd=QMK, check=True)

@@ -18,11 +18,15 @@ spec.loader.exec_module(support)
 fw = support.Firmware(args.build_dir.resolve(), args.s51.resolve(), args.output_dir.resolve())
 commands = fw.initialize()
 observations = []
-vial_ids = [0, 2, 6, 13, 14, 1, 31]
-expected_table = [0,0,1,5,2,1,6,2,13,3,14,4,31,6]
-assert [fw.code[fw.address('_supported_modes') + i] for i in range(14)] == expected_table
+report = json.loads((args.build_dir / 'build-report.json').read_text())
+configuration = report.get('configuration', {})
+# The configuration is independently checked against defines by qualification.
+no_direct = 'vialrgb-direct' not in configuration.get('optional_features', [])
+vial_ids = [0, 2, 6, 13, 14, 31] if no_direct else [0, 2, 6, 13, 14, 1, 31]
+expected_table = [0,0,2,1,6,2,13,3,14,4,31,5] if no_direct else [0,0,1,5,2,1,6,2,13,3,14,4,31,6]
+assert [fw.code[fw.address('_supported_modes') + i] for i in range(len(expected_table))] == expected_table
 for value in list(range(256)) + [256, 257, 511, 0xff00, 0xffff]:
-    for symbol, expected in [('_qmk_id_to_vialrgb_id', vial_ids[value] if value < 7 else 0),
+    for symbol, expected in [('_qmk_id_to_vialrgb_id', vial_ids[value] if value < len(vial_ids) else 0),
                              ('_vialrgb_id_to_qmk_id', vial_ids.index(value) if value in vial_ids else 0)]:
         label = f'{symbol}_{value}_END'
         commands += fw.call(symbol, value) + fw.dump(label, 'sfr', 0x82, 2)
@@ -34,7 +38,7 @@ for threshold in [0,1,2,5,6,12,13,14,30,31,32,255,256,257,65535]:
         expected = data[:]
         expected[:length] = [255] * length
         at = 0
-        for value in [0,1,2,6,13,14,31]:
+        for value in sorted(vial_ids):
             if value > threshold and length - at >= 2:
                 expected[at:at+2] = [value, 0]
                 at += 2

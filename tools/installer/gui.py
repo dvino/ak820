@@ -141,6 +141,7 @@ def main(argv=None):
     parser.add_argument('--session', help='Preselect an OEM recovery session; does not start an action')
     parser.add_argument('--backup-dir', help='Preselect a parent folder for new settings backups; does not start an action')
     parser.add_argument('--restore-backup', help='Preselect a settings backup; does not start an action')
+    parser.add_argument('--profile', help='Preselect installer profile')
     args = parser.parse_args(argv)
     root = tk.Tk()
     controller = Controller()
@@ -158,6 +159,29 @@ def main(argv=None):
     buttons = ttk.Frame(root)
     buttons.pack(fill='x', padx=12, pady=6)
     controls = []
+    catalog = ak820.profile_catalog()
+    profile_rows = catalog['profiles'] if catalog else []
+    profile_choice = tk.StringVar(value=args.profile or (catalog['default_profile'] if catalog else 'legacy'))
+    if profile_rows:
+        ak820.require(profile_choice.get() in [row['id'] for row in profile_rows], 'Unknown installer profile')
+    profile_label = ttk.Label(root, text='Профиль / Profile')
+    profile_label.pack(anchor='w', padx=12)
+    profile_selector = ttk.Combobox(root, textvariable=profile_choice,
+                                   values=[row['id'] for row in profile_rows], state='readonly')
+    profile_selector.pack(fill='x', padx=12)
+    profile_detail = ttk.Label(root, wraplength=860)
+    profile_detail.pack(anchor='w', padx=12, pady=4)
+    controls.append(profile_selector)
+    def refresh_profile(*_):
+        row = next((row for row in profile_rows if row['id'] == profile_choice.get()), None)
+        if row:
+            lang = controller.language.language
+            added, removed = ', '.join(row['added_to_main']) or '—', ', '.join(row['removed_from_main']) or '—'
+            profile_detail.configure(text=row['name'][lang] + ': ' + row['description'][lang] + '\n' +
+                ('Добавлено к main: ' if lang == 'ru' else 'Added to main: ') + added + '\n' +
+                ('Убрано из main: ' if lang == 'ru' else 'Removed from main: ') + removed)
+    profile_selector.bind('<<ComboboxSelected>>', refresh_profile)
+    refresh_profile()
     state = tk.StringVar(value=tr('ready', language))
     current_stage = None
     current_stage_data = {}
@@ -221,6 +245,8 @@ def main(argv=None):
         nonlocal current_stage, current_stage_data, current_status
         if command_args[0] in ('prepare', 'install', 'recover', 'check-device', 'update-prepared') and reference_folder.get().strip():
             command_args = command_args + ['--reference-dir', reference_folder.get().strip()]
+        if profile_rows:
+            command_args = command_args + ['--profile', profile_choice.get()]
         if controller.start(command_args):
             current_stage = None
             current_stage_data = {}
@@ -332,6 +358,7 @@ def main(argv=None):
             button.configure(text=tr(key, new_language))
         language_button.configure(text=tr('language_button', new_language))
         refresh_stage()
+        refresh_profile()
 
     language_button.configure(command=switch_language)
     output = tk.Text(root, wrap='word', state='disabled')
@@ -426,7 +453,7 @@ def main(argv=None):
                 instructions.set(tr('instructions', controller.language.language))
                 state.set(tr('completed', controller.language.language, code=value))
                 for button in controls:
-                    button.configure(state='normal')
+                    button.configure(state='readonly' if button is profile_selector else 'normal')
         root.after(100, poll)
 
     def close():

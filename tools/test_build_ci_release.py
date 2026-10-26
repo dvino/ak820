@@ -2,6 +2,8 @@
 import hashlib
 import json
 from pathlib import Path
+import re
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -72,7 +74,8 @@ class PolicySourceTests(unittest.TestCase):
             path = root / 'source.c'
             path.write_bytes(b'original')
             required_names = {'.github/workflows/windows-installer.yml', 'tools/ci_checks.py',
-                              'tools/test_keyboard.py', 'tools/build_ci_release.py'}
+                              'tools/test_keyboard.py', 'tools/build_ci_release.py',
+                              'tools/build_ci_profiles.py'}
             required_names |= set(ci.HOST_FILES) if hasattr(ci, 'HOST_FILES') else set()
             for name in required_names:
                 item = root / name
@@ -121,7 +124,8 @@ class PolicySourceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             required_names = {'.github/workflows/windows-installer.yml', 'tools/ci_checks.py',
-                              'tools/test_keyboard.py', 'tools/build_ci_release.py'}
+                              'tools/test_keyboard.py', 'tools/build_ci_release.py',
+                              'tools/build_ci_profiles.py'}
             for name in required_names:
                 path = root / name
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -177,6 +181,139 @@ class PolicySourceTests(unittest.TestCase):
 
 
 class AssemblyPreflightTests(unittest.TestCase):
+    def test_profile_set_is_exact_and_settings_matrix_rebinds_actual_images(self):
+        import ak820_profiles
+        import firmware_matrix
+        sys.path.insert(0, str(ci.ROOT / 'tools/installer'))
+        import settings_backup
+        names = ('main','game','mmo','typing','code','pointer','onehand','creative','shortcuts','multios')
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); builds_root = root/'builds'; builds_root.mkdir()
+            source_map = ci.ROOT / 'releases/rc6/firmware/application.map'
+            rows = []
+            measured = {}
+            for index, name in enumerate(names):
+                (builds_root/name).mkdir()
+                mapfile = builds_root/name/'ajazz_ak820_vial.map'
+                mapfile.write_bytes(source_map.read_bytes() + f'\npath: /local/{name}\n'.encode())
+                ihx = f'{index:064x}'
+                configuration = ak820_profiles.configuration(name)
+                artifact_identity = {'profile': name, 'configuration_sha256': f'{index+60:064x}',
+                    'ihx_sha256': ihx, 'map_sha256': ci.sha(mapfile),
+                    'mem_sha256': f'{index+80:064x}', 'build_report_sha256': f'{index+100:064x}',
+                    'source_manifest_sha256': f'{index+120:064x}',
+                    'compiler_sha256': f'{index+140:064x}', 'nvm_schema': configuration['nvm_schema']}
+                contract = settings_backup.catalog_settings_identity(
+                    configuration, ihx, f'{index+20:064x}', f'{index+40:064x}')
+                rows.append({'profile': name, 'configuration': configuration,
+                             'identity': {'ihx_sha256': ihx, 'nvm_schema': configuration['nvm_schema']},
+                             'reproducible_identity': ci.reproducible_identity(builds_root/name, artifact_identity),
+                             'settings_identity': contract,
+                             'release_approved': False, 'installable': False})
+                measured[name] = {'profile': name, 'configuration': configuration,
+                    'identity': artifact_identity,
+                    'measurement_status': 'linked-memory-pass', 'runtime_status': 'exact-image-pass',
+                    'offline_tests_status': 'exact-image-pass', 'release_approved': False,
+                    'installable': False}
+            settings_catalog = root/'settings-catalog.json'
+            settings_catalog.write_text(json.dumps({'format': firmware_matrix.FORMAT,
+                'profiles': rows, 'settings_transitions': []}))
+            with patch.object(firmware_matrix, 'measured_row', side_effect=lambda build, toolchain: measured[build.name]):
+                matrix, builds = ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
+            self.assertEqual(tuple(row['profile'] for row in matrix['profiles']), names)
+            self.assertEqual(matrix['profiles'][0]['settings_identity'], rows[0]['settings_identity'])
+            self.assertFalse(any(row['release_approved'] or row['installable'] for row in matrix['profiles']))
+            self.assertEqual(tuple(builds), names)
+            # CI map/report paths change raw hashes, while linked symbols stay stable.
+            changed_map = builds_root/'main'/'ajazz_ak820_vial.map'
+            changed_map.write_bytes(source_map.read_bytes() + b'\npath: /ci/profiles/main\n')
+            measured['main']['identity']['map_sha256'] = ci.sha(changed_map)
+            measured['main']['identity']['build_report_sha256'] = 'e' * 64
+            measured['main']['identity']['source_manifest_sha256'] = 'd' * 64
+            with patch.object(firmware_matrix, 'measured_row', side_effect=lambda build, toolchain: measured[build.name]):
+                ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
+            for field in ('configuration_sha256', 'compiler_sha256'):
+                original = measured['main']['identity'][field]
+                measured['main']['identity'][field] = 'f' * 64
+                with patch.object(firmware_matrix, 'measured_row', side_effect=lambda build, toolchain: measured[build.name]):
+                    with self.assertRaisesRegex(ValueError, 'does not bind the measured profile'):
+                        ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
+                measured['main']['identity'][field] = original
+            symbol_map = changed_map.read_text()
+            altered_map, replacements = re.subn(r'(?m)^C:\s+[0-9A-Fa-f]{8}',
+                'C: 00FFFFFF', symbol_map, count=1)
+            self.assertEqual(replacements, 1)
+            changed_map.write_text(altered_map)
+            measured['main']['identity']['map_sha256'] = ci.sha(changed_map)
+            with patch.object(firmware_matrix, 'measured_row', side_effect=lambda build, toolchain: measured[build.name]):
+                with self.assertRaisesRegex(ValueError, 'does not bind the measured profile'):
+                    ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
+            changed_map.write_text(symbol_map)
+            measured['main']['identity']['map_sha256'] = ci.sha(changed_map)
+            catalog = json.loads(settings_catalog.read_text())
+            source = settings_backup.WORK_IHX
+            catalog['historical_sources'] = [{'ihx_sha256':source,
+                'code_sha256':settings_backup._legacy_images()[source]['code_sha256']}]
+            catalog['settings_transitions'] = [{'source':source,'target':rows[0]['identity']['ihx_sha256']}]
+            settings_catalog.write_text(json.dumps(catalog))
+            with patch.object(firmware_matrix, 'measured_row', side_effect=lambda build, toolchain: measured[build.name]):
+                matrix, _ = ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
+            self.assertEqual(matrix['historical_sources'],catalog['historical_sources'])
+            self.assertEqual(matrix['settings_transitions'],catalog['settings_transitions'])
+            measured['shortcuts']['identity']['ihx_sha256'] = 'f' * 64
+            with patch.object(firmware_matrix, 'measured_row', side_effect=lambda build, toolchain: measured[build.name]):
+                with self.assertRaisesRegex(ValueError, 'does not bind the measured profile'):
+                    ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
+
+    def test_profile_release_requires_each_committed_policy_review_and_receipt_before_assembly(self):
+        names = ci.release_profile_names()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); source = root/'qmk-8051-ak820'; source.mkdir()
+            builds = source/'.build/ci-profiles'; builds.mkdir(parents=True)
+            policies = root/'ci/profiles'; policies.mkdir(parents=True)
+            settings = root/'tools/installer/settings-catalog.json'; settings.parent.mkdir(parents=True)
+            settings.write_text('{}')
+            for name in names:
+                (policies/name).mkdir()
+            out = root/'dist/ci-firmware'
+            with patch.object(ci, 'ROOT', root), patch.object(ci, 'SOURCE', source), \
+                 patch.object(ci, '_validate_source_commit'), patch.object(ci, '_require_committed_input'), \
+                 patch.object(ci, 'settings_matrix_from_builds', return_value=({}, {name: builds/name for name in names})):
+                with self.assertRaisesRegex(ValueError, 'Missing or unsafe .* policy'):
+                    ci.assemble_profiles(builds, policies, out, root/'toolchain', 'a' * 40, settings)
+            self.assertFalse(out.exists())
+
+    def test_profile_release_writes_capabilities_from_exact_measured_builds(self):
+        names = ci.release_profile_names()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); source = root/'qmk-8051-ak820'; source.mkdir()
+            builds_root = source/'.build/ci-profiles'; builds_root.mkdir(parents=True)
+            builds = {name: builds_root/name for name in names}
+            policies = root/'ci/profiles'
+            for name in names:
+                (policies/name).mkdir(parents=True)
+                for filename in ('release-policy.json', 'program-review.md', 'packing-validation.json'):
+                    (policies/name/filename).write_text('{}')
+            settings = root/'settings.json'; settings.write_text('{}')
+            matrix = {'profiles': [{'identity': {'ihx_sha256': name}} for name in names]}
+            capabilities = {'images': [{'build_identity': {'map_sha256': 'measured-raw-map'}}]}
+            def assemble_stub(build, qualification, policy, review, receipt, destination, *args, **kwargs):
+                destination.mkdir(parents=True)
+                (destination/'identity.json').write_text(build.name)
+                archive = destination.with_suffix('.zip'); archive.write_bytes(b'profile')
+                return {'archive': str(archive)}
+            out = root/'dist/release'; toolchain = root/'toolchain'
+            with patch.object(ci, 'ROOT', root), patch.object(ci, 'SOURCE', source), \
+                 patch.object(ci, '_validate_source_commit'), patch.object(ci, '_require_committed_input'), \
+                 patch.object(ci, '_git_head', return_value='a' * 40), \
+                 patch.object(ci, 'settings_matrix_from_builds', return_value=(matrix, builds)), \
+                 patch.object(ci.capability_catalog, 'catalog', return_value=capabilities) as measured, \
+                 patch.object(ci, 'assemble', side_effect=assemble_stub):
+                ci.assemble_profiles(builds_root, policies, out, toolchain, 'a' * 40, settings)
+            measured.assert_called_once_with([builds[name] for name in names], toolchain)
+            self.assertEqual(json.loads((out/'reports/capability-catalog.json').read_text()), capabilities)
+            self.assertEqual(json.loads((out/'reports/firmware-matrix.json').read_text()), matrix)
+
     def test_commit_identity_and_committed_input_are_enforced(self):
         with patch.object(ci, '_git_head', return_value='a' * 40):
             ci._validate_source_commit('a' * 40)
@@ -220,7 +357,11 @@ class AssemblyPreflightTests(unittest.TestCase):
                                   ('ajazz_ak820_vial.map', b'fresh map'),
                                   ('ajazz_ak820_vial.mem', b'fresh mem')):
                 (build / name).write_bytes(payload)
-            report = {'keyboard': 'ajazz/ak820', 'keymap': 'vial', 'build_id': 532482,
+            import ak820_profiles
+            configuration = ak820_profiles.configuration('main')
+            report = {'keyboard': 'ajazz/ak820', 'keymap': 'vial',
+                      'build_id': configuration['nvm_schema'],
+                      'configuration': configuration,
                       'builder_sha256': '166dff0bb41a7a029b8f3c1c8cd57976368e63714458ee26b8fabcf1eb6564a6',
                       'hardware_validated': False, 'artifacts': [
                           {'path': f'.build/ci/ajazz_ak820_vial.{ext}', 'sha256': sha(payload),
@@ -234,7 +375,8 @@ class AssemblyPreflightTests(unittest.TestCase):
             (source / 'util/build_ak820.py').write_bytes(b'builder')
             q, p, r, receipt = [root / name for name in ('q.json', 'p.json', 'r.md', 'receipt.json')]
             q.write_text('{}')
-            policy = {'source_files': {}, 'program': {'ihx_sha256': sha(b'fresh ihx'), 'symbols_sha256': '1' * 64}}
+            policy = {'source_files': {}, 'program': {'ihx_sha256': sha(b'fresh ihx'),
+                      'symbols_sha256': '1' * 64, 'schema': configuration['nvm_schema']}}
             p.write_text(json.dumps(policy))
             review = {'format': 'ak820-ci-program-review-1', 'policy_sha256': sha(p.read_bytes())}
             r.write_text('```json\n' + json.dumps(review) + '\n```\n')
@@ -252,6 +394,7 @@ class AssemblyPreflightTests(unittest.TestCase):
                 patch.object(ci.authorization, 'symbols_sha256', return_value='1' * 64),
                 patch.object(ci.authorization, 'validate_bundle_authorization'),
                 patch.object(ci.authorization, 'validate_qualification_contract'),
+                patch.object(ci, 'require_release_qualification'),
                 patch.object(ci, '_validate_policy_sources'),
                 patch.object(ci, '_qualification'),
             ]
@@ -265,7 +408,8 @@ class AssemblyPreflightTests(unittest.TestCase):
 
             bad_output = root / 'dist/bad'
             bad_policy = {'source_files': {},
-                          'program': {'ihx_sha256': '0' * 64, 'symbols_sha256': '1' * 64}}
+                          'program': {'ihx_sha256': '0' * 64, 'symbols_sha256': '1' * 64,
+                                      'schema': configuration['nvm_schema']}}
             bad_policy_path = root / 'bad-policy.json'
             bad_policy_path.write_text(json.dumps(bad_policy))
             bad_review = root / 'bad-review.md'

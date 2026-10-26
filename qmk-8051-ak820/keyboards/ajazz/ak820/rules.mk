@@ -7,13 +7,29 @@ ENCODER_ENABLE = yes
 ENCODER_MAP_ENABLE = yes
 EXTRAKEY_ENABLE = yes
 MOUSEKEY_ENABLE = no
-NKRO_ENABLE = yes
+AK820_NKRO ?= yes
+ifeq ($(AK820_NKRO),yes)
+    NKRO_ENABLE = yes
+    OPT_DEFS += -DAK820_NKRO
+else ifeq ($(AK820_NKRO),no)
+    NKRO_ENABLE = no
+else
+    $(error AK820_NKRO must be yes or no)
+endif
 CONSOLE_ENABLE = no
 COMMAND_ENABLE = no
 MAGIC_ENABLE = no
 CAPS_WORD_ENABLE = yes
 REPEAT_KEY_ENABLE = yes
-GRAVE_ESC_ENABLE = yes
+AK820_GRAVE_ESCAPE ?= yes
+ifeq ($(AK820_GRAVE_ESCAPE),yes)
+    GRAVE_ESC_ENABLE = yes
+    OPT_DEFS += -DAK820_GRAVE_ESCAPE
+else ifeq ($(AK820_GRAVE_ESCAPE),no)
+    GRAVE_ESC_ENABLE = no
+else
+    $(error AK820_GRAVE_ESCAPE must be yes or no)
+endif
 TRI_LAYER_ENABLE = yes
 SPACE_CADET_ENABLE = no
 LEADER_ENABLE = no
@@ -31,6 +47,14 @@ QMK_SETTINGS = no
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = custom
 VIALRGB_ENABLE = yes
+AK820_VIALRGB_DIRECT ?= yes
+ifeq ($(AK820_VIALRGB_DIRECT),yes)
+    OPT_DEFS += -DAK820_VIALRGB_DIRECT
+else ifeq ($(AK820_VIALRGB_DIRECT),no)
+    OPT_DEFS += -DVIALRGB_NO_DIRECT
+else
+    $(error AK820_VIALRGB_DIRECT must be yes or no)
+endif
 
 # Compact user controls are opt-in and do not enable the Magic engine.
 AK820_NKRO_CONTROL ?= no

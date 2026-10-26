@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import test_settings_backup as model
 
 s = model.settings
@@ -12,6 +12,16 @@ p = s.pack
 
 
 def profile_for(name, seed):
+    assert name in s.ak820_profiles.RELEASE_PROFILES
+    return _profile_for(name, seed)
+
+
+def legacy_profile_for(name, seed):
+    assert name not in s.ak820_profiles.RELEASE_PROFILES
+    return _profile_for(name, seed)
+
+
+def _profile_for(name, seed):
     profile = model.synthetic_profile()
     config = s.ak820_profiles.configuration(name)
     nvm = model.base_nvm()
@@ -42,7 +52,7 @@ def bind(catalog, *profiles):
 
 def backup_at(folder, profile, nvm=None):
     nvm = bytes(nvm if nvm is not None else profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
-    data = s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32]), combos=True)
+    data = s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32], image=s._profile_images(profile)[profile['ihx_sha256']]), combos=True)
     files = {'settings.json': s.canonical(data), 'before-full-rom.bin': model.WireDevice(profile, nvm).rom(),
              'saved-nvm.bin': nvm, 'read-log.jsonl': b'', '.gitignore': b'*\n'}
     manifest = {'format': s.FORMAT_V2 if profile['schema'] == s.extensions.SCHEMA else s.FORMAT,
@@ -58,6 +68,9 @@ def backup_at(folder, profile, nvm=None):
 
 class CatalogSettings(unittest.TestCase):
     def test_all_curated_contracts_exact_and_no_release_approval(self):
+        self.assertEqual(s.ak820_profiles.RELEASE_PROFILES,
+            ('main', 'game', 'mmo', 'typing', 'code', 'pointer', 'onehand', 'creative', 'shortcuts', 'multios'))
+        self.assertEqual(s.ak820_profiles.DEFAULT_PROFILE, 'main')
         for i, name in enumerate(s.ak820_profiles.RELEASE_PROFILES, 20):
             with self.subTest(name=name):
                 profile, row = profile_for(name, i)
@@ -71,13 +84,13 @@ class CatalogSettings(unittest.TestCase):
                     self.assertEqual(s.plan_restore(backup, profile)['key_count'], 498)
 
     def test_wrong_unknown_duplicate_and_feature_poisoned_metadata_fail(self):
-        _, row = profile_for('work', 31)
+        _, row = profile_for('main', 31)
         edits = [lambda r: r['settings_identity'].update(extra=True),
                  lambda r: r['settings_identity']['supported_keycodes'].__setitem__(0, False),
                  lambda r: r['settings_identity']['features'].append('mouse-keys'),
                  lambda r: r['settings_identity']['features'].append('future'),
                  lambda r: r['settings_identity']['supported_keycodes'].append(0xCD),
-                 lambda r: r['settings_identity'].update(nvm_schema=s.extensions.SCHEMA),
+                 lambda r: r['settings_identity'].update(nvm_schema=p.BUILD_ID),
                  lambda r: r['identity'].update(ihx_sha256='0'*64)]
         for edit in edits:
             poisoned = copy.deepcopy(row); edit(poisoned)
@@ -87,7 +100,7 @@ class CatalogSettings(unittest.TestCase):
         with self.assertRaises(ValueError): s._catalog_images(catalog_for(row, transitions=[{'source': '0'*64, 'target': row['settings_identity']['ihx_sha256']}]))
 
     def test_exact_code_mismatch_and_unknown_backup_fields_fail(self):
-        profile, row = profile_for('work', 32)
+        profile, row = profile_for('main', 32)
         bind(catalog_for(row), profile)
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp); backup_at(path, profile)
@@ -116,7 +129,7 @@ class CatalogSettings(unittest.TestCase):
             for context in ('encoder','macro'): self.assertFalse(s.image_keycode_supported(code,image,context=context))
 
     def test_reviewed_transition_does_not_override_module_or_schema(self):
-        work, wr = profile_for('work', 40); mouse, mr = profile_for('mouse', 41)
+        work, wr = profile_for('main', 40); mouse, mr = profile_for('game', 41)
         transition = {'source': work['ihx_sha256'], 'target': mouse['ihx_sha256']}
         catalog = catalog_for(wr,mr); bind(catalog,work,mouse)
         with tempfile.TemporaryDirectory() as temp:
@@ -130,17 +143,23 @@ class CatalogSettings(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             backup=backup_at(Path(temp),work,nvm)
             with self.assertRaisesRegex(ValueError,'Unsupported keycode'): s.plan_restore(backup,mouse)
-        typed,tr=profile_for('settings',42)
-        catalog=catalog_for(wr,tr,transitions=[{'source':work['ihx_sha256'],'target':typed['ihx_sha256']}, {'source':typed['ihx_sha256'],'target':work['ihx_sha256']}]);bind(catalog,work,typed)
+        legacy, lr = legacy_profile_for('work', 42)
+        typed, tr = profile_for('main', 43)
+        catalog = catalog_for(lr, tr, transitions=[
+            {'source': legacy['ihx_sha256'], 'target': typed['ihx_sha256']},
+            {'source': typed['ihx_sha256'], 'target': legacy['ihx_sha256']}])
+        bind(catalog, legacy, typed)
         with tempfile.TemporaryDirectory() as temp:
-            backup=backup_at(Path(temp),work);self.assertIsNotNone(s.plan_restore(backup,typed)['extension_data'])
+            backup = backup_at(Path(temp), legacy)
+            self.assertIsNotNone(s.plan_restore(backup, typed)['extension_data'])
         with tempfile.TemporaryDirectory() as temp:
-            backup=backup_at(Path(temp),typed)
-            with self.assertRaisesRegex(ValueError,'downgrade'):s.plan_restore(backup,work)
+            backup = backup_at(Path(temp), typed)
+            with self.assertRaisesRegex(ValueError, 'downgrade'):
+                s.plan_restore(backup, legacy)
 
     def test_unsupported_encoder_and_macro_actions_block_preflight(self):
-        for name, code, context in [('work',0x7C58,'encoder'), ('typing',0x7C13,'encoder'),
-                                     ('tap-dance',0x5700,'encoder'), ('work',0x7C58,'macro')]:
+        for name, code, context in [('main',0x7C58,'encoder'), ('typing',0x7C13,'encoder'),
+                                     ('creative',0x5700,'encoder'), ('main',0x7C58,'macro')]:
             with self.subTest(name=name,context=context):
                 profile,row=profile_for(name,60);bind(catalog_for(row),profile)
                 nvm=bytearray(profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
@@ -155,7 +174,7 @@ class CatalogSettings(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError,'Unsupported keycode'):s.plan_restore(backup,profile)
 
     def test_dynamic_macro_controls_require_physical_matrix_for_every_opcode(self):
-        profile,row=profile_for('work',63);bind(catalog_for(row),profile)
+        profile,row=profile_for('main',63);bind(catalog_for(row),profile)
         image=profile['compatible_images'][profile['ihx_sha256']]
         for code in range(0x7C53,0x7C58):
             self.assertTrue(s.image_keycode_supported(code,image,context='matrix'))
@@ -174,7 +193,7 @@ class CatalogSettings(unittest.TestCase):
                         with self.assertRaisesRegex(ValueError,'Unsupported keycode'):s.plan_restore(backup,profile)
 
     def test_key_override_macro_controls_accept_tap_and_reject_down_up(self):
-        profile,row=profile_for('key-overrides',64);bind(catalog_for(row),profile)
+        profile,row=profile_for('main',64);bind(catalog_for(row),profile)
         image=profile['compatible_images'][profile['ihx_sha256']]
         for code in range(0x7C5D,0x7C60):
             for opcode,context in ((5,'macro-tap'),(6,'macro-down'),(7,'macro-up')):
@@ -191,7 +210,7 @@ class CatalogSettings(unittest.TestCase):
                             with self.assertRaisesRegex(ValueError,'Unsupported keycode in macro'):s.plan_restore(backup,profile)
 
     def test_macro_module_keycode_cannot_cross_profile_even_with_transition(self):
-        source,sr=profile_for('system',61);target,tr=profile_for('work',62)
+        source,sr=profile_for('game',61);target,tr=profile_for('main',62)
         catalog=catalog_for(sr,tr,transitions=[{'source':source['ihx_sha256'],'target':target['ihx_sha256']}])
         bind(catalog,source,target)
         nvm=bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
@@ -203,8 +222,136 @@ class CatalogSettings(unittest.TestCase):
             self.assertIsNotNone(s.plan_restore(backup,source))
             with self.assertRaisesRegex(ValueError,'Unsupported keycode in macro'):s.plan_restore(backup,target)
 
+    def test_grave_escape_is_allowed_only_when_compiled(self):
+        for name in s.ak820_profiles.RELEASE_PROFILES:
+            features = s.ak820_profiles.configuration(name)['optional_features']
+            self.assertEqual(s.keycode_supported(0x7c16, features=features), 'grave-escape' in features)
+
+    def test_rgb_modes_follow_exact_profile_enum(self):
+        for name in s.ak820_profiles.RELEASE_PROFILES:
+            config = s.ak820_profiles.configuration(name)
+            image = {'features': config['optional_features'], 'supported_keycodes': []}
+            direct = 'vialrgb-direct' in config['optional_features']
+            expected = {1:2,2:6,3:13,4:14,5:1,6:31} if direct else {1:2,2:6,3:13,4:14,5:31}
+            self.assertEqual(s.rgb_modes(image), expected)
+            raw = bytes((5*4+1,0,255,80,96,255,0,0))
+            self.assertEqual(int.from_bytes(s.rgb_wire(raw,image=image)[:2], 'little'), 1 if direct else 31)
+            if not direct:
+                with self.assertRaisesRegex(ValueError, 'enable/mode'):
+                    s.rgb_wire(bytes((6*4+1,0,255,80,96,255,0,0)),image=image)
+
+    def test_reactive_mode_translates_between_direct_and_no_direct_enums(self):
+        for source_name,target_name,enum in [('typing','main',5),('main','typing',6)]:
+            source,row = profile_for(source_name,61)
+            target,target_row = profile_for(target_name,62)
+            edge = {'source': source['ihx_sha256'], 'target': target['ihx_sha256']}
+            bind(catalog_for(row,target_row,transitions=[edge]),source,target)
+            nvm = bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
+            nvm[24] = enum*4+1
+            with tempfile.TemporaryDirectory() as temp:
+                backup = backup_at(Path(temp),source,nvm)
+                plan = s.plan_restore(backup,target)
+                self.assertEqual(int.from_bytes(plan['rgb_saved_mode'][:2],'little'),31)
+
+    def test_direct_palette_is_blocked_before_restore_into_no_direct_image(self):
+        source,row = profile_for('main',63)
+        target,target_row = profile_for('typing',64)
+        edge = {'source':source['ihx_sha256'],'target':target['ihx_sha256']}
+        bind(catalog_for(row,target_row,transitions=[edge]),source,target)
+        nvm = bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
+        nvm[24] = 5*4+1
+        with tempfile.TemporaryDirectory() as temp:
+            backup = backup_at(Path(temp),source,nvm)
+            with self.assertRaisesRegex(ValueError,'unsupported by the selected target'):
+                s.plan_restore(backup,target)
+            target_dir = Path(temp)/'target-snapshot'
+            target_dir.mkdir()
+            before = backup_at(target_dir,target)
+            api = Mock(allow_writes=True)
+            with self.assertRaisesRegex(ValueError,'unsupported by the selected target'):
+                s.restore_settings(api,backup,target,target_backup=before)
+            self.assertEqual(api.mock_calls, [])
+
+    def test_known_beta1_work_source_requires_exact_pins_and_explicit_transition(self):
+        # These are historical image descriptors, not invented ROM contents.
+        source = {'ihx_sha256': '652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880',
+                  'code_sha256': 'a7ad972f47acff20f3492ed846f5c6ca0825d43de263f26cc9328069a27cdd10'}
+        for index, name in enumerate(s.ak820_profiles.RELEASE_PROFILES, 65):
+            target, row = profile_for(name, index)
+            edge = {'source': source['ihx_sha256'], 'target': target['ihx_sha256']}
+            catalog = catalog_for(row, transitions=[edge])
+            with self.subTest(target=name):
+                with self.assertRaisesRegex(ValueError, 'Unknown settings transition'):
+                    s._catalog_images(catalog)
+                catalog['historical_sources'] = [copy.deepcopy(source)]
+                images = s._catalog_images(catalog)
+                legacy = images[s.WORK_IHX]
+                self.assertEqual(legacy, s._legacy_images()[s.WORK_IHX])
+                self.assertEqual(legacy['build_id'], p.BUILD_ID)
+                self.assertEqual(images[target['ihx_sha256']]['build_id'], p.EXTENSION_BUILD_ID)
+                self.assertNotIn('supported_keycodes', legacy)
+                self.assertNotIn('profile', legacy)
+                self.assertNotIn('qmk-settings', legacy['features'])
+                catalog['historical_sources'][0]['code_sha256'] = '0' * 64
+                with self.assertRaisesRegex(ValueError, 'historical settings source'):
+                    s._catalog_images(catalog)
+
+
+    def test_pinned_alpha2_source_requires_explicit_descriptor_and_edge(self):
+        target,row = profile_for('main',91)
+        source = s.SUPPORTED_IHX
+        edge = {'source':source,'target':target['ihx_sha256']}
+        catalog = catalog_for(row,transitions=[edge])
+        with self.assertRaisesRegex(ValueError,'Unknown settings transition'):
+            s._catalog_images(catalog)
+        descriptor = {'ihx_sha256':source,'code_sha256':s._legacy_images()[source]['code_sha256']}
+        catalog['historical_sources'] = [descriptor]
+        self.assertEqual(s._catalog_images(catalog)[source],s._legacy_images()[source])
+        catalog['historical_sources'].append(copy.deepcopy(descriptor))
+        with self.assertRaisesRegex(ValueError,'duplicate historical'):
+            s._catalog_images(catalog)
+        catalog['historical_sources'] = [{'ihx_sha256':'f'*64,'code_sha256':'e'*64}]
+        with self.assertRaisesRegex(ValueError,'Unknown or duplicate historical'):
+            s._catalog_images(catalog)
+
+    def test_restore_and_final_verification_translate_rgb_enum_both_directions(self):
+        for source_name,target_name,source_enum,target_enum in [('main','typing',6,5),('typing','main',5,6)]:
+            for enabled in (0,1):
+                with self.subTest(source=source_name,target=target_name,enabled=enabled), tempfile.TemporaryDirectory() as temp:
+                    root = Path(temp)
+                    source,row = profile_for(source_name,71)
+                    target,target_row = profile_for(target_name,72)
+                    edge = {'source':source['ihx_sha256'],'target':target['ihx_sha256']}
+                    bind(catalog_for(row,target_row,transitions=[edge]),source,target)
+                    nvm = bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
+                    nvm[24] = source_enum*4+enabled
+                    saved_dir,target_dir = root/'source',root/'target'
+                    saved_dir.mkdir();target_dir.mkdir()
+                    saved = backup_at(saved_dir,source,nvm)
+                    before = backup_at(target_dir,target)
+                    target_nvm = before['nvm']
+                    raw = model.WireDevice(target,target_nvm)
+                    raw.mode_ids = ({1:2,2:6,3:13,4:14,5:31} if target_name=='typing' else {1:2,2:6,3:13,4:14,5:1,6:31})
+                    (root/'wire').mkdir()
+                    api = s.DeviceAPI(target,root/'wire',lambda:raw,allow_writes=True)
+                    config = s.ak820_profiles.configuration(target_name)
+                    api.settings_query = Mock(return_value=config['runtime_qmk_settings'])
+                    api.get_setting = lambda qsid:s.extensions.decode_settings(bytes(raw.nvm[0x6a8:0x6c0]))[str(qsid)]
+                    api.dynamic_entry_counts = Mock(return_value=(0,8,8))
+                    api.get_extension = lambda kind,index:bytes(raw.nvm[s.extensions.slot_offset(kind,index):s.extensions.slot_offset(kind,index)+10])
+                    try:
+                        with patch('ak820_device_protocol.time.sleep'):
+                            result = s.restore_settings(api,saved,target,target_backup=before)
+                        self.assertTrue(result['verified'])
+                        self.assertEqual(raw.nvm[24],target_enum*4+enabled)
+                        self.assertTrue(any(packet[0]==9 for packet in raw.writes))
+                        with patch('ak820_device_protocol.time.sleep'):
+                            self.assertTrue(s.verify_restore(api,saved,target)['verified'])
+                    finally:
+                        api.close()
+
     def test_loader_constructs_schema03_and_rejects_wrong_actual_code(self):
-        profile,row=profile_for('settings',50)
+        profile,row=profile_for('main',50)
         with tempfile.TemporaryDirectory() as temp:
             bundle=Path(temp);(bundle/'firmware').mkdir();(bundle/'reference').mkdir()
             ihx=b'synthetic ihx';(bundle/'firmware/application.ihx').write_bytes(ihx)

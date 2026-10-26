@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'qmk-8051-ak820/util'))
 import ak820_ci_authorization as auth
+import ak820_profiles
 import pack_ak820 as pack
 from ak820_release_manifest import read_review_record
 
@@ -69,6 +70,26 @@ class AuthorizationTests(unittest.TestCase):
     def test_pass(self):
         self.validate()
 
+    def test_extension_schema_receipt_and_mixed_schema_rejected(self):
+        self.program['schema'] = pack.EXTENSION_BUILD_ID
+        self.receipt['program']['schema'] = pack.EXTENSION_BUILD_ID
+        for image in (self.receipt['packing']['images']['ak820-vial-trial.bin'],
+                      self.receipt['packing']['permanent']):
+            image['build_id'] = pack.EXTENSION_BUILD_ID
+        self.policy['packing_receipt_sha256'] = auth.digest(raw(self.receipt))
+        self.validate()
+        for image in (self.receipt['packing']['images']['ak820-vial-trial.bin'],
+                      self.receipt['packing']['permanent']):
+            image['build_id'] = pack.BUILD_ID
+            self.policy['packing_receipt_sha256'] = auth.digest(raw(self.receipt))
+            with self.assertRaisesRegex(ValueError, 'schema differs'):
+                self.validate()
+            image['build_id'] = pack.EXTENSION_BUILD_ID
+        for invalid in (True, pack.EXTENSION_BUILD_ID + 1):
+            self.program['schema'] = invalid
+            with self.assertRaisesRegex(ValueError, 'Unsupported policy'):
+                self.validate()
+
     def test_corruption(self):
         for mutate in (lambda: self.policy['program'].update(sdcc_version='4.4.0'),
                        lambda: self.policy.update(packing_receipt_sha256='0'*64),
@@ -110,8 +131,10 @@ class AuthorizationTests(unittest.TestCase):
             path = bundle / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(value)
-        for name in ('firmware/application.ihx', 'firmware/application.mem', 'reports/build-report.json'):
+        for name in ('firmware/application.ihx', 'firmware/application.mem'):
             write(name, b'fixture')
+        config = ak820_profiles.configuration('main') if self.program['schema'] == pack.EXTENSION_BUILD_ID else ak820_profiles.legacy_configuration('work')
+        write('reports/build-report.json', raw({'build_id': self.program['schema'], 'configuration': config}))
         write('firmware/application.map', b'C: 00008010 foo\n')
         self.program.update(ihx_sha256=auth.digest(b'fixture'),
                             symbols_sha256=auth.symbols_sha256(bundle/'firmware/application.map'))
@@ -130,7 +153,7 @@ class AuthorizationTests(unittest.TestCase):
         write('reports/qualification.json', raw(qualification))
         attestation = dict(format='ak820-ci-build-attestation-1', source_commit='a'*40,
             build=dict(ihx_sha256=hashes['ihx'],map_sha256=hashes['map'],mem_sha256=auth.digest(b'fixture'),
-                       build_report_sha256=auth.digest(b'fixture')),
+                       build_report_sha256=auth.digest((bundle/'reports/build-report.json').read_bytes())),
             policy_sha256=auth.digest(raw(self.policy)), program_review_sha256=auth.digest(markdown(self.review)),
             qualification_sha256=auth.digest(raw(qualification)), host_files=self.host, hardware_validated=False)
         write('reports/build-attestation.json', raw(attestation))
@@ -155,6 +178,23 @@ class AuthorizationTests(unittest.TestCase):
                     item=json.loads(previous);item[field]=value;path.write_bytes(raw(item))
                     with self.assertRaises(ValueError): auth.validate_bundle_authorization(bundle,manifest,record)
                     path.write_bytes(previous)
+
+    def test_extension_bundle_schema_matches_report_and_receipt(self):
+        self.program['schema'] = pack.EXTENSION_BUILD_ID
+        self.receipt['program']['schema'] = pack.EXTENSION_BUILD_ID
+        self.receipt['packing']['images']['ak820-vial-trial.bin']['build_id'] = pack.EXTENSION_BUILD_ID
+        self.receipt['packing']['permanent']['build_id'] = pack.EXTENSION_BUILD_ID
+        with tempfile.TemporaryDirectory() as folder:
+            bundle, manifest, record = self.bundle_fixture(folder)
+            auth.validate_bundle_authorization(bundle, manifest, record)
+            report_path = bundle/'reports/build-report.json'
+            original = report_path.read_bytes()
+            for changed in ({'build_id': pack.BUILD_ID, 'configuration': ak820_profiles.configuration('main')},
+                            {'build_id': pack.EXTENSION_BUILD_ID, 'configuration': ak820_profiles.legacy_configuration('work')}):
+                report_path.write_bytes(raw(changed))
+                with self.assertRaises(ValueError):
+                    auth.validate_bundle_authorization(bundle, manifest, record)
+            report_path.write_bytes(original)
 
     def test_linux_report_paths_are_portable_to_windows_installer(self):
         with tempfile.TemporaryDirectory() as folder:

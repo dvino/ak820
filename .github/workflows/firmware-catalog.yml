@@ -37,7 +37,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install -r requirements-ak820-build.txt
-      - name: Build and qualify all nine candidates
+      - name: Build and qualify all ten candidates
         run: >-
           python tools/build_profile_catalog.py
           --build-root "qmk-8051-ak820/.build/$CATALOG_RUN"

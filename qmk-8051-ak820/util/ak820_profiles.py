@@ -17,6 +17,9 @@ LEGACY_BUILDERS = frozenset({
     '4094ceba4c883b70355fb6fefa8a219cb18a0847bfbcb623c1e5833feaf276db',
 })
 SWITCHES = {
+    'nkro': 'AK820_NKRO',
+    'grave-escape': 'AK820_GRAVE_ESCAPE',
+    'vialrgb-direct': 'AK820_VIALRGB_DIRECT',
     'tap-dance': 'AK820_COMPACT_TAP_DANCE',
     'key-overrides': 'AK820_COMPACT_KEY_OVERRIDE',
     'qmk-settings': 'AK820_QMK_SETTINGS',
@@ -32,20 +35,19 @@ SWITCHES = {
     'ctrl-gui-swap': 'AK820_COMPACT_CTRL_GUI_SWAP',
     'dynamic-macros': 'AK820_COMPACT_DYNAMIC_MACRO',
 }
-DEFAULT_PROFILE = 'work'
+DEFAULT_PROFILE = 'main'
 # The desktop and release builder offer these broad, finite feature packages.
 # Historical names below remain usable to reproduce earlier development builds.
-RELEASE_PROFILES = (
-    'work', 'essential', 'typing', 'mouse', 'mouse-typing', 'system',
-    'tap-dance', 'key-overrides', 'settings',
-)
+RELEASE_PROFILES = ('main', 'game', 'mmo', 'typing', 'code', 'pointer',
+                    'onehand', 'creative', 'shortcuts', 'multios')
+
 PROFILES = {
     # Development-only union used to measure whole-program compression.
     'maximal': tuple(SWITCHES),
     'work': ('nkro-control', 'one-shot', 'space-cadet', 'leader',
              'dynamic-macros', 'os-indicators'),
     'essential': ('nkro-control', 'one-shot', 'space-cadet', 'os-indicators'),
-    'typing': ('nkro-control', 'one-shot', 'space-cadet', 'auto-shift', 'os-indicators'),
+    'legacy-typing': ('nkro-control', 'one-shot', 'space-cadet', 'auto-shift', 'os-indicators'),
     'mouse': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'os-indicators'),
     'mouse-typing': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys',
                      'auto-shift', 'gui-lock', 'os-indicators'),
@@ -79,12 +81,33 @@ PROFILES = {
     'full-auto-shift': ('nkro-control', 'one-shot', 'space-cadet', 'auto-shift'),
     'full-mouse-auto-shift': ('nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'auto-shift'),
 }
+# Retain the historical feature sets under unambiguous names. The old
+# firmware always included NKRO, Grave Escape and Direct.
+PROFILES = {name: tuple(dict.fromkeys(tuple(features) + ('nkro', 'grave-escape', 'vialrgb-direct')))
+            for name, features in PROFILES.items()}
+_MAIN = ('one-shot', 'leader', 'dynamic-macros', 'os-indicators',
+         'qmk-settings', 'key-overrides', 'vialrgb-direct')
+def _variant(remove=(), add=()):
+    return tuple(feature for feature in _MAIN if feature not in remove) + tuple(add)
+PROFILES = {
+    'main': _MAIN,
+    'game': _variant(('leader',), ('nkro', 'nkro-control', 'gui-lock')),
+    'mmo': _variant(('leader', 'key-overrides'), ('nkro', 'nkro-control', 'gui-lock', 'tap-dance')),
+    'typing': _variant(('vialrgb-direct',), ('auto-shift', 'space-cadet')),
+    'code': _variant(('vialrgb-direct',), ('space-cadet', 'grave-escape')),
+    'pointer': _variant(('vialrgb-direct',), ('mouse-keys',)),
+    'onehand': _variant(('vialrgb-direct', 'key-overrides'), ('mouse-keys', 'tap-dance')),
+    'creative': _variant(('key-overrides',), ('tap-dance',)),
+    'shortcuts': _variant(('vialrgb-direct', 'dynamic-macros'), ('tap-dance',)),
+    'multios': _variant(('vialrgb-direct',), ('mac-pc', 'ctrl-gui-swap')),
+    **PROFILES,
+}
 CONFLICTS = []
 BASE_FEATURES = (
     'six-layers', 'sixteen-vial-macros', 'eight-two-key-combos',
-    'compact-tap-hold', 'encoder-map', 'media-keys', 'nkro-reports',
-    'caps-word', 'repeat', 'alternate-repeat', 'grave-escape', 'tri-layer',
-    'rgb-effects', 'vialrgb-direct-ram',
+    'compact-tap-hold', 'encoder-map', 'media-keys',
+    'caps-word', 'repeat', 'alternate-repeat', 'tri-layer',
+    'rgb-effects',
 )
 DEFERRED = {
     'magic': 'Additional swaps, Caps variants and persistent Magic settings are outside the bounded module contract; Ctrl/GUI and Alt/GUI swaps are session-only.',
@@ -97,7 +120,9 @@ def configuration(name: str) -> dict:
     enabled = PROFILES[name]
     return {
         'format': FORMAT, 'profile': name, 'optional_features': list(enabled),
-        'base_features': list(BASE_FEATURES),
+        'base_features': list(BASE_FEATURES) + [label for feature, label in
+            (('nkro', 'nkro-reports'), ('grave-escape', 'grave-escape'),
+             ('vialrgb-direct', 'vialrgb-direct-ram')) if feature in enabled],
         'nvm_schema': EXTENSION_SCHEMA if any(f in enabled for f in ('tap-dance', 'key-overrides', 'qmk-settings')) else SCHEMA,
         'make_options': {switch: 'yes' if feature in enabled else 'no'
                          for feature, switch in SWITCHES.items()},
@@ -122,7 +147,43 @@ def select(features: list[str]) -> str:
     for name, enabled in PROFILES.items():
         if set(features) == set(enabled):
             return name
+    if not set(features) & {'nkro', 'grave-escape', 'vialrgb-direct'}:
+        historical = set(features) | {'nkro', 'grave-escape', 'vialrgb-direct'}
+        for name, enabled in PROFILES.items():
+            if name not in RELEASE_PROFILES and historical == set(enabled):
+                return name
     raise ValueError('This feature combination has no supported profile')
+
+
+def legacy_configuration(name: str) -> dict:
+    """Reconstruct beta.1 metadata for backup readers; never build or qualify it.
+
+    New builds use configuration(), including legacy-typing when reproducing
+    the historical Typing feature set. Historical metadata keeps its old name.
+    """
+    selected = 'legacy-typing' if name == 'typing' else name
+    if selected in RELEASE_PROFILES or selected not in PROFILES:
+        raise ValueError('Unknown historical profile: ' + str(name))
+    value = configuration(selected)
+    value['profile'] = name
+    positive = {'nkro', 'grave-escape', 'vialrgb-direct'}
+    value['optional_features'] = [feature for feature in value['optional_features'] if feature not in positive]
+    value['make_options'] = {switch: setting for switch, setting in value['make_options'].items()
+                             if switch not in {SWITCHES[feature] for feature in positive}}
+    value['base_features'] = [
+        'six-layers', 'sixteen-vial-macros', 'eight-two-key-combos',
+        'compact-tap-hold', 'encoder-map', 'media-keys', 'nkro-reports',
+        'caps-word', 'repeat', 'alternate-repeat', 'grave-escape', 'tri-layer',
+        'rgb-effects', 'vialrgb-direct-ram',
+    ]
+    return value
+
+
+def validate_legacy_configuration(value: dict) -> dict:
+    """Validate frozen historical metadata without granting current approval."""
+    if not isinstance(value, dict) or value != legacy_configuration(value.get('profile')):
+        raise ValueError('Historical configuration differs from its original profile')
+    return value
 
 
 def validate_configuration(value: dict) -> dict:

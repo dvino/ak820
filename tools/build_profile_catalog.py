@@ -18,6 +18,7 @@ import zipfile
 
 import configure_firmware as configured
 import firmware_matrix
+import build_ci_profiles
 
 ROOT, QMK = configured.ROOT, configured.QMK
 
@@ -152,20 +153,16 @@ def main(argv=None):
         raise ValueError('Build root must remain beneath the QMK source root')
     preflight_output(output)
     toolchain = configured.validate_tools(args.toolchain)
-    builds = {}
-    for name in names:
-        build = build_root / name
-        print('QUALIFY' if build.exists() else 'BUILD', name, flush=True)
-        if build.exists():
-            if not args.resume:
-                raise ValueError('Build already exists; use --resume to rerun all gates: ' + name)
+    builds = {name: build_root / name for name in names}
+    if args.resume:
+        if not all(build.is_dir() for build in builds.values()):
+            raise ValueError('Resume requires every linked profile; use a fresh build root after an interrupted build')
+        for name, build in builds.items():
+            print('QUALIFY', name, flush=True)
             configured.qualify(build, toolchain)
-        else:
-            subprocess.run([sys.executable, str(ROOT / 'tools/configure_firmware.py'), 'build',
-                            '--profile', name, '--short-calls', '--build-dir', str(build),
-                            '--toolchain', str(toolchain), '--qmk-bin', str(args.qmk_bin.resolve()),
-                            '--python', str(args.python.resolve())], cwd=ROOT, check=True)
-        builds[name] = build
+    else:
+        build_ci_profiles.build_all(build_root, build_root / 'bootstrap', toolchain,
+                                    args.qmk_bin, args.python)
     # Revalidate earlier entries after the last qualification, so a mid-run
     # source/checker edit cannot leave a mixed catalog marked successful.
     rows = {name: firmware_matrix.measured_row(builds[name], toolchain, args.native_reference)

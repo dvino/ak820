@@ -47,10 +47,27 @@ def resolve(features, names=None):
 def default_row(name):
     configuration = profiles.configuration(name)
     return {'id': name, 'profile': name, 'configuration': configuration,
-            'build_recipe': {'script': 'util/build_ak820.py', 'profile': name,
-                             'make_options': configuration['make_options'],
-                             'memory_windows': {'low_code': [0x28a0, 0x3000], 'main_code': [0x3027, 0xc700], 'xram': [0x400, 0x1000]},
-                             'short_calls': True},
+            'build_recipe': {
+                'script': 'tools/configure_firmware.py build', 'profile': name,
+                'make_options': configuration['make_options'],
+                'memory_windows': {
+                    'low_code': [0x28a0, 0x3000],
+                    'main_code': [0x3027, 0xc700],
+                    'xram': [0x440, 0x1000],
+                },
+                'short_calls': True,
+                'pass30': {
+                    'compress_default_keymap': True,
+                    'nvm_update_block_asm': True,
+                    'nvm_read_block_asm': True,
+                    'keymap_words_asm': True,
+                    'trim_parameter_spills': True,
+                    'parameter_spills_context': 'fresh exact-image source/IRQ certificate required',
+                    'trim_register_saves': True,
+                    'tail_share': True,
+                    'outline_max_helpers': 400,
+                },
+            },
             'settings_identity': None, 'settings_status': 'not-packaged',
             'capabilities': {'optional_modules': {feature: feature in configuration['optional_features'] for feature in profiles.SWITCHES},
                              'dynamic_entries': {'combos': 8,

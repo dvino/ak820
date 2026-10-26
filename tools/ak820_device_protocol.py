@@ -14,6 +14,7 @@ import pack_ak820 as pack
 import ak820_diagnose as diag
 import ak820_tool as transport
 import ak820_extension_settings as extensions
+import ak820_profiles as profiles
 
 
 def require(ok, message):
@@ -25,12 +26,24 @@ def bind(release: Path, session: Path, approval: Path):
     """Validate reviewed release and personal recovery inputs before opening HID."""
     spec = importlib.util.spec_from_file_location('ak820_test_installer', ROOT / 'tools/installer/ak820.py')
     installer = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(installer)
+    sys.modules[spec.name] = installer
+    try:
+        spec.loader.exec_module(installer)
+    except BaseException:
+        sys.modules.pop(spec.name, None)
+        raise
     installer.BUNDLE, installer.APPROVAL = release, approval
     manifest = json.loads((release / 'installer-release.json').read_text(encoding='utf-8'))
     installer.RELEASE = manifest['release']
-    installer.load_release(approved=True)
-    images, payload, backup = transport.session_image(session, 'permanent')
+    installer._load_release(release, approval, approved=True)
+    build_report = json.loads((release / 'reports/build-report.json').read_text(encoding='utf-8'))
+    configuration = build_report.get('configuration')
+    require(isinstance(configuration, dict), 'Missing approved build configuration')
+    selected = (profiles.validate_configuration(configuration)
+                if configuration.get('profile') in profiles.RELEASE_PROFILES
+                else profiles.validate_legacy_configuration(configuration))
+    schema = selected['nvm_schema']
+    images, payload, backup = transport.session_image(session, 'permanent', target_build_id=schema)
     pack.validate_native(backup)
     for key, name in (('ihx_sha256', 'firmware/application.ihx'), ('map_sha256', 'firmware/application.map')):
         require(images.get(key) == pack.digest((release / name).read_bytes()), 'Personal image belongs to a different build')
@@ -39,7 +52,7 @@ def bind(release: Path, session: Path, approval: Path):
     # The manifest binds CODE, while the personal payload binds its own NVM.
     require(all(payload[a-pack.APP_START] == v for a, v in code.items()
                 if pack.APP_START <= a < pack.CODE_END), 'Personal payload CODE differs from release')
-    return {'release': manifest['release'], 'release_dir': str(release.resolve()),
+    return {'nvm_schema': schema, 'release': manifest['release'], 'release_dir': str(release.resolve()),
             'session': str(session.resolve()), 'payload_sha256': pack.digest(payload),
             'backup_sha256': pack.digest(backup), 'payload': payload, 'backup': backup,
             'code': code, 'definition': json.loads((release / 'reference/vial.json').read_text(encoding='utf-8'))}
@@ -240,7 +253,9 @@ class DeviceAPI:
         rom = self.read_code(0, 65536)
         (self.output / 'before-rom.bin').write_bytes(rom)
         require(all(rom[a] == v for a, v in self.binding['code'].items()), 'Live diagnostic CODE differs')
-        transport.verify_live(rom, self.binding['payload'], 'permanent', self.binding['backup'])
+        transport.verify_live(rom, self.binding['payload'], 'permanent', self.binding['backup'],
+                              target_build_id=self.binding.get('nvm_schema', self.binding.get('schema', pack.BUILD_ID)),
+                              allow_legacy=False)
         self.baseline = rom[pack.NVM_START:pack.NVM_END]
         (self.output / 'baseline-nvm.bin').write_bytes(self.baseline)
         require(self.read_nvm() == self.baseline, 'NVM unstable or stale')

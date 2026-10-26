@@ -1,0 +1,34 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "qmk-8051-ak820/tests/ak820_parameter_spills",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "run": 18,
+  "skipped": 0,
+  "source_files": {
+    "qmk-8051-ak820/util/ak820_parameter_spills.py": "30f9032ccf0fcb82ae785e0f7e15a1dcf69ef987686dbc50b7780621a22f52ad",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/README.md": "8492da5663becd54f8b2bb0727a4b3f83af9618a97d54685aa50975093415b72",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/cpu_dptr_restore.py": "49ebf6deeba848d43105ac81b9cfcad13ad9cedec61ade81746f111a8fe3f22b",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/fixtures/adversaries-noasm.ast.txt": "1adb69c9db8cf32020d0b44ba885990c41c3703478393cf125eb866e35659ce6",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/fixtures/adversaries-noasm.c": "0894dc2b57789ea61328513d9a460d9ec2e6f92173ecde9a92bca6554c096ffc",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/fixtures/adversaries-noasm.dumpraw0": "642bf4e22e0c8f562edd80e27232e9961e337a82d58895c9fc70812e7ad4630e",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/fixtures/adversaries-noasm.i": "9e59f35f1c9da4627e82f60cab519d8bbe1fcd2dcc5178388a3ec14d83df5c3a",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/fixtures/debug.adb": "de13ac7c88dc9526d3a6b864238972689684fd96ef9c2f02e8b1673ea975f5a5",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/fixtures/sha256.json": "503f02b55129529fb951ec840090c0fb7131229313a6c150e93866cab799f05e",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/test_dptr_restore.py": "f5b75328e31f822660ba57fb2b0ba3e69e7c84be9ed6c3070eb99d421cc08c49",
+    "qmk-8051-ak820/tests/ak820_parameter_spills/test_integration.py": "a2e708af8b6f0f59897262ac66d4dff144aec41f1fd6f51fc6ab2f0c7027c8fe"
+  },
+  "log_path": "audits/rc6/beta2-release-20261025/capture-unit-tests.log",
+  "log_sha256": "c0e9e018f516114a486c47491631dcd2c0e3a913e888aec0c897939617f83baa",
+  "hardware_validated": false,
+  "physical_device_commands": 0
+}

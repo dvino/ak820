@@ -10,7 +10,7 @@ import json
 import time
 from pathlib import Path
 from pack_ak820 import (APP_START,APP_END,CODE_END,NVM_START,NVM_END,MANIFEST_START,
-                       STOCK_SHA,NATIVE_SHA,digest,pack,read_ihex,read_symbols,
+                       STOCK_SHA,NATIVE_SHA,BUILD_ID,digest,pack,read_ihex,read_symbols,
                        verify_payload,write_package,validate_native)
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -141,7 +141,7 @@ def loader_reply(reply,command):
         raise ValueError('Unexpected loader identity')
 
 
-def session_image(session,name):
+def session_image(session,name,*,target_build_id=BUILD_ID):
     manifest=json.loads((session/'images.json').read_text(encoding='utf-8'))
     filename=IMAGES[name]
     payload=(session/filename).read_bytes()
@@ -155,14 +155,14 @@ def session_image(session,name):
     if recovery!=backup[APP_START:APP_END] or digest(recovery)!=manifest['images']['restore-native.bin']['sha256']:
         raise ValueError('Recovery image does not match the full backup')
     if name!='restore':
-        info=verify_payload(payload)
+        info=verify_payload(payload,target_build_id=target_build_id)
         if info['trial']!=(name=='trial'):
             raise ValueError('Trial/permanent image mismatch')
     return manifest,payload,backup
 
 
-def plan(session,name):
-    _,payload,_=session_image(session,name)
+def plan(session,name,*,target_build_id=BUILD_ID):
+    _,payload,_=session_image(session,name,target_build_id=target_build_id)
     return {'image':IMAGES[name],'size':len(payload),'sha256':digest(payload),
             'start_address':'0x2800','end_exclusive':'0xEFC0','data_blocks':len(payload)//64,
             'checksum':sum(payload)&0xFFFFFFFF,'usb_opened':False,'device_write_performed':False}
@@ -193,7 +193,7 @@ def prepare(session):
                       'images':metadata['images'],'migration':metadata['migration']},ensure_ascii=False,indent=2))
 
 
-def verify_live(live,expected,name,stock):
+def verify_live(live,expected,name,stock,*,target_build_id=BUILD_ID,allow_legacy=True):
     if len(live)!=65536:
         raise ValueError('Unexpected full-ROM reference')
     validate_native(stock)
@@ -209,10 +209,10 @@ def verify_live(live,expected,name,stock):
         # The preceding data page may retain the last successfully saved page.
         if any(live[NVM_END+64:MANIFEST_START]):
             raise ValueError('NVM journal header is not empty; retry after idle, investigate if persistent')
-        # Read-only validation accepts a known older schema for explicit offline
-        # migration. session_image/flash still reject an old application image.
+        # Current installers disable legacy acceptance explicitly; historical
+        # read-only migration may inspect the known older schema.
         from pack_ak820 import validate_nvm
-        metadata=verify_payload(expected,allow_legacy=True)
+        metadata=verify_payload(expected,target_build_id=target_build_id,allow_legacy=allow_legacy)
         validate_nvm(live[NVM_START:NVM_END],metadata['build_id'])
     marker=live[0x27C0:0x2800]
     if name=='trial':
@@ -286,9 +286,9 @@ UPDATE_PINS = {
 }
 
 
-def validate_prepared_update(session, snapshot=None):
+def validate_prepared_update(session, snapshot=None, *, target_build_id=BUILD_ID):
     """Admit only the reviewed RC6 repair pair, never arbitrary update images."""
-    manifest, payload, backup = session_image(session, 'permanent')
+    manifest, payload, backup = session_image(session, 'permanent', target_build_id=target_build_id)
     if (any(manifest.get(key) != UPDATE_PINS[key] for key in ('ihx_sha256', 'map_sha256')) or
             digest(payload) != UPDATE_PINS['payload'] or digest(backup) != UPDATE_PINS['backup']):
         raise ValueError('Update requires the exact reviewed candidate and personal recovery backup')
@@ -305,7 +305,8 @@ def validate_prepared_update(session, snapshot=None):
 
 def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
           application_descriptor=None,loader_descriptor=None,phase_guard=None,
-          native_install=False, prepared_update_snapshot=None, host_update_snapshot=None):
+          native_install=False, prepared_update_snapshot=None, host_update_snapshot=None,
+          target_build_id=BUILD_ID):
     """Use the unchanged OEM loader protocol with optional orchestration guards.
 
     A guard is called before reset/erase/restart, after the corresponding local
@@ -313,7 +314,7 @@ def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
     explicit consent before reset, while the user's keyboard can still type.
     ``reference_dir`` avoids depending on a historical archive directory layout.
     """
-    manifest,payload,backup=session_image(session,name)
+    manifest,payload,backup=session_image(session,name,target_build_id=target_build_id)
     references=Path(reference_dir) if reference_dir is not None else ROOT/'reference'
     stock=(references/'stock-full.bin').read_bytes()
     native=(references/'native-installed.bin').read_bytes()
@@ -327,7 +328,7 @@ def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
     if prepared_update:
         if name != 'permanent' or enter_loader or native_install or phase_guard is None or loader_descriptor is None:
             raise ValueError('Prepared update requires a guarded, explicitly authorized loader')
-        validate_prepared_update(session, prepared_update_snapshot)
+        validate_prepared_update(session, prepared_update_snapshot, target_build_id=target_build_id)
     host_update = host_update_snapshot is not None
     if host_update:
         if (name != 'permanent' or enter_loader or native_install or prepared_update or

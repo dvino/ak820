@@ -132,6 +132,11 @@ static void reactive(void) {
     rgb_matrix_set_speed_noeeprom(0);
 }
 int main(void) {
+    for (unsigned x = 0; x < 256; ++x) {
+        for (unsigned y = 0; y < 256; ++y) {
+            assert(add_sat(x, y) == (x + y > 255 ? 255 : x + y));
+        }
+    }
     assert(sizeof(rgb_config_t)==8);
     rgb_matrix_init();
     /* Public signed index validation must happen before narrowing to a byte. */

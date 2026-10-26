@@ -18,7 +18,8 @@ class WorkflowTests(unittest.TestCase):
             if not condition:
                 raise ValueError(message)
         return SimpleNamespace(CANCEL_EVENT=None, Cancelled=Cancelled, require=require,
-                               PROGRESS=None, transport=Mock(), require_state=Mock())
+                               PROGRESS=None, transport=Mock(), require_state=Mock(),
+                               release_context=Mock(return_value=SimpleNamespace(profile='legacy')))
 
     def test_update_and_restore_require_distinct_fresh_unlock_sequences(self):
         host = self.host()
@@ -148,7 +149,7 @@ class HostUpdateTransportTests(fixtures.BaseCase):
     def prepare_host_update(self):
         import ak820 as app
         with contextlib.redirect_stdout(io.StringIO()):
-            session, plan = app.prepare_trial(self.log, app.check_original())
+            session, plan = app.prepare_trial(self.log, app.check_original(), context=self.context)
         return session, {'payload_sha256': plan['sha256'],
                          'backup_sha256': app.sha(app.check_original())}
 
@@ -286,11 +287,13 @@ class EndToEndWorkflowTests(unittest.TestCase):
             raw.vial_unlock_command = unlock_command
             raw.vial_unlock_status = unlock_status
             raw.enter_vial_loader = lambda: events.append(('loader', 1))
-            context = {'profile': profile, 'native': profile['backup'], 'target': root/'target',
+            release_context = app.ReleaseContext('legacy', root, root/'approval', {})
+            context = {'release_context': release_context, 'profile': profile, 'native': profile['backup'], 'target': root/'target',
                        'plan': {'sha256': app.sha(profile['payload'])}, 'pins': {}}
             selected = {'path': b'wire-app'}
             progress = []
             stack.enter_context(patch.object(app, 'RUNS', root/'runs'))
+            stack.enter_context(patch.object(app, 'release_context', return_value=release_context))
             stack.enter_context(patch.object(app, 'RECOVERY_REFERENCE', root))
             stack.enter_context(patch.object(app, 'hid_module', return_value=Mock()))
             stack.enter_context(patch.object(app, 'require_state', return_value=selected))
@@ -405,6 +408,6 @@ class FrozenPreparationTests(unittest.TestCase):
             with patch.object(workflow, '__file__', str(root/'settings_workflow.py')), \
                     patch.object(workflow.settings, '__file__', str(root/'settings_backup.py')), \
                     patch.object(workflow.settings, 'load_profile', return_value={'payload':b'payload'}):
-                context = workflow.prepare(host, Mock(), source)
+                context = workflow.prepare(host, Mock(), source, release_context=SimpleNamespace(profile='legacy', bundle=bundle, approval=root/'approval.json', nvm_schema=0x082002))
             self.assertTrue(all(root/name in context['pins'] for name in names))
             self.assertNotIn(root/'settings_workflow.py', context['pins'])

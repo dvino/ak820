@@ -54,4 +54,4 @@ persistent settings. The timing and report-wide Shift behavior follow the
 relevant concepts in the [QMK Auto Shift documentation](https://docs.qmk.fm/features/auto_shift).
 
 
-Development status and limits are recorded in the [technical report](../audits/rc6/compact-runtime-20261024/README.md).
+Development status and limits are recorded in the [technical report](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/audits/rc6/compact-runtime-20261024/README.md).

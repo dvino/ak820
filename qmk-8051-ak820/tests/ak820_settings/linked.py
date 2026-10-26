@@ -42,8 +42,25 @@ def api(t,operation,qsid=0,data=None,capacity=2,expected=0,label='api'):
     t.commands+=fw.call('_ak820_settings_'+operation,qsid)
     if operation!='query':observe(t,label,0x82,list((expected&65535).to_bytes(2,'little')),'sfr')
 
+def compiled_grave_escape(fw):
+    """Bind the option to this image and require its linked handler to agree."""
+    report=json.loads((fw.build/'build-report.json').read_text())
+    for filename in ('ajazz_ak820_vial.ihx','ajazz_ak820_vial.map'):
+        rows=[row for row in report['artifacts'] if Path(row['path']).name==filename]
+        digest=hashlib.sha256((fw.build/filename).read_bytes()).hexdigest()
+        if len(rows)!=1 or rows[0]['sha256']!=digest:
+            raise ValueError('Grave Escape configuration is not bound to linked artifact: '+filename)
+    option=report['configuration']['make_options']['AK820_GRAVE_ESCAPE']
+    if option not in ('yes','no'):
+        raise ValueError('Invalid compiled Grave Escape option')
+    enabled=option=='yes'
+    if enabled!=('_process_grave_esc' in fw.symbols):
+        raise ValueError('Configured Grave Escape differs from linked handler')
+    return enabled
+
 def cases(fw):
     results=[]
+    has_grave_escape=compiled_grave_escape(fw)
     t=setup(fw,'settings-api-width-range-query')
     ids=[1,2]+([4] if '_ak820_autoshift_process' in fw.symbols else [])+[7,18,19]
     api(t,'query',0,capacity=16,label='query')
@@ -86,10 +103,14 @@ def cases(fw):
     observe(t,'write-fault',fw.address('_storage_failed'),[1],fw.symbol_space('_storage_failed'))
     api(t,'get',2,label='old-runtime');observe(t,'old-runtime-value',BUFFER,[40,0]);results.append(t.run())
     for flags,usage in ((0,0x35),(8,0x29)):
-        t=setup(fw,'settings-grave-escape-consumer-'+str(flags),grave=flags)
+        name='settings-grave-escape-consumer-' if has_grave_escape else 'settings-grave-escape-disabled-'
+        t=setup(fw,name+str(flags),grave=flags)
+        api(t,'get',1,capacity=1,label='grave-setting-readable')
+        observe(t,'grave-setting-value',BUFFER,[flags])
         t.map((0,0),0x7c16);t.map((0,1),0xe1)
         t.event((0,1),1,100);t.event((0,0),1,110)
-        t.check('grave-or-escape',tapping.packet(2,usage))
+        t.check('grave-or-escape' if has_grave_escape else 'disabled-key-retains-shift',
+                tapping.packet(2,usage) if has_grave_escape else tapping.packet(2))
         t.event((0,0),0,120);t.event((0,1),0,130);t.check('grave-release',tapping.packet());results.append(t.run())
     t=setup(fw,'settings-tapping-consumer',tapping_term=60)
     t.map((0,0),0x2104);t.event((0,0),1,100);t.tick(159);t.check('early',tapping.packet())

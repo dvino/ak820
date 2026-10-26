@@ -17,7 +17,7 @@ import sys
 import time
 
 from pack_ak820 import (APP_END, APP_START, BUILD_ID, CODE_END, CODE_START,
-                       LOW_END, LOW_START, MANIFEST_START, NVM_END, NVM_START,
+                       EXTENSION_BUILD_ID, LOW_END, LOW_START, MANIFEST_START, NVM_END, NVM_START,
                        digest, read_ihex, read_symbols, verify_payload, nvm_layout)
 
 NVM_FAULT_NAMES = (
@@ -68,13 +68,14 @@ def journal_report(rom: bytes) -> dict:
     return result
 
 
-def analyze(rom: bytes, expected: bytes | None = None, key=None) -> dict:
+def analyze(rom: bytes, expected: bytes | None = None, key=None, *,
+            target_build_id=BUILD_ID, allow_legacy=True) -> dict:
     if len(rom) != 65536:
         raise ValueError("A full 65536-byte CODE dump is required; partial captures are not full ROMs")
     schema = int.from_bytes(rom[NVM_START + 37:NVM_START + 40], "little")
     result = {"format": "ak820-code-diagnostic-1", "rom_bytes": len(rom),
               "rom_sha256": digest(rom), "eeprom_schema": schema,
-              "expected_schema": BUILD_ID, "schema_matches": schema == BUILD_ID,
+              "expected_schema": target_build_id, "schema_matches": schema == target_build_id,
               "trial_marker_all_zero": not any(rom[0x27C0:APP_START]),
               "journal": journal_report(rom), "physical_mutations_sent": 0,
               "persistence_after_restart": "not established by this capture",
@@ -85,7 +86,8 @@ def analyze(rom: bytes, expected: bytes | None = None, key=None) -> dict:
                          "code_address": address, "bytes_hex": rom[address:address + 2].hex(),
                          "keycode": int.from_bytes(rom[address:address + 2], "big")}
     if expected is not None:
-        metadata = verify_payload(expected, allow_legacy=True)
+        metadata = verify_payload(expected, target_build_id=target_build_id,
+                                  allow_legacy=allow_legacy)
         # NVM and journal are intentionally allowed to change after installation.
         regions = ((APP_START, CODE_END), (MANIFEST_START, APP_END))
         mismatches = [a for lo, hi in regions for a in range(lo, hi)
@@ -143,12 +145,14 @@ def diagnostic_build(ihx: Path | None, mapfile: Path | None, build_report: Path 
     return code
 
 
-def capture(output: Path, expected: bytes | None = None, code=None, key=None, app_factory=None) -> dict:
+def capture(output: Path, expected: bytes | None = None, code=None, key=None, app_factory=None, *,
+            target_build_id=BUILD_ID, allow_legacy=True) -> dict:
     # Validate all local inputs before opening the keyboard or creating output.
     if expected is not None:
-        verify_payload(expected, allow_legacy=True)
+        verify_payload(expected, target_build_id=target_build_id,
+                       allow_legacy=allow_legacy)
     if key is not None:
-        key_address(*key)
+        key_address(*key, build_id=target_build_id)
     if code is not None and not code:
         raise ValueError("Empty expected diagnostic CODE")
     output.mkdir(parents=True, exist_ok=False)
@@ -202,7 +206,9 @@ def capture(output: Path, expected: bytes | None = None, code=None, key=None, ap
                 report["bytes_captured"] = len(rom)
             raw_file.close()
             partial.rename(output / "rom.bin")
-            report["analysis"] = analyze(bytes(rom), expected, key)
+            report["analysis"] = analyze(bytes(rom), expected, key,
+                                         target_build_id=target_build_id,
+                                         allow_legacy=allow_legacy)
             # Detect edits or a still-running transaction during the long dump.
             stable = read_code(NVM_START, MANIFEST_START - NVM_START) == rom[NVM_START:MANIFEST_START]
             report["nvm_and_journal_stable_on_second_read"] = stable
@@ -244,15 +250,20 @@ def main():
     for item in (offline, live):
         item.add_argument("--expected-trial", type=Path)
         item.add_argument("--key", nargs=3, type=int, metavar=("LAYER", "ROW", "COLUMN"))
+        item.add_argument("--target-build-id", type=lambda value: int(value, 0),
+                          choices=(BUILD_ID, EXTENSION_BUILD_ID), default=BUILD_ID)
     args = parser.parse_args()
     expected = args.expected_trial.read_bytes() if args.expected_trial else None
-    if expected is not None and not verify_payload(expected, allow_legacy=True)["trial"]:
+    if expected is not None and not verify_payload(expected, target_build_id=args.target_build_id,
+                                                    allow_legacy=True)["trial"]:
         raise ValueError("--expected-trial must identify a trial payload")
     if args.command == "analyze":
-        result = analyze(args.rom.read_bytes(), expected, args.key)
+        result = analyze(args.rom.read_bytes(), expected, args.key,
+                         target_build_id=args.target_build_id)
     else:
         code = diagnostic_build(args.ihx, args.mapfile, args.build_report)
-        result = capture(args.output, expected, code, args.key)
+        result = capture(args.output, expected, code, args.key,
+                         target_build_id=args.target_build_id)
     print(json.dumps(result, indent=2))
 
 

@@ -2,147 +2,106 @@
 
 # CI and releases
 
-Firmware checks run on branch pushes and pull requests. Installer packages are built after the firmware checks pass. The beta installers contain the exact `work` image; the other eight profiles remain catalog candidates. Alpha.3 remains the installed firmware baseline. The manual candidate workflow can rebuild the nine profiles separately.
+The [release workflow](../.github/workflows/windows-installer.yml) runs on branch
+pushes, pull requests, version tags and manual launches. Its current source path
+builds the ten [profiles](profiles/README.md), with `main` as default. All ten
+use schema03. This describes configured checks, not a completed beta.2 release.
+Published beta.1 on 2026-10-25 had nine catalog profiles and standalone installers
+for exact `work`. Artifact and hardware results belong in [Status](STATUS.md).
 
-The [workflow](../.github/workflows/windows-installer.yml) checks branch pushes and pull requests. Packages are built for checked branches, pull requests, release tags and manual launches.
-No keyboard, OEM backup or repository secret is needed for checks and builds.
+## Firmware and installer jobs
 
-The workflow pins Node.js 24 actions by full commit hash: checkout 7.0.1, setup-python 7.1.0, upload-artifact 7.0.2 and download-artifact 8.0.2.
+The Ubuntu 24.04 job checks Python and shell syntax, workflow syntax with pinned
+actionlint, undefined Python names with pinned Ruff, and offline tests. SDCC
+4.6.0, LUFA and the QMK environment use pinned dependencies. Actions are pinned
+by full commit. No keyboard, private OEM ROM or device session is supplied to CI.
 
-## Checks and build outputs
+After shared checks, ten matrix jobs each run the producer with `--profile <name>`. Every job keeps its complete final and bootstrap trees. A separate assembly job requires all ten successes, restores those trees at the same checkout paths and repeats the exact-image admission checks before packaging. Omitting `--profile` builds all ten locally.
 
-The workflow builds the `work` profile through the configurator and runs its
-qualification suites. The earlier `v0.6.0-alpha.3` release used `full`.
-CI reproduced the approved image and built the release packages. That historical
-release and its pinned release workflow are separate from the current catalog
-of nine curated candidates. See [Build profiles](BUILD-PROFILES.md) and
-[Status](STATUS.md).
+`tools/build_ci_profiles.py` is the all-profile producer. Each profile gets a
+fresh bootstrap and source/IRQ context, then the audited pass30 build. The final
+image's foreground, startup and IRQ bounds are checked before full base and
+profile regressions. Bootstrap evidence must remain unchanged. Unknown paths,
+missing context, overflow, failed tests or skipped required checks stop the run.
+Host storage power-loss models remain separate from physical durability.
 
-The Ubuntu 24.04 firmware job checks the syntax of tracked Python and shell
-files, validates GitHub Actions workflows with a hash-pinned actionlint, checks
-project Python for undefined names with pinned Ruff, and runs all host tool unit tests.
-It downloads the pinned SDCC 4.6.0 and LUFA archives, checks their hashes,
-builds the `work` profile through the configurator, checks exact-image stack
-and interrupt bounds before running all base and work-profile host C and
-linked CPU regressions. Storage
-harnesses model interrupted journal and macro writes. These checks cannot
-prove physical USB, lighting or flash durability.
+To build all ten locally (the workflow adds one `--profile` per matrix job):
 
-For an approved release commit, after the tests pass Linux assembles a fresh
-public firmware bundle from that
-run's IHX, MAP, MEM and build report. The Windows package job downloads that
-bundle, checks its commit identity and replaces the checkout's old release
-inputs before building both installer applications. Its smoke checks include
-CLI help and offline verification, plus creating and closing the Tk interface.
-This is an automatic startup check, not a check of visible dialogs or
-interactive behavior.
+```sh
+python tools/build_ci_profiles.py \
+  --builds-root qmk-8051-ak820/.build/ci-profiles \
+  --bootstrap-root qmk-8051-ak820/.build/ci-profile-bootstrap \
+  --toolchain toolchains/sdcc-4.6.0 \
+  --qmk-bin qmk-8051-ak820/.venv/bin/qmk \
+  --python qmk-8051-ak820/.venv/bin/python \
+  --report qmk-8051-ak820/.build/ci-profile-builds.json
+```
 
-The native Linux package job runs on Ubuntu 22.04 x86_64 (glibc 2.35). It builds
-`AK820-Linux-x86_64.tar.gz` and its SHA256 file. The builder checks the frozen
-hidraw import, CLI help and offline verification, and a Tk startup under Xvfb.
-These checks do not open USB or test live keyboard behavior.
+These output roots must be fresh. Run from the repository root after installing
+the pinned dependencies and QMK environment described in [Build](BUILD.md).
+Do not run builds concurrently in one source tree.
 
-On commits that satisfy the release policy, branch pushes produce build
-artifacts without publishing a release. Release publication remains limited to
-a qualifying version tag after required jobs pass.
-The outputs of a qualified release build include:
+After qualification, `tools/build_ci_release.py --all-profiles` checks the
+per-profile policies under `ci/profiles`, independent reviews, packing receipts
+and `tools/installer/settings-catalog.json`. It writes complete bundles to
+`dist/ci-firmware/profiles/<profile>`. Missing or stale approval inputs fail
+closed; creating a linked image alone does not satisfy this gate.
 
-- The standalone public firmware bundle, with SHA256 and build evidence.
-- The complete Windows portable ZIP, with SHA256.
-- The Linux portable tarball, with SHA256.
-- Firmware host/CPU test logs.
+Assembly also exports the capability catalog from those exact CI builds. Publication uses this catalog and the measured firmware matrix, so path-dependent MAP and report hashes refer to the approved CI files. It does not replace them with hashes from local builds.
 
-The application IHX is not a complete flashable ROM. The installer constructs
-the full update using a fresh backup and local OEM recovery data. Raw OEM ROM,
-private sessions and device captures never enter the workflow or its artifacts.
-The Windows and Linux installers contain fresh firmware, not the old
-checked-in `releases/rc6/firmware` files. Before publication, the workflow
-checks both GUI and CLI application folders inside each package against the
-same run's firmware bundle.
+The Windows and Linux jobs download that same run's bundles, check their source
+commit and stage them in `releases/beta2/<profile>`. Every selectable profile
+needs its own matching manifest and approval. Packaging verifies collected
+inputs inside both GUI and CLI applications. Windows performs native startup
+smokes; Linux uses Ubuntu 22.04 x86_64/glibc 2.35 and Xvfb. CLI help, offline
+verification and Tk startup do not open USB or prove interactive device behavior.
 
-## Manual nine-profile candidate catalog
+## Catalogs and evidence
 
-The separate [candidate workflow](../.github/workflows/firmware-catalog.yml)
-runs only through `workflow_dispatch` on the Actions page. One Ubuntu 24.04 job
-uses the same pinned actions, SDCC, LUFA and QMK requirements as the release
-workflow. `tools/build_profile_catalog.py` builds all nine curated profiles with
-short calls, checks each exact image's stack and interrupts before regressions,
-and revalidates every profile before exporting the catalog.
+The source firmware matrix can contain ten unmeasured rows. The capability
+catalog remains empty until exact qualified records are imported. Do not copy
+previous identities into current rows. A catalog does not grant writes or
+physical validation; see [Development catalog](DEVELOPMENT-CATALOG.md).
 
-A successful run retains one candidate ZIP and SHA256 file as a CI artifact for
-30 days. The ZIP contains the capability matrix, linked IHX/MAP/MEM files and
-per-profile qualification reports. A separate compressed CI artifact retains
-generated build evidence, including partial results after a failure. Build and
-export paths include the run ID and attempt number.
+The separate [candidate workflow](../.github/workflows/firmware-catalog.yml) and
+`tools/build_profile_catalog.py` export development candidates. They do not
+supply release approval. Any fresh current-profile path must supply the required
+source/IRQ context; a historical nine-profile workflow is not evidence for the
+new compositions. Retain complete logs and intermediate evidence, including
+partial results from failures.
 
-These workflow outputs are candidates with `release_approved: false` and `installable: false`; beta release approval is tracked separately for its exact assets.
-The workflow has read-only repository permissions and no publishing job. It
-uses no OEM references and sends no USB commands. Its offline results do not
-prove device behavior or approve a public release. The independently approved `work` installer workflow remains separate.
+Per-profile release policy binds exact IHX, MAP symbols, build inputs and host
+files. A matching packing receipt records previously reviewed local checks
+using private references; CI does not repeat OEM-dependent packing in the cloud.
+Machine reproduction and bundle approval do not replace independent review or
+authorize a device write. Changed source or host bytes require renewed evidence.
 
-## Review and reproducible builds
+## Publication and local checks
 
-`ci/release-policy.json` records the independently reviewed IHX hash, the hash
-of every parsed MAP symbol, the host code and the source inputs used by the
-build and tests. `ci/program-review.md` binds the actual independent review to
-that policy. `ci/packing-receipt.json` records prior local packing checks for
-that exact program, performed using private OEM references.
+Only a qualifying SemVer tag on a checked commit in `main` can publish after
+required jobs pass. Branch pushes, pull requests and manual checks produce
+artifacts without publishing. Only the publication job receives write access.
+Local tests do not create tags or releases. Standalone Windows/Linux packages,
+SHA256 files and EN/RU instructions remain required release assets. Exact
+publication results are recorded separately in Status.
 
-CI must reproduce the reviewed program and symbol addresses, use the pinned
-toolchain, and pass every required suite with zero skips. It checks the reviewed
-inputs against the current Git commit. It then writes a machine build
-attestation and an exact bundle approval. The machine record is reproduction
-evidence, not a new independent review or permission to write a keyboard.
+Required workflow job names are:
 
-When firmware or reviewed host inputs change, update the policy and review
-after independent review. Repeat affected local packing checks when their
-inputs change. Track the evidence and hashes; new generated firmware binaries
-do not have to be placed in the release directory or committed for CI. A stale
-policy fails closed. CI reuses the verified packing receipt for the exact
-program; it does not claim to repeat OEM-dependent packing in the cloud.
-
-## Publish a release
-
-The normal automated path uses a new SemVer tag on a checked commit in `main`,
-for example `v0.6.0-beta.1`. The tag starts publication after all three build
-jobs pass. A tag on
-a commit outside `main` cannot publish. `v0.6.0-rc.1` creates a prerelease;
-build metadata such as `+build.1` is accepted. A manual workflow run only checks
-and builds. Ordinary branch pushes and pull requests do not publish.
-
-For `v0.6.0-alpha.3`, the release was published from the three green native jobs
-for the same commit using the GitHub release API before the tag-triggered run
-was cancelled as a duplicate. The cancelled run did not report a test failure;
-it also did not complete as a passing tag run. This one-time publication path
-does not change the automated tag workflow described above.
-
-The release contains the public firmware bundle, Windows ZIP and Linux tarball,
-each with its SHA256 file. Only the publishing job receives `contents: write`;
-checks and builds use read access. No tag or release is created by local tests. See
-[Build](BUILD.md) for the local build and packing commands.
-
-Repository protection rules are separate GitHub settings. Select all three job
-names as required checks if branch protection is enabled:
-
-- `Linux syntax, host, CPU, and pinned firmware build`.
+- `Linux syntax and shared host checks`.
+- `Qualify firmware (<profile>)` — all ten profiles.
+- `Revalidate and assemble all ten profiles`.
 - `Native Windows package build and smoke`.
 - `Native Linux x86_64 package build and smoke`.
 
-## Run checks locally
-
-From the repository root:
+For local syntax and document checks, run `python tools/ci_checks.py` and
+`python tools/check_docs.py`. To qualify an existing completed current image:
 
 ```sh
-python3 tools/ci_checks.py
-python3 tools/check_docs.py
-python3 tools/configure_firmware.py qualify \
+python tools/configure_firmware.py qualify \
   --build-dir qmk-8051-ak820/.build/local-1 \
   --toolchain toolchains/sdcc-4.6.0
 ```
 
-The last command requires a completed pinned build. It checks exact-image stack
-and interrupt bounds before running the base and profile regressions. It does
-not open USB.
-The workflow also runs tool-specific tests and the separate storage harnesses.
-Check the workflow for their exact commands. A local pass does not prove that
-the GitHub-hosted jobs ran; execution results belong in [Status](STATUS.md).
+Qualification rechecks the saved context and complete transform chain before
+runtime proofs and regressions. A local pass does not establish a successful
+GitHub run, publication or hardware behavior.

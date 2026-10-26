@@ -45,6 +45,7 @@ static void dynamic_keymap_set_buffer(uint16_t offset, uint16_t size, uint8_t *d
 /* Return value models whether raw_hid_receive reaches its final reply send.
  * The four dispatch bodies below are extracted verbatim from production. */
 static void dispatch(uint8_t packet[32], uint8_t length) {
+    uint8_t *command_id = &packet[0];
     uint8_t *command_data = &packet[1];
     reply_reached = false;
     if (length != 32) return;

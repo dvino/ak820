@@ -1,3 +1,5 @@
+Русский перевод: [Обновление NVM](ru/NVM-UPDATE-KERNEL.md).
+
 # Optional XDATA NVM update kernel
 
 `--nvm-update-block-asm` selects a separate SDCC translation unit for

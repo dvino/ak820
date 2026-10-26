@@ -17,6 +17,7 @@ HOST_FILES = frozenset((
     'tools/installer/ak820.py', 'tools/installer/gui.py', 'tools/installer/i18n.py',
     'tools/ak820_device_protocol.py', 'tools/installer/settings_backup.py',
     'tools/installer/settings_workflow.py',
+    'tools/installer/profile-catalog.json', 'tools/installer/settings-catalog.json',
     'tools/installer/requirements.txt', 'tools/installer/70-ak820.rules',
     'qmk-8051-ak820/util/ak820_tool.py', 'qmk-8051-ak820/util/ak820_diagnose.py',
     'qmk-8051-ak820/util/pack_ak820.py', 'qmk-8051-ak820/util/prepare_ak820_trial.py',

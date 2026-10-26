@@ -11,7 +11,8 @@ import ak820 as app
 
 
 class PreparedUpdateTests(unittest.TestCase):
-    def run_update(self, failure=None):
+    def run_update(self, failure=None, *, target_build_id=None):
+        target_build_id = target_build_id or app.packer.BUILD_ID
         with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:
             root = Path(directory)
             (root / 'stock-full.bin').write_bytes(bytes(65536))
@@ -28,6 +29,9 @@ class PreparedUpdateTests(unittest.TestCase):
             cancel_event = threading.Event()
             def capture(output, **kwargs):
                 events.append('capture')
+                if kwargs.get('expected') is not None:
+                    self.assertEqual(kwargs['target_build_id'], target_build_id)
+                    self.assertIs(kwargs['allow_legacy'], False)
                 output.mkdir()
                 (output / 'rom.bin').write_bytes(bytes(65536))
                 return {'completed': True, 'nvm_and_journal_stable_on_second_read': True,
@@ -87,12 +91,17 @@ class PreparedUpdateTests(unittest.TestCase):
                 events.append('flash')
             flash = stack.enter_context(patch.object(app.transport, 'flash', side_effect=fake_flash))
             stack.enter_context(patch.object(app.transport, 'verify_live'))
+            if target_build_id != app.packer.BUILD_ID:
+                stack.enter_context(patch.object(app, 'require_session_release'))
             stack.enter_context(patch.object(app.diagnostic, 'diagnostic_build', return_value={1: 2}))
             stack.enter_context(patch.object(app.diagnostic, 'capture', side_effect=capture))
             stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
             error = None
             try:
-                app.update_prepared(Mock(folder=root), Mock(), source)
+                app.update_prepared(Mock(folder=root), Mock(), source,
+                    context=app.ReleaseContext('legacy' if target_build_id == app.packer.BUILD_ID else 'work',
+                                               root, root/'approval', release,
+                                               nvm_schema=target_build_id))
             except (app.Cancelled, TimeoutError, ValueError) as caught:
                 error = caught
             self.assertTrue((root / 'before-update-readback' / 'rom.bin').is_file())
@@ -109,6 +118,11 @@ class PreparedUpdateTests(unittest.TestCase):
         events, count, error = self.run_update()
         self.assertIsNone(error)
         self.assertEqual(events, ['capture', 'lock', 'unlock-start', 'bootloader', 'loader', 'flash', 'application', 'capture'])
+        self.assertEqual(count, 1)
+
+    def test_schema3_post_update_capture_uses_selected_strict_schema(self):
+        _, count, error = self.run_update(target_build_id=app.packer.EXTENSION_BUILD_ID)
+        self.assertIsNone(error)
         self.assertEqual(count, 1)
 
     def test_declined_consent_or_missing_loader_never_flashes(self):
@@ -239,7 +253,7 @@ class PreparedUpdateTests(unittest.TestCase):
                              'nvm_and_journal_stable_on_second_read': False}), \
                  patch.object(app, 'confirm') as consent, patch.object(app.transport, 'flash') as flash:
                 with self.assertRaisesRegex(ValueError, 'journal changed'):
-                    app.update_prepared(log, Mock(), Path('session'))
+                    app.update_prepared(log, Mock(), Path('session'), context=app.ReleaseContext('legacy', Path(directory), Path(directory)/'approval', release))
                 consent.assert_not_called()
                 flash.assert_not_called()
 

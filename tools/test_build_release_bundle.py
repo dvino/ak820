@@ -73,6 +73,26 @@ class ReviewBindingTests(unittest.TestCase):
 
 
 class BuildArtifactTests(unittest.TestCase):
+    def test_permanent_payload_uses_exact_profile_schema(self):
+        with tempfile.TemporaryDirectory(prefix="ak820-schema-") as directory:
+            root = Path(directory)
+            ihx, mapping, stock = (root / name for name in ("app.ihx", "app.map", "stock.bin"))
+            for path in (ihx, mapping, stock):
+                path.write_bytes(b"input")
+            target = 0x082003
+            with patch.object(builder.packer, "read_ihex", return_value={}), \
+                 patch.object(builder.packer, "read_symbols", return_value={}), \
+                 patch.object(builder.packer, "migrate", return_value=(b"schema2", {})), \
+                 patch.object(builder.packer, "migrate_vial_nvm", return_value=(b"schema3", {"target_build_id": target})) as migrate, \
+                 patch.object(builder.packer, "pack", return_value=b"payload") as pack, \
+                 patch.object(builder.packer, "verify_payload", return_value={"trial": False}) as verify:
+                result = builder.validate_permanent_payload(ihx, mapping, stock, b"backup", target)
+            migrate.assert_called_once_with(b"schema2", builder.packer.BUILD_ID,
+                                            target_build_id=target)
+            self.assertEqual(pack.call_args.kwargs['target_build_id'], target)
+            verify.assert_called_once_with(b"payload", target_build_id=target)
+            self.assertEqual(result['nvm_schema_transition']['target_build_id'], target)
+
     def test_memory_report_is_bound_by_size_and_hash(self):
         with tempfile.TemporaryDirectory(prefix="ak820-mem-test-") as directory:
             root = Path(directory)
@@ -208,8 +228,15 @@ class AssemblySnapshotTests(unittest.TestCase):
                 path = root / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(name.encode())
+            safety_manifest = root / builder.release_safety.manifest_name(
+                ak820_profiles.configuration('main'))
+            safety_manifest.parent.mkdir(parents=True, exist_ok=True)
+            safety_manifest.write_text("{}")
+            configuration = ak820_profiles.configuration('main')
             report = {"keyboard": "ajazz/ak820", "keymap": "vial",
-                      "build_id": builder.packer.BUILD_ID, "hardware_validated": False}
+                      "build_id": configuration['nvm_schema'],
+                      "configuration": configuration,
+                      "hardware_validated": False}
             for field, path in {
                 "builder_sha256": source / "util/build_ak820.py",
                 "dce_sha256": source / "util/ak820_dce.py",
@@ -225,6 +252,7 @@ class AssemblySnapshotTests(unittest.TestCase):
             record = {
                 "format": "ak820-offline-review-2", "release": "rc6", "status": "passed",
                 "hardware_validated": False, "host_files": reviewed,
+                "release_safety_manifest_sha256": builder.sha(safety_manifest),
                 "build": {
                     "ihx_sha256": builder.sha(build / "ajazz_ak820_vial.ihx"),
                     "map_sha256": builder.sha(build / "ajazz_ak820_vial.map"),
@@ -247,6 +275,7 @@ class AssemblySnapshotTests(unittest.TestCase):
                  patch.object(builder, "ROOT", root), patch.object(builder, "SOURCE", source), \
                  patch.object(builder, "host_manifest", side_effect=[reviewed, changed]), \
                  patch.object(builder.diagnostic, "diagnostic_build"), \
+                 patch.object(builder, "require_release_qualification"), \
                  patch.object(builder, "validate_build_artifact"), patch.object(builder, "validate_inputs"), \
                  patch.object(builder.packer, "validate_native"), \
                  patch.object(builder, "validate_permanent_payload", return_value={'trial': False}), \

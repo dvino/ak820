@@ -17,7 +17,8 @@ class ExportTests(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.output = self.root / 'result'
         self.names = catalog.firmware_matrix.candidate_names()
-        self.assertEqual(len(self.names), 9)
+        self.assertEqual(self.names, ('main', 'game', 'mmo', 'typing', 'code', 'pointer',
+                                      'onehand', 'creative', 'shortcuts', 'multios'))
         (self.root / 'web').mkdir()
         (self.root / 'web/module-descriptions.json').write_text('{}')
         reference = self.root / 'keyboards/ajazz/ak820/keymaps/vial'
@@ -37,7 +38,7 @@ class ExportTests(unittest.TestCase):
             (build / 'runtime-safety').mkdir()
             (build / 'runtime-safety/summary.json').write_text('{}')
             self.builds[name] = build
-            self.rows[name] = dict(identity=identity, configuration={'profile': name},
+            self.rows[name] = dict(identity=identity, configuration=catalog.firmware_matrix.profiles.configuration(name),
                                    measurement_status='linked-memory-pass',
                                    runtime_status='exact-image-pass',
                                    offline_tests_status='exact-image-pass')
@@ -59,7 +60,7 @@ class ExportTests(unittest.TestCase):
             self.assertFalse(path.is_symlink())
         self.assertEqual(list(self.root.glob('.result-stage-*')), [])
 
-    def test_success_exact_nine_and_deterministic_archive(self):
+    def test_success_exact_ten_and_deterministic_archive(self):
         result, archive = self.export()
         self.assertEqual(result['profiles'], list(self.names))
         manifest = json.loads((self.output / 'candidate-manifest.json').read_text())

@@ -139,10 +139,13 @@ def cases(fw):
     t.map((0,3),0x5240);t.event((0,3),1,110);t.event((0,3),0,111);t.check('default-away',layer=4)
     t.map((0,3),0x5241);t.event((0,3),1,112);t.event((0,3),0,113);t.event((0,1),1,114);t.event((0,1),0,115);t.event((0,0),0,116);t.check('explicit-adjust-survives',layer=8)
     t.event((0,2),1,117);t.check('to-replaces-persistent',layer=16);out.append(t.run())
-    t=Trace(fw,'nkro-seven-owners');t.width=32;t.commands=[c.replace(f'{t.report_address+7:#x} 16;',f'{t.report_address+31:#x} 16;') for c in t.commands];t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1])
-    for i in range(8):t.map((i//4,i%4),4+max(0,i-1));t.event((i//4,i%4),1,100+i)
-    # Shared NKRO report: id6, modifier byte, then usages4..10 bitmap.
-    t.check('bitmap', [6,0,240,7]+[0]*28);t.event((0,0),0,120);t.check('duplicate', [6,0,240,7]+[0]*28);t.event((0,1),0,121);t.check('last-owner', [6,0,224,7]+[0]*28);out.append(t.run())
+    if json.loads((fw.build/'build-report.json').read_text())['configuration']['make_options'].get('AK820_NKRO')=='yes':
+        t=Trace(fw,'nkro-seven-owners');t.width=32;t.commands=[c.replace(f'{t.report_address+7:#x} 16;',f'{t.report_address+31:#x} 16;') for c in t.commands];t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1])
+        for i in range(8):t.map((i//4,i%4),4+max(0,i-1));t.event((i//4,i%4),1,100+i)
+        # Shared NKRO report: id6, modifier byte, then usages4..10 bitmap.
+        t.check('bitmap', [6,0,240,7]+[0]*28);t.event((0,0),0,120);t.check('duplicate', [6,0,240,7]+[0]*28);t.event((0,1),0,121);t.check('last-owner', [6,0,224,7]+[0]*28);out.append(t.run())
+    else:
+        t=Trace(fw,'nkro-disabled-keeps-boot-report');t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1]);t.map((0,0),4);t.event((0,0),1,100);t.check('boot-press',packet(0,4));t.event((0,0),0,101);t.check('boot-release',packet());out.append(t.run())
     for code,usage,kind in [(0xa5,0x81,'system'),(0xa8,0xe2,'consumer')]:
         t=Trace(fw,'extra-duplicate-'+kind);t.extra_address=fw.address(next(n for n in fw.symbols if n.startswith('_host_extra_send_report_100')));t.commands += [f'break {fw.address("_send_extra"):#x}',f'commands 2 "echo @@EXTRA; dump xram {t.extra_address:#x} {t.extra_address+2:#x} 16; fill xram 0x2201 0x2203 0x12; run"'];t.map((0,0),code);t.map((0,1),code);t.map((0,2),code+1)
         def extra(label,value):

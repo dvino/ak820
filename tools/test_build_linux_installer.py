@@ -14,7 +14,7 @@ import build_linux_installer as builder
 
 class LinuxBuildTests(unittest.TestCase):
     def fixture(self, root):
-        names = ['releases/rc6/installer-release.json', 'tools/installer/approved-release.json']
+        names = ['releases/beta2/main/installer-release.json', 'releases/beta2/main/approved-release.json']
         for name in names:
             path = root/name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -39,7 +39,9 @@ class LinuxBuildTests(unittest.TestCase):
         return names, hashes, output, binaries
 
     def context(self, root, binaries):
-        return (patch.object(builder.shared, 'ROOT', root),
+        return (patch.object(builder, 'ROOT', root),
+                patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta2/main'),)),
+                patch.object(builder.shared, 'ROOT', root),
                 patch.dict(os.environ, {'PATH': str(binaries)+os.pathsep+os.environ['PATH']}))
 
     def test_real_executable_smoke_and_tar_modes_hashes_and_reports(self):
@@ -47,8 +49,8 @@ class LinuxBuildTests(unittest.TestCase):
             root = Path(temporary)
             names, hashes, output, binaries = self.fixture(root)
             archive = Path(str(output)+'.tar.gz')
-            source_patch, env_patch = self.context(root, binaries)
-            with source_patch, env_patch:
+            builder_patch, context_patch, root_patch, env_patch = self.context(root, binaries)
+            with builder_patch, context_patch, root_patch, env_patch:
                 builder.write_package(output, archive, names, hashes)
             report = json.loads((output/'build-provenance.json').read_text())
             self.assertEqual(report['approved_inputs'], hashes)
@@ -73,8 +75,8 @@ class LinuxBuildTests(unittest.TestCase):
                 else:
                     (output/'AK820/_internal'/names[0]).write_bytes(b'tampered')
                 archive = Path(str(output)+'.tar.gz')
-                source_patch, env_patch = self.context(root, binaries)
-                with source_patch, env_patch, self.assertRaises(RuntimeError):
+                builder_patch, context_patch, root_patch, env_patch = self.context(root, binaries)
+                with builder_patch, context_patch, root_patch, env_patch, self.assertRaises(RuntimeError):
                     builder.write_package(output, archive, names, hashes)
                 self.assertFalse(archive.exists())
                 self.assertFalse((output/'build-provenance.json').exists())
@@ -88,8 +90,8 @@ class LinuxBuildTests(unittest.TestCase):
             link = library.with_name('libalias.so')
             link.symlink_to(library.name)
             archive = Path(str(output)+'.tar.gz')
-            source_patch, env_patch = self.context(root, binaries)
-            with source_patch, env_patch:
+            builder_patch, context_patch, root_patch, env_patch = self.context(root, binaries)
+            with builder_patch, context_patch, root_patch, env_patch:
                 builder.write_package(output, archive, names, hashes)
             with tarfile.open(archive) as bundle:
                 self.assertTrue(bundle.getmember(output.name+'/AK820/_internal/libalias.so').issym())
@@ -107,7 +109,8 @@ class LinuxBuildTests(unittest.TestCase):
                 result = subprocess.CompletedProcess([], 0, 'AK820_FROZEN_HIDRAW_OK')
                 outcomes = [result]*3
                 outcomes[stage] = subprocess.CalledProcessError(1, 'fixture')
-                with patch.object(builder.shared, 'ROOT', root), \
+                with patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta2/main'),)), \
+                     patch.object(builder.shared, 'ROOT', root), \
                      patch.object(builder.subprocess, 'run', side_effect=outcomes), self.assertRaises(subprocess.CalledProcessError):
                     builder.write_package(output, archive, names, hashes)
                 self.assertFalse(archive.exists())
@@ -123,7 +126,8 @@ class LinuxBuildTests(unittest.TestCase):
                     if mutation:
                         (root/names[0]).write_bytes(b'changed')
                     return subprocess.CompletedProcess([], 0, 'AK820_FROZEN_HIDRAW_OK' if mutation else '')
-                with patch.object(builder.shared, 'ROOT', root), patch.object(builder.subprocess, 'run', side_effect=smoke), \
+                with patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta2/main'),)), \
+                     patch.object(builder.shared, 'ROOT', root), patch.object(builder.subprocess, 'run', side_effect=smoke), \
                      self.assertRaises(RuntimeError):
                     builder.write_package(output, archive, names, hashes)
                 self.assertFalse(archive.exists())

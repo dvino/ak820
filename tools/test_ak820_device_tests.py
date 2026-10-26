@@ -208,7 +208,11 @@ class DeviceTests(unittest.TestCase):
         for suffix in ('ihx','map'):
             (release/f'firmware/application.{suffix}').write_bytes(suffix.encode())
         images = {'ihx_sha256':protocol.pack.digest(b'ihx'), 'map_sha256':protocol.pack.digest(b'map')}
-        spec = types.SimpleNamespace(loader=types.SimpleNamespace(exec_module=lambda module:setattr(module,'load_release',lambda **kwargs:None)))
+        (release/'reports').mkdir()
+        (release/'reports/build-report.json').write_text(json.dumps({
+            'configuration': protocol.profiles.configuration('main')}))
+        spec = types.SimpleNamespace(name='fixture_installer', loader=types.SimpleNamespace(
+            exec_module=lambda module:setattr(module,'_load_release',lambda *args, **kwargs:None)))
         for failure in ('ihx_sha256','map_sha256','CODE'):
             selected = dict(images)
             if failure != 'CODE': selected[failure] = 'wrong'
@@ -221,6 +225,34 @@ class DeviceTests(unittest.TestCase):
                 with self.subTest(failure=failure), self.assertRaisesRegex(ValueError,'different build|CODE differs'):
                     protocol.bind(release,self.output/'session',self.output/'approval')
                 opened.assert_not_called()
+
+    def test_bind_passes_exact_approved_schema_to_personal_session(self):
+        for name in ('main', 'game'):
+            with self.subTest(profile=name):
+                release = self.output / ('selected-' + name)
+                for folder in ('firmware', 'reference', 'reports'):
+                    (release / folder).mkdir(parents=True)
+                (release / 'installer-release.json').write_text(json.dumps({'release':'fixture'}))
+                (release / 'reports/build-report.json').write_text(json.dumps({
+                    'configuration': protocol.profiles.configuration(name)}))
+                (release / 'reference/vial.json').write_text('{}')
+                for suffix in ('ihx', 'map'):
+                    (release / ('firmware/application.' + suffix)).write_bytes(suffix.encode())
+                images = {'ihx_sha256':protocol.pack.digest(b'ihx'),
+                          'map_sha256':protocol.pack.digest(b'map')}
+                checked = mock.Mock()
+                spec = types.SimpleNamespace(name='fixture_selected_installer', loader=types.SimpleNamespace(
+                    exec_module=lambda module:setattr(module,'_load_release',checked)))
+                with mock.patch.object(protocol.importlib.util,'spec_from_file_location',return_value=spec), \
+                     mock.patch.object(protocol.importlib.util,'module_from_spec',return_value=types.SimpleNamespace()), \
+                     mock.patch.object(protocol.transport,'session_image',return_value=(images,b'\1',bytes(65536))) as session, \
+                     mock.patch.object(protocol.pack,'validate_native'), \
+                     mock.patch.object(protocol.diag,'diagnostic_build',return_value={protocol.pack.APP_START:1}):
+                    binding = protocol.bind(release,self.output/'personal',self.output/'approval')
+                checked.assert_called_once_with(release,self.output/'approval',approved=True)
+                self.assertEqual(binding['nvm_schema'],protocol.pack.EXTENSION_BUILD_ID)
+                session.assert_called_once_with(self.output/'personal','permanent',
+                                                target_build_id=protocol.pack.EXTENSION_BUILD_ID)
 
     def test_real_bind_missing_approval_stops_before_session_or_open(self):
         # Reach the missing-approval gate with a self-consistent host fixture.

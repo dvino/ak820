@@ -34,6 +34,24 @@ class TrialCandidateTest(preparation.PreparationTest):
             self.root / 'reference/stock-full.bin', self.nativepath,
             self.backup, out, current_rom=bytes(self.live), current_trial=self.payloads['trial'])
 
+    def test_explicit_schema3_target_preserves_existing_schema2_trial_settings(self):
+        self.completed_save()
+        out = self.root / 'schema3-candidate'
+        metadata = trial_builder.write_trial(self.ihx, self.mapfile,
+            self.root / 'reference/stock-full.bin', self.nativepath,
+            self.backup, out, current_rom=bytes(self.live), current_trial=self.payloads['trial'],
+            source_build_id=packer.BUILD_ID, target_build_id=packer.EXTENSION_BUILD_ID)
+        _, payload, backup = updater.session_image(out, 'trial', target_build_id=packer.EXTENSION_BUILD_ID)
+        self.assertEqual(backup, self.backup)
+        self.assertEqual(packer.verify_payload(payload, target_build_id=packer.EXTENSION_BUILD_ID)['build_id'],
+                         packer.EXTENSION_BUILD_ID)
+        expected, _ = packer.migrate_vial_nvm(self.live[packer.NVM_START:packer.NVM_END],
+            packer.BUILD_ID, target_build_id=packer.EXTENSION_BUILD_ID)
+        self.assertEqual(payload[packer.NVM_START-packer.APP_START:packer.NVM_END-packer.APP_START], expected)
+        self.assertEqual(metadata['migration']['target_build_id'], packer.EXTENSION_BUILD_ID)
+        self.application.assert_not_called()
+        self.hid.assert_not_called()
+
     def test_trial_only_preserves_current_nvm_and_original_recovery(self):
         self.completed_save()
         self.live[packer.NVM_START:packer.NVM_START + 2] = bytes.fromhex('e6fe')

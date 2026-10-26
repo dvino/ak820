@@ -2,62 +2,62 @@
 
 # Roadmap
 
-The source registry defines nine curated profile packages that cover all 14
-optional modules. The default `work` package includes Leader, Dynamic Macros
-and OS indicator control; it excludes Mouse Keys and Mac/PC mapping. The
-packages are fixed combinations, not independent toggles. Older profile names
-remain available in the low-level CLI for reproducing earlier builds. New
-source images have their own qualification records. Installed alpha.3 remains unchanged; beta installers are now part of the companion baseline. See [Status](STATUS.md), [Build profiles](BUILD-PROFILES.md) and the
-[module matrix](MODULE-MATRIX.md).
+The source registry defines ten fixed [profiles](profiles/README.md), with
+`main` as default. All ten include QMK Settings and schema `0x082003`.
+Other profiles exchange selected `main` modules for task-specific functions;
+these are complete compositions, not arbitrary toggles. Historical names remain
+for reproduction; historical Typing uses `legacy-typing` in current builds.
+
+Published beta.1 on 2026-10-25 supplied nine catalog profiles and standalone
+Windows/Linux installers for exact `work`. The ten-profile source and installer
+selection work does not announce beta.2 publication or a device installation.
+See [Status](STATUS.md) for the separate artifact and hardware state.
 
 ## Configurator
 
-The companion application is developed in the separate [AK Configurator](https://github.com/dvino/ak-configurator) repository. Its imported Entropy source still needs adaptation for AK820. The firmware catalogs and protocol contracts in this repository provide the integration baseline.
+The companion is developed in [AK Configurator](https://github.com/dvino/ak-configurator).
+Firmware catalogs and protocol contracts provide its integration baseline.
+New module development is paused while existing functions, defects,
+documentation and application contracts are completed.
 
-New module development is paused for the beta. Firmware work now covers the
-existing profiles, defects, documentation and application contracts.
-
-The next product phase is the browser and desktop configurator. The client
-should use an exact-image catalog, distinguish reserved storage from enabled
-controls, and show only commands supported by the installed profile. Present
-the nine curated packages as whole choices, with `work` as the default when
-selecting a project package. Backup and restore must use the typed module
-storage contract and reject settings the target image cannot represent. See
-the [requirements](../web/docs/REQUIREMENTS.md),
-[implementation plan](../web/docs/PLAN.md), and
+The browser and desktop clients should present the ten complete compositions,
+with `main` as the project default. Detect the installed exact image; reserved
+storage alone does not enable a control. Unmeasured source rows must remain
+unqualified. Backup and restore use the typed storage contract and reject
+settings the selected image cannot represent. See the
+[requirements](../web/docs/REQUIREMENTS.md), [plan](../web/docs/PLAN.md) and
 [development catalog](DEVELOPMENT-CATALOG.md).
 
-## Module limits and future work
+## Module limits
 
-The modules have bounded behavior. Tap Dance has eight entries, four basic or
-modified-basic outputs per entry, one pending decision and at most two presses
-per gesture; resolved holds can overlap. Key Overrides has eight rows and
-captures one physical trigger at a time. QMK Settings exposes QSID 1, 2, 7, 18
-and 19 in the `settings` package. QSID 4 remains reserved for a future package
-that combines QMK Settings and Auto Shift. Its settings record is versioned,
-typed, 24 bytes and protected by CRC; backup and migration are supported. The
-individual guides document rejected inputs and limits.
+Tap Dance has eight entries with four basic or modified-basic outputs, one
+pending decision and at most two presses per gesture; resolved holds may
+overlap. Key Overrides has eight rows and one physical trigger at a time.
+Leader selects saved macros with 1–0 or A–F after its prefix. One Shot supports
+modifiers, not layers. Dynamic recording stores two temporary sequences of up
+to 16 completed key taps each, separately from the 16 persistent Vial macros.
 
-Other Magic actions remain future work. Current GUI controls and modifier
-swaps are temporary. Caps variants and persistent Magic settings are outside
-the current module contract. Any extension needs defined user behavior,
-storage and migration rules where applicable, and exact-image resource and
-runtime qualification before release consideration.
+QMK Settings exposes QSID 1, 2, 7, 18 and 19 in all ten profiles, plus QSID 4
+for Auto Shift in `typing`. Its typed, versioned 24-byte record has a CRC.
+Tap Dance uses its row term rather than QSID 7. Individual guides describe
+rejected inputs and remaining limits.
 
-## Storage and compatibility
+Other Magic actions remain future work. GUI controls, Mac/PC and modifier swaps
+are temporary. Caps variants and persistent Magic settings are outside the
+current contract. Any extension needs defined behavior, storage and migration
+rules, exact-image resources and startup/stack/IRQ proof before release review.
 
-Profiles that enable Tap Dance, Key Overrides or QMK Settings use schema
-`0x082003`; other profiles retain `0x082002`. Both schemas preserve six layers,
-16 macros with 8,192 bytes of macro storage, eight Combos and the fixed Combo
-offset at `0x658`. Extension records use reserved space described in
-[module storage](MODULE-STORAGE.md). Do not enable upstream QMK Settings
-storage; it moves the fixed Combo layout.
+## Storage and release gates
 
-Resource use depends on the complete linked image. The [module matrix](MODULE-MATRIX.md)
-records each package's measurements; [Status](STATUS.md) records current
-qualification and release state. A source profile does not establish physical
-behavior or release approval.
+Current schema03 preserves six layers, 16 macros with an 8192-byte shared
+buffer, eight Combos and Combo offset `0x658`. Historical schema02 remains a
+supported migration source. Extension records use reserved space documented in
+[module storage](MODULE-STORAGE.md); upstream QMK Settings storage must not move
+the fixed Combo layout.
 
-## Later releases
-
-The installed alpha.3 image remains unchanged. Future profile releases require independent review, exact-image qualification and matching installer evidence before publication.
+All current builds require pass30 and fresh source/IRQ context. Resource use
+is measured for each complete linked image. Source composition, host models,
+release approval and physical behavior are separate. Future publication needs
+independent review, complete exact-image qualification and matching installer
+evidence. The [module matrix](MODULE-MATRIX.md) describes composition;
+[Status](STATUS.md) records actual evidence and release state.

@@ -71,8 +71,15 @@ def main() -> int:
         "id_dynamic_keymap_get_buffer",
         "id_dynamic_keymap_set_buffer",
     )
-    for index, name in enumerate(cases):
-        replacements[f"/*__CASE_{index}__*/"] = extract_case(source, name)
+    # The four bulk commands now share one guarded switch body. Keep that
+    # production body intact so this fixture tests the actual size firewall.
+    first = re.search(r"\bcase\s+id_dynamic_keymap_macro_get_buffer\s*:", source)
+    last = re.search(r"\bcase\s+id_dynamic_keymap_set_buffer\s*:\s*\{", source)
+    if not first or not last or first.start() > last.start():
+        raise ValueError("missing grouped VIA bulk cases")
+    replacements["/*__CASE_0__*/"] = source[first.start():matching_brace(source, source.index("{", last.start())) + 1]
+    for index in range(1, len(cases)):
+        replacements[f"/*__CASE_{index}__*/"] = ""
     for marker, value in replacements.items():
         if template.count(marker) != 1:
             raise ValueError(f"expected one marker: {marker}")

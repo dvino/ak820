@@ -18,6 +18,128 @@ import configure_firmware as config
 
 
 class ProfileTests(unittest.TestCase):
+    def test_direct_allocation_uses_exact_xdata_map_record(self):
+        # Isolate the actual inspect guard: earlier source/ABI checks are mocked,
+        # and a sentinel stops before unrelated startup and resource validation.
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build = root / 'build'
+            build.mkdir()
+            mapfile = build / 'ajazz_ak820_vial.map'
+            ihx, mem = build / 'ajazz_ak820_vial.ihx', build / 'ajazz_ak820_vial.mem'
+            symbols = {name: 0x3027 for name in
+                ('_ak820_eeprom_read_block_xdata', '_ak820_eeprom_update_block_xdata',
+                 '_dynamic_keymap_get_keycode', '_dynamic_keymap_set_keycode',
+                 '_dynamic_keymap_get_encoder', '_dynamic_keymap_set_encoder')}
+            for profile, records, valid in (
+                    ('main', 'D:   00000CF2  _g_direct_mode_colors              vialrgb\n', True),
+                    ('main', 'C:   00000CF2  _g_direct_mode_colors              vialrgb\n', False),
+                    ('main', 'D:   00000CF2  _g_direct_mode_colors              other_module\n', False),
+                    ('main', '', False),
+                    ('main', 'D: 00000CF2 _g_direct_mode_colors vialrgb\n' * 2, False),
+                    ('pointer', '', True),
+                    ('pointer', 'D: 00000CF2 _g_direct_mode_colors vialrgb\n', False)):
+                selected = config.profiles.configuration(profile)
+                report = {'configuration': selected, 'keyboard': 'ajazz/ak820', 'keymap': 'vial',
+                    'build_id': selected['nvm_schema'], 'hardware_validated': False,
+                    'code_window': [0x3027, 0xc700], 'code_windows': list(config.WINDOWS),
+                    'xram_window': [0x440, 0x1000],
+                    'compiler_sha256': config.SDCC46_PINS['sdcc'],
+                    'assembler_sha256': config.SDCC46_PINS['sdas8051']}
+                mapfile.write_text(records)
+                with self.subTest(profile=profile, records=records), \
+                     patch.object(config, 'QMK', root), \
+                     patch.object(config, 'validate_tools', return_value=root), \
+                     patch.object(config, 'load_json', return_value=report), \
+                     patch.object(config, 'validate_inputs'), \
+                     patch.object(config, 'check_feature_defines'), \
+                     patch.object(config, 'check_pass30'), \
+                     patch.object(config, 'artifact', side_effect=[ihx, mapfile, mem]), \
+                     patch.object(config, 'check_short_calls'), \
+                     patch.object(config, 'diagnostic_build', return_value={0x3027: 0x22}), \
+                     patch.object(config, 'linked_symbols', return_value=symbols), \
+                     patch.object(config, 'validate_startup', side_effect=RuntimeError('startup sentinel')):
+                    expected = RuntimeError if valid else ValueError
+                    message = 'startup sentinel' if valid else 'Direct allocation'
+                    with self.assertRaisesRegex(expected, message):
+                        config.inspect(build, root)
+
+    def test_beta2_ten_profile_composition_and_positive_core_switches(self):
+        self.assertEqual(config.profiles.RELEASE_PROFILES,
+            ('main', 'game', 'mmo', 'typing', 'code', 'pointer', 'onehand',
+             'creative', 'shortcuts', 'multios'))
+        main = {'one-shot', 'leader', 'dynamic-macros', 'os-indicators',
+                'qmk-settings', 'key-overrides', 'vialrgb-direct'}
+        variants = {
+            'main': (set(), set()),
+            'game': ({'leader'}, {'nkro', 'nkro-control', 'gui-lock'}),
+            'mmo': ({'leader', 'key-overrides'}, {'nkro', 'nkro-control', 'gui-lock', 'tap-dance'}),
+            'typing': ({'vialrgb-direct'}, {'auto-shift', 'space-cadet'}),
+            'code': ({'vialrgb-direct'}, {'space-cadet', 'grave-escape'}),
+            'pointer': ({'vialrgb-direct'}, {'mouse-keys'}),
+            'onehand': ({'vialrgb-direct', 'key-overrides'}, {'mouse-keys', 'tap-dance'}),
+            'creative': ({'key-overrides'}, {'tap-dance'}),
+            'shortcuts': ({'vialrgb-direct', 'dynamic-macros'}, {'tap-dance'}),
+            'multios': ({'vialrgb-direct'}, {'mac-pc', 'ctrl-gui-swap'}),
+        }
+        for name, (remove, add) in variants.items():
+            value = config.profiles.configuration(name)
+            self.assertEqual(set(value['optional_features']), main - remove | add)
+            for feature, label in (('nkro', 'nkro-reports'), ('grave-escape', 'grave-escape'),
+                                   ('vialrgb-direct', 'vialrgb-direct-ram')):
+                enabled = feature in value['optional_features']
+                self.assertEqual(label in value['base_features'], enabled)
+                self.assertEqual(value['make_options'][config.profiles.SWITCHES[feature]],
+                                 'yes' if enabled else 'no')
+            self.assertEqual(value['nvm_schema'], config.profiles.EXTENSION_SCHEMA)
+            self.assertFalse(any('DIAG' in switch or 'OMIT' in switch for switch in value['make_options']))
+
+    def test_old_typing_metadata_has_an_explicit_reader_and_build_alias(self):
+        old = config.profiles.legacy_configuration('typing')
+        self.assertEqual(old['optional_features'],
+            ['nkro-control', 'one-shot', 'space-cadet', 'auto-shift', 'os-indicators'])
+        self.assertEqual(old['nvm_schema'], config.profiles.SCHEMA)
+        self.assertNotIn('AK820_NKRO', old['make_options'])
+        config.profiles.validate_legacy_configuration(old)
+        with self.assertRaises(ValueError):
+            config.profiles.validate_configuration(old)
+        self.assertNotEqual(old, config.profiles.configuration('typing'))
+        alias = config.profiles.configuration('legacy-typing')
+        self.assertEqual(set(alias['optional_features']),
+                         set(old['optional_features']) | {'nkro', 'grave-escape', 'vialrgb-direct'})
+        for field in ('profile', 'optional_features', 'make_options', 'base_features'):
+            altered = copy.deepcopy(old)
+            altered[field] = None
+            with self.assertRaises(ValueError):
+                config.profiles.validate_legacy_configuration(altered)
+
+    def test_pass30_rejects_each_unreviewed_compiler_and_transform_choice(self):
+        flags = ('--opt-code-size -DAK820_READ_HOOK_PRESERVES_RN=1'
+                 ' -DAK820_READ_HOOK_PRESERVES_RN=1 --callee-saves ' +
+                 ','.join(config.AK820_CALLEE_SAVES) +
+                 ' -DAK820_COMPRESS_DEFAULT_KEYMAP -DAK820_WORD_HOOKS_PRESERVE_RN=1')
+        baseline = dict(compiler_extra_flags=flags,
+            audited_callee_saves=list(config.AK820_CALLEE_SAVES), outline_max_helpers=400,
+            experimental_iram_overlay=None, xram_window=[0x440, 0x1000],
+            compress_default_keymap=True, nvm_read_block_asm=True,
+            nvm_update_block_asm=True, keymap_words_asm=True, short_calls={})
+        mutations = [('compiler_extra_flags', flags + ' --stack-auto'),
+                     ('compiler_extra_flags', flags.replace('--opt-code-size', '--opt-code-speed')),
+                     ('compiler_extra_flags', flags.replace(' -DAK820_WORD_HOOKS_PRESERVE_RN=1', '')),
+                     ('audited_callee_saves', []), ('outline_max_helpers', 200),
+                     ('experimental_iram_overlay', {}), ('xram_window', [0x400, 0x1000]),
+                     ('short_calls', None)]
+        mutations += [(field, False) for field in
+                      ('compress_default_keymap', 'nvm_read_block_asm',
+                       'nvm_update_block_asm', 'keymap_words_asm')]
+        for field, value in mutations:
+            with self.subTest(field=field, value=value), self.assertRaisesRegex(ValueError, 'pass30 compiler'):
+                config.check_pass30({**baseline, field: value}, Path('/missing-build'), Path('/missing-tools'))
+        # The exact flags alone cannot qualify a build without bound proofs.
+        with self.assertRaisesRegex(ValueError, 'Pass30 implementation differs'):
+            config.check_pass30(baseline, Path('/missing-build'), Path('/missing-tools'))
+
+
     def test_included_fixtures_and_tool_dependencies_are_part_of_source_snapshot(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -119,9 +241,9 @@ class ProfileTests(unittest.TestCase):
         for name in names:
             self.assertFalse(config.profiles.configuration(name)['release_approved'])
 
-    def test_work_default_preserves_required_and_excluded_modules(self):
-        self.assertEqual(config.profiles.DEFAULT_PROFILE, 'work')
-        features = config.profiles.configuration('work')['optional_features']
+    def test_main_default_preserves_required_and_excluded_modules(self):
+        self.assertEqual(config.profiles.DEFAULT_PROFILE, 'main')
+        features = config.profiles.configuration('main')['optional_features']
         self.assertIn('os-indicators', features)
         self.assertNotIn('mac-pc', features)
         self.assertNotIn('mouse-keys', features)
@@ -212,7 +334,7 @@ class ProfileTests(unittest.TestCase):
             flags.parent.mkdir(parents=True)
             selected = config.profiles.configuration('full')
             text = ' '.join('-D' + config.profiles.SWITCHES[feature]
-                            for feature in selected['optional_features'])
+                            for feature in selected['optional_features']) + ' -DNKRO_ENABLE -DGRAVE_ESC_ENABLE'
             def report(value):
                 flags.write_text(value)
                 return {'artifacts': [{'path': flags.relative_to(root).as_posix(),
@@ -253,7 +375,7 @@ class ProfileTests(unittest.TestCase):
 
     def test_auto_shift_profile_keeps_full_features_and_owns_timing(self):
         profile = config.profiles.configuration('full-auto-shift')
-        self.assertEqual(profile['optional_features'], ['nkro-control', 'one-shot', 'space-cadet', 'auto-shift'])
+        self.assertEqual(profile['optional_features'], ['nkro-control', 'one-shot', 'space-cadet', 'auto-shift', 'nkro', 'grave-escape', 'vialrgb-direct'])
         self.assertEqual(profile['timing_ms']['auto_shift'], 175)
         commands = {name: command for name, _, command in
                     config.profile_test_plan('full-auto-shift', Path('/tmp/as'), Path('/tmp/sdcc'))}
@@ -264,7 +386,7 @@ class ProfileTests(unittest.TestCase):
         name = 'full-mouse-auto-shift'
         profile = config.profiles.configuration(name)
         self.assertEqual(set(profile['optional_features']),
-                         {'nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'auto-shift'})
+                         {'nkro-control', 'one-shot', 'space-cadet', 'mouse-keys', 'auto-shift', 'nkro', 'grave-escape', 'vialrgb-direct'})
         self.assertEqual(config.profiles.select(profile['optional_features']), name)
         commands = {test: command for test, _, command in
                     config.profile_test_plan(name, Path('/tmp/combined'), Path('/tmp/sdcc'))}

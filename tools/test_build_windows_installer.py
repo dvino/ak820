@@ -6,6 +6,7 @@ import json
 import zipfile
 import unittest
 from unittest.mock import patch
+from types import SimpleNamespace
 
 import build_windows_installer as builder
 
@@ -14,23 +15,93 @@ class WindowsInstallerBuildTests(unittest.TestCase):
     def test_only_reviewed_allowlisted_inputs_and_no_personal_backup(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            bundle = root / 'releases/rc6'
             files = ['firmware/application.ihx', 'reference/info.json', 'reference/vial.json']
-            required = ['AK820.cmd', 'tools/installer/approved-release.json',
-                        'releases/rc6/installer-release.json'] + ['releases/rc6/' + name for name in files]
+            required = ['AK820.cmd', 'tools/installer/profile-catalog.json', 'tools/installer/settings-catalog.json']
+            required.extend(builder.PUBLIC_GUIDES)
+            required.extend(builder.PUBLIC_ASSETS)
+            contexts = []
+            for profile in ('main','game','mmo','typing','code','pointer','onehand','creative','shortcuts','multios'):
+                bundle = root / 'releases/beta2' / profile
+                required.extend(f'releases/beta2/{profile}/{name}' for name in files + ['installer-release.json','approved-release.json'])
+                contexts.append(SimpleNamespace(profile=profile, bundle=bundle, approval=bundle/'approved-release.json',
+                    manifest={'install_modes': ['permanent','trial'], 'files': {name: {} for name in files}}))
             for name in required + ['evidence/oem-backup/before-full-rom.bin', 'host/runs/private.bin']:
                 path = root / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(b'fixture')
-            with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'BUNDLE', bundle), \
-                 patch.object(builder, 'HOST_FILES', {'AK820.cmd'}), \
-                 patch.object(builder.ak820, 'load_release', return_value={
-                     'install_modes': ['permanent', 'trial'], 'files': {name: {'sha256': builder.ak820.packer.NATIVE_PUBLIC_SHA} for name in files}}):
-                self.assertEqual(builder.package_files(), sorted(required))
+            with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=tuple(contexts)), \
+                 patch.object(builder, 'HOST_FILES', {'AK820.cmd', 'tools/installer/profile-catalog.json', 'tools/installer/settings-catalog.json'}):
+                self.assertEqual(builder.package_files(), sorted(set(required)))
 
     def test_old_trial_only_release_is_not_packaged_as_permanent(self):
-        with patch.object(builder.ak820, 'load_release', return_value={'trial_only': True}):
-            with self.assertRaisesRegex(ValueError, 'newly reviewed'):
+        context = SimpleNamespace(profile='main', bundle=builder.ROOT/'releases/beta2/main',
+            approval=builder.ROOT/'releases/beta2/main/approved-release.json', manifest={'trial_only': True})
+        with patch.object(builder.ak820, 'release_contexts', return_value=(context,)):
+            with self.assertRaisesRegex(ValueError, 'permanent'):
+                builder.package_files()
+
+    def test_missing_or_symlinked_public_guide_blocks_inventory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            guide = root / builder.PUBLIC_GUIDES[0]
+            guide.parent.mkdir(parents=True, exist_ok=True)
+            guide.write_text('guide', encoding='utf-8')
+            with patch.object(builder, 'ROOT', root):
+                with self.assertRaisesRegex(ValueError, 'Missing or unsafe public guide'):
+                    builder.guide_files()
+                for name in builder.PUBLIC_GUIDES[1:]:
+                    path = root / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text('guide', encoding='utf-8')
+                for name in builder.PUBLIC_ASSETS:
+                    path = root / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(b'image fixture')
+                self.assertEqual(builder.guide_files(), [*builder.PUBLIC_GUIDES, *builder.PUBLIC_ASSETS])
+                guide.unlink()
+                outside = root / 'outside.md'
+                outside.write_text('private', encoding='utf-8')
+                guide.symlink_to(outside)
+                with self.assertRaisesRegex(ValueError, 'Missing or unsafe public guide'):
+                    builder.guide_files()
+
+    def test_public_readme_images_are_explicit_binary_hash_inputs(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name in builder.PUBLIC_GUIDES:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('guide', encoding='utf-8')
+            for name in builder.PUBLIC_ASSETS:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b'\x00\xffwebp fixture')
+            with patch.object(builder, 'ROOT', root):
+                names = builder.guide_files()
+                hashes = builder.snapshot_inputs(names)
+                self.assertEqual(set(names), set((*builder.PUBLIC_GUIDES, *builder.PUBLIC_ASSETS)))
+                self.assertEqual(set(hashes), set(names))
+                self.assertTrue(all(len(hashes[name]) == 64 for name in builder.PUBLIC_ASSETS))
+
+    def test_tampered_guide_is_detected_by_build_snapshot(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            name = builder.PUBLIC_GUIDES[0]
+            path = root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('approved source', encoding='utf-8')
+            with patch.object(builder, 'ROOT', root):
+                snapshot = builder.snapshot_inputs([name])
+                path.write_text('changed while packaging', encoding='utf-8')
+                with self.assertRaisesRegex(RuntimeError, 'Approved input changed during build'):
+                    builder.verify_sources_unchanged(snapshot)
+
+    def test_missing_or_tampered_alternate_profile_blocks_package_inventory(self):
+        # release_contexts validates the complete catalog before returning any
+        # contexts, so an invalid non-default profile cannot be silently omitted.
+        with patch.object(builder.ak820, 'release_contexts',
+                          side_effect=ValueError('tampered profile bundle: shortcuts')):
+            with self.assertRaisesRegex(ValueError, 'shortcuts'):
                 builder.package_files()
 
     def test_gui_windowed_cli_console_and_explicit_data_only(self):
@@ -81,7 +152,7 @@ class WindowsInstallerBuildTests(unittest.TestCase):
                     builder.verify_collected(root / 'AK820', ['release/file.bin'])
 
     def _synthetic_package(self, root):
-        names = ['AK820.cmd', 'releases/rc6/installer-release.json', 'tools/installer/approved-release.json']
+        names = ['AK820.cmd', 'releases/beta2/main/installer-release.json', 'releases/beta2/main/approved-release.json']
         for name in names + ['AK820.cmd']:
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -102,7 +173,8 @@ class WindowsInstallerBuildTests(unittest.TestCase):
             root = Path(temporary)
             names, hashes, output = self._synthetic_package(root)
             archive = Path(str(output) + '.zip')
-            with patch.object(builder, 'ROOT', root), patch.object(builder.sys, 'version', '3.12.0'), \
+            context = SimpleNamespace(profile='main', bundle=root/'releases/beta2/main')
+            with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=(context,)), patch.object(builder.sys, 'version', '3.12.0'), \
                  patch.object(builder.subprocess, 'run') as run:
                 builder.write_package(output, archive, names, hashes)
             self.assertEqual(run.call_count, 3)
@@ -126,7 +198,8 @@ class WindowsInstallerBuildTests(unittest.TestCase):
             root = Path(temporary)
             names, hashes, output = self._synthetic_package(root)
             archive = Path(str(output) + '.zip')
-            with patch.object(builder, 'ROOT', root), patch.object(builder.subprocess, 'run', side_effect=[None, None, RuntimeError('Tk failed')]):
+            context = SimpleNamespace(profile='main', bundle=root/'releases/beta2/main')
+            with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=(context,)), patch.object(builder.subprocess, 'run', side_effect=[None, None, RuntimeError('Tk failed')]):
                 with self.assertRaisesRegex(RuntimeError, 'Tk failed'):
                     builder.write_package(output, archive, names, hashes)
             self.assertFalse((output / 'build-provenance.json').exists())
@@ -141,7 +214,8 @@ class WindowsInstallerBuildTests(unittest.TestCase):
                 archive = Path(str(output) + '.zip')
                 outcomes = [None, None, None]
                 outcomes[failing_call] = RuntimeError('smoke failed')
-                with patch.object(builder, 'ROOT', root), patch.object(builder.subprocess, 'run', side_effect=outcomes):
+                context = SimpleNamespace(profile='main', bundle=root/'releases/beta2/main')
+                with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=(context,)), patch.object(builder.subprocess, 'run', side_effect=outcomes):
                     with self.assertRaisesRegex(RuntimeError, 'smoke failed'):
                         builder.write_package(output, archive, names, hashes)
                 self.assertFalse((output / 'build-provenance.json').exists())
@@ -155,7 +229,8 @@ class WindowsInstallerBuildTests(unittest.TestCase):
             def mutate_on_final_smoke(*args, **kwargs):
                 if args[0][1] == '--self-test':
                     (root / names[0]).write_bytes(b'changed')
-            with patch.object(builder, 'ROOT', root), patch.object(builder.subprocess, 'run', side_effect=mutate_on_final_smoke):
+            context = SimpleNamespace(profile='main', bundle=root/'releases/beta2/main')
+            with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=(context,)), patch.object(builder.subprocess, 'run', side_effect=mutate_on_final_smoke):
                 with self.assertRaisesRegex(RuntimeError, 'changed during build'):
                     builder.write_package(output, archive, names, hashes)
             self.assertFalse((output / 'build-provenance.json').exists())

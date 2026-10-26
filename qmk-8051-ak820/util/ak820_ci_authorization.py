@@ -45,7 +45,9 @@ def validate_policy(policy: dict, host_files: dict, receipt_bytes: bytes,
     require(policy.get('format') == 'ak820-ci-program-policy-1', 'Unknown program policy')
     program = policy.get('program', {})
     require(program.get('keyboard') == 'ajazz/ak820' and program.get('keymap') == 'vial'
-            and program.get('sdcc_version') == '4.6.0' and program.get('schema') == pack.BUILD_ID,
+            and program.get('sdcc_version') == '4.6.0'
+            and type(program.get('schema')) is int
+            and program['schema'] in (pack.BUILD_ID, pack.EXTENSION_BUILD_ID),
             'Unsupported policy target or schema')
     for field in ('ihx_sha256', 'symbols_sha256'):
         require(isinstance(program.get(field), str) and re.fullmatch('[0-9a-f]{64}', program[field]),
@@ -72,8 +74,10 @@ def validate_policy(policy: dict, host_files: dict, receipt_bytes: bytes,
                 and isinstance(image.get('sha256'), str)
                 and re.fullmatch('[0-9a-f]{64}', image['sha256']), 'Invalid packing image evidence')
     require(packing['images']['ak820-vial-trial.bin'].get('trial') is True
-            and packing['images']['ak820-vial-trial.bin'].get('build_id') == pack.BUILD_ID
-            and packing['permanent'].get('build_id') == pack.BUILD_ID,
+            and type(packing['images']['ak820-vial-trial.bin'].get('build_id')) is int
+            and packing['images']['ak820-vial-trial.bin']['build_id'] == program['schema']
+            and type(packing['permanent'].get('build_id')) is int
+            and packing['permanent']['build_id'] == program['schema'],
             'Packing trial or permanent schema differs')
     review = _record(program_review_bytes, 'ak820-ci-program-review-1')
     require(review.get('status') == 'passed' and review.get('hardware_validated') is False,
@@ -98,6 +102,24 @@ def validate_bundle_authorization(bundle: Path, manifest: dict, record: dict) ->
     review_bytes = data('reviews/program-review.md')
     validate_policy(policy, manifest['host_files'], data('reports/packing-validation.json'), review_bytes)
     program = policy['program']
+    report = json.loads(data('reports/build-report.json'))
+    import ak820_profiles
+    configuration = report.get('configuration')
+    if configuration is not None:
+        if program['schema'] == pack.BUILD_ID:
+            try:
+                ak820_profiles.validate_configuration(configuration)
+            except ValueError:
+                ak820_profiles.validate_legacy_configuration(configuration)
+        else:
+            ak820_profiles.validate_configuration(configuration)
+    require(type(report.get('build_id')) is int
+            and report['build_id'] == program['schema']
+            and ((configuration is None and program['schema'] == pack.BUILD_ID)
+                 or (isinstance(configuration, dict)
+                     and type(configuration.get('nvm_schema')) is int
+                     and configuration['nvm_schema'] == program['schema'])),
+            'Build report schema differs from reviewed program')
     require(program['ihx_sha256'] == sha('firmware/application.ihx')
             and program['symbols_sha256'] == symbols_sha256(bundle / 'firmware/application.map'),
             'Fresh build differs from the reviewed program')

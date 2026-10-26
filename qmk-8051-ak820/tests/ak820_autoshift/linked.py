@@ -130,18 +130,25 @@ def direct_cases(fw):
     t.event((253,0),1,100);t.check('encoder_immediate',report(4));t.event((253,0),0,110);t.check('encoder_up',report())
     t.map((0,0),0x2104);t.event((0,0),1,200);t.event((0,0),0,220);t.check('mt_up',report());t.macro([1,2,4]);t.check('macro_down',report(4));t.macro([1,3,4]);t.check('macro_up',report())
     r=t.run();r['pass']=r.pop('pass_');yield r
-    t=tap.Trace(fw,'as-nkro-held-and-release');t.width=32
-    t.commands=[c.replace(f'{fw.address("_actual_keyboard_report")+7:#x} 16;',f'{fw.address("_actual_keyboard_report")+31:#x} 16;') for c in t.commands]
+    has_nkro=fw.compiled_feature('nkro')
+    t=tap.Trace(fw,'as-nkro-held-and-release' if has_nkro else 'as-nkro-disabled-stale-setting-held-and-release')
+    if has_nkro:
+        t.width=32
+        t.commands=[c.replace(f'{fw.address("_actual_keyboard_report")+7:#x} 16;',f'{fw.address("_actual_keyboard_report")+31:#x} 16;') for c in t.commands]
     t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1]);t.map((0,0),4)
-    t.event((0,0),1,100);t.tick(275);t.check('shifted_bitmap',[6,2,16]+[0]*29)
-    t.event((0,0),0,300);t.check('released_bitmap',[6]+[0]*31)
+    t.event((0,0),1,100);t.tick(275);t.check('shifted_report',[6,2,16]+[0]*29 if has_nkro else report(4,2))
+    t.event((0,0),0,300);t.check('released_report',[6]+[0]*31 if has_nkro else report())
+    t.check_memory('setting-retained','_keymap_config',0,[128,0])
     r=t.run();r['pass']=r.pop('pass_');yield r
     for shifted in (False,True):
-        t=tap.Trace(fw,'as-nkro-switch-cancels-'+str(int(shifted)));t.map((0,0),4);t.map((0,1),0x7013)
+        t=tap.Trace(fw,('as-nkro-switch-cancels-' if has_nkro else 'as-nkro-disabled-control-keeps-owner-')+str(int(shifted)));t.map((0,0),4);t.map((0,1),0x7013)
         t.event((0,0),1,100)
         if shifted:t.tick(275)
-        # NK_TOGG switches reports and clears the deferred owner.
-        t.event((0,1),1,300);t.check('switch_clears',report());t.tick(500);t.event((0,0),0,510);t.event((0,1),0,520);t.check('no_revival',report())
+        # At 300 the timeout has elapsed in both traces. A compiled NK_TOGG
+        # clears that owner; an omitted control cannot change mode or clear it.
+        t.event((0,1),1,300);t.check('control_result',report() if has_nkro else report(4,2))
+        t.check_memory('mode','_keymap_config',0,[128,0] if has_nkro else [0,0])
+        t.tick(500);t.event((0,0),0,510);t.event((0,1),0,520);t.check('no_revival',report())
         r=t.run();r['pass']=r.pop('pass_');yield r
 
 def mouse_cases(fw):

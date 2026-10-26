@@ -1,3 +1,5 @@
+English source of truth: [NVM update kernel](../NVM-UPDATE-KERNEL.md).
+
 # Ассемблерное обновление блока NVM
 
 Флаг `--nvm-update-block-asm` выбирает отдельный модуль SDCC для функции

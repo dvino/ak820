@@ -76,6 +76,16 @@ class ReleaseSafetyTests(unittest.TestCase):
         self.assertEqual(result['stack_bound'], 93)
         self.assertEqual(result['stack_margin'], 69)
 
+    def test_current_profiles_require_their_own_witness(self):
+        from ak820_profiles import RELEASE_PROFILES
+        for name in RELEASE_PROFILES:
+            with self.subTest(profile=name):
+                self.assertEqual(gate.manifest_name(configuration(name)),
+                                 'ci/profiles/' + name + '/release-safety.json')
+                report = dict(self.report, configuration=configuration(name))
+                with self.assertRaises(ValueError):
+                    gate.validate(report, self.root)
+
     def test_positive_reviewed_work_configuration(self):
         self.configuration.clear()
         self.configuration.update(configuration('work'))
@@ -188,7 +198,8 @@ class ReleaseSafetyTests(unittest.TestCase):
         lock = {'format': 'ak820-external-dependency-1', 'name': 'lufa', 'destination': 'lib/lufa',
                 'revision': '549b97320d515bfca2f95c145a67bd13be968faa', 'required_files': {}}
         names = {lock_name, '.github/workflows/windows-installer.yml', 'tools/ci_checks.py',
-                 'tools/test_keyboard.py', 'tools/build_ci_release.py', 'ci/release-safety.json'}
+                 'tools/test_keyboard.py', 'tools/build_ci_release.py', 'tools/build_ci_profiles.py',
+                 'ci/release-safety.json'}
         names.update(self.proof['source_files'])
         names.update(record['path'] for record in self.proof['witnesses'].values())
         self.write(lock_name, json.dumps(lock).encode())
@@ -200,10 +211,17 @@ class ReleaseSafetyTests(unittest.TestCase):
         with patch.object(ci, 'ROOT', self.root), patch.object(ci, 'host_manifest', return_value={}), \
                 patch.object(ci, '_git_blob', side_effect=lambda path: path.read_bytes()):
             ci._validate_policy_sources({'source_files': declared}, self.report)
-            for missing in ('ci/release-safety.json', 'witnesses/irq.json', 'tools/ak820_device_protocol.py'):
+            for missing in ('ci/release-safety.json', 'witnesses/irq.json',
+                            'tools/ak820_device_protocol.py', 'tools/build_ci_profiles.py'):
                 incomplete = {name: record for name, record in declared.items() if name != missing}
                 with self.subTest(missing=missing), self.assertRaisesRegex(ValueError, 'omits required'):
                     ci._validate_policy_sources({'source_files': incomplete}, self.report)
+
+    def test_release_profile_selects_its_own_safety_manifest_without_fallback(self):
+        self.assertEqual(gate.manifest_name(configuration('main')),
+                         'ci/profiles/main/release-safety.json')
+        with self.assertRaisesRegex(ValueError, 'Build configuration differs'):
+            gate.manifest_name({'profile': 'main'})
 
     def test_local_review_requires_safety_manifest_hash(self):
         sys.path.insert(0, str(ROOT / 'tools'))

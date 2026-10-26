@@ -1,0 +1,30 @@
+{
+  "syntax": {
+    "exit_code": 0,
+    "python_files": 344,
+    "shell_files": 3,
+    "log_path": "audits/rc6/beta2-release-20261025/syntax-streams-final.log",
+    "log_sha256": "0c49f23dd832542dfc170d063dfef6dbd54e30ddcd66b2f209c4296e7bad7a9e",
+    "warnings": 9
+  },
+  "documentation": {
+    "exit_code": 0,
+    "public_documents": 77,
+    "failures": 0
+  },
+  "whitespace": {
+    "command": "git -c core.whitespace=cr-at-eol diff HEAD --check",
+    "exit_code": 0
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "capture_fix": {
+    "unit_tests_passed": 18,
+    "capture_module_sha256": "30f9032ccf0fcb82ae785e0f7e15a1dcf69ef987686dbc50b7780621a22f52ad",
+    "independent_review": "audits/rc6/beta2-release-20261025/final-tree-source-review.md"
+  },
+  "actionlint": {
+    "exit_code": 0,
+    "workflow_sha256": "d3c707fc132a02b780aba1e4c1c6233484ac51bb9c326b4a7e1f2e4d77f9f937"
+  }
+}

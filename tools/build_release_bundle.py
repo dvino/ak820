@@ -32,9 +32,10 @@ sys.path.insert(0, str(SOURCE / "util"))
 
 import ak820_diagnose as diagnostic
 import pack_ak820 as packer
+import ak820_release_safety as release_safety
 from prepare_ak820_trial import write_trial
 from ak820_build_inputs import validate_inputs
-from ak820_profiles import require_release_qualification
+from ak820_profiles import require_release_qualification, validate_configuration
 from ak820_release_manifest import MANIFEST_FORMAT, RELEASE, host_manifest, read_review_record
 
 
@@ -58,8 +59,10 @@ def validate_review(review: Path, ihx: Path, mapfile: Path, report: Path) -> dic
                 "build_report_sha256": sha(report)}
     if record.get("build") != expected:
         raise ValueError("Independent review belongs to a different build")
-    if 'configuration' in json.loads(report.read_text()):
-        if record.get('release_safety_manifest_sha256') != sha(ROOT / 'ci/release-safety.json'):
+    report_data = json.loads(report.read_text())
+    if 'configuration' in report_data:
+        safety_path = ROOT / release_safety.manifest_name(report_data['configuration'])
+        if record.get('release_safety_manifest_sha256') != sha(safety_path):
             raise ValueError('Independent review belongs to different release safety evidence')
     if record.get("host_files") != host_manifest(ROOT):
         raise ValueError("Independent review belongs to different host code")
@@ -75,13 +78,18 @@ def validate_build_artifact(report: dict, path: Path) -> None:
         raise ValueError("Build artifact differs from its report: " + name)
 
 
-def validate_permanent_payload(ihx: Path, mapfile: Path, stock: Path, backup: bytes) -> dict:
+def validate_permanent_payload(ihx: Path, mapfile: Path, stock: Path, backup: bytes,
+                               target_build_id: int) -> dict:
     data, symbols = packer.read_ihex(ihx), packer.read_symbols(mapfile)
     nvm, _ = packer.migrate(backup, data, symbols)
-    image = packer.pack(data, symbols, stock.read_bytes(), nvm, False)
-    result = packer.verify_payload(image)
+    nvm, transition = packer.migrate_vial_nvm(
+        nvm, packer.BUILD_ID, target_build_id=target_build_id)
+    image = packer.pack(data, symbols, stock.read_bytes(), nvm, False,
+                        target_build_id=target_build_id)
+    result = packer.verify_payload(image, target_build_id=target_build_id)
     if result['trial'] is not False:
         raise ValueError('Permanent packaging unexpectedly produced a trial')
+    result['nvm_schema_transition'] = transition
     return result
 
 
@@ -121,7 +129,8 @@ def validate_tools(report: dict, toolchain: Path | None = None,
 
 
 def assemble(build: Path, review: Path, output: Path, oem_reference_dir: Path,
-             toolchain: Path | None = None, builder_source: Path | None = None) -> dict:
+             toolchain: Path | None = None, builder_source: Path | None = None,
+             expected_profile: str | None = None) -> dict:
     build, review, output = build.resolve(), review.resolve(), output.resolve()
     oem_reference_dir = oem_reference_dir.resolve()
     if output.exists():
@@ -133,9 +142,14 @@ def assemble(build: Path, review: Path, output: Path, oem_reference_dir: Path,
     report_path = build / "build-report.json"
     report = json.loads(report_path.read_text(encoding="utf-8"))
     require_release_qualification(report)
+    actual_profile = report.get('configuration', {}).get('profile')
+    if expected_profile is not None and actual_profile != expected_profile:
+        raise ValueError(f'Build profile mismatch: expected {expected_profile}, got {actual_profile}')
     if report.get("keyboard") != "ajazz/ak820" or report.get("keymap") != "vial":
         raise ValueError("Wrong build target")
-    if report.get("build_id") != packer.BUILD_ID or report.get("hardware_validated") is not False:
+    configuration = validate_configuration(report.get('configuration'))
+    if (report.get("build_id") != configuration['nvm_schema']
+            or report.get("hardware_validated") is not False):
         raise ValueError("Unexpected schema or hardware-validation claim")
     ihx, mapfile = build / "ajazz_ak820_vial.ihx", build / "ajazz_ak820_vial.map"
     diagnostic.diagnostic_build(ihx, mapfile, report_path)
@@ -157,7 +171,8 @@ def assemble(build: Path, review: Path, output: Path, oem_reference_dir: Path,
         packed = write_trial(ihx, mapfile, stock, native, backup, session)
         if set(packed["images"]) != {"ak820-vial-trial.bin", "restore-native.bin"}:
             raise ValueError("Unexpected trial/recovery image set")
-        permanent = validate_permanent_payload(ihx, mapfile, stock, backup)
+        permanent = validate_permanent_payload(
+            ihx, mapfile, stock, backup, configuration['nvm_schema'])
         if (session / "restore-native.bin").read_bytes() != backup[packer.APP_START:packer.APP_END]:
             raise ValueError("Recovery image changed during migration")
         packing = {
@@ -224,9 +239,11 @@ def main() -> None:
     parser.add_argument("--builder-source", type=Path,
                         default=Path("qmk-8051-ak820/util/build_ak820.py"),
                         help="Actual builder source matching the report, relative to the repository root")
+    parser.add_argument("--expected-profile", help="Require this exact profile in the linked build report")
     args = parser.parse_args()
     print(json.dumps(assemble(SOURCE / args.build_dir, ROOT / args.review, ROOT / args.output,
-                             args.oem_reference_dir, ROOT / args.toolchain, ROOT / args.builder_source),
+                             args.oem_reference_dir, ROOT / args.toolchain, ROOT / args.builder_source,
+                             args.expected_profile),
                      ensure_ascii=False, indent=2))
 
 

@@ -75,13 +75,29 @@ def cases(fw):
         ("only_latest_usage_retried", fifo2, [4, 0xEA, 0],
          fw.call("_host_consumer_send", 0) + fw.call("_host_consumer_send", 0xEA) + ready(2) + post(fw)),
     ])
-    nkro_blank = [6, 0] + [0] * 30
-    nkro_down = [6, 0, 16] + [0] * 29
-    yield case(fw, "nkro-release-after-timeout", init + fw.write("_keymap_config", [0x80, 0]) +
-               fw.call("_register_code", 4) + fw.call("_unregister_code", 4), [
-        ("busy_keeps_nkro_down", fifo2, nkro_down, post(fw)),
-        ("nkro_release_retried", fifo2, nkro_blank, ready(2) + post(fw)),
-    ])
+    has_nkro = fw.compiled_feature("nkro")
+    if has_nkro:
+        nkro_blank = [6, 0] + [0] * 30
+        nkro_down = [6, 0, 16] + [0] * 29
+        yield case(fw, "nkro-release-after-timeout", init + fw.write("_keymap_config", [0x80, 0]) +
+                   fw.call("_register_code", 4) + fw.call("_unregister_code", 4), [
+            ("busy_keeps_nkro_down", fifo2, nkro_down, post(fw)),
+            ("nkro_release_retried", fifo2, nkro_blank, ready(2) + post(fw)),
+        ])
+    else:
+        # A stale persisted NKRO bit cannot enable an omitted report module.
+        # Both press and delayed release must still use the boot endpoint;
+        # the shared endpoint remains untouched throughout the retry.
+        marker = [0xa5] * 32
+        yield case(fw, "nkro-disabled-stale-setting-keeps-boot-retry", init +
+                   [emitted.memory("xram", fifo2, marker)] + fw.write("_keymap_config", [0x80, 0]) +
+                   fw.call("_register_code", 4) + fw.call("_unregister_code", 4), [
+            ("busy_keeps_boot_down", fifo1, a, post(fw)),
+            ("shared_not_published", fifo2, marker, []),
+            ("boot_release_retried", fifo1, blank, ready(1) + ready(2) + post(fw)),
+            ("shared_still_untouched", fifo2, marker, []),
+            ("shared_endpoint_ready", 0x2202, [0x12], []),
+        ])
     reset_setup = init + fw.call("_register_code", 4) + fw.call("_register_code", 5)
     yield case(fw, "reset-discards-stale-pending", reset_setup, [
         ("reset_guard_preserves_old_fifo", fifo1, a, fw.write("_keyboard_reset", [1]) + ready(1) + post(fw)),

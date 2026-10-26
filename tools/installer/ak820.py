@@ -8,6 +8,7 @@ The loader transport lives in util/ak820_tool.py; this file orchestrates it.
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -30,6 +31,7 @@ import ak820_tool as transport
 import ak820_diagnose as diagnostic
 import pack_ak820 as packer
 from prepare_ak820_trial import write_trial
+import ak820_profiles
 from ak820_ci_authorization import CI_EXTRA_FILES, validate_bundle_authorization
 from ak820_release_manifest import MANIFEST_FORMAT, RELEASE, validate_host_manifest, read_review_record
 
@@ -37,6 +39,7 @@ BUNDLE = ROOT / 'releases' / RELEASE
 APPROVAL = ROOT / 'tools' / 'installer' / 'approved-release.json'
 ORIGINAL = ROOT / 'evidence' / 'oem-backup'
 RECOVERY_REFERENCE = None  # User-owned local inputs, never distributed.
+PROFILE_IDS = ('main','game','mmo','typing','code','pointer','onehand','creative','shortcuts','multios')
 def runs_directory(frozen=FROZEN):
     if not frozen:
         return ROOT / 'host' / 'runs'
@@ -110,9 +113,109 @@ class Log:
         print('Diagnostic archive:', archive)
 
 
-def load_release(*, approved):
+@dataclass(frozen=True, init=False)
+class ReleaseContext:
+    """An operation's selected paths and immutable validated manifest snapshot."""
+    profile: str
+    bundle: Path
+    approval: Path
+    _manifest_json: str
+    nvm_schema: int
+
+    def __init__(self, profile, bundle, approval, manifest, *, nvm_schema=None):
+        if profile == 'legacy':
+            require(nvm_schema in (None, packer.BUILD_ID), 'Historical release schema changed')
+            nvm_schema = packer.BUILD_ID
+        else:
+            require(type(nvm_schema) is int and nvm_schema in (packer.BUILD_ID, packer.EXTENSION_BUILD_ID),
+                    'Selected release requires an exact approved NVM schema')
+        object.__setattr__(self, 'nvm_schema', nvm_schema)
+        object.__setattr__(self, 'profile', profile)
+        object.__setattr__(self, 'bundle', Path(bundle))
+        object.__setattr__(self, 'approval', Path(approval))
+        object.__setattr__(self, '_manifest_json', json.dumps(manifest, sort_keys=True))
+
+    @property
+    def manifest(self):
+        # Callers cannot mutate the snapshot used by later operation guards.
+        return json.loads(self._manifest_json)
+
+
+def profile_catalog():
+    path = ROOT / 'tools/installer/profile-catalog.json'
+    if not path.exists():
+        return None
+    value = json.loads(path.read_text(encoding='utf-8'))
+    require(value.get('format') == 'ak820-installer-profile-catalog-1' and
+            value.get('default_profile') == 'main' and type(value.get('profiles')) is list,
+            'Invalid installer profile catalog')
+    ids = []
+    for row in value['profiles']:
+        name = row.get('id')
+        require(name in PROFILE_IDS
+                and name not in ids, 'Unknown or duplicate installer profile')
+        require(row.get('bundle') == 'releases/beta2/' + name and
+                row.get('approval') == 'releases/beta2/' + name + '/approved-release.json',
+                'Invalid profile asset path')
+        require(all(type(row.get(key)) is dict and all(type(row[key].get(lang)) is str for lang in ('en','ru'))
+                    for key in ('name','description')), 'Missing bilingual profile description')
+        require(all(type(row.get(key)) is list and all(type(item) is str for item in row[key])
+                    for key in ('added_to_main','removed_from_main')), 'Invalid profile differences')
+        ids.append(name)
+    require(set(ids) == set(PROFILE_IDS),
+            'Incomplete installer profile catalog')
+    return value
+
+
+def release_context(profile=None, *, approved):
+    catalog = profile_catalog()
+    if catalog is None:
+        require(profile is None, 'Installer profile catalog is missing')
+        return ReleaseContext('legacy', BUNDLE, APPROVAL, _load_release(BUNDLE, APPROVAL, approved=approved))
+    profile = profile or catalog['default_profile']
+    row = next((r for r in catalog['profiles'] if r['id'] == profile), None)
+    require(row is not None, 'Unknown installer profile: ' + str(profile))
+    bundle, approval = ROOT / row['bundle'], ROOT / row['approval']
+    manifest = _load_release(bundle, approval, approved=approved)
+    report = json.loads((bundle / 'reports/build-report.json').read_text(encoding='utf-8'))
+    configuration = ak820_profiles.validate_configuration(report.get('configuration'))
+    require(configuration['profile'] == profile,
+            'Selected profile differs from the exact build configuration')
+    require('tools/installer/profile-catalog.json' in manifest['host_files'],
+            'Installer profile catalog is not bound to approved host code')
+    return ReleaseContext(profile, bundle, approval, manifest, nvm_schema=configuration['nvm_schema'])
+
+
+def release_contexts(*, approved):
+    catalog = profile_catalog()
+    return tuple(release_context(row['id'], approved=approved) for row in catalog['profiles']) if catalog else (release_context(approved=approved),)
+
+
+def load_release(*, approved, context=None, profile=None):
+    if context is None:
+        return release_context(profile, approved=approved).manifest
+    require(profile is None or profile == context.profile, 'Selected release context changed')
+    current = release_context(None if context.profile == 'legacy' else context.profile, approved=approved)
+    require(current.bundle == context.bundle and current.approval == context.approval and
+            current.manifest == context.manifest and current.nvm_schema == context.nvm_schema, 'Selected release inputs changed')
+    return current.manifest
+
+
+def session_release_identity(context):
+    if context.profile == 'legacy':
+        return {'profile': 'legacy'}
+    return {'profile': context.profile, 'manifest_sha256': sha((context.bundle / 'installer-release.json').read_bytes())}
+
+
+def require_session_release(manifest, context):
+    if context.profile != 'legacy':
+        require(manifest.get('installer_release') == session_release_identity(context),
+                'Session belongs to another profile or release')
+
+
+def _load_release(bundle, approval_path, *, approved):
     """Fail closed on absent, stale, mixed or known-bad release artifacts."""
-    path = BUNDLE / 'installer-release.json'
+    path = bundle / 'installer-release.json'
     raw = path.read_bytes()
     manifest = json.loads(raw)
     require(manifest.get('format') == MANIFEST_FORMAT, 'Unknown release format')
@@ -130,30 +233,30 @@ def load_release(*, approved):
         REQUIRED_FILES | CI_EXTRA_FILES, REQUIRED_FILES | CI_EXTRA_FILES | {REPRODUCTION_BUILDER}),
         'Incomplete or unexpected release contents')
     for name in sorted(files):
-        data = (BUNDLE / name).read_bytes()
+        data = (bundle / name).read_bytes()
         item = files[name]
         require(isinstance(item, dict) and item.get('size') == len(data) and item.get('sha256') == sha(data),
                 'File modified or corrupted: ' + name)
     if REPRODUCTION_BUILDER in files:
-        report = json.loads((BUNDLE / 'reports/build-report.json').read_text(encoding='utf-8'))
+        report = json.loads((bundle / 'reports/build-report.json').read_text(encoding='utf-8'))
         require(files[REPRODUCTION_BUILDER]['sha256'] == report.get('builder_sha256'),
                 'Reproduction builder differs from the build report')
     require(files['firmware/application.ihx']['sha256'] not in BAD_IHX,
             'Known-bad RC3 firmware is forbidden')
     # This binds the IHX and MAP to the actual compiler report, not just names.
-    diagnostic.diagnostic_build(BUNDLE / 'firmware/application.ihx', BUNDLE / 'firmware/application.map',
-                                BUNDLE / 'reports/build-report.json')
+    diagnostic.diagnostic_build(bundle / 'firmware/application.ihx', bundle / 'firmware/application.map',
+                                bundle / 'reports/build-report.json')
     validate_host_manifest(manifest, ROOT)
-    review = read_review_record((BUNDLE / 'reviews/independent-review.md').read_text(encoding='utf-8'))
+    review = read_review_record((bundle / 'reviews/independent-review.md').read_text(encoding='utf-8'))
     require(review.get('host_files') == manifest['host_files'] and review.get('build') == {
         'ihx_sha256': files['firmware/application.ihx']['sha256'],
         'map_sha256': files['firmware/application.map']['sha256'],
         'build_report_sha256': files['reports/build-report.json']['sha256'],
     }, 'Independent review belongs to different build or host code')
-    validate_bundle_authorization(BUNDLE, manifest, review)
+    validate_bundle_authorization(bundle, manifest, review)
     if approved:
-        require(APPROVAL.is_file(), 'Release approval is missing; installation is blocked pending independent review')
-        approval = json.loads(APPROVAL.read_text(encoding='utf-8'))
+        require(approval_path.is_file(), 'Release approval is missing; installation is blocked pending independent review')
+        approval = json.loads(approval_path.read_text(encoding='utf-8'))
         require(approval == {'format': 'ak820-installer-approval-1', 'release': RELEASE,
                              'manifest_sha256': sha(raw)},
                 'Approval does not match exact release bytes; installation blocked')
@@ -300,27 +403,32 @@ def capture_native(log, selected, *, references):
     return backup
 
 
-def prepare_trial(log, backup, *, image='permanent'):
+def prepare_trial(log, backup, *, image='permanent', context=None):
+    context = context or release_context(approved=True)
     require(image in ('trial', 'permanent'), 'Unknown install mode')
     capture_references(log, backup)
     dest = log.folder / ('trial-session' if image == 'trial' else 'permanent-session')
-    result = write_trial(BUNDLE / 'firmware/application.ihx', BUNDLE / 'firmware/application.map',
+    result = write_trial(context.bundle / 'firmware/application.ihx', context.bundle / 'firmware/application.map',
                          RECOVERY_REFERENCE / 'stock-full.bin', RECOVERY_REFERENCE / 'native-installed.bin',
-                         backup, dest)
+                         backup, dest, target_build_id=context.nvm_schema)
     require(set(result['images']) == {'ak820-vial-trial.bin', 'restore-native.bin'},
             'Packer produced unexpected images')
     if image == 'permanent':
-        data = packer.read_ihex(BUNDLE / 'firmware/application.ihx')
-        symbols = packer.read_symbols(BUNDLE / 'firmware/application.map')
+        data = packer.read_ihex(context.bundle / 'firmware/application.ihx')
+        symbols = packer.read_symbols(context.bundle / 'firmware/application.map')
         stock = (RECOVERY_REFERENCE / 'stock-full.bin').read_bytes()
         nvm, _ = packer.migrate(backup, data, symbols)
-        payload = packer.pack(data, symbols, stock, nvm, False)
-        result['images'][transport.IMAGES[image]] = packer.verify_payload(payload)
+        if context.nvm_schema != packer.BUILD_ID:
+            nvm, _ = packer.migrate_vial_nvm(nvm, packer.BUILD_ID, target_build_id=context.nvm_schema)
+        payload = packer.pack(data, symbols, stock, nvm, False, target_build_id=context.nvm_schema)
+        result['images'][transport.IMAGES[image]] = packer.verify_payload(payload, target_build_id=context.nvm_schema)
         result['trial_only'] = False
         result['native_install_backup_sha256'] = sha(backup)
         (dest / transport.IMAGES[image]).write_bytes(payload)
         json_write(dest / 'images.json', result)
-    plan = transport.plan(dest, image)
+    result['installer_release'] = session_release_identity(context)
+    json_write(dest / 'images.json', result)
+    plan = transport.plan(dest, image, target_build_id=context.nvm_schema)
     restore = transport.plan(dest, 'restore')
     require(restore['sha256'] == sha(backup[packer.APP_START:packer.APP_END]),
             'Personal recovery image differs from the fresh backup')
@@ -346,7 +454,10 @@ def confirm_preparation(log):
     log.record('preparation_accepted')
 
 
-def consent(log, plan, *, recovery, image='permanent'):
+def consent(log, plan, *, recovery, image='permanent', context=None):
+    if context is not None:
+        print('Profile:', context.profile)
+        print('Linked image SHA256:', context.manifest['files']['firmware/application.ihx']['sha256'])
     print('\nImage:', plan['image'])
     print('SHA256:', plan['sha256'])
     print('Size:', plan['size'], 'bytes; writes limited to 0x2800..0xEFBF.')
@@ -441,21 +552,25 @@ def boot_status(hid, selected, log, seconds=5):
                    'scope': 'main-loop liveness only; HIDAPI control-transfer timeout is OS-specific'})
 
 
-def verify_trial(log, hid, session, selected, *, image='permanent'):
-    manifest, trial, _ = transport.session_image(session, image)
-    release = load_release(approved=True)
+def verify_trial(log, hid, session, selected, *, image='permanent', context=None):
+    context = context or release_context(approved=True)
+    manifest, trial, _ = transport.session_image(session, image, target_build_id=context.nvm_schema)
+    release = load_release(approved=True, context=context)
+    require_session_release(manifest, context)
     for filename, key in (('firmware/application.ihx', 'ihx_sha256'), ('firmware/application.map', 'map_sha256')):
         require(manifest.get(key) == release['files'][filename]['sha256'], 'Session belongs to a different build')
     require_state(hid, 'VIAL_APP', selected['path'])
     boot_status(hid, selected, log)
     typed = keyboard_smoke(log)
-    code = diagnostic.diagnostic_build(BUNDLE / 'firmware/application.ihx', BUNDLE / 'firmware/application.map',
-                                       BUNDLE / 'reports/build-report.json')
+    code = diagnostic.diagnostic_build(context.bundle / 'firmware/application.ihx', context.bundle / 'firmware/application.map',
+                                       context.bundle / 'reports/build-report.json')
     output = log.folder / 'code-readback'
     report = diagnostic.capture(output, expected=trial, code=code,
-                                app_factory=lambda: transport.Application(selected))
+                                app_factory=lambda: transport.Application(selected),
+                                target_build_id=context.nvm_schema, allow_legacy=False)
     rom = (output / 'rom.bin').read_bytes()
-    transport.verify_live(rom, trial, image, (RECOVERY_REFERENCE / 'stock-full.bin').read_bytes())
+    transport.verify_live(rom, trial, image, (RECOVERY_REFERENCE / 'stock-full.bin').read_bytes(),
+                          target_build_id=context.nvm_schema, allow_legacy=False)
     require(report['nvm_and_journal_stable_on_second_read'], 'NVM changed during verification')
     require(not report['status']['storage_failed'], 'Diagnostics reports an NVM storage failure')
     log.record('application_readback_verified', image=image, rom_sha256=sha(rom), trial_marker_clear=image == 'trial',
@@ -465,8 +580,9 @@ def verify_trial(log, hid, session, selected, *, image='permanent'):
     return rom
 
 
-def install(log, hid, *, image='permanent'):
-    release = load_release(approved=True)
+def install(log, hid, *, image='permanent', context=None):
+    context = context or release_context(approved=True)
+    release = load_release(approved=True, context=context)
     require(image in ('permanent', 'trial') and
             (image == 'trial' or release.get('install_modes') == ['permanent', 'trial']),
             'This reviewed release permits trial only; permanent requires separate review and approval')
@@ -474,18 +590,26 @@ def install(log, hid, *, image='permanent'):
     state, selected = inventory(log, hid)
     require(state == 'OEM_APP', 'Installation requires one AK820 running OEM firmware; run diagnose/recover first')
     backup = capture_native(log, selected, references=RECOVERY_REFERENCE)
-    session, plan = prepare_trial(log, backup, image=image)
+    session, plan = prepare_trial(log, backup, image=image, context=context)
     print('Personal recovery session:', session)
-    authorization = consent(log, plan, recovery=False, image=image)
+    authorization = consent(log, plan, recovery=False, image=image, context=context)
     # Revalidate immutable build inputs after the operator reviewed the plan.
-    load_release(approved=True)
+    load_release(approved=True, context=context)
+    guard = phase_guard(log, hid, authorization, selected)
+    def install_guard(phase, **fields):
+        guard(phase, **fields)
+        if phase == 'erase_and_flash':
+            load_release(approved=True, context=context)
+            prepared, _, _ = transport.session_image(session, image, target_build_id=context.nvm_schema)
+            require_session_release(prepared, context)
     transport.flash(session, image, True, False, reference_dir=RECOVERY_REFERENCE,
                     native_install=image == 'permanent',
-                    application_descriptor=selected, phase_guard=phase_guard(log, hid, authorization, selected))
+                    application_descriptor=selected, phase_guard=install_guard,
+                    target_build_id=context.nvm_schema)
     log.record('loader_completed', note='checksum accepted; application startup not yet established')
     running = wait_state(hid, 'VIAL_APP')
-    rom = verify_trial(log, hid, session, running, image=image)
-    _, trial, _ = transport.session_image(session, image)
+    rom = verify_trial(log, hid, session, running, image=image, context=context)
+    _, trial, _ = transport.session_image(session, image, target_build_id=context.nvm_schema)
     require(rom[packer.NVM_START:packer.NVM_END] == trial[packer.NVM_START-packer.APP_START:packer.NVM_END-packer.APP_START],
             'Initial settings differ from the prepared image')
     print('\n' + image.upper() + ': typing and complete CODE readback passed. Entropy/Vial checks can now begin.')
@@ -495,10 +619,12 @@ def install(log, hid, *, image='permanent'):
         print('Trial is intended to return to the loader after reset; do not treat it as a daily-use installation.')
 
 
-def update_prepared(log, hid, source):
+def update_prepared(log, hid, source, *, context=None):
+    context = context or release_context(approved=True)
     """Fresh physical Vial consent, limited to the reviewed RC6 repair pair."""
-    release = load_release(approved=True)
-    manifest, payload, backup = transport.validate_prepared_update(source)
+    release = load_release(approved=True, context=context)
+    manifest, payload, backup = transport.validate_prepared_update(source, target_build_id=context.nvm_schema)
+    require_session_release(manifest, context)
     for filename, key in (('firmware/application.ihx', 'ihx_sha256'), ('firmware/application.map', 'map_sha256')):
         require(manifest[key] == release['files'][filename]['sha256'], 'Update session belongs to another release')
     capture_references(log, backup)
@@ -510,14 +636,16 @@ def update_prepared(log, hid, source):
     require(report['completed'] and report['nvm_and_journal_stable_on_second_read'],
             'Current settings or journal changed; update stopped')
     snapshot = output / 'rom.bin'
-    transport.validate_prepared_update(source, snapshot)
+    transport.validate_prepared_update(source, snapshot, target_build_id=context.nvm_schema)
     session = log.folder / 'update-session'
     session.mkdir()
     for name in ('images.json', 'before-full-rom.bin', 'restore-native.bin', 'ak820-vial-permanent.bin'):
         shutil.copyfile(source / name, session / name)
-    transport.validate_prepared_update(session, snapshot)
-    plan = transport.plan(session, 'permanent')
-    print('Prepared RC6 repair only. Fresh full ROM saved:', snapshot)
+    transport.validate_prepared_update(session, snapshot, target_build_id=context.nvm_schema)
+    plan = transport.plan(session, 'permanent', target_build_id=context.nvm_schema)
+    print('Profile:', context.profile)
+    print('Linked image SHA256:', release['files']['firmware/application.ihx']['sha256'])
+    print('Prepared update. Fresh full ROM saved:', snapshot)
     print('Image SHA256:', plan['sha256'])
     print('This restores the durable settings saved before the failed encoder probe, '
           'and discards its pending journal transaction. The temporary encoder change will not be replayed.')
@@ -561,8 +689,8 @@ def update_prepared(log, hid, source):
                 PROGRESS('unlock_wait', {'sha256': plan['sha256'], 'counter': counter})
             time.sleep(.1)
         log.record('physical_consent_received', image_sha256=plan['sha256'])
-        load_release(approved=True)
-        transport.validate_prepared_update(session, snapshot)
+        load_release(approved=True, context=context)
+        transport.validate_prepared_update(session, snapshot, target_build_id=context.nvm_schema)
         require(device.vial_unlock_status() == (1,0), 'Vial unlock changed before bootloader entry')
         before_mutation('vial_bootloader_0B')
         device.enter_vial_loader()
@@ -581,8 +709,8 @@ def update_prepared(log, hid, source):
         raise Cancelled('Ожидание отменено до записи прошивки')
     if PROGRESS:
         PROGRESS('loader_detected', {})
-    load_release(approved=True)
-    transport.validate_prepared_update(session, snapshot)
+    load_release(approved=True, context=context)
+    transport.validate_prepared_update(session, snapshot, target_build_id=context.nvm_schema)
     authorization = {'image': 'permanent', 'sha256': plan['sha256'], 'reset': False,
                      'erase': True, 'flash': True, 'restart': True}
     if CANCEL_EVENT is not None and CANCEL_EVENT.is_set():
@@ -595,8 +723,8 @@ def update_prepared(log, hid, source):
         if phase == 'erase_and_flash' and CANCEL_EVENT is not None and CANCEL_EVENT.is_set():
             raise Cancelled('Запись отменена до стирания прошивки')
         if phase == 'erase_and_flash':
-            load_release(approved=True)
-            transport.validate_prepared_update(session, snapshot)
+            load_release(approved=True, context=context)
+            transport.validate_prepared_update(session, snapshot, target_build_id=context.nvm_schema)
             if CANCEL_EVENT is not None and CANCEL_EVENT.is_set():
                 raise Cancelled('Запись отменена до стирания прошивки')
             log.record('device_mutation_attempt', command='loader_erase_flash')
@@ -604,16 +732,18 @@ def update_prepared(log, hid, source):
                 PROGRESS('flashing', {})
     transport.flash(session, 'permanent', False, False, reference_dir=RECOVERY_REFERENCE,
                     loader_descriptor=loader, prepared_update_snapshot=snapshot,
-                    phase_guard=update_guard)
+                    phase_guard=update_guard, target_build_id=context.nvm_schema)
     running = wait_state(hid, 'VIAL_APP')
     boot_status(hid, running, log)
-    code = diagnostic.diagnostic_build(BUNDLE / 'firmware/application.ihx', BUNDLE / 'firmware/application.map',
-                                       BUNDLE / 'reports/build-report.json')
+    code = diagnostic.diagnostic_build(context.bundle / 'firmware/application.ihx', context.bundle / 'firmware/application.map',
+                                       context.bundle / 'reports/build-report.json')
     post = log.folder / 'after-update-readback'
     report = diagnostic.capture(post, expected=payload, code=code,
-                                app_factory=lambda: transport.Application(running))
+                                app_factory=lambda: transport.Application(running),
+                                target_build_id=context.nvm_schema, allow_legacy=False)
     rom = (post / 'rom.bin').read_bytes()
-    transport.verify_live(rom, payload, 'permanent', (RECOVERY_REFERENCE / 'stock-full.bin').read_bytes())
+    transport.verify_live(rom, payload, 'permanent', (RECOVERY_REFERENCE / 'stock-full.bin').read_bytes(),
+                          target_build_id=context.nvm_schema, allow_legacy=False)
     require(report['completed'] and report['nvm_and_journal_stable_on_second_read'] and
             not report['status']['storage_failed'], 'Update readback or storage check failed')
     require(rom[packer.NVM_START:packer.NVM_END] == payload[packer.NVM_START-packer.APP_START:packer.NVM_END-packer.APP_START],
@@ -658,7 +788,7 @@ def recover(log, hid, source):
     typed = keyboard_smoke(log)
     rom = capture_native(log, running, references=RECOVERY_REFERENCE)
     _, image, _ = transport.session_image(session, 'restore')
-    transport.verify_live(rom, image, 'restore', (RECOVERY_REFERENCE / 'stock-full.bin').read_bytes())
+    transport.verify_live(rom, image, 'restore', (RECOVERY_REFERENCE / 'stock-full.bin').read_bytes(), allow_legacy=False)
     require(rom == backup, 'Restored ROM differs from the selected complete personal OEM backup')
     log.record('oem_recovery_verified', rom_sha256=sha(rom), full_rom_matches=True, keyboard_typing_passed=typed)
     require(typed, 'ROM restored but typing check failed; keyboard functionality remains unconfirmed')
@@ -716,6 +846,7 @@ def udev(install_rules):
 
 def parser():
     out = argparse.ArgumentParser(description='AK820 Linux/Windows installer. No command: HID enumeration only.')
+    out.add_argument('--profile', choices=PROFILE_IDS, help='Exact installer profile (default: main)')
     sub = out.add_subparsers(dest='command')
     sub.add_parser('diagnose', help='List HID interfaces without opening devices, reset or firmware writes')
     sub.add_parser('setup', help='Local Python environment and hidapi; no USB access')
@@ -742,6 +873,9 @@ def parser():
                              type=Path, required=True)
     for command in (prep, installation, verification, recovery, update):
         command.add_argument('--reference-dir', type=Path, help='Directory with your own exact stock-full.bin and native-installed.bin; never downloaded')
+    for command in sub.choices.values():
+        command.add_argument('--profile', choices=PROFILE_IDS, default=argparse.SUPPRESS,
+                             help='Exact installer profile (default: main)')
     return out
 
 
@@ -769,20 +903,21 @@ def main(argv=None, *, prompt=None, interactive=None, progress=None, cancel_even
         if mode in ('install', 'recover', 'check-device', 'update-prepared', 'restore', 'update'):
             require(interactive is True or (sys.stdin is not None and sys.stdin.isatty()),
                     'An interactive terminal or the installer GUI is required')
+        context = None
         # Offline release/recovery checks precede importing hid or enumeration.
         if mode in ('install', 'verify', 'check-device', 'prepare', 'update-prepared'):
-            load_release(approved=mode != 'prepare')
+            context = release_context(args.profile, approved=True)
         if mode in ('install', 'recover', 'check-device', 'prepare', 'update-prepared'):
             RECOVERY_REFERENCE = local_references(args.reference_dir) if args.reference_dir else None
             if mode == 'check-device':
                 _, _, backup = transport.session_image(args.session, 'restore')
                 capture_references(log, backup)
             if mode == 'update-prepared':
-                transport.validate_prepared_update(args.session)
+                transport.validate_prepared_update(args.session, target_build_id=context.nvm_schema)
         workflow_context = None
         if mode in ('backup', 'restore', 'update'):
             import settings_workflow
-            workflow_context = settings_workflow.prepare(sys.modules[__name__], log, args.session)
+            workflow_context = settings_workflow.prepare(sys.modules[__name__], log, args.session, release_context=release_context(args.profile, approved=True))
             if mode == 'restore':
                 settings_workflow.settings.validate_backup(args.backup, workflow_context['profile'])
         if mode == 'verify':
@@ -791,7 +926,7 @@ def main(argv=None, *, prompt=None, interactive=None, progress=None, cancel_even
             print('Release files and independent approval match their checksums. Your device backup is made during preparation.')
             print('Verification was entirely offline; hidapi was not loaded and USB was not opened.')
         elif mode == 'prepare' and args.native_rom:
-            prepare_trial(log, args.native_rom.read_bytes(), image='trial' if args.trial else 'permanent')
+            prepare_trial(log, args.native_rom.read_bytes(), image='trial' if args.trial else 'permanent', context=context)
             print('Offline session prepared. USB was not opened; no firmware was written.')
         else:
             hid = hid_module()
@@ -822,17 +957,17 @@ def main(argv=None, *, prompt=None, interactive=None, progress=None, cancel_even
                 state, selected = inventory(log, hid)
                 require(state == 'OEM_APP', 'Preparation requires a single OEM AK820')
                 prepare_trial(log, capture_native(log, selected, references=RECOVERY_REFERENCE),
-                              image='trial' if args.trial else 'permanent')
+                              image='trial' if args.trial else 'permanent', context=context)
                 print('Session prepared without reset/erase/flash. Installation will still capture a fresh backup.')
             elif mode == 'install':
-                install(log, hid, image='trial' if args.trial else 'permanent')
+                install(log, hid, image='trial' if args.trial else 'permanent', context=context)
             elif mode == 'recover':
                 recover(log, hid, args.session)
             elif mode == 'update-prepared':
-                update_prepared(log, hid, args.session)
+                update_prepared(log, hid, args.session, context=context)
             elif mode == 'check-device':
                 selected = require_state(hid, 'VIAL_APP')
-                verify_trial(log, hid, args.session, selected, image='trial' if args.trial else 'permanent')
+                verify_trial(log, hid, args.session, selected, image='trial' if args.trial else 'permanent', context=context)
                 print('Typing, CODE, protected OEM loader/tail and selected mode marker verified.')
         status = 0
     except Cancelled as error:

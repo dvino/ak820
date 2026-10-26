@@ -106,11 +106,14 @@ def cases(fw, diagnostic=False):
         ("suppressed_up",snapshot,6,mouse(),fw.transition(features.rows(),120)),
         ("cancel_clean",snapshot,6,mouse(),features.unlock.vial(fw,8)),
     ])
-    # NKRO's compact user control clears all report owners on mode change.
+    # Only a compiled NKRO control changes mode and clears report owners.
+    has_nkro=fw.compiled_feature("nkro")
     nkro=(1,2)
-    yield run_case(fw,"matrix-nkro-change-release",physical+features.assign(*nkro,0x7011),[
+    yield run_case(fw,"matrix-nkro-change-release" if has_nkro else "matrix-nkro-disabled-keeps-mouse-owner",physical+features.assign(*nkro,0x7011),[
         ("held",snapshot,6,mouse(buttons=1),fw.transition(features.rows(a),100)),
-        ("mode_change_release",snapshot,6,mouse(),fw.transition(features.rows(a,nkro),120)+tick(fw,130)),
+        ("control_result",snapshot,6,mouse() if has_nkro else mouse(buttons=1),fw.transition(features.rows(a,nkro),120)+tick(fw,130)),
+        ("mode","_keymap_config",2,[128,0] if has_nkro else [0,0],[]),
+        ("physical_release",snapshot,6,mouse(),fw.transition(features.rows(),140)+tick(fw,150)),
     ])
 
 

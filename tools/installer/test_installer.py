@@ -50,6 +50,9 @@ class BaseCase(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.log = Log(self.root)
+        catalog_patch = patch.object(app, 'profile_catalog', return_value=None)
+        catalog_patch.start()
+        self.addCleanup(catalog_patch.stop)
         # Synthetic ROMs exercise validation/orchestration without redistributing
         # OEM bytes. Per-test hash patches identify only these generated fixtures;
         # they do not validate the production pinned hashes or hardware behavior.
@@ -92,6 +95,9 @@ class BaseCase(unittest.TestCase):
             patcher.start()
             self.addCleanup(patcher.stop)
 
+        self.context = app.ReleaseContext('legacy', fixture, app.APPROVAL, {
+            'files': {'firmware/application.ihx': {'sha256': app.sha((fixture/'firmware/application.ihx').read_bytes())}}})
+
         # Generated factory bytes form a synthetic ORIGINAL session so checks for
         # session integrity never depend on a machine's private evidence folder.
         reference = fixture / 'reference'
@@ -119,6 +125,29 @@ class BaseCase(unittest.TestCase):
 
 
 class OfflineTests(BaseCase):
+    def test_schema3_selected_context_prepares_trial_and_permanent_with_exact_schema(self):
+        backup = (app.BUNDLE / 'reference/stock-full.bin').read_bytes()
+        (app.BUNDLE / 'installer-release.json').write_text('synthetic approved manifest')
+        context = app.ReleaseContext('main', app.BUNDLE, app.APPROVAL,
+            self.context.manifest, nvm_schema=app.packer.EXTENSION_BUILD_ID)
+        with contextlib.redirect_stdout(io.StringIO()):
+            session, _ = app.prepare_trial(self.log, backup, context=context)
+        for mode in ('trial', 'permanent'):
+            manifest, payload, original = app.transport.session_image(
+                session, mode, target_build_id=context.nvm_schema)
+            self.assertEqual(original, backup)
+            info = app.packer.verify_payload(payload, target_build_id=context.nvm_schema)
+            self.assertEqual(info['build_id'], app.packer.EXTENSION_BUILD_ID)
+            nvm = payload[app.packer.NVM_START-app.packer.APP_START:app.packer.NVM_END-app.packer.APP_START]
+            app.packer.validate_nvm(nvm, app.packer.EXTENSION_BUILD_ID)
+            self.assertEqual(nvm[37:40], app.packer.EXTENSION_BUILD_ID.to_bytes(3, 'little'))
+            self.assertEqual(manifest['installer_release']['profile'], 'main')
+            with self.assertRaises(ValueError):
+                app.packer.verify_payload(payload)
+        self.assertEqual((session / 'restore-native.bin').read_bytes(),
+                         backup[app.packer.APP_START:app.packer.APP_END])
+
+
     def test_automatic_private_reference_uses_owner_backup_and_preserves_settings(self):
         backup = bytearray((app.RECOVERY_REFERENCE / 'stock-full.bin').read_bytes())
         backup[0xA050] ^= 1  # Owner-specific settings do not change code identity.
@@ -172,14 +201,14 @@ class OfflineTests(BaseCase):
         backup = (app.BUNDLE / 'reference/stock-full.bin').read_bytes()
         app.packer.validate_native(backup, backup, (app.BUNDLE / 'reference/native-installed.bin').read_bytes())
         with contextlib.redirect_stdout(io.StringIO()):
-            session, _ = app.prepare_trial(self.log, backup)
+            session, _ = app.prepare_trial(self.log, backup, context=self.context)
         manifest, image, actual_backup = app.transport.session_image(session, 'permanent')
         self.assertEqual(actual_backup, backup)
         self.assertEqual((session / 'restore-native.bin').read_bytes(), backup[app.packer.APP_START:app.packer.APP_END])
         self.assertEqual(manifest['migration']['native_variant'], 'factory OEM')
         data = app.packer.read_ihex(app.BUNDLE / 'firmware/application.ihx')
         symbols = app.packer.read_symbols(app.BUNDLE / 'firmware/application.map')
-        keys = struct.unpack('<256H', app.packer.code_bytes(data, symbols['_keymaps'], 512))
+        keys = struct.unpack('<256H', app.packer.factory_keymaps(data, symbols))
         for slot in app.packer.PHYSICAL:
             address = app.packer.NVM_START-app.packer.APP_START + 0x40 + 256 + slot*2
             self.assertEqual(int.from_bytes(image[address:address+2], 'big'), keys[128+slot])
@@ -210,7 +239,7 @@ class OfflineTests(BaseCase):
              patch.object(app.transport, 'flash') as flash, patch('builtins.input', side_effect=['y', '']), \
              contextlib.redirect_stdout(io.StringIO()):
             with self.assertRaises(app.Cancelled):
-                app.install(self.log, FakeHid([]))
+                app.install(self.log, FakeHid([]), context=self.context)
         self.assertEqual((self.root / 'native-rom.bin').read_bytes(), backup)
         self.assertEqual((self.root / 'permanent-session/before-full-rom.bin').read_bytes(), backup)
         flash.assert_not_called()
@@ -223,7 +252,7 @@ class OfflineTests(BaseCase):
                  patch.object(app.transport, 'flash') as flash, patch('builtins.input', return_value=answer), \
                  contextlib.redirect_stdout(io.StringIO()):
                 with self.assertRaises(app.Cancelled):
-                    app.install(self.log, FakeHid([]))
+                    app.install(self.log, FakeHid([]), context=self.context)
                 inventory.assert_not_called()
                 capture.assert_not_called()
                 flash.assert_not_called()
@@ -232,7 +261,7 @@ class OfflineTests(BaseCase):
         with patch.object(app, 'load_release', return_value={'trial_only': True}), \
              patch.object(app, 'inventory') as inventory, patch('builtins.input') as prompt:
             with self.assertRaisesRegex(ValueError, 'trial only'):
-                app.install(self.log, FakeHid([]))
+                app.install(self.log, FakeHid([]), context=self.context)
             inventory.assert_not_called()
             prompt.assert_not_called()
 
@@ -247,7 +276,7 @@ class OfflineTests(BaseCase):
                  patch.object(app.transport, 'flash') as flash, \
                  patch('builtins.input', side_effect=['y', answer]), contextlib.redirect_stdout(io.StringIO()):
                 with self.assertRaises(app.Cancelled):
-                    app.install(self.log, FakeHid([]))
+                    app.install(self.log, FakeHid([]), context=self.context)
                 capture.assert_called_once()
                 self.assertEqual(prepare.call_args.args[1], b'personal backup')
                 flash.assert_not_called()
@@ -255,7 +284,7 @@ class OfflineTests(BaseCase):
     def test_permanent_and_trial_bootstrap_and_personal_recovery(self):
         backup = app.check_original()
         with contextlib.redirect_stdout(io.StringIO()):
-            session, plan = app.prepare_trial(self.log, backup)
+            session, plan = app.prepare_trial(self.log, backup, context=self.context)
         manifest, permanent, original = app.transport.session_image(session, 'permanent')
         _, trial, _ = app.transport.session_image(session, 'trial')
         _, restore, _ = app.transport.session_image(session, 'restore')
@@ -647,7 +676,7 @@ class TransportTests(BaseCase):
     def test_direct_permanent_requires_fresh_native_snapshot_and_guards(self):
         backup = app.check_original()
         with contextlib.redirect_stdout(io.StringIO()):
-            session, _ = app.prepare_trial(self.log, backup)
+            session, _ = app.prepare_trial(self.log, backup, context=self.context)
         hid = self.loader()
         hid.descriptors = [descriptor('OEM_APP')]
         events = []
@@ -674,7 +703,7 @@ class TransportTests(BaseCase):
     def test_direct_permanent_cannot_bypass_guard_or_native_provenance(self):
         backup = app.check_original()
         with contextlib.redirect_stdout(io.StringIO()):
-            session, _ = app.prepare_trial(self.log, backup)
+            session, _ = app.prepare_trial(self.log, backup, context=self.context)
         for changes in ({'phase_guard': None}, {'application_descriptor': None}, {'enter_loader': False}):
             options = dict(enter_loader=True, phase_guard=lambda *_a, **_kw: None,
                            application_descriptor=descriptor('OEM_APP'))
@@ -697,7 +726,7 @@ class TransportTests(BaseCase):
     def test_direct_permanent_refuses_changed_live_native_rom_before_reset(self):
         backup = app.check_original()
         with contextlib.redirect_stdout(io.StringIO()):
-            session, _ = app.prepare_trial(self.log, backup)
+            session, _ = app.prepare_trial(self.log, backup, context=self.context)
         native = unittest.mock.Mock()
         changed = bytearray(backup)
         changed[0xA000] ^= 1
@@ -853,7 +882,7 @@ class InstallFlowTests(BaseCase):
              contextlib.redirect_stdout(io.StringIO()):
             error = None
             try:
-                app.install(self.log, hid)
+                app.install(self.log, hid, context=self.context)
             except ValueError as caught:
                 error = caught
             self.assertEqual(flashing.call_count, 1)

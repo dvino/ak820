@@ -9,6 +9,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'util'))
 import ak820_diagnose as diagnostic
+import pack_ak820 as packer
 
 
 class FakeApplication:
@@ -53,6 +54,45 @@ class DiagnoseTest(unittest.TestCase):
         self.rom = bytearray(65536)
         self.rom[0xC725:0xC728] = diagnostic.BUILD_ID.to_bytes(3, 'little')
         self.rom[0xC740:0xC742] = b'\x00\x04'
+
+    def schema3_fixture(self):
+        """Synthetic valid image; no firmware or private reference bytes."""
+        nvm, _ = packer.migrate_vial_nvm(packer.empty_nvm(), packer.BUILD_ID,
+                                         target_build_id=packer.EXTENSION_BUILD_ID)
+        rom = bytearray(65536)
+        rom[packer.NVM_START:packer.NVM_END] = nvm
+        payload = bytearray(rom[packer.APP_START:packer.APP_END])
+        manifest = packer.MANIFEST_START - packer.APP_START
+        payload[manifest:manifest + 16] = (packer.MAGIC + b'\x01\x01\x00\x00' +
+                                            packer.EXTENSION_BUILD_ID.to_bytes(4, 'little'))
+        payload[manifest + 16:manifest + 48] = bytes.fromhex(
+            packer.digest(payload[:packer.CODE_END - packer.APP_START]))
+        payload[manifest + 48:manifest + 64] = bytes.fromhex(packer.digest(nvm))[:16]
+        packer.verify_payload(payload, target_build_id=packer.EXTENSION_BUILD_ID)
+        rom[packer.APP_START:packer.APP_END] = payload
+        return bytes(rom), bytes(payload)
+
+    def test_schema3_expected_requires_explicit_target_before_capture(self):
+        rom, payload = self.schema3_fixture()
+        app = FakeApplication(rom)
+        output = self.root / 'wrong-default'
+        with self.assertRaisesRegex(ValueError, 'Unknown application manifest'):
+            diagnostic.capture(output, expected=payload, app_factory=lambda: app)
+        self.assertFalse(output.exists())
+        self.assertEqual(app.requests, [])
+        self.assertFalse(app.closed)
+        report = diagnostic.capture(self.root / 'approved', expected=payload,
+                                    app_factory=lambda: app,
+                                    target_build_id=packer.EXTENSION_BUILD_ID,
+                                    allow_legacy=False)
+        self.assertTrue(report['completed'])
+        self.assertTrue(report['analysis']['schema_matches'])
+        self.assertTrue(report['analysis']['expected_image']['code_entry_manifest_match'])
+        self.assertTrue(app.closed)
+        self.assertTrue(all(packet[:2] == b'\xfd\x00' for packet in app.requests))
+        with self.assertRaisesRegex(ValueError, 'Unknown application manifest'):
+            diagnostic.analyze(rom, payload, target_build_id=packer.BUILD_ID,
+                               allow_legacy=False)
 
     def test_direct_code_key_ignores_ram_getter_value(self):
         result = diagnostic.analyze(bytes(self.rom), key=(0, 0, 0))

@@ -13,10 +13,10 @@ import firmware_matrix as matrix
 
 class MatrixTests(unittest.TestCase):
     def setUp(self):
-        self.catalog = ('standard', 'full', 'full-leader', 'full-mouse')
-        self.patch = patch.object(matrix.profiles, 'RELEASE_PROFILES', self.catalog, create=True)
-        self.patch.start()
-        self.addCleanup(self.patch.stop)
+        self.catalog = ('main', 'game', 'mmo', 'typing', 'code', 'pointer',
+                        'onehand', 'creative', 'shortcuts', 'multios')
+        self.assertEqual(matrix.candidate_names(), self.catalog)
+        self.assertEqual(matrix.profiles.DEFAULT_PROFILE, 'main')
 
     def test_only_curated_profiles_are_exposed(self):
         result = matrix.matrix()
@@ -28,31 +28,44 @@ class MatrixTests(unittest.TestCase):
             self.assertFalse(row['installable'])
             self.assertIsNone(row['settings_identity'])
             self.assertTrue(row['build_recipe']['short_calls'])
+            self.assertEqual(row['build_recipe']['memory_windows']['xram'], [0x440, 0x1000])
+            self.assertEqual(row['build_recipe']['pass30']['parameter_spills_context'],
+                             'fresh exact-image source/IRQ certificate required')
+            self.assertTrue(row['build_recipe']['pass30']['trim_parameter_spills'])
+            self.assertEqual(row['build_recipe']['pass30']['outline_max_helpers'], 400)
 
     def test_exact_then_smallest_superset_catalog_tiebreak(self):
-        self.assertEqual(matrix.resolve([])[0], 'standard')
-        self.assertEqual(matrix.resolve(['leader']), ['full-leader'])
-        self.assertEqual(matrix.resolve(['one-shot'])[0], 'full')
-        self.assertEqual(matrix.resolve(['one-shot', 'space-cadet', 'nkro-control'])[0], 'full')
-        self.assertEqual(matrix.resolve(['leader', 'mouse-keys']), [])
+        self.assertEqual(matrix.resolve([])[0], 'shortcuts')
+        self.assertEqual(matrix.resolve(['leader'])[0], 'shortcuts')
+        self.assertEqual(matrix.resolve(['one-shot'])[0], 'shortcuts')
+        self.assertEqual(matrix.resolve(['nkro', 'gui-lock'])[0], 'game')
+        self.assertEqual(matrix.resolve(['leader', 'mouse-keys']), ['pointer', 'onehand'])
+        self.assertEqual(matrix.resolve(['nkro', 'leader']), [])
+        self.assertEqual(matrix.resolve(matrix.profiles.configuration('main')['optional_features'])[0], 'main')
 
     def test_unknown_and_duplicate_features_rejected(self):
         for features in (['unknown'], ['leader', 'leader']):
             with self.assertRaises(ValueError):
                 matrix.resolve(features)
 
-    def test_uncovered_modules_are_explicit(self):
+    def test_every_module_is_covered_by_the_ten_current_profiles(self):
         result = matrix.matrix()
-        self.assertFalse(result['complete_module_coverage'])
-        self.assertIn('tap-dance', result['uncovered_modules'])
+        self.assertTrue(result['complete_module_coverage'])
+        self.assertEqual(result['uncovered_modules'], [])
+        for row in result['profiles']:
+            self.assertEqual(row['configuration']['nvm_schema'], matrix.profiles.EXTENSION_SCHEMA)
         leader = next(row for row in result['modules'] if row['feature'] == 'leader')
-        self.assertEqual(leader['profiles'], ['full-leader'])
+        self.assertEqual(leader['profiles'], [name for name in self.catalog if name not in ('game', 'mmo')])
+        with patch.object(matrix.profiles, 'RELEASE_PROFILES', ('main',)):
+            limited = matrix.matrix()
+            self.assertFalse(limited['complete_module_coverage'])
+            self.assertIn('tap-dance', limited['uncovered_modules'])
 
     def test_measurements_must_match_catalog(self):
-        measured = matrix.default_row('full')
+        measured = matrix.default_row('main')
         measured['configuration']['nvm_schema'] += 1
         with self.assertRaises(ValueError):
-            matrix.matrix({'full': measured})
+            matrix.matrix({'main': measured})
         with self.assertRaises(ValueError):
             matrix.matrix({'not-a-candidate': {}})
 
@@ -64,14 +77,15 @@ class MatrixTests(unittest.TestCase):
 
     def test_pairwise_scope_and_reason(self):
         result = matrix.matrix()
-        self.assertEqual(len(result['feature_pairs']), 91)
-        pair = next(row for row in result['feature_pairs'] if row['features'] == ['leader', 'mouse-keys'])
+        self.assertEqual(len(result['feature_pairs']), len(matrix.profiles.SWITCHES) *
+                         (len(matrix.profiles.SWITCHES) - 1) // 2)
+        pair = next(row for row in result['feature_pairs'] if row['features'] == ['leader', 'nkro-control'])
         self.assertEqual(pair['disabled_reason'], 'no_catalog_profile')
         self.assertEqual(pair['profiles'], [])
 
     def test_import_rejects_stale_identity_and_failed_inspection(self):
         import configure_firmware as configured
-        fresh = {'configuration': matrix.profiles.configuration('full'),
+        fresh = {'configuration': matrix.profiles.configuration('main'),
                  'identity': {'ihx_sha256': 'current'}, 'resources': {}, 'short_calls': None}
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
@@ -85,7 +99,7 @@ class MatrixTests(unittest.TestCase):
 
     def test_import_does_not_promote_unproved_pass_claim(self):
         import configure_firmware as configured
-        fresh = {'configuration': matrix.profiles.configuration('full'),
+        fresh = {'configuration': matrix.profiles.configuration('main'),
                  'identity': {'ihx_sha256': 'current'}, 'resources': {}, 'short_calls': None}
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
@@ -98,17 +112,17 @@ class MatrixTests(unittest.TestCase):
     def test_settings_contract_uses_single_catalog_shape(self):
         sys.path.insert(0, str(matrix.ROOT / 'tools/installer'))
         import settings_backup as settings
-        row = matrix.default_row('full')
+        row = matrix.default_row('main')
         row['identity'] = {'ihx_sha256': '1' * 64, 'nvm_schema': row['configuration']['nvm_schema']}
         row['settings_identity'] = settings.catalog_settings_identity(row['configuration'], '1' * 64, '2' * 64, '3' * 64)
-        catalog = matrix.matrix({'full': row})
+        catalog = matrix.matrix({'main': row})
         images = settings._catalog_images(catalog)
         self.assertEqual(list(images), ['1' * 64])
         self.assertEqual(images['1' * 64]['code_sha256'], '2' * 64)
         self.assertEqual(catalog['settings_transitions'], [])
         row['settings_identity']['supported_keycodes'].append(65535)
         with self.assertRaises(ValueError):
-            settings._catalog_images(matrix.matrix({'full': row}))
+            settings._catalog_images(matrix.matrix({'main': row}))
 
     def test_settings_hash_covers_contiguous_packed_code(self):
         import pack_ak820 as pack
@@ -118,7 +132,7 @@ class MatrixTests(unittest.TestCase):
             return captured
         settings = SimpleNamespace(catalog_settings_identity=helper, canonical=lambda value: b'definition')
         payload = bytes((index % 251 for index in range(pack.APP_END - pack.APP_START)))
-        fresh = {'configuration': matrix.profiles.configuration('full'), 'identity': {'ihx_sha256': 'linked-hash'}}
+        fresh = {'configuration': matrix.profiles.configuration('main'), 'identity': {'ihx_sha256': 'linked-hash'}}
         with tempfile.TemporaryDirectory() as tmp:
             native = Path(tmp) / 'native.bin'
             native.write_bytes(b'native')
@@ -135,11 +149,11 @@ class MatrixTests(unittest.TestCase):
             self.assertEqual(result['ihx'], 'linked-hash')
 
     def test_matrix_does_not_modify_measurement(self):
-        measured = matrix.default_row('full')
+        measured = matrix.default_row('main')
         measured.update(measurement_status='linked-memory-pass', resources={'code_bytes': 123})
         original = copy.deepcopy(measured)
-        result = matrix.matrix({'full': measured})
-        result['profiles'][1]['resources']['code_bytes'] = 999
+        result = matrix.matrix({'main': measured})
+        result['profiles'][0]['resources']['code_bytes'] = 999
         self.assertEqual(measured, original)
         self.assertFalse(original['release_approved'])
 

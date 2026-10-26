@@ -2,28 +2,63 @@
 
 # Installation and recovery
 
-Use these packages only with the wired AJAZZ AK820 that has a VS11K28A
+These instructions describe beta.2 packages; publication status is recorded in [Status](STATUS.md).
+
+Use these packages only with a wired AJAZZ AK820 that has a VS11K28A
 controller and matching PCB revision. V2, Pro and Max are not supported. The
-product name and USB ID `320F:505B` alone do not confirm compatibility. The first
-installation creates an OEM recovery session; keep it and later settings
+product name and USB ID `320F:505B` alone do not confirm compatibility. The
+first installation creates an OEM recovery session. Keep it and later settings
 backups in separate private copies.
 
-## Companion-design beta
+Offline English and Russian guides are included under `AK820/_internal/docs/` and `AK820/_internal/docs/ru/` in each native package. Start with `profiles/README.md` in the chosen language.
 
-[v0.6.0-beta.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1) supplies linked firmware images and catalogs for companion development. Download `AK820-Beta1-Catalog.zip` and its `.sha256` file. Check the SHA256 before extracting: use `sha256sum -c AK820-Beta1-Catalog.zip.sha256` on Linux, or `Get-FileHash` and compare it with the checksum file on Windows. Extract with `unzip` or Windows **Extract All**. The archive contains data and IHX applications; it has no application to launch. The separate JSON assets provide the selection matrix, exact-image capabilities and bilingual descriptions. Read the [firmware handoff](../web/docs/FIRMWARE-HANDOFF.md) before integrating them.
+## Choose a profile
 
-The beta release includes standalone Windows and Linux x86_64 installers for the `work` profile. Follow the download, checksum and install steps below using the beta release assets. The installers install the exact `work` image with IHX SHA256 `652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880`; the other eight profiles are catalog candidates and are not installed. Beta firmware has not been tested on physical hardware.
+The installer offers ten firmware profiles. `main` is selected by default.
+Choose a profile before starting an operation; the installer shows its purpose
+and changes from `main`. The choice stays fixed while package checks,
+preparation, confirmation and installation are in progress. Choosing a profile
+alone does not write to the keyboard.
 
-## Download and check a release package
+| Profile | What it adds or changes |
+| --- | --- |
+| `main` | Key Overrides, Leader macro shortcuts, temporary Dynamic Macros and VialRGB Direct control. |
+| `game` | Adds NKRO reports and controls and GUI lock; keeps Key Overrides, Dynamic Macros and Direct lighting; removes Leader. |
+| `mmo` | Adds NKRO, GUI lock and eight Tap Dance entries instead of Key Overrides; keeps Dynamic Macros and Direct lighting; removes Leader. |
+| `typing` | Adds Auto Shift and Space Cadet; keeps Key Overrides, Leader and Dynamic Macros; removes Direct lighting. |
+| `code` | Adds Space Cadet and Grave Escape; keeps Key Overrides, Leader and Dynamic Macros; removes Direct lighting. |
+| `pointer` | Adds Mouse Keys for pointer movement, scrolling and buttons; keeps Key Overrides, Leader and Dynamic Macros; removes Direct lighting. |
+| `onehand` | Adds Mouse Keys and Tap Dance; keeps Leader and Dynamic Macros; removes Key Overrides and Direct lighting. |
+| `creative` | Adds Tap Dance; keeps Leader, Dynamic Macros and Direct lighting; removes Key Overrides. |
+| `shortcuts` | Adds Tap Dance; keeps Key Overrides and Leader; removes Dynamic Macros and Direct lighting. |
+| `multios` | Adds Mac/PC Alt/GUI mode and Ctrl/GUI swap; keeps Key Overrides, Leader and Dynamic Macros; removes Direct lighting. |
 
-Open [beta.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.1) and download the
-package and matching `.sha256` file for the operating system:
+All profiles include six layers, 16 saved Vial macros, eight Combos, QMK
+Settings for supported timing parameters, One Shot, common tap/hold and media
+functions, built-in RGB effects and host-controlled OS indication. `main` also
+includes Key Overrides and VialRGB Direct control. Direct is needed for
+per-LED control by a compatible application; built-in lighting remains
+available in every profile. See the [profile descriptions](profiles/README.md)
+for details and limits.
 
-- Windows: `AK820-Windows.zip` and `AK820-Windows.zip.sha256`.
-- Linux x86_64: `AK820-Linux-x86_64.tar.gz` and
-  `AK820-Linux-x86_64.tar.gz.sha256`.
+To change the installed profile, prepare an update to the selected target with
+a settings backup. The installer checks settings compatibility for the exact
+source and target images and stops before writing if the transition is not
+supported. In the CLI, select a profile with `--profile`, for example
+`AK820-cli --profile game verify`. `verify` checks package files without
+accessing the keyboard.
 
-On Windows, compare the downloaded archive with its checksum in PowerShell:
+## Download and check a package
+
+Open the [beta.2 release page](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.2)
+and download the package and its matching checksum file:
+
+- Windows installer: [AK820-Windows.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Windows.zip) and [AK820-Windows.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Windows.zip.sha256).
+- Linux x86_64 installer: [AK820-Linux-x86_64.tar.gz](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Linux-x86_64.tar.gz) and [AK820-Linux-x86_64.tar.gz.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Linux-x86_64.tar.gz.sha256).
+- Firmware and companion catalog: [AK820-Beta2-Catalog.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Beta2-Catalog.zip) and [AK820-Beta2-Catalog.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Beta2-Catalog.zip.sha256).
+
+On Windows, compare the downloaded archive with its checksum in PowerShell.
+For the installer, run:
 
 ```powershell
 $expected = (Get-Content .\AK820-Windows.zip.sha256 -Raw).Trim().Split()[0]
@@ -31,8 +66,9 @@ $actual = (Get-FileHash .\AK820-Windows.zip -Algorithm SHA256).Hash
 if ($actual -ne $expected) { throw 'SHA256 mismatch; do not extract this package.' }
 ```
 
-On Linux, run the checksum command in the folder containing both downloaded
-files:
+Use the corresponding `.sha256` filename for the Linux or catalog archive.
+On Linux, run the matching command in the folder containing both files, for
+example:
 
 ```sh
 sha256sum -c AK820-Linux-x86_64.tar.gz.sha256
@@ -71,6 +107,18 @@ rule from a desktop terminal:
 This command uses `sudo` only to install and apply the rule. Run the GUI as the
 ordinary desktop user; do not launch it with `sudo`.
 
+## Firmware and companion catalog
+
+The catalog archive contains firmware images and data for companion
+integration; it does not contain a desktop application to launch. Its JSON
+files describe profile selection, exact-image capabilities and module help.
+The `guide.en` and `guide.ru` paths in module descriptions are relative to the
+repository's `web/` directory. Resolve them against
+`https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/`, and include the
+linked guides in a companion package for offline help. Read the [firmware
+handoff](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/docs/FIRMWARE-HANDOFF.md)
+before integrating catalog data.
+
 ## First installation from OEM firmware
 
 If the keyboard still runs its original OEM firmware, an earlier recovery
@@ -86,8 +134,8 @@ after restart. Stop on any error; do not repeat the write blindly.
 Keep the complete session folder shown in the log. Its `permanent-session`
 subfolder contains `images.json`, `before-full-rom.bin` and `restore-native.bin`;
 select that subfolder as the OEM recovery session for future updates and
-recovery. These personal files are created from the keyboard, not downloaded
-with the release. **Save OEM backup** in the same panel saves a recovery session
+recovery. These private files are read from the keyboard, not downloaded with
+the release. **Save OEM backup** in the same panel saves a recovery session
 without installing firmware.
 
 ## Back up settings and update firmware
@@ -113,9 +161,3 @@ and check the supported image. Keep it private and separate from the settings
 backup. For recovery from a loader that is already visible, use the supplied
 CLI's `recover --session OEM_DIR` command. If the application is unresponsive
 and the loader is unavailable, stop and seek help; do not repeat an erase.
-
-## Use the source installer
-
-The native packages above are the normal way to install a release. To run the
-source installer or build firmware, follow [Build](BUILD.md). Source tools need
-Python 3.10 or newer; firmware builds use Linux or WSL with the pinned toolchain.

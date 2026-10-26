@@ -12,6 +12,21 @@ support = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(support)
 
 
+def reactive_mode(fw):
+    """Bind the fixture's enum selection to the exact configured linked image."""
+    report = json.loads((fw.build / 'configuration-report.json').read_text())
+    image_sha256 = hashlib.sha256(fw.image.read_bytes()).hexdigest()
+    if report['identity']['ihx_sha256'] != image_sha256:
+        raise ValueError('RGB configuration report does not match the linked image')
+    direct = report['configuration']['make_options']['AK820_VIALRGB_DIRECT']
+    if direct not in ('yes', 'no'):
+        raise ValueError('Missing explicit compiled Direct configuration')
+    if ('_g_direct_mode_colors' in fw.symbols) != (direct == 'yes'):
+        raise ValueError('Direct configuration disagrees with linked symbols')
+    # AK820 appends Reactive after the four base effects and optional Direct.
+    return 6 if direct == 'yes' else 5
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-dir', type=Path, required=True)
@@ -20,6 +35,7 @@ def main():
     args = parser.parse_args()
     fw = support.Firmware(args.build_dir.resolve(), args.s51.resolve(),
                           (args.output_dir or args.build_dir / 'rgb-emitted').resolve())
+    mode = reactive_mode(fw)
     indicator_commands = fw.initialize()
     dma = fw.address('_ak820_led_dma')
     # Dedicated slots 71/79 are absent from the published RGB slot map.
@@ -57,18 +73,25 @@ def main():
                    {'caps': [255, 255, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
     indicator_case('unrelated_host_led_bits', 0xfd, 0, 1, 1, False, True,
                    {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
-    indicator_case('layer_on_api', 0, 0, 1, 1, False, False,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
-                   producer=(fw.call('_layer_on', 2),))
-    indicator_case('layer_off_api', 0, 0, 1, 1, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]},
-                   producer=(fw.call('_layer_on', 2), fw.call('_layer_off', 2)))
+    if '_layer_on' in fw.symbols and '_layer_off' in fw.symbols:
+        indicator_case('layer_on_api', 0, 0, 1, 1, False, False,
+                       {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
+                       producer=(fw.call('_layer_on', 2),))
+        indicator_case('layer_off_api', 0, 0, 1, 1, False, True,
+                       {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]},
+                       producer=(fw.call('_layer_on', 2), fw.call('_layer_off', 2)))
+    else:
+        # Optimized profiles retain the state-set API used by active actions.
+        indicator_case('layer_state_set_api', 0, 0, 1, 1, False, False,
+                       {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
+                       producer=(fw.call('_layer_state_set', 4),))
     indicator_case('default_layer_api', 0, 0, 1, 1, False, True,
                    {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
                    producer=(fw.call('_default_layer_set', 3),))
-    indicator_case('tri_layer_api', 0, 0, 1, 1, False, True,
-                   {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
-                   producer=(fw.call('_layer_on', 1), fw.call('_layer_on', 2)))
+    if '_layer_on' in fw.symbols:
+        indicator_case('tri_layer_api', 0, 0, 1, 1, False, True,
+                       {'caps': [0, 0, 0x5a, 0xa5], 'layer': [255, 255, 0x3c, os_idle]},
+                       producer=(fw.call('_layer_on', 1), fw.call('_layer_on', 2)))
     indicator_case('capsword_without_host_led', 0, 0, 1, 1, False, True,
                    {'caps': [0, 0, 0x5a, 0xa5], 'layer': [0, 0, 0x3c, os_idle]})
     indicator_case('suspended', 2, 2, 1, 1, True, False,
@@ -104,8 +127,8 @@ def main():
                         'mac_pc_compiled': mac_pc, **indicator_stack,
                         'scope': 'Linked updater CPU model with simulated USB/layer state; CapsWord key activity and USB report generation are not invoked here.'}
     commands = fw.initialize() + fw.clock(0)
-    # Existing EEPROM mode IDs: Solid=1, Direct=5; append Reactive=6.
-    commands += fw.write('_rgb_matrix_config', [25, 0, 255, 160, 0, 255, 0, 0])
+    # SDCC packs enable in bits 0..1 and the configured mode in bits 2..7.
+    commands += fw.write('_rgb_matrix_config', [(mode << 2) | 1, 0, 255, 160, 0, 255, 0, 0])
     observations = []
 
     def observe(label, index, expected):
@@ -155,6 +178,7 @@ def main():
         cases.append({'name': label, 'pass': actual == expected, 'actual': actual, 'expected': expected})
     report = {'pass': all(c['pass'] for c in cases) and indicator_report['pass'], 'cases': cases,
               'indicators': indicator_report, **stack,
+              'reactive_mode': mode,
               'linked_image_sha256': hashlib.sha256(fw.image.read_bytes()).hexdigest(),
               'limits': 'uCsim C52 CPU/linked-code fixtures; no VS11K28A peripheral, physical timing or device validation.'}
     (fw.output / 'results.json').write_text(json.dumps(report, indent=2) + '\n')

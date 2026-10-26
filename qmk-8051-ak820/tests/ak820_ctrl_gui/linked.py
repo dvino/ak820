@@ -23,6 +23,7 @@ def main():
     p.add_argument('--output-dir',type=Path,required=True)
     a=p.parse_args()
     fw=e.Firmware(a.build_dir.resolve(),a.s51.resolve(),a.output_dir.resolve())
+    has_nkro=fw.compiled_feature('nkro')
     cg,ctrl,gui,letter,osm,mt,nkro,repeat=(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(1,3),(1,2)
     base=fw.initialize()+assign(*cg,0x701b)+assign(*ctrl,0xe0)+assign(*gui,0xe3)+assign(*letter,4)
     cases=[]
@@ -76,18 +77,33 @@ def main():
         ('consumed','_ak820_oneshot_mods',1,[0],[]),
         ('all-up','_actual_keyboard_report',8,report(),fw.transition(rows(),200)),
     ]))
-    # Toggle to NKRO while the two physical modifier owners are held and check
-    # the swapped modifier bitmap, then release the owners independently.
-    setup=(fw.initialize()+assign(*cg,0x701b)+assign(*ctrl,0xe0)+assign(*letter,4)+
-           assign(*nkro,0x7011))
-    cases.append(u.run_case(fw,'nkro-modifier-bitmap-follows-swap',setup,[
-        ('physical','_actual_keyboard_report',8,report(4,1),fw.transition(rows(ctrl,letter),100)),
-        ('swapped-6kro','_actual_keyboard_report',8,report(4,8),fw.transition(rows(ctrl,cg,letter),120)),
-        ('nkro-on','_keymap_config',2,[0x80,0],fw.transition(rows(ctrl,cg,nkro,letter),140)+fw.transition(rows(cg),160)),
-        ('swapped-nkro','_actual_keyboard_report',4,[6,8,0x10,0],fw.transition(rows(ctrl,cg,letter),180)),
-        ('control-up','_actual_keyboard_report',4,[6,0,0x10,0],fw.transition(rows(cg,letter),200)),
-        ('letter-up','_actual_keyboard_report',4,[6,0,0,0],fw.transition(rows(),220)),
-    ]))
+    if has_nkro:
+        # Toggle to NKRO while the two physical modifier owners are held and check
+        # the swapped modifier bitmap, then release the owners independently.
+        setup=(fw.initialize()+assign(*cg,0x701b)+assign(*ctrl,0xe0)+assign(*letter,4)+
+               assign(*nkro,0x7011))
+        cases.append(u.run_case(fw,'nkro-modifier-bitmap-follows-swap',setup,[
+            ('physical','_actual_keyboard_report',8,report(4,1),fw.transition(rows(ctrl,letter),100)),
+            ('swapped-6kro','_actual_keyboard_report',8,report(4,8),fw.transition(rows(ctrl,cg,letter),120)),
+            ('nkro-on','_keymap_config',2,[0x80,0],fw.transition(rows(ctrl,cg,nkro,letter),140)+fw.transition(rows(cg),160)),
+            ('swapped-nkro','_actual_keyboard_report',4,[6,8,0x10,0],fw.transition(rows(ctrl,cg,letter),180)),
+            ('control-up','_actual_keyboard_report',4,[6,0,0x10,0],fw.transition(rows(cg,letter),200)),
+            ('letter-up','_actual_keyboard_report',4,[6,0,0,0],fw.transition(rows(),220)),
+        ]))
+    else:
+        # A stale persisted NKRO bit cannot change boot report encoding when
+        # NKRO is omitted. Transform and release the physical Ctrl owner.
+        setup=(fw.initialize()+assign(*cg,0x701b)+assign(*ctrl,0xe0)+
+               assign(*letter,4)+assign(*nkro,0x7011))
+        cases.append(u.run_case(fw,'disabled-nkro-stale-bit-follows-output-swap',setup,[
+            ('nkro-control-disabled','_keymap_config',2,[0,0],fw.transition(rows(nkro),100)+fw.transition(rows(),120)),
+            ('stale-bit','_keymap_config',2,[0x80,0],fw.write('_keymap_config',[0x80,0])+fw.write('_keyboard_protocol',[1])),
+            ('physical-ctrl','_actual_keyboard_report',8,report(4,1),fw.transition(rows(ctrl,letter),140)),
+            ('swapped-ctrl','_actual_keyboard_report',8,report(4,8),fw.transition(rows(ctrl,cg,letter),160)),
+            ('control-up','_actual_keyboard_report',8,report(4,8),fw.transition(rows(ctrl,letter),180)),
+            ('owner-up','_actual_keyboard_report',8,report(4),fw.transition(rows(letter),200)),
+            ('all-up','_actual_keyboard_report',8,report(),fw.transition(rows(),220)),
+        ]))
     # Hold an encoded MT(LGUI, A) action beyond its tapping term. The output
     # changes from GUI to Ctrl when the session swap is pressed, and the MT
     # release removes the owner without leaving a transformed modifier behind.

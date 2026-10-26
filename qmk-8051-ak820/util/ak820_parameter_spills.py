@@ -438,7 +438,8 @@ def capture(root,obj,module,destination,sdcc,initial_inputs):
 
     Relative output naming retains .module identity. Full original noncomment compiler ASM
     must match canonically (including strings, areas, symbols and operands); changed code/options/types never get guessed.
-    Only four semantic/provenance files are retained per TU.
+    Retain compiler ASM, raw/AST dumps, preprocessed source, dependency file,
+    and compiler diagnostics per translation unit.
     """
     original=obj/module;dep=original.with_suffix('.d');deps=dependency_paths(dep,root)
     before={str(p):sha(p) for p in sorted(deps)}
@@ -459,13 +460,14 @@ def capture(root,obj,module,destination,sdcc,initial_inputs):
     pre_path=dest/(stem+'.i');pre_path.write_bytes(pre.stdout)
     if dependency_paths(dest_dependency,root)!=deps:raise ValueError('Preprocessor include closure differs from original compile')
     command=[str(sdcc),*flags,'--c1mode','--dump-ast','--dump-i-code','-o',stem+'.asm']
-    proc=subprocess.run(command,cwd=dest,input=pre.stdout,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=120)
+    proc=subprocess.run(command,cwd=dest,input=pre.stdout,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=120)
     ast_path=dest/(stem+'.ast.log');ast_path.write_bytes(proc.stdout)
+    diagnostics_path=dest/(stem+'.diagnostics.log');diagnostics_path.write_bytes(proc.stderr)
     if proc.returncode:raise ValueError('Typed SDCC capture failed: '+module)
     assembly=dest/(stem+'.asm');raw=dest/(stem+'.dumpraw0')
     if not assembly.is_file() or not raw.is_file() or canonical(assembly.read_text())!=canonical(original.read_text()):raise ValueError('Typed compiler ASM identity mismatch: '+module)
     if any(sha(Path(p))!=digest for p,digest in before.items()):raise ValueError('Input changed while capturing typed metadata')
-    keep={assembly,raw,ast_path,pre_path,dest_dependency}
+    keep={assembly,raw,ast_path,diagnostics_path,pre_path,dest_dependency}
     for path in dest.glob(stem+'.dump*'):
         if path not in keep:path.unlink()
     record={'module':module,'compiler_sha256':sha(sdcc),'flags':flags,'preprocess_argv':pre_command,'compile_argv':command,

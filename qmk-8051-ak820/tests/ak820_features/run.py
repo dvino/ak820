@@ -44,6 +44,7 @@ def report(keycode=0, mods=0):
 
 
 def cases(fw):
+    options = json.loads((fw.build / "build-report.json").read_text())["configuration"]["make_options"]
     # Prove the multiplication-free count update against the former signed
     # product for all int8 states, including the unreachable -128 sentinel.
     for direction in (-1, 1):
@@ -240,6 +241,13 @@ def cases(fw):
                 ("both_up", "_actual_keyboard_report", 8, report(), fw.transition(rows(), 200)),
             ])
 
+    if options.get("AK820_GRAVE_ESCAPE") != "yes":
+        gesc = (0, 0)
+        yield run_case(fw, "grave-escape-disabled", fw.initialize() + assign(*gesc, 0x7C16), [
+            ("disabled_press", "_actual_keyboard_report", 8, report(), fw.transition(rows(gesc), 100)),
+            ("disabled_release", "_actual_keyboard_report", 8, report(), fw.transition(rows(), 120)),
+        ])
+        return
     gesc = (0, 0)
     setup = fw.initialize() + assign(*gesc, 0x7C16)
     yield run_case(fw, "grave-escape-release-uses-press-state", setup, [

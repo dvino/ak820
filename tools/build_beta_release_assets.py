@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble the beta.1 catalog assets from pinned, reviewed local inputs."""
+"""Assemble beta catalog assets from exact, independently approved bundles."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -18,6 +18,12 @@ sys.path.insert(0, str(ROOT / 'tools' / 'installer'))
 import ak820_ci_authorization as authorization
 from ak820_release_manifest import validate_host_manifest, read_review_record
 import settings_backup as settings
+import ak820
+import ak820_profiles
+import configure_firmware
+import pack_ak820
+from build_ci_release import PUBLIC_FILES as CI_PUBLIC_FILES
+from build_windows_installer import guide_files
 
 CANDIDATE_ZIP = ROOT / 'audits/rc6/beta-catalog-20261024/final/ak820-beta-catalog-20261024.zip'
 CANDIDATE_SHA256 = '6f165df7685f72c30d80536868af5827719880b923d3cfc8e13a193f34cbbe7c'
@@ -25,12 +31,31 @@ WORK_IHX = '652ee9b583a285cea779d3937b8bcd84035e391d823d71d8ea1d34db2fdef880'
 WORK_CODE = 'a7ad972f47acff20f3492ed846f5c6ca0825d43de263f26cc9328069a27cdd10'
 WORK_IDENTITY = ROOT / 'audits/rc6/beta1-release-20261025/work-packed-identity.json'
 FORMAT = 'ak820-beta-release-catalog-1'
+RELEASE_PROFILES = ('main', 'game', 'mmo', 'typing', 'code', 'pointer',
+                    'onehand', 'creative', 'shortcuts', 'multios')
 
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 def canonical(value) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode() + b'\n'
+
+def standalone_guide(source: Path) -> bytes:
+    """Keep relative guide links valid when the copy lives at archive root."""
+    text = source.read_text(encoding='utf-8')
+    base = source.parent.relative_to(ROOT)
+    def replace(match):
+        target = match.group(2)
+        if target.startswith(('#', '/', 'http:', 'https:', 'mailto:')):
+            return match.group(0)
+        path, separator, fragment = target.partition('#')
+        import posixpath
+        rebased = posixpath.normpath(base.as_posix() + '/' + path)
+        if rebased == '..' or rebased.startswith('../'):
+            raise ValueError('Standalone guide link escapes the archive')
+        return match.group(1) + rebased + (separator + fragment if separator else '') + ')'
+    return re.sub(r'(\[[^\]\n]*\]\()([^\s)]+)\)', replace, text).encode('utf-8')
+
 
 def _safe_name(name: str) -> str:
     parts = name.split('/') if isinstance(name, str) else []
@@ -154,80 +179,203 @@ def validate_work_identity() -> dict:
         raise ValueError('Pinned packed CODE identity does not match the approved work record')
     return identity
 
-def validate_profile_links(payload: dict[str, bytes]) -> None:
+def _identity_from_bundle(context) -> tuple[dict, dict]:
+    manifest = context.manifest
+    files = manifest.get('files')
+    if not isinstance(files, dict) or set(files) != set(CI_PUBLIC_FILES) - {'installer-release.json'}:
+        raise ValueError('Approved profile bundle has an unexpected public dependency set: ' + context.profile)
+    report_path = _checked_file(context.bundle, 'reports/build-report.json')
+    report_bytes = report_path.read_bytes()
+    report = json.loads(report_bytes)
+    configuration = report.get('configuration')
+    expected_configuration = ak820_profiles.configuration(context.profile)
+    if configuration != expected_configuration:
+        raise ValueError('Bundle build configuration differs from selected profile: ' + context.profile)
+    sources = report.get('sources')
+    if not isinstance(sources, list):
+        raise ValueError('Build report lacks source identity: ' + context.profile)
+    identity = {
+        'profile': context.profile,
+        'configuration_sha256': sha(configure_firmware.canonical(configuration)),
+        'ihx_sha256': files['firmware/application.ihx']['sha256'],
+        'map_sha256': files['firmware/application.map']['sha256'],
+        'mem_sha256': files['firmware/application.mem']['sha256'],
+        'build_report_sha256': files['reports/build-report.json']['sha256'],
+        'source_manifest_sha256': sha(configure_firmware.canonical(sources)),
+        'compiler_sha256': report.get('compiler_sha256'),
+        'nvm_schema': configuration['nvm_schema'],
+    }
+    if (not identity['compiler_sha256'] or report.get('build_id') != identity['nvm_schema']
+            or report.get('hardware_validated') is not False):
+        raise ValueError('Build report does not identify an exact release image: ' + context.profile)
+    return identity, configuration
+
+
+def validate_profile_links(payload: dict[str, bytes], contexts,
+                           settings_catalog: dict, capability_catalog: dict,
+                           module_descriptions: dict | bytes | None = None) -> None:
+    """Bind every published matrix/capability row to its exact approved bundle."""
+    import firmware_matrix
+    import build_capability_catalog as capability_builder
+    names = tuple(context.profile for context in contexts)
+    if names != RELEASE_PROFILES or len(set(names)) != len(RELEASE_PROFILES):
+        raise ValueError('Approved contexts must be exactly the ten unique profiles in catalog order')
     matrix = json.loads(payload['firmware-matrix.json'])
-    if len(matrix.get('profiles', [])) != 9:
-        raise ValueError('Frozen catalog must contain nine profiles')
-    work = next((row for row in matrix['profiles'] if row['profile'] == 'work'), None)
-    if work is None or work['identity']['ihx_sha256'] != WORK_IHX:
-        raise ValueError('Frozen catalog has no exact work image')
-    for row in matrix['profiles']:
+    settings_catalog = settings_catalog if isinstance(settings_catalog, dict) else json.loads(settings_catalog)
+    capability_catalog = capability_catalog if isinstance(capability_catalog, dict) else json.loads(capability_catalog)
+    if module_descriptions is not None:
+        validate_module_descriptions(module_descriptions)
+    rows = matrix.get('profiles')
+    settings_rows = settings_catalog.get('profiles')
+    images = capability_catalog.get('images')
+    if (not isinstance(rows, list) or tuple(row.get('profile') for row in rows) != RELEASE_PROFILES
+            or not isinstance(settings_rows, list)
+            or tuple(row.get('profile') for row in settings_rows) != RELEASE_PROFILES
+            or not isinstance(images, list) or len(images) != len(RELEASE_PROFILES)
+            or any(not isinstance(row, dict) for row in images)
+            or len({row.get('profile') for row in images}) != len(RELEASE_PROFILES)
+            or {row.get('profile') for row in images} != set(RELEASE_PROFILES)):
+        raise ValueError('Matrix/settings catalogs need ten ordered profiles; capability catalog needs ten unique profiles')
+    settings_rows = {row['profile']: row for row in settings_rows}
+    matrix_rows = {row['profile']: row for row in rows}
+    image_rows = {row['profile']: row for row in images}
+    settings._catalog_images(settings_catalog)
+    for context in contexts:
+        profile = context.profile
+        expected_identity, configuration = _identity_from_bundle(context)
+        row, static = matrix_rows[profile], settings_rows[profile]
+        expected_features = firmware_matrix.default_row(profile)
+        settings_identity = static.get('settings_identity')
+        if (not isinstance(settings_identity, dict)
+                or row.get('configuration') != configuration or row.get('identity') != expected_identity
+                or row.get('optional_features') != expected_features['optional_features']
+                or row.get('capabilities') != expected_features['capabilities']
+                or row.get('settings_identity') != settings_identity
+                or settings_identity.get('ihx_sha256') != expected_identity['ihx_sha256']
+                or settings_identity.get('nvm_schema') != configuration['nvm_schema']
+                or static.get('configuration') != configuration):
+            raise ValueError('Matrix or settings identity differs from approved image: ' + profile)
+        image = image_rows[profile]
+        image_hex = _checked_file(context.bundle, 'firmware/application.ihx')
+        linked_code_identity = capability_builder.code_identity(pack_ak820.read_ihex(image_hex))
+        if (image.get('build_identity') != expected_identity
+                or image.get('settings_schema') != configuration['nvm_schema']
+                or image.get('code_identity') != linked_code_identity
+                or image.get('features') != sorted(configuration['base_features'] +
+                                                   configuration['optional_features'])):
+            raise ValueError('Capability image differs from approved profile: ' + profile)
         for suffix in ('ihx', 'map', 'mem'):
-            path = 'profiles/' + row['profile'] + '/firmware/application.' + suffix
-            if sha(payload[path]) != row['identity'][suffix + '_sha256']:
-                raise ValueError('Catalog profile firmware does not match matrix: ' + row['profile'] + '.' + suffix)
+            path = f'profiles/{profile}/firmware/application.{suffix}'
+            if path not in payload or sha(payload[path]) != expected_identity[suffix + '_sha256']:
+                raise ValueError('Catalog profile firmware does not match approved image: ' + profile + '.' + suffix)
 
-def _catalog_payload() -> dict[str, bytes]:
-    if not CANDIDATE_ZIP.is_file() or sha(CANDIDATE_ZIP.read_bytes()) != CANDIDATE_SHA256:
-        raise ValueError('Frozen candidate archive hash mismatch')
-    with zipfile.ZipFile(CANDIDATE_ZIP) as zf:
-        names = zf.namelist()
-        if len(names) != len(set(names)):
-            raise ValueError('Duplicate candidate archive member')
-        for name in names: _safe_name(name)
-        manifest = json.loads(zf.read('candidate-manifest.json'))
-        expected = manifest.get('files', {})
-        payload = {name: zf.read(name) for name in names if name != 'candidate-manifest.json'}
-        if set(expected) != set(payload):
-            raise ValueError('Candidate archive members differ from frozen manifest')
-        for name, data in payload.items():
-            item = expected[name]
-            if item.get('sha256') != sha(data) or item.get('size') != len(data):
-                raise ValueError('Candidate member integrity mismatch: ' + name)
-    for name in ('firmware-matrix.json', 'module-descriptions.json'):
-        if payload[name] != (ROOT / 'web' / name).read_bytes():
-            raise ValueError('Candidate archive differs from current web catalog: ' + name)
-    validate_profile_links(payload)
-    return payload
 
-def build(bundle: Path, output: Path, tag: str) -> dict:
+def validate_module_descriptions(value: dict | bytes) -> None:
+    """Require module descriptions to cover the exact registry without dropping prose."""
+    if isinstance(value, bytes):
+        value = json.loads(value)
+    import ak820_profiles
+    descriptions = value.get('features')
+    profiles = value.get('profiles')
+    if (not isinstance(value, dict) or not isinstance(descriptions, list)
+            or not isinstance(profiles, list) or len(profiles) != len(RELEASE_PROFILES)
+            or any(not isinstance(row, dict) for row in profiles)):
+        raise ValueError('Module descriptions must define ten profiles and a feature list')
+    profile_ids = [row.get('id', row.get('profile')) for row in profiles]
+    if len(set(profile_ids)) != len(RELEASE_PROFILES) or set(profile_ids) != set(RELEASE_PROFILES):
+        raise ValueError('Module descriptions must define every release profile exactly once')
+    feature_ids = [row.get('id') for row in descriptions if isinstance(row, dict)]
+    expected_feature_ids = set()
+    for profile in RELEASE_PROFILES:
+        configuration = ak820_profiles.configuration(profile)
+        features = sorted(configuration['base_features'] + configuration['optional_features'])
+        row = profiles[profile_ids.index(profile)]
+        if (row.get('profile', profile) != profile
+                or row.get('configuration') != configuration
+                or row.get('features') != features
+                or row.get('optional_features') != configuration['optional_features']
+                or row.get('default', profile == 'main') != (profile == 'main')):
+            raise ValueError('Module description profile configuration/features differ from registry: ' + profile)
+        expected_feature_ids.update(features)
+    if (len(feature_ids) != len(set(feature_ids)) or not all(isinstance(name, str) for name in feature_ids)
+            or not expected_feature_ids <= set(feature_ids)):
+        raise ValueError('Module descriptions omit or duplicate a registered feature')
+
+def build(bundles_root: Path, output: Path, tag: str) -> dict:
     if not re.fullmatch(r'v?\d+\.\d+\.\d+-beta\.\d+', tag):
-        raise ValueError('Tag must be a beta version such as v0.6.0-beta.1')
-    validate_bundle(bundle)
-    validate_work_identity()
-    payload = _catalog_payload()
+        raise ValueError('Tag must be a beta version such as v0.6.0-beta.2')
+    contexts = ak820.release_contexts(approved=True)
+    if len(contexts) != 10:
+        raise ValueError('Beta.2 catalog requires all ten approved installer profiles')
+    profile_ids = [context.profile for context in contexts]
+    if tuple(profile_ids) != RELEASE_PROFILES or len(set(profile_ids)) != len(RELEASE_PROFILES):
+        raise ValueError('Approved contexts differ from the exact ten-profile release catalog')
+    bundles_root = Path(bundles_root).resolve(strict=True)
+    for context in contexts:
+        if not context.bundle.resolve(strict=True).is_relative_to(bundles_root):
+            raise ValueError('Approved profile bundle is outside the supplied bundles root')
+    payload = {name: (ROOT / 'web' / name).read_bytes() for name in
+               ('firmware-matrix.json', 'module-descriptions.json', 'capability-catalog.json')}
+    payload['profile-catalog.json'] = (ROOT / 'tools/installer/profile-catalog.json').read_bytes()
+    payload['settings-catalog.json'] = (ROOT / 'tools/installer/settings-catalog.json').read_bytes()
     matrix = json.loads(payload['firmware-matrix.json'])
-    row = next(item for item in matrix['profiles'] if item['profile'] == 'work')
-    for candidate in matrix['profiles']:
-        candidate['release_approved'] = False
-        candidate['installable'] = False
-    definition = json.loads(payload['profiles/work/reference/vial.json'])
-    row['settings_identity'] = settings.catalog_settings_identity(
-        row['configuration'], WORK_IHX, WORK_CODE, sha(settings.canonical(definition)))
-    row['settings_status'] = 'reviewed-exact-packed-code'
-    row['release_approved'] = True
-    row['installable'] = True
+    by_profile = {item.get('profile'): item for item in matrix.get('profiles', [])
+                  if isinstance(item, dict)}
+    if tuple(row.get('profile') for row in matrix.get('profiles', [])) != RELEASE_PROFILES:
+        raise ValueError('Firmware matrix must contain exactly the ten release profiles in catalog order')
+    settings_catalog = json.loads(payload['settings-catalog.json'])
+    capability_catalog = json.loads(payload['capability-catalog.json'])
+    for context in contexts:
+        bundle = context.bundle
+        manifest = context.manifest
+        row = by_profile[context.profile]
+        identity, configuration = _identity_from_bundle(context)
+        if row.get('identity') != identity or row.get('configuration') != configuration:
+            raise ValueError('Web matrix identity differs from approved bundle: ' + context.profile)
+        row['release_approved'] = True
+        row['installable'] = True
+        for name, item in manifest['files'].items():
+            _safe_name(name)
+            if name not in CI_PUBLIC_FILES or name == 'installer-release.json':
+                raise ValueError('Approved bundle contains a non-public dependency: ' + context.profile + '/' + name)
+            data = _checked_file(bundle, name).read_bytes()
+            if len(data) != item['size'] or sha(data) != item['sha256']:
+                raise ValueError('Approved bundle file changed: ' + context.profile + '/' + name)
+            payload[f'profiles/{context.profile}/{name}'] = data
+        for ext in ('ihx', 'map', 'mem'):
+            name = f'firmware/application.{ext}'
+            item = manifest['files'].get(name)
+            if not item:
+                raise ValueError(f'Approved bundle lacks {context.profile} {ext}')
+            data = (bundle / name).read_bytes()
+            if sha(data) != item['sha256']:
+                raise ValueError(f'Approved bundle hash changed: {context.profile}/{name}')
+            payload[f'profiles/{context.profile}/firmware/application.{ext}'] = data
+        for name, path in (('installer-release.json', bundle / 'installer-release.json'),
+                           ('approved-release.json', context.approval)):
+            payload[f'profiles/{context.profile}/{name}'] = path.read_bytes()
     payload['firmware-matrix.json'] = canonical(matrix)
-    caps = json.loads((ROOT / 'web/capability-catalog.json').read_text(encoding='utf-8'))
+    for name in guide_files():
+        payload[name] = (ROOT / name).read_bytes()
+    validate_profile_links(payload, contexts, settings_catalog, capability_catalog,
+                           payload['module-descriptions.json'])
+    caps = capability_catalog
     caps['release_approved'] = False
     caps['hardware_validated'] = False
     caps['flashing_authorized'] = False
     caps['settings_writes_authorized'] = False
     caps['status'] = 'beta-catalog; physical operations require fresh consent'
     for image in caps.get('images', []):
-        image['release_approved'] = image.get('profile') == 'work'
+        image['release_approved'] = image.get('profile') in profile_ids
         image['flashing_authorized'] = False
         image['settings_writes_authorized'] = False
         image['hardware_validated'] = False
     payload['capability-catalog.json'] = canonical(caps)
     for lang, source in (('en', ROOT / 'docs/INSTALL.md'), ('ru', ROOT / 'docs/ru/INSTALL.md')):
-        text = source.read_text(encoding='utf-8')
-        text = text.replace('ak820-beta-catalog-20261024.zip', 'AK820-Beta1-Catalog.zip')
-        text = text.replace('ak820-beta-catalog-20261024.zip.sha256', 'AK820-Beta1-Catalog.zip.sha256')
-        payload['INSTALL-' + lang + '.md'] = text.encode('utf-8')
+        payload['INSTALL-' + lang + '.md'] = standalone_guide(source)
     files = {name: {'sha256': sha(data), 'size': len(data)} for name, data in sorted(payload.items())}
-    descriptor = {'format': FORMAT, 'tag': tag, 'status': 'beta', 'default_profile': 'work',
-                  'installable_profiles': ['work'], 'catalog_profiles': [r['profile'] for r in matrix['profiles']],
+    descriptor = {'format': FORMAT, 'tag': tag, 'status': 'beta', 'default_profile': 'main',
+                  'installable_profiles': profile_ids, 'catalog_profiles': [r['profile'] for r in matrix['profiles']],
                   'hardware_validated': False, 'flashing_authorized': False,
                   'settings_writes_authorized': False, 'assets': files}
     payload['release-catalog.json'] = canonical(descriptor)
@@ -241,24 +389,24 @@ def build(bundle: Path, output: Path, tag: str) -> dict:
         stage = Path(tmp) / 'assets'; stage.mkdir()
         for name, data in payload.items():
             dest = stage / _safe_name(name); dest.parent.mkdir(parents=True, exist_ok=True); dest.write_bytes(data)
-        archive = stage / 'AK820-Beta1-Catalog.zip'
+        archive = stage / 'AK820-Beta2-Catalog.zip'
         with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
             for name in sorted(payload):
                 info = zipfile.ZipInfo(name, (1980,1,1,0,0,0)); info.compress_type = zipfile.ZIP_DEFLATED; info.external_attr = 0o100644 << 16
                 zf.writestr(info, payload[name])
         digest = sha(archive.read_bytes())
-        (stage / 'AK820-Beta1-Catalog.zip.sha256').write_text(digest + '  AK820-Beta1-Catalog.zip\n')
-        (stage / 'SHA256SUMS').write_text(''.join(sha((stage / n).read_bytes()) + '  ' + n + '\n' for n in sorted(payload)) + digest + '  AK820-Beta1-Catalog.zip\n')
+        (stage / 'AK820-Beta2-Catalog.zip.sha256').write_text(digest + '  AK820-Beta2-Catalog.zip\n')
+        (stage / 'SHA256SUMS').write_text(''.join(sha((stage / n).read_bytes()) + '  ' + n + '\n' for n in sorted(payload)) + digest + '  AK820-Beta2-Catalog.zip\n')
         stage.rename(output)
-    return {'output': str(output), 'tag': tag, 'profiles': 9, 'installable_profiles': ['work'], 'zip_sha256': digest}
+    return {'output': str(output), 'tag': tag, 'profiles': len(profile_ids), 'installable_profiles': profile_ids, 'zip_sha256': digest}
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--bundle', required=True, type=Path)
+    parser.add_argument('--bundles-root', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--tag', required=True)
     args = parser.parse_args(argv)
-    print(json.dumps(build(args.bundle, args.output, args.tag), sort_keys=True))
+    print(json.dumps(build(args.bundles_root, args.output, args.tag), sort_keys=True))
     return 0
 
 if __name__ == '__main__': raise SystemExit(main())

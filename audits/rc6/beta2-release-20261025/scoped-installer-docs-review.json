@@ -1,0 +1,324 @@
+{
+  "format": "ak820-scoped-independent-review-1",
+  "status": "passed-scoped-review",
+  "scope": "Installer-agent transport/settings corrections and root-authored profile documentation corrections; root-only configure fixes: one deduplicated READ_HOOK define, four explicit DCE roots, exact Direct XDATA MAP record. No approval of remaining reviewer-authored configure implementation.",
+  "excluded_authored_changes": [
+    "tools/installer/ak820.py",
+    "qmk-8051-ak820/util/prepare_ak820_trial.py",
+    "tools/configure_firmware.py",
+    "firmware/profile implementation",
+    "test fixture changes authored by this reviewer"
+  ],
+  "source_files": {
+    "qmk-8051-ak820/util/ak820_tool.py": {
+      "sha256": "87229c0fb92dcbbcc0d60f3d75ed43f459647c5a0fccf7cc57e0dd36bb884f0b",
+      "size": 23134
+    },
+    "tools/installer/settings_backup.py": {
+      "sha256": "db65d0fe431c902adc169a6a1804fbf3ce8c1d40e12e813b614ced83c80bb3df",
+      "size": 48282
+    },
+    "tools/installer/settings_workflow.py": {
+      "sha256": "739b941cb1724fdf08b9fb5d798adec507260c22a2d97cdcd02ce7f1247bb26f",
+      "size": 12798
+    },
+    "tools/installer/test_transport_schema.py": {
+      "sha256": "61b65fe7f0b6102abd1784da1e20fd9d02e6c7f4f7be8e92aa39a1959bd7178a",
+      "size": 4039
+    },
+    "docs/profiles/README.md": {
+      "sha256": "b53335a44575a6fb678375d16390d568bf14f12147e5aaf39ada6ca904b6c7f3",
+      "size": 3101
+    },
+    "docs/ru/profiles/README.md": {
+      "sha256": "4364e58d250dbc8f929bc054460e5cb950cee628366356accd1a24ad3127642e",
+      "size": 6331
+    },
+    "docs/profiles/code.md": {
+      "sha256": "4e6abc4869679341c1e26d2274631f690061b00d10f29ac9135829d695d810ea",
+      "size": 1473
+    },
+    "docs/profiles/creative.md": {
+      "sha256": "fec0137750ab6cc3c52fbb09edf8e01bf363b75add91ecf9066336e58d68e21a",
+      "size": 1424
+    },
+    "docs/profiles/game.md": {
+      "sha256": "09a7cca9ca2c1818d6fd554be29a01c6aed7e8027d885232894210128e1e8e5b",
+      "size": 1227
+    },
+    "docs/profiles/main.md": {
+      "sha256": "d99e15827d6bf4a2b009aba68ff187879ca2fa7aed5971b6b334ea62f27b0a64",
+      "size": 1213
+    },
+    "docs/profiles/mmo.md": {
+      "sha256": "d07f40954ef564dc457e137cec678373d801b8cf68b49f474c3ae4d3c4b97b28",
+      "size": 1487
+    },
+    "docs/profiles/multios.md": {
+      "sha256": "e2d39ead19b9ea8ec3255f78649308967c2a5b4f77a6e86760940bfcdc26068b",
+      "size": 1463
+    },
+    "docs/profiles/onehand.md": {
+      "sha256": "88fab4ba22a2e9ffe3fd3688f034a052a45f65cc4a35fef89cd653f6087c363d",
+      "size": 1582
+    },
+    "docs/profiles/pointer.md": {
+      "sha256": "de69928334f528686c7fc2ef8b1a8dd17fab4bacb3da30aaf0b3901152669ddf",
+      "size": 1368
+    },
+    "docs/profiles/shortcuts.md": {
+      "sha256": "5f910ca051c278a6c1a405365d601fe422ec441dbe4a7728f3ce72ba644714e5",
+      "size": 1462
+    },
+    "docs/profiles/typing.md": {
+      "sha256": "2d77c88b59a8cbc472ae997bbe75308c73aee5b6df02e986ee8baa0c6a7d5096",
+      "size": 1412
+    },
+    "docs/ru/profiles/code.md": {
+      "sha256": "8d0c79bb093f823486099257c0cbf69d61581ea0146643ec25e3fe84ff2679fe",
+      "size": 2652
+    },
+    "docs/ru/profiles/creative.md": {
+      "sha256": "1319952b72c1dd975d92572fd1cbc7ad249fc684578172db2c3381b2723977cb",
+      "size": 2722
+    },
+    "docs/ru/profiles/game.md": {
+      "sha256": "9a4bd95ec168a4779f0aa1c6f00edf095be04b3c3a7209f5d08ed2ac35237477",
+      "size": 2173
+    },
+    "docs/ru/profiles/main.md": {
+      "sha256": "d8c09db8bf5fe541328329985c917b7c8fabeea5b5cdbdabb17b63502abdc3b6",
+      "size": 2119
+    },
+    "docs/ru/profiles/mmo.md": {
+      "sha256": "1c96834f2875c89d77ab7fcf6eb4df58e4776c58a9c608dbfff7197241a5b1ce",
+      "size": 2835
+    },
+    "docs/ru/profiles/multios.md": {
+      "sha256": "9d3d574c66162399357cd3af2f8c7d4b5c22c33344c1019c907f51c533d0c970",
+      "size": 2485
+    },
+    "docs/ru/profiles/onehand.md": {
+      "sha256": "9995c1f5cc8099413a8782ecd7ead6b3e12d88d045cc53ff42bed262f03ebd5a",
+      "size": 2976
+    },
+    "docs/ru/profiles/pointer.md": {
+      "sha256": "e2d2f9d21a256d55541faef3b34a6b1dcbab7afd6a401fea1b3db864c1781060",
+      "size": 2411
+    },
+    "docs/ru/profiles/shortcuts.md": {
+      "sha256": "ebdc4fffe6e66adbdb80a2b8be5e663f641b77b3f7ab8c5de0691bfea15825ec",
+      "size": 2735
+    },
+    "docs/ru/profiles/typing.md": {
+      "sha256": "d2beae2f16c7d90ef8214c14a2a1fe1beb97a208a3a233b988b460ed08bc1d4a",
+      "size": 2554
+    },
+    "tools/configure_firmware.py": {
+      "sha256": "406b8135bb3f85c12ca6163eed15eb8376129cdfb3795d2af6c1f8f2a6682340",
+      "size": 62405
+    },
+    "README.md": {
+      "sha256": "83dc7875b0e965c82ea1ab919bd613fe317a86fa71c22d0ef16c0efc362e5b91",
+      "size": 4910
+    },
+    "docs/ru/README.md": {
+      "sha256": "51bf92adbcd36570104b6ee0852bfa3a262f54e740e85fd63e8a9cc1faf28d5a",
+      "size": 7315
+    },
+    "docs/BUILD-PROFILES.md": {
+      "sha256": "1a9736d9ceac223b37d348b22c6794eb338f3561f5fe9c37a9098ef6664c184b",
+      "size": 1550
+    },
+    "docs/ru/BUILD-PROFILES.md": {
+      "sha256": "04890d77a81cffcf01884adf4865a49ccc2d38b0bd52f6aeb3481ca65fa41f06",
+      "size": 2536
+    },
+    "docs/MODULE-MATRIX.md": {
+      "sha256": "df4374bb205d388f5d5b08a08782eaa65a8ced02f196cb714384020c328a024b",
+      "size": 2477
+    },
+    "docs/ru/MODULE-MATRIX.md": {
+      "sha256": "d553c3f2b8b241f47af1ed37e10db7278f4a9a2e63fdd7ae7c3f245019ee3713",
+      "size": 3246
+    },
+    "tools/installer/profile-catalog.json": {
+      "sha256": "c37ef159ad685d211e3e19509183346b65143431964cf2dd4b76e8d6b3becf5d",
+      "size": 7176
+    }
+  },
+  "checks": [
+    "Explicit transport target_build_id reaches session_image/plan/flash/verify_live/prepared-update; legacy schema2 default retained",
+    "Historical WORK_IHX source descriptor uses exact pinned IHX/CODE pair without current configuration(name) reinterpretation; transitions require typed current targets",
+    "Grave Escape keycode requires compiled grave-escape feature",
+    "Direct/noDirect RGB wire enumeration follows exact feature descriptor",
+    "EN/RU profile module lists agree with current ten-profile registry; OneShot modifiers only; Leader1-0/A-F; dynamic recording16completedtaps grounded in C source"
+  ],
+  "findings": [
+    {
+      "id": "RGB-ENUM-RESTORE",
+      "priority": "P1",
+      "status": "closed",
+      "file": "tools/installer/settings_backup.py",
+      "trigger": "Restore or update from Direct-capable image saved RGB mode6 Breathing31 to noDirect image mode5 Breathing31",
+      "impact": "Preflight accepts common wire effect but restore_settings and verify_restore retain source raw enum; target correctly writes new enum and fails expected-NVM/final-settings comparison after mutations",
+      "required": "Translate expected target bytes and final settings comparison consistently, or reject enum-changing case during preflight before erase/write",
+      "closure": "translated_rgb_config maps source VialRGB wire effect to target internal enum; plan supplies converted durable bytes; restore and final expected settings both use translated bytes. Bidirectional main/typing enabled and off restore/final-verification model passed."
+    },
+    {
+      "id": "LEGACY-READBACK-REGRESSION",
+      "priority": "P2",
+      "status": "closed",
+      "file": "qmk-8051-ak820/util/ak820_tool.py",
+      "trigger": "Read-only explicit schema1 trial snapshot migration",
+      "impact": "Strict verify_live default prevented established legacy migration and masked macro-overflow no-truncation check",
+      "closure": "Read-only verify_live retains configurable allow_legacy=True. Strict session_image/flash remains unchanged; selected installer verification explicitly requests allow_legacy=False (reviewer-authored caller delta excluded from this approval). Three original legacy migration tests pass."
+    }
+  ],
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "release_approved": false,
+  "prior_source_files": {
+    "qmk-8051-ak820/util/ak820_tool.py": {
+      "sha256": "3d6937cc7b8480dc4299cece75d00c1e619fcf02e8b1f0a10b3c2915d0bf86d9",
+      "size": 23026
+    },
+    "tools/installer/settings_backup.py": {
+      "sha256": "4e34d57f0a940a87a4733e5c669fa4268dcfaa476b6b9c7d224bf76b13b28099",
+      "size": 47371
+    },
+    "tools/installer/settings_workflow.py": {
+      "sha256": "739b941cb1724fdf08b9fb5d798adec507260c22a2d97cdcd02ce7f1247bb26f",
+      "size": 12798
+    },
+    "tools/installer/test_transport_schema.py": {
+      "sha256": "61b65fe7f0b6102abd1784da1e20fd9d02e6c7f4f7be8e92aa39a1959bd7178a",
+      "size": 4039
+    },
+    "docs/profiles/README.md": {
+      "sha256": "b53335a44575a6fb678375d16390d568bf14f12147e5aaf39ada6ca904b6c7f3",
+      "size": 3101
+    },
+    "docs/ru/profiles/README.md": {
+      "sha256": "4364e58d250dbc8f929bc054460e5cb950cee628366356accd1a24ad3127642e",
+      "size": 6331
+    },
+    "docs/profiles/code.md": {
+      "sha256": "4e6abc4869679341c1e26d2274631f690061b00d10f29ac9135829d695d810ea",
+      "size": 1473
+    },
+    "docs/profiles/creative.md": {
+      "sha256": "fec0137750ab6cc3c52fbb09edf8e01bf363b75add91ecf9066336e58d68e21a",
+      "size": 1424
+    },
+    "docs/profiles/game.md": {
+      "sha256": "09a7cca9ca2c1818d6fd554be29a01c6aed7e8027d885232894210128e1e8e5b",
+      "size": 1227
+    },
+    "docs/profiles/main.md": {
+      "sha256": "d99e15827d6bf4a2b009aba68ff187879ca2fa7aed5971b6b334ea62f27b0a64",
+      "size": 1213
+    },
+    "docs/profiles/mmo.md": {
+      "sha256": "d07f40954ef564dc457e137cec678373d801b8cf68b49f474c3ae4d3c4b97b28",
+      "size": 1487
+    },
+    "docs/profiles/multios.md": {
+      "sha256": "e2d39ead19b9ea8ec3255f78649308967c2a5b4f77a6e86760940bfcdc26068b",
+      "size": 1463
+    },
+    "docs/profiles/onehand.md": {
+      "sha256": "88fab4ba22a2e9ffe3fd3688f034a052a45f65cc4a35fef89cd653f6087c363d",
+      "size": 1582
+    },
+    "docs/profiles/pointer.md": {
+      "sha256": "de69928334f528686c7fc2ef8b1a8dd17fab4bacb3da30aaf0b3901152669ddf",
+      "size": 1368
+    },
+    "docs/profiles/shortcuts.md": {
+      "sha256": "5f910ca051c278a6c1a405365d601fe422ec441dbe4a7728f3ce72ba644714e5",
+      "size": 1462
+    },
+    "docs/profiles/typing.md": {
+      "sha256": "2d77c88b59a8cbc472ae997bbe75308c73aee5b6df02e986ee8baa0c6a7d5096",
+      "size": 1412
+    },
+    "docs/ru/profiles/code.md": {
+      "sha256": "8d0c79bb093f823486099257c0cbf69d61581ea0146643ec25e3fe84ff2679fe",
+      "size": 2652
+    },
+    "docs/ru/profiles/creative.md": {
+      "sha256": "1319952b72c1dd975d92572fd1cbc7ad249fc684578172db2c3381b2723977cb",
+      "size": 2722
+    },
+    "docs/ru/profiles/game.md": {
+      "sha256": "9a4bd95ec168a4779f0aa1c6f00edf095be04b3c3a7209f5d08ed2ac35237477",
+      "size": 2173
+    },
+    "docs/ru/profiles/main.md": {
+      "sha256": "d8c09db8bf5fe541328329985c917b7c8fabeea5b5cdbdabb17b63502abdc3b6",
+      "size": 2119
+    },
+    "docs/ru/profiles/mmo.md": {
+      "sha256": "1c96834f2875c89d77ab7fcf6eb4df58e4776c58a9c608dbfff7197241a5b1ce",
+      "size": 2835
+    },
+    "docs/ru/profiles/multios.md": {
+      "sha256": "9d3d574c66162399357cd3af2f8c7d4b5c22c33344c1019c907f51c533d0c970",
+      "size": 2485
+    },
+    "docs/ru/profiles/onehand.md": {
+      "sha256": "9995c1f5cc8099413a8782ecd7ead6b3e12d88d045cc53ff42bed262f03ebd5a",
+      "size": 2976
+    },
+    "docs/ru/profiles/pointer.md": {
+      "sha256": "e2d2f9d21a256d55541faef3b34a6b1dcbab7afd6a401fea1b3db864c1781060",
+      "size": 2411
+    },
+    "docs/ru/profiles/shortcuts.md": {
+      "sha256": "ebdc4fffe6e66adbdb80a2b8be5e663f641b77b3f7ab8c5de0691bfea15825ec",
+      "size": 2735
+    },
+    "docs/ru/profiles/typing.md": {
+      "sha256": "d2beae2f16c7d90ef8214c14a2a1fe1beb97a208a3a233b988b460ed08bc1d4a",
+      "size": 2554
+    }
+  },
+  "verification": [
+    {
+      "command": "PYTHONPATH=tools/installer python -m unittest test_transport_schema test_settings_workflow -q",
+      "tests": 20,
+      "result": "PASS"
+    },
+    {
+      "command": "PYTHONPATH=tools/installer python -m unittest test_catalog_settings.CatalogSettings.test_restore_and_final_verification_translate_rgb_enum_both_directions test_transport_schema -q",
+      "tests": 5,
+      "result": "PASS"
+    },
+    {
+      "command": "python -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_legacy_trial_migration.py -q",
+      "tests": 3,
+      "result": "PASS"
+    },
+    {
+      "check": "Both EN/RU module matrices compared cell-by-cell against all ten exact source configurations",
+      "result": "PASS"
+    },
+    {
+      "check": "Read all EN/RU ten profile pages and overview; compared module/limits claims with source modules",
+      "result": "PASS"
+    },
+    {
+      "command": "PYTHONPATH=tools:tools/installer python -m unittest test_firmware_matrix test_build_profile_catalog test_build_capability_catalog test_catalog_settings -q",
+      "tests": 47,
+      "result": "PASS",
+      "scope": "Registry fixture verification only; reviewer-authored tests still require separate review"
+    }
+  ],
+  "limits": [
+    "Static source review and offline host/models only.",
+    "No firmware build, device access, physical consent, flashing or hardware behavior tested.",
+    "Synthetic fixture results do not qualify published artifacts.",
+    "Reviewer-authored schema/preparation, firmware/configure implementation and own tests remain excluded and need separate review."
+  ]
+}

@@ -2,15 +2,17 @@
 
 # Desktop development handoff
 
-This note connects the current AK820 firmware contracts to the planned desktop configurator. It is an implementation handoff, not a desktop application release claim. Firmware beta.1 is the companion baseline; the installed alpha.3 image remains unchanged. See [firmware status](../../docs/STATUS.md). The [firmware matrix](../firmware-matrix.json), produced by the [matrix generator](../../tools/firmware_matrix.py), describes nine curated images. The beta installers install the exact `work` image; the other eight remain catalog candidates. Exact-image build, runtime and regression results remain separate from physical device validation. Source profile definitions alone do not qualify an image; current evidence is recorded in [firmware status](../../docs/STATUS.md).
+Current source prepares `beta.2` with ten profiles and installer selection. It is not published yet; the published `beta.1` installer contains the previous `work` image. The companion application remains a separate development effort. [Firmware status](../../docs/STATUS.md) distinguishes builds, offline checks, packaging and physical validation.
 
 ## Firmware and profile contract
 
-The desktop catalog offers nine profiles, selected as whole packages: `work`, `essential`, `typing`, `mouse`, `mouse-typing`, `system`, `tap-dance`, `key-overrides`, and `settings`. The default `work` includes NKRO controls, One Shot, Space Cadet, Leader, dynamic macros and OS indicators. Mouse Keys and Mac/PC switching are available in other packages. Historical source profile names remain for reproducing earlier builds; they are not additional desktop choices.
+The current catalog contains `main`, `game`, `mmo`, `typing`, `code`, `pointer`, `onehand`, `creative`, `shortcuts` and `multios`. The default is `main`. See the [individual profile guides](../../docs/profiles/README.md) for complete compositions. All functions cannot fit in controller memory at once; a Vial layer cannot enable an absent module. Historical CLI names are not additional choices in the new installer.
 
-The matrix reports each exact image and its enabled features. `tap-dance`, `key-overrides`, and `settings` use schema 03. Schema 03 reserves storage for all three extension types, but each profile enables only its selected module. A reserved table or stored value does not expose a control: use enabled modules and runtime QSIDs. The other six curated profiles use schema 02 without typed extension storage.
+All ten profiles include QMK Settings and storage schema 03. Storage reserves all three extension types, but editors expose only modules and runtime QSIDs enabled by the exact image. `typing` enables Auto Shift and exposes QSID 4. `game`, `mmo`, `main` and `creative` retain Direct; the other profiles retain built-in effects and global RGB controls without per-LED host frames.
 
-Profiles are individually configured and qualified. There is no all-module combined build. A catalog entry is valid only for its exact linked image and completed evidence; source metadata and host tests alone are insufficient. See [profile definitions](../../qmk-8051-ak820/util/ak820_profiles.py), [module storage](../../docs/MODULE-STORAGE.md), and the [development catalog contract](../../docs/DEVELOPMENT-CATALOG.md). The generated [capability catalog](../capability-catalog.json) supplies typed storage, active settings IDs and limits for these exact nine images; join it to the selection matrix by IHX SHA256.
+The [matrix](../firmware-matrix.json) and [descriptions](../module-descriptions.json) reflect the current registry. Until qualification completes, matrix rows remain unmeasured and the [capability catalog](../capability-catalog.json) has no approved new images. Do not infer capabilities from a profile name. Exact catalogs join by IHX SHA256; catalog presence alone does not authorize a device write. Installer approval, settings identities and transitions are checked separately for each image.
+
+The `guide.en` and `guide.ru` paths are relative to `web/`. During development, resolve them against the current checkout; a published companion package must include matching guides for offline help. Do not combine the old `beta.1` catalog with new profile images.
 
 ## Typed settings and validation
 

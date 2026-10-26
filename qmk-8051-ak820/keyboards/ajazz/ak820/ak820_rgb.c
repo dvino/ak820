@@ -20,7 +20,9 @@
 #include <string.h>
 
 rgb_config_t rgb_matrix_config;
+#ifndef VIALRGB_NO_DIRECT
 extern HSV g_direct_mode_colors[RGB_MATRIX_LED_COUNT];
+#endif
 
 #if defined(__SDCC_mcs51)
 #    define AK820_FLAG __bit
@@ -64,7 +66,8 @@ static void age_reactive(void) {
 }
 
 static uint8_t add_sat(uint8_t x, uint8_t y) {
-    return x > (uint8_t)(255 - y) ? 255 : x + y;
+    uint8_t sum = (uint8_t)(x + y);
+    return sum < x ? 255 : sum;
 }
 
 static uint8_t sub_sat(uint8_t x, uint8_t y) {
@@ -188,7 +191,9 @@ void rgb_matrix_task(void) {
         if (!frame_mode || !(LED_FLAG_KEYLIGHT & frame_flags)) {
             rgb_matrix_set_color(led_index, 0, 0, 0);
         } else {
-#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+#if defined(VIALRGB_NO_DIRECT)
+            if (1) {
+#elif defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
             if (frame_mode != RGB_MATRIX_VIALRGB_DIRECT) {
 #else
             if (frame_mode == RGB_MATRIX_VIALRGB_DIRECT) {
@@ -211,14 +216,18 @@ void rgb_matrix_task(void) {
             /* Model-large locals and direct colors are XDATA. Typed input
              * avoids copying HSV through generic aggregate parameters. */
 #ifdef USE_CIE1931_CURVE
-#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+#if !defined(VIALRGB_NO_DIRECT) && defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
             hsv_to_rgb_into(frame_mode == RGB_MATRIX_VIALRGB_DIRECT ? &g_direct_mode_colors[led_index] : &hsv, frame_mode != RGB_MATRIX_BREATHING, &rgb);
+#elif defined(VIALRGB_NO_DIRECT) && defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+            hsv_to_rgb_into(&hsv, frame_mode != RGB_MATRIX_BREATHING, &rgb);
 #else
             hsv_to_rgb_into(hsv, frame_mode != RGB_MATRIX_BREATHING, &rgb);
 #endif
 #else
-#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+#if !defined(VIALRGB_NO_DIRECT) && defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
             hsv_to_rgb_into(frame_mode == RGB_MATRIX_VIALRGB_DIRECT ? &g_direct_mode_colors[led_index] : &hsv, false, &rgb);
+#elif defined(VIALRGB_NO_DIRECT) && defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+            hsv_to_rgb_into(&hsv, false, &rgb);
 #else
             hsv_to_rgb_into(hsv, false, &rgb);
 #endif

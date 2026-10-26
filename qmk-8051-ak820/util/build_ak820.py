@@ -427,17 +427,22 @@ def main():
                  obj/'obj.txt',obj/'cflags.txt',obj/'ldflags.txt',obj/'src/version.h',obj/'src/info_config.h']
     if outlining is not None:
         artifacts.append(dce/'outlining.json')
+        for pattern in ('*.asm', '*.lst', '*.rel'):
+            artifacts.extend(sorted(dce_input.rglob(pattern)))
     # Absolute XDATA declarations are not represented by ordinary linker
     # area lengths. Preserve compiler ASM for the profile resource checker.
     if short_result is not None:
         artifacts.append(build/'short-calls.json')
         artifacts.append(ihx.with_suffix('.noi'))
+        for pattern in ('*.asm', '*.lst', '*.rel'):
+            artifacts.extend(sorted(short_input.rglob(pattern)))
         artifacts.extend(sorted(dce.rglob('*.asm')))
         artifacts.extend(sorted(dce.rglob('*.rel')))
     if tail_result is not None:
         artifacts.append(build/'tail-share.json')
         artifacts.extend(sorted((build/'tailshare-input').rglob('*.asm')))
         artifacts.extend(sorted((build/'tailshare-input').rglob('*.lst')))
+        artifacts.extend(sorted((build/'tailshare-input').rglob('*.rel')))
         artifacts.extend(sorted(dce.rglob('*.asm')))
     if register_result is not None:
         artifacts.append(build/'register-saves.json')
@@ -472,7 +477,7 @@ def main():
         source_records.append({'path':'util/ak820_default_keymap.py','origin':'source','sha256':sha(generator)})
     if parameter_result is not None:
         existing_source_paths={(r['origin'],r['path']) for r in source_records}
-        for name in ('util/ak820_parameter_spills.py','util/ak820_register_saves.py','tests/ak820_stack/analyze.py'):
+        for name in ('util/ak820_parameter_spills.py','util/ak820_register_saves.py','util/ak820_tailshare.py','tests/ak820_stack/analyze.py'):
             path=(root/name).resolve()
             if inputs_before.get(path)!=sha(path):raise ValueError('Spill proof implementation changed during build: '+name)
             if ('source',name) not in existing_source_paths:

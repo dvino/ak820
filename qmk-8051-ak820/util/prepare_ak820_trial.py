@@ -17,7 +17,9 @@ import ak820_tool as updater
 
 def write_trial(ihx: Path, mapfile: Path, stockpath: Path, nativepath: Path,
                 backup: bytes, out: Path, *, current_rom: bytes | None = None,
-                current_trial: bytes | None = None) -> dict:
+                current_trial: bytes | None = None,
+                target_build_id: int = packer.BUILD_ID,
+                source_build_id: int = packer.BUILD_ID) -> dict:
     stock, native = stockpath.read_bytes(), nativepath.read_bytes()
     packer.validate_native(backup, stock, native)
     data, symbols = packer.read_ihex(ihx), packer.read_symbols(mapfile)
@@ -25,23 +27,28 @@ def write_trial(ihx: Path, mapfile: Path, stockpath: Path, nativepath: Path,
         raise ValueError("Existing trial migration requires both readback and exact current trial image")
     if current_rom is None:
         nvm, migration = packer.migrate(backup, data, symbols)
+        if target_build_id != packer.BUILD_ID:
+            nvm, schema_migration = packer.migrate_vial_nvm(
+                nvm, packer.BUILD_ID, target_build_id=target_build_id)
+            migration = {'native_migration': migration, 'schema_migration': schema_migration}
         provenance = {"mode": "native_backup", "source_sha256": packer.digest(backup)}
     else:
-        old = packer.verify_payload(current_trial, allow_legacy=True)
+        old = packer.verify_payload(current_trial, allow_legacy=True, target_build_id=source_build_id)
         if not old['trial']:
             raise ValueError("Expected the exact previously installed trial image")
         # This preserves the existing protected-loader/tail, full code/entry,
         # manifest, marker, journal and incomplete-macro checks.
-        updater.verify_live(current_rom, current_trial, 'trial', stock)
+        updater.verify_live(current_rom, current_trial, 'trial', stock, target_build_id=source_build_id)
         nvm, migration = packer.migrate_vial_nvm(
-            current_rom[packer.NVM_START:packer.NVM_END], old['build_id'])
+            current_rom[packer.NVM_START:packer.NVM_END], old['build_id'],
+            target_build_id=target_build_id)
         provenance = {'mode': 'verified_trial_readback',
                       'source_sha256': packer.digest(current_rom),
                       'prior_trial_sha256': packer.digest(current_trial),
                       'journal_header_verified_empty': True,
                       'note': 'Offline snapshot validation does not establish that the live device has not changed since capture.'}
-    trial = packer.pack(data, symbols, stock, nvm, True)
-    info = packer.verify_payload(trial)
+    trial = packer.pack(data, symbols, stock, nvm, True, target_build_id=target_build_id)
+    info = packer.verify_payload(trial, target_build_id=target_build_id)
     recovery = backup[packer.APP_START:packer.APP_END]
     metadata = {'format': 'ak820-vial-release-1',
                 'hardware': 'AJAZZ AK820 wired / VS11K28A / 320F:505B',
@@ -64,7 +71,7 @@ def write_trial(ihx: Path, mapfile: Path, stockpath: Path, nativepath: Path,
     (out / updater.IMAGES['restore']).write_bytes(recovery)
     (out / 'before-full-rom.bin').write_bytes(backup)
     (out / 'images.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    updater.plan(out, 'trial')
+    updater.plan(out, 'trial', target_build_id=target_build_id)
     updater.plan(out, 'restore')
     return metadata
 

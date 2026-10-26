@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import zipfile
+from types import SimpleNamespace
 
 import build_beta_release_assets as assets
 
@@ -83,51 +84,241 @@ class BundleValidationTests(unittest.TestCase):
 
 
 class PromotionTests(unittest.TestCase):
-    def test_build_archives_hash_closed_work_only_release(self):
+    profiles = assets.RELEASE_PROFILES
+
+    @staticmethod
+    def ihex_record(address, kind, data):
+        body = bytes([len(data), address >> 8, address & 0xff, kind]) + data
+        checksum = (-sum(body)) & 0xff
+        return ':' + (body + bytes([checksum])).hex().upper() + '\n'
+
+    @classmethod
+    def sparse_ihex(cls, value):
+        return (cls.ihex_record(0x3027, 0, bytes([value])) +
+                cls.ihex_record(0, 1, b'')).encode()
+
+    def make_inputs(self, root):
+        import ak820_profiles
+        import firmware_matrix
+        bundles_root = root / 'bundles'; bundles_root.mkdir()
+        contexts, rows, settings_rows, images = [], [], [], []
+        for index, profile in enumerate(self.profiles):
+            bundle = bundles_root / profile; bundle.mkdir()
+            configuration = ak820_profiles.configuration(profile)
+            contents = {}
+            for name in sorted(set(assets.CI_PUBLIC_FILES) - {'installer-release.json'}):
+                path = bundle / name; path.parent.mkdir(parents=True, exist_ok=True)
+                if name == 'reports/build-report.json':
+                    value = {'configuration': configuration, 'sources': [],
+                             'compiler_sha256': f'{index + 1:064x}',
+                             'build_id': configuration['nvm_schema'],
+                             'hardware_validated': False}
+                    data = json.dumps(value).encode()
+                elif name == 'firmware/application.ihx':
+                    data = self.sparse_ihex(index + 1)
+                else:
+                    data = (f'{profile}:{name}').encode()
+                path.write_bytes(data); contents[name] = data
+            files = {name: {'sha256': assets.sha(data), 'size': len(data)}
+                     for name, data in contents.items()}
+            manifest = {'files': files}
+            manifest_path = bundle / 'installer-release.json'
+            manifest_path.write_text(json.dumps(manifest))
+            approval_path = bundle / 'approved-release.json'; approval_path.write_text('{}')
+            ihx, map_hash, mem = (files[f'firmware/application.{ext}']['sha256']
+                                  for ext in ('ihx', 'map', 'mem'))
+            report_bytes = contents['reports/build-report.json']
+            identity = {'profile': profile,
+                'configuration_sha256': assets.sha(assets.configure_firmware.canonical(configuration)),
+                'ihx_sha256': ihx, 'map_sha256': map_hash, 'mem_sha256': mem,
+                'build_report_sha256': assets.sha(report_bytes),
+                'source_manifest_sha256': assets.sha(assets.configure_firmware.canonical([])),
+                'compiler_sha256': f'{index + 1:064x}', 'nvm_schema': configuration['nvm_schema']}
+            code_sha = f'{index + 101:064x}'; definition_sha = f'{index + 201:064x}'
+            settings_identity = assets.settings.catalog_settings_identity(
+                configuration, ihx, code_sha, definition_sha)
+            contexts.append(SimpleNamespace(profile=profile, bundle=bundle,
+                manifest=manifest, approval=approval_path))
+            row = firmware_matrix.default_row(profile)
+            row.update(identity=identity, settings_identity=settings_identity,
+                       release_approved=False, installable=False)
+            rows.append(row)
+            settings_row = firmware_matrix.default_row(profile)
+            settings_row.update(identity=identity, settings_identity=settings_identity)
+            settings_rows.append(settings_row)
+            import build_capability_catalog as capability_builder
+            linked_identity = capability_builder.code_identity(
+                assets.pack_ak820.read_ihex(bundle / 'firmware/application.ihx'))
+            images.append({'profile': profile, 'build_identity': dict(identity),
+                'settings_schema': configuration['nvm_schema'],
+                'code_identity': linked_identity,
+                'features': sorted(configuration['base_features'] + configuration['optional_features'])})
+        (root / 'docs/ru').mkdir(parents=True)
+        (root / 'docs/INSTALL.md').write_text('AK820-Beta2-Catalog.zip')
+        (root / 'docs/ru/INSTALL.md').write_text('AK820-Beta2-Catalog.zip')
+        for name in assets.guide_files():
+            path = root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('# public guide\n', encoding='utf-8')
+        (root / 'tools/installer').mkdir(parents=True)
+        (root / 'tools/installer/profile-catalog.json').write_text('{}')
+        settings_catalog = {'format': firmware_matrix.FORMAT, 'profiles': settings_rows,
+                            'settings_transitions': []}
+        capability_catalog = {'images': images}
+        matrix = {'format': firmware_matrix.FORMAT, 'profiles': rows}
+        (root / 'tools/installer/settings-catalog.json').write_text(json.dumps(settings_catalog))
+        (root / 'web').mkdir(exist_ok=True)
+        (root / 'web/firmware-matrix.json').write_bytes(assets.canonical(matrix))
+        module_profiles = []
+        feature_ids = set()
+        for profile in self.profiles:
+            configuration = ak820_profiles.configuration(profile)
+            features = sorted(configuration['base_features'] + configuration['optional_features'])
+            feature_ids.update(features)
+            module_profiles.append({'id': profile, 'profile': profile, 'default': profile == 'main',
+                'title': {'en': profile, 'ru': profile}, 'summary': {'en': 'x', 'ru': 'x'},
+                'purpose': {'en': 'x', 'ru': 'x'},
+                'optional_features': configuration['optional_features'],
+                'configuration': configuration, 'features': features})
+        module_descriptions = {'schema': 'ak820-module-descriptions-1',
+            'features': [{'id': feature, 'title': {'en': feature, 'ru': feature}}
+                         for feature in sorted(feature_ids)], 'profiles': module_profiles}
+        (root / 'web/module-descriptions.json').write_bytes(assets.canonical(module_descriptions))
+        (root / 'web/capability-catalog.json').write_bytes(assets.canonical(capability_catalog))
+        return bundles_root, tuple(contexts), matrix, settings_catalog, capability_catalog
+
+    def test_build_emits_exact_ten_bundles_and_full_public_dependency_closure(self):
         with tempfile.TemporaryDirectory() as temp:
-            bundle, output = Path(temp) / 'bundle', Path(temp) / 'assets'
-            bundle.mkdir()
-            with patch.object(assets, 'validate_bundle', return_value={}):
-                assets.build(bundle, output, 'v0.6.0-beta.1')
-            archive = output / 'AK820-Beta1-Catalog.zip'
-            self.assertTrue((output / 'INSTALL-en.md').is_file())
-            self.assertTrue((output / 'INSTALL-ru.md').is_file())
-            self.assertIn('AK820-Beta1-Catalog.zip', (output / 'INSTALL-en.md').read_text())
-            self.assertIn('AK820-Beta1-Catalog.zip', (output / 'INSTALL-ru.md').read_text())
-            self.assertEqual((output / 'AK820-Beta1-Catalog.zip.sha256').read_text().split()[0], assets.sha(archive.read_bytes()))
+            root = Path(temp)
+            bundles, contexts, *_ = self.make_inputs(root)
+            output = root / 'output'
+            with patch.object(assets, 'ROOT', root), patch.object(
+                    assets.ak820, 'release_contexts', return_value=contexts):
+                result = assets.build(bundles, output, 'v0.6.0-beta.2')
+            self.assertEqual(result['profiles'], 10)
+            archive = output / 'AK820-Beta2-Catalog.zip'
+            self.assertEqual((output / 'AK820-Beta2-Catalog.zip.sha256').read_text().split()[0],
+                             assets.sha(archive.read_bytes()))
             with zipfile.ZipFile(archive) as zf:
                 members = {name: zf.read(name) for name in zf.namelist()}
+            descriptor = json.loads(members['release-catalog.json'])
+            self.assertEqual(descriptor['default_profile'], 'main')
+            self.assertEqual(descriptor['installable_profiles'], list(self.profiles))
+            for profile in self.profiles:
+                prefix = f'profiles/{profile}/'
+                self.assertIn(prefix + 'reference/vial.json', members)
+                self.assertIn(prefix + 'reports/qualification.json', members)
+                self.assertIn(prefix + 'reviews/program-review.md', members)
+                self.assertIn(prefix + 'approved-release.json', members)
+            for name in assets.guide_files():
+                self.assertIn(name, members)
             manifest = json.loads(members['release-manifest.json'])
             for name, item in manifest['files'].items():
                 self.assertEqual({'sha256': assets.sha(members[name]), 'size': len(members[name])}, item)
-            descriptor = json.loads(members['release-catalog.json'])
-            self.assertEqual(descriptor['installable_profiles'], ['work'])
-            matrix = json.loads(members['firmware-matrix.json'])
-            approved = [row['profile'] for row in matrix['profiles'] if row['release_approved'] or row['installable']]
-            self.assertEqual(approved, ['work'])
-            self.assertEqual(next(row for row in matrix['profiles'] if row['profile'] == 'work')['settings_status'],
-                             'reviewed-exact-packed-code')
-            caps = json.loads(members['capability-catalog.json'])
-            self.assertTrue(next(row for row in caps['images'] if row['profile'] == 'work')['release_approved'])
-            self.assertEqual([row['profile'] for row in caps['images'] if row['release_approved']], ['work'])
-            self.assertFalse(caps['flashing_authorized'])
-            self.assertFalse(caps['settings_writes_authorized'])
-            self.assertFalse(caps['hardware_validated'])
 
-    def test_tampered_work_settings_pin_is_rejected(self):
+    def test_rejects_wrong_configuration_identity_settings_or_capability_rows(self):
+        for mutation, expected in (
+            ('configuration', 'Web matrix identity differs'),
+            ('identity', 'Web matrix identity differs'),
+            ('settings', 'Build configuration differs'),
+            ('capability', 'Capability image differs'),
+        ):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp); bundles, contexts, matrix, setting, capability = self.make_inputs(root)
+                profile = self.profiles[0]
+                if mutation == 'configuration': matrix['profiles'][0]['configuration']['profile'] = 'game'
+                elif mutation == 'identity': matrix['profiles'][0]['identity']['ihx_sha256'] = 'f' * 64
+                elif mutation == 'settings': setting['profiles'][0]['configuration']['profile'] = 'game'
+                else: capability['images'][0]['build_identity']['profile'] = 'game'
+                (root / 'web/firmware-matrix.json').write_bytes(assets.canonical(matrix))
+                (root / 'tools/installer/settings-catalog.json').write_text(json.dumps(setting))
+                (root / 'web/capability-catalog.json').write_bytes(assets.canonical(capability))
+                output = root / 'output'
+                with patch.object(assets, 'ROOT', root), patch.object(
+                        assets.ak820, 'release_contexts', return_value=contexts), \
+                     self.assertRaisesRegex(ValueError, expected):
+                    assets.build(bundles, output, 'v0.6.0-beta.2')
+                self.assertFalse(output.exists())
+
+    def test_beta2_asset_builder_fails_closed_without_all_ten_approved_contexts(self):
         with tempfile.TemporaryDirectory() as temp:
-            record = Path(temp) / 'identity.json'
-            record.write_text(json.dumps({'ihx_sha256': assets.WORK_IHX, 'code_sha256': '0' * 64}))
-            with patch.object(assets, 'WORK_IDENTITY', record), self.assertRaisesRegex(ValueError, 'CODE identity'):
-                assets.validate_work_identity()
+            bundles, output = Path(temp) / 'bundles', Path(temp) / 'assets'
+            bundles.mkdir()
+            with patch.object(assets.ak820, 'release_contexts', return_value=()):
+                with self.assertRaisesRegex(ValueError, 'all ten'):
+                    assets.build(bundles, output, 'v0.6.0-beta.2')
+            self.assertFalse(output.exists())
 
-    def test_cross_profile_firmware_link_is_rejected(self):
-        payload = assets._catalog_payload()
-        matrix = json.loads(payload['firmware-matrix.json'])
-        row = next(item for item in matrix['profiles'] if item['profile'] != 'work')
-        payload['profiles/' + row['profile'] + '/firmware/application.ihx'] = payload['profiles/work/firmware/application.ihx']
-        with self.assertRaisesRegex(ValueError, 'does not match matrix'):
-            assets.validate_profile_links(payload)
+    def test_rejects_duplicate_or_reordered_contexts(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); bundles, contexts, *_ = self.make_inputs(root)
+            with self.assertRaisesRegex(ValueError, 'exact ten-profile'):
+                with patch.object(assets.ak820, 'release_contexts', return_value=contexts[:-1] + (contexts[0],)):
+                    with patch.object(assets, 'ROOT', root):
+                        assets.build(bundles, root / 'out', 'v0.6.0-beta.2')
+
+    def test_capability_image_order_is_irrelevant_but_profiles_must_be_unique_and_complete(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); bundles, contexts, matrix, setting, capability = self.make_inputs(root)
+            capability['images'].reverse()
+            (root / 'web/capability-catalog.json').write_bytes(assets.canonical(capability))
+            with patch.object(assets, 'ROOT', root), patch.object(
+                    assets.ak820, 'release_contexts', return_value=contexts):
+                assets.build(bundles, root / 'out', 'v0.6.0-beta.2')
+            for invalid in ('duplicate', 'missing'):
+                with self.subTest(invalid=invalid), tempfile.TemporaryDirectory() as temp2:
+                    root = Path(temp2); bundles, contexts, _, _, capability = self.make_inputs(root)
+                    if invalid == 'duplicate':
+                        capability['images'][-1] = dict(capability['images'][0])
+                    else:
+                        capability['images'].pop()
+                    (root / 'web/capability-catalog.json').write_bytes(assets.canonical(capability))
+                    with patch.object(assets, 'ROOT', root), patch.object(
+                            assets.ak820, 'release_contexts', return_value=contexts), \
+                         self.assertRaisesRegex(ValueError, 'capability catalog needs ten unique'):
+                        assets.build(bundles, root / 'out', 'v0.6.0-beta.2')
+
+    def test_linked_code_identity_uses_complete_windows_algorithm_not_settings_code_hash(self):
+        import build_capability_catalog as capability_builder
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); bundles, contexts, matrix, setting, capability = self.make_inputs(root)
+            expected = capability_builder.code_identity(
+                assets.pack_ak820.read_ihex(contexts[0].bundle / 'firmware/application.ihx'))
+            self.assertEqual(capability['images'][0]['code_identity'], expected)
+            packed_code_hash = setting['profiles'][0]['settings_identity']['code_sha256']
+            self.assertNotEqual(expected['sha256'], packed_code_hash)
+            payload = {'firmware-matrix.json': assets.canonical(matrix)}
+            for context in contexts:
+                for ext in ('ihx', 'map', 'mem'):
+                    name = f'profiles/{context.profile}/firmware/application.{ext}'
+                    payload[name] = (context.bundle / f'firmware/application.{ext}').read_bytes()
+            assets.validate_profile_links(payload,
+                contexts, setting, capability)
+
+    def test_rejects_module_description_registry_drift_preserving_descriptive_fields(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); self.make_inputs(root)
+            value = json.loads((root / 'web/module-descriptions.json').read_bytes())
+            value['profiles'][1]['configuration']['profile'] = 'main'
+            with self.assertRaisesRegex(ValueError, 'Module description profile'):
+                assets.validate_module_descriptions(value)
+
+
+class StandaloneGuideTests(unittest.TestCase):
+    def test_rebases_english_and_russian_links_preserving_external_and_anchors(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for language, directory in [('en', 'docs'), ('ru', 'docs/ru')]:
+                source = root / directory / 'INSTALL.md'
+                source.parent.mkdir(parents=True, exist_ok=True)
+                source.write_text('[profiles](profiles/README.md#limits) [status](STATUS.md) '
+                                  '[web](https://example.com) [anchor](#local)')
+                with patch.object(assets, 'ROOT', root):
+                    data = assets.standalone_guide(source).decode()
+                self.assertIn('](' + directory + '/profiles/README.md#limits)', data)
+                self.assertIn('](' + directory + '/STATUS.md)', data)
+                self.assertIn('](https://example.com)', data)
+                self.assertIn('](#local)', data)
 
 
 if __name__ == '__main__': unittest.main()

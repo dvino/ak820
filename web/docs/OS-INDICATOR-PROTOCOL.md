@@ -8,7 +8,7 @@ Optional `AK820_MAC_PC` supplies normal OS state. Without it, normal is off.
 
 The desktop helper and platform layout detectors are separate planned work.
 A client must identify the exact image before sending FD02; VID/PID or an
-arbitrary reply does not prove support. The [development catalog](CAPABILITY-CATALOG.md)
+arbitrary reply does not prove support. The [development catalog](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/docs/CAPABILITY-CATALOG.md)
 prepares identity data, without release or write authorization.
 
 ## Transport and request
@@ -85,7 +85,7 @@ W uses component 1 at `0x13D`; their shared intensity is `0x13C`.
 Intensity is full when either is active, with independent component values.
 Component 2 is untouched. C uses slot 71.
 
-The [work report](../../audits/rc6/web-firmware-20261024/README.md) records
+The [work report](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/audits/rc6/web-firmware-20261024/README.md) records
 the OEM dataflow and exact-image checks. They do not prove the physical
 light connection, brightness, timing or helper behavior on a real OS.
 Each advertised profile requires its own memory, foreground-stack and IRQ

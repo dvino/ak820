@@ -101,8 +101,15 @@ def write_package(output, archive, names, initial_hashes):
     limits = ['No USB enumeration or access was performed.',
               'Xvfb smoke creates Tk widgets; manual interaction and physical behavior were not tested.',
               'No firmware update or durable device storage was tested.']
+    contexts = shared.ak820.release_contexts(approved=True)
+    releases = {}
+    for context in contexts:
+        manifest_name = (context.bundle.relative_to(ROOT) / 'installer-release.json').as_posix()
+        releases[context.profile] = {'manifest': manifest_name,
+                                     'manifest_sha256': initial_hashes[manifest_name]}
     report = {'format': FORMAT, 'platform': {'system': 'Linux', 'architecture': 'x86_64',
               'glibc_baseline': '2.35', 'python': sys.version.split()[0], 'pyinstaller': '6.16.0'},
+              'releases': releases,
               'approved_inputs': initial_hashes, 'collected_inputs': collected,
               'apps': {name: {'sha256': sha256(path)} for name, path in apps.items()},
               'checks': checks, 'limits': limits,

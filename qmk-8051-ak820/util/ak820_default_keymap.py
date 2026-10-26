@@ -82,7 +82,7 @@ def generate(assembly):
     arrays = encode(literal_block(assembly, '_keymaps'), literal_block(assembly, '_ak820_default_metadata'))
     text = '#define AK820_DEFAULT_LAYERS 2\n'
     for name, values in zip(('classes', 'payload', 'offsets'), arrays):
-        text += 'static const uint8_t __code ak820_default_' + name + '[] = {' + ','.join(map(str, values)) + '};\n'
+        text += 'const uint8_t __code ak820_default_' + name + '[] = {' + ','.join(map(str, values)) + '};\n'
         text += '_Static_assert(sizeof(ak820_default_' + name + ') == ' + str(len(values)) + ', "default table size");\n'
     text += '_Static_assert(MATRIX_ROWS == 16 && MATRIX_COLS == 8 && sizeof(uint16_t) == 2 && KC_NO == 0 && KC_TRNS == 1, "default table configuration");\n'
     return text

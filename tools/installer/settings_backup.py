@@ -97,7 +97,13 @@ def load_profile(bundle, native_backup, *, trusted_catalog=None):
     bundle = Path(bundle)
     ihx, mapfile = bundle / 'firmware/application.ihx', bundle / 'firmware/application.map'
     ihx_sha256 = pack.digest(ihx.read_bytes())
-    images = _catalog_images(trusted_catalog) if trusted_catalog is not None else _legacy_images()
+    images = _legacy_images()
+    if trusted_catalog is not None:
+        current = _catalog_images(trusted_catalog)
+        for digest, image in current.items():
+            require(digest not in images or images[digest]['code_sha256'] == image['code_sha256'],
+                    'Catalog redefines a pinned historical image')
+        images.update(current)
     require(ihx_sha256 in images,
             'Unsupported firmware build for settings preservation')
     native_backup = bytes(native_backup)
@@ -127,7 +133,7 @@ def _legacy_images():
     return {ihx: {'ihx_sha256': ihx, 'code_sha256': code, 'build_id': pack.BUILD_ID,
                   'combos_version': 1 if ihx in (CANDIDATE_IHX, FULL_IHX, WORK_IHX) else None,
                   'features': (sorted(WORK_FEATURES) if ihx == WORK_IHX else
-                               sorted(FULL_FEATURES) if ihx == FULL_IHX else [])}
+                               sorted(FULL_FEATURES) if ihx == FULL_IHX else []) + ['nkro', 'grave-escape', 'vialrgb-direct']}
             for ihx, code in SUPPORTED_IMAGES}
 
 
@@ -186,9 +192,20 @@ def _catalog_images(catalog):
                 value['code_sha256'] not in {i['code_sha256'] for i in images.values()},
                 'Duplicate or ambiguous settings image')
         images[value['ihx_sha256']] = {**value, 'build_id': value['nvm_schema']}
+    current_images = set(images)
+    historical = catalog.get('historical_sources', [])
+    require(type(historical) is list, 'Invalid historical settings sources')
+    for source in historical:
+        require(type(source) is dict and set(source) == {'ihx_sha256', 'code_sha256'},
+                'Unknown historical settings source fields')
+        ihx = source['ihx_sha256']
+        pinned = _legacy_images().get(ihx) if type(ihx) is str else None
+        require(pinned is not None and source['code_sha256'] == pinned['code_sha256'] and
+                ihx not in images, 'Unknown or duplicate historical settings source')
+        images[ihx] = pinned
     for transition in catalog['settings_transitions']:
         require(type(transition) is dict and set(transition) == {'source', 'target'} and
-                transition['source'] in images and transition['target'] in images,
+                transition['source'] in images and transition['target'] in current_images,
                 'Unknown settings transition image/fields')
     return images
 
@@ -278,13 +295,31 @@ def macro_commands(stream):
     return result
 
 
-def rgb_wire(raw, *, selected=False):
+def rgb_modes(image=None):
+    # Historical images and old synthetic fixtures used the Direct enum.
+    direct = image is None or 'supported_keycodes' not in image or 'vialrgb-direct' in image.get('features', ())
+    return RGB_MODES if direct else {1: 2, 2: 6, 3: 13, 4: 14, 5: 31}
+
+
+def rgb_wire(raw, *, selected=False, image=None):
     require(len(raw) == 8, 'RGB config requires eight saved bytes')
     mode, enabled = raw[0] >> 2, raw[0] & 3
-    require(enabled in (0, 1) and mode in RGB_MODES, 'Saved RGB enable/mode is unsupported')
+    modes = rgb_modes(image)
+    require(enabled in (0, 1) and mode in modes, 'Saved RGB enable/mode is unsupported')
     require(raw[3] <= BRIGHTNESS, 'Saved RGB brightness exceeds the target limit')
-    wire = RGB_MODES[mode] if enabled or selected else 0
+    wire = modes[mode] if enabled or selected else 0
     return wire.to_bytes(2, 'little') + bytes((raw[4], raw[1], raw[2], raw[3]))
+
+
+def translated_rgb_config(raw, source_image, target_image):
+    """Preserve the wire effect while encoding the target's exact saved enum."""
+    selected = rgb_wire(raw, selected=True, image=source_image)
+    effect = int.from_bytes(selected[:2], 'little')
+    inverse = {value: key for key, value in rgb_modes(target_image).items()}
+    require(effect in inverse, 'Saved RGB effect is unsupported by the selected target image')
+    target = bytearray(raw)
+    target[0] = inverse[effect] * 4 + (raw[0] & 3)
+    return bytes(target)
 
 
 def combo_settings(nvm):
@@ -377,10 +412,11 @@ def capture_settings(api, profile):
     nvm = rom[pack.NVM_START:pack.NVM_END]
     require(api.read_nvm() == nvm, 'NVM changed during export')
     rgb = api.rgb()
-    require(rgb['effects'] == sorted(RGB_MODES.values()) and rgb['info_hex'] == '0100a0',
+    image = _rom_identity(rom, profile)
+    require(rgb['effects'] == sorted(rgb_modes(image).values()) and rgb['info_hex'] == '0100a0',
             'RGB capabilities differ from the supported image')
     current = bytes.fromhex(rgb['mode_hex'])
-    require(current == rgb_wire(nvm[24:32]),
+    require(current == rgb_wire(nvm[24:32], image=image),
             'RGB RAM and saved NVM differ; save the intended settings explicitly before export')
     settings = settings_from_nvm(nvm, current, combos=_combo_capable(profile, _rom_identity(rom, profile)['ihx_sha256']))
     _check_getters(api, settings, _rom_identity(rom, profile))
@@ -487,7 +523,7 @@ def validate_backup(path, profile, expected_identity=None):
     validate_rom(rom, profile, (source_ihx, source_code))
     require(nvm == rom[pack.NVM_START:pack.NVM_END], 'Saved NVM differs from the full ROM')
     settings = _json(files['settings.json'])
-    expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32]), combos=_combo_capable(profile, source_ihx))
+    expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32], image=image), combos=_combo_capable(profile, source_ihx))
     require(canonical(settings) == canonical(expected), 'Settings JSON differs from validated NVM or RGB contract')
     return {'path': path, 'identity': identity, 'manifest': manifest, 'settings': expected,
             'rom': rom, 'nvm': nvm, 'source_identity': (source_ihx, source_code)}
@@ -511,6 +547,7 @@ def keycode_supported(code, *, features=()):
         'auto-shift': (0x7C13, 0x7C14, 0x7C15),
         'dynamic-macros': tuple(range(0x7C53, 0x7C58)),
         'leader': (0x7C58,),
+        'grave-escape': (0x7C16,),
     }
     if any(feature in features and code in values for feature, values in optional.items()):
         return True
@@ -535,7 +572,7 @@ def keycode_supported(code, *, features=()):
     if 0x52A0 <= code <= 0x52BF:  # existing held-mod OSM fallback, not one-shot
         return True
     return (0x7700 <= code <= 0x770F or 0x7820 <= code <= 0x782A or
-            code in (0x7C00, 0x7C01, 0x7C02, 0x7C03, 0x7C16, 0x7C73,
+            code in (0x7C00, 0x7C01, 0x7C02, 0x7C03, 0x7C73,
                      0x7C77, 0x7C78, 0x7C79, 0x7C7A))
 
 
@@ -629,7 +666,11 @@ def plan_restore(backup, profile, target_nvm=None):
         if not image_keycode_supported(item['keycode'], target_image, context=context):
             blockers.append('Unsupported keycode ' + hex(item['keycode']) + ': ' + str(item))
     raw = nvm[24:32]
-    if RGB_MODES[raw[0] >> 2] == 1:
+    source_image = _profile_images(profile)[backup['source_identity'][0]]
+    selected_rgb = rgb_wire(raw, selected=True, image=source_image)
+    if int.from_bytes(selected_rgb[:2], 'little') not in rgb_modes(target_image).values():
+        blockers.append('Saved RGB effect is unsupported by the selected target image')
+    if int.from_bytes(selected_rgb[:2], 'little') == 1:
         blockers.append('Direct Control palette has no getter; selected Direct mode cannot be preserved')
     if raw[5:8] != target_nvm[29:32] or raw[6:8] != bytes(2):
         blockers.append('Saved RGB flags/padding have no setter or differ from the target')
@@ -657,7 +698,8 @@ def plan_restore(backup, profile, target_nvm=None):
                     blockers.append(f'Unsupported keycode in macro {number}: {value:#06x}')
     require(not blockers, 'Settings cannot be restored before any erase/write:\n' + '\n'.join(blockers))
     return {'extension_features': target_features, 'extension_data': extension_data, 'combo_entries': combo_entries, 'key_count': 498, 'encoder_count': 12, 'macro_chunks': chunks,
-            'rgb_saved_mode': rgb_wire(raw, selected=True), 'rgb_effective_mode': rgb_wire(raw),
+            'rgb_saved_mode': selected_rgb, 'rgb_effective_mode': rgb_wire(raw, image=source_image),
+            'rgb_saved_config': translated_rgb_config(raw, source_image, target_image),
             'limitations': list(LIMITATIONS) + (['Runtime NKRO mode and pending One Shot modifiers are volatile; not restored.']
                 if target_features else []), 'requires_physical_unlock': True}
 
@@ -689,6 +731,10 @@ def verify_restore(api, backup, profile):
             _rom_identity(rom, profile)['code_sha256'] == expected_target[1],
             'Final running firmware differs from the selected target image')
     expected_settings = dict(backup['settings'])
+    images = _profile_images(profile)
+    rgb = translated_rgb_config(backup['nvm'][24:32], images[backup['source_identity'][0]],
+                                images[profile['ihx_sha256']])
+    expected_settings['rgb'] = {**expected_settings['rgb'], 'saved_config_hex': rgb.hex()}
     if _combo_capable(profile) and 'combos' not in expected_settings:
         require(all(data == bytes(10).hex() for data in actual['combos']['entries_hex']),
                 'Legacy restore target Combos are not empty')
@@ -773,7 +819,7 @@ def restore_settings(api, backup, profile, before_write=None, *, target_backup=N
         expected[meta:meta+3] = b'\0' + len(stream).to_bytes(2, 'little')
         require(api.macros() == stream + bytes(8192-len(stream)), 'Published macro readback differs')
         durable('macros')
-    rgb = backup['nvm'][24:32]
+    rgb = plan['rgb_saved_config']
     if expected[24:32] != rgb:
         write('rgb:selected', lambda: api.set_rgb_mode(plan['rgb_saved_mode']))
         require(api.rgb_mode() == plan['rgb_saved_mode'], 'Selected RGB mode readback differs')

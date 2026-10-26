@@ -48,9 +48,12 @@ def cases(fw):
   t=Trace(fw,'dm-effective-'+source);t.ctl(0x7c53);t.map((0,3),code);t.tap((0,3))
   if source=='oneshot':t.tap((0,0))
   t.ctl(0x7c55);t.memory('effective-mods','_dm_taps',[4,2] if source=='oneshot' else [6,1]);t.ctl(0x7c56);t.step();t.check('replay',packet(2,4) if source=='oneshot' else packet(1,6));t.step();t.check('released',packet());yield t.result()
- t=Trace(fw,'dm-nkro-duplicate-physical-owner');t.seed();t.width=32
- t.commands=[c.replace(f'{fw.address("_actual_keyboard_report")+7:#x} 16;',f'{fw.address("_actual_keyboard_report")+31:#x} 16;') for c in t.commands]
- t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1]);t.press((0,0));t.ctl(0x7c56);t.step();t.check('physical-survives',[6,0,16]+[0]*29);t.step();t.release((0,0));t.check('physical-released',[6]+[0]*31);yield t.result()
+ has_nkro=fw.compiled_feature('nkro')
+ t=Trace(fw,'dm-nkro-duplicate-physical-owner' if has_nkro else 'dm-nkro-disabled-stale-setting-physical-owner');t.seed()
+ if has_nkro:
+  t.width=32
+  t.commands=[c.replace(f'{t.report_address+7:#x} 16;',f'{t.report_address+31:#x} 16;') for c in t.commands]
+ t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1]);t.press((0,0));t.ctl(0x7c56);t.step();t.check('physical-survives',[6,0,16]+[0]*29 if has_nkro else packet(0,4));t.step();t.release((0,0));t.check('physical-released',[6]+[0]*31 if has_nkro else packet());t.memory('setting-retained','_keymap_config',[128,0]);yield t.result()
  t=Trace(fw,'dm-generated-output-excluded');t.ctl(0x7c53);t.tap((0,0));t.map((0,3),0x7c79);t.tap((0,3));t.commands+=[tap.linked.memory('rom',0xcd40,[0,5])];t.event((253,0),1,300);t.event((253,0),0,301);t.macro([1,2,6,1,3,6]);t.ctl(0x7c55);t.memory('only-original','_dm_lengths',[1,0]);yield t.result()
  t=Trace(fw,'dm-generated-controls-excluded');t.seed();t.macro([1,5,0x56,0x7c,1,6,0x56,0x7c,1,5,0x54,0x7c,1,6,0x54,0x7c]);t.memory('not-playing','_dm_play',[0]);t.memory('not-recording','_dm_record',[0]);yield t.result()
  t=Trace(fw,'dm-nested-macro-pauses-playback');t.seed();t.ctl(0x7c56);t.time+=20;t.commands+=fw.clock(t.time);t.macro([1,6,0x54,0x7c,1,7,0x54,0x7c]);t.memory('no-nested-owner','_dm_down',[0]);t.memory('still-playing','_dm_play',[1]);t.step();t.check('foreground-press',packet(0,4));t.step();t.check('foreground-release',packet());yield t.result()
