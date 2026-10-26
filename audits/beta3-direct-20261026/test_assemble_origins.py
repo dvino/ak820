@@ -2,12 +2,15 @@
 import copy
 import importlib.util
 import json
+import hashlib
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
+from contextlib import redirect_stderr
+import io
 import zipfile
 
 HERE = Path(__file__).resolve().parent
@@ -17,6 +20,56 @@ spec.loader.exec_module(a)
 
 
 class BoundaryTests(unittest.TestCase):
+    def test_proof_and_assembly_toolchains_are_distinct_but_byte_identical(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            shared = root / 'shared'
+            origin = root / 'origin'
+            for rel in ('shared/bin', 'origin/mirror/bin'):
+                path = root / rel
+                path.mkdir(parents=True)
+                (path / 'sdcc').write_bytes(b'pinned tool')
+            (origin / 'toolchains').symlink_to(shared, target_is_directory=True)
+            with patch.object(a, 'ROOT', root):
+                proof_path = (origin / 'toolchains').resolve()
+                assembly_path = a.checked(origin, Path('mirror'))
+                proof = a.toolchain_inventory(proof_path)
+                mirror = a.toolchain_inventory(assembly_path)
+                self.assertEqual(proof, mirror)
+                a.require_same_toolchain(proof, mirror)
+                self.assertEqual(proof['bin/sdcc'], hashlib.sha256(b'pinned tool').hexdigest())
+                self.assertEqual(proof_path, shared)
+                self.assertEqual(assembly_path, origin / 'mirror')
+                (origin / 'mirror/bin/sdcc').write_bytes(b'changed')
+                with self.assertRaisesRegex(ValueError, 'differs'):
+                    a.require_same_toolchain(proof, a.toolchain_inventory(assembly_path))
+
+    def test_toolchain_inventory_rejects_symlinks_and_external_copy(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'tools').mkdir()
+            (root / 'tools/link').symlink_to(root / 'outside')
+            with patch.object(a, 'ROOT', root):
+                with self.assertRaisesRegex(ValueError, 'Symlink'):
+                    a.toolchain_inventory((root / 'tools').resolve())
+                with self.assertRaises(ValueError):
+                    a.checked(root, Path('../outside'))
+
+    def test_failed_worker_diagnostic_is_preserved_and_status_propagates(self):
+        with tempfile.TemporaryDirectory() as folder:
+            log = Path(folder) / 'worker.log'
+            error = subprocess.CalledProcessError(9, ['worker'])
+            def fail(*args, **kwargs):
+                kwargs['stdout'].write(b'actual worker failure detail\n')
+                raise error
+            stderr = io.StringIO()
+            with patch.object(a.subprocess, 'run', side_effect=fail), redirect_stderr(stderr):
+                with self.assertRaises(subprocess.CalledProcessError) as raised:
+                    a.run_worker_process(['worker'], folder, log)
+            self.assertIs(raised.exception, error)
+            self.assertIn('actual worker failure detail', log.read_text())
+            self.assertIn('actual worker failure detail', stderr.getvalue())
+
     def test_incomplete_and_duplicate_origins_rejected(self):
         with self.assertRaisesRegex(ValueError, 'exactly ten'):
             a.origins([])

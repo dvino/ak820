@@ -41,6 +41,27 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def toolchain_inventory(folder):
+    """Hash every regular file in a resolved toolchain tree; reject links inside it."""
+    folder = Path(folder)
+    require(folder.is_dir() and folder.resolve() == folder,
+            'Toolchain inventory requires an actual resolved directory')
+    inventory = {}
+    for path in sorted(folder.rglob('*')):
+        require(not path.is_symlink(), 'Symlink in toolchain: ' + str(path))
+        if path.is_file():
+            inventory[path.relative_to(folder).as_posix()] = sha(path)
+        else:
+            require(path.is_dir(), 'Unsupported toolchain entry: ' + str(path))
+    require(inventory, 'Toolchain contains no regular files')
+    return inventory
+
+
+def require_same_toolchain(proof, assembly):
+    require(assembly == proof,
+            'Assembly toolchain differs from original qualification toolchain')
+
+
 def write(path, value):
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
 
@@ -191,6 +212,16 @@ def require_fresh_worker_output(output):
             'Worker output already exists')
 
 
+def run_worker_process(command, origin, log):
+    with log.open('wb') as stream:
+        try:
+            subprocess.run(command, cwd=origin, stdout=stream, stderr=subprocess.STDOUT, check=True)
+        except subprocess.CalledProcessError:
+            stream.flush()
+            print(log.read_text(errors='replace'), file=sys.stderr, end='')
+            raise
+
+
 def worker(args):
     output = checked(ROOT, args.output)
     require_fresh_worker_output(output)
@@ -201,18 +232,30 @@ def worker(args):
     catalog = json.loads(catalog_path.read_bytes())
     build = checked(ROOT, relative(args.builds_root) / name)
     snapshot = measure_origin.tree(build)
-    toolchain = (ROOT / relative(args.toolchain)).resolve()
+    proof_rel = relative(args.toolchain)
+    # Preserve the exact original qualification path resolution for proof checks.
+    toolchain = (ROOT / proof_rel).resolve()
     row = matrix.measured_row(build, toolchain)
     image = capability.inspect_entry(build, toolchain)
+    assembly_rel = relative(args.assembly_toolchain or args.toolchain)
+    proof_inventory = toolchain_inventory(toolchain)
+    assembly_path = checked(ROOT, assembly_rel)
+    assembly_inventory = toolchain_inventory(assembly_path)
+    require_same_toolchain(proof_inventory, assembly_inventory)
     row = bind_row(name, row, catalog_rows(catalog)[name], ci.reproducible_identity(build, row['identity']))
     policies = checked(ROOT, relative(args.policies_root) / name)
     result = ci.assemble(build, build / 'qualification.json', policies / 'release-policy.json',
                          policies / 'program-review.md', policies / 'packing-validation.json',
-                         output, toolchain, args.source_commit, expected_profile=name)
+                         output, assembly_path, args.source_commit, expected_profile=name)
+    require(toolchain_inventory(toolchain) == proof_inventory
+            and toolchain_inventory(assembly_path) == assembly_inventory,
+            'Toolchain changed during worker assembly')
     require(source_snapshot(ROOT, args.source_commit) == before and measure_origin.tree(build) == snapshot,
             'Inputs changed during worker assembly')
     write(output.with_suffix('.worker.json'), {'profile': name, 'row': row, 'capability': image,
-          'source_files': before, 'build_tree': snapshot, 'bundle_tree': measure_origin.tree(output), 'assembly': result})
+          'source_files': before, 'build_tree': snapshot, 'bundle_tree': measure_origin.tree(output),
+          'qualification_toolchain': proof_inventory, 'assembly_toolchain': assembly_inventory,
+          'assembly': result})
 
 
 def orchestrate(args):
@@ -264,9 +307,10 @@ def orchestrate(args):
                            '--builds-root', args.builds_root, '--policies-root', args.policies_root,
                            '--settings-catalog', args.settings_catalog, '--toolchain', args.toolchain,
                            '--source-commit', args.source_commit, '--output', worker_rel.as_posix()]
+                if args.assembly_toolchain:
+                    command += ['--assembly-toolchain', args.assembly_toolchain]
                 log = stage / 'reports' / (name + '.log')
-                with log.open('wb') as stream:
-                    subprocess.run(command, cwd=origin, stdout=stream, stderr=subprocess.STDOUT, check=True)
+                run_worker_process(command, origin, log)
                 work = origin / worker_rel
                 result = json.loads(work.with_suffix('.worker.json').read_bytes())
                 require(result['source_files'] == before and result['build_tree'] == snapshots[name], 'Worker input binding differs')
@@ -319,6 +363,7 @@ def main():
     parser.add_argument('--policies-root', default='ci/profiles')
     parser.add_argument('--settings-catalog', default='tools/installer/settings-catalog.json')
     parser.add_argument('--toolchain', required=True)
+    parser.add_argument('--assembly-toolchain', help='Optional repository-local identical toolchain copy used only by ci.assemble')
     parser.add_argument('--source-commit', required=True)
     parser.add_argument('--output', required=True)
     args = parser.parse_args()

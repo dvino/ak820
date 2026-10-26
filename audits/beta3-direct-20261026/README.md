@@ -71,6 +71,7 @@ fixtures; they do not prove a physical settings restore.
 | [Metadata review](metadata-final-review.md) | Exact C/D symbol spaces, data bounds and original-root measurement paths |
 | [Stack review](stack-final-review.md) | Exact outlined multiplication, guarded RGB target set and call-frame accounting |
 | [Origin assembly review](origin-assembly-review.md) | Full canonical per-profile gates and complete atomic aggregation |
+| [Assembly toolchain review](assembly-toolchain-review.md) | Original qualification paths and byte-identical repository-local tools for committed assembly |
 | [Release handoff review](release-handoff-review.md) | Matching installation commands, recovery links, catalog semantics and English/Russian guides |
 | [Direct fixture review](direct-fixture-review.md) | Exact-image Direct limitation metadata in offline fixtures; ten real roundtrips retained separately |
 | [Alpha.2 admission review](alpha2-admission-review.md) | Exact legacy identity, zero Combo writes, preserved target defaults and strict preflight binding |
@@ -137,6 +138,15 @@ inventory identifies the current archives and the exact requalification reports.
 The [retained helper sources](delivery-helper-sources.json) preserve the exact
 reviewed delivery scripts. Their preflight reviews cover code; execution and
 final package checks are recorded separately after committed assembly.
+
+The [first committed assembly](assembly-initial-run.json) stopped before producing
+a release bundle because the shared compiler path resolved outside the worker
+repository. The [diagnostic log](assembly-main-diagnostic.log) records the exact
+canonical rejection. The audit-only [toolchain correction](assembly-toolchain-fix.md)
+keeps the original path for qualification checks and uses an ordinary local copy
+for canonical assembly. All 4197 files in each [local copy](assembly-toolchain-copies.json)
+match the original toolchain. Firmware, qualification evidence and program
+policies are unchanged; canonical checks remain active.
 
 No USB, bootloader, reset or flash commands were sent. Static bounds, host tests
 and CPU models do not verify physical USB timing, added LED interrupt timing,
