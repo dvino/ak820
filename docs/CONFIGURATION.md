@@ -195,6 +195,11 @@ a release for each key-down that should not remain held. The 8192-byte limit is
 shared by all slots, so long scripts leave less space for the others. See [Settings backup and restore](SETTINGS-BACKUP.md)
 before replacing firmware or moving a layout.
 
+The beta.3 source candidate adds a macro-on-tap, layer-on-hold action for
+physical matrix keys. Enter its AK820 keycode in an editor that accepts numeric
+values; see [Tap and hold](TAP-HOLD.md#macro-on-tap-layer-on-hold) for the
+formula, example and limits. Earlier firmware does not support this action.
+
 ## Caps and layer indicators
 
 The dedicated **C** indicator follows the host's Caps Lock state. Caps Word

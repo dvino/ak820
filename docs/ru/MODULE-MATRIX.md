@@ -8,7 +8,7 @@ English source of truth: [Module matrix](../MODULE-MATRIX.md).
 
 | Модуль | `main` | `game` | `mmo` | `typing` | `code` | `pointer` | `onehand` | `creative` | `shortcuts` | `multios` |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| auto-shift | — | — | — | ✓ | — | — | — | — | — | — |
+| auto-shift | ✓ | — | — | ✓ | — | — | — | — | — | — |
 | ctrl-gui-swap | — | — | — | — | — | — | — | — | — | ✓ |
 | dynamic-macros | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ |
 | grave-escape | — | — | — | — | ✓ | — | — | — | — | — |

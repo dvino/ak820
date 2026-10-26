@@ -43,6 +43,15 @@ class ProtocolTests(unittest.TestCase):
             api.set_combo(0, bytes(10))
         self.assertEqual(raw.requests, [])
 
+    def test_combo_caps_word_validation_is_narrow_and_offline(self):
+        data = bytes.fromhex('0400160000000000737c')
+        self.assertEqual(protocol.DeviceAPI.validate_combo(data), data)
+        self.assertEqual(protocol.DeviceAPI.stored_combo(data),
+                         data[:4] + protocol.DeviceAPI.COMBO_MARKER + data[8:])
+        for output in (0x7C72, 0x7C74, 0x2004, 0x5000):
+            with self.subTest(output=output), self.assertRaises(ValueError):
+                protocol.DeviceAPI.validate_combo(data[:8] + output.to_bytes(2, 'little'))
+
     def test_combo_validation_rejects_unsupported_input_without_transport(self):
         api, raw = self.api(True)
         for data in (bytes(9), bytes.fromhex('04000400000000000600'),

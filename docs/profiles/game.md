@@ -24,6 +24,8 @@ Added: NKRO keyboard reports; NKRO on/off controls; GUI lock: block Win/Command 
 
 Removed: Leader: a prefix followed by one 1–0 or A–F key selects one of 16 saved Vial macros.
 
+Auto Shift is not included.
+
 ## Limits
 
 Key Overrides: eight modifier-dependent replacements.

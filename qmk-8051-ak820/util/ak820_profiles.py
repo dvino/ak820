@@ -90,7 +90,7 @@ _MAIN = ('one-shot', 'leader', 'dynamic-macros', 'os-indicators',
 def _variant(remove=(), add=()):
     return tuple(feature for feature in _MAIN if feature not in remove) + tuple(add)
 PROFILES = {
-    'main': _MAIN,
+    'main': _variant(add=('auto-shift',)),
     'game': _variant(('leader',), ('nkro', 'nkro-control', 'gui-lock')),
     'mmo': _variant(('leader', 'key-overrides'), ('nkro', 'nkro-control', 'gui-lock', 'tap-dance')),
     'typing': _variant(('vialrgb-direct',), ('auto-shift', 'space-cadet')),
@@ -117,7 +117,10 @@ DEFERRED = {
 def configuration(name: str) -> dict:
     if not isinstance(name, str) or name not in PROFILES:
         raise ValueError('Unknown profile: ' + str(name))
-    enabled = PROFILES[name]
+    return _configuration(name, PROFILES[name])
+
+
+def _configuration(name, enabled):
     return {
         'format': FORMAT, 'profile': name, 'optional_features': list(enabled),
         'base_features': list(BASE_FEATURES) + [label for feature, label in
@@ -136,6 +139,45 @@ def configuration(name: str) -> dict:
                       **({'dynamic_macro_phase': 10} if 'dynamic-macros' in enabled else {})},
         'release_approved': False,
     }
+
+
+# Frozen beta.2 packages are source contracts, independent of new builds.
+_BETA2_MAIN = ('one-shot', 'leader', 'dynamic-macros', 'os-indicators',
+               'qmk-settings', 'key-overrides', 'vialrgb-direct')
+_BETA2_VARIANTS = {
+    'main': ((), ()),
+    'game': (('leader',), ('nkro', 'nkro-control', 'gui-lock')),
+    'mmo': (('leader', 'key-overrides'), ('nkro', 'nkro-control', 'gui-lock', 'tap-dance')),
+    'typing': (('vialrgb-direct',), ('auto-shift', 'space-cadet')),
+    'code': (('vialrgb-direct',), ('space-cadet', 'grave-escape')),
+    'pointer': (('vialrgb-direct',), ('mouse-keys',)),
+    'onehand': (('vialrgb-direct', 'key-overrides'), ('mouse-keys', 'tap-dance')),
+    'creative': (('key-overrides',), ('tap-dance',)),
+    'shortcuts': (('vialrgb-direct', 'dynamic-macros'), ('tap-dance',)),
+    'multios': (('vialrgb-direct',), ('mac-pc', 'ctrl-gui-swap')),
+}
+
+
+def historical_configuration(name):
+    """Reconstruct a frozen beta.2 package for source-image readers."""
+    if not isinstance(name, str) or name not in _BETA2_VARIANTS:
+        raise ValueError('Unknown historical package: ' + str(name))
+    remove, add = _BETA2_VARIANTS[name]
+    return _configuration(name, tuple(f for f in _BETA2_MAIN if f not in remove) + add)
+
+
+def validate_source_configuration(value):
+    """Accept known source contracts, never arbitrary feature combinations."""
+    if not isinstance(value, dict):
+        raise ValueError('Invalid source configuration')
+    name = value.get('profile')
+    if not isinstance(name, str):
+        raise ValueError('Invalid source profile')
+    if name in PROFILES and value == configuration(name):
+        return value
+    if name in _BETA2_VARIANTS and value == historical_configuration(name):
+        return value
+    raise ValueError('Source configuration differs from a known package')
 
 
 def select(features: list[str]) -> str:

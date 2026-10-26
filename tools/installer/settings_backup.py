@@ -143,11 +143,12 @@ def _sha(value):
 
 
 @lru_cache(maxsize=64)
-def _supported_keycodes(features):
-    return tuple(code for code in range(65536) if keycode_supported(code, features=features))
+def _supported_keycodes(features, macro_layer_tap):
+    return tuple(code for code in range(65536) if keycode_supported(code, features=features)
+                 and (macro_layer_tap or not macro_layer_tap_keycode(code)))
 
 
-def catalog_settings_identity(configuration, ihx_sha256, code_sha256, definition_sha256):
+def catalog_settings_identity(configuration, ihx_sha256, code_sha256, definition_sha256, *, combo_actions=('caps-word-toggle',), macro_layer_tap=True):
     """Describe a measured packed image; this grants no release/write approval.
 
     CODE is SHA256 of permanent packed bytes [APP_START:CODE_END], including
@@ -155,14 +156,23 @@ def catalog_settings_identity(configuration, ihx_sha256, code_sha256, definition
     The caller must obtain the catalog from a separately trusted source.
     """
     config = ak820_profiles.validate_configuration(configuration)
+    return _settings_identity(config, ihx_sha256, code_sha256, definition_sha256,
+                              combo_actions=combo_actions, macro_layer_tap=macro_layer_tap)
+
+
+def _settings_identity(config, ihx_sha256, code_sha256, definition_sha256, *, combo_actions, macro_layer_tap):
     require(all(_sha(v) for v in (ihx_sha256, code_sha256, definition_sha256)),
             'Invalid settings image digest')
+    require(type(combo_actions) in (list, tuple) and list(combo_actions) in ([], ['caps-word-toggle']),
+            'Unknown Combo action capability')
+    require(type(macro_layer_tap) is bool, 'Invalid macro layer tap capability')
     features = config['optional_features']
     return {'ihx_sha256': ihx_sha256, 'code_sha256': code_sha256,
             'definition_sha256': definition_sha256, 'nvm_schema': config['nvm_schema'],
             'profile': config['profile'], 'features': sorted(features),
-            'supported_keycodes': list(_supported_keycodes(tuple(sorted(features)))),
-            'combos_version': 1, 'extensions_version': 1 if config['nvm_schema'] == extensions.SCHEMA else None}
+            'supported_keycodes': list(_supported_keycodes(tuple(sorted(features)), macro_layer_tap)),
+            'macro_layer_tap': macro_layer_tap,
+            'combo_actions': list(combo_actions), 'combos_version': 1, 'extensions_version': 1 if config['nvm_schema'] == extensions.SCHEMA else None}
 
 
 def _catalog_images(catalog):
@@ -175,24 +185,34 @@ def _catalog_images(catalog):
             type(catalog.get('profiles')) is list and type(catalog.get('settings_transitions')) is list,
             'Invalid trusted settings catalog')
     images = {}
-    for row in catalog['profiles']:
+    historical_profiles = catalog.get('historical_profiles', [])
+    require(type(historical_profiles) is list and all(type(row) is dict and
+            type(row.get('settings_identity')) is dict for row in historical_profiles),
+            'Invalid historical settings profiles')
+    for historical_row, row in ([(False, r) for r in catalog['profiles']] +
+                                [(True, r) for r in historical_profiles]):
         require(type(row) is dict, 'Invalid settings catalog row')
         value = row.get('settings_identity')
         if value is None:
             continue
         require(type(value) is dict, 'Invalid settings identity')
-        config = ak820_profiles.validate_configuration(row.get('configuration'))
-        expected = catalog_settings_identity(config, value.get('ihx_sha256'),
-                                             value.get('code_sha256'), value.get('definition_sha256'))
-        require(canonical(value) == canonical(expected), 'Settings identity fields/features/keycodes differ from configuration')
+        validator = (ak820_profiles.validate_source_configuration if historical_row else
+                     ak820_profiles.validate_configuration)
+        config = validator(row.get('configuration'))
+        expected = _settings_identity(config, value.get('ihx_sha256'),
+                                             value.get('code_sha256'), value.get('definition_sha256'),
+                                             combo_actions=value.get('combo_actions', []), macro_layer_tap=value.get('macro_layer_tap', False))
+        compared = {'combo_actions': [], 'macro_layer_tap': False, **value}
+        require(canonical(compared) == canonical(expected), 'Settings identity fields/features/keycodes differ from configuration')
         require(row.get('profile') == config['profile'] and row.get('identity', {}).get('ihx_sha256') == value['ihx_sha256']
                 and row['identity'].get('nvm_schema') == value['nvm_schema'],
                 'Settings identity differs from measured image')
         require(value['ihx_sha256'] not in images and
                 value['code_sha256'] not in {i['code_sha256'] for i in images.values()},
                 'Duplicate or ambiguous settings image')
-        images[value['ihx_sha256']] = {**value, 'build_id': value['nvm_schema']}
-    current_images = set(images)
+        images[value['ihx_sha256']] = {**expected, 'build_id': value['nvm_schema'], '_configuration': config}
+    current_images = {row['settings_identity']['ihx_sha256'] for row in catalog['profiles']
+                      if row.get('settings_identity') is not None}
     historical = catalog.get('historical_sources', [])
     require(type(historical) is list, 'Invalid historical settings sources')
     for source in historical:
@@ -210,6 +230,15 @@ def _catalog_images(catalog):
     return images
 
 
+def _image_configuration(image):
+    config = image.get('_configuration')
+    if config is None:
+        return ak820_profiles.configuration(image.get('profile'))
+    config = ak820_profiles.validate_source_configuration(config)
+    require(config['profile'] == image.get('profile'), 'Image configuration profile differs')
+    return config
+
+
 def _profile_images(profile):
     images = profile.get('compatible_images')
     if images is None:
@@ -220,13 +249,15 @@ def _profile_images(profile):
     for key, image in images.items():
         require(image.get('ihx_sha256') == key, 'Settings image index differs')
         if 'supported_keycodes' in image:
-            config = ak820_profiles.configuration(image.get('profile'))
-            expected = catalog_settings_identity(config, image.get('ihx_sha256'), image.get('code_sha256'),
-                                                 image.get('definition_sha256'))
-            require(canonical(image) == canonical({**expected, 'build_id': expected['nvm_schema']}),
+            config = _image_configuration(image)
+            expected = _settings_identity(config, image.get('ihx_sha256'), image.get('code_sha256'),
+                                                 image.get('definition_sha256'), combo_actions=image.get('combo_actions', []), macro_layer_tap=image.get('macro_layer_tap', False))
+            compared = {'combo_actions': [], 'macro_layer_tap': False,
+                        **{k: v for k, v in image.items() if k != '_configuration'}}
+            require(canonical(compared) == canonical({**expected, 'build_id': expected['nvm_schema']}),
                     'Settings image metadata differs from exact capability contract')
         if image.get('build_id') == extensions.SCHEMA:
-            config = ak820_profiles.configuration(image.get('profile'))
+            config = _image_configuration(image)
             require(image.get('extensions_version') == 1 and image.get('combos_version') == 1
                     and config['nvm_schema'] == extensions.SCHEMA
                     and set(image.get('features', ())) == set(config['optional_features'])
@@ -337,6 +368,13 @@ def combo_settings(nvm):
     return {'version': 1, 'entries_hex': entries}
 
 
+def _validate_combo_actions(combos, image):
+    for entry in combos['entries_hex']:
+        output = int.from_bytes(bytes.fromhex(entry)[8:10], 'little')
+        require(output != 0x7C73 or 'caps-word-toggle' in image.get('combo_actions', []),
+                'Caps Word Combo is unsupported by the exact image')
+
+
 def _combo_capable(profile, identity=None):
     image = _profile_images(profile)[identity or profile['ihx_sha256']]
     version = image.get('combos_version')
@@ -374,7 +412,7 @@ def settings_from_nvm(nvm, rgb_mode, *, combos=False):
 def _check_getters(api, settings, image=None):
     if 'extensions' in settings:
         require(image is not None, 'Missing typed image metadata')
-        config = ak820_profiles.configuration(image['profile'])
+        config = _image_configuration(image)
         features = config['optional_features']
         data = settings['extensions']
         ids = api.settings_query()
@@ -524,9 +562,26 @@ def validate_backup(path, profile, expected_identity=None):
     require(nvm == rom[pack.NVM_START:pack.NVM_END], 'Saved NVM differs from the full ROM')
     settings = _json(files['settings.json'])
     expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32], image=image), combos=_combo_capable(profile, source_ihx))
+    for item in expected['keys'] + expected['encoders']:
+        if macro_layer_tap_keycode(item['keycode']):
+            require(image_keycode_supported(item['keycode'], image,
+                    context='encoder' if 'direction' in item else 'matrix'),
+                    'Unsupported macro layer tap keycode in backup source')
+    for commands in expected['macros']['commands']:
+        for command in commands:
+            if command.get('command') in ('tap16', 'down16', 'up16'):
+                value = int.from_bytes(bytes.fromhex(command['operands_hex']), 'little')
+                require(not macro_layer_tap_keycode(value),
+                        'Unsupported macro layer tap keycode in backup source macro')
+    if 'combos' in expected:
+        _validate_combo_actions(expected['combos'], image)
     require(canonical(settings) == canonical(expected), 'Settings JSON differs from validated NVM or RGB contract')
     return {'path': path, 'identity': identity, 'manifest': manifest, 'settings': expected,
             'rom': rom, 'nvm': nvm, 'source_identity': (source_ihx, source_code)}
+
+
+def macro_layer_tap_keycode(code):
+    return type(code) is int and 0x40 <= code >> 8 <= 0x45 and 0xF0 <= (code & 255) <= 0xFF
 
 
 def keycode_supported(code, *, features=()):
@@ -564,7 +619,7 @@ def keycode_supported(code, *, features=()):
     if code < 0x4000:  # modifiers; mod-tap retains its existing tap-only fallback
         return basic(code & 255)
     if code < 0x5000:  # layer-tap retains tap-only fallback, known layers only
-        return (code >> 8) & 15 < 6 and basic(code & 255)
+        return macro_layer_tap_keycode(code) or ((code >> 8) & 15 < 6 and basic(code & 255))
     if code < 0x5200:
         return ((code - 0x5000) >> 5) < 6
     if (code & 0xFFE0) in (0x5200, 0x5220, 0x5240, 0x5260, 0x52C0):
@@ -578,6 +633,8 @@ def keycode_supported(code, *, features=()):
 
 def image_keycode_supported(code, image, *, context='matrix'):
     require(context in ('matrix', 'encoder', 'macro', 'macro-tap', 'macro-down', 'macro-up'), 'Unknown keycode source')
+    if macro_layer_tap_keycode(code) and (context != 'matrix' or image.get('macro_layer_tap') is not True):
+        return False
     if not keycode_supported(code, features=image.get('features', ())):
         return False
     if 'supported_keycodes' in image and code not in image['supported_keycodes']:
@@ -646,7 +703,7 @@ def plan_restore(backup, profile, target_nvm=None):
         for kind, feature in (('tap_dance','tap-dance'), ('key_overrides','key-overrides')):
             require(feature in target_features or extension_data[kind] == target_extensions[kind],
                     'Inactive module data differs: ' + kind)
-        writable_ids = ak820_profiles.configuration(target_image['profile'])['runtime_qmk_settings']
+        writable_ids = _image_configuration(target_image)['runtime_qmk_settings']
         for qsid in extensions.FIELDS:
             require(qsid in writable_ids or extension_data['qmk_settings'][str(qsid)] ==
                     target_extensions['qmk_settings'][str(qsid)], 'Inactive QMK setting differs')
@@ -655,6 +712,7 @@ def plan_restore(backup, profile, target_nvm=None):
     if _combo_capable(profile):
         target_combos = combo_settings(target_nvm)
         if 'combos' in settings:
+            _validate_combo_actions(settings['combos'], target_image)
             combo_entries = settings['combos']['entries_hex']
         else:
             require(all(data == bytes(10).hex() for data in target_combos['entries_hex']),

@@ -4,14 +4,14 @@
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+  "ihx_sha256": "34ad0613353bff0d74afe31e320de44b7a8c8f52e9181aa13d6c38bffce9bb98",
   "physical_device_commands": 0,
-  "policy_sha256": "c5cc202a5c4d346c6c6562e565e5556bab2c3f2d586f7f0eeddf86e351e2f01f",
+  "policy_sha256": "4a640a5dc4fc0e421f2e630ad5a8b9b9652a4d2129ccee39c951fffbe04fe9f2",
   "profile": "shortcuts",
-  "review_report": "audits/ci-speed-20261026/independent-review.md",
-  "scope": "Independent source review of session-local pass30 replay reuse, spawned parallel inspection, unchanged safety checks, bilingual documentation and refreshed offline policy bindings. Prior exact-image witnesses, program, host manifest and packing receipt are retained unchanged. Fresh local build and full qualification cover multios only. Committed-source admission, ten-profile GitHub qualification, native package builds, publication and hardware validation remain separate.",
+  "review_report": "audits/caps-word-combo-20261026/final-generated-admission-review.md",
+  "scope": "Independent source and generated-data review: exact-image canonical original-root measurements, current source hashes, runtime witnesses, packing and offline settings transitions. Source push only; no release or hardware validation.",
   "status": "passed",
-  "symbols_sha256": "233fc710daf734d1d8facbfa8d974b80e29e61877e42cd0052553ff7bf3b1e56",
-  "test_source_snapshot_sha256": "bd8ce77746a7dee28e55792a20a7a35459a755075c09df9890a8b39e88ee30c2"
+  "symbols_sha256": "576118a4733c1c82060e56b96e603df5a3e9c1afcbcc821fcbf79009679eaf69",
+  "test_source_snapshot_sha256": "6c1ccb04abb429fd93f9521fcb3a7aa3433b30d785b3728e0964ff878c47721c"
 }
 ```

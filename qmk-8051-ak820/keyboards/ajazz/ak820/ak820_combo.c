@@ -14,7 +14,8 @@
  * also allow modifiers. No generated record re-enters this engine. */
 #define COMBO_INPUT(code) ((code) >= KC_A && (code) <= KC_EXSEL)
 #define COMBO_OUTPUT(code) \
-    ((code) < QK_MOD_TAP && (COMBO_INPUT((uint8_t)(code)) || ((uint8_t)(code) >= KC_LEFT_CTRL && (uint8_t)(code) <= KC_RIGHT_GUI)))
+    ((code) == QK_CAPS_WORD_TOGGLE || \
+     ((code) < QK_MOD_TAP && (COMBO_INPUT((uint8_t)(code)) || ((uint8_t)(code) >= KC_LEFT_CTRL && (uint8_t)(code) <= KC_RIGHT_GUI))))
 static struct { uint8_t a, b; uint16_t output; } combos[VIAL_COMBO_ENTRIES];
 static keyrecord_t saved;
 static uint8_t first = NONE, second = NONE;

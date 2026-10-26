@@ -23,14 +23,17 @@ class Trace:
     def capture_extra(self):
         self.extra_address=self.fw.address(next(n for n in self.fw.symbols if n.startswith('_host_extra_send_report_100')))
         self.commands += [f'break {self.fw.address("_send_extra"):#x}',f'commands 2 "echo @@EXTRA; dump xram {self.extra_address:#x} {self.extra_address+2:#x} 16; fill xram 0x2201 0x2203 0x12; run"']
-    def macro(self,body):
+    def load_macro(self,body):
         stream=bytes(body)+bytes(packer.MACRO_COUNT)
         length=packer.macro_stream_length(stream)
         if length>packer.MACRO_SIZE:raise ValueError('Macro fixture exceeds published storage')
         self.macro_fixtures.append({'logical_length':length,'stream_sha256':hashlib.sha256(stream).hexdigest(),'grammar_validated':True,'busy':0,'metadata_address':packer.NVM_START+packer.MACRO_BUSY_ADDR,'stream_address':packer.NVM_START+packer.MACRO_ADDR})
         self.commands += [linked.memory('rom',packer.NVM_START+packer.MACRO_BUSY_ADDR,[0,length&255,length>>8])]
         self.commands += [linked.memory('rom',packer.NVM_START+packer.MACRO_ADDR+i,stream[i:i+32]) for i in range(0,length,32)]
-        self.commands += self.fw.call('_ak820_macro_init')+['timer set macro 0','timer start macro']+self.fw.call('_dynamic_keymap_macro_send',0)+['timer stop macro','timer get macro']
+        self.commands += self.fw.call('_ak820_macro_init')
+    def macro(self,body):
+        self.load_macro(body)
+        self.commands += ['timer set macro 0','timer start macro']+self.fw.call('_dynamic_keymap_macro_send',0)+['timer stop macro','timer get macro']
     def check_memory(self,label,symbol,offset,expected):
         # Reuse observation parsing with a stable synthetic symbol alias.
         alias=f'_fixture_{label}';self.fw.symbols[alias]=self.fw.address(symbol)+offset
@@ -110,6 +113,40 @@ def cases(fw):
         t=Trace(fw,f'mt-mask-{mask}');t.map((0,0),0x2004|(mask<<8));t.event((0,0),1,100);t.tick(300);t.check('hold',packet((mask<<4)&255 if mask&16 else mask));t.event((0,0),0,301);t.check('release',packet());out.append(t.run())
     for layer in range(6):
         t=Trace(fw,f'lt-target-{layer}');t.map((0,0),0x4004|(layer<<8));t.event((0,0),1,100);t.tick(300);t.check('hold',layer=1<<layer);t.event((0,0),0,301);t.check('release',layer=0);out.append(t.run())
+    # Layer-tap macro uses an extended Vial TAP of encoded Alt+Shift+A.
+    macro_body=[1,5,4,6]
+    macro_tap_reports=[packet(6),packet(6,4),packet(6),packet()]
+    for duration,start in [(199,100),(200,100),(100,65500)]:
+        t=Trace(fw,f'macro-layer-tap-{duration}-{start}');t.map((0,0),0x41f0);t.load_macro(macro_body)
+        t.event((0,0),1,start);t.tick((start+duration)&65535);t.check('decision',packet(),layer=0 if duration<200 else 2)
+        t.event((0,0),0,(start+duration)&65535);t.check('released',packet(),layer=0)
+        r=t.run();r['expected_hid_send_trace']=macro_tap_reports if duration<200 else []
+        r['pass_'] &= r['hid_send_trace']==r['expected_hid_send_trace'];out.append(r)
+    # A second key on layer A interrupts the pending tap and resolves its hold.
+    t=Trace(fw,'macro-layer-tap-layer-a-caps-word');t.map((0,0),0x41f0);t.map((0,1),0x7c73,1);t.map((0,2),4,1);t.load_macro(macro_body)
+    t.event((0,0),1,100);t.event((0,1),1,110);t.check('layer-a-caps-word-key',layer=2);t.event((0,1),0,111);t.event((0,2),1,112);t.check('capital-letter',packet(2,4),layer=2)
+    t.event((0,2),0,113);t.event((0,0),0,114);t.check('released-caps-word-shift',packet(2),layer=0)
+    t.map((0,3),0x2c);t.event((0,3),1,115);t.event((0,3),0,116);t.check('space-ends-caps-word',packet(),layer=0)
+    r=t.run();r['pass_'] &= not any(p[0]==6 and p[2]==4 for p in r['hid_send_trace']);out.append(r)
+    # The accepted release uses the press-time cached dual-role value.
+    t=Trace(fw,'macro-layer-tap-captured-release');t.map((0,0),0x41f0);t.load_macro(macro_body);t.event((0,0),1,100);t.map((0,0),0x42f1);t.event((0,0),0,110);r=t.run()
+    r['expected_hid_send_trace']=macro_tap_reports;r['pass_'] &= r['hid_send_trace']==r['expected_hid_send_trace'];out.append(r)
+    # Clear and Vial unlock cancellation cannot turn a late release into a macro.
+    for unlock in (False,True):
+        t=Trace(fw,f'macro-layer-tap-cancel-{unlock}');t.map((0,0),0x41f0);t.load_macro(macro_body);t.event((0,0),1,100)
+        t.commands+=vial(fw,6) if unlock else fw.call('_clear_keyboard')
+        if unlock:t.commands+=vial(fw,8)
+        t.event((0,0),0,110);t.check('no-layer',layer=0);r=t.run();r['pass_'] &= not any(p[0]==6 and p[2]==4 for p in r['hid_send_trace']);out.append(r)
+    # Encoder directions are non-matrix sources and must not acquire the role.
+    for row in (253,252):
+        address=0xcd40+(0 if row==253 else 2);t=Trace(fw,f'macro-layer-tap-encoder-{row}');t.commands += [linked.memory('rom',address,[0x41,0xf0])]
+        t.event((row,0),1,100);t.tick(300);t.event((row,0),0,301);t.check('no-layer',layer=0);r=t.run();r['pass_'] &= r['hid_send_trace']==[];out.append(r)
+    # Macro-generated dual-role bytes bypass physical role admission; Repeat
+    # must not learn or replay the macro-on-tap source.
+    t=Trace(fw,'macro-layer-tap-generated-and-repeat');t.map((0,0),0x41f0);t.map((0,1),0x7c79);t.load_macro(macro_body)
+    t.event((0,0),1,100);t.event((0,0),0,110);t.event((0,1),1,120);t.event((0,1),0,121);r=t.run()
+    r['expected_hid_send_trace']=macro_tap_reports;r['pass_'] &= r['hid_send_trace']==r['expected_hid_send_trace'];out.append(r)
+    t=Trace(fw,'macro-generated-layer-tap-is-not-recursive');t.macro([1,5,0xf0,0x41]);t.check('no-output',packet(),0);r=t.run();r['pass_'] &= r['hid_send_trace']==[];out.append(r)
     t=Trace(fw,'nested-modtaps');t.map((0,0),0x2104);t.map((0,1),0x2205);t.event((0,0),1,100);t.event((0,1),1,101);t.check('first-committed',packet(1));t.tick(301);t.check('both-held',packet(3));t.event((0,0),0,302);t.check('second-survives',packet(2));t.event((0,1),0,303);t.check('empty',packet());out.append(t.run())
     t=Trace(fw,'nested-frozen-remap');t.map((0,0),0x4104);t.map((0,1),5);t.map((0,1),6,1);t.map((0,0),1,1);t.event((0,0),1,100);t.event((0,1),1,110);t.check('lookup-after-hold',packet(0,6),2);t.map((0,0),0x4204);t.event((0,0),0,120);t.check('frozen-lt-release',packet(0,6),0);t.map((0,1),7);t.event((0,1),0,130);t.check('frozen-basic-release',packet());out.append(t.run())
     t=Trace(fw,'duplicate-rollover-promotion')

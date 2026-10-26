@@ -21,8 +21,8 @@ class WindowsInstallerBuildTests(unittest.TestCase):
             required.extend(builder.PUBLIC_ASSETS)
             contexts = []
             for profile in ('main','game','mmo','typing','code','pointer','onehand','creative','shortcuts','multios'):
-                bundle = root / 'releases/beta2' / profile
-                required.extend(f'releases/beta2/{profile}/{name}' for name in files + ['installer-release.json','approved-release.json'])
+                bundle = root / 'releases/beta3' / profile
+                required.extend(f'releases/beta3/{profile}/{name}' for name in files + ['installer-release.json','approved-release.json'])
                 contexts.append(SimpleNamespace(profile=profile, bundle=bundle, approval=bundle/'approved-release.json',
                     manifest={'install_modes': ['permanent','trial'], 'files': {name: {} for name in files}}))
             for name in required + ['evidence/oem-backup/before-full-rom.bin', 'host/runs/private.bin']:
@@ -34,8 +34,8 @@ class WindowsInstallerBuildTests(unittest.TestCase):
                 self.assertEqual(builder.package_files(), sorted(set(required)))
 
     def test_old_trial_only_release_is_not_packaged_as_permanent(self):
-        context = SimpleNamespace(profile='main', bundle=builder.ROOT/'releases/beta2/main',
-            approval=builder.ROOT/'releases/beta2/main/approved-release.json', manifest={'trial_only': True})
+        context = SimpleNamespace(profile='main', bundle=builder.ROOT/'releases/beta3/main',
+            approval=builder.ROOT/'releases/beta3/main/approved-release.json', manifest={'trial_only': True})
         with patch.object(builder.ak820, 'release_contexts', return_value=(context,)):
             with self.assertRaisesRegex(ValueError, 'permanent'):
                 builder.package_files()
@@ -152,7 +152,7 @@ class WindowsInstallerBuildTests(unittest.TestCase):
                     builder.verify_collected(root / 'AK820', ['release/file.bin'])
 
     def _synthetic_package(self, root):
-        names = ['AK820.cmd', 'releases/beta2/main/installer-release.json', 'releases/beta2/main/approved-release.json']
+        names = ['AK820.cmd', 'releases/beta3/main/installer-release.json', 'releases/beta3/main/approved-release.json']
         for name in names + ['AK820.cmd']:
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -173,7 +173,7 @@ class WindowsInstallerBuildTests(unittest.TestCase):
             root = Path(temporary)
             names, hashes, output = self._synthetic_package(root)
             archive = Path(str(output) + '.zip')
-            context = SimpleNamespace(profile='main', bundle=root/'releases/beta2/main')
+            context = SimpleNamespace(profile='main', bundle=root/'releases/beta3/main')
             with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=(context,)), patch.object(builder.sys, 'version', '3.12.0'), \
                  patch.object(builder.subprocess, 'run') as run:
                 builder.write_package(output, archive, names, hashes)
@@ -198,7 +198,7 @@ class WindowsInstallerBuildTests(unittest.TestCase):
             root = Path(temporary)
             names, hashes, output = self._synthetic_package(root)
             archive = Path(str(output) + '.zip')
-            context = SimpleNamespace(profile='main', bundle=root/'releases/beta2/main')
+            context = SimpleNamespace(profile='main', bundle=root/'releases/beta3/main')
             with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=(context,)), patch.object(builder.subprocess, 'run', side_effect=[None, None, RuntimeError('Tk failed')]):
                 with self.assertRaisesRegex(RuntimeError, 'Tk failed'):
                     builder.write_package(output, archive, names, hashes)
@@ -214,7 +214,7 @@ class WindowsInstallerBuildTests(unittest.TestCase):
                 archive = Path(str(output) + '.zip')
                 outcomes = [None, None, None]
                 outcomes[failing_call] = RuntimeError('smoke failed')
-                context = SimpleNamespace(profile='main', bundle=root/'releases/beta2/main')
+                context = SimpleNamespace(profile='main', bundle=root/'releases/beta3/main')
                 with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=(context,)), patch.object(builder.subprocess, 'run', side_effect=outcomes):
                     with self.assertRaisesRegex(RuntimeError, 'smoke failed'):
                         builder.write_package(output, archive, names, hashes)
@@ -229,7 +229,7 @@ class WindowsInstallerBuildTests(unittest.TestCase):
             def mutate_on_final_smoke(*args, **kwargs):
                 if args[0][1] == '--self-test':
                     (root / names[0]).write_bytes(b'changed')
-            context = SimpleNamespace(profile='main', bundle=root/'releases/beta2/main')
+            context = SimpleNamespace(profile='main', bundle=root/'releases/beta3/main')
             with patch.object(builder, 'ROOT', root), patch.object(builder.ak820, 'release_contexts', return_value=(context,)), patch.object(builder.subprocess, 'run', side_effect=mutate_on_final_smoke):
                 with self.assertRaisesRegex(RuntimeError, 'changed during build'):
                     builder.write_package(output, archive, names, hashes)

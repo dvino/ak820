@@ -22,8 +22,8 @@
       "size": 4191
     },
     "qmk-8051-ak820/util/ak820_profiles.py": {
-      "sha256": "d86bb313a4beb53cdb81cadc17c4dace81ba47dbb42fb1a9ad5670a238f0639c",
-      "size": 11360
+      "sha256": "485b8b40d4b78a80e568018ec7736700a11ea460739f4bc8f96a212ef1e056a2",
+      "size": 13279
     },
     "qmk-8051-ak820/util/ak820_release_manifest.py": {
       "sha256": "a1cfbc444607119eda9e1facbb3a7401b199961b42f40d5d93e1e17ba3944820",
@@ -46,12 +46,12 @@
       "size": 6340
     },
     "tools/ak820_device_protocol.py": {
-      "sha256": "1e4018b75793ecd27876e4b72ad733511f01356a59d7a800868f5dd2ea25137b",
-      "size": 28975
+      "sha256": "4e8c584bfa2a6d2f8c7575f5081fe2ba1e2e2768719ecc87d862809a26095528",
+      "size": 29020
     },
     "tools/build_ci_release.py": {
-      "sha256": "5d88cd4435ad7f6827649b7057a15dc79b393d93fd856c2b9436ee8f118f7acc",
-      "size": 35490
+      "sha256": "89b72e2860e4ada4a2c1f00984beeb623bfa9d0c63278954769ab51d3d67bfe3",
+      "size": 35652
     },
     "tools/build_linux_installer.py": {
       "sha256": "d4cbab8efec02ab47d70b229f34ec695f2b1b85c06d6a0c74742e9af603545d2",
@@ -70,7 +70,7 @@
       "size": 339
     },
     "tools/installer/ak820.py": {
-      "sha256": "45461adb311e634f44d94af7295e7cbda08a79470b3b9c34a145ec130297b17c",
+      "sha256": "6ce93cce23a6b8fc5be0032ad46eb7c7034cc23131de8a1c5985354ada474c22",
       "size": 57815
     },
     "tools/installer/gui.py": {
@@ -82,7 +82,7 @@
       "size": 21250
     },
     "tools/installer/profile-catalog.json": {
-      "sha256": "c37ef159ad685d211e3e19509183346b65143431964cf2dd4b76e8d6b3becf5d",
+      "sha256": "2142f639846930dd267556d5218c12743727e73f9e56ecc2a1d974bcf0758423",
       "size": 7176
     },
     "tools/installer/requirements-build-linux.txt": {
@@ -98,26 +98,26 @@
       "size": 15
     },
     "tools/installer/settings-catalog.json": {
-      "sha256": "93cb88220260b3f3cd0f619e95084064819b9a05022d1521808a15f49e7686d7",
-      "size": 2525336
+      "sha256": "058d7b73b8baf009a784ce81d1faa6d8a488b0159aa164fea92650ffe936f4ab",
+      "size": 5033175
     },
     "tools/installer/settings_backup.py": {
-      "sha256": "1353bc56e16db36d48545b2712c6971910201da8797dd140df1a153a3a2472b2",
-      "size": 48481
+      "sha256": "535c2d0a0639f8e673afaa15a0c6b9e6264c33737fb1b5aadac2b2c0764f97ba",
+      "size": 52143
     },
     "tools/installer/settings_workflow.py": {
       "sha256": "739b941cb1724fdf08b9fb5d798adec507260c22a2d97cdcd02ce7f1247bb26f",
       "size": 12798
     }
   },
-  "packing_receipt_sha256": "bfd58ac167634eac70006485b9a476d9c6826a303cb6c14523ab8490c6773c9a",
+  "packing_receipt_sha256": "987fc6d57e6da735a63f377b316d66f0fe182b921d985a6bd427dbfea2879cea",
   "program": {
-    "ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+    "ihx_sha256": "34ce9c0f2a138c5df1bbe8b8eb845bbeeac3497e6b29079243562c57b74a6f5a",
     "keyboard": "ajazz/ak820",
     "keymap": "vial",
     "schema": 532483,
     "sdcc_version": "4.6.0",
-    "symbols_sha256": "5720671e0fa9c10a92f661b615a89abcdbf93921894e7a7a3c11b011e6be926d"
+    "symbols_sha256": "429a5c585e57c5a6e86f004353312bab9dbb6df46d0839be8f78c797e2235e6c"
   },
   "source_files": {
     ".github/workflows/firmware-catalog.yml": {
@@ -125,7 +125,7 @@
       "size": 2724
     },
     ".github/workflows/windows-installer.yml": {
-      "sha256": "f2c1cbe04020880b57fad231707e63eb5c15e7ccd2f2d82cc5eb529070a0cbc0",
+      "sha256": "fbbedc41f2626865be1a29babac088d1efdba00a91688314b15ee43ad20c6e7a",
       "size": 28386
     },
     "AK820.cmd": {
@@ -137,64 +137,100 @@
       "size": 515
     },
     "README.md": {
-      "sha256": "638496a4ff0b5bf1461bfaa254c4325155ad0134a59c43c47fc8a8599349053c",
-      "size": 5601
+      "sha256": "49660a33626837cb9315c9cf0166d8be51da700492d7f68912cf274a689e535b",
+      "size": 5891
+    },
+    "audits/caps-word-combo-20261026/capture_settings_tests.py": {
+      "sha256": "3a33ec9a15aa496ed8734bf9756f1c8d2c5cee2c0becb6d9eddf6a491f2a4baa",
+      "size": 1764
+    },
+    "audits/caps-word-combo-20261026/check_module_matrix.py": {
+      "sha256": "3fb3df897f17d71e91c6007fafdd0277511212a23226fac84415e67812e36ca4",
+      "size": 1468
+    },
+    "audits/caps-word-combo-20261026/historical-catalog.json": {
+      "sha256": "93cb88220260b3f3cd0f619e95084064819b9a05022d1521808a15f49e7686d7",
+      "size": 2525336
+    },
+    "audits/caps-word-combo-20261026/measure_origin.py": {
+      "sha256": "114c3eb7262eaadba6800a1b54b432765141fac82091b416e655be76ee2ed80e",
+      "size": 4902
+    },
+    "audits/caps-word-combo-20261026/module-matrix-check.json": {
+      "sha256": "03115efaa80be65a29e02e29c6447ada6e3096cbd9424b03d6439661f86727b7",
+      "size": 806
+    },
+    "audits/caps-word-combo-20261026/origin-measurements/creative/binding.json": {
+      "sha256": "bbf605e8584e07671725a91bd3d3342ce328e8c647353c8436176e88b7088d2a",
+      "size": 840699
+    },
+    "audits/caps-word-combo-20261026/origin-measurements/creative/matrix.json": {
+      "sha256": "e942f129b9cb3a4589346e6f029a75df5439bef5b666e04c7d3c067b8b1e4ba7",
+      "size": 322261
+    },
+    "audits/caps-word-combo-20261026/origin-measurements/creative/measurement.log": {
+      "sha256": "ca1eb512b950ef8bad1191ef7a503984113bf9e5ca8eb4750d8baba4f15c6bf9",
+      "size": 156
+    },
+    "audits/caps-word-combo-20261026/packing-preflight.json": {
+      "sha256": "52cdf1e5ad735cc82ecd6afc46650f896e7aa21aaf28aea21d4af2d285d26f7a",
+      "size": 15117
+    },
+    "audits/caps-word-combo-20261026/prepare_release.py": {
+      "sha256": "f5b09cb533327c03599622105c160e6e835ae0af0c3957852dad06e41bf6c270",
+      "size": 30067
+    },
+    "audits/caps-word-combo-20261026/profiles/creative/alpha2-preflight.json": {
+      "sha256": "ac20307046d8271e87ddfb1307eb3f308253cee3272a71a4f8fd7f98f14ee325",
+      "size": 560
+    },
+    "audits/caps-word-combo-20261026/profiles/creative/irq.json": {
+      "sha256": "30c6a07a9f7fcd0e89c2beddee8d2132d4823ccfe1010ae0dbad0fc9981b4485",
+      "size": 47471
+    },
+    "audits/caps-word-combo-20261026/profiles/creative/stack.json": {
+      "sha256": "ce67acfd0c7dd495a3854d9afc76eac1c62a480cefb24d86fba479e9b8886fd1",
+      "size": 318669
+    },
+    "audits/caps-word-combo-20261026/profiles/creative/startup.json": {
+      "sha256": "8c6dea6e4a2d076e936f8fba7ff81cf49d4c0a59afed0e29c8a9ee58081f0c67",
+      "size": 9997
+    },
+    "audits/caps-word-combo-20261026/profiles/creative/transition.json": {
+      "sha256": "b052d48b2b2053d4ad65d4a85417700b99137de6deff3d11cc1e86038b9dfcdf",
+      "size": 40136
+    },
+    "audits/caps-word-combo-20261026/settings-tests.log": {
+      "sha256": "235eebddc84ccae9789eb07915062a077277292a5392645f4a53a4cfea1690df",
+      "size": 28557
+    },
+    "audits/caps-word-combo-20261026/test_measure_origin.py": {
+      "sha256": "e9e5e4c5d1bdac7c491740592ec01d4220ee16dae3dfee6b0e09d21c6ebc557d",
+      "size": 3175
+    },
+    "audits/caps-word-combo-20261026/test_prepare_paths.py": {
+      "sha256": "674c79a03efdfa1d8fafd66a3cd2a7ee8780acbd5156f919ea400967fa320cb5",
+      "size": 1976
+    },
+    "audits/caps-word-combo-20261026/transition-preflight.json": {
+      "sha256": "d167e420dc2908a8b66f739bd0be16f8f40041366df47f0d5204be0c7dae577a",
+      "size": 255417
     },
     "audits/rc6/alpha3-transition-20261024/verify_transition.py": {
       "sha256": "44c3602ea7e7f9ca0b924ed1663b942442a8f2e50005586d08b11d211b231165",
       "size": 1866
     },
-    "audits/rc6/beta2-release-20261025/prepare_profile_policy.py": {
-      "sha256": "4994125b4f6c9c9822e3e9af158dc427d5281317745bc84981df9c522565ebda",
-      "size": 10157
-    },
-    "audits/rc6/beta2-release-20261025/profiles/creative/alpha2-preflight.json": {
-      "sha256": "a87558c92471d67399844988f04b5b150ebd3f93a4e847b118b43873f40a3002",
-      "size": 527
-    },
-    "audits/rc6/beta2-release-20261025/profiles/creative/irq.json": {
-      "sha256": "30d0b32bf6042e183a94c6a3b920bae225ccd4db723f453954e4ff1e43568ab2",
-      "size": 47471
-    },
-    "audits/rc6/beta2-release-20261025/profiles/creative/stack.json": {
-      "sha256": "c402e3dd4579b44ec7e96c18f449c1b720637d4089607a2c33344860b696d28f",
-      "size": 317839
-    },
-    "audits/rc6/beta2-release-20261025/profiles/creative/startup.json": {
-      "sha256": "221742ddf8c1c15ee7f76c8d8d6c28ecd0712a60ac9f611b483a5919c0e35228",
-      "size": 10007
-    },
-    "audits/rc6/beta2-release-20261025/profiles/creative/transition.json": {
-      "sha256": "32d760c35632cc0df7346814bdc07b840edb6332d47c30349f17dc78ef02037c",
-      "size": 9901
-    },
-    "audits/rc6/beta2-release-20261025/settings-final-tests.log": {
-      "sha256": "65836ea2d18425aef5cfb5f6db4374f0dfc9a6920acf1758a3dfaaaaefc29731",
-      "size": 11373
-    },
-    "audits/rc6/beta2-release-20261025/transition-preflight.json": {
-      "sha256": "fef7c6371c4e4d3c53a56d6ff104e9cad0dba3fa9b0eeb5903e173b348346836",
-      "size": 72928
-    },
-    "audits/rc6/beta2-release-20261025/verify_transition.py": {
-      "sha256": "f92ea6d06654fc1005894eea3b0fb6b59442ce02fef0f335ea48c197284e6edb",
-      "size": 2522
-    },
     "ci/profiles/creative/release-safety.json": {
-      "sha256": "bcdadd739df0d0d451b42dbd0f8792f972180cf121e1bce2f2aa62d3f025cdad",
-      "size": 12386
+      "sha256": "994308af64e4156f3f1e698918deff7bd673ed71149f72d16346d85fb690597c",
+      "size": 52634
     },
     "docs/BUILD-PROFILES.md": {
       "sha256": "2218d625b7fabddd356b743d8eae23e44479e1a4e0dc0f5fd9c917754cc54640",
       "size": 1605
     },
-    "docs/CI.md": {
-      "sha256": "01bad957eed5f3e8cfbef09e707e66036b059d164975ae018166e0367f047a06",
-      "size": 7166
-    },
     "docs/COMBOS.md": {
-      "sha256": "e0677866ffdc9a4b4352cc62a5b7fcef4db1e74d372f7e3281a7ad927db6f690",
-      "size": 2859
+      "sha256": "0474268458256c4fa5a939813771916139609413294fc0b2ba81f311820ada48",
+      "size": 3158
     },
     "docs/COMPACT-DYNAMIC-MACROS.md": {
       "sha256": "e1da1546da0787230458764931264b11423a878db88f98c61f951c691b97a337",
@@ -217,35 +253,35 @@
       "size": 3535
     },
     "docs/COMPACT_AUTOSHIFT.md": {
-      "sha256": "8ad750adb5061ccfd710e7769cb644c448a8d91aa259d619dc24b3f65adc8053",
-      "size": 3128
+      "sha256": "e9b2ec1784d24ee05febcaea7b195c81f0e633e7f59f8f931b54ab5593d61085",
+      "size": 3121
     },
     "docs/CONFIGURATION.md": {
-      "sha256": "7d769e6a320e2ad1d0692aff2aa1459c2ff2f4fff0f41e2340a8184de13cfaa1",
-      "size": 12532
+      "sha256": "60e4a33d90232b67f6601db028223656a850b778211d65088eac3b2c535cff8e",
+      "size": 12838
     },
     "docs/FEATURES.md": {
-      "sha256": "0540260e327a5b99acaa0305836b233dffcf1aee71f16a22858d1e421ba01c70",
-      "size": 7125
+      "sha256": "3b9b88e8f4d2999c7c51858a63a16d68467e9c680f39f37af3f36c3e50e679e4",
+      "size": 7289
     },
     "docs/GUI-CONTROL.md": {
-      "sha256": "6f73150570fc415a3dd6fd4faf4fe57a3f79a76679e1d40074e6267452fa95ce",
-      "size": 2397
+      "sha256": "ce33955346fcf87d0c2bce78d69879e3ad581c8c9f77a5a44121f0a824b98857",
+      "size": 2359
     },
     "docs/INDICATORS.md": {
       "sha256": "e42d3ae7448949e84cee9f3e7ff3d62fc2a841025429776036c0e74ceb62f796",
       "size": 2298
     },
     "docs/INSTALL.md": {
-      "sha256": "6f1aa3a5718497524134d1b0efefd06d2201a3a6b59afb483ce7c7b93ac2ca4d",
-      "size": 8891
+      "sha256": "09371c7fa2e04e3175bd66496321e98a66bb5c4087e5818dd01c1a489dd78144",
+      "size": 9253
     },
     "docs/MAC-PC.md": {
       "sha256": "580e140d492a5b253e0d2ab3cd152baca0378601b4dcdc5dfa982c0a63300e4d",
       "size": 1853
     },
     "docs/MODULE-MATRIX.md": {
-      "sha256": "df4374bb205d388f5d5b08a08782eaa65a8ced02f196cb714384020c328a024b",
+      "sha256": "786909088e22372475bc3daf07125c2ebec43438f7a9fc8f2aacfdfb76cf17d2",
       "size": 2477
     },
     "docs/MODULE-STORAGE.md": {
@@ -257,16 +293,16 @@
       "size": 3478
     },
     "docs/SETTINGS-BACKUP.md": {
-      "sha256": "254cdd97c4a2d134476738077b5151b1edff0d946d83cb09e997fb2e8637acc8",
-      "size": 4791
+      "sha256": "ef69da1c6518d928a62f184f5c59d3177f9e99b2495d444e0073791cbfc9c709",
+      "size": 5173
     },
     "docs/STATUS.md": {
-      "sha256": "9ab573a45f6622c18c48bae1b21fb58a19fa7b4a2ee3f0cabbd92947c6c3205e",
-      "size": 6157
+      "sha256": "7666e74c012ecfa37b3dc92020c02cba3f65b712691a429df2de582016185c10",
+      "size": 7600
     },
     "docs/TAP-HOLD.md": {
-      "sha256": "1fa30921d5f7f7eee97d481b2f59337703d14a86a298f9e94617ff502263f57c",
-      "size": 2278
+      "sha256": "41073eb3898d523c4714b1f6c239da741bc7fc25484ed58c46405cdb2a973bd0",
+      "size": 3626
     },
     "docs/images/banner.webp": {
       "sha256": "3bda0d53c3c604a8a88d0f0b5ba56fd84b68d8a0c846ff0d3be6dcad56d3b9d6",
@@ -285,60 +321,56 @@
       "size": 178980
     },
     "docs/profiles/README.md": {
-      "sha256": "b53335a44575a6fb678375d16390d568bf14f12147e5aaf39ada6ca904b6c7f3",
-      "size": 3101
+      "sha256": "572a1676cca84ba0748081e9fb64625f909b731e565fb837e41ddf4d0a7a2672",
+      "size": 3149
     },
     "docs/profiles/code.md": {
-      "sha256": "4e6abc4869679341c1e26d2274631f690061b00d10f29ac9135829d695d810ea",
-      "size": 1473
+      "sha256": "dcf045af2cdab7e1b8e39cdce630ed56da039167ba2dd3ee8dfebc5837b5c05a",
+      "size": 1502
     },
     "docs/profiles/creative.md": {
-      "sha256": "fec0137750ab6cc3c52fbb09edf8e01bf363b75add91ecf9066336e58d68e21a",
-      "size": 1424
+      "sha256": "f64fa6adaf99c6fde2211f421803dde6dab33e0be40e35278295abd577172353",
+      "size": 1453
     },
     "docs/profiles/game.md": {
-      "sha256": "09a7cca9ca2c1818d6fd554be29a01c6aed7e8027d885232894210128e1e8e5b",
-      "size": 1227
+      "sha256": "789d82d6753ade4bbdbeaaa7c0795ae0826ddbdde48ce969b1df64508f986d6e",
+      "size": 1256
     },
     "docs/profiles/main.md": {
-      "sha256": "d99e15827d6bf4a2b009aba68ff187879ca2fa7aed5971b6b334ea62f27b0a64",
-      "size": 1213
+      "sha256": "6f470722d10b75b64b156d972d047a64ff093e15d85b6e40248f2bfbc6eb6b8f",
+      "size": 1302
     },
     "docs/profiles/mmo.md": {
-      "sha256": "d07f40954ef564dc457e137cec678373d801b8cf68b49f474c3ae4d3c4b97b28",
-      "size": 1487
+      "sha256": "809ef54859001612a532af825d08046634e961c90a95b0b4679883a2008a84da",
+      "size": 1516
     },
     "docs/profiles/multios.md": {
-      "sha256": "e2d39ead19b9ea8ec3255f78649308967c2a5b4f77a6e86760940bfcdc26068b",
-      "size": 1463
+      "sha256": "5f20715466542ff1ac9eb754ef70a78faad9ba4bd8414967d953d08ca8db2b04",
+      "size": 1492
     },
     "docs/profiles/onehand.md": {
-      "sha256": "88fab4ba22a2e9ffe3fd3688f034a052a45f65cc4a35fef89cd653f6087c363d",
-      "size": 1582
+      "sha256": "6594759c208f9a24ce7e3523ec013c6f901b3e12ba9f98809f93ebb101afd555",
+      "size": 1611
     },
     "docs/profiles/pointer.md": {
-      "sha256": "de69928334f528686c7fc2ef8b1a8dd17fab4bacb3da30aaf0b3901152669ddf",
-      "size": 1368
+      "sha256": "0e444aa0f1261138ce3d7ad76554484d8bfeb12d67a9dba236f9439a07d0598b",
+      "size": 1397
     },
     "docs/profiles/shortcuts.md": {
-      "sha256": "5f910ca051c278a6c1a405365d601fe422ec441dbe4a7728f3ce72ba644714e5",
-      "size": 1462
+      "sha256": "27c5c28f1d3015ae0287a5ba0177cc2cf3ab0bbfe7f322573de3ceb0a31fe4c8",
+      "size": 1491
     },
     "docs/profiles/typing.md": {
-      "sha256": "2d77c88b59a8cbc472ae997bbe75308c73aee5b6df02e986ee8baa0c6a7d5096",
-      "size": 1412
+      "sha256": "5818ca610e11c3f1069a59ec758ecb1016e97daedd831f5f03435fb8ff6cbf25",
+      "size": 1376
     },
     "docs/ru/BUILD-PROFILES.md": {
       "sha256": "e4e5061c8464b5c870d68cd11f8661ae8f64f591c22a169097b4915782a61779",
       "size": 2591
     },
-    "docs/ru/CI.md": {
-      "sha256": "36b7651a1fde6ec0fd4db2044376e1ec892b7da2426c37b4a95f137b9231d3fd",
-      "size": 11742
-    },
     "docs/ru/COMBOS.md": {
-      "sha256": "67e376912a3f4617cf9e5f401214ae0b87087b76a7ce024071b5997fb6963630",
-      "size": 5007
+      "sha256": "8764b78e69bede21d09fb4f348dde2901ce3a3c26c7167f1e98abd45c46f90d5",
+      "size": 5510
     },
     "docs/ru/COMPACT-DYNAMIC-MACROS.md": {
       "sha256": "c87fd15203bdd33996026d09b0d475de0c7cbf3842a24f56f98707393c7f6c83",
@@ -361,35 +393,35 @@
       "size": 6420
     },
     "docs/ru/COMPACT_AUTOSHIFT.md": {
-      "sha256": "023e0e925717148ade95b965a19b17f0885a5102977660eda316585744ea66fb",
-      "size": 5163
+      "sha256": "685688cd7bb61e7f9639dfe4f5dba50e13675aa0d68d7853614f50e5e76b931e",
+      "size": 5143
     },
     "docs/ru/CONFIGURATION.md": {
-      "sha256": "9f4769f13d96e63d01c625052278027a83319ecd57330d36684af3c0650da1a3",
-      "size": 22129
+      "sha256": "6184cfa5063d09333a6788bb1b9890c738eebc11412a988dfb56aae3ca184bf6",
+      "size": 22740
     },
     "docs/ru/FEATURES.md": {
-      "sha256": "b79f6ed80a54cf7e4c7b5909fb1133fcbd1c1cee18d205115afe3258b31b2e91",
-      "size": 12233
+      "sha256": "10e6ab34692d288b87bb9a34c51606b90d48368ca9b118cdc63b7a9f82acfdf6",
+      "size": 12573
     },
     "docs/ru/GUI-CONTROL.md": {
-      "sha256": "97f6aef93ee4c744a2de45439052e0be9fde603c6f64af34699d8b19c6284f4e",
-      "size": 4069
+      "sha256": "dbc979b63909a8f25acce89cbece5bdbacaaa0fcfaba056d88f81073575fd388",
+      "size": 3996
     },
     "docs/ru/INDICATORS.md": {
       "sha256": "9720301603183662de71e9d2bf77950b8075e98a546e679fb602c2d848ec6404",
       "size": 3871
     },
     "docs/ru/INSTALL.md": {
-      "sha256": "7f36da8eed8e13ffed8bf1931dd6baa121aee8c925bbe91aee66fd3637586929",
-      "size": 14505
+      "sha256": "93eb6ee37d5d8b83bc3ebfd089c8c6af2e3ccfac7266ec65fffaaeb9179f9900",
+      "size": 15092
     },
     "docs/ru/MAC-PC.md": {
       "sha256": "79cbc911cb2c00c57fd15144b022337621cb1237a70c60d796e08b2598a5459a",
       "size": 3229
     },
     "docs/ru/MODULE-MATRIX.md": {
-      "sha256": "d553c3f2b8b241f47af1ed37e10db7278f4a9a2e63fdd7ae7c3f245019ee3713",
+      "sha256": "832a1327be229f394dae0c2cd26dbac9a4e94919ed98370d25fbce81b989f861",
       "size": 3246
     },
     "docs/ru/MODULE-STORAGE.md": {
@@ -401,64 +433,64 @@
       "size": 5766
     },
     "docs/ru/README.md": {
-      "sha256": "f20e99717f36620ba53ed26e556ae3e46732430ee5189a7472f351d899a8c0a0",
-      "size": 8001
+      "sha256": "511c89ff431cc1e49a9079c523ed0413f93e8d14bb8e1b3d5dd22399743fb83e",
+      "size": 8510
     },
     "docs/ru/SETTINGS-BACKUP.md": {
-      "sha256": "92e4e8b68d513f3a428ac64d100d5f69de2ed886d91f095b04ca701f22a4df35",
-      "size": 8428
+      "sha256": "19aba5bb7ff25ab455b047b0a65f86f75991f01ce62b8f6e3f2125345503dd8e",
+      "size": 9070
     },
     "docs/ru/STATUS.md": {
-      "sha256": "bd7bdff4a3da0aca56de54c6d826632e13c68ae09496e00bb44230966e30f940",
-      "size": 9160
+      "sha256": "ab24637c1f822c97ac70f913541d4dacdb59c8fec1a8183b0fe437301c53d30c",
+      "size": 11679
     },
     "docs/ru/TAP-HOLD.md": {
-      "sha256": "2d01e189f92c480208cec13b6f8ee241d16d665ee073587dc01860f5636e2dac",
-      "size": 4307
+      "sha256": "c76f26fc0eef4f44e2160c5ef33f99cb7ca81d76dfa445e07b264012b9257087",
+      "size": 6929
     },
     "docs/ru/profiles/README.md": {
-      "sha256": "4364e58d250dbc8f929bc054460e5cb950cee628366356accd1a24ad3127642e",
-      "size": 6331
+      "sha256": "722e6ecc25f05a7a7f11cc7d8f6b50041dc56f6f3bba339b0e00280c6a77b2f7",
+      "size": 6402
     },
     "docs/ru/profiles/code.md": {
-      "sha256": "8d0c79bb093f823486099257c0cbf69d61581ea0146643ec25e3fe84ff2679fe",
-      "size": 2652
+      "sha256": "ecea044e407d4ba1d2977af23f26b3e8e815b0a672f01a32b2fe81e88b825d06",
+      "size": 2710
     },
     "docs/ru/profiles/creative.md": {
-      "sha256": "1319952b72c1dd975d92572fd1cbc7ad249fc684578172db2c3381b2723977cb",
-      "size": 2722
+      "sha256": "d1cddd7dc33fbb0408aa9f25e6de69d4afe15b28c7f1bdafa0141300c3234c75",
+      "size": 2780
     },
     "docs/ru/profiles/game.md": {
-      "sha256": "9a4bd95ec168a4779f0aa1c6f00edf095be04b3c3a7209f5d08ed2ac35237477",
-      "size": 2173
+      "sha256": "87e4bab1b479a90f4252538a01eed0e8417e86ed599a7398e6a3129d5f19a81f",
+      "size": 2231
     },
     "docs/ru/profiles/main.md": {
-      "sha256": "d8c09db8bf5fe541328329985c917b7c8fabeea5b5cdbdabb17b63502abdc3b6",
-      "size": 2119
+      "sha256": "026d165df8dd644cd1449b0a6a80913809e2a92b3eebcaf5d8195c40af4b034a",
+      "size": 2294
     },
     "docs/ru/profiles/mmo.md": {
-      "sha256": "1c96834f2875c89d77ab7fcf6eb4df58e4776c58a9c608dbfff7197241a5b1ce",
-      "size": 2835
+      "sha256": "b07374a6858cae508a0eeaa204bd627004f449af3d6838efe3a0007c0f10ca07",
+      "size": 2893
     },
     "docs/ru/profiles/multios.md": {
-      "sha256": "9d3d574c66162399357cd3af2f8c7d4b5c22c33344c1019c907f51c533d0c970",
-      "size": 2485
+      "sha256": "34cbad5bc4b49d71cd7ce435e3cac015f265de174f416e4a8119406fcbb0bc0a",
+      "size": 2543
     },
     "docs/ru/profiles/onehand.md": {
-      "sha256": "9995c1f5cc8099413a8782ecd7ead6b3e12d88d045cc53ff42bed262f03ebd5a",
-      "size": 2976
+      "sha256": "c227140c0c667494001a4c83a700d812a52c1c4fe074a1736fcd04b9bb464707",
+      "size": 3034
     },
     "docs/ru/profiles/pointer.md": {
-      "sha256": "e2d2f9d21a256d55541faef3b34a6b1dcbab7afd6a401fea1b3db864c1781060",
-      "size": 2411
+      "sha256": "98c037721262d587708d63de746b524c7b8fac614a51b1e43db6cbd1d81819f5",
+      "size": 2469
     },
     "docs/ru/profiles/shortcuts.md": {
-      "sha256": "ebdc4fffe6e66adbdb80a2b8be5e663f641b77b3f7ab8c5de0691bfea15825ec",
-      "size": 2735
+      "sha256": "06e078a36f83b53447165fdfbe235aa6be6142a2450d7e967afa1782ff738a04",
+      "size": 2793
     },
     "docs/ru/profiles/typing.md": {
-      "sha256": "d2beae2f16c7d90ef8214c14a2a1fe1beb97a208a3a233b988b460ed08bc1d4a",
-      "size": 2554
+      "sha256": "32e13450419625c75aa794d75c562e56b8f18c39da6935630324db5245599cea",
+      "size": 2474
     },
     "qmk-8051-ak820/builddefs/build_json.mk": {
       "sha256": "b2b79bdeb1e5b483eedd600429cb054567615744f8df1f39148aadbf2692156f",
@@ -909,16 +941,16 @@
       "size": 1172
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_combo.c": {
-      "sha256": "309d0416ada76272c2633e407f75f2721610cf4b53c54a1840ec63748b214394",
-      "size": 3701
+      "sha256": "f4c3426126e971bbcea6c1e1884eaa0cb3752c1ba556ff858e509dfaf481b037",
+      "size": 3743
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_combo.h": {
       "sha256": "87658fe8c95221baa764fb77375a371ce634a6deb1f8d053f2ce5994bad49014",
       "size": 356
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_crc.c": {
-      "sha256": "0874e2964d63a4e6b2306187759cdf343d4fbc73ee92497e43ae7368bb918b59",
-      "size": 1720
+      "sha256": "53cb7272cfba994c12fbc2d7390e1a85c607d7580d55bf566f986b576ba57675",
+      "size": 1779
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_crc.h": {
       "sha256": "3bd0f27a626ab1d3cde52dc5d8726adc5c9f179b9cc20c32f20e82dc278e7d6a",
@@ -1033,8 +1065,8 @@
       "size": 415
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_tapping.c": {
-      "sha256": "f9dca4af93e3e6183fc865af4535617b6aaed9e4459f32e50c78aa8f905d7549",
-      "size": 8500
+      "sha256": "cc04218a3ea733be5d4a4a83e5e5ba7c1db2ca984f9b6e22582c1fd0e4801d07",
+      "size": 9205
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/ak820_tapping.h": {
       "sha256": "53cbeb47826596c81a254e158b250dfea29ed4822148e88f21f88cd58a2ed645",
@@ -2237,20 +2269,20 @@
       "size": 3640
     },
     "qmk-8051-ak820/tests/ak820_combo/emitted.py": {
-      "sha256": "acb6bd422b5abf6e5a0be08ace525358bd3c6351b746b3a4df04a14cefae48fc",
-      "size": 10742
+      "sha256": "3d639127cfff25fb4fed2d2fb9a912594fea56fb5f91482f0d641fa82579211b",
+      "size": 12186
     },
     "qmk-8051-ak820/tests/ak820_combo/harness.c": {
-      "sha256": "9f63dbb14b4b5c51d08b669fdf7ee1c1dde509c272ed0df11a87da8982f09200",
-      "size": 3048
+      "sha256": "f72631465361f9ba9883be4c0ed6c84465d8c3f2efda6ece00f6b48e86b5655b",
+      "size": 3657
     },
     "qmk-8051-ak820/tests/ak820_combo/run.py": {
-      "sha256": "ab06f0750bc7656685291f9ee64346ce7b0b8bd7957b44eafbb1d762cb617a10",
-      "size": 2250
+      "sha256": "af3b0f572e390a56cf3c1da91761e0fe05397eaa5d05388bf4ffc8f860b7f73e",
+      "size": 2285
     },
     "qmk-8051-ak820/tests/ak820_combo/storage.c": {
-      "sha256": "eed25071a0a5f9f2108225e449a84373e96a0884a40c1c6ff39b8dc47f5825d3",
-      "size": 2480
+      "sha256": "b1eaea553ab5baf447a39d7b3534f08daa73ec20a20aac19898fcaca7e2e8867",
+      "size": 2710
     },
     "qmk-8051-ak820/tests/ak820_compiler/fixture.c": {
       "sha256": "56eb7eafa4e822725bfa1f45378115041b80544aab1f571265a626a95dae9906",
@@ -2729,12 +2761,12 @@
       "size": 2304
     },
     "qmk-8051-ak820/tests/ak820_tapping/emitted.py": {
-      "sha256": "d6d31c22c5090ee73b5449fb0e2aedaa7e5ccb54a81922deb58af183e9470b25",
-      "size": 26793
+      "sha256": "1d0b186d896d83b4c8fca4f960daa7efe3fb88d56ea4a0cb4aac5a8fee8e2e5e",
+      "size": 30230
     },
     "qmk-8051-ak820/tests/ak820_tapping/harness.c": {
-      "sha256": "028b40e4cf5bd11bbda134b5f331d4aa10fe8c9d107a8e3f5a086c8aee9ecc99",
-      "size": 37985
+      "sha256": "2a62d82a51e276fd62c37b6632cd361cba990323ead916f59d45a71ddc3d9315",
+      "size": 39974
     },
     "qmk-8051-ak820/tests/ak820_tapping/oracle.py": {
       "sha256": "3ffd296cbeaf3cfb0d7c4a0b67abc13f7d4fb30da002f74c608b4e94eec526ae",
@@ -2785,8 +2817,8 @@
       "size": 1671
     },
     "qmk-8051-ak820/tests/ak820_usb/run.py": {
-      "sha256": "59e874db3263698262800d3588c06d01796214ac465305330b7b3710839f2d9e",
-      "size": 2354
+      "sha256": "911741681e46b202e452f2561e1b9eb74e355ed22074d7a20edcff9cce5e1060",
+      "size": 2428
     },
     "qmk-8051-ak820/tests/ak820_usb/test_usb.c": {
       "sha256": "ddedae7e0709dc35eb696d4214c1974194f7baf908f3f9f3072bf6fd4e3997c4",
@@ -2953,8 +2985,8 @@
       "size": 37623
     },
     "qmk-8051-ak820/util/ak820_profiles.py": {
-      "sha256": "d86bb313a4beb53cdb81cadc17c4dace81ba47dbb42fb1a9ad5670a238f0639c",
-      "size": 11360
+      "sha256": "485b8b40d4b78a80e568018ec7736700a11ea460739f4bc8f96a212ef1e056a2",
+      "size": 13279
     },
     "qmk-8051-ak820/util/ak820_register_saves.py": {
       "sha256": "3b47823a7b534f9b17c73aa1e2890156f5ec44621c4f45c4d49d5b56596094bf",
@@ -3149,8 +3181,8 @@
       "size": 6151
     },
     "tools/ak820_device_protocol.py": {
-      "sha256": "1e4018b75793ecd27876e4b72ad733511f01356a59d7a800868f5dd2ea25137b",
-      "size": 28975
+      "sha256": "4e8c584bfa2a6d2f8c7575f5081fe2ba1e2e2768719ecc87d862809a26095528",
+      "size": 29020
     },
     "tools/ak820_device_tests.py": {
       "sha256": "ccd3c373536b06c0c9dc9c1788dd86304e68ccbadf88c200525680dd2786c31b",
@@ -3165,7 +3197,7 @@
       "size": 8285
     },
     "tools/build_beta_release_assets.py": {
-      "sha256": "755eef0906fa7bca8aab780296a3e0ba209e8d4f3cc596959f0b743fc2a666d9",
+      "sha256": "a2017a4fcc391a54a4a1af68e4c2cf5ed45c8bfac5e2281879bf42fdbb16eab4",
       "size": 23946
     },
     "tools/build_capability_catalog.py": {
@@ -3177,8 +3209,8 @@
       "size": 6333
     },
     "tools/build_ci_release.py": {
-      "sha256": "5d88cd4435ad7f6827649b7057a15dc79b393d93fd856c2b9436ee8f118f7acc",
-      "size": 35490
+      "sha256": "89b72e2860e4ada4a2c1f00984beeb623bfa9d0c63278954769ab51d3d67bfe3",
+      "size": 35652
     },
     "tools/build_linux_installer.py": {
       "sha256": "d4cbab8efec02ab47d70b229f34ec695f2b1b85c06d6a0c74742e9af603545d2",
@@ -3249,7 +3281,7 @@
       "size": 339
     },
     "tools/installer/ak820.py": {
-      "sha256": "45461adb311e634f44d94af7295e7cbda08a79470b3b9c34a145ec130297b17c",
+      "sha256": "6ce93cce23a6b8fc5be0032ad46eb7c7034cc23131de8a1c5985354ada474c22",
       "size": 57815
     },
     "tools/installer/gui.py": {
@@ -3261,7 +3293,7 @@
       "size": 21250
     },
     "tools/installer/profile-catalog.json": {
-      "sha256": "c37ef159ad685d211e3e19509183346b65143431964cf2dd4b76e8d6b3becf5d",
+      "sha256": "2142f639846930dd267556d5218c12743727e73f9e56ecc2a1d974bcf0758423",
       "size": 7176
     },
     "tools/installer/requirements-build-linux.txt": {
@@ -3277,20 +3309,20 @@
       "size": 15
     },
     "tools/installer/settings-catalog.json": {
-      "sha256": "93cb88220260b3f3cd0f619e95084064819b9a05022d1521808a15f49e7686d7",
-      "size": 2525336
+      "sha256": "058d7b73b8baf009a784ce81d1faa6d8a488b0159aa164fea92650ffe936f4ab",
+      "size": 5033175
     },
     "tools/installer/settings_backup.py": {
-      "sha256": "1353bc56e16db36d48545b2712c6971910201da8797dd140df1a153a3a2472b2",
-      "size": 48481
+      "sha256": "535c2d0a0639f8e673afaa15a0c6b9e6264c33737fb1b5aadac2b2c0764f97ba",
+      "size": 52143
     },
     "tools/installer/settings_workflow.py": {
       "sha256": "739b941cb1724fdf08b9fb5d798adec507260c22a2d97cdcd02ce7f1247bb26f",
       "size": 12798
     },
     "tools/installer/test_catalog_settings.py": {
-      "sha256": "c2bee692cb94f25cc619fe810e63ce75c6c6dd68072861a1f460aac8ae11c74f",
-      "size": 23909
+      "sha256": "f812640baaf6c955e342a7e76f7777baf005b84ca03d89b0eb05e1db86823d3f",
+      "size": 33882
     },
     "tools/installer/test_extension_backup.py": {
       "sha256": "b7c1ec1ce3198e821498ecfd16af4b6d280a824d72fc7ea127eef19824926b92",
@@ -3313,7 +3345,7 @@
       "size": 15438
     },
     "tools/installer/test_profile_selection.py": {
-      "sha256": "505b0f0c589cf5559693f564d4a31936cc99c36a563c4e28395a55bfffabb731",
+      "sha256": "f4051ade2b495732d07f7bd301ebab036e7cedc0d77ae9bb6efc6a0bdcc9dfdf",
       "size": 8515
     },
     "tools/installer/test_runtime_paths.py": {
@@ -3337,8 +3369,8 @@
       "size": 1067
     },
     "tools/test_ak820_device_protocol.py": {
-      "sha256": "db51a9c721f0a2565d1b576f8129c4b00f8e4cec9243ed7cd9f01a5e76b0266a",
-      "size": 6641
+      "sha256": "afd930f3779c82ae12c5f54954e045c95a96c1ea53a5a2609f4a8faf2888fd92",
+      "size": 7204
     },
     "tools/test_ak820_device_tests.py": {
       "sha256": "7dedc0f072909525dee60f43bc20c58c646b9dccd502cc4ed4d6e33f7203282d",
@@ -3349,23 +3381,23 @@
       "size": 4827
     },
     "tools/test_build_beta_release_assets.py": {
-      "sha256": "34b9839cd803a1637177d6a4f7f60b4d24dfbead45e9b66b280faf149be16072",
+      "sha256": "26081a74f59d79b9c446655842e14b581f378882fed781b1edb7c999a7fae2ff",
       "size": 20185
     },
     "tools/test_build_capability_catalog.py": {
-      "sha256": "b45665672718c5257fd3a2db147a56b68f3bc0d97a1d027b96355cf6f397fc53",
-      "size": 18743
+      "sha256": "30982f350b6da858107d295c31fc04f49ab57eb9921426a0230592c84bac287b",
+      "size": 18818
     },
     "tools/test_build_ci_profiles.py": {
       "sha256": "13fd83cb26bce0872a9789903a5b82d9c191966413a5d4e8b759a7d920b472f6",
       "size": 6453
     },
     "tools/test_build_ci_release.py": {
-      "sha256": "8bcb0160f3d6862d099c40b3d1190b1b7a528cce128a0b12fd95c1d7eadb51fb",
-      "size": 26878
+      "sha256": "1227ecfc4065070a0c323360089d3c6c887e212cea7cd0c9d669de5498abe281",
+      "size": 29097
     },
     "tools/test_build_linux_installer.py": {
-      "sha256": "715940088de8ca6b25344d7a88aebceea0aaa68d7a836c430656c738b0cf9c58",
+      "sha256": "f9fde23ced9d2c2ffc91a6ae5db8bae0f63221703fc3f2bcdbf21d9826825f6f",
       "size": 10989
     },
     "tools/test_build_profile_catalog.py": {
@@ -3377,7 +3409,7 @@
       "size": 16390
     },
     "tools/test_build_windows_installer.py": {
-      "sha256": "3707bfd5c81c90c6a2a32e30e13c271ad4e808bcb34c548485056bdaec2a30cc",
+      "sha256": "a3c876002ba08e28f8f8fa99517a8d6d1f1c0e613d51311b4eaa33076b7e98f4",
       "size": 15351
     },
     "tools/test_ci_authorization.py": {
@@ -3393,8 +3425,8 @@
       "size": 6248
     },
     "tools/test_configure_firmware.py": {
-      "sha256": "10798085d7a6a34ea82549fb5494619d72450467e5c0e4486c037926ca23a4b1",
-      "size": 42506
+      "sha256": "59c32839ce388e592dcf175699acb39365e5b786f46c9dd96df60226a4e6ed6c",
+      "size": 43006
     },
     "tools/test_firmware_matrix.py": {
       "sha256": "4e07f818baa6625b48c4456937965231b45d3f717f73dfe99d85d4bdbb0e5241",

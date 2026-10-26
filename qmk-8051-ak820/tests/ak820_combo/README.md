@@ -6,11 +6,13 @@ temporary host files and never accesses a keyboard. It builds the production
 extracted production `dynamic_keymap_get_combo` and `dynamic_keymap_set_combo`
 functions and an EEPROM/NVM model. Both runs use UBSan.
 
-The event fixture checks the local state machine. The storage fixture checks
-record validation, slot bounds, version markers, wire conversion, empty entries,
-latched NVM failure and failure returned by verified flush. The existing flash
-journal suite must establish the lower-level durability contract. These checks
-do not prove USB, 8051 ABI, physical timing or power-loss behavior.
+The event fixture checks the local state machine, including Caps Word toggle
+outputs in both key and release orders. The storage fixture checks record
+validation, slot bounds, version markers, wire conversion, empty entries,
+Caps Word toggle acceptance, rejection of other unsupported outputs, latched
+NVM failure and failure returned by verified flush. The existing flash journal
+suite must establish the lower-level durability contract. These checks do not
+prove USB, 8051 ABI, physical timing or power-loss behavior.
 
 The user contract and stored format are in [Combos](../../../docs/COMBOS.md).
 
@@ -27,11 +29,12 @@ python3 tests/ak820_combo/emitted.py \
 
 The command never builds firmware or opens USB. It uses the linked production
 `action_exec`, report pipeline and Vial packet dispatcher in the C52 simulator.
-The 26 cases cover both key orders and release orders in 6KRO and NKRO,
+The cases cover both key orders and release orders in 6KRO and NKRO,
 39/40 ms and timer wrap, pending-key flush before ordinary keys, modifiers,
 Mod-Tap and an encoder event, modifier and encoded-modifier outputs, physical
-output ownership, Repeat, Caps Word and cancellation. Packet cases check the
-advertised eight entries, stored-marker masking, empty and out-of-range slots,
+output ownership, Repeat, Caps Word toggle-on and toggle-off through the combo,
+no A/S leak from the combo sources, both release orders and cancellation.
+Packet cases check the advertised eight entries, stored-marker masking, empty and out-of-range slots,
 invalid setters preserving a pending Combo, and an unsupported record version.
 
 A valid setter case supplies an identical marked record in simulated ROM.
@@ -44,6 +47,8 @@ Each output directory contains simulator command files, logs and `results.json`
 with checks, HID callback traces, stack peaks and hashes of the linked image,
 map, runner, imported support and simulator. The NKRO callback is captured before
 the USB driver assigns its report ID; state checks also inspect the resulting
-report. Caps Word retains its weak Shift after the output release until clear.
+report. Caps Word retains its weak Shift after typing A or S and turns off via a
+second combo press. The combo source keys stay suppressed; A and S appear only
+when typed separately afterward.
 Stack peaks cover these paths without interrupt overlap. Physical key scanning,
 encoder behavior, USB transfers, IAP, power loss and real timing are not tested.

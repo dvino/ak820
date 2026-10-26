@@ -260,6 +260,37 @@ class AssemblyPreflightTests(unittest.TestCase):
                 matrix, _ = ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
             self.assertEqual(matrix['historical_sources'],catalog['historical_sources'])
             self.assertEqual(matrix['settings_transitions'],catalog['settings_transitions'])
+            # Previous typed images retain their original contracts and source edges.
+            historical_rows = json.loads(json.dumps(rows))
+            for index, row in enumerate(historical_rows):
+                digest = f'{index+200:064x}'
+                row['identity']['ihx_sha256'] = digest
+                row['settings_identity']['ihx_sha256'] = digest
+                row['settings_identity']['code_sha256'] = f'{index+220:064x}'
+                row['settings_identity'].pop('combo_actions')
+            catalog['historical_profiles'] = historical_rows
+            catalog['settings_transitions'].extend(
+                {'source': row['settings_identity']['ihx_sha256'],
+                 'target': rows[index]['identity']['ihx_sha256']}
+                for index, row in enumerate(historical_rows))
+            settings_catalog.write_text(json.dumps(catalog))
+            with patch.object(firmware_matrix, 'measured_row', side_effect=lambda build, toolchain: measured[build.name]):
+                matrix, _ = ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
+            self.assertEqual(matrix['historical_profiles'], historical_rows)
+            self.assertEqual(matrix['historical_sources'], catalog['historical_sources'])
+            self.assertEqual(matrix['settings_transitions'], catalog['settings_transitions'])
+            images = settings_backup._catalog_images(matrix)
+            for row in historical_rows:
+                self.assertEqual(images[row['settings_identity']['ihx_sha256']]['combo_actions'], [])
+            # Assembly must validate historical contracts before processing builds.
+            bad = json.loads(json.dumps(catalog))
+            bad['historical_profiles'][0]['settings_identity']['supported_keycodes'].append(65535)
+            settings_catalog.write_text(json.dumps(bad))
+            with patch.object(firmware_matrix, 'measured_row') as measure:
+                with self.assertRaisesRegex(ValueError, 'Settings identity'):
+                    ci.settings_matrix_from_builds(builds_root, root/'toolchain', settings_catalog)
+                measure.assert_not_called()
+            settings_catalog.write_text(json.dumps(catalog))
             measured['shortcuts']['identity']['ihx_sha256'] = 'f' * 64
             with patch.object(firmware_matrix, 'measured_row', side_effect=lambda build, toolchain: measured[build.name]):
                 with self.assertRaisesRegex(ValueError, 'does not bind the measured profile'):

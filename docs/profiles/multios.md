@@ -23,6 +23,8 @@ Added: Mac/PC mode: swap Alt and GUI; Swap Ctrl and GUI.
 
 Removed: VialRGB Direct: direct RGB control from a compatible application.
 
+Auto Shift is not included.
+
 ## Limits
 
 Key Overrides: eight modifier-dependent replacements.

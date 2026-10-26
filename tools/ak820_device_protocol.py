@@ -344,7 +344,8 @@ class DeviceAPI:
         a, b, c, d, output = (int.from_bytes(data[i:i+2], 'little') for i in range(0, 10, 2))
         require(c == d == 0, 'Unsupported Combo format/version')
         valid = (a == b == output == 0) or (4 <= a <= 0xA4 and 4 <= b <= 0xA4 and a != b
-                and output < 0x2000 and (4 <= (output & 255) <= 0xA4 or 0xE0 <= (output & 255) <= 0xE7))
+                and (output == 0x7C73 or (output < 0x2000 and
+                     (4 <= (output & 255) <= 0xA4 or 0xE0 <= (output & 255) <= 0xE7))))
         require(valid, 'Unsupported Combo keys/output')
         return data
 

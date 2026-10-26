@@ -2,7 +2,8 @@
 
 # Installation and recovery
 
-These instructions describe beta.2 packages; publication status is recorded in [Status](STATUS.md).
+These instructions describe v0.6.0-beta.3 packages. Check [Status](STATUS.md)
+for release availability before downloading.
 
 Use these packages only with a wired AJAZZ AK820 that has a VS11K28A
 controller and matching PCB revision. V2, Pro and Max are not supported. The
@@ -22,7 +23,7 @@ alone does not write to the keyboard.
 
 | Profile | What it adds or changes |
 | --- | --- |
-| `main` | Key Overrides, Leader macro shortcuts, temporary Dynamic Macros and VialRGB Direct control. |
+| `main` | Auto Shift, Key Overrides, Leader macro shortcuts, temporary Dynamic Macros and VialRGB Direct control; no GUI lock. |
 | `game` | Adds NKRO reports and controls and GUI lock; keeps Key Overrides, Dynamic Macros and Direct lighting; removes Leader. |
 | `mmo` | Adds NKRO, GUI lock and eight Tap Dance entries instead of Key Overrides; keeps Dynamic Macros and Direct lighting; removes Leader. |
 | `typing` | Adds Auto Shift and Space Cadet; keeps Key Overrides, Leader and Dynamic Macros; removes Direct lighting. |
@@ -36,10 +37,15 @@ alone does not write to the keyboard.
 All profiles include six layers, 16 saved Vial macros, eight Combos, QMK
 Settings for supported timing parameters, One Shot, common tap/hold and media
 functions, built-in RGB effects and host-controlled OS indication. `main` also
-includes Key Overrides and VialRGB Direct control. Direct is needed for
+includes Auto Shift, Key Overrides and VialRGB Direct control; it does not
+include GUI lock. `typing` also includes Auto Shift. Direct is needed for
 per-LED control by a compatible application; built-in lighting remains
 available in every profile. See the [profile descriptions](profiles/README.md)
 for details and limits.
+
+Beta.3 images also accept Caps Word as a Combo output and support macro-on-tap,
+layer-on-hold on physical matrix keys. Earlier beta.2 images do not support
+these actions. See [Two-key Combos](COMBOS.md) and [Tap and hold](TAP-HOLD.md).
 
 To change the installed profile, prepare an update to the selected target with
 a settings backup. The installer checks settings compatibility for the exact
@@ -50,12 +56,12 @@ accessing the keyboard.
 
 ## Download and check a package
 
-Open the [beta.2 release page](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.2)
+Open the [beta.3 release page](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.3)
 and download the package and its matching checksum file:
 
-- Windows installer: [AK820-Windows.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Windows.zip) and [AK820-Windows.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Windows.zip.sha256).
-- Linux x86_64 installer: [AK820-Linux-x86_64.tar.gz](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Linux-x86_64.tar.gz) and [AK820-Linux-x86_64.tar.gz.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Linux-x86_64.tar.gz.sha256).
-- Firmware and companion catalog: [AK820-Beta2-Catalog.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Beta2-Catalog.zip) and [AK820-Beta2-Catalog.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Beta2-Catalog.zip.sha256).
+- Windows installer: [AK820-Windows.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Windows.zip) and [AK820-Windows.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Windows.zip.sha256).
+- Linux x86_64 installer: [AK820-Linux-x86_64.tar.gz](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Linux-x86_64.tar.gz) and [AK820-Linux-x86_64.tar.gz.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Linux-x86_64.tar.gz.sha256).
+- Firmware and companion catalog: [AK820-Beta3-Catalog.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Beta3-Catalog.zip) and [AK820-Beta3-Catalog.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Beta3-Catalog.zip.sha256).
 
 On Windows, compare the downloaded archive with its checksum in PowerShell.
 For the installer, run:
@@ -114,9 +120,9 @@ integration; it does not contain a desktop application to launch. Its JSON
 files describe profile selection, exact-image capabilities and module help.
 The `guide.en` and `guide.ru` paths in module descriptions are relative to the
 repository's `web/` directory. Resolve them against
-`https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/`, and include the
+`https://github.com/dvino/ak820/blob/v0.6.0-beta.3/web/`, and include the
 linked guides in a companion package for offline help. Read the [firmware
-handoff](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/docs/FIRMWARE-HANDOFF.md)
+handoff](https://github.com/dvino/ak820/blob/v0.6.0-beta.3/web/docs/FIRMWARE-HANDOFF.md)
 before integrating catalog data.
 
 ## First installation from OEM firmware

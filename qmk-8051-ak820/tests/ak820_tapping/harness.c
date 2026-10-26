@@ -19,6 +19,7 @@
 #include "qmk_settings.h"
 #include "ak820_tapping.h"
 #include "ak820_combo.h"
+void dynamic_keymap_macro_send(uint8_t id);
 static vial_combo_entry_t fixture_combos[VIAL_COMBO_ENTRIES];
 int dynamic_keymap_get_combo(uint8_t i, vial_combo_entry_t *entry) {*entry=fixture_combos[i];return 0;}
 #include "caps_word.h"
@@ -126,6 +127,31 @@ int main(int argc,char **argv) {
   printf("F %u %u\n",get_mods()|get_weak_mods(),layer_state);return 0;
  }
 
+ /* Layer-tap macro: release fires once; hold switches layer only. */
+ { const uint8_t body[]={1,SS_TAP_CODE,KC_A};
+   reset(); macro_load(body,sizeof(body)); assign(0,0x41f0); event(0,1,10);
+   assert(!key_refs[KC_A]&&!log_count); event(0,0,20); assert(log_count==2&&log_reports[0][2]==KC_A&&log_reports[1][2]==0); clean();
+   reset(); macro_load(body,sizeof(body)); assign(0,0x41f0); event(0,1,10); tick(210);
+   assert(layer_state==2&&!log_count); event(0,0,220); assert(!layer_state&&!log_count); clean();
+   reset(); macro_load(body,sizeof(body)); assign(0,0x41f0); assign(1,0x7c73); assign(2,KC_A);
+   event(0,1,10); event(1,1,20); assert(layer_state==2); event(1,0,21); event(2,1,22);
+   assert(is_caps_word_on()&&key_refs[KC_A]); event(2,0,23); event(0,0,24); caps_word_off(); clean();
+   reset(); macro_load(body,sizeof(body)); enc[0][0]=0x43f0; encoder(false,1,10); encoder(false,0,20);
+   assert(!layer_state&&!log_count); clean();
+   reset(); macro_load(body,sizeof(body)); enc[0][0]=0x43f0; encoder(false,1,10); tick(210);
+   assert(!layer_state&&!log_count); encoder(false,0,220); assert(!layer_state&&!log_count); clean();
+   for(unsigned i=0;i<3;i++) {
+    uint16_t start=i==2?65500:100,elapsed=i==1?200:(i==2?100:199);
+    reset();macro_load(body,sizeof(body));assign(0,0x41f0);event(0,1,start);tick((start+elapsed)&65535);
+    if(elapsed==200) assert(layer_state==2&&!log_count);
+    event(0,0,(start+elapsed)&65535);
+    if(elapsed==200) assert(!layer_state&&!log_count);
+    else assert(log_count==2&&log_reports[0][2]==KC_A&&log_reports[1][2]==0);
+    clean();
+   }
+   reset();macro_load(body,sizeof(body));assign(0,0x41f0);event(0,1,10);clear_keyboard();event(0,0,20);assert(!log_count&&!layer_state);clean();
+   reset();macro_load(body,sizeof(body));assign(0,0x41f0);event(0,1,10);vial_unlock_in_progress=true;ak820_tapping_cancel();event(0,0,20);vial_unlock_in_progress=false;assert(!log_count&&!layer_state);clean();
+ }
 
 #ifdef AK820_COMPACT_ONESHOT
  /* Every encoded modifier, including the right-hand group, uses owners. */

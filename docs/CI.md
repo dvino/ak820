@@ -49,7 +49,7 @@ closed; creating a linked image alone does not satisfy this gate.
 Assembly also exports the capability catalog from those exact CI builds. Publication uses this catalog and the measured firmware matrix, so path-dependent MAP and report hashes refer to the approved CI files. It does not replace them with hashes from local builds.
 
 The Windows and Linux jobs download that same run's bundles, check their source
-commit and stage them in `releases/beta2/<profile>`. Every selectable profile
+commit and stage them in `releases/beta3/<profile>`. Every selectable profile
 needs its own matching manifest and approval. Packaging verifies collected
 inputs inside both GUI and CLI applications. Windows performs native startup
 smokes; Linux uses Ubuntu 22.04 x86_64/glibc 2.35 and Xvfb. CLI help, offline

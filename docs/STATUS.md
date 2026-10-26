@@ -2,6 +2,28 @@
 
 # Project status
 
+## v0.6.0-beta.3 source candidate, 2026-10-26
+
+The source candidate retains Caps Word toggle (`CW_TOGG`) as a two-key Combo
+output and adds macro-on-tap, layer-on-hold actions for physical matrix keys.
+The beta.3 profile plan puts Auto Shift in `main` and `typing`, and leaves GUI
+lock out of `main`. A rejected `game` image with the proposed W pulse exceeded
+the CODE limit by 160 bytes. The pulse has been deferred in all profiles.
+Host checks for the Combo output, macro keycode handling, settings storage and
+protocol have passed. Shared tool preflight passed 283 tests. The current main
+image uses 40,398 CODE bytes. Fresh startup, foreground and enabled-interrupt
+checks passed with a 160/167-byte stack bound. Main passed 336 unit tests with
+no skips and all 34 supplemental profile suites.
+All ten local images passed exact-image qualification: 336 unit tests without
+skips per image and 32–37 supplemental suites. Offline packing and 230 default
+settings plans across 23 source images passed, as did 100 Caps Word Combo plans,
+100 macro Layer-Tap plans and the frozen 180-test settings suite. These are
+offline checks, not device validation. Source review passed; final generated
+policy review remains pending. Rejected earlier candidates do not qualify the release.
+Publication is on hold. The published beta.2 release
+remains available unchanged. No device writes were performed; installation and
+keyboard behavior are untested.
+
 ## CI validation time, 2026-10-26
 
 The release workflow reuses successful transform checks while all inputs remain

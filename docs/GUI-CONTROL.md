@@ -4,11 +4,12 @@
 
 Temporarily suppress or restore GUI modifier output.
 
+It starts off and lasts until restart.
 
-The `mouse-typing` and `system` packages include GUI lock. `system` also
-includes Ctrl/GUI swapping. The low-level CLI retains older `full-*` profile
-names for reproducing earlier builds. These source profiles are not included
-in published alpha.3.
+
+GUI lock is available in the `game` and `mmo` profiles; `main` does not include
+it. The low-level CLI retains older `full-*` profile names for reproducing
+earlier builds.
 
 | Keycode | Action |
 | --- | --- |

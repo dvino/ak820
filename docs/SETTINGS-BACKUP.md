@@ -31,6 +31,12 @@ applies all eight saved slots, so an empty slot clears the matching target
 slot. Firmware without Combo support rejects a backup that contains Combos.
 See [Combo behavior](COMBOS.md) for supported entries.
 
+Caps Word Combos and macro-on-tap Layer-Tap keycodes require a target image that supports them. The installer
+checks the exact source and target images before preparing an update. Earlier
+beta.2 images remain recognized as migration sources; they do not gain these
+actions. A Caps Word Combo or macro-on-tap Layer-Tap keycode cannot be restored
+to an image that lacks its support.
+
 ## Commands
 
 Run the source installer as `AK820.sh` on Linux or `AK820.cmd` on Windows.

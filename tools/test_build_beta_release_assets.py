@@ -154,8 +154,8 @@ class PromotionTests(unittest.TestCase):
                 'code_identity': linked_identity,
                 'features': sorted(configuration['base_features'] + configuration['optional_features'])})
         (root / 'docs/ru').mkdir(parents=True)
-        (root / 'docs/INSTALL.md').write_text('AK820-Beta2-Catalog.zip')
-        (root / 'docs/ru/INSTALL.md').write_text('AK820-Beta2-Catalog.zip')
+        (root / 'docs/INSTALL.md').write_text('AK820-Beta3-Catalog.zip')
+        (root / 'docs/ru/INSTALL.md').write_text('AK820-Beta3-Catalog.zip')
         for name in assets.guide_files():
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -196,8 +196,8 @@ class PromotionTests(unittest.TestCase):
                     assets.ak820, 'release_contexts', return_value=contexts):
                 result = assets.build(bundles, output, 'v0.6.0-beta.2')
             self.assertEqual(result['profiles'], 10)
-            archive = output / 'AK820-Beta2-Catalog.zip'
-            self.assertEqual((output / 'AK820-Beta2-Catalog.zip.sha256').read_text().split()[0],
+            archive = output / 'AK820-Beta3-Catalog.zip'
+            self.assertEqual((output / 'AK820-Beta3-Catalog.zip.sha256').read_text().split()[0],
                              assets.sha(archive.read_bytes()))
             with zipfile.ZipFile(archive) as zf:
                 members = {name: zf.read(name) for name in zf.namelist()}
@@ -240,7 +240,7 @@ class PromotionTests(unittest.TestCase):
                     assets.build(bundles, output, 'v0.6.0-beta.2')
                 self.assertFalse(output.exists())
 
-    def test_beta2_asset_builder_fails_closed_without_all_ten_approved_contexts(self):
+    def test_beta3_asset_builder_fails_closed_without_all_ten_approved_contexts(self):
         with tempfile.TemporaryDirectory() as temp:
             bundles, output = Path(temp) / 'bundles', Path(temp) / 'assets'
             bundles.mkdir()

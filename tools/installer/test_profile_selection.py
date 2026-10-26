@@ -37,7 +37,7 @@ class ProfileSelectionTests(unittest.TestCase):
         self.assertEqual([c.profile for c in contexts], [r['id'] for r in self.catalog['profiles']])
         self.assertEqual(app.release_context(approved=True).profile, 'main')
         for context in contexts:
-            self.assertEqual(context.bundle, self.root / ('releases/beta2/' + context.profile))
+            self.assertEqual(context.bundle, self.root / ('releases/beta3/' + context.profile))
             self.assertEqual(context.approval, context.bundle / 'approved-release.json')
         self.assertTrue(all(c.kwargs['approved'] for c in self.loader.call_args_list))
 
@@ -55,7 +55,7 @@ class ProfileSelectionTests(unittest.TestCase):
             app.release_context('main', approved=True)
 
     def test_wrong_image_profile_and_unbound_catalog(self):
-        report = self.root / 'releases/beta2/game/reports/build-report.json'
+        report = self.root / 'releases/beta3/game/reports/build-report.json'
         report.write_text(json.dumps({'configuration': app.ak820_profiles.configuration('main')}))
         with self.assertRaisesRegex(ValueError, 'build configuration'):
             app.release_context('game', approved=True)

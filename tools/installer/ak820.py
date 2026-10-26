@@ -154,8 +154,8 @@ def profile_catalog():
         name = row.get('id')
         require(name in PROFILE_IDS
                 and name not in ids, 'Unknown or duplicate installer profile')
-        require(row.get('bundle') == 'releases/beta2/' + name and
-                row.get('approval') == 'releases/beta2/' + name + '/approved-release.json',
+        require(row.get('bundle') == 'releases/beta3/' + name and
+                row.get('approval') == 'releases/beta3/' + name + '/approved-release.json',
                 'Invalid profile asset path')
         require(all(type(row.get(key)) is dict and all(type(row[key].get(lang)) is str for lang in ('en','ru'))
                     for key in ('name','description')), 'Missing bilingual profile description')

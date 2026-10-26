@@ -8,10 +8,9 @@ Other profiles exchange selected `main` modules for task-specific functions;
 these are complete compositions, not arbitrary toggles. Historical names remain
 for reproduction; historical Typing uses `legacy-typing` in current builds.
 
-Published beta.1 on 2026-10-25 supplied nine catalog profiles and standalone
-Windows/Linux installers for exact `work`. The ten-profile source and installer
-selection work does not announce beta.2 publication or a device installation.
-See [Status](STATUS.md) for the separate artifact and hardware state.
+Beta.2 is published. The beta.3 source adds Caps Word Combo output, macro
+Layer-Tap and Auto Shift in main. All ten local images have passed qualification;
+publication remains on hold. See [Status](STATUS.md) for artifact and hardware state.
 
 ## Configurator
 
@@ -28,7 +27,27 @@ settings the selected image cannot represent. See the
 [requirements](../web/docs/REQUIREMENTS.md), [plan](../web/docs/PLAN.md) and
 [development catalog](DEVELOPMENT-CATALOG.md).
 
-## Module limits
+## Next firmware work
+
+- Read the current Direct palette from the keyboard, with a coherent snapshot
+  across USB packets. This requires a firmware protocol change; application-side
+  color caches cannot supply the actual state.
+- Apply a complete Direct frame atomically. Stage and validate all LED values
+  before commit; incomplete or interrupted uploads must leave the active frame
+  unchanged. Define the renderer/DMA publication boundary as well as the palette
+  swap. Existing fastset packets do not provide this guarantee.
+- Try to fit the GUI-lock W pulse alongside that work: a smooth 2000 ms cycle,
+  disabled lock by default, and any nonbase active/default layer overriding W to
+  full brightness. Keep Caps and OS indications independent. Main must retain
+  Auto Shift; do not silently remove modules to make room. The previous pulse
+  candidates overflowed main by 600 bytes and game by 160 bytes.
+
+The detailed continuation instructions are kept in a local handoff outside Git.
+New exact-image CODE, XRAM, startup, foreground and IRQ bounds are required after
+these changes, before full regressions. No release or device write is authorized
+by this plan.
+
+## Current module limits
 
 Tap Dance has eight entries with four basic or modified-basic outputs, one
 pending decision and at most two presses per gesture; resolved holds may
@@ -38,7 +57,7 @@ modifiers, not layers. Dynamic recording stores two temporary sequences of up
 to 16 completed key taps each, separately from the 16 persistent Vial macros.
 
 QMK Settings exposes QSID 1, 2, 7, 18 and 19 in all ten profiles, plus QSID 4
-for Auto Shift in `typing`. Its typed, versioned 24-byte record has a CRC.
+for Auto Shift in `main` and `typing`. Its typed, versioned 24-byte record has a CRC.
 Tap Dance uses its row term rather than QSID 7. Individual guides describe
 rejected inputs and remaining limits.
 

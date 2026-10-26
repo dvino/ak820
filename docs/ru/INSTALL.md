@@ -2,7 +2,8 @@ English source of truth: [Installation and recovery](../INSTALL.md).
 
 # Установка и восстановление
 
-Эти инструкции описывают пакеты beta.2; состояние публикации указано в [разделе «Состояние проекта»](STATUS.md).
+Эти инструкции описывают пакеты v0.6.0-beta.3. Перед загрузкой проверьте
+доступность выпуска в [статусе](STATUS.md).
 
 Пакеты предназначены только для проводной AJAZZ AK820 с контроллером VS11K28A
 и соответствующей ревизией платы. V2, Pro и Max не поддерживаются. Названия
@@ -22,7 +23,7 @@ English source of truth: [Installation and recovery](../INSTALL.md).
 
 | Профиль | Что добавлено или изменено |
 | --- | --- |
-| `main` | Key Overrides, выбор сохранённых Vial-макросов через Leader, временные Dynamic Macros и прямое управление VialRGB. |
+| `main` | Auto Shift, Key Overrides, выбор сохранённых Vial-макросов через Leader, временные Dynamic Macros и прямое управление VialRGB; без блокировки GUI. |
 | `game` | Добавляет отчёты NKRO, переключатель NKRO и блокировку Win/Command; сохраняет Key Overrides, Dynamic Macros и прямое управление подсветкой; убирает Leader. |
 | `mmo` | Добавляет NKRO, блокировку Win/Command и восемь действий Tap Dance вместо Key Overrides; сохраняет Dynamic Macros и прямое управление подсветкой; убирает Leader. |
 | `typing` | Добавляет Auto Shift и Space Cadet; сохраняет Key Overrides, Leader и Dynamic Macros; убирает прямое управление подсветкой. |
@@ -36,10 +37,16 @@ English source of truth: [Installation and recovery](../INSTALL.md).
 Во всех профилях есть шесть слоёв, 16 сохранённых макросов Vial, восемь
 комбинаций клавиш, QMK Settings для поддерживаемых временных параметров,
 One Shot, общие функции удержания и мультимедиа, встроенные эффекты RGB и
-индикатор ОС, которым управляет хост. В `main` также включены Key Overrides
-и прямое управление VialRGB. Direct нужен совместимому приложению для
+индикатор ОС, которым управляет хост. В `main` включены Key Overrides,
+Auto Shift и прямое управление VialRGB; блокировки GUI в нём нет. Auto Shift
+также включён в `typing`. Direct нужен совместимому приложению для
 управления отдельными светодиодами; встроенные эффекты доступны во всех
 профилях. Подробности и ограничения приведены в [описаниях профилей](profiles/README.md).
+
+В образах beta.3 Caps Word можно использовать как выход Combo, а физическую
+клавишу матрицы — настроить на запуск макроса по нажатию и включение слоя при
+удержании. В beta.2 этих действий нет. См. [Комбинации двух клавиш](COMBOS.md)
+и [Нажатие и удержание](TAP-HOLD.md).
 
 Чтобы сменить установленный профиль, подготовьте обновление на выбранный
 целевой профиль и создайте резервную копию настроек. Установщик проверяет
@@ -50,12 +57,12 @@ One Shot, общие функции удержания и мультимедиа
 
 ## Загрузка и проверка пакета
 
-Откройте [страницу beta.2](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.2)
+Откройте [страницу beta.3](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.3)
 и скачайте пакет и соответствующий ему файл контрольной суммы:
 
-- Установщик Windows: [AK820-Windows.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Windows.zip) и [AK820-Windows.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Windows.zip.sha256).
-- Установщик Linux x86_64: [AK820-Linux-x86_64.tar.gz](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Linux-x86_64.tar.gz) и [AK820-Linux-x86_64.tar.gz.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Linux-x86_64.tar.gz.sha256).
-- Каталог прошивок и компаньона: [AK820-Beta2-Catalog.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Beta2-Catalog.zip) и [AK820-Beta2-Catalog.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.2/AK820-Beta2-Catalog.zip.sha256).
+- Установщик Windows: [AK820-Windows.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Windows.zip) и [AK820-Windows.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Windows.zip.sha256).
+- Установщик Linux x86_64: [AK820-Linux-x86_64.tar.gz](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Linux-x86_64.tar.gz) и [AK820-Linux-x86_64.tar.gz.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Linux-x86_64.tar.gz.sha256).
+- Каталог прошивок и компаньона: [AK820-Beta3-Catalog.zip](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Beta3-Catalog.zip) и [AK820-Beta3-Catalog.zip.sha256](https://github.com/dvino/ak820/releases/download/v0.6.0-beta.3/AK820-Beta3-Catalog.zip.sha256).
 
 В Windows сравните архив с контрольной суммой в PowerShell. Для установщика
 выполните:
@@ -115,9 +122,9 @@ cd AK820-Linux-x86_64
 выбор профиля, возможности точных образов и справку по модулям. Пути
 `guide.en` и `guide.ru` в описаниях модулей отсчитываются от каталога `web/`
 репозитория. Для их разрешения используйте базовый адрес
-`https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/`. Чтобы справка была
+`https://github.com/dvino/ak820/blob/v0.6.0-beta.3/web/`. Чтобы справка была
 доступна без сети, включите эти руководства в пакет компаньона. Перед
-интеграцией прочитайте [контракты прошивки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/docs/ru/FIRMWARE-HANDOFF.md).
+интеграцией прочитайте [контракты прошивки](https://github.com/dvino/ak820/blob/v0.6.0-beta.3/web/docs/ru/FIRMWARE-HANDOFF.md).
 
 ## Первая установка из OEM-прошивки
 

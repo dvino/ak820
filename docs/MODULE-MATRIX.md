@@ -8,7 +8,7 @@ The firmware is modular because all implemented functions do not fit in controll
 
 | Module | `main` | `game` | `mmo` | `typing` | `code` | `pointer` | `onehand` | `creative` | `shortcuts` | `multios` |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| auto-shift | — | — | — | ✓ | — | — | — | — | — | — |
+| auto-shift | ✓ | — | — | ✓ | — | — | — | — | — | — |
 | ctrl-gui-swap | — | — | — | — | — | — | — | — | — | ✓ |
 | dynamic-macros | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ |
 | grave-escape | — | — | — | — | ✓ | — | — | — | — | — |

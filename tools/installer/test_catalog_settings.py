@@ -67,6 +67,106 @@ def backup_at(folder, profile, nvm=None):
 
 
 class CatalogSettings(unittest.TestCase):
+    def test_historical_main_survives_current_composition_change(self):
+        profiles = s.ak820_profiles
+        # Build the historical row under its original composition, even after
+        # the real current MAIN has changed.
+        old_features = profiles.historical_configuration('main')['optional_features']
+        with patch.dict(profiles.PROFILES, main=tuple(old_features)):
+            old, row = profile_for('main', 112)
+        del row['settings_identity']['combo_actions']
+        row['settings_identity']['supported_keycodes'] = [
+            code for code in row['settings_identity']['supported_keycodes']
+            if not s.macro_layer_tap_keycode(code)]
+        del row['settings_identity']['macro_layer_tap']
+        with patch.dict(profiles.PROFILES, main=tuple(old_features) + ('gui-lock', 'auto-shift')):
+            new, current = profile_for('main', 113)
+            catalog = catalog_for(current, transitions=[
+                {'source': old['ihx_sha256'], 'target': new['ihx_sha256']}])
+            catalog['historical_profiles'] = [row]
+            bind(catalog, old, new)
+            image = s._profile_images(new)[old['ihx_sha256']]
+            self.assertEqual(s._image_configuration(image)['runtime_qmk_settings'], [1, 2, 7, 18, 19])
+            for code in (0x7009, 0x7C13, 0x40F0):
+                self.assertFalse(s.image_keycode_supported(code, image))
+                self.assertTrue(s.image_keycode_supported(code, new['compatible_images'][new['ihx_sha256']]))
+            with tempfile.TemporaryDirectory() as temp:
+                saved = backup_at(Path(temp), old)
+                self.assertIsNotNone(s.plan_restore(saved, new))
+                api = Mock()
+                data = saved['settings']['extensions']
+                api.settings_query.return_value = [1, 2, 7, 18, 19]
+                api.get_setting.side_effect = lambda qsid: data['qmk_settings'][str(qsid)]
+                api.dynamic_entry_counts.return_value = (0, 8, 8)
+                api.get_extension.side_effect = lambda kind, index: bytes.fromhex(data[kind][index])
+                api.combo_count.return_value = 8
+                api.get_combo.side_effect = lambda index: bytes.fromhex(saved['settings']['combos']['entries_hex'][index])
+                keys = {(r['layer'], r['row'], r['column']): r['keycode'] for r in saved['settings']['keys']}
+                encoders = {(r['layer'], r['direction']): r['keycode'] for r in saved['settings']['encoders']}
+                api.get_key.side_effect = lambda layer, coordinate: keys[(layer, *coordinate)]
+                api.get_encoder.side_effect = lambda layer, direction: encoders[layer, direction]
+                api.get_layout_options.return_value = saved['settings']['layout_options']
+                stream = bytes.fromhex(saved['settings']['macros']['data_hex'])
+                api.macros.return_value = stream + bytes(8192-len(stream))
+                api.rgb_mode.return_value = bytes.fromhex(saved['settings']['rgb']['current_mode_hex'])
+                s._check_getters(api, saved['settings'], image)
+                self.assertEqual([call.args[0] for call in api.get_setting.call_args_list], [1, 2, 7, 18, 19])
+            bad = copy.deepcopy(catalog)
+            bad['profiles'][0]['configuration'] = row['configuration']
+            with self.assertRaises(ValueError): s._catalog_images(bad)
+            bad = copy.deepcopy(catalog)
+            bad['historical_profiles'][0]['configuration']['optional_features'].append('gui-lock')
+            with self.assertRaises(ValueError): s._catalog_images(bad)
+            with self.assertRaises(ValueError):
+                s.catalog_settings_identity(row['configuration'], '1'*64, '2'*64, '3'*64)
+
+    def test_macro_layer_tap_exact_image_contract(self):
+        new, row = profile_for('main', 110)
+        old, oldrow = profile_for('main', 111)
+        identity = oldrow['settings_identity']
+        identity['supported_keycodes'] = [code for code in identity['supported_keycodes']
+                                          if not s.macro_layer_tap_keycode(code)]
+        del identity['macro_layer_tap']
+        catalog = catalog_for(row, oldrow, transitions=[
+            {'source': new['ihx_sha256'], 'target': old['ihx_sha256']}])
+        bind(catalog, new, old)
+        image = new['compatible_images'][new['ihx_sha256']]
+        old_image = old['compatible_images'][old['ihx_sha256']]
+        codes = {layer << 8 | tap for layer in range(0x40, 0x46) for tap in range(0xF0, 0x100)}
+        self.assertEqual(len(codes), 96)
+        for code in codes:
+            self.assertTrue(s.image_keycode_supported(code, image))
+            self.assertFalse(s.image_keycode_supported(code, old_image))
+            for context in ('encoder', 'macro', 'macro-tap', 'macro-down', 'macro-up'):
+                self.assertFalse(s.image_keycode_supported(code, image, context=context))
+        for code in (0x40EF, 0x46F0, 0x4FFF, 0x20F0, 0xF0):
+            self.assertFalse(s.keycode_supported(code))
+        for bad_value in (1, None, 'true', []):
+            bad = copy.deepcopy(catalog)
+            bad['profiles'][0]['settings_identity']['macro_layer_tap'] = bad_value
+            with self.assertRaises(ValueError): s._catalog_images(bad)
+        bad = copy.deepcopy(catalog)
+        bad['profiles'][1]['settings_identity']['supported_keycodes'].append(0x40F0)
+        with self.assertRaises(ValueError): s._catalog_images(bad)
+        nvm = bytearray(new['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
+        offset = s.DeviceAPI.key_offset(0, (0, 0))
+        nvm[offset:offset+2] = bytes.fromhex('40f0')
+        with tempfile.TemporaryDirectory() as temp:
+            saved = backup_at(Path(temp), new, nvm)
+            self.assertIsNotNone(s.plan_restore(saved, new))
+            with self.assertRaisesRegex(ValueError, 'Unsupported keycode'):
+                s.plan_restore(saved, old)
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, 'backup source'):
+                backup_at(Path(temp), old, nvm)
+        nvm[offset:offset+2] = bytes(2)
+        stream = bytes.fromhex('0105f040') + bytes(16)
+        nvm[p.MACRO_ADDR:p.MACRO_ADDR+len(stream)] = stream
+        nvm[p.MACRO_BUSY_ADDR+1:p.MACRO_BUSY_ADDR+3] = len(stream).to_bytes(2, 'little')
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, 'backup source macro'):
+                backup_at(Path(temp), new, nvm)
+
     def test_all_curated_contracts_exact_and_no_release_approval(self):
         self.assertEqual(s.ak820_profiles.RELEASE_PROFILES,
             ('main', 'game', 'mmo', 'typing', 'code', 'pointer', 'onehand', 'creative', 'shortcuts', 'multios'))
@@ -78,10 +178,63 @@ class CatalogSettings(unittest.TestCase):
                 bind(catalog, profile)
                 self.assertEqual(s._profile_images(profile)[profile['ihx_sha256']]['build_id'], profile['schema'])
                 self.assertNotIn('release_approved', row['settings_identity'])
+                self.assertIs(row['settings_identity']['macro_layer_tap'], True)
+                self.assertEqual(sum(s.macro_layer_tap_keycode(code) for code in
+                                     row['settings_identity']['supported_keycodes']), 96)
                 self.assertEqual(row['settings_identity']['supported_keycodes'], sorted(set(row['settings_identity']['supported_keycodes'])))
                 with tempfile.TemporaryDirectory() as temp:
                     backup = backup_at(Path(temp), profile)
                     self.assertEqual(s.plan_restore(backup, profile)['key_count'], 498)
+
+    def test_caps_word_combo_exact_image_migration_and_old_target_stop(self):
+        source, sr = profile_for('main', 101)
+        target, tr = profile_for('main', 102)
+        old, oldrow = profile_for('main', 103)
+        del oldrow['settings_identity']['combo_actions']
+        catalog = catalog_for(sr, tr, oldrow, transitions=[
+            {'source': source['ihx_sha256'], 'target': target['ihx_sha256']},
+            {'source': source['ihx_sha256'], 'target': old['ihx_sha256']}])
+        bind(catalog, source, target, old)
+        self.assertEqual(old['compatible_images'][old['ihx_sha256']]['combo_actions'], [])
+        nvm = bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
+        data = bytes.fromhex('0400050000000000737c')
+        nvm[0x658:0x662] = s.DeviceAPI.stored_combo(data)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            saved = backup_at(root, source, nvm)
+            self.assertEqual(s.plan_restore(saved, target)['combo_entries'][0], data.hex())
+            before_dir = root/'before'; before_dir.mkdir()
+            before = backup_at(before_dir, old)
+            api = Mock(allow_writes=True)
+            with self.assertRaisesRegex(ValueError, 'Caps Word Combo'):
+                s.restore_settings(api, saved, old, target_backup=before)
+            self.assertEqual(api.mock_calls, [])
+        # An old source cannot claim this action merely because the reader knows it.
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, 'Caps Word Combo'):
+                backup_at(Path(temp), old, nvm)
+
+    def test_typed_historical_profiles_remain_strict_and_source_only(self):
+        old, row = profile_for('main', 104)
+        new, current = profile_for('main', 105)
+        del row['settings_identity']['combo_actions']
+        catalog = catalog_for(current, transitions=[{'source':old['ihx_sha256'], 'target':new['ihx_sha256']}])
+        catalog['historical_profiles'] = [row]
+        images = s._catalog_images(catalog)
+        self.assertEqual(images[old['ihx_sha256']]['combo_actions'], [])
+        self.assertEqual(images[new['ihx_sha256']]['combo_actions'], ['caps-word-toggle'])
+        for change in (lambda r:r['settings_identity'].update(combo_actions=['future']),
+                       lambda r:r['settings_identity'].update(extra=True),
+                       lambda r:r['settings_identity']['supported_keycodes'].append(65535)):
+            bad = copy.deepcopy(catalog); change(bad['historical_profiles'][0])
+            with self.assertRaises(ValueError): s._catalog_images(bad)
+        bad = copy.deepcopy(catalog); bad['historical_profiles'].append(copy.deepcopy(row))
+        with self.assertRaises(ValueError): s._catalog_images(bad)
+        bad = copy.deepcopy(catalog); bad['settings_transitions'].append({'source':new['ihx_sha256'], 'target':old['ihx_sha256']})
+        with self.assertRaisesRegex(ValueError, 'Unknown settings transition'): s._catalog_images(bad)
+        bind(catalog, old, new)
+        with tempfile.TemporaryDirectory() as temp:
+            self.assertIsNotNone(s.plan_restore(backup_at(Path(temp), old), new))
 
     def test_wrong_unknown_duplicate_and_feature_poisoned_metadata_fail(self):
         _, row = profile_for('main', 31)

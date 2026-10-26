@@ -19,7 +19,7 @@ The [shared functions](README.md#shared-functions) are included.
 
 ## Changes from main
 
-Added: Auto Shift for supported text keys; Space Cadet: Shift when held, parenthesis when tapped.
+Added: Space Cadet: Shift when held, parenthesis when tapped.
 
 Removed: VialRGB Direct: direct RGB control from a compatible application.
 

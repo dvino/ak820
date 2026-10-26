@@ -27,6 +27,8 @@ if '--os-indicators' in sys.argv:
     defines.append('AK820_OS_INDICATORS')
 if '--mac-pc' in sys.argv:
     defines.append('AK820_MAC_PC')
+if '--gui-lock' in sys.argv:
+    defines.append('AK820_COMPACT_GUI_LOCK')
 if '--without-mouse' in sys.argv:
     defines = [item for item in defines if item not in ('MOUSE_ENABLE','MOUSE_SHARED_EP')]
 with tempfile.TemporaryDirectory(prefix='ak820-usb-') as temp:

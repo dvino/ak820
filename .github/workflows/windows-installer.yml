@@ -237,7 +237,7 @@ jobs:
           def allowed_path(path):
               if path == WORKFLOW or path.startswith("audits/"):
                   return True
-              if path == "ci/beta2-release-notes.md":
+              if path == "ci/beta3-release-notes.md":
                   return True
               if re.fullmatch(r"(?:README(?:[^/]*)|docs/.+)\.md", path):
                   return True
@@ -380,7 +380,7 @@ jobs:
             $bundle = Resolve-Path "dist/ci-firmware/profiles/$($profile.id)"
             $attestation = Get-Content "$bundle/reports/build-attestation.json" -Raw | ConvertFrom-Json
             if ($attestation.source_commit -cne $env:SOURCE_COMMIT) { throw "Stale CI bundle: $($profile.id)" }
-            $target = "releases/beta2/$($profile.id)"
+            $target = "releases/beta3/$($profile.id)"
             New-Item $target -ItemType Directory -Force | Out-Null
             Copy-Item "$bundle/*" $target -Recurse -Force
           }
@@ -442,7 +442,7 @@ jobs:
               attestation = json.loads((bundle / 'reports/build-attestation.json').read_text())
               if attestation['source_commit'] != os.environ['SOURCE_COMMIT']:
                   raise SystemExit('Stale CI bundle: ' + profile['id'])
-              target = Path('releases/beta2') / profile['id']
+              target = Path('releases/beta3') / profile['id']
               shutil.copytree(bundle, target)
           PYTHON
       - name: Run Linux packaging regressions
@@ -509,15 +509,15 @@ jobs:
               if attestation.get('source_commit') != os.environ['SOURCE_COMMIT']:
                   raise SystemExit('firmware bundle source commit mismatch: ' + profile['id'])
               bundles[profile['id']] = bundle
-          shutil.copytree('dist/firmware/profiles', 'releases/beta2')
+          shutil.copytree('dist/firmware/profiles', 'releases/beta3')
           with zipfile.ZipFile('dist/windows/AK820-Windows.zip') as package:
               for app in ('AK820', 'AK820-cli'):
                   prefix = f'AK820-Windows/{app}/_internal/'
                   for profile, bundle in bundles.items():
                     manifest = json.loads((bundle / 'installer-release.json').read_text())
-                    checks = [(bundle / 'installer-release.json', f'releases/beta2/{profile}/installer-release.json')]
-                    checks.extend((bundle / name, f'releases/beta2/{profile}/' + name) for name in manifest['files'])
-                    checks.append((bundle / 'approved-release.json', f'releases/beta2/{profile}/approved-release.json'))
+                    checks = [(bundle / 'installer-release.json', f'releases/beta3/{profile}/installer-release.json')]
+                    checks.extend((bundle / name, f'releases/beta3/{profile}/' + name) for name in manifest['files'])
+                    checks.append((bundle / 'approved-release.json', f'releases/beta3/{profile}/approved-release.json'))
                     for source, packaged in checks:
                       if hashlib.sha256(package.read(prefix + packaged)).hexdigest() != hashlib.sha256(source.read_bytes()).hexdigest():
                         raise SystemExit(f'{app} package input mismatch: {profile}/{source.name}')
@@ -526,9 +526,9 @@ jobs:
                   prefix = f'AK820-Linux-x86_64/{app}/_internal/'
                   for profile, bundle in bundles.items():
                     manifest = json.loads((bundle / 'installer-release.json').read_text())
-                    checks = [(bundle / 'installer-release.json', f'releases/beta2/{profile}/installer-release.json')]
-                    checks.extend((bundle / name, f'releases/beta2/{profile}/' + name) for name in manifest['files'])
-                    checks.append((bundle / 'approved-release.json', f'releases/beta2/{profile}/approved-release.json'))
+                    checks = [(bundle / 'installer-release.json', f'releases/beta3/{profile}/installer-release.json')]
+                    checks.extend((bundle / name, f'releases/beta3/{profile}/' + name) for name in manifest['files'])
+                    checks.append((bundle / 'approved-release.json', f'releases/beta3/{profile}/approved-release.json'))
                     for source, packaged in checks:
                       member = package.getmember(prefix + packaged)
                       if not member.isfile(): raise SystemExit('Linux approved input is not a regular file')
@@ -545,7 +545,7 @@ jobs:
       - name: Prepare companion catalogs and installation guides
         run: >-
           python tools/build_beta_release_assets.py
-          --bundles-root releases/beta2
+          --bundles-root releases/beta3
           --output dist/catalog
           --tag "${{ github.ref_name }}"
       - name: Create GitHub release
@@ -559,13 +559,13 @@ jobs:
             dist/windows/AK820-Windows.zip dist/windows/AK820-Windows.zip.sha256
             dist/linux/AK820-Linux-x86_64.tar.gz dist/linux/AK820-Linux-x86_64.tar.gz.sha256
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
-            dist/catalog/AK820-Beta2-Catalog.zip dist/catalog/AK820-Beta2-Catalog.zip.sha256
+            dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta3-Catalog.zip.sha256
             dist/catalog/firmware-matrix.json dist/catalog/capability-catalog.json
             dist/catalog/module-descriptions.json dist/catalog/release-catalog.json
             dist/catalog/release-manifest.json dist/catalog/SHA256SUMS
             dist/catalog/INSTALL-en.md dist/catalog/INSTALL-ru.md
             --title "AK820 $RELEASE_TAG"
-            --notes-file ci/beta2-release-notes.md
+            --notes-file ci/beta3-release-notes.md
           )
           if [[ "$RELEASE_PRERELEASE" == true ]]; then
             gh release create "${args[@]}" --verify-tag --prerelease

@@ -389,14 +389,14 @@ def build(bundles_root: Path, output: Path, tag: str) -> dict:
         stage = Path(tmp) / 'assets'; stage.mkdir()
         for name, data in payload.items():
             dest = stage / _safe_name(name); dest.parent.mkdir(parents=True, exist_ok=True); dest.write_bytes(data)
-        archive = stage / 'AK820-Beta2-Catalog.zip'
+        archive = stage / 'AK820-Beta3-Catalog.zip'
         with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
             for name in sorted(payload):
                 info = zipfile.ZipInfo(name, (1980,1,1,0,0,0)); info.compress_type = zipfile.ZIP_DEFLATED; info.external_attr = 0o100644 << 16
                 zf.writestr(info, payload[name])
         digest = sha(archive.read_bytes())
-        (stage / 'AK820-Beta2-Catalog.zip.sha256').write_text(digest + '  AK820-Beta2-Catalog.zip\n')
-        (stage / 'SHA256SUMS').write_text(''.join(sha((stage / n).read_bytes()) + '  ' + n + '\n' for n in sorted(payload)) + digest + '  AK820-Beta2-Catalog.zip\n')
+        (stage / 'AK820-Beta3-Catalog.zip.sha256').write_text(digest + '  AK820-Beta3-Catalog.zip\n')
+        (stage / 'SHA256SUMS').write_text(''.join(sha((stage / n).read_bytes()) + '  ' + n + '\n' for n in sorted(payload)) + digest + '  AK820-Beta3-Catalog.zip\n')
         stage.rename(output)
     return {'output': str(output), 'tag': tag, 'profiles': len(profile_ids), 'installable_profiles': profile_ids, 'zip_sha256': digest}
 

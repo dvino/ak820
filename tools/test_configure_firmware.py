@@ -64,14 +64,14 @@ class ProfileTests(unittest.TestCase):
                     with self.assertRaisesRegex(expected, message):
                         config.inspect(build, root)
 
-    def test_beta2_ten_profile_composition_and_positive_core_switches(self):
+    def test_beta3_ten_profile_composition_and_positive_core_switches(self):
         self.assertEqual(config.profiles.RELEASE_PROFILES,
             ('main', 'game', 'mmo', 'typing', 'code', 'pointer', 'onehand',
              'creative', 'shortcuts', 'multios'))
         main = {'one-shot', 'leader', 'dynamic-macros', 'os-indicators',
                 'qmk-settings', 'key-overrides', 'vialrgb-direct'}
         variants = {
-            'main': (set(), set()),
+            'main': (set(), {'auto-shift'}),
             'game': ({'leader'}, {'nkro', 'nkro-control', 'gui-lock'}),
             'mmo': ({'leader', 'key-overrides'}, {'nkro', 'nkro-control', 'gui-lock', 'tap-dance'}),
             'typing': ({'vialrgb-direct'}, {'auto-shift', 'space-cadet'}),
@@ -93,6 +93,15 @@ class ProfileTests(unittest.TestCase):
                                  'yes' if enabled else 'no')
             self.assertEqual(value['nvm_schema'], config.profiles.EXTENSION_SCHEMA)
             self.assertFalse(any('DIAG' in switch or 'OMIT' in switch for switch in value['make_options']))
+
+    def test_beta2_main_metadata_remains_frozen_and_readable(self):
+        old = config.profiles.historical_configuration('main')
+        self.assertNotIn('auto-shift', old['optional_features'])
+        self.assertNotIn('gui-lock', old['optional_features'])
+        config.profiles.validate_source_configuration(old)
+        with self.assertRaises(ValueError):
+            config.profiles.validate_configuration(old)
+        self.assertNotEqual(old, config.profiles.configuration('main'))
 
     def test_old_typing_metadata_has_an_explicit_reader_and_build_alias(self):
         old = config.profiles.legacy_configuration('typing')

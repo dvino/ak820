@@ -2,13 +2,20 @@
 
 # Desktop development handoff
 
-Current source prepares `beta.2` with ten profiles and installer selection. It is not published yet; the published `beta.1` installer contains the previous `work` image. The companion application remains a separate development effort. [Firmware status](../../docs/STATUS.md) distinguishes builds, offline checks, packaging and physical validation.
+Current source prepares `beta.3` with ten profiles and installer selection. The published `beta.2` remains available. The companion application remains a separate development effort. [Firmware status](../../docs/STATUS.md) distinguishes builds, offline checks, packaging and physical validation.
+
+Beta.3 adds two exact-image capabilities. `combo_actions: ["caps-word-toggle"]`
+permits Caps Word (`0x7c73`) as a Combo output. `macro_layer_tap: true` permits
+macro-on-tap, layer-on-hold codes `0x40F0`–`0x45FF` with low bytes `F0`–`FF`
+on physical matrix keys. Missing fields mean no support. Earlier beta.2 rows
+remain source-only entries in `historical_profiles`; their original keycodes
+and settings must not be inferred from the new profile with the same name.
 
 ## Firmware and profile contract
 
 The current catalog contains `main`, `game`, `mmo`, `typing`, `code`, `pointer`, `onehand`, `creative`, `shortcuts` and `multios`. The default is `main`. See the [individual profile guides](../../docs/profiles/README.md) for complete compositions. All functions cannot fit in controller memory at once; a Vial layer cannot enable an absent module. Historical CLI names are not additional choices in the new installer.
 
-All ten profiles include QMK Settings and storage schema 03. Storage reserves all three extension types, but editors expose only modules and runtime QSIDs enabled by the exact image. `typing` enables Auto Shift and exposes QSID 4. `game`, `mmo`, `main` and `creative` retain Direct; the other profiles retain built-in effects and global RGB controls without per-LED host frames.
+All ten profiles include QMK Settings and storage schema 03. Storage reserves all three extension types, but editors expose only modules and runtime QSIDs enabled by the exact image. Beta.3 `main` and `typing` enable Auto Shift and expose QSID 4. Earlier beta.2 `main` does not. `game`, `mmo`, `main` and `creative` retain Direct; the other profiles retain built-in effects and global RGB controls without per-LED host frames.
 
 The [matrix](../firmware-matrix.json) and [descriptions](../module-descriptions.json) reflect the current registry. Until qualification completes, matrix rows remain unmeasured and the [capability catalog](../capability-catalog.json) has no approved new images. Do not infer capabilities from a profile name. Exact catalogs join by IHX SHA256; catalog presence alone does not authorize a device write. Installer approval, settings identities and transitions are checked separately for each image.
 
