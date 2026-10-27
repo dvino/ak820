@@ -2,7 +2,7 @@
 
 # Installation
 
-Beta.3 provides Python source packages for Windows and Linux x86_64. The
+Beta.4 provides Python source packages for Windows and Linux x86_64. The
 packages contain the installer scripts and all ten approved firmware profiles.
 They do not contain a GUI application. Python 3.10 or newer is required; use
 the `python` command on Windows and `python3` on Linux.
@@ -14,7 +14,7 @@ and USB ID `320F:505B` alone do not confirm compatibility.
 ## Download and check the package
 
 Download the matching archive and `.sha256` file from the
-[beta.3 release page](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.3):
+[beta.4 release page](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.4):
 
 - Windows: `AK820-Windows.zip` and `AK820-Windows.zip.sha256`.
 - Linux x86_64: `AK820-Linux-x86_64.tar.gz` and its `.sha256` file.
@@ -108,6 +108,6 @@ installer confirms that the selected source and target images are compatible.
 
 ## Companion catalog
 
-The beta.3 firmware catalog is also available as `AK820-Beta3-Catalog.zip`.
+The beta.4 firmware catalog is also available as `AK820-Beta4-Catalog.zip`.
 It contains firmware and companion-integration data, not a desktop
 application. Companion integration is planned separately.

@@ -13,11 +13,9 @@
  * and blocks held sources after clear_keyboard(). */
 static keyrecord_t as_saved;
 static uint8_t as_state; /* 0 idle, 1 pending, 2 plain down, 3 shifted down */
-#if defined(__SDCC_mcs51)
-static __bit as_enabled = true;
-#else
-static bool as_enabled = true;
-#endif
+/* Upstream QSID 3 bits: enabled, no special, no numeric, no alpha. */
+static uint8_t as_flags = 1;
+void ak820_autoshift_configure(uint8_t flags) { as_flags = flags; }
 
 static void as_emit(bool shifted) {
     as_state = shifted ? 3 : 2;
@@ -56,12 +54,15 @@ bool ak820_autoshift_process(keyrecord_t AK820_STATE_MEM *record) {
     if (record->event.key.row >= MATRIX_ROWS || record->event.key.col >= MATRIX_COLS) return true;
     if (code >= QK_AUTO_SHIFT_ON && code <= QK_AUTO_SHIFT_TOGGLE) {
         if (record->event.pressed)
-            as_enabled = code == QK_AUTO_SHIFT_TOGGLE ? !as_enabled : code == QK_AUTO_SHIFT_ON;
+            as_flags = code == QK_AUTO_SHIFT_TOGGLE ? as_flags ^ 1 :
+                (as_flags & ~1) | (code == QK_AUTO_SHIFT_ON);
         return false;
     }
-    if (!as_enabled || as_state || !record->event.pressed || get_mods() || get_weak_mods()) return true;
+    if (!(as_flags & 1) || as_state || !record->event.pressed || get_mods() || get_weak_mods()) return true;
     if (!((code >= KC_A && code <= KC_0) ||
           (code >= KC_MINUS && code <= KC_SLASH) || code == KC_NONUS_BACKSLASH)) return true;
+    if (code <= KC_Z ? (as_flags & 16) :
+        code <= KC_0 ? (as_flags & 8) : (as_flags & 4)) return true;
     as_saved = *record;
     as_state = 1;
     return false;

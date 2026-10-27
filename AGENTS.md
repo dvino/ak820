@@ -81,6 +81,9 @@ and hardware limits. Companion integration is separate from the beta.3 packet.
 - The lead checks current state and ownership, coordinates integration and
   evidence, and assigns bounded tasks with explicit owned files. Avoid duplicate
   work and concurrent builds sharing a working tree or output paths.
+- For long-running builds and checks, use a monitor tied to the actual process
+  or completion report. Report completion, failure or required action; avoid
+  repeated manual log polling and unchanged status updates.
 - Use fresh GPT-6 Luna at medium reasoning for small edits, docs and routine
   builds; GPT-6.1 Terra (`gpt-6.1-terra`) at low for bounded code implementation/refactoring,
   native UI and visual/browser/desktop tasks. Use GPT-6.1 Sol at low for complex
@@ -93,4 +96,8 @@ and hardware limits. Companion integration is separate from the beta.3 packet.
   handoff with ownership, current facts, evidence, dependencies and stop
   conditions rather than the full routine-task conversation. Communicate with
   agents in English and with the user in their chosen language.
+- Before finishing a task, clean up temporary files, build outputs and worktrees
+  created for it after preserving required artifacts and evidence. Check ownership
+  and dirty state first; do not remove active work, unrelated changes, recovery
+  backups or the only copy of useful data. Record any retained paths and why.
 - Apply the evidence, review and device-authorization rules above to every agent.

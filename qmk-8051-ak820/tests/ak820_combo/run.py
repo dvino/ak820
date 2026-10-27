@@ -13,6 +13,12 @@ with tempfile.TemporaryDirectory(prefix='ak820-combo-') as d:
 #define MATRIX_ROWS 16
 #define MATRIX_COLS 8
 #define VIAL_COMBO_ENTRIES 8
+#define QK_COMBO_ON 0x7c50
+#define QK_COMBO_OFF 0x7c51
+#define QK_COMBO_TOGGLE 0x7c52
+#define KC_AUDIO_MUTE 0xa8
+#define KC_LAUNCHPAD 0xc2
+void clear_keyboard(void);
 #define QK_MOD_TAP 0x2000
 #define QK_CAPS_WORD_TOGGLE 0x7c73
 #define KC_A 4
@@ -29,12 +35,12 @@ void process_record(keyrecord_t *);
     (work/'vial.h').write_text('#pragma once\n#include "action.h"\ntypedef struct {uint16_t input[4], output;} vial_combo_entry_t;\n')
     (work/'quantum.h').write_text('#include "action.h"\n')
     (work/'dynamic_keymap.h').write_text('#include "vial.h"\nint dynamic_keymap_get_combo(uint8_t,vial_combo_entry_t *);\n')
-    cmd=['cc','-std=c11','-Wall','-Wextra','-Werror','-fsanitize=undefined','-I'+str(work),'-I'+str(ROOT/'keyboards/ajazz/ak820'),str(ROOT/'keyboards/ajazz/ak820/ak820_combo.c'),str(HERE/'harness.c'),'-o',str(work/'test')]
+    cmd=['cc','-std=c11','-Wall','-Wno-int-to-pointer-cast','-Wextra','-Werror','-fsanitize=undefined','-I'+str(work),'-I'+str(ROOT/'keyboards/ajazz/ak820'),str(ROOT/'keyboards/ajazz/ak820/ak820_combo.c'),str(HERE/'harness.c'),'-o',str(work/'test')]
     subprocess.run(cmd,check=True)
     subprocess.run([str(work/'test')],check=True)
 
     source=(ROOT/'quantum/dynamic_keymap.c').read_text()
-    parts=[]
+    parts=[source[source.index("/* TD and KO retain"):source.index("#ifdef VIAL_TAP_DANCE_ENABLE\n#ifdef AK820_COMPACT_TAP_DANCE\nint dynamic_keymap_get_tap_dance")]]
     for name in ['dynamic_keymap_get_combo','dynamic_keymap_set_combo']:
         m=re.search(r'^int '+name+r'\([^\n]*\) \{',source,re.M)
         i=source.index('{',m.start())+1; depth=1

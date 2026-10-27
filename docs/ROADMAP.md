@@ -8,10 +8,10 @@ Other profiles exchange selected `main` modules for task-specific functions;
 these are complete compositions, not arbitrary toggles. Historical names remain
 for reproduction; historical Typing uses `legacy-typing` in current builds.
 
-Beta.2 is published. The beta.3 source adds Caps Word Combo output, macro
-Layer-Tap, Auto Shift in `main`, Direct snapshots and complete-frame updates,
-and the GUI-lock W pulse. Qualification, release and hardware state are
-recorded in [Status](STATUS.md).
+Beta.3 is published with Caps Word Combo output, macro Layer-Tap, Auto Shift
+in `main`, Direct snapshots and complete-frame updates, and the GUI-lock W
+pulse. Beta.4 is being prepared with compact controls. Qualification, release
+and hardware state are recorded in [Status](STATUS.md).
 
 ## Configurator
 
@@ -49,11 +49,10 @@ Tap Dance has eight entries with four basic or modified-basic outputs, one
 pending decision and at most two presses per gesture; resolved holds may
 overlap. Key Overrides has eight rows and one physical trigger at a time.
 Leader selects saved macros with 1–0 or A–F after its prefix. One Shot supports
-modifiers, not layers. Dynamic recording stores two temporary sequences of up
+modifiers, not layers; its timeout is configurable and defaults to unlimited. Dynamic recording stores two temporary sequences of up
 to 16 completed key taps each, separately from the 16 persistent Vial macros.
 
-QMK Settings exposes QSID 1, 2, 7, 18 and 19 in all ten profiles, plus QSID 4
-for Auto Shift in `main` and `typing`. Its typed, versioned 24-byte record has a CRC.
+QMK Settings exposes base timing settings in all ten profiles. Auto Shift settings (QSID 3 and 4) are available in `main` and `typing`; One Shot timeout (QSID 6) follows One Shot availability. The 24-byte `QS` record uses version 2 and CRC; version 1 upgrades in RAM until a setting changes.
 Tap Dance uses its row term rather than QSID 7. Individual guides describe
 rejected inputs and remaining limits.
 

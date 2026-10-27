@@ -1,17 +1,19 @@
 # Independent program review: typing
 
+## Exact-tree review record
+
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+  "ihx_sha256": "382e5e965740ce917b165ddc01d8a7078525173882016310a755bbb54a8b63a9",
   "physical_device_commands": 0,
-  "policy_sha256": "0b89ca702777ef979eeb9fd4386a98229b56f70cff40b09bb534523d3df8c1e7",
+  "policy_sha256": "8c8b3d4dcf4d1bc7b6bacd3c232e03045ba9c8771adc000d433e0112880ed7f6",
   "profile": "typing",
-  "review_report": "audits/beta3-direct-20261026/release-acceptance-policy-20261027.md",
-  "scope": "Independent final source and documentation review plus exact-image policy refresh. Only English and Russian STATUS source pins changed; firmware image, symbols, host inputs, packing and frozen test-source evidence remain unchanged. Retained offline qualification and package evidence remain scoped to their recorded identities. Final merged-main and release-tag CI and actual publication are pending. No hardware validation or device operation is claimed.",
+  "review_report": "ci/profiles/typing/program-review.md#exact-tree-review-record",
+  "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/typing-qualified/typing/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
   "status": "passed",
-  "symbols_sha256": "8b48498d60fbf1e502e10627a40793dc7c6488640d25f87b2c1d9047e5e1a2ff",
+  "symbols_sha256": "5a642ede79b45d5af0f5d2705535fa42d821d0bfa46c18b3919fc82d06dc864c",
   "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
 }
 ```

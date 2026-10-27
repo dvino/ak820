@@ -2,11 +2,13 @@
 
 # Independent reviews
 
-The published and installed firmware is `v0.6.0-alpha.3`.
+The published release is `v0.6.0-beta.3`. The last recorded physical installation
+was `v0.6.0-alpha.3`; it does not verify beta hardware behavior.
 Exact images, checks and limits are recorded in [Status](STATUS.md).
 
 | Scope | Evidence |
 | --- | --- |
+| Beta.3 release | [Release acceptance](../audits/beta3-direct-20261026/release-acceptance-firmware-20261027.md) and [independent firmware review](../audits/beta3-direct-20261026/firmware-final-review.md). |
 | Nine-profile beta preparation | [Catalog, optimization, documentation and contract review](../audits/rc6/beta-catalog-20261024/README.md). |
 | Alpha.3 release | [Release qualification](../audits/rc6/alpha3-release-20261024/review.md) and [independent program review](../audits/rc6/alpha3-release-20261024/program-review.md). |
 | Alpha.3 installation | [Device result](../audits/rc6/alpha3-release-20261024/device-result.json). |

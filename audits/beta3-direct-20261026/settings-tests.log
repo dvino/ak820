@@ -4,6 +4,7 @@ test_command_domains_and_source_restrictions (test_catalog_settings.CatalogSetti
 test_direct_palette_is_blocked_before_restore_into_no_direct_image (test_catalog_settings.CatalogSettings.test_direct_palette_is_blocked_before_restore_into_no_direct_image) ... ok
 test_dynamic_macro_controls_require_physical_matrix_for_every_opcode (test_catalog_settings.CatalogSettings.test_dynamic_macro_controls_require_physical_matrix_for_every_opcode) ... ok
 test_exact_code_mismatch_and_unknown_backup_fields_fail (test_catalog_settings.CatalogSettings.test_exact_code_mismatch_and_unknown_backup_fields_fail) ... ok
+test_explicit_transition_cannot_downgrade_settings_record (test_catalog_settings.CatalogSettings.test_explicit_transition_cannot_downgrade_settings_record) ... ok
 test_grave_escape_is_allowed_only_when_compiled (test_catalog_settings.CatalogSettings.test_grave_escape_is_allowed_only_when_compiled) ... ok
 test_historical_main_survives_current_composition_change (test_catalog_settings.CatalogSettings.test_historical_main_survives_current_composition_change) ... ok
 test_key_override_macro_controls_accept_tap_and_reject_down_up (test_catalog_settings.CatalogSettings.test_key_override_macro_controls_accept_tap_and_reject_down_up) ... ok
@@ -14,6 +15,7 @@ test_macro_module_keycode_cannot_cross_profile_even_with_transition (test_catalo
 test_pinned_alpha2_source_requires_explicit_descriptor_and_edge (test_catalog_settings.CatalogSettings.test_pinned_alpha2_source_requires_explicit_descriptor_and_edge) ... ok
 test_reactive_mode_translates_between_direct_and_no_direct_enums (test_catalog_settings.CatalogSettings.test_reactive_mode_translates_between_direct_and_no_direct_enums) ... ok
 test_restore_and_final_verification_translate_rgb_enum_both_directions (test_catalog_settings.CatalogSettings.test_restore_and_final_verification_translate_rgb_enum_both_directions) ... ok
+test_restore_reapplies_saved_controls_without_rewriting_v1_or_v2 (test_catalog_settings.CatalogSettings.test_restore_reapplies_saved_controls_without_rewriting_v1_or_v2) ... ok
 test_reviewed_transition_does_not_override_module_or_schema (test_catalog_settings.CatalogSettings.test_reviewed_transition_does_not_override_module_or_schema) ... ok
 test_rgb_modes_follow_exact_profile_enum (test_catalog_settings.CatalogSettings.test_rgb_modes_follow_exact_profile_enum) ... ok
 test_typed_historical_profiles_remain_strict_and_source_only (test_catalog_settings.CatalogSettings.test_typed_historical_profiles_remain_strict_and_source_only) ... ok
@@ -167,11 +169,11 @@ test_work_to_alpha3_downgrade_is_blocked_before_writes (test_settings_backup.Wor
 test_changed_manifest_config_hash_stops_before_restore_unlock (test_settings_workflow.EndToEndWorkflowTests.test_changed_manifest_config_hash_stops_before_restore_unlock) ... ok
 test_cli_and_gui_use_same_actual_backup_restore_backend (test_settings_workflow.EndToEndWorkflowTests.test_cli_and_gui_use_same_actual_backup_restore_backend) ... Release files and independent approval match their checksums. Your device backup is made during preparation.
 Verification was entirely offline; hidapi was not loaded and USB was not opened.
-Personal recovery session: /tmp/tmpsbm_3dq9
+Personal recovery session: /tmp/tmpvo_ad1ep
 
 PERMANENT: typing and complete CODE readback passed. Entropy/Vial checks can now begin.
 Persistence after power loss was not tested by this run.
-Personal recovery session: /tmp/tmpsbm_3dq9
+Personal recovery session: /tmp/tmpvo_ad1ep
 Rules installed and applied to hidraw. No USB reset or reconnect was performed.
 ok
 test_gui_timeout_stops_and_joins_child (test_settings_workflow.EndToEndWorkflowTests.test_gui_timeout_stops_and_joins_child) ... ok
@@ -196,6 +198,6 @@ test_prepared_update_forwards_exact_schema_before_reviewed_pins (test_transport_
 test_schema3_readback_uses_explicit_expected_schema (test_transport_schema.TransportSchemaTests.test_schema3_readback_uses_explicit_expected_schema) ... ok
 
 ----------------------------------------------------------------------
-Ran 186 tests in 82.580s
+Ran 188 tests in 159.689s
 
 OK

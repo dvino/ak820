@@ -1,17 +1,19 @@
 # Independent program review: multios
 
+## Exact-tree review record
+
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+  "ihx_sha256": "871f9d60715a40261808a5433085cf4f829083c3dd0ae2e1230792dd46522998",
   "physical_device_commands": 0,
-  "policy_sha256": "3920a0e072065214e894a3a789b224301399457f3a24c8fe6e06f37737a0c99b",
+  "policy_sha256": "8e0e51c706f1c577b5bcc0f33291df15c39acd38d182f15a7a7cf48c4b648ea9",
   "profile": "multios",
-  "review_report": "audits/beta3-direct-20261026/release-acceptance-policy-20261027.md",
-  "scope": "Independent final source and documentation review plus exact-image policy refresh. Only English and Russian STATUS source pins changed; firmware image, symbols, host inputs, packing and frozen test-source evidence remain unchanged. Retained offline qualification and package evidence remain scoped to their recorded identities. Final merged-main and release-tag CI and actual publication are pending. No hardware validation or device operation is claimed.",
+  "review_report": "ci/profiles/multios/program-review.md#exact-tree-review-record",
+  "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/multios-qualified/multios/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
   "status": "passed",
-  "symbols_sha256": "1dce960b6ea76e3cfb11480815d9dd91993b346911cddd3fe12a14967437f43b",
+  "symbols_sha256": "480a19d2f90fc66d11f4211726f2f3c3bd55bcc869f7cc4ee7fa1c781c85e8e6",
   "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
 }
 ```

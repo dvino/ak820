@@ -272,7 +272,7 @@ class PromotionTests(unittest.TestCase):
         for mutation, expected in (
             ('configuration', 'Web matrix identity differs'),
             ('identity', 'Web matrix identity differs'),
-            ('settings', 'Build configuration differs'),
+            ('settings', 'Source configuration differs from a known package'),
             ('capability', 'Capability image differs'),
         ):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temp:

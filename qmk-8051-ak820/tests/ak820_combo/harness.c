@@ -8,6 +8,7 @@ static keyrecord_t logbuf[64];
 static unsigned n, traces;
 int dynamic_keymap_get_combo(uint8_t i,vial_combo_entry_t *e) {*e=entries[i];return 0;}
 void process_record(keyrecord_t *r) {assert(n<64);logbuf[n++]=*r;}
+void clear_keyboard(void) {ak820_combo_cancel();}
 static void event(uint8_t id,uint16_t code,bool down,uint16_t time) {
     keyrecord_t r={.event={{id/8,id%8},down,time},.keycode=code};
     ak820_combo_tick(time);
@@ -34,5 +35,7 @@ int main(void) {
     reset();entries[0].input[1]=22;entries[0].output=0x7c73;ak820_combo_reload();event(0,4,true,0);assert(!n);event(1,22,true,1);assert(n==1);expect(0,0x7c73,true);event(1,22,false,2);event(0,4,false,3);assert(n==2);expect(1,0x7c73,false);
     reset();entries[0].input[1]=22;entries[0].output=0x7c73;ak820_combo_reload();event(1,22,true,0);event(0,4,true,1);assert(n==1);expect(0,0x7c73,true);event(0,4,false,2);event(1,22,false,3);assert(n==2);expect(1,0x7c73,false);
     reset();event(0,4,true,0);event(1,4,true,1);assert(n==1);expect(0,4,true);ak820_combo_tick(41);expect(1,4,true);
+    reset();e=(vial_combo_entry_t){{4,5,0,0},KC_AUDIO_MUTE};assert(ak820_combo_valid(&e));e.output=KC_LAUNCHPAD;assert(ak820_combo_valid(&e));e.output=0x100|KC_AUDIO_MUTE;assert(!ak820_combo_valid(&e));
+    reset();event(0,4,true,0);event(3,QK_COMBO_OFF,true,1);assert(n==1);expect(0,4,true);event(1,5,true,2);expect(1,5,true);event(3,QK_COMBO_ON,true,3);
     printf("compact combo production engine: %u traces and configuration validation PASS (host C/UBSan; no hardware)\n",traces);
 }

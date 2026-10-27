@@ -36,13 +36,15 @@ _Static_assert(QK_MOD_TAP == 0x2000 && QK_LAYER_TAP_MAX == 0x4fff, "dual-role by
  * cross-byte extraction in the code-size-limited maximal profile. */
 #define SOURCE_STATE_BYTES SOURCES
 static uint8_t source_state[SOURCE_STATE_BYTES];
-static uint8_t source_state_get(uint8_t id) {
-    return source_state[id];
-}
-static void source_state_set(uint8_t id, uint8_t state) {
-    source_state[id] = state & SOURCE_STATE_MASK;
-}
+/* The byte representation needs no accessor calls or shared argument slots. */
+#define source_state_get(id) (source_state[(id)])
+#define source_state_set(id, state) (source_state[(id)] = (state) & SOURCE_STATE_MASK)
+/* A direct byte keeps the frequent pending-source checks compact. */
+#ifdef __SDCC_mcs51
+static __data uint8_t pending = NONE;
+#else
 static uint8_t pending = NONE;
+#endif
 static uint16_t pending_time, pending_code;
 
 #ifndef AK820_COMPACT_ONESHOT
@@ -169,9 +171,32 @@ void ak820_tapping_cancel(void) {
  * remains down, a new OSM works as a held modifier but cannot arm again. */
 uint8_t ak820_oneshot_mods, ak820_oneshot_consumed;
 uint8_t ak820_oneshot_target = NONE;
+uint16_t ak820_oneshot_time;
+void ak820_oneshot_tick(uint16_t now) {
+#ifdef AK820_QMK_SETTINGS
+    uint16_t timeout = ak820_settings_oneshot_timeout();
+    if (timeout && ak820_oneshot_mods && (uint16_t)(now - ak820_oneshot_time) >= timeout) {
+        unregister_mods(ak820_oneshot_mods);
+        ak820_oneshot_mods = 0;
+    }
+#else
+    (void)now;
+#endif
+}
+static void oneshot_use_held(void) {
+    for (uint8_t i = 0; i < SOURCES; ++i) {
+        uint8_t state = source_state_get(i);
+        if (state & SOURCE_ONESHOT) source_state_set(i, state | SOURCE_ONESHOT_USED);
+    }
+}
 bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
     uint8_t mods;
     if (id == NONE || get_repeat_key_count()) return true;
+#ifdef CAPS_WORD_ENABLE
+    /* Language selection is a control, not the next output key. */
+    if ((code >> 8) == (AK820_CW_LANG_EN >> 8) && (uint8_t)code <= (uint8_t)AK820_CW_LANG_TOGGLE) return true;
+#endif
+    if (code >= QK_COMBO_ON && code <= QK_COMBO_TOGGLE) return true;
 #ifdef AK820_COMPACT_GUI_LOCK
     /* Output controls must not consume a queued modifier or mark held OSM used. */
     if (code >= QK_MAGIC_GUI_ON && code <= QK_MAGIC_TOGGLE_GUI) return true;
@@ -188,14 +213,15 @@ bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
         mods = code & 15;
         if (code & 16) mods <<= 4;
         if (pressed) {
-            source_state_set(id, source_state_get(id) | SOURCE_ONESHOT);
-            source_state_set(id, source_state_get(id) & ~SOURCE_ONESHOT_USED);
-            if (ak820_oneshot_target != NONE) source_state_set(id, source_state_get(id) | SOURCE_ONESHOT_USED);
+            uint8_t state = (source_state_get(id) | SOURCE_ONESHOT) & ~SOURCE_ONESHOT_USED;
+            if (ak820_oneshot_target != NONE) state |= SOURCE_ONESHOT_USED;
+            source_state_set(id, state);
             register_mods(mods);
         } else if (source_state_get(id) & SOURCE_ONESHOT) {
             if (!(source_state_get(id) & SOURCE_ONESHOT_USED)) {
                 add_owned_mods(mods & ~ak820_oneshot_mods);
                 ak820_oneshot_mods |= mods;
+                ak820_oneshot_time = timer_read();
             }
             unregister_mods(mods);
             source_state_set(id, source_state_get(id) & ~(SOURCE_ONESHOT | SOURCE_ONESHOT_USED));
@@ -205,8 +231,7 @@ bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed) {
     if (pressed && code > KC_TRANSPARENT &&
         !(code >= KC_LCTL && code <= KC_RGUI) &&
         !(code >= QK_TO && code <= QK_LAYER_TAP_TOGGLE_MAX)) {
-        for (uint8_t i = 0; i < SOURCES; ++i)
-            if (source_state_get(i) & SOURCE_ONESHOT) source_state_set(i, source_state_get(i) | SOURCE_ONESHOT_USED);
+        oneshot_use_held();
         if (ak820_oneshot_mods) {
             ak820_oneshot_consumed = ak820_oneshot_mods;
             ak820_oneshot_target = id;

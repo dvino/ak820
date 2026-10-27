@@ -26,8 +26,11 @@
 #include "modifiers.h"
 
 /** @brief True when Caps Word is active. */
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+static __bit caps_word_active;
+#else
 static bool caps_word_active = false;
-
+#endif
 #if CAPS_WORD_IDLE_TIMEOUT > 0
 // Constrain timeout to a sensible range. With 16-bit timers, the longest
 // timeout possible is 32768 ms, rounded here to 30000 ms = half a minute.
@@ -102,10 +105,18 @@ __attribute__((weak)) void caps_word_set_user(bool active) {}
 /* Keep the default callback with the Caps Word state machine. On AK820 this
  * small module fits in the independently bounded low application window. */
 __attribute__((weak)) bool caps_word_press_user(uint16_t keycode) {
-    if ((keycode >= KC_A && keycode <= KC_Z) || keycode == KC_MINS) {
+    /* Minus becomes underscore in both languages. RU adds the seven letter
+     * positions in the standard Russian layout; no OS layout switch is sent. */
+    uint8_t key = keycode;
+    if (keycode > 255) return keycode == KC_UNDS;
+    if ((key >= KC_A && key <= KC_Z) || key == KC_MINS
+#ifdef AK820_BOARD
+        || (caps_word_ru && ((key >= KC_LBRC && key <= KC_RBRC) ||
+            (key >= KC_SCLN && key <= KC_DOT)))
+#endif
+    ) {
         add_weak_mods(MOD_BIT(KC_LSFT));
         return true;
     }
-    return (keycode >= KC_1 && keycode <= KC_0) || keycode == KC_BSPC ||
-        keycode == KC_DEL || keycode == KC_UNDS;
+    return (key >= KC_1 && key <= KC_0) || key == KC_BSPC || key == KC_DEL;
 }

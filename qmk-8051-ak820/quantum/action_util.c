@@ -98,32 +98,37 @@ static uint8_t owned_mod_refs[8], owned_weak_refs[8];
 static uint8_t owned_mods, owned_weak_mods;
 static uint8_t macro_mods[2];
 bool ak820_macro_primitive, ak820_macro_cancelled;
-bool ak820_macro_change(uint8_t AK820_STATE_MEM *bits, uint8_t index, bool pressed) {
+ak820_owner_result_t ak820_macro_change(uint8_t AK820_STATE_MEM *bits, uint8_t index, bool pressed) {
     if (!ak820_macro_primitive) return true;
     uint8_t mask = 1u << (index & 7);
-    bits += index >> 3;
-    if (((*bits & mask) != 0) == pressed) return false;
-    *bits ^= mask;
-    return true;
+    uint8_t AK820_STATE_MEM *target = bits + (index >> 3);
+    uint8_t old = *target;
+    uint8_t delta = mask & (pressed ? ~old : old);
+    *target = old ^ delta;
+    return delta != 0;
 }
 static void change_owned(uint8_t mods, uint8_t mode) {
-    uint8_t kind = mode >> 1;
-    bool pressed = (mode & 1) != 0;
-    uint8_t AK820_STATE_MEM *refs = kind ? owned_weak_refs : owned_mod_refs;
+    /* The four private callers pass 0..3: low bit adds/removes a reference,
+     * high bit selects the weak owners. Walk the eight counters directly. */
+    uint8_t AK820_STATE_MEM *refs = (mode & 2) ? owned_weak_refs : owned_mod_refs;
     if (ak820_macro_primitive) {
-        uint8_t old = macro_mods[kind];
-        macro_mods[kind] = pressed ? old | mods : old & ~mods;
-        mods &= pressed ? ~old : old;
+        uint8_t old = macro_mods[mode >> 1];
+        macro_mods[mode >> 1] = (mode & 1) ? old | mods : old & ~mods;
+        mods &= (mode & 1) ? ~old : old;
     }
-    uint8_t result = 0;
-    for (uint8_t i = 0, bit = 1; i < 8; ++i, bit <<= 1) {
+    uint8_t result = 0, bit = 1;
+    do {
+        uint8_t count = *refs;
         if (mods & bit) {
-            if (pressed) ++refs[i];
-            else if (refs[i]) --refs[i];
+            if (mode & 1) ++count;
+            else if (count) --count;
+            *refs = count;
         }
-        if (refs[i]) result |= bit;
-    }
-    if (kind) owned_weak_mods = result;
+        if (count) result |= bit;
+        ++refs;
+        bit <<= 1;
+    } while (bit);
+    if (mode & 2) owned_weak_mods = result;
     else owned_mods = result;
 }
 void add_owned_mods(uint8_t mods) { change_owned(mods, 1); }
@@ -145,7 +150,7 @@ void clear_owned_keys(void) {
     distinct_keys = 0;
     for (uint8_t i = 0; i < sizeof(macro_keys); ++i) macro_keys[i] = 0;
 }
-bool add_owned_key(uint8_t code) {
+ak820_owner_result_t add_owned_key(uint8_t code) {
     if (!ak820_macro_change(macro_keys, code, true)) return false;
     if (key_refs[code]++) return false;
     ++distinct_keys;
@@ -157,7 +162,7 @@ bool add_owned_key(uint8_t code) {
     } else add_key(code);
     return true;
 }
-bool del_owned_key(uint8_t code) {
+ak820_owner_result_t del_owned_key(uint8_t code) {
     if (!ak820_macro_change(macro_keys, code, false)) return false;
     if (!key_refs[code] || --key_refs[code]) return false;
     --distinct_keys;
@@ -178,34 +183,37 @@ bool del_owned_key(uint8_t code) {
  * most recently activated remaining usage, never a later deferred tap. */
 #define USAGE_COUNT (KC_LAUNCHPAD - KC_SYSTEM_POWER + 1)
 #define SYSTEM_COUNT (KC_SYSTEM_WAKE - KC_SYSTEM_POWER + 1)
-static uint8_t usage_refs[USAGE_COUNT], usage_order[USAGE_COUNT], usage_lengths[2];
+/* Zero is the end; a node is its usage index plus one. Removing an interior
+ * owner only relinks its predecessor, without shifting the remaining list. */
+static uint8_t usage_refs[USAGE_COUNT], usage_next[USAGE_COUNT], usage_head[2];
 static uint8_t macro_usages[(USAGE_COUNT + 7) / 8];
 _Static_assert(USAGE_COUNT == 30 && SYSTEM_COUNT == 3, "owned extra usage domain");
 void clear_owned_usages(void) {
-    for (uint8_t i = 0; i < USAGE_COUNT; ++i) usage_refs[i] = usage_order[i] = 0;
-    usage_lengths[0] = usage_lengths[1] = 0;
+    for (uint8_t i = 0; i < USAGE_COUNT; ++i) usage_refs[i] = 0;
+    usage_head[0] = usage_head[1] = 0;
     for (uint8_t i = 0; i < sizeof(macro_usages); ++i) macro_usages[i] = 0;
 }
 void owned_usage_key(uint8_t code, bool pressed) {
     uint8_t which = code >= KC_AUDIO_MUTE;
-    uint8_t base = which ? SYSTEM_COUNT : 0;
-    uint8_t count = usage_lengths[which];
     uint8_t index = code - KC_SYSTEM_POWER;
+    uint8_t node = index + 1;
     if (!ak820_macro_change(macro_usages, index, pressed)) return;
     if (pressed) {
         if (usage_refs[index]++) return;
-        usage_order[base + count++] = index;
+        usage_next[index] = usage_head[which];
+        usage_head[which] = node;
     } else {
         if (!usage_refs[index] || --usage_refs[index]) return;
-        uint8_t pos = 0;
-        while (usage_order[base + pos] != index) ++pos;
-        --count;
-        for (uint8_t i = pos; i < count; ++i) usage_order[base + i] = usage_order[base + i + 1];
-        usage_lengths[which] = count;
-        if (pos != count) return; /* A non-winning owner changed only storage. */
+        if (usage_head[which] != node) {
+            uint8_t previous = usage_head[which] - 1;
+            while (usage_next[previous] != node) previous = usage_next[previous] - 1;
+            usage_next[previous] = usage_next[index];
+            return; /* A non-winning owner changed only storage. */
+        }
+        usage_head[which] = usage_next[index];
     }
-    usage_lengths[which] = count;
-    code = count ? usage_order[base + count - 1] + KC_SYSTEM_POWER : 0;
+    code = usage_head[which];
+    if (code) code += KC_SYSTEM_POWER - 1;
     if (which) host_consumer_send(code ? KEYCODE2CONSUMER(code) : 0);
     else host_system_send(code ? KEYCODE2SYSTEM(code) : 0);
 }

@@ -1,5 +1,5 @@
 static uint16_t t;
-static void fresh(void) { reset();as_enabled=false;as_state=0;ak820_leader_cancel();macro_available=false;t=100;assign(0,QK_LEAD);assign(1,KC_1);assign(2,KC_A); }
+static void fresh(void) { reset();as_flags=0;as_state=0;ak820_leader_cancel();macro_available=false;t=100;assign(0,QK_LEAD);assign(1,KC_1);assign(2,KC_A); }
 static void press(unsigned id) {event(id,true,t+=10);}
 static void release(unsigned id) {event(id,false,t+=1);}
 static void tap(unsigned id) {press(id);release(id);}

@@ -11,6 +11,7 @@ void ak820_tapping_cancel(void);
 #ifdef AK820_COMPACT_ONESHOT
 uint8_t ak820_tapping_source(keypos_t key);
 bool ak820_oneshot_process(uint16_t code, uint8_t id, bool pressed);
+void ak820_oneshot_tick(uint16_t now);
 void ak820_oneshot_post(uint8_t id, bool pressed);
 void ak820_oneshot_cancel(void);
 #endif

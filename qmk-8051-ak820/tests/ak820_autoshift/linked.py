@@ -106,7 +106,7 @@ def cases(fw):
         ('release','_actual_keyboard_report',8,report(),fw.transition(rows(),140)),
         ('immediate','_actual_keyboard_report',8,report(5),fw.transition(rows(b),160)),
         ('up','_actual_keyboard_report',8,report(),fw.transition(rows(),180)),
-        ('on','_as_enabled',1,[1],assign(*control,0x7c13)+fw.transition(rows(control),200)+fw.transition(rows(),220)),
+        ('on','_as_flags',1,[1],assign(*control,0x7c13)+fw.transition(rows(control),200)+fw.transition(rows(),220)),
         ('deferred_again','_actual_keyboard_report',8,report(),fw.transition(rows(a),240)),
         ('shifted_again','_actual_keyboard_report',8,report(4,2),tick(fw,421)),
         ('up_again','_actual_keyboard_report',8,report(),fw.transition(rows(),440)),

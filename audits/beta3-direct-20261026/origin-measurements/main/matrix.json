@@ -1859,10 +1859,13 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          3,
           4,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -1880,6 +1883,7 @@
           "rgb-effects",
           "vialrgb-direct-ram"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "yes",
@@ -1916,10 +1920,13 @@
         "runtime_qmk_settings": [
           1,
           2,
+          3,
           4,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "auto_shift": 175,
@@ -1933,15 +1940,15 @@
       },
       "id": "main",
       "identity": {
-        "build_report_sha256": "b5f2ad06f883e8af86892634fee0fd36112d377707ce4fe678518b00098f4f47",
+        "build_report_sha256": "16675ab87ee22f8854ec1750a4d9c572e771c418b093107d6acabca2a4aff61a",
         "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
-        "configuration_sha256": "302a07fb1d23e411077fa492d266aac6561d33d1beb7c5316ce23574bdd49861",
-        "ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
-        "map_sha256": "b41f7d63286ec4da78ca870b4995f0bc6b5bff763e8fc7954fc0e458b19aac23",
-        "mem_sha256": "feef725ef6f57080cbf4b348c6e4da38df1399a0134e8d8c68ea32da5e6d7fc3",
+        "configuration_sha256": "ff139f9af8e47733ef39f88d2b581656749de753f2a70ed00a0f12de59297d6d",
+        "ihx_sha256": "05f49d16b380a8f40b55c3a38c0e863a25d884237d4fd8d6aaef51b6fd95c389",
+        "map_sha256": "b41c6fe9492e87faa1b2f5528c338735c3691b3ddc3ada6264cfd96257f2d04b",
+        "mem_sha256": "963c58841f355a535b64a8bcb9f24e7233525275afe00fbbb583a50146adc1c0",
         "nvm_schema": 532483,
         "profile": "main",
-        "source_manifest_sha256": "49238b07919ab4532d1fbb08eedbeabdbd86ce5a38c9e7c91666ae2ab67ef4c2"
+        "source_manifest_sha256": "5cacb762cdf33a8f58de42d8b7d4e85029f8e65101537a07d395bed9a42732fa"
       },
       "installable": false,
       "measurement_status": "linked-memory-pass",
@@ -1972,52 +1979,54 @@
             "symbol": "_ak820_flash_stage"
           }
         ],
-        "code_bytes": 40466,
+        "code_bytes": 40468,
         "code_windows": [
           {
             "end_exclusive": 12288,
-            "highest_address": 12281,
+            "highest_address": 12285,
             "name": "low",
-            "occupied_bytes": 1882,
+            "occupied_bytes": 1886,
             "start": 10400,
-            "trailing_free_bytes": 6
+            "trailing_free_bytes": 2
           },
           {
             "end_exclusive": 50944,
-            "highest_address": 50915,
+            "highest_address": 50913,
             "name": "main",
-            "occupied_bytes": 38584,
+            "occupied_bytes": 38582,
             "start": 12327,
-            "trailing_free_bytes": 28
+            "trailing_free_bytes": 30
           }
         ],
         "internal_ram": {
           "initial_sp": 73,
-          "runtime_stack_bound": 160,
+          "runtime_stack_bound": 161,
           "stack_capacity": 182,
-          "stack_margin": 22,
+          "stack_margin": 21,
           "stack_qualified": true,
           "static_bytes": 74
         },
         "protected_windows_clear": true,
         "xram": {
-          "bytes": 2858,
+          "bytes": 2853,
           "capacity": 3008,
-          "end_inclusive": 3945,
+          "end_inclusive": 3940,
           "physical_capacity": 3072,
           "reserved_bytes": 64,
           "start": 1088,
-          "total_bytes": 2922
+          "total_bytes": 2917
         }
       },
-      "runtime_evidence_sha256": "54a7bb4f4b66e8753d000b1efc46fdd6cdb03c1ce9e836176a6e0e9be12a59d0",
+      "runtime_evidence_sha256": "4bd603f910514f7799c25e76a79355d3f363a4da2ddc947f57ef669b07016b3a",
       "runtime_status": "exact-image-pass",
       "settings_identity": {
-        "code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+        "code_sha256": "70cf0f668b3839f67387f01e4cca600b68ceac27c38cb7230d0c4828c390e2de",
         "combo_actions": [
           "caps-word-toggle"
         ],
+        "combo_media": true,
         "combos_version": 1,
+        "compact_controls_version": 2,
         "definition_sha256": "72b2261e1f7da5ec8ba37b8276bab12f12642e3d6514ec76ca1e4cd9b499fa6e",
         "direct_protocol": 1,
         "extensions_version": 1,
@@ -2031,10 +2040,11 @@
           "qmk-settings",
           "vialrgb-direct"
         ],
-        "ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+        "ihx_sha256": "05f49d16b380a8f40b55c3a38c0e863a25d884237d4fd8d6aaef51b6fd95c389",
         "macro_layer_tap": true,
         "nvm_schema": 532483,
         "profile": "main",
+        "settings_record_version": 2,
         "supported_keycodes": [
           0,
           1,
@@ -16490,6 +16500,9 @@
           31763,
           31764,
           31765,
+          31824,
+          31825,
+          31826,
           31827,
           31828,
           31829,
@@ -16503,16 +16516,19 @@
           31863,
           31864,
           31865,
-          31866
+          31866,
+          32256,
+          32257,
+          32258
         ]
       },
       "settings_status": "exact-image-contract",
       "short_calls": {
         "algorithm": "foreground-short-transfers-v2",
-        "report": ".build/beta3-release/main/short-calls.json",
-        "report_sha256": "abcf9d695ad069ddff4b744e3ba3ce9f949bac3f9778fa64c9f452cd66d67fff",
-        "saved_bytes": 512,
-        "selected": 512
+        "report": ".build/glibc-profiles/main/short-calls.json",
+        "report_sha256": "05ec53eabf82df0b9fc699df3663a48be22e917100ce2a5f8f3249fb0e667929",
+        "saved_bytes": 510,
+        "selected": 510
       }
     },
     {
@@ -16593,9 +16609,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -16614,6 +16632,7 @@
           "nkro-reports",
           "vialrgb-direct-ram"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -16651,9 +16670,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -16763,9 +16784,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -16784,6 +16807,7 @@
           "nkro-reports",
           "vialrgb-direct-ram"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -16821,9 +16845,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -16933,10 +16959,13 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          3,
           4,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -16953,6 +16982,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "yes",
@@ -16989,10 +17019,13 @@
         "runtime_qmk_settings": [
           1,
           2,
+          3,
           4,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "auto_shift": 175,
@@ -17103,9 +17136,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17123,6 +17158,7 @@
           "rgb-effects",
           "grave-escape"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17159,9 +17195,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17271,9 +17309,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17290,6 +17330,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17325,9 +17366,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17438,9 +17481,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17457,6 +17502,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17492,9 +17538,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17605,9 +17653,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17625,6 +17675,7 @@
           "rgb-effects",
           "vialrgb-direct-ram"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17660,9 +17711,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17771,9 +17824,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17790,6 +17845,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17824,9 +17880,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17933,9 +17991,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17952,6 +18012,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17988,9 +18049,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,

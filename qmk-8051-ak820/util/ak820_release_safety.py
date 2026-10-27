@@ -9,11 +9,14 @@ import itertools
 import json
 from pathlib import Path
 import re
+import sys
 
 import pack_ak820
 from ak820_profiles import RELEASE_PROFILES, validate_configuration
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'tools'))
+import ak820_beta_transition_policy as beta_policy
 REQUIRED_SOURCES = frozenset((
     'qmk-8051-ak820/util/ak820_release_safety.py',
     'qmk-8051-ak820/util/ak820_profiles.py',
@@ -27,7 +30,10 @@ REQUIRED_SOURCES = frozenset((
     'tools/installer/settings_backup.py', 'tools/installer/settings_workflow.py',
     'tools/ak820_device_protocol.py',
     'tools/installer/test_settings_backup.py', 'tools/installer/test_settings_workflow.py',
-    'audits/rc6/alpha3-transition-20261024/verify_transition.py',
+    'tools/ak820_beta_transition_policy.py',
+    'tools/test_ak820_beta_transition_policy.py',
+    'tools/test_release_safety.py',
+    'audits/beta3-direct-20261026/prepare_release.py',
 ))
 ROOT_NAMES = {'_main', '_ak820_timer_irq', '_USB_DeviceInterrupt', '_ak820_led_irq'}
 
@@ -87,35 +93,31 @@ def manifest_name(configuration):
             if name in RELEASE_PROFILES else 'ci/release-safety.json')
 
 
-ALPHA2_IHX_SHA256 = 'f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e'
-ALPHA2_COMBO_RESTORE = {'source_combos_version': None, 'plan_combo_entries': None,
-                       'target_policy': 'preserve-existing'}
-
-
-def validate_alpha2_preflight(transition, root, ihx_hash, profile):
-    """Admit only the pinned Combo-less source and its exact preservation plan."""
-    preflight = transition.get('actual_alpha2_preflight')
-    require(isinstance(preflight, dict), 'alpha2 transition preflight incomplete')
-    actual_path = safe_path(root, preflight.get('result_path'))
-    require(sha(actual_path.read_bytes()) == preflight.get('result_sha256'),
-            'alpha2 preflight evidence changed')
-    actual = load(actual_path)
-    require(actual == {key: value for key, value in preflight.items()
-                       if key not in ('result_path', 'result_sha256')},
-            'alpha2 preflight content differs from transition')
-    require(actual.get('source') == ALPHA2_IHX_SHA256
-            and type(transition.get('source_images')) is list
-            and ALPHA2_IHX_SHA256 in transition['source_images']
-            and actual.get('source_case') == 'alpha2-saved-rom'
-            and actual.get('target') == ihx_hash and actual.get('target_profile') == profile,
-            'alpha2 preflight source/target differs from exact images')
-    require(actual.get('passed') is True and actual.get('offline_only') is True
-            and type(actual.get('physical_device_commands')) is int
-            and actual['physical_device_commands'] == 0
-            and all(type(actual.get(key)) is int and actual[key] == count
-                    for key, count in (('key_count', 498), ('encoder_count', 12), ('combo_count', 0)))
-            and actual.get('combo_restore') == ALPHA2_COMBO_RESTORE,
-            'alpha2 transition preservation preflight incomplete')
+def validate_beta_preflight(transition, root, ihx_hash, configuration, sources):
+    """Validate the complete reviewed previous/current matrix, with no legacy fallback."""
+    documents = {}
+    for key in ('previous_beta_catalog', 'settings_catalog', 'preflight_matrix'):
+        reference = transition.get(key)
+        require(type(reference) is dict and set(reference) == {'path', 'size', 'sha256'},
+                'missing beta transition evidence: ' + key)
+        name = reference['path']
+        require(name in sources and sources[name] == {k: reference[k] for k in ('size', 'sha256')},
+                'beta transition evidence absent from reviewed sources: ' + key)
+        documents[key] = checked_record(root, name, reference)
+    previous = beta_policy.load_previous_catalog(documents['previous_beta_catalog'])
+    catalog = load(documents['settings_catalog'])
+    matrix = load(documents['preflight_matrix'])
+    expected_sources = beta_policy.validate_transition_matrix(matrix, catalog, previous)
+    require(transition.get('source_images') == sorted(expected_sources),
+            'beta transition source scope differs from complete matrix')
+    rows = [r for r in catalog['profiles'] if r['profile'] == configuration['profile']]
+    require(len(rows) == 1 and rows[0]['configuration'] == configuration,
+            'beta target configuration differs from reviewed image')
+    identity = rows[0]['settings_identity']
+    require(transition['target'] == {'ihx_sha256': ihx_hash, 'schema': configuration['nvm_schema'],
+                'optional_features': configuration['optional_features'], 'code_sha256': identity['code_sha256']}
+            and identity['ihx_sha256'] == ihx_hash and identity['nvm_schema'] == configuration['nvm_schema'],
+            'beta transition target differs from exact image')
 
 
 def validate(report, root=ROOT):
@@ -199,11 +201,16 @@ def validate(report, root=ROOT):
     require(total <= capacity and number(startup['pre_main_control_stack_bound'], 'startup bound') <= capacity,
             'whole-program stack allowance exceeds capacity')
     target = transition.get('target', {})
-    require(transition.get('format') == 'ak820-settings-transition-1' and transition.get('passed') is True
-            and transition.get('offline_only') is True and transition.get('physical_device_commands') == 0
+    require(transition.get('format') == 'ak820-settings-transition-2' and transition.get('passed') is True
+            and transition.get('offline_only') is True
+            and type(transition.get('physical_device_commands')) is int and transition['physical_device_commands'] == 0
             and target.get('ihx_sha256') == ihx_hash and target.get('schema') == configuration.get('nvm_schema')
             and target.get('optional_features') == optional and transition.get('source_images')
-            and transition.get('tests') and all(test.get('exit_code') == 0 for test in transition['tests']),
+            and type(transition.get('tests')) is list and transition['tests']
+            and all(type(test) is dict and type(test.get('exit_code')) is int and test['exit_code'] == 0
+                    and type(test.get('command')) is list and test['command']
+                    and all(type(part) is str and part for part in test['command'])
+                    for test in transition['tests']),
             'installer transition not qualified for this image/features')
     transition_sources = set()
     for test in transition['tests']:
@@ -214,9 +221,9 @@ def validate(report, root=ROOT):
             transition_sources.add(name)
         log = safe_path(root, test.get('log_path'))
         require(sha(log.read_bytes()) == test.get('log_sha256'), 'transition log changed')
-    required_transition = {name for name in REQUIRED_SOURCES if name.startswith('tools/') or name.endswith('/verify_transition.py')}
+    required_transition = {name for name in REQUIRED_SOURCES if name.startswith('tools/') or name.endswith('/prepare_release.py')}
     require(required_transition <= transition_sources, 'incomplete transition implementation/test source closure')
-    validate_alpha2_preflight(transition, root, ihx_hash, configuration['profile'])
+    validate_beta_preflight(transition, root, ihx_hash, configuration, sources)
     return {'manifest_sha256': sha(manifest.read_bytes()), 'foreground_bound': bounds['_main'],
             'main_entry_frame_bound': entry, 'irq_bound': irq_total, 'stack_bound': total,
             'stack_capacity': capacity, 'stack_margin': capacity - total,

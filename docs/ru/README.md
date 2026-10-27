@@ -44,10 +44,14 @@ USB VID:PID `320F:505B` — дополнительный признак, а не
 Mod-Tap и Layer-Tap, встроенные эффекты RGB. Индикатор **C** следует Caps Lock,
 а **W** показывает активный слой выше нулевого.
 
-В текущих исходниках Caps Word можно назначить выходом Combo, а физической
-клавише — запуск макроса по нажатию и слой при удержании. Новое действие описано
+В текущих исходниках можно выбрать правила Caps Word, управлять Combo на сеанс,
+сохранять настройки Auto Shift и One Shot, а физической клавише назначить
+макрос по нажатию и слой при удержании. Новое действие описано
 в разделе [Нажатие и удержание](TAP-HOLD.md); доступность функций в пакетах
 указана в [статусе](STATUS.md).
+Caps Word также включается одновременным удержанием обеих клавиш Shift или
+быстрым двойным нажатием левого Shift; подробности приведены в
+[руководстве по настройке](CONFIGURATION.md#caps-word).
 
 VialRGB Direct поддерживает согласованный снимок палитры и передачу полного
 кадра через версионированный протокол. 82 цвета HSV8 хранятся только в RAM.
@@ -63,8 +67,8 @@ VialRGB Direct. Блокировка GUI остаётся в `game` и `mmo`, н
 В других профилях часть модулей заменена на NKRO, Tap Dance, Space Cadet, Grave Escape, Mouse Keys или
 обмен модификаторов.
 
-В выпуск beta.3 входят сценарии установки на Python для Windows и Linux
-x86_64. Отдельных GUI-установщиков в нём нет. Приложение-компаньон
+Для выпуска beta.4 готовятся сценарии установки на Python для Windows и Linux
+x86_64. Отдельные GUI-установщики не планируются. Приложение-компаньон
 [AK Configurator](https://github.com/dvino/ak-configurator) разрабатывается
 отдельно. Выпуски и аппаратные ограничения перечислены в [статусе](STATUS.md),
 описания функций — в [каталоге](FEATURES.md).
@@ -79,7 +83,7 @@ x86_64. Отдельных GUI-установщиков в нём нет. При
 
 В пределах, допускаемых применимым законодательством, авторы и участники
 проекта не несут ответственности за ущерб и убытки от использования проекта
-или невозможности его использовать. См. разделы 15–17 [LICENSE](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/LICENSE).
+или невозможности его использовать. См. разделы 15–17 [LICENSE](https://github.com/dvino/ak820/blob/main/LICENSE).
 
 ## Начало работы
 
@@ -91,16 +95,16 @@ x86_64. Отдельных GUI-установщиков в нём нет. При
 [Сохранение настроек](SETTINGS-BACKUP.md).
 
 [Настройка](CONFIGURATION.md) описывает Vial. Чтобы собрать прошивку из
-исходников, следуйте разделу [Сборка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/BUILD.md). Сборка использует Linux/WSL,
+исходников, следуйте разделу [Сборка](https://github.com/dvino/ak820/blob/main/docs/ru/BUILD.md). Сборка использует Linux/WSL,
 Python 3.11+ и закреплённый SDCC 4.6.0.
 
-[План сжатия всей прошивки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/MAXIMUM-FUNCTIONALITY-PLAN.md) описывает цель разработки. Текущие результаты и оставшиеся ограничения приведены в [отчёте о сжатии](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/MAXIMUM-FUNCTIONALITY-STATUS.md).
+[План сжатия всей прошивки](https://github.com/dvino/ak820/blob/main/docs/MAXIMUM-FUNCTIONALITY-PLAN.md) описывает цель разработки. Текущие результаты и оставшиеся ограничения приведены в [отчёте о сжатии](https://github.com/dvino/ak820/blob/main/docs/MAXIMUM-FUNCTIONALITY-STATUS.md).
 
-[Документация](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI и выпуски](https://github.com/dvino/ak820/blob/main/docs/ru/CI.md) · [Сборка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/BUILD.md) · [Разработка](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/DEVELOPMENT.md) ·
-[Проверки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/TESTING.md) · [Участие](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/CONTRIBUTING.md).
+[Документация](https://github.com/dvino/ak820/blob/main/docs/ru/INDEX.md) · [AK Configurator](https://github.com/dvino/ak-configurator) · [CI и выпуски](https://github.com/dvino/ak820/blob/main/docs/ru/CI.md) · [Сборка](https://github.com/dvino/ak820/blob/main/docs/ru/BUILD.md) · [Разработка](https://github.com/dvino/ak820/blob/main/docs/ru/DEVELOPMENT.md) ·
+[Проверки](https://github.com/dvino/ak820/blob/main/docs/ru/TESTING.md) · [Участие](https://github.com/dvino/ak820/blob/main/CONTRIBUTING.md).
 
-Приложение-компаньон ведётся в [AK Configurator](https://github.com/dvino/ak-configurator). [Контракты прошивки](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/web/docs/ru/FIRMWARE-HANDOFF.md) описывают основу интеграции.
+Приложение-компаньон ведётся в [AK Configurator](https://github.com/dvino/ak-configurator). [Контракты прошивки](https://github.com/dvino/ak820/blob/main/web/docs/ru/FIRMWARE-HANDOFF.md) описывают основу интеграции.
 
 Английская документация — источник правды, русская — перевод. Оригинальный
 код проекта распространяется по GPL-3.0-only, лицензии сторонних компонентов
-сохраняются. См. [лицензирование](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/docs/ru/LICENSING.md) и корневой [LICENSE](https://github.com/dvino/ak820/blob/v0.6.0-beta.2/LICENSE).
+сохраняются. См. [лицензирование](https://github.com/dvino/ak820/blob/main/docs/ru/LICENSING.md) и корневой [LICENSE](https://github.com/dvino/ak820/blob/main/LICENSE).

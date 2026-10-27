@@ -7,7 +7,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 
 def function(source, name):
-    match = re.search(r'^(?:static )?(?:int|bool|uint16_t) ' + name + r'\([^\n]*\) \{', source, re.M)
+    match = re.search(r'^(?:static )?(?:int|bool|uint16_t|ak820_key_override_result_t) ' + name + r'\([^\n]*\) \{', source, re.M)
     if not match:
         raise RuntimeError('Missing production function: ' + name)
     end = source.index('{', match.start()) + 1
@@ -30,7 +30,7 @@ for module in ('tap_dance', 'key_override'):
     source = (ROOT / f'keyboards/ajazz/ak820/ak820_{module}.c').read_text()
     validator = function(source, f'ak820_{module}_valid')
     if module == 'key_override':
-        validator = '\n'.join(re.findall(r'^#define (?:basic\([^\n]*|ACTIVATIONS [^\n]*)', source, re.M)) + '\n' + validator
+        validator = 'typedef bool ak820_key_override_result_t;\n' + '\n'.join(re.findall(r'^#define (?:basic\([^\n]*|ACTIVATIONS [^\n]*)', source, re.M)) + '\n' + validator
     production.insert(0, '#ifdef AK820_COMPACT_' + module.upper() + '\n' + validator + '\n#endif')
     production.append('#ifdef AK820_COMPACT_' + module.upper())
     for operation in ('get', 'set'):

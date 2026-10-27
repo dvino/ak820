@@ -39,6 +39,7 @@ def main():
             command = [os.environ.get('CC', 'cc'), '-std=gnu11', '-O1', '-g', '-Wall', '-Wextra',
                        '-Werror', '-Wno-unused-parameter', '-Wno-unknown-pragmas',
                        '-Wno-old-style-declaration', '-fsanitize=address,undefined', '-fno-omit-frame-pointer',
+                       '-DREPEAT_KEY_ENABLE',
                        *(['-DTEST_ACTION_TAPPING'] if profile == 'tapping' else []),
                        '-include', str(root / 'keyboards/ajazz/ak820/config.h'),
                        *['-I' + str(path) for path in (work, root / 'quantum', root / 'quantum/keymap_extras', root / 'quantum/sequencer',

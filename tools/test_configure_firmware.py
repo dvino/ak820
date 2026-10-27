@@ -202,6 +202,8 @@ class ProfileTests(unittest.TestCase):
             plan = config.profile_test_plan(name, Path('/build'), Path('/toolchain'))
             identifiers = [identifier for identifier, _, _ in plan]
             self.assertEqual(len(identifiers), len(set(identifiers)))
+            self.assertIn('compact-controls-gates', identifiers)
+            self.assertIn('ascii-sendstring-gates', identifiers)
             for feature, prefix in (('tap-dance', 'tap-dance'), ('key-overrides', 'key-overrides'), ('qmk-settings', 'qmk-settings'), ('dynamic-macros', 'dynamic-macro'), ('gui-lock', 'gui-lock'), ('leader', 'leader'), ('os-indicators', 'os-indicators'), ('mac-pc', 'mac-pc')):
                 for suffix in ('host', 'linked'):
                     self.assertEqual(prefix + '-' + suffix in identifiers, feature in features)
@@ -222,6 +224,25 @@ class ProfileTests(unittest.TestCase):
         config.check_feature_symbols(symbols, swapped, code)
         with self.assertRaisesRegex(ValueError, 'feature state'):
             config.check_feature_symbols(symbols, selected, code)
+
+    def test_settings_symbol_follows_compact_controls_version(self):
+        code = {0x3027: 0x22}
+        current = config.profiles.configuration('main')
+        historical = config.profiles.historical_configuration('main')
+        self.assertEqual(current['compact_controls_version'], 2)
+        self.assertNotIn('compact_controls_version', historical)
+        for selected, expected, wrong in (
+                (current, config.COMPACT_SETTINGS_SYMBOL, config.SYMBOLS['qmk-settings']),
+                (historical, config.SYMBOLS['qmk-settings'], config.COMPACT_SETTINGS_SYMBOL)):
+            with self.subTest(version=selected.get('compact_controls_version')):
+                other = {symbol: 0x3027 for feature, symbol in config.SYMBOLS.items()
+                         if feature in selected['optional_features'] and feature != 'qmk-settings'}
+                config.check_feature_symbols({**other, expected: 0x3027}, selected, code)
+                for symbols in ({**other, wrong: 0x3027},
+                                {**other, expected: 0x3027, wrong: 0x3027},
+                                {**other, expected: 0x3028}):
+                    with self.assertRaisesRegex(ValueError, 'qmk-settings'):
+                        config.check_feature_symbols(symbols, selected, code)
 
     def test_exact_named_combinations_and_no_inherited_switches(self):
         for name, features in config.profiles.PROFILES.items():

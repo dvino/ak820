@@ -52,7 +52,8 @@ def bind(release: Path, session: Path, approval: Path):
     # The manifest binds CODE, while the personal payload binds its own NVM.
     require(all(payload[a-pack.APP_START] == v for a, v in code.items()
                 if pack.APP_START <= a < pack.CODE_END), 'Personal payload CODE differs from release')
-    return {'nvm_schema': schema, 'release': manifest['release'], 'release_dir': str(release.resolve()),
+    return {'combo_media': selected.get('compact_controls_version') == 2,
+            'settings_record_version': selected.get('compact_controls_version', 1), 'nvm_schema': schema, 'release': manifest['release'], 'release_dir': str(release.resolve()),
             'session': str(session.resolve()), 'payload_sha256': pack.digest(payload),
             'backup_sha256': pack.digest(backup), 'payload': payload, 'backup': backup,
             'code': code, 'definition': json.loads((release / 'reference/vial.json').read_text(encoding='utf-8'))}
@@ -354,7 +355,7 @@ class DeviceAPI:
         a, b, c, d, output = (int.from_bytes(data[i:i+2], 'little') for i in range(0, 10, 2))
         require(c == d == 0, 'Unsupported Combo format/version')
         valid = (a == b == output == 0) or (4 <= a <= 0xA4 and 4 <= b <= 0xA4 and a != b
-                and (output == 0x7C73 or (output < 0x2000 and
+                and (0xA8 <= output <= 0xC2 or output == 0x7C73 or (output < 0x2000 and
                      (4 <= (output & 255) <= 0xA4 or 0xE0 <= (output & 255) <= 0xE7))))
         require(valid, 'Unsupported Combo keys/output')
         return data
@@ -384,6 +385,10 @@ class DeviceAPI:
         self._require_writes()
         require(type(index) is int and 0 <= index < 8, 'Invalid Combo index')
         data = self.validate_combo(data)
+        image = self.binding.get('compatible_images', {}).get(self.binding.get('ihx_sha256'))
+        output = int.from_bytes(data[8:10], 'little')
+        capability = image if image is not None else self.binding
+        require(not 0xA8 <= output <= 0xC2 or (capability.get('combo_media') is True and self._settings_record_version() == 2), 'Media Combo unsupported by exact image')
         before = self.read_nvm()
         packet = self.packet(254, 13, 4, index, *data)
         require(self.exchange(packet) == b'\0' + packet[1:], 'Combo setter ACK mismatch')
@@ -424,11 +429,12 @@ class DeviceAPI:
         ids = [int.from_bytes(reply[i:i+2], 'little') for i in range(0,32,2)]
         values = [i for i in ids if i != 65535]
         require(ids == values + [65535]*(16-len(values)) and values == sorted(set(values))
-                and all(i in extensions.FIELDS and i > greater_than for i in values), 'Invalid settings capabilities')
+                and all(i in (extensions.FIELDS if self._settings_record_version() == 2 else extensions.LEGACY_FIELDS) and i > greater_than for i in values), 'Invalid settings capabilities')
         return values
 
     def get_setting(self, qsid):
         require(type(qsid) is int and qsid in extensions.FIELDS, 'Unknown settings ID')
+        require(self._settings_record_version() == 2 or qsid in extensions.LEGACY_FIELDS, 'Setting unsupported by exact image')
         reply = self.exchange(self.packet(254, 10, qsid & 255, qsid >> 8))
         require(reply[0] == 0, 'Settings getter failed')
         width = extensions.FIELDS[qsid][1]
@@ -436,12 +442,22 @@ class DeviceAPI:
         extensions.field_value(qsid, value)
         return value
 
+    def _settings_record_version(self):
+        image = self.binding.get('compatible_images', {}).get(self.binding.get('ihx_sha256'))
+        if image is not None:
+            return image.get('settings_record_version', 1)
+        return self.binding.get('settings_record_version', 2)
+
     def set_setting(self, qsid, value):
         self._require_writes()
         data = extensions.field_value(qsid, value)
+        require(self._settings_record_version() == 2 or qsid in extensions.LEGACY_FIELDS, 'Setting unsupported by exact image')
         before = self.read_nvm()
-        values = extensions.decode_settings(before[0x6A8:0x6C0])
-        if values[str(qsid)] == value:
+        values = extensions.decode_settings(before[0x6A8:0x6C0], version=self._settings_record_version())
+        unchanged = values[str(qsid)] == value
+        # Saved control getters do not expose physical session overrides. An
+        # explicit Set must reapply these controls even when storage is equal.
+        if unchanged and qsid not in (3, 22):
             require(self.get_setting(qsid) == value, 'Settings no-op getter differs')
             require(self.read_nvm() == before, 'Settings no-op durable readback differs')
             return True
@@ -451,26 +467,26 @@ class DeviceAPI:
         self.status()
         require(self.get_setting(qsid) == value, 'Settings getter readback differs')
         expected = bytearray(before)
-        expected[0x6A8:0x6C0] = extensions.settings_record(values)
+        if not unchanged:
+            expected[0x6A8:0x6C0] = extensions.settings_record(values, version=self._settings_record_version())
         require(self.read_nvm() == bytes(expected), 'Settings durable readback or neighboring bytes differ')
         return True
 
     def reset_settings(self):
         self._require_writes()
         before = self.read_nvm()
-        values = extensions.from_nvm(before)['qmk_settings']
-        if values == extensions.decode_settings(extensions.settings_record()):
-            for qsid in self.settings_query():
-                require(self.get_setting(qsid) == extensions.FIELDS[qsid][4], 'Settings no-op reset getter differs')
-            require(self.read_nvm() == before, 'Settings no-op reset durable readback differs')
-            return True
+        values = extensions.from_nvm(before, version=self._settings_record_version())['qmk_settings']
+        unchanged = values == extensions.decode_settings(extensions.settings_record(version=self._settings_record_version()))
+        # Reset also reapplies volatile controls. Firmware leaves durable bytes
+        # untouched when the effective saved record already contains defaults.
         packet = self.packet(254, 12)
         require(self.exchange(packet) == b'\0' + packet[1:], 'Settings reset ACK mismatch')
         self.status()
         for qsid in self.settings_query():
             require(self.get_setting(qsid) == extensions.FIELDS[qsid][4], 'Settings reset getter differs')
         expected = bytearray(before)
-        expected[0x6A8:0x6C0] = extensions.settings_record()
+        if not unchanged:
+            expected[0x6A8:0x6C0] = extensions.settings_record(version=self._settings_record_version())
         require(self.read_nvm() == bytes(expected), 'Settings reset durable readback differs')
         return True
 

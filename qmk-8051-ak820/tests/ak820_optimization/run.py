@@ -46,7 +46,8 @@ def main():
         # cache fixture still compiles against the current layer API.
         parts += [function(files[5], "ak820_macro_change")]
         adapter = ("#define AK820_STATE_MEM\n"
-                   "bool ak820_macro_change(uint8_t *bits, uint8_t index, bool pressed);\n"
+                   "typedef bool ak820_owner_result_t;\n"
+                   "ak820_owner_result_t ak820_macro_change(uint8_t *bits, uint8_t index, bool pressed);\n"
                    "bool ak820_macro_primitive, ak820_macro_cancelled;\n")
         body = (HERE / "harness.c").read_text().replace("/* PRODUCTION */", adapter + "\n".join(parts))
         definitions = ["ENCODER_MAP_ENABLE", "VIAL_ENABLE", "DYNAMIC_KEYMAP_ENABLE", "EXTRAKEY_ENABLE"]

@@ -8,30 +8,46 @@
 #    define AK820_COMBO_TERM 40
 #endif
 #include "dynamic_keymap.h"
+#include <stddef.h>
 
 #define NONE 255
 /* Only ordinary nonmodifier keyboard usages enter the delayed path. Outputs
- * also allow modifiers. No generated record re-enters this engine. */
+ * also allow modifiers, unmodified consumer usages and Caps Word toggle.
+ * No generated record re-enters this engine. */
 #define COMBO_INPUT(code) ((code) >= KC_A && (code) <= KC_EXSEL)
-#define COMBO_OUTPUT(code) \
-    ((code) == QK_CAPS_WORD_TOGGLE || \
-     ((code) < QK_MOD_TAP && (COMBO_INPUT((uint8_t)(code)) || ((uint8_t)(code) >= KC_LEFT_CTRL && (uint8_t)(code) <= KC_RIGHT_GUI))))
 static struct { uint8_t a, b; uint16_t output; } combos[VIAL_COMBO_ENTRIES];
 static keyrecord_t saved;
-static uint8_t first = NONE, second = NONE;
+#ifdef __SDCC_mcs51
+static __data uint8_t first = NONE;
+#else
+static uint8_t first = NONE;
+#endif
+static uint8_t second = NONE;
 #if defined(__SDCC_mcs51)
 static __bit active;
 #else
 static bool active;
 #endif
 
-bool ak820_combo_valid(const vial_combo_entry_t AK820_STATE_MEM *entry) {
-    if (entry->input[2] || entry->input[3]) return false;
-    if (!(entry->input[0] | entry->input[1])) return !entry->output;
-    if (entry->input[0] == entry->input[1]) return false;
-    if (!COMBO_INPUT(entry->input[0])) return false;
-    if (!COMBO_INPUT(entry->input[1])) return false;
-    return COMBO_OUTPUT(entry->output);
+#ifdef __SDCC_mcs51
+static __bit enabled = true;
+#else
+static bool enabled = true;
+#endif
+
+ak820_combo_result_t ak820_combo_valid(const vial_combo_entry_t AK820_STATE_MEM *entry) {
+    /* The packed Vial record uses little-endian 16-bit keycodes. Inputs are
+     * basic bytes; inspect their high bytes once before the smaller checks. */
+    const uint8_t AK820_STATE_MEM *bytes = (const uint8_t AK820_STATE_MEM *)entry;
+    uint8_t a, b, lo, hi;
+    _Static_assert(sizeof(vial_combo_entry_t) == 10 && offsetof(vial_combo_entry_t, output) == 8, "Combo wire layout");
+    if (bytes[1] | bytes[3] | bytes[4] | bytes[5] | bytes[6] | bytes[7]) return false;
+    a = bytes[0]; b = bytes[2]; lo = bytes[8]; hi = bytes[9];
+    if (!(a | b)) return !(lo | hi);
+    if (a == b || !COMBO_INPUT(a) || !COMBO_INPUT(b)) return false;
+    if (hi == (QK_CAPS_WORD_TOGGLE >> 8) && lo == (uint8_t)QK_CAPS_WORD_TOGGLE) return true;
+    if (!hi && lo >= KC_AUDIO_MUTE && lo <= KC_LAUNCHPAD) return true;
+    return hi < (QK_MOD_TAP >> 8) && (COMBO_INPUT(lo) || (lo >= KC_LEFT_CTRL && lo <= KC_RIGHT_GUI));
 }
 /* A Combo settings write or unlock calls clear_keyboard(), whose shared cancellation
  * path drops every owner and blocks still-held physical sources. */
@@ -54,7 +70,7 @@ static void flush(void) {
 void ak820_combo_tick(uint16_t now) {
     if (first != NONE && !active && (uint16_t)(now - saved.event.time) >= AK820_COMBO_TERM) flush();
 }
-bool ak820_combo_process(keyrecord_t AK820_STATE_MEM *record) {
+ak820_combo_result_t ak820_combo_process(keyrecord_t AK820_STATE_MEM *record) {
     uint8_t id, code = record->keycode;
     if (IS_NOEVENT(record->event)) return true;
     /* Encoder pulses never become candidates. */
@@ -63,6 +79,22 @@ bool ak820_combo_process(keyrecord_t AK820_STATE_MEM *record) {
         return true;
     }
     id = record->event.key.row * MATRIX_COLS + record->event.key.col;
+    /* Controls are physical only and retain the full 16-bit namespace. Flush
+     * before broad cancellation so a pending press is never silently lost. */
+    if (record->keycode >= QK_COMBO_ON && record->keycode <= QK_COMBO_TOGGLE) {
+        if (record->event.pressed) {
+            bool next = record->keycode == QK_COMBO_TOGGLE ? !enabled : record->keycode == QK_COMBO_ON;
+            if (next != enabled) {
+                if (first != NONE && !active) flush();
+                enabled = next;
+                /* Shared clear releases generated outputs and blocks their
+                 * still-held physical sources, including unrelated actions. */
+                clear_keyboard();
+            }
+        }
+        return false;
+    }
+    if (!enabled) return true;
     if (active) {
         if (id != first && id != second) return true;
         if (!record->event.pressed) {
@@ -76,7 +108,7 @@ bool ak820_combo_process(keyrecord_t AK820_STATE_MEM *record) {
         }
         return false;
     }
-    bool eligible = false;
+    ak820_combo_result_t eligible = false;
     if (record->event.pressed && COMBO_INPUT(record->keycode)) {
         uint8_t previous = saved.keycode;
         for (uint8_t i = 0; i < VIAL_COMBO_ENTRIES; ++i) {

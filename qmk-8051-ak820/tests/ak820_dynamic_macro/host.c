@@ -1,7 +1,7 @@
 static bool has(uint8_t code) { return is_key_pressed(keyboard_report,code); }
 static uint16_t t;
 static void fresh(void) {
- reset();memset(dm_taps,0,sizeof(dm_taps));memset(dm_lengths,0,sizeof(dm_lengths));dm_record=dm_play=dm_down=0;dm_busy=false;as_enabled=false;as_state=0;t=100;
+ reset();memset(dm_taps,0,sizeof(dm_taps));memset(dm_lengths,0,sizeof(dm_lengths));dm_record=dm_play=dm_down=0;dm_busy=false;as_flags=0;as_state=0;t=100;
  assign(0,KC_A);assign(1,KC_B);assign(2,KC_LSFT);assign(3,KC_LCTL);
 }
 static void ctl(uint16_t code) {assign(4,code);event(4,true,t+=20);event(4,false,t+=1);}
@@ -27,7 +27,7 @@ int main(void) {
  ctl(DM_PLY1);step();assert(has(KC_A)&&get_mods()==2);step();assert(!get_mods());step();
  fresh();ctl(DM_REC1);assign(5,LCTL(KC_C));tap(5);ctl(DM_RSTP);assert(dm_taps[0].code==KC_C&&dm_taps[0].mods==1);
  fresh();ctl(DM_REC1);caps_word_on();tap(0);caps_word_off();ctl(DM_RSTP);assert(dm_taps[0].mods==2);
- fresh();as_enabled=true;ctl(DM_REC1);event(0,true,t+=20);tick(t+=175);event(0,false,t+=20);ctl(DM_RSTP);assert(dm_lengths[0]==1&&dm_taps[0].mods==2);
+ fresh();as_flags=1;ctl(DM_REC1);event(0,true,t+=20);tick(t+=175);event(0,false,t+=20);ctl(DM_RSTP);assert(dm_lengths[0]==1&&dm_taps[0].mods==2);
  /* Generated Repeat, encoder, Vial macro and unsupported usage excluded. */
  fresh();ctl(DM_REC1);tap(0);assign(5,QK_REPEAT_KEY);tap(5);enc[0][0]=KC_B;encoder(false,true,t+=20);encoder(false,false,t+=20);vial_keycode_down(KC_C);vial_keycode_up(KC_C);assign(5,KC_EXSEL);tap(5);ctl(DM_RSTP);assert(dm_lengths[0]==1);
  /* Tap-hold/Combo outputs are physical handlers; synthetic Grave Escape is excluded. */

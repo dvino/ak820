@@ -117,11 +117,12 @@ DEFERRED = {
 def configuration(name: str) -> dict:
     if not isinstance(name, str) or name not in PROFILES:
         raise ValueError('Unknown profile: ' + str(name))
-    return _configuration(name, PROFILES[name])
+    return _configuration(name, PROFILES[name], current=True)
 
 
-def _configuration(name, enabled):
+def _configuration(name, enabled, *, current=False):
     return {
+        **({'compact_controls_version': 2} if current else {}),
         'format': FORMAT, 'profile': name, 'optional_features': list(enabled),
         'base_features': list(BASE_FEATURES) + [label for feature, label in
             (('nkro', 'nkro-reports'), ('grave-escape', 'grave-escape'),
@@ -129,7 +130,7 @@ def _configuration(name, enabled):
         'nvm_schema': EXTENSION_SCHEMA if any(f in enabled for f in ('tap-dance', 'key-overrides', 'qmk-settings')) else SCHEMA,
         'make_options': {switch: 'yes' if feature in enabled else 'no'
                          for feature, switch in SWITCHES.items()},
-        'runtime_qmk_settings': ([1, 2, 4, 7, 18, 19] if 'auto-shift' in enabled else [1, 2, 7, 18, 19]) if 'qmk-settings' in enabled else [],
+        'runtime_qmk_settings': sorted([1, 2, 7, 18, 19] + ([4] if 'auto-shift' in enabled else []) + ([22] + ([3] if 'auto-shift' in enabled else []) + ([6] if 'one-shot' in enabled else []) if current else [])) if 'qmk-settings' in enabled else [],
         'timing_ms': {'combo': 40, 'tap_hold': 200,
                       **({'os_indicator_lease': 3000, 'os_indicator_period': 4096}
                          if 'os-indicators' in enabled else {}),
@@ -175,6 +176,8 @@ def validate_source_configuration(value):
         raise ValueError('Invalid source profile')
     if name in PROFILES and value == configuration(name):
         return value
+    if name in PROFILES and value == _configuration(name, PROFILES[name]):
+        return value
     if name in _BETA2_VARIANTS and value == historical_configuration(name):
         return value
     raise ValueError('Source configuration differs from a known package')
@@ -206,7 +209,7 @@ def legacy_configuration(name: str) -> dict:
     selected = 'legacy-typing' if name == 'typing' else name
     if selected in RELEASE_PROFILES or selected not in PROFILES:
         raise ValueError('Unknown historical profile: ' + str(name))
-    value = configuration(selected)
+    value = _configuration(selected, PROFILES[selected])
     value['profile'] = name
     positive = {'nkro', 'grave-escape', 'vialrgb-direct'}
     value['optional_features'] = [feature for feature in value['optional_features'] if feature not in positive]

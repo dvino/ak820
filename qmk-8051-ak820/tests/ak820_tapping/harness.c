@@ -24,6 +24,11 @@ static vial_combo_entry_t fixture_combos[VIAL_COMBO_ENTRIES];
 int dynamic_keymap_get_combo(uint8_t i, vial_combo_entry_t *entry) {*entry=fixture_combos[i];return 0;}
 #include "caps_word.h"
 #include "process_caps_word.h"
+void caps_word_shift_cancel(void);
+void caps_word_shift_task(void);
+#ifndef GET_TAPPING_TERM
+#    define GET_TAPPING_TERM(keycode, record) 200
+#endif
 #include "timer.h"
 #include "send_string.h"
 #define VIAL_MATRIX_MAGIC 240
@@ -47,6 +52,13 @@ void vial_keycode_tap(uint16_t);
 #define dprintf(...) ((void)0)
 #define NUM_ENCODERS 1
 static uint16_t now;
+static uint16_t fixture_oneshot_timeout;
+uint16_t ak820_settings_oneshot_timeout(void) {return fixture_oneshot_timeout;}
+uint16_t ak820_settings_tapping_term(void) {return 200;}
+uint16_t ak820_settings_combo_term(void) {return 40;}
+uint8_t ak820_settings_grave_esc(void) {return 0;}
+uint16_t ak820_settings_tap_code_delay(void) {return 0;}
+uint16_t ak820_settings_caps_delay(void) {return 0;}
 static uint16_t map[6][MATRIX_ROWS][MATRIX_COLS], enc[6][2];
 static uint8_t log_reports[2048][sizeof(report_keyboard_t)];
 volatile uint8_t keyboard_protocol = 1;
@@ -109,7 +121,7 @@ static void macro_one(uint8_t op,uint16_t code) {
 }
 static uint16_t usage(uint8_t key) {return key<KC_AUDIO_MUTE?KEYCODE2SYSTEM(key):KEYCODE2CONSUMER(key);}
 static uint16_t current_usage(uint8_t key) {return key<KC_AUDIO_MUTE?last_system:last_consumer;}
-static void clean(void) {for(unsigned i=0;i<USAGE_COUNT;i++)assert(!usage_refs[i]);assert(!usage_lengths[0]&&!usage_lengths[1]);for(unsigned i=0;i<=KC_EXSEL;i++)assert(!key_refs[i]);assert(!get_mods()&&!get_weak_mods()&&!layer_state&&pending==NONE);for(unsigned i=0;i<SOURCES;i++)assert(!(source_state_get(i)&(SOURCE_ACTIVE|SOURCE_HELD)));}
+static void clean(void) {for(unsigned i=0;i<USAGE_COUNT;i++)assert(!usage_refs[i]);assert(!usage_head[0]&&!usage_head[1]);for(unsigned i=0;i<=KC_EXSEL;i++)assert(!key_refs[i]);assert(!get_mods()&&!get_weak_mods()&&!layer_state&&pending==NONE);for(unsigned i=0;i<SOURCES;i++)assert(!(source_state_get(i)&(SOURCE_ACTIVE|SOURCE_HELD)));}
 int main(int argc,char **argv) {
  assert(sizeof(source_state)==SOURCE_STATE_BYTES);
  const uint8_t expected_pattern[4]={0,8,16,31};uint8_t expected[SOURCES];
@@ -154,6 +166,23 @@ int main(int argc,char **argv) {
  }
 
 #ifdef AK820_COMPACT_ONESHOT
+ /* Caps Word language controls preserve queued and held OSM owners. */
+ for(uint16_t selector=AK820_CW_LANG_EN;selector<=AK820_CW_LANG_TOGGLE;selector++) {
+  for(unsigned held=0;held<2;held++) {
+   reset();ak820_caps_word_configure(0);assign(0,OSM(MOD_LCTL));assign(1,selector);assign(2,KC_A);
+   event(0,1,10);if(!held)event(0,0,11);
+   event(1,1,12);event(1,0,13);if(held)event(0,0,14);
+   assert(ak820_oneshot_mods==1&&get_mods()==1);
+   event(2,1,15);assert(key_refs[KC_A]&&get_mods()==1);event(2,0,16);clean();
+  }
+ }
+ ak820_caps_word_configure(0);
+ /* Timeout releases only the queued owner, at the inclusive boundary. */
+ reset();fixture_oneshot_timeout=40;assign(0,OSM(MOD_LSFT));assign(1,KC_LSFT);event(1,1,1);event(0,1,10);event(0,0,20);tick(59);assert(ak820_oneshot_mods==2);tick(60);assert(!ak820_oneshot_mods&&get_mods()==2);event(1,0,61);clean();
+ reset();assign(0,OSM(MOD_LSFT));event(0,1,65510);event(0,0,65520);tick(23);assert(get_mods()==2);tick(24);clean();
+ reset();assign(0,OSM(MOD_LSFT));assign(1,KC_A);event(0,1,1);event(0,0,2);event(1,1,3);tick(100);assert(get_mods()==2);event(1,0,101);clean();fixture_oneshot_timeout=0;
+ /* Zero timeout keeps the queued modifier until a consuming action. */
+ reset();assign(0,OSM(MOD_LSFT));assign(1,KC_A);event(0,1,1);event(0,0,2);tick(30002);assert(get_mods()==2&&ak820_oneshot_mods==2);event(1,1,30003);assert(key_refs[KC_A]&&get_mods()==2);event(1,0,30004);clean();
  /* Every encoded modifier, including the right-hand group, uses owners. */
  for(unsigned mask=0;mask<32;mask++) {
   reset();assign(0,0x52a0|mask);assign(1,KC_A);assign(2,KC_B);
@@ -189,6 +218,8 @@ int main(int argc,char **argv) {
  reset();assign(0,0x52a2);assign(1,KC_A);caps_word_on();event(0,1,10);event(0,0,20);event(1,1,30);assert(get_mods()==2&&get_weak_mods()==2);event(1,0,40);caps_word_off();clean();
  reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(0,0x52a2);assign(1,KC_A);assign(2,KC_B);event(0,1,1);event(0,0,2);event(1,1,10);event(2,1,20);assert(get_mods()==2&&key_refs[KC_C]);event(1,0,30);event(2,0,40);clean();
 #endif
+ /* Disabling an active media Combo releases it and suppresses held inputs. */
+ reset();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_AUDIO_MUTE};ak820_combo_reload();assign(0,KC_A);assign(1,KC_B);assign(2,CM_OFF);assign(3,CM_ON);event(0,1,1);event(1,1,2);assert(last_consumer==usage(KC_AUDIO_MUTE));event(2,1,3);assert(!last_consumer);event(0,0,4);event(1,0,5);event(2,0,6);event(3,1,7);event(3,0,8);clean();
  for(unsigned mask=0;mask<32;mask++) {
   reset();assign(0,0x2004|(mask<<8));event(0,1,100);assert(!get_mods());tick(299);assert(!get_mods());tick(300);assert(get_mods()==((mask&16)?((mask&15)<<4):mask));event(0,0,301);clean();
   reset();assign(0,0x2004|(mask<<8));event(0,1,100);event(0,0,299);assert(log_count==2&&log_reports[0][2]==4&&!log_reports[1][2]);clean();
@@ -265,7 +296,21 @@ int main(int argc,char **argv) {
  reset();assign(0,KC_AUDIO_MUTE);event(0,1,10);unsigned ne=extra_count;register_code(KC_AUDIO_MUTE);assert(extra_count==ne);event(0,0,20);assert(current_usage(KC_AUDIO_MUTE)==usage(KC_AUDIO_MUTE));unregister_code(KC_AUDIO_MUTE);assert(!last_consumer);clean();
  reset();assign(0,KC_SYSTEM_POWER);assign(1,KC_AUDIO_MUTE);event(0,1,10);event(1,1,20);assert(last_system==SYSTEM_POWER_DOWN&&last_consumer==usage(KC_AUDIO_MUTE));event(0,0,30);assert(!last_system&&last_consumer==usage(KC_AUDIO_MUTE));event(1,0,40);assert(!last_consumer);clean();
  reset();assign(0,KC_AUDIO_MUTE);assign(1,KC_AUDIO_VOL_UP);assign(2,0x2200|KC_AUDIO_MUTE);event(0,1,10);event(1,1,20);ne=extra_count;event(2,1,30);event(2,0,40);assert(extra_count==ne&&last_consumer==usage(KC_AUDIO_VOL_UP));event(1,0,50);assert(last_consumer==usage(KC_AUDIO_MUTE));event(0,0,60);clean();
- reset();assign(0,KC_AUDIO_MUTE);assign(1,KC_SYSTEM_POWER);event(0,1,10);event(1,1,20);clear_keyboard();assert(!last_system&&!last_consumer&&!usage_lengths[0]&&!usage_lengths[1]);event(0,0,30);event(1,0,40);event(0,1,50);assert(last_consumer==usage(KC_AUDIO_MUTE));event(0,0,60);clean();
+ /* Every release order restores the latest surviving usage, including
+  * removal of the middle and tail while the current winner stays held. */
+ { const uint8_t order[6][3]={{0,1,2},{0,2,1},{1,0,2},{1,2,0},{2,0,1},{2,1,0}};
+   for(unsigned ns=0;ns<2;ns++) for(unsigned permutation=0;permutation<6;permutation++) {
+    uint8_t base=ns?KC_AUDIO_MUTE:KC_SYSTEM_POWER;bool held[3]={true,true,true};
+    reset();for(unsigned i=0;i<3;i++){assign(i,base+i);event(i,1,10+i);}
+    for(unsigned step=0;step<3;step++) {
+     unsigned released=order[permutation][step];held[released]=false;event(released,0,20+step);
+     uint16_t expected=0;for(unsigned i=0;i<3;i++)if(held[i])expected=usage(base+i);
+     assert(current_usage(base)==expected);
+    }
+    clean();
+   }
+ }
+ reset();assign(0,KC_AUDIO_MUTE);assign(1,KC_SYSTEM_POWER);event(0,1,10);event(1,1,20);clear_keyboard();assert(!last_system&&!last_consumer&&!usage_head[0]&&!usage_head[1]);event(0,0,30);event(1,0,40);event(0,1,50);assert(last_consumer==usage(KC_AUDIO_MUTE));event(0,0,60);clean();
  reset();assign(0,QK_TRI_LAYER_LOWER);event(0,1,10);assert(layer_state==2);set_tri_layer_layers(4,2,3);event(0,0,20);clean();
  reset();layer_hold_on(1);layer_hold_on(2);assert(layer_state==14);set_tri_layer_layers(4,2,3);assert(layer_state==6);set_tri_layer_lower_layer(1);assert(layer_state==14);set_tri_layer_adjust_layer(5);assert(layer_state==38);set_tri_layer_upper_layer(4);assert(layer_state==6);layer_hold_off(1);layer_hold_off(2);clean();
  for(unsigned dir=0;dir<2;dir++){reset();enc[0][dir]=QK_TRI_LAYER_LOWER;encoder(dir,1,10);assert(layer_state==2);set_tri_layer_layers(4,2,3);encoder(dir,0,20);clean();}
@@ -305,6 +350,29 @@ int main(int argc,char **argv) {
  }}
  reset();assign(0,0x2204);event(0,1,10);tick(210);cancel_during_pre_release=true;event(0,0,220);assert(!(source_state_get(0)&SOURCE_BLOCKED));event(0,1,230);tick(430);assert(get_mods()==2);event(0,0,440);clean();
  reset();assign(0,0x0204);event(0,1,10);caps_word_on();add_weak_mods(2);caps_word_off();assert(!weak_mods&&get_weak_mods()==2);event(0,0,20);clean();
+ /* Physical Shift gestures traverse the complete matrix/action pipeline. */
+ reset();assign(0,KC_LSFT);assign(1,KC_RSFT);assign(2,KC_A);
+ event(0,1,10);event(1,1,20);assert(is_caps_word_on());
+ event(2,1,30);assert(key_refs[KC_A]&&get_weak_mods()==2);event(2,0,31);
+ caps_word_off();event(1,0,32);event(0,0,33);clean();
+ reset();assign(0,KC_LSFT);assign(1,KC_B);event(0,1,100);event(0,0,110);event(0,1,299);
+ assert(is_caps_word_on());event(0,0,300);caps_word_off();clean();
+ reset();assign(0,KC_LSFT);event(0,1,400);event(0,0,410);event(0,1,600);
+ assert(!is_caps_word_on());event(0,0,601);clean();
+ reset();assign(0,KC_LSFT);assign(1,KC_B);event(0,1,700);event(0,0,710);event(1,1,711);event(1,0,712);event(0,1,713);
+ assert(!is_caps_word_on());event(0,0,714);clean();
+ reset();assign(0,KC_LSFT);assign(1,AK820_CW_LANG_RU);event(0,1,720);event(0,0,730);event(1,1,731);event(1,0,732);event(0,1,733);
+ assert(!is_caps_word_on());event(0,0,734);clean();
+ reset();assign(0,KC_LSFT);event(0,1,800);event(0,0,810);clear_keyboard();event(0,1,811);
+ assert(!is_caps_word_on());event(0,0,812);clean();
+ reset();assign(0,KC_LSFT);event(0,1,820);event(0,0,830);vial_unlock_in_progress=true;clear_keyboard();vial_unlock_in_progress=false;event(0,1,831);
+ assert(!is_caps_word_on());event(0,0,832);clean();
+ reset();assign(0,KC_LSFT);assign(1,QK_REPEAT_KEY);event(0,1,900);event(0,0,910);event(1,1,911);event(1,0,912);event(0,1,913);
+ assert(!is_caps_word_on());event(0,0,914);clean();
+ reset();assign(0,KC_LSFT);event(0,1,65500);event(0,0,65510);event(0,1,163);
+ assert(is_caps_word_on());event(0,0,164);caps_word_off();clean();
+ reset();assign(0,KC_LSFT);event(0,1,65500);event(0,0,65510);now=164;caps_word_shift_task();now=40000;caps_word_shift_task();event(0,1,40001);
+ assert(!is_caps_word_on());event(0,0,40002);clean();
  reset();assign(0,KC_LSFT);assign(1,KC_A);assign(2,QK_REPEAT_KEY);event(0,1,10);event(1,1,20);event(0,0,30);event(1,0,40);event(2,1,50);caps_word_on();add_weak_mods(2);caps_word_off();assert(!weak_mods&&get_weak_mods()==2);event(2,0,60);clean();
  reset();macro_one(VIAL_MACRO_EXT_DOWN,0x0204);caps_word_on();add_weak_mods(2);caps_word_off();assert(!weak_mods&&get_weak_mods()==2);macro_one(VIAL_MACRO_EXT_UP,0x0204);clean();
  reset();assign(0,0x2204);caps_word_on();event(0,1,10);event(0,0,20);assert(is_caps_word_on()&&get_weak_mods()==2&&pending==NONE);caps_word_off();assert(!get_weak_mods());clean();

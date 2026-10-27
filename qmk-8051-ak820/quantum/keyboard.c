@@ -692,6 +692,9 @@ void quantum_task(void) {
 
 #ifdef CAPS_WORD_ENABLE
     caps_word_task();
+#    if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+    caps_word_shift_task();
+#    endif
 #endif
 
 #ifdef SECURE_ENABLE

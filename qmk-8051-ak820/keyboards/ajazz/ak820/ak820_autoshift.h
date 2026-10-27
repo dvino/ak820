@@ -6,3 +6,5 @@ bool ak820_autoshift_before(const keyevent_t AK820_STATE_MEM *event);
 bool ak820_autoshift_process(keyrecord_t AK820_STATE_MEM *record);
 /* Shared clear path also clears modifier/key refs and blocks held sources. */
 void ak820_autoshift_cancel(void);
+/* Change admissions only; an existing owner retains its release. */
+void ak820_autoshift_configure(uint8_t flags);

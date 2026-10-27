@@ -2,6 +2,28 @@
 
 # Project status
 
+## v0.6.0-beta.4, release preparation
+
+All ten beta.4 profiles passed offline exact-image firmware qualification:
+28 base suites, 353 unit tests without skips per profile, and each profile's
+supplementary regression suites. The offline settings suite passed 188 tests
+without skips. The candidate supports settings transitions from the immediately
+preceding beta.3 build and between its own profiles. Release approval,
+publication and physical device testing remain pending.
+
+| Profile | CODE bytes | XRAM bytes / 3008 | Stack bound / capacity | Margin |
+| --- | ---: | ---: | ---: | ---: |
+| main | 40,468 | 2,853 / 3,008 | 161 / 182 | 21 |
+| game | 40,381 | 2,925 / 3,008 | 161 / 177 | 16 |
+| mmo | 40,272 | 2,928 / 3,008 | 165 / 179 | 14 |
+| typing | 38,741 | 2,346 / 3,008 | 161 / 184 | 23 |
+| code | 38,398 | 2,335 / 3,008 | 161 / 184 | 23 |
+| pointer | 38,807 | 2,354 / 3,008 | 161 / 184 | 23 |
+| onehand | 38,768 | 2,381 / 3,008 | 165 / 185 | 20 |
+| creative | 39,849 | 2,862 / 3,008 | 165 / 183 | 18 |
+| shortcuts | 38,673 | 2,398 / 3,008 | 165 / 185 | 20 |
+| multios | 38,309 | 2,328 / 3,008 | 161 / 183 | 22 |
+
 ## v0.6.0-beta.3 firmware qualification, 2026-10-26
 
 All ten unchanged profile configurations have completed exact-image firmware

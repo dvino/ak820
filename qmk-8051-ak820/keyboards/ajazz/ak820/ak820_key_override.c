@@ -20,7 +20,7 @@ static bool enabled = true, blocked, hidden;
 /* Inline this tiny predicate: a model-large helper spills its argument and
  * saves registers at each of the three call sites. */
 #define basic(key) ((key) >= KC_A && (key) <= KC_EXSEL)
-bool ak820_key_override_valid(const vial_key_override_entry_t AK820_STATE_MEM *e) {
+ak820_key_override_result_t ak820_key_override_valid(const vial_key_override_entry_t AK820_STATE_MEM *e) {
     const uint8_t AK820_STATE_MEM *bytes = (const uint8_t AK820_STATE_MEM *)e;
     uint8_t any = 0;
     /* The packed Vial ABI is little endian. Empty disabled slots are zero;
@@ -35,7 +35,7 @@ bool ak820_key_override_valid(const vial_key_override_entry_t AK820_STATE_MEM *e
     return true;
 }
 /* A mask containing both sides means either side, as in upstream QMK. */
-static bool eligible(uint8_t index) {
+static ak820_key_override_result_t eligible(uint8_t index) {
     vial_key_override_entry_t AK820_STATE_MEM *e = &entries[index];
     uint8_t low = e->trigger_mods & 15, high = e->trigger_mods >> 4;
     if (current_layer >= 6 || !((uint8_t)e->layers & ((uint8_t)1 << current_layer)) ||
@@ -78,7 +78,7 @@ void ak820_key_override_sync(uint8_t mods, uint8_t layer) {
     activate(false);
     previous_mods = mods;
 }
-bool ak820_key_override_process(keyrecord_t AK820_STATE_MEM *record, uint8_t mods, uint8_t layer) {
+ak820_key_override_result_t ak820_key_override_process(keyrecord_t AK820_STATE_MEM *record, uint8_t mods, uint8_t layer) {
     uint16_t key;
     uint8_t id;
     ak820_key_override_sync(mods, layer);
@@ -123,4 +123,4 @@ uint8_t ak820_key_override_mods(uint8_t mods) {
     if (replacement & 16) replacement = (replacement & 15) << 4;
     return (mods & ~entries[active].suppressed_mods) | replacement;
 }
-bool ak820_key_override_enabled(void) { return enabled; }
+ak820_key_override_result_t ak820_key_override_enabled(void) { return enabled; }
