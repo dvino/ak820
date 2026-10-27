@@ -2,12 +2,16 @@
 
 # Compact Auto Shift
 
-Holding a supported key past 175 ms sends its shifted form.
+Holding a supported key past the configured interval sends its shifted form.
 
-The beta.3 profile plan includes this engine in `main` and `typing`. It starts
-enabled and uses a fixed 175 ms hold threshold. `AS_ON`, `AS_OFF` and `AS_TOGG`
-change the current session without writing settings. `AS_UP`, `AS_DOWN` and
-`AS_RPT` are not supported.
+The engine is available in `main` and `typing`. QSID 3 stores the enabled state
+and the punctuation, digit and letter exclusions in a bit mask; its default is
+`1` (enabled, with no exclusions). A successful QSID 3 operation applies the
+flags immediately and saves them for restart. `AS_ON`, `AS_OFF` and `AS_TOGG`
+change only whether Auto Shift is active for the current session; they keep the
+selected key categories. The hold interval defaults to 175 ms and can be
+changed from 1 to 1000 ms with QSID 4. `AS_UP`, `AS_DOWN` and `AS_RPT` are not
+supported.
 
 ## Keys and timing
 
@@ -16,7 +20,8 @@ The engine accepts direct physical basic keys: A–Z, 1–0, Minus through Slash
 Space, Enter, Tab, Backspace, navigation keys, function keys or modifiers.
 The host keyboard layout determines the printed characters.
 
-A release before 175 ms sends an ordinary press and release. At 175 ms or later,
+A release before the configured interval sends an ordinary press and release. At
+the interval or later,
 the engine holds the key with left Shift until its physical release. The host
 can repeat that held shifted key. A different press before the threshold sends
 the pending key without adding Shift, before processing the new key. Its
@@ -49,8 +54,7 @@ and preserves an already emitted key until its physical release. An interrupted
 pending key is resolved before the physical control key changes the mode.
 
 This is a bounded board feature. It does not enable upstream QMK Auto Shift,
-Retro Shift, per-key callbacks, repeat-on-second-tap, adjustable timing or
-persistent settings. The timing and report-wide Shift behavior follow the
+Retro Shift, per-key callbacks or repeat-on-second-tap. The timing and report-wide Shift behavior follow the
 relevant concepts in the [QMK Auto Shift documentation](https://docs.qmk.fm/features/auto_shift).
 
 

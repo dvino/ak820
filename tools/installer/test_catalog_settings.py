@@ -52,7 +52,8 @@ def bind(catalog, *profiles):
 
 def backup_at(folder, profile, nvm=None):
     nvm = bytes(nvm if nvm is not None else profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
-    data = s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32], image=s._profile_images(profile)[profile['ihx_sha256']]), combos=True)
+    image = s._profile_images(profile)[profile['ihx_sha256']]
+    data = s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32], image=image), combos=True, settings_version=image.get('settings_record_version',1))
     files = {'settings.json': s.canonical(data), 'before-full-rom.bin': model.WireDevice(profile, nvm).rom(),
              'saved-nvm.bin': nvm, 'read-log.jsonl': b'', '.gitignore': b'*\n'}
     manifest = {'format': s.FORMAT_V2 if profile['schema'] == s.extensions.SCHEMA else s.FORMAT,
@@ -67,6 +68,26 @@ def backup_at(folder, profile, nvm=None):
 
 
 class CatalogSettings(unittest.TestCase):
+    def test_explicit_transition_cannot_downgrade_settings_record(self):
+        source, source_row = profile_for('main', 121)
+        target, target_row = profile_for('main', 122)
+        config = s.ak820_profiles._configuration('main', s.ak820_profiles.PROFILES['main'])
+        target_row['configuration'] = config
+        target_row['settings_identity'] = s._settings_identity(config, target['ihx_sha256'],
+            target['code_sha256'], target['definition_sha256'], combo_actions=['caps-word-toggle'], macro_layer_tap=True)
+        payload = bytearray(target['payload'])
+        begin = p.NVM_START-p.APP_START+0x6a8
+        payload[begin:begin+24] = s.extensions.settings_record(version=1)
+        target['payload'] = bytes(payload)
+        edge = {'source': source['ihx_sha256'], 'target': target['ihx_sha256']}
+        bind(catalog_for(source_row, target_row, transitions=[edge]), source, target)
+        with tempfile.TemporaryDirectory() as temp:
+            backup = backup_at(Path(temp), source)
+            original = (Path(temp)/'settings.json').read_bytes()
+            with self.assertRaisesRegex(ValueError, 'downgrade'):
+                s.plan_restore(backup, target)
+            self.assertEqual((Path(temp)/'settings.json').read_bytes(), original)
+
     def test_historical_main_survives_current_composition_change(self):
         profiles = s.ak820_profiles
         # Build the historical row under its original composition, even after
@@ -74,6 +95,12 @@ class CatalogSettings(unittest.TestCase):
         old_features = profiles.historical_configuration('main')['optional_features']
         with patch.dict(profiles.PROFILES, main=tuple(old_features)):
             old, row = profile_for('main', 112)
+        row['configuration'] = profiles.historical_configuration('main')
+        row['settings_identity'] = s._settings_identity(row['configuration'], old['ihx_sha256'], old['code_sha256'], old['definition_sha256'], combo_actions=[], macro_layer_tap=False)
+        old_nvm = bytearray(old['payload'])
+        begin = s.pack.NVM_START-s.pack.APP_START+0x6a8
+        old_nvm[begin:begin+24] = s.extensions.settings_record(version=1)
+        old['payload'] = bytes(old_nvm)
         del row['settings_identity']['combo_actions']
         row['settings_identity']['supported_keycodes'] = [
             code for code in row['settings_identity']['supported_keycodes']
@@ -274,7 +301,7 @@ class CatalogSettings(unittest.TestCase):
             for code in values:
                 self.assertTrue(s.keycode_supported(code, features=[feature]), (feature, code))
                 self.assertFalse(s.keycode_supported(code), (feature, code))
-        for code in (0xD6,0xD7,0xD8,0xDD,0xDE,0xDF,0x7005,0x7017,0x7C10,0x7C18,0x7C5A,0x5280):
+        for code in (0xD6,0xD7,0xD8,0xDD,0xDE,0xDF,0x7005,0x7017,0x7C10,0x7C18,0x5280):
             self.assertFalse(s.keycode_supported(code, features=list(s.MODULE_FEATURES)), hex(code))
         for feature, code in [('tap-dance',0x5700), ('leader',0x7C58), ('auto-shift',0x7C13)] + [('dynamic-macros', code) for code in range(0x7C53,0x7C58)]:
             image = {'features':[feature]}
@@ -466,6 +493,35 @@ class CatalogSettings(unittest.TestCase):
         catalog['historical_sources'] = [{'ihx_sha256':'f'*64,'code_sha256':'e'*64}]
         with self.assertRaisesRegex(ValueError,'Unknown or duplicate historical'):
             s._catalog_images(catalog)
+
+    def test_restore_reapplies_saved_controls_without_rewriting_v1_or_v2(self):
+        for record_version in (1,2):
+            with self.subTest(record_version=record_version), tempfile.TemporaryDirectory() as temp:
+                root=Path(temp)
+                profile,row=profile_for('main',123)
+                bind(catalog_for(row),profile)
+                nvm=bytearray(profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
+                nvm[0x6a8:0x6c0]=s.extensions.settings_record(version=record_version)
+                for index in range(8):
+                    begin=0x658+index*10
+                    nvm[begin:begin+10]=s.DeviceAPI.stored_combo(bytes(10))
+                saved=backup_at(root,profile,nvm)
+                raw=model.WireDevice(profile,bytes(nvm))
+                raw.runtime_controls={3:0,22:1}
+                (root/'wire').mkdir()
+                api=s.DeviceAPI(profile,root/'wire',lambda:raw,allow_writes=True)
+                api.settings_query=Mock(return_value=s.ak820_profiles.configuration('main')['runtime_qmk_settings'])
+                api.get_setting=lambda qsid:s.extensions.decode_settings(bytes(raw.nvm[0x6a8:0x6c0]),version=2)[str(qsid)]
+                api.dynamic_entry_counts=Mock(return_value=(0,8,8))
+                api.get_extension=lambda kind,index:bytes(raw.nvm[s.extensions.slot_offset(kind,index):s.extensions.slot_offset(kind,index)+10])
+                try:
+                    with patch('ak820_device_protocol.time.sleep'):
+                        result=s.restore_settings(api,saved,profile,target_backup=saved)
+                    self.assertTrue(result['verified'])
+                    self.assertEqual(raw.runtime_controls,{3:1,22:0})
+                    self.assertEqual(bytes(raw.nvm),bytes(nvm))
+                    self.assertEqual([int.from_bytes(packet[2:4],'little') for packet in raw.writes if packet[:2]==bytes([254,11])],[3,22])
+                finally:api.close()
 
     def test_restore_and_final_verification_translate_rgb_enum_both_directions(self):
         for source_name,target_name,source_enum,target_enum in [('main','typing',6,5),('typing','main',5,6)]:

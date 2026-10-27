@@ -143,8 +143,8 @@ def _sha(value):
 
 
 @lru_cache(maxsize=64)
-def _supported_keycodes(features, macro_layer_tap):
-    return tuple(code for code in range(65536) if keycode_supported(code, features=features)
+def _supported_keycodes(features, macro_layer_tap, compact_controls_version=1):
+    return tuple(code for code in range(65536) if keycode_supported(code, features=features, compact_controls_version=compact_controls_version)
                  and (macro_layer_tap or not macro_layer_tap_keycode(code)))
 
 
@@ -171,8 +171,9 @@ def _settings_identity(config, ihx_sha256, code_sha256, definition_sha256, *, co
     return {'ihx_sha256': ihx_sha256, 'code_sha256': code_sha256,
             'definition_sha256': definition_sha256, 'nvm_schema': config['nvm_schema'],
             'profile': config['profile'], 'features': sorted(features),
-            'supported_keycodes': list(_supported_keycodes(tuple(sorted(features)), macro_layer_tap)),
+            'supported_keycodes': list(_supported_keycodes(tuple(sorted(features)), macro_layer_tap, config.get('compact_controls_version', 1))),
             'macro_layer_tap': macro_layer_tap,
+            **({'compact_controls_version': 2, 'settings_record_version': 2, 'combo_media': True} if config.get('compact_controls_version') == 2 else {}),
             **({'direct_protocol': 1} if direct_protocol == 1 else {}),
             'combo_actions': list(combo_actions), 'combos_version': 1, 'extensions_version': 1 if config['nvm_schema'] == extensions.SCHEMA else None}
 
@@ -198,8 +199,7 @@ def _catalog_images(catalog):
         if value is None:
             continue
         require(type(value) is dict, 'Invalid settings identity')
-        validator = (ak820_profiles.validate_source_configuration if historical_row else
-                     ak820_profiles.validate_configuration)
+        validator = ak820_profiles.validate_source_configuration
         config = validator(row.get('configuration'))
         expected = _settings_identity(config, value.get('ihx_sha256'),
                                              value.get('code_sha256'), value.get('definition_sha256'),
@@ -235,7 +235,7 @@ def _catalog_images(catalog):
 def _image_configuration(image):
     config = image.get('_configuration')
     if config is None:
-        return ak820_profiles.configuration(image.get('profile'))
+        return ak820_profiles._configuration(image.get('profile'), ak820_profiles.PROFILES[image.get('profile')])
     config = ak820_profiles.validate_source_configuration(config)
     require(config['profile'] == image.get('profile'), 'Image configuration profile differs')
     return config
@@ -373,6 +373,7 @@ def combo_settings(nvm):
 def _validate_combo_actions(combos, image):
     for entry in combos['entries_hex']:
         output = int.from_bytes(bytes.fromhex(entry)[8:10], 'little')
+        require(not 0xA8 <= output <= 0xC2 or image.get('combo_media') is True, 'Media Combo is unsupported by the exact image')
         require(output != 0x7C73 or 'caps-word-toggle' in image.get('combo_actions', []),
                 'Caps Word Combo is unsupported by the exact image')
 
@@ -384,7 +385,7 @@ def _combo_capable(profile, identity=None):
     return version == 1
 
 
-def settings_from_nvm(nvm, rgb_mode, *, combos=False, direct_capable=False):
+def settings_from_nvm(nvm, rgb_mode, *, combos=False, direct_capable=False, settings_version=None):
     schema = int.from_bytes(nvm[37:40], 'little')
     metadata = pack.validate_nvm(nvm, schema)
     length = metadata['published_macro_length']
@@ -408,7 +409,7 @@ def settings_from_nvm(nvm, rgb_mode, *, combos=False, direct_capable=False):
                 'Current RGB flags are sampled separately from NVM and the palette generation.',
                 *LIMITATIONS[2:]] if direct_capable else LIMITATIONS)}
     if schema == extensions.SCHEMA:
-        result['extensions'] = extensions.from_nvm(nvm)
+        result['extensions'] = extensions.from_nvm(nvm, version=settings_version)
     if combos:
         result['combos'] = combo_settings(nvm)
     return result
@@ -461,7 +462,9 @@ def capture_settings(api, profile):
     current = bytes.fromhex(rgb['mode_hex'])
     require(current == rgb_wire(nvm[24:32], image=image),
             'RGB RAM and saved NVM differ; save the intended settings explicitly before export')
-    settings = settings_from_nvm(nvm, current, combos=_combo_capable(profile, _rom_identity(rom, profile)['ihx_sha256']), direct_capable=image.get('direct_protocol') == 1)
+    settings = settings_from_nvm(nvm, current, combos=_combo_capable(profile, _rom_identity(rom, profile)['ihx_sha256']), direct_capable=image.get('direct_protocol') == 1, settings_version=image.get('settings_record_version', 1))
+    if 'combos' in settings:
+        _validate_combo_actions(settings['combos'], image)
     _check_getters(api, settings, _rom_identity(rom, profile))
     require(api.read_nvm() == nvm, 'NVM changed during getters; export is not a firmware freeze')
     require(api.rgb_mode() == current, 'RGB changed during export')
@@ -578,7 +581,7 @@ def validate_backup(path, profile, expected_identity=None):
     validate_rom(rom, profile, (source_ihx, source_code))
     require(nvm == rom[pack.NVM_START:pack.NVM_END], 'Saved NVM differs from the full ROM')
     settings = _json(files['settings.json'])
-    expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32], image=image), combos=_combo_capable(profile, source_ihx), direct_capable=image.get('direct_protocol') == 1)
+    expected = settings_from_nvm(nvm, rgb_wire(nvm[24:32], image=image), combos=_combo_capable(profile, source_ihx), direct_capable=image.get('direct_protocol') == 1, settings_version=image.get('settings_record_version', 1))
     for item in expected['keys'] + expected['encoders']:
         if macro_layer_tap_keycode(item['keycode']):
             require(image_keycode_supported(item['keycode'], image,
@@ -603,7 +606,7 @@ def macro_layer_tap_keycode(code):
     return type(code) is int and 0x40 <= code >> 8 <= 0x45 and 0xF0 <= (code & 255) <= 0xFF
 
 
-def keycode_supported(code, *, features=()):
+def keycode_supported(code, *, features=(), compact_controls_version=2):
     """Conservative current-build allowlist, including documented tap fallbacks.
 
     quantum/keymap_common.c, quantum.c, process_rgb.c and enabled key processors
@@ -612,6 +615,8 @@ def keycode_supported(code, *, features=()):
     if type(code) is not int or not 0 <= code <= 65535:
         return False
     require(set(features) <= MODULE_FEATURES and len(features) == len(set(features)), 'Unknown settings feature profile')
+    if compact_controls_version == 2 and (0x7C50 <= code <= 0x7C52 or 0x7E00 <= code <= 0x7E02):
+        return True
     optional = {
         'nkro-control': (0x7011, 0x7012, 0x7013),
         'space-cadet': (0x7C1A, 0x7C1B, 0x7C1E),
@@ -654,13 +659,14 @@ def image_keycode_supported(code, image, *, context='matrix'):
     require(context in ('matrix', 'encoder', 'macro', 'macro-tap', 'macro-down', 'macro-up'), 'Unknown keycode source')
     if macro_layer_tap_keycode(code) and (context != 'matrix' or image.get('macro_layer_tap') is not True):
         return False
-    if not keycode_supported(code, features=image.get('features', ())):
+    if not keycode_supported(code, features=image.get('features', ()), compact_controls_version=image.get('compact_controls_version', 1)):
         return False
     if 'supported_keycodes' in image and code not in image['supported_keycodes']:
         return False
     # These compact processors admit physical matrix positions only.
     if context != 'matrix' and (0x5700 <= code <= 0x5707 or 0x7C53 <= code <= 0x7C58 or
-                                0x7C13 <= code <= 0x7C15):
+                                0x7C13 <= code <= 0x7C15 or 0x7C50 <= code <= 0x7C52 or
+                                0x7E00 <= code <= 0x7E02):
         return False
     if context.startswith('macro') and 0x7C5D <= code <= 0x7C5F and context != 'macro-tap':
         return False
@@ -713,17 +719,18 @@ def plan_restore(backup, profile, target_nvm=None):
                 'Settings restore would downgrade firmware; only same-image or approved forward transitions are allowed')
     extension_data = backup['settings'].get('extensions')
     if target_schema == extensions.SCHEMA and extension_data is None:
-        extension_data = extensions.from_nvm(target_nvm)
-        require(extension_data['qmk_settings'] == extensions.decode_settings(extensions.settings_record()) and
+        extension_data = extensions.from_nvm(target_nvm, version=target_image.get('settings_record_version', 1))
+        require(extension_data['qmk_settings'] == extensions.decode_settings(extensions.settings_record(version=target_image.get('settings_record_version', 1))) and
                 all(v == bytes(10).hex() for kind in ('tap_dance','key_overrides') for v in extension_data[kind]),
                 'Legacy backup cannot overwrite nondefault target extensions')
     if extension_data is not None:
-        target_extensions = extensions.from_nvm(target_nvm)
+        extension_data = {**extension_data, 'qmk_settings': extensions.normalize_settings(extension_data['qmk_settings'], version=target_image.get('settings_record_version', 1))}
+        target_extensions = extensions.from_nvm(target_nvm, version=target_image.get('settings_record_version', 1))
         for kind, feature in (('tap_dance','tap-dance'), ('key_overrides','key-overrides')):
             require(feature in target_features or extension_data[kind] == target_extensions[kind],
                     'Inactive module data differs: ' + kind)
         writable_ids = _image_configuration(target_image)['runtime_qmk_settings']
-        for qsid in extensions.FIELDS:
+        for qsid in map(int, extension_data['qmk_settings']):
             require(qsid in writable_ids or extension_data['qmk_settings'][str(qsid)] ==
                     target_extensions['qmk_settings'][str(qsid)], 'Inactive QMK setting differs')
     blockers = []
@@ -809,6 +816,8 @@ def verify_restore(api, backup, profile):
             'Final running firmware differs from the selected target image')
     expected_settings = dict(backup['settings'])
     expected_settings['limitations'] = actual['limitations']
+    if 'extensions' in expected_settings and 'extensions' in actual:
+        expected_settings['extensions'] = {**expected_settings['extensions'], 'qmk_settings': extensions.normalize_settings(expected_settings['extensions']['qmk_settings'], version=2 if '22' in actual['extensions']['qmk_settings'] else 1)}
     images = _profile_images(profile)
     rgb = translated_rgb_config(backup['nvm'][24:32], images[backup['source_identity'][0]],
                                 images[profile['ihx_sha256']])
@@ -819,7 +828,7 @@ def verify_restore(api, backup, profile):
         expected_settings['combos'] = actual['combos']
     if 'extensions' in actual and 'extensions' not in expected_settings:
         expected_settings['extensions'] = actual['extensions']
-        require(actual['extensions']['qmk_settings'] == extensions.decode_settings(extensions.settings_record()) and all(v == bytes(10).hex() for kind in ('tap_dance','key_overrides') for v in actual['extensions'][kind]), 'Legacy restore target extensions differ')
+        require(actual['extensions']['qmk_settings'] == extensions.decode_settings(extensions.settings_record(version=2 if '22' in actual['extensions']['qmk_settings'] else 1)) and all(v == bytes(10).hex() for kind in ('tap_dance','key_overrides') for v in actual['extensions'][kind]), 'Legacy restore target extensions differ')
     require(canonical(actual) == canonical(expected_settings), 'Final restored settings differ from the backup')
     # User values are compared, not journal data, unused slots, stale macro tail
     # or the new firmware's initial-config manifest digest.
@@ -923,13 +932,14 @@ def restore_settings(api, backup, profile, before_write=None, *, target_backup=N
         ids = api.settings_query()
         for qsid in ids:
             value = values['qmk_settings'][str(qsid)]
-            if api.get_setting(qsid) != value:
+            if api.get_setting(qsid) != value or qsid in (3, 22):
                 write('setting:' + str(qsid), lambda: api.set_setting(qsid, value))
-                current = extensions.decode_settings(bytes(expected[0x6A8:0x6C0]))
-                current[str(qsid)] = value
-                expected[0x6A8:0x6C0] = extensions.settings_record(current)
+                current = extensions.decode_settings(bytes(expected[0x6A8:0x6C0]), version=2 if '22' in values['qmk_settings'] else 1)
+                if current[str(qsid)] != value:
+                    current[str(qsid)] = value
+                    expected[0x6A8:0x6C0] = extensions.settings_record(current, version=2 if '22' in current else 1)
                 durable('setting')
-        require(extensions.decode_settings(bytes(expected[0x6A8:0x6C0])) == values['qmk_settings'], 'Unexposed settings differ')
+        require(extensions.decode_settings(bytes(expected[0x6A8:0x6C0]), version=2 if '22' in values['qmk_settings'] else 1) == values['qmk_settings'], 'Unexposed settings differ')
         for kind, feature in (('tap_dance','tap-dance'), ('key_overrides','key-overrides')):
             if feature not in plan['extension_features']:
                 continue

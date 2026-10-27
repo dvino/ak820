@@ -137,14 +137,20 @@ void add_owned_weak_mods(uint8_t mods);
 void del_owned_weak_mods(uint8_t mods);
 void clear_owned_mods(void);
 extern bool ak820_macro_primitive, ak820_macro_cancelled;
+/* Direct internal C predicates use the carry return on the 8051. */
+#if defined(__SDCC_mcs51)
+typedef __bit ak820_owner_result_t;
+#else
+typedef bool ak820_owner_result_t;
+#endif
 #if defined(__SDCC_mcs51)
 #    define AK820_STATE_MEM __xdata
 #else
 #    define AK820_STATE_MEM
 #endif
-bool ak820_macro_change(uint8_t AK820_STATE_MEM *bits, uint8_t index, bool pressed);
-bool add_owned_key(uint8_t code);
-bool del_owned_key(uint8_t code);
+ak820_owner_result_t ak820_macro_change(uint8_t AK820_STATE_MEM *bits, uint8_t index, bool pressed);
+ak820_owner_result_t add_owned_key(uint8_t code);
+ak820_owner_result_t del_owned_key(uint8_t code);
 void clear_owned_keys(void);
 void owned_usage_key(uint8_t code, bool pressed);
 void clear_owned_usages(void);

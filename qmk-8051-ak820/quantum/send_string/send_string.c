@@ -35,6 +35,7 @@ float bell_song[][2] = SONG(BELL_SOUND);
 
 // clang-format off
 
+#if !defined(AK820_BOARD) || !defined(__SDCC_mcs51)
 /* Bit-Packed look-up table to convert an ASCII character to whether
  * [Shift] needs to be sent with the keycode.
  */
@@ -58,6 +59,9 @@ __attribute__((weak)) const uint8_t ascii_to_shift_lut[16] PROGMEM = {
     KCLUT_ENTRY(0, 0, 0, 1, 1, 1, 1, 0)
 };
 
+#endif
+
+#if !defined(AK820_BOARD) || !defined(__SDCC_mcs51)
 /* Bit-Packed look-up table to convert an ASCII character to whether
  * [AltGr] needs to be sent with the keycode.
  */
@@ -104,8 +108,31 @@ __attribute__((weak)) const uint8_t ascii_to_dead_lut[16] PROGMEM = {
     KCLUT_ENTRY(0, 0, 0, 0, 0, 0, 0, 0)
 };
 
+#endif
+
 /* Look-up table to convert an ASCII character to a keycode.
  */
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* The fixed AK820 map has no keycode above 0x7f; bit 7 carries Shift. */
+__attribute__((weak)) const uint8_t ascii_to_keycode_lut[128] PROGMEM = {
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_BSPC, KC_TAB, KC_ENT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, XXXXXXX, XXXXXXX, KC_ESC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_SPC, (KC_1 | 0x80), (KC_QUOT | 0x80), (KC_3 | 0x80), (KC_4 | 0x80), (KC_5 | 0x80), (KC_7 | 0x80), KC_QUOT,
+    (KC_9 | 0x80), (KC_0 | 0x80), (KC_8 | 0x80), (KC_EQL | 0x80), KC_COMM, KC_MINS, KC_DOT, KC_SLSH,
+    KC_0, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7,
+    KC_8, KC_9, (KC_SCLN | 0x80), KC_SCLN, (KC_COMM | 0x80), KC_EQL, (KC_DOT | 0x80), (KC_SLSH | 0x80),
+    (KC_2 | 0x80), (KC_A | 0x80), (KC_B | 0x80), (KC_C | 0x80), (KC_D | 0x80), (KC_E | 0x80), (KC_F | 0x80), (KC_G | 0x80),
+    (KC_H | 0x80), (KC_I | 0x80), (KC_J | 0x80), (KC_K | 0x80), (KC_L | 0x80), (KC_M | 0x80), (KC_N | 0x80), (KC_O | 0x80),
+    (KC_P | 0x80), (KC_Q | 0x80), (KC_R | 0x80), (KC_S | 0x80), (KC_T | 0x80), (KC_U | 0x80), (KC_V | 0x80), (KC_W | 0x80),
+    (KC_X | 0x80), (KC_Y | 0x80), (KC_Z | 0x80), KC_LBRC, KC_BSLS, KC_RBRC, (KC_6 | 0x80), (KC_MINS | 0x80),
+    KC_GRV, KC_A, KC_B, KC_C, KC_D, KC_E, KC_F, KC_G,
+    KC_H, KC_I, KC_J, KC_K, KC_L, KC_M, KC_N, KC_O,
+    KC_P, KC_Q, KC_R, KC_S, KC_T, KC_U, KC_V, KC_W,
+    KC_X, KC_Y, KC_Z, (KC_LBRC | 0x80), (KC_BSLS | 0x80), (KC_RBRC | 0x80), (KC_GRV | 0x80), KC_DEL,
+};
+#else
 __attribute__((weak)) const uint8_t ascii_to_keycode_lut[128] PROGMEM = {
     // NUL   SOH      STX      ETX      EOT      ENQ      ACK      BEL
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -141,10 +168,11 @@ __attribute__((weak)) const uint8_t ascii_to_keycode_lut[128] PROGMEM = {
     // x     y        z        {        |        }        ~        DEL
     KC_X,    KC_Y,    KC_Z,    KC_LBRC, KC_BSLS, KC_RBRC, KC_GRV,  KC_DEL
 };
+#endif
 
 // clang-format on
 
-#ifdef AK820_BOARD
+#if defined(AK820_BOARD) && !defined(__SDCC_mcs51)
 // One-bit masks avoid three variable-count shift loops in send_char.
 static const uint8_t ascii_bit_mask_lut[8] PROGMEM = {1, 2, 4, 8, 16, 32, 64, 128};
 #endif
@@ -214,12 +242,20 @@ void send_char(char ascii_code) {
 
 #ifdef AK820_BOARD
     uint8_t ascii_index = (uint8_t)ascii_code;
+#    if defined(__SDCC_mcs51)
+    uint8_t encoded_keycode = pgm_read_byte(&ascii_to_keycode_lut[ascii_index]);
+    uint8_t keycode         = encoded_keycode & 0x7F;
+    bool    is_shifted      = (encoded_keycode & 0x80) != 0;
+    bool    is_altgred      = false;
+    bool    is_dead         = false;
+#    else
     uint8_t bit_mask    = pgm_read_byte(&ascii_bit_mask_lut[ascii_index & 7]);
     uint8_t bit_index   = ascii_index >> 3;
     uint8_t keycode     = pgm_read_byte(&ascii_to_keycode_lut[ascii_index]);
     bool    is_shifted  = (pgm_read_byte(&ascii_to_shift_lut[bit_index]) & bit_mask) != 0;
     bool    is_altgred  = (pgm_read_byte(&ascii_to_altgr_lut[bit_index]) & bit_mask) != 0;
     bool    is_dead     = (pgm_read_byte(&ascii_to_dead_lut[bit_index]) & bit_mask) != 0;
+#    endif
 #else
     uint8_t keycode    = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
     bool    is_shifted = PGM_LOADBIT(ascii_to_shift_lut, (uint8_t)ascii_code);

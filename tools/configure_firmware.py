@@ -39,6 +39,7 @@ WINDOWS = ((0x28a0, 0x3000), (0x3027, 0xc700))
 SYMBOLS = {'grave-escape': '_process_grave_esc', 'tap-dance': '_ak820_tap_dance_process', 'key-overrides': '_ak820_key_override_process', 'qmk-settings': '_ak820_settings_set', 'os-indicators': '_ak820_os_indicator_value', 'leader': '_ak820_leader_process', 'nkro-control': '_process_ak820_nkro', 'one-shot': '_ak820_oneshot_process',
            'mouse-keys': '_mousekey_task', 'auto-shift': '_ak820_autoshift_process',
            'dynamic-macros': '_ak820_dynamic_macro_process'}
+COMPACT_SETTINGS_SYMBOL = '_ak820_settings_set_packet'
 STATIC_BITS = {'gui-lock': '_gui_disabled', 'ctrl-gui-swap': '_ctrl_gui_swapped', 'mac-pc': '_ak820_mac_mode'}
 RELEASE_BLOCKERS = (
     'Run check-runtime to establish the exact-image foreground/startup/IRQ stack bound.',
@@ -192,7 +193,7 @@ def retained_static_symbols(report, build, code):
             if declaration:
                 area = (declaration[1], declaration[2])
             label = re.match(r'^\s*([0-9A-F]{6})\s+\d+\s+(_[\w$]+):', line)
-            if label and label[2] in (*SYMBOLS.values(), *STATIC_BITS.values()):
+            if label and label[2] in (*SYMBOLS.values(), COMPACT_SETTINGS_SYMBOL, *STATIC_BITS.values()):
                 require(label[2] not in found, 'Ambiguous feature symbol')
                 if label[2] in STATIC_BITS.values():
                     allocation = re.match(r'^\s*([0-9A-F]{6})\s+\d+\s+\.ds\s+1\s*$',
@@ -211,8 +212,14 @@ def retained_static_symbols(report, build, code):
 
 def check_feature_symbols(symbols, selected, code):
     for feature, symbol in SYMBOLS.items():
+        if feature == 'qmk-settings' and selected.get('compact_controls_version') == 2:
+            symbol = COMPACT_SETTINGS_SYMBOL
         require((symbol in symbols and symbols[symbol] in code) ==
                 (feature in selected['optional_features']), 'Compiled feature differs from profile: ' + feature)
+    if 'qmk-settings' in selected['optional_features']:
+        unexpected = (SYMBOLS['qmk-settings'] if selected.get('compact_controls_version') == 2
+                      else COMPACT_SETTINGS_SYMBOL)
+        require(unexpected not in symbols, 'Compiled feature differs from profile: qmk-settings')
     for feature, symbol in STATIC_BITS.items():
         require((symbol in symbols) == (feature in selected['optional_features']),
                 'Compiled feature state differs from profile: ' + feature)
@@ -812,6 +819,10 @@ def profile_test_plan(name, build, toolchain):
     plan = [('gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'tools',
                              '-p', 'test_configure_firmware.py'])]
     plan.extend([
+        ('compact-controls-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                         '-s', 'tools', '-p', 'test_compact_controls_contract.py']),
+        ('ascii-sendstring-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
+                                        '-s', 'tools', '-p', 'test_ascii_sendstring_compaction.py']),
         ('firmware-matrix-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',
                                        '-s', 'tools', '-p', 'test_firmware_matrix.py']),
         ('catalog-bundle-gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover',

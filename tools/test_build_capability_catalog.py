@@ -26,14 +26,14 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(contract['modules'][module]['enabled_entries'],
                                  8 if feature in selected['optional_features'] else 0)
             self.assertEqual(contract['modules']['qmk_settings']['enabled_qsids'],
-                             [1,2,4,7,18,19] if name in ('main', 'typing') else [1,2,7,18,19])
+                             [1,2,3,4,6,7,18,19,22] if name in ('main', 'typing') else [1,2,6,7,18,19,22])
             self.assertFalse(contract['restore']['write_authorization_granted'])
             self.assertFalse(contract['physical_behavior_verified'])
 
     def test_individual_module_contracts_are_capability_aware(self):
         limits={'tap_dance':8,'key_overrides':8}
-        for name,td,ko,qsids in (('creative',8,0,[1,2,7,18,19]),
-                ('main',0,8,[1,2,4,7,18,19]), ('onehand',8,0,[1,2,7,18,19])):
+        for name,td,ko,qsids in (('creative',8,0,[1,2,6,7,18,19,22]),
+                ('main',0,8,[1,2,3,4,6,7,18,19,22]), ('onehand',8,0,[1,2,6,7,18,19,22])):
             with self.subTest(name=name):
                 contract=catalog.module_contract(config.profiles.configuration(name),limits)
                 modules=contract['modules']

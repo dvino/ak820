@@ -42,8 +42,10 @@ palette readback. This API does not select Direct mode or save the palette to
 EEPROM. Older backups without the sidecar cannot recover Direct colors. See
 [Direct palette](DIRECT.md) for the protocol and limits.
 
-Restore the same image by default. Other image transitions must be explicitly
-listed and still pass schema, feature and value checks. Keep configuration
+Restore the same image by default. During beta, cross-release transitions are
+limited to the immediately preceding build; older release sources are unsupported.
+Transitions between profiles of the current release must be explicitly listed
+and still pass schema, feature and value checks. Keep configuration
 software closed during backup; the firmware does not pause while settings are
 read. A failed read, timeout or mismatch stops the operation.
 

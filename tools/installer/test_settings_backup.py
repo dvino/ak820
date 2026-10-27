@@ -138,7 +138,21 @@ class WireDevice:
         write = cmd in (3, 5, 7, 9, 15) or (cmd, sub) == (254, 4)
         if write:
             self.writes.append(packet)
-        if cmd == 254 and sub == 13:
+        if cmd == 254 and sub == 11:
+            qsid = int.from_bytes(packet[2:4], 'little')
+            values = settings.extensions.decode_settings(bytes(self.nvm[0x6a8:0x6c0]), version=2)
+            width = settings.extensions.FIELDS[qsid][1]
+            value = int.from_bytes(packet[4:4+width], 'little')
+            if values[str(qsid)] != value:
+                values[str(qsid)] = value
+                self.nvm[0x6a8:0x6c0] = settings.extensions.settings_record(values)
+            if not hasattr(self, 'runtime_controls'):
+                self.runtime_controls = {}
+            if qsid in (3,22):
+                self.runtime_controls[qsid] = value
+            self.writes.append(packet)
+            reply[0] = 0
+        elif cmd == 254 and sub == 13:
             op, index = packet[2:4]
             at = 0x658 + index*10
             if op == 0:
@@ -585,7 +599,7 @@ class FullFeatureTests(unittest.TestCase):
             self.assertFalse(settings.keycode_supported(code))
             self.assertTrue(settings.keycode_supported(code, features=settings.FULL_FEATURES))
         for code in (0x7010, 0x7014, 0x7C18, 0x7C19, 0x7C1C, 0x7C1D, 0x5280, 0x7C5A):
-            self.assertFalse(settings.keycode_supported(code, features=settings.FULL_FEATURES))
+            self.assertFalse(settings.keycode_supported(code, features=settings.FULL_FEATURES, compact_controls_version=1))
         with self.assertRaisesRegex(ValueError, 'Unknown settings feature'):
             settings.keycode_supported(4, features=['future'])
 

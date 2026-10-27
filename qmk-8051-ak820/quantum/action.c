@@ -94,6 +94,9 @@ __attribute__((weak)) bool get_retro_tapping(uint16_t keycode, keyrecord_t *reco
  * FIXME: Needs documentation.
  */
 void action_exec(keyevent_t event) {
+#ifdef AK820_COMPACT_ONESHOT
+    ak820_oneshot_tick(event.time);
+#endif
 #ifdef AK820_COMPACT_DYNAMIC_MACRO
     ak820_dynamic_macro_task(event.time);
 #endif
@@ -1323,6 +1326,9 @@ void clear_keyboard_but_mods(void) {
 void clear_keyboard_but_mods_and_keys(void) {
 #ifdef AK820_COMPACT_TAPPING
     ak820_tapping_cancel();
+#    if defined(CAPS_WORD_ENABLE) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+    caps_word_shift_cancel();
+#    endif
 #    ifdef AK820_COMPACT_TAP_DANCE
     ak820_tap_dance_cancel();
 #    endif

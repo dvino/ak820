@@ -4,8 +4,8 @@ Default execution writes audit evidence only. Review the draft catalog, install
 its identical bytes in both catalog locations, freeze sources and run settings
 tests before using --write-policies with a new private output directory.
 --settings-run accepts a successful record with command, exit_code, source_files,
-log_path and log_sha256; every source and log is checked before reuse. Public
-historical bundles must be authenticated before this script is run. Their linked
+log_path and log_sha256; every source and log is checked before reuse. Previous-beta
+bundles must be authenticated before this script is run. Earlier releases are not admitted. Their linked
 IHX and reconstructed packed CODE are checked against retained exact identities.
 No independent approval is generated. No device is opened.
 """
@@ -22,6 +22,7 @@ AUDIT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / 'qmk-8051-ak820/util'))
 sys.path.insert(0, str(ROOT / 'tools'))
 import configure_firmware as configured
+import ak820_beta_transition_policy as beta_policy
 import ak820_ci_authorization as authorization
 import ak820_release_safety as safety
 sys.path.insert(0, str(ROOT / 'tools'))
@@ -56,6 +57,54 @@ def profile_build(args, name):
     require(path.is_relative_to((ROOT / 'qmk-8051-ak820').resolve()) and path.is_dir(),
             'Missing or external profile build: ' + name)
     return path
+
+def add_generated_backup(backups, generated, label, profile, create):
+    """Coalesce generated defaults only; user-captured backups remain distinct.
+
+    The catalog has already checked configuration/settings identity equality.
+    Also require identical reconstructed bytes, schema and definition here before
+    reusing one generated default as evidence for an unchanged image.
+    """
+    require(label not in backups, 'Duplicate source fixture label: ' + label)
+    identity = profile['ihx_sha256']
+    contract = tuple(profile[key] for key in
+                     ('code_sha256', 'schema', 'definition_sha256', 'definition', 'payload'))
+    if identity in generated:
+        require(generated[identity] == contract,
+                'Conflicting generated source identity/contract: ' + label)
+        return
+    backup = create()
+    require(tuple(backup['source_identity']) == (identity, profile['code_sha256']),
+            'Generated backup identity differs: ' + label)
+    backups[label] = backup
+    generated[identity] = contract
+
+
+def produce_transition_evidence(root, audit, profile, report, packed, tests):
+    """Produce the same scoped witness consumed by the exact-image safety gate."""
+    previous_path = audit / 'previous-beta-catalog.json'
+    catalog_path = audit / 'settings-catalog-draft.json'
+    matrix_path = audit / 'transition-preflight.json'
+    previous = beta_policy.load_previous_catalog(previous_path)
+    catalog, matrix = safety.load(catalog_path), safety.load(matrix_path)
+    sources = beta_policy.validate_transition_matrix(matrix, catalog, previous)
+    row = next(r for r in catalog['profiles'] if r['profile'] == profile)
+    target = row['settings_identity']
+    require(row['configuration'] == report['configuration'] and
+            target['ihx_sha256'] == packed['build']['ihx_sha256'] and
+            target['code_sha256'] == packed['settings_code_sha256'] and
+            target['nvm_schema'] == report['build_id'], 'Transition producer target differs from exact build')
+    def reference(path):
+        return dict(record(path), path=str(path.relative_to(root)))
+    return {'format': 'ak820-settings-transition-2', 'passed': bool(tests),
+            'offline_only': True, 'physical_device_commands': 0,
+            'scope': 'Previous published beta and current exact images to current only; offline plans, no physical restore proof.',
+            'target': {'ihx_sha256': target['ihx_sha256'], 'code_sha256': target['code_sha256'],
+                       'schema': report['build_id'], 'optional_features': report['configuration']['optional_features']},
+            'source_images': sorted(sources), 'tests': tests,
+            'previous_beta_catalog': reference(previous_path), 'settings_catalog': reference(catalog_path),
+            'preflight_matrix': reference(matrix_path)}
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -100,7 +149,6 @@ def main():
             require(pack['build']['ihx_sha256'] == ihx, "Preparation input check failed: pack['build']['ihx_sha256'] == ihx")
             cases = [c for c in transitions['cases'] if c['target_profile'] == profile]
             require(len(cases) == transitions['sources_per_target'] and all(c['target'] == ihx for c in cases), 'Incomplete target transition coverage')
-            alpha = next(c for c in cases if c['source_case'] == 'alpha2-saved-rom')
             evidence = AUDIT / 'profiles' / profile
             evidence.mkdir(parents=True, exist_ok=True)
             for src, dst in [('runtime-stack.json', 'stack.json'),
@@ -108,17 +156,8 @@ def main():
                              ('runtime-safety/irq/results.json', 'irq.json'),
                              ('runtime-safety/summary.json', 'runtime-summary.json')]:
                 shutil.copyfile(build / src, evidence / dst)
-            write(evidence / 'alpha2-preflight.json', alpha)
-            transition = {'format': 'ak820-settings-transition-1', 'passed': bool(tests),
-                'offline_only': True, 'physical_device_commands': 0,
-                'scope': 'Offline exact-image preflight; complete frozen settings test record required. No device validation.',
-                'target': {'ihx_sha256': ihx, 'schema': report['build_id'],
-                           'optional_features': report['configuration']['optional_features'],
-                           'code_sha256': pack['settings_code_sha256']},
-                'source_images': sorted({c['source'] for c in cases}), 'tests': tests,
-                'actual_alpha2_preflight': dict(alpha, result_path=relative(evidence / 'alpha2-preflight.json'),
-                    result_sha256=digest(evidence / 'alpha2-preflight.json')),
-                'preflight_matrix': dict(record(AUDIT / 'transition-preflight.json'), path=relative(AUDIT / 'transition-preflight.json'))}
+            transition = produce_transition_evidence(
+                ROOT, AUDIT, profile, report, pack, tests)
             write(evidence / 'transition.json', transition)
             source_names = set(safety.REQUIRED_SOURCES) | set(summary['source_files']) | {relative(Path(__file__).resolve())}
             source_names |= {relative(AUDIT / leaf) for leaf in (
@@ -126,6 +165,7 @@ def main():
                 'check_module_matrix.py', 'module-matrix-check.json')}
             source_names |= {relative(AUDIT / 'origin-measurements' / profile / leaf)
                              for leaf in ('binding.json', 'matrix.json', 'measurement.log')}
+            source_names |= {relative(AUDIT / name) for name in ('previous-beta-catalog.json', 'settings-catalog-draft.json', 'transition-preflight.json')}
             source_names |= {name for test in tests for name in test['source_files']}
             sources = {name: record(ROOT / name) for name in sorted(source_names)}
             symbols = authorization.symbols_sha256(build / 'ajazz_ak820_vial.map')
@@ -152,8 +192,8 @@ def main():
                 'tools/ci_checks.py', 'tools/test_keyboard.py', 'tools/build_ci_release.py', 'tools/build_ci_profiles.py',
                 'qmk-8051-ak820/dependencies/lufa.json', relative(dest / 'release-safety.json')}
             required |= {relative(evidence / (name + '.json')) for name in ('stack', 'startup', 'irq', 'transition')}
-            required |= {relative(evidence / 'alpha2-preflight.json'), relative(AUDIT / 'transition-preflight.json')}
-            required |= {relative(AUDIT / name) for name in ('packing-preflight.json', 'historical-catalog.json')}
+            required |= {relative(AUDIT / name) for name in ('transition-preflight.json', 'settings-catalog-draft.json', 'previous-beta-catalog.json')}
+            required |= {relative(AUDIT / name) for name in ('packing-preflight.json', 'previous-beta-catalog.json')}
             required |= {t['log_path'] for t in tests}
             required |= set(configured.test_source_snapshot())
             required |= {'qmk-8051-ak820/' + row['path'].replace('\\', '/') for row in report['sources']
@@ -183,18 +223,18 @@ def preparation_arguments(parser):
     parser.add_argument('--private-output', required=True, type=Path,
                         help='New private directory outside the repository for packed ROMs and fixtures')
     parser.add_argument('--historical-catalog', required=True, type=Path,
-                        help='Frozen previous catalog; prior exact identities remain source-only')
+                        help='Authenticated published beta.3 catalog; only its current ten profiles remain source-only')
     parser.add_argument('--source-backups-root', required=True, type=Path,
-                        help='Private validated backup directories for every historical source, including alpha2-saved-rom')
+                        help='Private validated backups covering exactly previous beta.3 and current beta images')
     parser.add_argument('--source-rom', action='append', default=[], metavar='NAME=FILE',
-                        help='Known saved full ROM; derive a private backup without claiming a live capture')
+                        help='Saved ROM of previous beta.3 or this beta; derive offline backup, never a live capture')
     parser.add_argument('--source-bundle', action='append', default=[], metavar='NAME=DIR',
-                        help='Authenticated historical bundle; derive an explicit offline packed-default fixture')
+                        help='Authenticated previous beta.3/current bundle; derive an offline packed-default fixture')
     historical = parser.add_mutually_exclusive_group()
     historical.add_argument('--historical-builds-root', type=Path,
-                        help='Optional retained ten-profile builds for deriving old exact default fixtures')
+                        help='Optional exact previous beta.3 ten-profile builds for offline default fixtures')
     historical.add_argument('--historical-bundles-root', type=Path,
-                        help='Extracted authenticated previous firmware-bundle profiles directory')
+                        help='Extracted authenticated beta.3 firmware-bundle profiles directory')
     parser.add_argument('--write-policies', action='store_true',
                         help='Also replace current catalogs and ci/profiles drafts; never writes review approval')
 
@@ -209,7 +249,8 @@ def make_backup(folder, rom, profile):
     image = s._rom_identity(rom, profile)
     values = s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32], image=image),
                                  combos=s._combo_capable(profile, image['ihx_sha256']),
-                                 direct_capable=image.get('direct_protocol') == 1)
+                                 direct_capable=image.get('direct_protocol') == 1,
+                                 settings_version=image.get('settings_record_version', 1))
     files = {'settings.json': s.canonical(values), 'before-full-rom.bin': rom,
              'saved-nvm.bin': nvm, 'read-log.jsonl': s.canonical({
                  'offline_derived': True, 'physical_device_commands': 0}), '.gitignore': b'*\n'}
@@ -229,9 +270,28 @@ def make_backup(folder, rom, profile):
     return s.validate_backup(folder, profile)
 
 
+def historical_default_rom(rom, profile):
+    """Reconstruct a beta.3 default with its v1 settings record.
+
+    The current packer creates v2 defaults when repacking an older IHX. The
+    published beta.3 catalog has no v2 capability, so that synthetic default
+    is not a valid historical settings fixture.
+    """
+    import settings_backup as s
+    image = s._profile_images(profile)[profile['ihx_sha256']]
+    require(image.get('settings_record_version', 1) == 1,
+            'Historical image unexpectedly declares a newer settings record')
+    result = bytearray(rom)
+    start = s.pack.NVM_START + s.extensions.SETTINGS_ADDR
+    result[start:start+24] = s.extensions.settings_record(version=1)
+    nvm = bytes(result[s.pack.NVM_START:s.pack.NVM_END])
+    result[s.pack.MANIFEST_START+48:s.pack.MANIFEST_START+64] = bytes.fromhex(s.pack.digest(nvm))[:16]
+    s.validate_rom(bytes(result), profile)
+    return bytes(result)
+
+
 def prepare(args):
     """Remeasure every image, pack privately, and exercise explicit forward plans."""
-    import copy
     import os
     sys.path.insert(0, str(ROOT / 'tools/installer'))
     import settings_backup as s
@@ -260,12 +320,9 @@ def prepare(args):
     stock = (args.oem_reference_dir / 'stock-full.bin').read_bytes()
     native = (args.oem_reference_dir / 'native-installed.bin').read_bytes()
     p.validate_native(stock, stock, native)
-    old = json.loads(args.historical_catalog.read_text())
+    old = beta_policy.load_previous_catalog(args.historical_catalog)
     # Validate old typed contracts without reinterpreting them as the new images.
-    source_catalog = copy.deepcopy(old)
-    source_catalog['historical_profiles'] = source_catalog.get('historical_profiles', []) + source_catalog['profiles']
-    source_catalog['profiles'] = []
-    source_catalog['settings_transitions'] = []
+    source_catalog = beta_policy.previous_source_catalog(old)
     s._catalog_images(source_catalog)
     require(tuple(row['profile'] for row in old['profiles']) == matrix.candidate_names(),
             'Historical catalog must retain the previous ten-profile catalog')
@@ -306,13 +363,9 @@ def prepare(args):
         packs.append({'profile': name, 'build': row['identity'], 'schema': report['build_id'],
             'settings_code_sha256': code_sha, **packed, 'recovery_byte_equal': True,
             'recovery_sha256': p.digest(recovery), 'hardware_validated': False, 'physical_device_commands': 0})
-    catalog = matrix.matrix({row['profile']: row for row in rows})
-    catalog['historical_sources'] = copy.deepcopy(old.get('historical_sources', []))
-    catalog['historical_profiles'] = copy.deepcopy(old.get('historical_profiles', []) + old['profiles'])
-    all_sources = {row['settings_identity']['ihx_sha256'] for row in rows + catalog['historical_profiles']}
-    all_sources |= {row['ihx_sha256'] for row in catalog['historical_sources']}
-    catalog['settings_transitions'] = [{'source': source, 'target': row['identity']['ihx_sha256']}
-        for source in sorted(all_sources) for row in rows]
+    catalog = beta_policy.compose_catalog(
+        matrix.matrix({row['profile']: row for row in rows}), old)
+    all_sources = set(beta_policy.source_identities(catalog))
     s._catalog_images(catalog)
     # No historical target edges: old images cannot consume Caps Word combo actions.
     def load_build(build, name, contracts):
@@ -344,11 +397,12 @@ def prepare(args):
         require(separator and label and label not in ('.', '..') and
                 all(char.isalnum() or char in '-_' for char in label), 'Invalid source bundle label')
         require(label not in backups, 'Duplicate source fixture label: ' + label)
-        profile = s.load_profile(Path(filename), stock)
+        profile = s.load_profile(Path(filename), stock, trusted_catalog=catalog)
         require(profile['ihx_sha256'] in all_sources, 'Historical bundle image absent from retained catalog')
         rom = bytearray(stock)
         rom[p.APP_START:p.APP_END] = profile['payload']
         backups[label] = make_backup(private / 'backups' / label, bytes(rom), first)
+    generated = {}
     if args.historical_builds_root or args.historical_bundles_root:
         for name in matrix.candidate_names():
             profile = (load_build(args.historical_builds_root / name, 'historical-' + name, source_catalog)
@@ -361,38 +415,30 @@ def prepare(args):
             rom[p.APP_START:p.APP_END] = profile['payload']
             label = 'historical-' + name
             require(label not in backups, 'Duplicate source fixture label: ' + label)
-            make_backup(private / 'backups' / label, bytes(rom), profile)
-            backups[label] = s.validate_backup(private / 'backups' / label, first)
+            def create_historical():
+                make_backup(private / 'backups' / label, historical_default_rom(rom, profile), profile)
+                return s.validate_backup(private / 'backups' / label, first)
+            add_generated_backup(backups, generated, label, profile, create_historical)
     for name, profile in profiles.items():
         rom = bytearray(stock)
         rom[p.APP_START:p.APP_END] = profile['payload']
         label = 'fresh-' + name
         require(label not in backups, 'Duplicate source fixture label: ' + label)
-        backups[label] = make_backup(private / 'backups' / label, bytes(rom), profile)
-    require('alpha2-saved-rom' in backups, 'Missing exact alpha2-saved-rom source backup')
-    require({b['source_identity'][0] for b in backups.values()} == all_sources,
-            'Historical backups do not cover exactly every retained catalog image')
+        add_generated_backup(backups, generated, label, profile,
+                             lambda: make_backup(private / 'backups' / label, bytes(rom), profile))
+    beta_policy.validate_backup_scope(backups, catalog)
     cases = []
     for name, profile in profiles.items():
         for label, backup in backups.items():
             plan = s.plan_restore(backup, profile)
-            preservation = {}
-            if label == 'alpha2-saved-rom':
-                source_image = s._profile_images(profile)[backup['source_identity'][0]]
-                require(backup['source_identity'][0] == s.SUPPORTED_IHX and
-                        source_image.get('combos_version') is None and
-                        plan['combo_entries'] is None,
-                        'Exact alpha2 must preserve existing target Combos without writes')
-                preservation = {'combo_restore': {
-                    'source_combos_version': source_image.get('combos_version'),
-                    'plan_combo_entries': plan['combo_entries'],
-                    'target_policy': 'preserve-existing'}}
             cases.append({'source': backup['source_identity'][0], 'target': profile['ihx_sha256'],
+                'source_code_sha256': backup['source_identity'][1],
+                'target_code_sha256': profile['code_sha256'],
                 'source_case': label, 'target_profile': name, 'passed': True, 'offline_only': True,
                 'physical_device_commands': 0, 'key_count': plan['key_count'],
                 'encoder_count': plan['encoder_count'], 'combo_count': len(plan['combo_entries'] or []),
                 'source_scope': backup['manifest'].get('scope', 'Validated saved backup; capture provenance not recorded'),
-                'backup_manifest_sha256': backup['identity'], **preservation})
+                'backup_manifest_sha256': backup['identity']})
     action_cases = []
     macro_layer_cases = []
     for name, profile in profiles.items():
@@ -435,22 +481,25 @@ def prepare(args):
                 'source_ihx_sha256': profile['ihx_sha256'], 'source_code_sha256': profile['code_sha256'],
                 'target_ihx_sha256': target['ihx_sha256'], 'target_code_sha256': target['code_sha256'],
                 'matrix_keycode': '0x43f0', 'macro_data_sha256': p.digest(stream), 'passed': True})
-    frozen = AUDIT / 'historical-catalog.json'
+    frozen = AUDIT / 'previous-beta-catalog.json'
     if frozen.exists():
         require(json.loads(frozen.read_text()) == old, 'Frozen historical catalog differs from supplied input')
     else:
-        write(frozen, old)
+        shutil.copyfile(args.historical_catalog, frozen)
+    beta_policy.load_previous_catalog(frozen)
     write(AUDIT / 'settings-catalog-draft.json', catalog)
     write(AUDIT / 'packing-preflight.json', {'format': 'ak820-caps-word-packing-preflight-1',
         'offline_only': True, 'physical_device_commands': 0, 'hardware_validated': False,
         'native_reference_sha256': p.digest(stock), 'profiles': packs})
-    write(AUDIT / 'transition-preflight.json', {'format': 'ak820-settings-transition-matrix-1',
+    transition_matrix = {'format': 'ak820-settings-transition-matrix-2',
         'offline_only': True, 'physical_device_commands': 0, 'hardware_validated': False,
         'sources_per_target': len(backups), 'cases': cases,
         'caps_word_combo_cases': action_cases,
         'macro_layer_tap_cases': macro_layer_cases,
         'limitations': ['Default packed fixtures and supplied offline backups; no physical restore proof.',
-                        'No transition to historical images is authorized.']})
+                        'No transition to historical images is authorized.']}
+    beta_policy.validate_transition_matrix(transition_matrix, catalog, old)
+    write(AUDIT / 'transition-preflight.json', transition_matrix)
     if args.write_policies:
         for target in ('tools/installer/settings-catalog.json', 'web/firmware-matrix.json'):
             write(ROOT / target, catalog)

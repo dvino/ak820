@@ -19,8 +19,50 @@
 #include "quantum_keycodes.h"
 #include "modifiers.h"
 #include "timer.h"
+#ifdef AK820_BOARD
+#include "repeat_key.h"
+#endif
 #include "action_tapping.h"
 #include "action_util.h"
+
+#ifdef AK820_BOARD
+/* Language controls share this main CODE unit, leaving the small state
+ * machine in its independently bounded low application window. */
+#ifdef __SDCC_mcs51
+__bit caps_word_ru;
+#else
+bool caps_word_ru;
+#endif
+void ak820_caps_word_configure(uint8_t ru) {
+    if (caps_word_ru != (ru != 0)) caps_word_off();
+    caps_word_ru = ru != 0;
+}
+void ak820_caps_word_select(uint16_t keycode) {
+    ak820_caps_word_configure(keycode == AK820_CW_LANG_TOGGLE ? !caps_word_ru : keycode == AK820_CW_LANG_RU);
+}
+#endif
+
+#if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+/* A pending first press must be released before another press can finish. */
+#ifdef __SDCC_mcs51
+static __bit shift_tap_armed;
+static __bit shift_tap_released;
+#else
+static bool shift_tap_armed;
+static bool shift_tap_released;
+#endif
+static uint16_t shift_tap_deadline;
+
+void caps_word_shift_cancel(void) {
+    shift_tap_armed = false;
+}
+
+void caps_word_shift_task(void) {
+    if (shift_tap_armed && timer_expired(timer_read(), shift_tap_deadline)) {
+        shift_tap_armed = false;
+    }
+}
+#endif
 
 #ifdef CAPS_WORD_INVERT_ON_SHIFT
 static uint8_t held_mods = 0;
@@ -79,7 +121,43 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
 #else
     keyrecord_t* record = event_record;
 #endif
+#if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+#    ifdef __SDCC_mcs51
+    __bit eligible;
+#    else
+    bool eligible;
+#    endif
+    eligible = record->event.key.row < MATRIX_ROWS && record->event.key.col < MATRIX_COLS
+#    ifdef REPEAT_KEY_ENABLE
+        && !get_repeat_key_count()
+#    endif
+        && !ak820_macro_primitive;
+    /* Generated events cannot trigger gestures or language selection. */
+    if ((keycode >> 8) == (AK820_CW_LANG_EN >> 8) && (uint8_t)keycode <= (uint8_t)AK820_CW_LANG_TOGGLE) {
+        shift_tap_armed = false;
+        if (eligible && record->event.pressed) ak820_caps_word_select(keycode);
+        return false;
+    }
+
+#else
+#ifdef AK820_BOARD
+    if ((keycode >> 8) == (AK820_CW_LANG_EN >> 8) && (uint8_t)keycode <= (uint8_t)AK820_CW_LANG_TOGGLE) {
+        if (record->event.pressed && record->event.key.row < MATRIX_ROWS && record->event.key.col < MATRIX_COLS
+#ifdef REPEAT_KEY_ENABLE
+            && !get_repeat_key_count()
+#endif
+#ifdef AK820_COMPACT_TAPPING
+            && !ak820_macro_primitive
+#endif
+        ) ak820_caps_word_select(keycode);
+        return false;
+    }
+#endif
+#endif
     if (keycode == QK_CAPS_WORD_TOGGLE) {
+#if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+        shift_tap_armed = false;
+#endif
         if (record->event.pressed) {
             caps_word_toggle();
         }
@@ -98,12 +176,36 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
 #endif // NO_ACTION_ONESHOT
 
     if (!is_caps_word_on()) {
+#if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+        if (!eligible) {
+            shift_tap_armed = false;
+        } else if (keycode != KC_LSFT && keycode != KC_RSFT) {
+            if (record->event.pressed) shift_tap_armed = false;
+        } else if (!record->event.pressed) {
+            if (keycode == KC_LSFT && shift_tap_armed) shift_tap_released = true;
+        } else {
+            uint8_t shift_mods = mods | (keycode == KC_LSFT ? MOD_BIT(KC_LSFT) : MOD_BIT(KC_RSFT));
+            caps_word_shift_task();
+            if (shift_mods == MOD_MASK_SHIFT ||
+                (keycode == KC_LSFT && shift_tap_armed && shift_tap_released && !(shift_mods & ~MOD_MASK_SHIFT))) {
+                shift_tap_armed = false;
+                caps_word_on();
+                return true;
+            }
+            shift_tap_armed = false;
+            if (keycode == KC_LSFT && shift_mods == MOD_BIT(KC_LSFT)) {
+                shift_tap_armed = true;
+                shift_tap_released = false;
+                shift_tap_deadline = record->event.time + GET_TAPPING_TERM(keycode, record);
+            }
+        }
+#endif
         // The following optionally turns on Caps Word by holding left and
         // right shifts or by double tapping left shift. This way Caps Word
         // may be used without needing a dedicated key and also without
         // needing combos or tap dance.
 
-#ifdef BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+#if defined(BOTH_SHIFTS_TURNS_ON_CAPS_WORD) && !defined(AK820_COMPACT_TAPPING)
         // Many keyboards enable the Command feature by default, which also
         // uses left+right shift. It can be configured to use a different
         // key combination by defining IS_COMMAND(). We make a non-fatal
@@ -122,7 +224,7 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
 #    endif     // defined(COMMAND_ENABLE) && !defined(IS_COMMAND)
 #endif         // BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
-#ifdef DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
+#if defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD) && !defined(AK820_COMPACT_TAPPING)
         // Double tapping left shift turns on Caps Word.
         //
         // NOTE: This works with KC_LSFT and one-shot left shift. It
@@ -147,6 +249,9 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
         return true;
     }
 
+#if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+    shift_tap_armed = false;
+#endif
 #if CAPS_WORD_IDLE_TIMEOUT > 0
     caps_word_reset_idle_timer();
 #endif // CAPS_WORD_IDLE_TIMEOUT > 0

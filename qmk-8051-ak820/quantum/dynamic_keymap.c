@@ -271,9 +271,10 @@ void dynamic_keymap_set_qmk_settings(uint16_t offset, uint8_t value) {
 
 /* TD and KO retain separate validators and fixed ten-byte wire records.
  * Select only compiled modules; no optional validator becomes a link dependency. */
-#if defined(AK820_COMPACT_TAP_DANCE) || defined(AK820_COMPACT_KEY_OVERRIDE)
+#if defined(AK820_COMPACT_TAP_DANCE) || defined(AK820_COMPACT_KEY_OVERRIDE) || defined(AK820_COMPACT_COMBO)
 #define AK820_STORAGE_TAP_DANCE 0u
 #define AK820_STORAGE_KEY_OVERRIDE 1u
+#define AK820_STORAGE_COMBO 2u
 static bool ak820_extension_valid(uint8_t kind, const void AK820_STATE_MEM *entry) {
 #ifdef AK820_COMPACT_TAP_DANCE
     if (kind == AK820_STORAGE_TAP_DANCE) return ak820_tap_dance_valid((const vial_tap_dance_entry_t AK820_STATE_MEM *)entry);
@@ -281,21 +282,53 @@ static bool ak820_extension_valid(uint8_t kind, const void AK820_STATE_MEM *entr
 #ifdef AK820_COMPACT_KEY_OVERRIDE
     if (kind == AK820_STORAGE_KEY_OVERRIDE) return ak820_key_override_valid((const vial_key_override_entry_t AK820_STATE_MEM *)entry);
 #endif
+#ifdef AK820_COMPACT_COMBO
+    if (kind == AK820_STORAGE_COMBO) return ak820_combo_valid((const vial_combo_entry_t AK820_STATE_MEM *)entry);
+#endif
     return false;
 }
 static uint16_t ak820_extension_address(uint8_t kind, uint8_t index) {
-    return (kind == AK820_STORAGE_TAP_DANCE ? AK820_TAP_DANCE_ADDR : AK820_KEY_OVERRIDE_ADDR) + AK820_EXTENSION_OFFSET(index);
+    /* Both callers reject indices above seven before computing an address.
+     * The final two TD/KO slots follow the four-byte page padding. */
+    uint8_t offset = index * AK820_EXTENSION_SLOT_SIZE;
+#ifdef AK820_COMPACT_COMBO
+    if (kind == AK820_STORAGE_COMBO) return VIAL_COMBO_EEPROM_ADDR + offset;
+#endif
+    if (index >= 6) offset += 4;
+    return (kind == AK820_STORAGE_TAP_DANCE ? AK820_TAP_DANCE_ADDR : AK820_KEY_OVERRIDE_ADDR) + offset;
 }
 static int ak820_extension_get(uint8_t kind, uint8_t index, void AK820_STATE_MEM *entry) {
     if (index >= AK820_EXTENSION_ENTRIES) return -1;
     ak820_eeprom_read_block_xdata(entry, (const void *)ak820_extension_address(kind, index), AK820_EXTENSION_SLOT_SIZE);
-    if (!ak820_extension_valid(kind, entry)) memset(entry, 0, AK820_EXTENSION_SLOT_SIZE);
+#ifdef AK820_COMPACT_COMBO
+    if (kind == AK820_STORAGE_COMBO) {
+        vial_combo_entry_t AK820_STATE_MEM *combo = entry;
+        if (combo->input[2] != AK820_COMBO_MARKER || combo->input[3] != AK820_COMBO_VERSION) goto empty;
+        combo->input[2] = combo->input[3] = 0;
+    }
+#endif
+    if (ak820_extension_valid(kind, entry)) return 0;
+#ifdef AK820_COMPACT_COMBO
+empty:
+#endif
+    for (uint8_t i = 0; i < AK820_EXTENSION_SLOT_SIZE; ++i) ((uint8_t AK820_STATE_MEM *)entry)[i] = 0;
     return 0;
 }
 static int ak820_extension_set(uint8_t kind, uint8_t index, const void AK820_STATE_MEM *entry) {
     if (index >= AK820_EXTENSION_ENTRIES || !ak820_extension_valid(kind, entry) || !ak820_nvm_ok()) return -1;
     clear_keyboard();
-    ak820_eeprom_update_block_xdata(entry, (void *)ak820_extension_address(kind, index), AK820_EXTENSION_SLOT_SIZE);
+    uint16_t address = ak820_extension_address(kind, index);
+#ifdef AK820_COMPACT_COMBO
+    if (kind == AK820_STORAGE_COMBO) {
+        vial_combo_entry_t stored;
+        for (uint8_t i = 0; i < AK820_EXTENSION_SLOT_SIZE; ++i)
+            ((uint8_t AK820_STATE_MEM *)&stored)[i] = ((const uint8_t AK820_STATE_MEM *)entry)[i];
+        stored.input[2] = AK820_COMBO_MARKER;
+        stored.input[3] = AK820_COMBO_VERSION;
+        ak820_eeprom_write_block_xdata(&stored, (void *)address, AK820_EXTENSION_SLOT_SIZE);
+    } else
+#endif
+    ak820_eeprom_update_block_xdata(entry, (void *)address, AK820_EXTENSION_SLOT_SIZE);
     ak820_nvm_flush();
     return ak820_nvm_ok() ? 0 : -1;
 }
@@ -333,61 +366,25 @@ int dynamic_keymap_set_tap_dance(uint8_t index, const vial_tap_dance_entry_t *en
 #endif
 
 #ifdef VIAL_COMBO_ENABLE
+#ifdef AK820_COMPACT_COMBO
 int dynamic_keymap_get_combo(uint8_t index, vial_combo_entry_t *buffer) {
-#ifdef AK820_COMPACT_COMBO
-    /* Every board caller passes XDATA storage. */
-    vial_combo_entry_t AK820_STATE_MEM *entry = (vial_combo_entry_t AK820_STATE_MEM *)buffer;
-#else
-    vial_combo_entry_t *entry = buffer;
-#endif
-    if (index >= VIAL_COMBO_ENTRIES)
-        return -1;
-
-    uint8_t *address = (uint8_t *)(VIAL_COMBO_EEPROM_ADDR + index * sizeof(vial_combo_entry_t));
-#ifdef AK820_COMPACT_COMBO
-    ak820_eeprom_read_block_xdata(entry, address, sizeof(vial_combo_entry_t));
-#else
-    eeprom_read_block(entry, address, sizeof(vial_combo_entry_t));
-#endif
-#ifdef AK820_COMPACT_COMBO
-    bool marked = entry->input[2] == AK820_COMBO_MARKER && entry->input[3] == AK820_COMBO_VERSION;
-    entry->input[2] = entry->input[3] = 0;
-    if (!marked || !ak820_combo_valid(entry)) memset(entry, 0, sizeof(*entry));
-#endif
-
-    return 0;
+    return ak820_extension_get(AK820_STORAGE_COMBO, index, (void AK820_STATE_MEM *)buffer);
 }
-
 int dynamic_keymap_set_combo(uint8_t index, const vial_combo_entry_t *buffer) {
-#ifdef AK820_COMPACT_COMBO
-    const vial_combo_entry_t AK820_STATE_MEM *entry = (const vial_combo_entry_t AK820_STATE_MEM *)buffer;
+    return ak820_extension_set(AK820_STORAGE_COMBO, index, (const void AK820_STATE_MEM *)buffer);
+}
 #else
-    const vial_combo_entry_t *entry = buffer;
-#endif
-#ifdef AK820_COMPACT_COMBO
-    if (!ak820_combo_valid(entry) || !ak820_nvm_ok()) return -1;
-#endif
-    if (index >= VIAL_COMBO_ENTRIES)
-        return -1;
-
-    uint8_t *address = (uint8_t *)(VIAL_COMBO_EEPROM_ADDR + index * sizeof(vial_combo_entry_t));
-#ifdef AK820_COMPACT_COMBO
-    clear_keyboard();
-    vial_combo_entry_t stored = *entry;
-    stored.input[2] = AK820_COMBO_MARKER;
-    stored.input[3] = AK820_COMBO_VERSION;
-    ak820_eeprom_write_block_xdata(&stored, address, sizeof(stored));
-#else
-    eeprom_write_block(entry, address, sizeof(vial_combo_entry_t));
-#endif
-#ifdef AK820_COMPACT_COMBO
-    ak820_nvm_flush();
-    if (!ak820_nvm_ok()) return -1;
-    /* flush() verifies the entire journal target page before success. */
-#endif
-
+int dynamic_keymap_get_combo(uint8_t index, vial_combo_entry_t *entry) {
+    if (index >= VIAL_COMBO_ENTRIES) return -1;
+    eeprom_read_block(entry, (void *)(VIAL_COMBO_EEPROM_ADDR + index * sizeof(*entry)), sizeof(*entry));
     return 0;
 }
+int dynamic_keymap_set_combo(uint8_t index, const vial_combo_entry_t *entry) {
+    if (index >= VIAL_COMBO_ENTRIES) return -1;
+    eeprom_write_block(entry, (void *)(VIAL_COMBO_EEPROM_ADDR + index * sizeof(*entry)), sizeof(*entry));
+    return 0;
+}
+#endif
 #endif
 
 #ifdef VIAL_KEY_OVERRIDE_ENABLE

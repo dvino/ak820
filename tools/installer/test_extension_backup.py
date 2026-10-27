@@ -19,7 +19,8 @@ class ExtensionBackup(unittest.TestCase):
         profile.update(payload=bytes(payload),schema=p.EXTENSION_BUILD_ID)
         profile['compatible_images']={profile['ihx_sha256']:{'ihx_sha256':profile['ihx_sha256'],
             'code_sha256':profile['code_sha256'],'build_id':p.EXTENSION_BUILD_ID,
-            'extensions_version':1,'combos_version':1,'profile':name,
+            'extensions_version':1,'combos_version':1,'profile':name, 'settings_record_version':2, 'compact_controls_version':2,
+            '_configuration':s.ak820_profiles.configuration(name),
             'features':s.ak820_profiles.configuration(name)['optional_features']}}
         rom=model.WireDevice(profile,nvm).rom()
         settings=s.settings_from_nvm(nvm,s.rgb_wire(nvm[24:32]),combos=True)

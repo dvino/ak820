@@ -15,9 +15,29 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
+
+#ifdef AK820_BOARD
+#define AK820_CW_LANG_EN 0x7E00
+#define AK820_CW_LANG_RU 0x7E01
+#define AK820_CW_LANG_TOGGLE 0x7E02
+/* Shared by the low-window state machine and main-window selector handler. */
+#ifdef __SDCC_mcs51
+extern __bit caps_word_ru;
+#else
+extern bool caps_word_ru;
+#endif
+void ak820_caps_word_configure(uint8_t ru);
+void ak820_caps_word_select(uint16_t keycode);
+#endif
 
 #ifndef CAPS_WORD_IDLE_TIMEOUT
 #    define CAPS_WORD_IDLE_TIMEOUT 5000 // Default timeout of 5 seconds.
+#endif
+
+#if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+void caps_word_shift_task(void);
+void caps_word_shift_cancel(void);
 #endif
 
 /** @brief Matrix scan task for Caps Word feature */

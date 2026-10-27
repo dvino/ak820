@@ -1859,10 +1859,13 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          3,
           4,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -1880,6 +1883,7 @@
           "rgb-effects",
           "vialrgb-direct-ram"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "yes",
@@ -1916,10 +1920,13 @@
         "runtime_qmk_settings": [
           1,
           2,
+          3,
           4,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "auto_shift": 175,
@@ -2030,9 +2037,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -2051,6 +2060,7 @@
           "nkro-reports",
           "vialrgb-direct-ram"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -2088,9 +2098,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -2102,15 +2114,15 @@
       },
       "id": "game",
       "identity": {
-        "build_report_sha256": "602112e4aedc02b116a0ca655f9cfc19e8840ee613627963f01b10d409ee9cf6",
+        "build_report_sha256": "5063408c975f137479f86458ef39585b898ace7ab4d7860c7d444ef585b9398e",
         "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
-        "configuration_sha256": "0e94ff00e43e3b3088ab944df8b0b9487365fc0b06f29891b8f16d256eab461a",
-        "ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
-        "map_sha256": "424ce3127567aa841a23477d9df0bcfc7ed0792d3d7c7235c73474558bac0432",
-        "mem_sha256": "cdf5be41506939c28e15be2f3830c5af50d11f43a894f03ebd3736e0351990e0",
+        "configuration_sha256": "a5bc991094de234d0c76f48be6f23d0a7246cd6f8f3eb770ab740562e9ad184b",
+        "ihx_sha256": "aa7452fb3ebc68b01b4e675c5423b868806ecee6f79b5fe5786be6fd19d9d67a",
+        "map_sha256": "e39e0dc8893e604f6a19236f18fd2d2012f29046b6bb0e0a7873a175fae76a17",
+        "mem_sha256": "050bc2002699103d8a626660601236e5e22c4a13392ca5070e723bd5820bb1ac",
         "nvm_schema": 532483,
         "profile": "game",
-        "source_manifest_sha256": "5a36b263e41762088044b4f384f1c52f62bec0994c458258222c890693a7b6b7"
+        "source_manifest_sha256": "30082b8be9c45d165de88e9626a79f62a8152bfa2c50008c44b9b0f5f13bca9f"
       },
       "installable": false,
       "measurement_status": "linked-memory-pass",
@@ -2142,52 +2154,54 @@
             "symbol": "_ak820_flash_stage"
           }
         ],
-        "code_bytes": 40462,
+        "code_bytes": 40381,
         "code_windows": [
           {
             "end_exclusive": 12288,
-            "highest_address": 12281,
+            "highest_address": 12285,
             "name": "low",
-            "occupied_bytes": 1882,
+            "occupied_bytes": 1886,
             "start": 10400,
-            "trailing_free_bytes": 6
+            "trailing_free_bytes": 2
           },
           {
             "end_exclusive": 50944,
-            "highest_address": 50911,
+            "highest_address": 50826,
             "name": "main",
-            "occupied_bytes": 38580,
+            "occupied_bytes": 38495,
             "start": 12327,
-            "trailing_free_bytes": 32
+            "trailing_free_bytes": 117
           }
         ],
         "internal_ram": {
           "initial_sp": 78,
-          "runtime_stack_bound": 160,
+          "runtime_stack_bound": 161,
           "stack_capacity": 177,
-          "stack_margin": 17,
+          "stack_margin": 16,
           "stack_qualified": true,
           "static_bytes": 79
         },
         "protected_windows_clear": true,
         "xram": {
-          "bytes": 2932,
+          "bytes": 2925,
           "capacity": 3008,
-          "end_inclusive": 4019,
+          "end_inclusive": 4012,
           "physical_capacity": 3072,
           "reserved_bytes": 64,
           "start": 1088,
-          "total_bytes": 2996
+          "total_bytes": 2989
         }
       },
-      "runtime_evidence_sha256": "28ba7d756d381fc2f799563e323e8a8d65cb909e81dea0d189f42afbc02cf9cb",
+      "runtime_evidence_sha256": "3090fe879fed1fb8d036791b41ee7e6afefcb60063cae29c261df06ac841aa44",
       "runtime_status": "exact-image-pass",
       "settings_identity": {
-        "code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+        "code_sha256": "8cd041d28df837df230334f2f502b5540dbda7dec779d4d4a2c03d197874834e",
         "combo_actions": [
           "caps-word-toggle"
         ],
+        "combo_media": true,
         "combos_version": 1,
+        "compact_controls_version": 2,
         "definition_sha256": "72b2261e1f7da5ec8ba37b8276bab12f12642e3d6514ec76ca1e4cd9b499fa6e",
         "direct_protocol": 1,
         "extensions_version": 1,
@@ -2202,10 +2216,11 @@
           "qmk-settings",
           "vialrgb-direct"
         ],
-        "ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+        "ihx_sha256": "aa7452fb3ebc68b01b4e675c5423b868806ecee6f79b5fe5786be6fd19d9d67a",
         "macro_layer_tap": true,
         "nvm_schema": 532483,
         "profile": "game",
+        "settings_record_version": 2,
         "supported_keycodes": [
           0,
           1,
@@ -16664,6 +16679,9 @@
           31745,
           31746,
           31747,
+          31824,
+          31825,
+          31826,
           31827,
           31828,
           31829,
@@ -16676,16 +16694,19 @@
           31863,
           31864,
           31865,
-          31866
+          31866,
+          32256,
+          32257,
+          32258
         ]
       },
       "settings_status": "exact-image-contract",
       "short_calls": {
         "algorithm": "foreground-short-transfers-v2",
-        "report": ".build/beta3-release/game/short-calls.json",
-        "report_sha256": "6a0b009bde99fd172652dc418414d25c2c835d58f445ff02814a4aa447f0a4c4",
-        "saved_bytes": 499,
-        "selected": 499
+        "report": ".build/glibc-game-profiles/game/short-calls.json",
+        "report_sha256": "92c65091366a14f8d55d2af96226279e7ec95f510ec6a3acf9a809f8c797e68c",
+        "saved_bytes": 490,
+        "selected": 490
       }
     },
     {
@@ -16766,9 +16787,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -16787,6 +16810,7 @@
           "nkro-reports",
           "vialrgb-direct-ram"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -16824,9 +16848,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -16936,10 +16962,13 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          3,
           4,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -16956,6 +16985,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "yes",
@@ -16992,10 +17022,13 @@
         "runtime_qmk_settings": [
           1,
           2,
+          3,
           4,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "auto_shift": 175,
@@ -17106,9 +17139,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17126,6 +17161,7 @@
           "rgb-effects",
           "grave-escape"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17162,9 +17198,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17274,9 +17312,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17293,6 +17333,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17328,9 +17369,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17441,9 +17484,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17460,6 +17505,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17495,9 +17541,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17608,9 +17656,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17628,6 +17678,7 @@
           "rgb-effects",
           "vialrgb-direct-ram"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17663,9 +17714,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17774,9 +17827,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17793,6 +17848,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17827,9 +17883,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,
@@ -17936,9 +17994,11 @@
         "runtime_qmk_settings_ids": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ]
       },
       "configuration": {
@@ -17955,6 +18015,7 @@
           "tri-layer",
           "rgb-effects"
         ],
+        "compact_controls_version": 2,
         "format": "ak820-build-configuration-1",
         "make_options": {
           "AK820_COMPACT_AUTOSHIFT": "no",
@@ -17991,9 +18052,11 @@
         "runtime_qmk_settings": [
           1,
           2,
+          6,
           7,
           18,
-          19
+          19,
+          22
         ],
         "timing_ms": {
           "combo": 40,

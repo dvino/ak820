@@ -5,12 +5,15 @@ import subprocess
 import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 with tempfile.TemporaryDirectory(prefix='ak820-settings-') as tmp:
-    for autoshift in (False, True):
-        binary = Path(tmp) / ('host-as' if autoshift else 'host')
+    for autoshift, oneshot in ((False, False), (False, True), (True, False), (True, True)):
+        binary = Path(tmp) / f'host-as{autoshift}-os{oneshot}'
         command = ['cc', '-std=c11', '-O1', '-g', '-Wall', '-Wextra', '-Werror',
                    '-fsanitize=undefined', '-fno-sanitize-recover=undefined']
         if autoshift:
             command += ['-DAK820_COMPACT_AUTOSHIFT']
+        if oneshot:
+            command += ['-DAK820_COMPACT_ONESHOT']
+        command += ['-DCAPS_WORD_ENABLE']
         command += ['-I', str(ROOT / 'keyboards/ajazz/ak820'),
                     str(ROOT / 'util/test_ak820_settings.c'),
                     str(ROOT / 'keyboards/ajazz/ak820/ak820_settings.c'), str(ROOT / 'keyboards/ajazz/ak820/ak820_crc.c'), '-o', str(binary)]

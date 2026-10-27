@@ -237,7 +237,7 @@ jobs:
           def allowed_path(path):
               if path == WORKFLOW or path.startswith("audits/"):
                   return True
-              if path == "ci/beta3-release-notes.md":
+              if path == "ci/beta4-release-notes.md":
                   return True
               if re.fullmatch(r"(?:README(?:[^/]*)|docs/.+)\.md", path):
                   return True
@@ -398,12 +398,20 @@ jobs:
           --bundles-root releases/beta3
           --output dist/catalog
           --tag "${{ github.ref_name }}"
+      - name: Name the beta.4 catalog archive
+        run: |
+          mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4-Catalog.zip
+          rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
+          cd dist/catalog
+          sha256sum AK820-Beta4-Catalog.zip > AK820-Beta4-Catalog.zip.sha256
+          sed -i 's/AK820-Beta3-Catalog.zip/AK820-Beta4-Catalog.zip/g' SHA256SUMS
       - name: Verify Python package and catalog checksums
         run: |
           cd dist/catalog
           sha256sum --check AK820-Windows.zip.sha256
           sha256sum --check AK820-Linux-x86_64.tar.gz.sha256
-          sha256sum --check AK820-Beta3-Catalog.zip.sha256
+          sha256sum --check AK820-Beta4-Catalog.zip.sha256
+          sha256sum --check SHA256SUMS
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -415,13 +423,13 @@ jobs:
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
             dist/catalog/AK820-Windows.zip dist/catalog/AK820-Windows.zip.sha256
             dist/catalog/AK820-Linux-x86_64.tar.gz dist/catalog/AK820-Linux-x86_64.tar.gz.sha256
-            dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta3-Catalog.zip.sha256
+            dist/catalog/AK820-Beta4-Catalog.zip dist/catalog/AK820-Beta4-Catalog.zip.sha256
             dist/catalog/firmware-matrix.json dist/catalog/capability-catalog.json
             dist/catalog/module-descriptions.json dist/catalog/release-catalog.json
             dist/catalog/release-manifest.json dist/catalog/SHA256SUMS
             dist/catalog/INSTALL-en.md dist/catalog/INSTALL-ru.md
             --title "AK820 $RELEASE_TAG"
-            --notes-file ci/beta3-release-notes.md
+            --notes-file ci/beta4-release-notes.md
           )
           if [[ "$RELEASE_PRERELEASE" == true ]]; then
             gh release create "${args[@]}" --verify-tag --prerelease

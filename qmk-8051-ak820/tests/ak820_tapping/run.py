@@ -47,7 +47,7 @@ with tempfile.TemporaryDirectory(prefix='ak820-tapping-') as temp:
     work=Path(temp);(work/'protocol').mkdir();(work/'protocol/usb_descriptor.h').write_text('#define SHARED_EPSIZE 32\n');(work/'_timer.h').write_text('#define FAST_TIMER_T_SIZE 16\n')
     src=(HERE/'harness.c').read_text().replace('/* PRODUCTION */','\n'.join(parts));(work/'test.c').write_text(src)
     cmd=[os.environ.get('CC','cc'),'-std=gnu11','-O1','-g','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-Wno-implicit-function-declaration','-Wno-unused-function','-Wno-unknown-pragmas','-Wno-int-to-pointer-cast','-fsanitize=undefined','-fno-sanitize-recover=undefined','-DMAX_LAYER=6','-DCAPS_WORD_ENABLE','-DGRAVE_ESC_ENABLE','-DVIAL_ENABLE','-DEEPROM_CUSTOM','-DPROTOCOL_CH555','-DNKRO_ENABLE','-DREPEAT_KEY_ENABLE','-DTRI_LAYER_ENABLE','-DENCODER_MAP_ENABLE','-DEXTRAKEY_ENABLE','-DNO_RESET','-include',str(ROOT/'keyboards/ajazz/ak820/config.h'),*['-I'+str(p) for p in [work,ROOT/'keyboards/ajazz/ak820',ROOT/'quantum',ROOT/'quantum/keymap_extras',ROOT/'quantum/sequencer',ROOT/'quantum/send_string',ROOT/'quantum/process_keycode',ROOT/'platforms',ROOT/'tmk_core/protocol',ROOT]],str(work/'test.c'),'-o',str(work/'test')]
-    if args.oneshot: cmd.insert(1,'-DAK820_COMPACT_ONESHOT')
+    if args.oneshot: cmd[1:1]=['-DAK820_COMPACT_ONESHOT','-DAK820_QMK_SETTINGS']
     if args.space_cadet: cmd.insert(1,'-DAK820_COMPACT_SPACE_CADET')
     subprocess.run(cmd,check=True);subprocess.run([str(work/'test')],check=True)
     comparison=differential.check(work/'test',work)

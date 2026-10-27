@@ -9,6 +9,8 @@ FIELDS = {1: (5, 1, 0, 15, 0), 2: (6, 2, 1, 1000, 40),
           4: (14, 2, 1, 1000, 175), 7: (8, 2, 1, 1000, 200),
           18: (10, 2, 0, 100, 0), 19: (12, 2, 0, 100, 80)}
 
+LEGACY_FIELDS = dict(FIELDS)
+FIELDS.update({3: (16, 1, 0, 29, 1), 6: (18, 2, 0, 30000, 0), 22: (17, 1, 0, 1, 0)})
 
 def require(ok, message):
     if not ok:
@@ -18,27 +20,40 @@ def require(ok, message):
 def field_value(qsid, value):
     require(type(qsid) is int and qsid in FIELDS, 'Unknown settings ID')
     _, width, low, high, _ = FIELDS[qsid]
-    require(type(value) is int and low <= value <= high, 'Settings value out of range')
+    require(type(value) is int and low <= value <= high and (qsid != 3 or not value & ~0x1d), 'Settings value out of range')
     return value.to_bytes(width, 'little')
 
 
-def settings_record(values=None):
-    values = values if values is not None else {str(i): f[4] for i, f in FIELDS.items()}
-    require(isinstance(values, dict) and set(values) == {str(i) for i in FIELDS}, 'Missing or unknown settings field')
-    raw = bytearray(b'QS\x01\x0b\x3f' + bytes(19))
-    for qsid, (offset, width, _, _, _) in FIELDS.items():
+def settings_record(values=None, *, version=2):
+    require(type(version) is int and version in (1, 2), 'Unknown settings version')
+    fields = LEGACY_FIELDS if version == 1 else FIELDS
+    values = values if values is not None else {str(i): f[4] for i, f in fields.items()}
+    require(isinstance(values, dict) and set(values) == {str(i) for i in fields}, 'Missing or unknown settings field')
+    raw = bytearray((b'QS\x01\x0b\x3f' if version == 1 else b'QS\x02\x0f\x7f') + bytes(19))
+    for qsid, (offset, width, _, _, _) in fields.items():
         raw[offset:offset+width] = field_value(qsid, values[str(qsid)])
     raw[22:] = binascii.crc_hqx(raw[:22], 0xFFFF).to_bytes(2, 'little')
     return bytes(raw)
 
 
-def decode_settings(raw):
+def normalize_settings(values, *, version=2):
+    require(type(values) is dict, 'Invalid settings fields')
+    source = 1 if set(values) == {str(i) for i in LEGACY_FIELDS} else 2
+    settings_record(values, version=source)
+    require(type(version) is int and version in (1, 2) and source <= version, 'Settings record downgrade is forbidden')
+    return {str(i): values.get(str(i), f[4]) for i, f in (LEGACY_FIELDS if version == 1 else FIELDS).items()}
+
+
+def decode_settings(raw, *, version=None):
     require(type(raw) is bytes and len(raw) == 24, 'Settings record requires 24 bytes')
     if raw in (bytes(24), b'\xff'*24):
-        raw = settings_record()
-    values = {str(i): int.from_bytes(raw[o:o+w], 'little') for i, (o,w,*_) in FIELDS.items()}
-    require(raw == settings_record(values), 'Invalid settings header, reserved bytes or CRC')
-    return values
+        raw = settings_record(version=version or 2)
+    source = raw[2]
+    require(source in (1, 2), 'Unknown settings record version')
+    fields = LEGACY_FIELDS if source == 1 else FIELDS
+    values = {str(i): int.from_bytes(raw[o:o+w], 'little') for i, (o,w,*_) in fields.items()}
+    require(raw == settings_record(values, version=source), 'Invalid settings header, reserved bytes or CRC')
+    return normalize_settings(values, version=version) if version is not None else values
 
 
 def slot_offset(kind, index):
@@ -65,9 +80,9 @@ def validate_entry(kind, raw):
     return raw
 
 
-def from_nvm(nvm):
+def from_nvm(nvm, *, version=None):
     require(len(nvm) == 0x2800 and nvm[37:40] == SCHEMA.to_bytes(3, 'little'), 'Extension schema differs')
-    result = {'version': 1, 'qmk_settings': decode_settings(bytes(nvm[SETTINGS_ADDR:SETTINGS_ADDR+24]))}
+    result = {'version': 1, 'qmk_settings': decode_settings(bytes(nvm[SETTINGS_ADDR:SETTINGS_ADDR+24]), version=version)}
     for kind in ('tap_dance', 'key_overrides'):
         result[kind] = [validate_entry(kind, bytes(nvm[slot_offset(kind,i):slot_offset(kind,i)+10])).hex() for i in range(8)]
     return result
@@ -76,7 +91,8 @@ def from_nvm(nvm):
 def validate_json(value):
     require(type(value) is dict and set(value) == {'version', 'qmk_settings', 'tap_dance', 'key_overrides'}
             and type(value['version']) is int and value['version'] == 1, 'Unknown extension JSON fields/version')
-    settings_record(value['qmk_settings'])
+    require(type(value['qmk_settings']) is dict, 'Invalid settings fields')
+    settings_record(value['qmk_settings'], version=1 if set(value['qmk_settings']) == {str(i) for i in LEGACY_FIELDS} else 2)
     for kind in ('tap_dance', 'key_overrides'):
         require(type(value[kind]) is list and len(value[kind]) == 8, 'Extension requires eight entries')
         for entry in value[kind]:

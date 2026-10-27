@@ -72,14 +72,16 @@ class ProtocolFailure(unittest.TestCase):
             payload[p.NVM_START-p.APP_START:p.NVM_END-p.APP_START]=before
             with tempfile.TemporaryDirectory() as directory:
                 raw=Mock()
+                raw.raw.side_effect=lambda packet:b'\0'+packet[1:]
                 api=protocol.DeviceAPI({'payload':bytes(payload)},Path(directory),lambda:raw,allow_writes=True)
                 try:
                     api.read_nvm=Mock(return_value=before)
+                    api.status=Mock()
                     api.get_setting=Mock(side_effect=lambda qsid:e.FIELDS[qsid][4])
                     api.settings_query=Mock(return_value=[1,2,7,18,19])
                     self.assertTrue(api.set_setting(2,40))
                     self.assertTrue(api.reset_settings())
-                    raw.raw.assert_not_called()
+                    raw.raw.assert_called_once_with(api.packet(254,12))
                 finally:api.close()
 
     def test_widths_rejected_before_transport(self):

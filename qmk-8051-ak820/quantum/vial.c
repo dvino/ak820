@@ -309,11 +309,15 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
         }
         case vial_qmk_settings_query: {
 #if defined(QMK_SETTINGS) || defined(AK820_QMK_SETTINGS)
+#if defined(AK820_QMK_SETTINGS) && defined(__SDCC_mcs51)
+            ak820_settings_query_packet();
+#else
             uint16_t qsid_greater_than = msg[2] | (msg[3] << 8);
 #ifdef AK820_QMK_SETTINGS
             ak820_settings_query(qsid_greater_than, msg, length);
 #else
             qmk_settings_query(qsid_greater_than, msg, length);
+#endif
 #endif
 #else
             VIAL_FILL_PACKET(msg, 0xFF, length); /* indicate that we don't support any qsid */
@@ -322,21 +326,29 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
         }
 #if defined(QMK_SETTINGS) || defined(AK820_QMK_SETTINGS)
         case vial_qmk_settings_get: {
+#if defined(AK820_QMK_SETTINGS) && defined(__SDCC_mcs51)
+            msg[0] = ak820_settings_get_packet();
+#else
             uint16_t qsid = msg[2] | (msg[3] << 8);
 #ifdef AK820_QMK_SETTINGS
             msg[0] = ak820_settings_get(qsid, &msg[1], length - 1);
 #else
             msg[0] = qmk_settings_get(qsid, &msg[1], length - 1);
 #endif
+#endif
 
             break;
         }
         case vial_qmk_settings_set: {
+#if defined(AK820_QMK_SETTINGS) && defined(__SDCC_mcs51)
+            msg[0] = ak820_settings_set_packet();
+#else
             uint16_t qsid = msg[2] | (msg[3] << 8);
 #ifdef AK820_QMK_SETTINGS
             msg[0] = ak820_settings_set(qsid, &msg[4], length - 4);
 #else
             msg[0] = qmk_settings_set(qsid, &msg[4], length - 4);
+#endif
 #endif
 
             break;

@@ -119,19 +119,24 @@ def module_contract(configuration, limits):
              7: ('tapping_term_ms', ['compact-mod-tap','compact-layer-tap','space-cadet']),
              18: ('tap_code_delay_ms', ['tap_code','tap_code16']),
              19: ('caps_lock_delay_ms', ['tap_code','tap_code16'])}
+    names.update({3: ('auto_shift_flags', ['auto-shift']), 6: ('one_shot_timeout_ms', ['one-shot']), 22: ('caps_word_language', ['caps-word'])})
     qsids = configuration['runtime_qmk_settings']
     settings = []
     if schema03:
-        for qsid, (offset,width,low,high,default) in sorted(extensions.FIELDS.items()):
+        for qsid, (offset,width,low,high,default) in sorted((extensions.FIELDS if configuration.get('compact_controls_version') == 2 else extensions.LEGACY_FIELDS).items()):
             name, consumers = names[qsid]
             settings.append({'qsid': qsid, 'name': name, 'stored': True,
                 'enabled': qsid in qsids, 'offset': extensions.SETTINGS_ADDR+offset,
                 'width_bytes': width, 'encoding': 'uint8' if width == 1 else 'uint16-le',
                 'minimum': low, 'maximum': high, 'default': default,
+                **({'allowed_mask': 0x1d} if qsid == 3 else {}),
+                **({'zero_means': 'unlimited'} if qsid == 6 else {}),
                 'consumers': consumers if qsid in qsids else [],
                 'consumer_key_filter': 'caps-lock' if qsid == 19 else ('except-caps-lock' if qsid == 18 else None)})
     modules['qmk_settings'] = {'enabled': 'qmk-settings' in enabled,
         'stored_record_bytes': 24 if schema03 else 0,
+        'record_version': configuration.get('compact_controls_version', 1) if schema03 else None,
+        'accepted_record_versions': ([1,2] if configuration.get('compact_controls_version') == 2 else [1]) if schema03 else [],
         'record_offset': extensions.SETTINGS_ADDR if schema03 else None,
         'enabled_qsids': list(qsids), 'fields': settings,
         'wire_commands': {'query': 9, 'get': 10, 'set': 11, 'reset': 12}}

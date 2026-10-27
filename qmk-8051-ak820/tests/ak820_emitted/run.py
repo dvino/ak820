@@ -160,7 +160,7 @@ class Firmware:
                     commands += self.write("_action_exec_PARM_1", [7, 15, 0, 0, 1, pressed])
                     commands += self.call("_action_exec")
                 commands += [memory("rom", address, nvm[254:256])]
-            commands += self.dump_symbol("fixture_auto_shift_enabled", "_as_enabled", 1)
+            commands += self.dump_symbol("fixture_auto_shift_enabled", "_as_flags", 1)
         return commands
 
     @staticmethod
@@ -200,7 +200,7 @@ class Firmware:
         if self.has_auto_shift:
             mode = "not-observed"
             if "@@fixture_auto_shift_enabled" in run.stdout:
-                enabled = self.extract(run.stdout, "fixture_auto_shift_enabled", self.address("_as_enabled"), 1)
+                enabled = self.extract(run.stdout, "fixture_auto_shift_enabled", self.address("_as_flags"), 1)
                 if enabled != [int(self.auto_shift)]:
                     raise RuntimeError(f"Auto Shift fixture mode was not established in {name}")
                 mode = "enabled-default" if self.auto_shift else "disabled-with-AS_OFF"
