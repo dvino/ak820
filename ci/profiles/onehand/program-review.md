@@ -1,17 +1,19 @@
 # Independent program review: onehand
 
+## Exact-tree review record
+
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+  "ihx_sha256": "32bfa36b3b5a9d4b674b69d0b55b891045c43d575c716384aa77a6ebe6e6b99e",
   "physical_device_commands": 0,
-  "policy_sha256": "99db3b5af4a9543cddf826eca5fc2b7c8fec9bcbe0dbfe9fc21d346ad8540341",
+  "policy_sha256": "46b2d8a5f9ee5fb6cf5a10efcdb735c16354529bd71c277e1959938b5af26cb9",
   "profile": "onehand",
-  "review_report": "audits/beta3-direct-20261026/release-acceptance-policy-20261027.md",
-  "scope": "Independent final source and documentation review plus exact-image policy refresh. Only English and Russian STATUS source pins changed; firmware image, symbols, host inputs, packing and frozen test-source evidence remain unchanged. Retained offline qualification and package evidence remain scoped to their recorded identities. Final merged-main and release-tag CI and actual publication are pending. No hardware validation or device operation is claimed.",
+  "review_report": "ci/profiles/onehand/program-review.md#exact-tree-review-record",
+  "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/onehand-preliminary-final/onehand/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
   "status": "passed",
-  "symbols_sha256": "9cbeacfa6fac4a79d331e930425202dde65a88d68a2f96a927dd07d71c9bbe2b",
+  "symbols_sha256": "5ee5899bfa10afa5d5d9a176ce774144015017ca9f72ff06f0ed5fa598390183",
   "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
 }
 ```

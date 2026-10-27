@@ -1,17 +1,19 @@
 # Independent program review: creative
 
+## Exact-tree review record
+
 ```json
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+  "ihx_sha256": "05c61ebfea8c5d362b8a69e71ec689e26c284137c0a593d1b6501ea1713adbf7",
   "physical_device_commands": 0,
-  "policy_sha256": "2302c459037075db7b660736a129166e93034e0e6426f6f8496c09a7af913531",
+  "policy_sha256": "30958f7d736edcfe0135c309f6169820d4045415deae3f92e1f57ef486bac830",
   "profile": "creative",
-  "review_report": "audits/beta3-direct-20261026/release-acceptance-policy-20261027.md",
-  "scope": "Independent final source and documentation review plus exact-image policy refresh. Only English and Russian STATUS source pins changed; firmware image, symbols, host inputs, packing and frozen test-source evidence remain unchanged. Retained offline qualification and package evidence remain scoped to their recorded identities. Final merged-main and release-tag CI and actual publication are pending. No hardware validation or device operation is claimed.",
+  "review_report": "ci/profiles/creative/program-review.md#exact-tree-review-record",
+  "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/creative-preliminary-final/creative/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
   "status": "passed",
-  "symbols_sha256": "7e63a38c6c5cfb75e2c41c98203f6950df77497ce7823da595721f4bcb037594",
+  "symbols_sha256": "a92c9c00ee330a18b4f23a8f6978425afa359e18bc152355e24cfec21bad2ecc",
   "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
 }
 ```
