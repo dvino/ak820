@@ -352,7 +352,7 @@ jobs:
   publish:
     name: Publish tagged version from main
     needs: [linux-assembly]
-    if: startsWith(github.ref_name, 'v') && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.qualified_run_id != ''))
+    if: always() && !cancelled() && needs.linux-assembly.result == 'success' && startsWith(github.ref_name, 'v') && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.qualified_run_id != ''))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
