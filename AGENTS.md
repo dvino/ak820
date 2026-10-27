@@ -2,109 +2,95 @@
 
 @C:\Users\vinok\.codex\RTK.md
 
-## Code, documentation and independent review
+# Working on AK820
 
-Owner's rule, 2026-10-21: update documentation alongside code; review must check agreement.
+## Code, documentation and evidence
 
-- Update documents in the same work package when behavior, formats, commands,
-  addresses, sizes, APIs or limitations change.
-- Keep README.md and docs/STATUS.md current. ROADMAP describes the future;
-  distinguish the source project, built artifact and installed implementation.
-- Regenerate affected machine reports after changing inputs or generators.
-  Check sizes, SHA256, versions, addresses and commands against actual artifacts.
-- Distinguish static analysis, builds, CPU/host models and device tests.
-  A PASS at one level does not prove another; list untested conditions.
-- Before committing, obtain review from an independent reviewer who did not
-  author the changes. Include code, documentation and verification evidence.
-- Resolve disagreements before committing. Save review results and finding
-  closure in documentation; retest substantive corrections.
-- Mark obsolete descriptions as historical or replace them. Do not leave
-  conflicting current-state claims without a date and explanation.
+- Update code and affected documentation together when behavior, formats,
+  commands, addresses, sizes, APIs or limits change. Keep README and STATUS
+  current; ROADMAP describes future work.
+- Regenerate affected machine reports. Verify sizes, SHA256, versions,
+  addresses and commands against actual artifacts.
+- Distinguish source inspection, static analysis, builds, host/CPU models,
+  read-only device diagnosis and physical behavior. A pass at one level does
+  not prove another; record skipped checks and untested conditions.
+  Keep the source project, built artifact and installed implementation distinct.
+- Obtain independent review of code, documentation and evidence before commit.
+  Authors cannot approve their own changes. Resolve disagreements, record
+  findings and closure, and retest substantive corrections.
 
-## Documentation language and style
+## Documentation
 
-Documentation rule, 2026-10-23: use impersonal wording throughout documentation.
-Do not describe an owner's keyboard, personal installation or who performed a
-check. Record the result and its evidence without identifying a person.
-README introduces the project, features and getting started. Put package paths,
-extraction and launch instructions in INSTALL, and validation results and
-deployment state in STATUS or technical reports, never in the README introduction.
+- Write plain, concise, impersonal EN/RU text in the owner's style, including
+  translations. Use supplied examples and write-like-me for substantial text;
+  do not claim unavailable style retrieval. Explain necessary terms; avoid
+  bureaucracy, marketing, generic AI phrasing and overloaded headings.
+- README introduces the project, features and getting started. INSTALL covers
+  package paths, download, checksums, extraction, minimal Python dependencies
+  and launch. STATUS and technical reports contain validation, installed state
+  and internal evidence. User guides explain actions and behavior.
+- Public release notes describe only user-visible changes, fixes and relevant
+  limits; omit tests, packaging/licence details, installed state, audits and
+  agent process. Do not repeat README.
+- Replace obsolete claims or mark historical claims with a date and explanation.
+  Remove obsolete instructions and historical documents from the current tree;
+  retain tracked history in Git and preserve unique uncommitted material in an
+  external private backup before deletion. Do not create a docs archive.
 
-Owner's rule, 2026-10-23: write all documentation in the owner's style, in
-plain language that a person can understand on the first reading. Apply this
-to new text and to documents changed during the task, including translations.
-Use direct sentences, concrete actions and familiar words. Explain technical
-terms when the reader needs them; keep internal audit details in the relevant
-technical reports. Avoid bureaucratic wording, marketing, generic AI phrasing
-and titles overloaded with architecture or development status. README should
-introduce the project and help someone use it. Remove obsolete instructions
-and historical documents from the current tree instead of keeping a docs
-archive there. Keep tracked versions in Git history; preserve unique
-uncommitted material in the external private backup before removing it.
-Use the owner's supplied wording and examples; apply the write-like-me skill
-when composing substantial documentation, without claiming unavailable style
-retrieval.
+## Firmware and device checks
 
-Owner's rule, 2026-10-24: every document serves its readers and purpose. Keep
-documentation concise, plain and free of repeated material. User guides explain
-actions and behavior; do not mix them with internal workflow or evidence.
-Record verification evidence in Status or technical reports and link to it when
-useful. Public release notes describe only user-visible changes, features,
-fixes and relevant limits. Do not include test results, packaging or licence
-details, installed state, audit or agent process, or repeat the README.
+- Every new feature or profile closes stack and interrupt checks in the same
+  change. Bound foreground calls, startup and all enabled interrupt sources
+  for the exact linked image. Pass this gate before full regression suites.
+  Unknown paths, incomplete IRQ contracts or bounds above capacity block
+  completion. Retain machine evidence; another profile cannot qualify changes.
+- Maintain a reusable regression suite for supported functions and remapping,
+  including both encoder directions. Current automatic tests require no key
+  presses, knob rotation, reconnect or manual Vial unlock. Keep host/CPU,
+  live protocol and durable-storage evidence separate.
+- Default tests are offline or read-only. Settings changes require an explicit
+  execution option and authorization. Timeout, storage fault or bad readback
+  stops the operation without blind retry, restore, reset or recovery.
+- Local development, offline checks and previously authorized read-only diagnosis
+  remain authorized; read-only access does not authorize writes. Each hardware
+  flash needs explicit confirmation so
+  alternate input and stable power can be prepared. USB writes, reset and
+  loader transitions require authorization for that operation.
+- The installer update flow uses a fresh three-second Esc + left Control hold
+  after Update to confirm the displayed image, then unlocks, enters the loader,
+  flashes once and verifies. Preserve fresh backup, exact image checks,
+  cancellation before erase and failure stops. Typed yes/ready, separate Vial
+  or manual Bootloader do not replace this flow. Modeling it offline does not
+  authorize a live update.
 
-Owner's release rule, 2026-10-26: releases provide Python installation scripts
-for Windows and Linux x86_64 with matching SHA256 files and English and Russian
-instructions. Do not build or publish standalone GUI installers or their
-bundled runtime dependencies unless a later request changes this rule. Explain
-how to download the matching package, check its checksum, extract it, install
-the minimal Python dependency and run the script.
+## Releases
 
-## Current work boundary
+During beta, require backward compatibility only with the immediately preceding
+build to avoid spending firmware CODE on older compatibility paths. Determine
+that predecessor from the target release; do not extend support back to alpha.
 
-Owner's runtime rule, 2026-10-24: close stack and interrupt checks in the same
-change as every new feature or profile. Use the exact linked image to bound
-foreground calls, startup and all enabled interrupt sources. The configured
-build must pass that check before its full regression suites. Unknown paths,
-an incomplete IRQ contract or a bound above stack capacity block completion.
-Retain machine evidence for that image; a previous profile's bound cannot
-qualify changed source. Keep physical validation separate from static and CPU
-model results.
-
-Owner's GUI update rule, 2026-10-23: the update stays inside the installer.
-After clicking Update, a fresh physical Esc + left Control hold for three
-seconds confirms the displayed update. The installer requests unlock, enters
-the loader, flashes once and verifies the result. Do not require typed yes,
-ready, a separate Vial app or a manual Bootloader action in this workflow.
-Keep fresh backup, exact image checks, cancellation before erase and failure
-stop conditions. This does not authorize an agent to start a live update.
-
-Owner's testing rule, 2026-10-23: prepare a reusable automatic regression suite
-for use after firmware updates. Cover the supported functions and remapping,
-including both encoder directions. The current test work must require no
-physical key presses, knob rotation, cable reconnect or manual Vial unlock.
-Keep host/CPU tests separate from live protocol and durable-storage checks.
-Default test commands must be offline or read-only; setting changes need an
-explicit execution option and authorization. A timeout, storage fault or bad
-readback is a failure: stop without blind restore, retry, reset or recovery.
-Report skipped checks and the physical behavior the suite cannot prove.
-
-Offline checks and local development are authorized. Hardware flashing needs
-the owner's explicit confirmation before each operation so alternate input
-and stable power can be prepared. Do not send programming, reset or bootloader
-transition commands before confirmation. Read-only diagnosis was separately
-authorized on 2026-10-23; it does not authorize flashing.
+The 2026-10-26 policy supersedes the beta.1 installer direction for beta.3:
+provide Python installation scripts for Windows and Linux x86_64, matching
+SHA256 and EN/RU instructions. Do not build or publish standalone GUI installers
+or bundled runtime dependencies unless a later request changes this policy.
+Preserve exact image identities and all ten catalog profiles; state installation
+and hardware limits. Companion integration is separate from the beta.3 packet.
 
 ## Agent routing and handoffs
 
-- Communicate with subagents in English: task assignments, clarifications, coordination messages, handoffs and result reports. Continue communicating with the owner in their chosen language.
-- The root lead coordinates ownership, integration, current-state checks and the evidence record. Keep each delegated task bounded and explicit about its owned files.
-- Use a fresh GPT-6 Luna agent at medium reasoning for limited implementation, documentation or build tasks. Use GPT-6.1 Sol at low reasoning only when a task needs complex reasoning about ABI, NVM, technical contracts or an independent review. The root lead may adjust this routing within these limits when the task requires it.
-- Use a fresh GPT-6.1 Sol agent at high reasoning for architecture and complex planning only as a last resort, when there is a real need for deeper analysis. Before delegation, record the unresolved question and why normal implementation or review cannot settle it. Do not use this route for routine work.
-- Start a fresh agent for a new bounded task or when the current context has grown. Give it a short, self-contained handoff with ownership, relevant current facts, required evidence and stop conditions. Do not fork the full conversation history for routine work.
-- Check task ownership before starting. Do not duplicate another agent's work, and do not run simultaneous builds that share a working tree or output paths.
-- Authors cannot independently approve their own code. Independent review covers code, documentation and verification evidence; resolve findings and record closure before commit.
-- Update documentation alongside implementation. State separately what is known about source, built artifacts and installed firmware, and distinguish static checks, builds, host/CPU models, read-only device diagnosis and device behavior.
-- No agent may write to USB, enter bootloader, reset or flash the keyboard without the owner's explicit confirmation for that operation. Read-only diagnosis authorization does not grant flash authorization.
-
-Owner's release clarification, 2026-10-26: beta.3 excludes standalone GUI installers and their bundled dependencies. Keep the Python installation scripts for Windows and Linux x86_64, preserve exact image identities and all ten catalog profiles, and state installation and hardware limits clearly. Companion integration will follow separately. This does not authorize device writes. The 2026-10-25 beta.1 installer direction is superseded for beta.3.
+- The lead checks current state and ownership, coordinates integration and
+  evidence, and assigns bounded tasks with explicit owned files. Avoid duplicate
+  work and concurrent builds sharing a working tree or output paths.
+- Use fresh GPT-6 Luna at medium reasoning for small edits, docs and routine
+  builds; GPT-6.1 Terra (`gpt-6.1-terra`) at low for bounded code implementation/refactoring,
+  native UI and visual/browser/desktop tasks. Use GPT-6.1 Sol at low for complex
+  ABI/NVM/contracts and independent review. The lead may adjust effort and routing
+  within these role limits when the task requires it.
+- GPT-6.1 Sol at high is a last resort for architecture/complex planning. Before
+  delegation, record the unresolved question and why ordinary work/review cannot
+  settle it. Do not use this route for routine work.
+- Use fresh contexts for new bounded tasks or grown context. Give a concise
+  handoff with ownership, current facts, evidence, dependencies and stop
+  conditions rather than the full routine-task conversation. Communicate with
+  agents in English and with the user in their chosen language.
+- Apply the evidence, review and device-authorization rules above to every agent.
