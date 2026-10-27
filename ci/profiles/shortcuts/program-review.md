@@ -8,7 +8,7 @@
   "hardware_validated": false,
   "ihx_sha256": "1df6f4fc00eb36bca75b2fe8b3a46dbed63529ea00d9474f708dfee51dd1421d",
   "physical_device_commands": 0,
-  "policy_sha256": "4554295c00ef2a412649f92394ac4c8db47d2c51dd5242d41608e1aeb9bd38e4",
+  "policy_sha256": "b886a4d023ca615c418ae0957dcb232933dfa9561bdf21b34cdc7a12dbcb630f",
   "profile": "shortcuts",
   "review_report": "ci/profiles/shortcuts/program-review.md#exact-tree-review-record",
   "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/glibc-shortcuts-profiles/shortcuts/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
