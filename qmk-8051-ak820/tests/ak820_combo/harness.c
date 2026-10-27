@@ -30,7 +30,9 @@ int main(void) {
     reset();event(0,4,true,0);ak820_combo_cancel();ak820_combo_tick(100);assert(!n);
     reset();event(0,4,true,0);event(1,5,true,1);ak820_combo_cancel();ak820_combo_tick(100);assert(n==1); /* external clear owns output cancellation */
     vial_combo_entry_t e={{0},0};assert(ak820_combo_valid(&e));e=(vial_combo_entry_t){{4,5,0,0},224};assert(ak820_combo_valid(&e));
-    e.input[2]=7;assert(!ak820_combo_valid(&e));e.input[2]=0;e.input[1]=4;assert(!ak820_combo_valid(&e));e.input[1]=5;e.output=0x104;assert(ak820_combo_valid(&e));e.output=0x2004;assert(!ak820_combo_valid(&e));e.output=6;e.input[0]=0x2004;assert(!ak820_combo_valid(&e));
+    e.input[2]=7;assert(!ak820_combo_valid(&e));e.input[2]=0;e.input[1]=4;assert(!ak820_combo_valid(&e));e.input[1]=5;e.output=0x104;assert(ak820_combo_valid(&e));e.output=0x2004;assert(!ak820_combo_valid(&e));e.output=0x7c73;assert(ak820_combo_valid(&e));e.output=0x7c72;assert(!ak820_combo_valid(&e));e.output=0x7c00;assert(!ak820_combo_valid(&e));e.output=6;e.input[0]=0x2004;assert(!ak820_combo_valid(&e));
+    reset();entries[0].input[1]=22;entries[0].output=0x7c73;ak820_combo_reload();event(0,4,true,0);assert(!n);event(1,22,true,1);assert(n==1);expect(0,0x7c73,true);event(1,22,false,2);event(0,4,false,3);assert(n==2);expect(1,0x7c73,false);
+    reset();entries[0].input[1]=22;entries[0].output=0x7c73;ak820_combo_reload();event(1,22,true,0);event(0,4,true,1);assert(n==1);expect(0,0x7c73,true);event(0,4,false,2);event(1,22,false,3);assert(n==2);expect(1,0x7c73,false);
     reset();event(0,4,true,0);event(1,4,true,1);assert(n==1);expect(0,4,true);ak820_combo_tick(41);expect(1,4,true);
     printf("compact combo production engine: %u traces and configuration validation PASS (host C/UBSan; no hardware)\n",traces);
 }

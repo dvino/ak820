@@ -42,6 +42,7 @@ def check_readonly(api, report):
     require(api.macros() == api.macro_view(image), 'Macro getter/published NVM view mismatch')
     report['checks'].append({'name': 'macro_getters', 'status': 'PASS', 'count': 16, 'bytes': 8192})
     report['rgb'] = api.rgb()
+    report['direct_ram'] = api.direct_snapshot()
     report['checks'].append({'name': 'RGB_protocol_getters', 'status': 'PASS', 'leds': 82})
     require(stable(api) == image, 'Read-only checks changed NVM')
     return matrix

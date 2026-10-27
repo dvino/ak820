@@ -4,14 +4,14 @@
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+  "ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
   "physical_device_commands": 0,
-  "policy_sha256": "b5c3bc28f8f9ea211237c36352eb4d776003c1925049a271762021a5e631968d",
+  "policy_sha256": "3920a0e072065214e894a3a789b224301399457f3a24c8fe6e06f37737a0c99b",
   "profile": "multios",
-  "review_report": "audits/ci-speed-20261026/independent-review.md",
-  "scope": "Independent source review of session-local pass30 replay reuse, spawned parallel inspection, unchanged safety checks, bilingual documentation and refreshed offline policy bindings. Prior exact-image witnesses, program, host manifest and packing receipt are retained unchanged. Fresh local build and full qualification cover multios only. Committed-source admission, ten-profile GitHub qualification, native package builds, publication and hardware validation remain separate.",
+  "review_report": "audits/beta3-direct-20261026/release-acceptance-policy-20261027.md",
+  "scope": "Independent final source and documentation review plus exact-image policy refresh. Only English and Russian STATUS source pins changed; firmware image, symbols, host inputs, packing and frozen test-source evidence remain unchanged. Retained offline qualification and package evidence remain scoped to their recorded identities. Final merged-main and release-tag CI and actual publication are pending. No hardware validation or device operation is claimed.",
   "status": "passed",
-  "symbols_sha256": "fe813d11200ebeab6eca38c2b3a877d39e247518cef12f9d32c90f3dc748b8c2",
-  "test_source_snapshot_sha256": "bd8ce77746a7dee28e55792a20a7a35459a755075c09df9890a8b39e88ee30c2"
+  "symbols_sha256": "1dce960b6ea76e3cfb11480815d9dd91993b346911cddd3fe12a14967437f43b",
+  "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
 }
 ```

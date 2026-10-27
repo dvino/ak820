@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "ak820_crc.h"
 
+#if defined(__SDCC_mcs51)
+#pragma codeseg AK820LOW
+#endif
+
 #if defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
 /* SDCC mcs51 default register bank 0, non-reentrant ABI: pointer in DPTR,
  * length in the compiler-allocated XDATA parameter slot, result in DPTR. R2-R7,

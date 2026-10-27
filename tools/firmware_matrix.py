@@ -91,6 +91,7 @@ def settings_identity(build, inspected, native_reference):
     import pack_ak820 as pack
     sys.path.insert(0, str(ROOT / 'tools/installer'))
     import settings_backup as settings
+    from build_capability_catalog import direct_contract
     native = Path(native_reference).read_bytes()
     pack.validate_native(native)
     schema = inspected['configuration']['nvm_schema']
@@ -105,7 +106,9 @@ def settings_identity(build, inspected, native_reference):
     return settings.catalog_settings_identity(
         inspected['configuration'], inspected['identity']['ihx_sha256'],
         pack.digest(payload[:pack.CODE_END - pack.APP_START]),
-        pack.digest(settings.canonical(definition)))
+        pack.digest(settings.canonical(definition)),
+        direct_protocol=(1 if direct_contract(
+            build, inspected['configuration'])['available'] else None))
 
 
 def measured_row(build, toolchain, native_reference=None):

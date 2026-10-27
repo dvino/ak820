@@ -138,3 +138,28 @@ static void test_os_indicators(void) {
     }
     puts("PASS: OS indicator production USB path, exact wire replies, malformed requests, no NVM, lease, IRQ restoration, lifecycle cancellation and DMA ownership");
 }
+
+#ifdef AK820_COMPACT_GUI_LOCK
+static void test_gui_lock_w_channel(void) {
+    fresh(); configure(); gui_active=false; layer_state=default_layer_state=1;
+    KB_USB_SetReport=0; os_now=0;
+    memset(ak820_led_dma,0,sizeof(ak820_led_dma)); ak820_update_indicators();
+    assert(ak820_led_dma[0x13d]==0); /* default off */
+    gui_active=true;
+    for (unsigned t=0;t<=2000;t+=250) {
+        os_now=t; ak820_update_indicators();
+        uint16_t phase=(uint16_t)(t%2000);
+        uint8_t expected=ak820_breathing_wave((uint8_t)(192u+((phase<<4)/125u)));
+        assert(ak820_led_dma[0x13d]==expected);
+        assert(ak820_led_dma[0x13c]==255);
+        assert(ak820_led_dma[0x11c]==0 && ak820_led_dma[0x11d]==0);
+    }
+    layer_state=2; os_now=2100; ak820_update_indicators(); assert(ak820_led_dma[0x13d]==255);
+    layer_state=default_layer_state=1; gui_active=false; os_now=2200; ak820_update_indicators(); assert(ak820_led_dma[0x13d]==0);
+    gui_active=true; os_now=2300; ak820_update_indicators();
+    USB_SleepStatus=2; ak820_update_indicators(); assert(ak820_led_dma[0x13d]==0);
+    USB_SleepStatus=0; D0UsbConfig=0; ak820_update_indicators(); assert(ak820_led_dma[0x13d]==0);
+    D0UsbConfig=1; gui_active=false;
+    puts("PASS: GUI-lock W host fixture: default off, 2s extracted-wave pulse, layer priority, Caps separation, suspend/unconfigured");
+}
+#endif

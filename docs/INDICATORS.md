@@ -5,10 +5,10 @@
 The keyboard has three separate indicators:
 
 - **C** follows the Caps Lock state reported by the computer. Caps Word does not turn it on.
-- **W** lights when any layer above layer 0 is active, including a held, toggled or default layer. This port uses W for layers.
+- **W** lights when any layer above layer 0 is active, including a held, toggled or default layer. When no such layer is active, GUI lock makes W pulse through a 2000 ms brightness cycle. This port uses W for layers.
 - **OS** belongs to the optional Mac/PC and host-layout modules below. These modules do not change C or W.
 
-The indicators work independently of key lighting. They are dark before USB configuration and during suspend. Published alpha.3 implements C and W; the OS modules are development features.
+The indicators work independently of key lighting. They are dark before USB configuration and during suspend. An active or default layer above 0 overrides the GUI-lock pulse and lights W steadily. The pulse is available only in `game` and `mmo`, where GUI lock is supported; the default lock state is off. C and OS remain independent. See [GUI controls](GUI-CONTROL.md).
 
 ## Mac/PC module
 

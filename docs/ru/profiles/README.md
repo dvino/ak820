@@ -8,7 +8,7 @@ English source of truth: [Profiles](../../profiles/README.md).
 
 | Профиль | Назначение |
 | --- | --- |
-| [main](main.md) | Повседневная работа: настройки, замены сочетаний, оба вида макросов и Direct. |
+| [main](main.md) | Повседневная работа: Auto Shift, настройки, замены сочетаний, оба вида макросов и Direct; без блокировки GUI. |
 | [game](game.md) | NKRO и блокировка Win; Direct сохраняется. Leader убран, чтобы не запускать команды-префиксы во время игры. |
 | [mmo](mmo.md) | Tap Dance даёт четыре базовых/модифицированных действия на слот; NKRO, блокировка Win и Direct сохраняются. Key Overrides обменивается на Tap Dance ради выбранного состава. |
 | [typing](typing.md) | Auto Shift для поддерживаемых клавиш и Shift/скобки через Space Cadet. Встроенные RGB-эффекты сохраняются, Direct уступает место функциям ввода. |
@@ -30,7 +30,7 @@ English source of truth: [Profiles](../../profiles/README.md).
 - QMK Settings для поддерживаемых параметров времени.
 - Индикаторы C (Caps Lock), W (активный слой выше нулевого) и управление OS от компьютера.
 
-[Каталог функций](../FEATURES.md) описывает настройку и ограничения. NKRO, Grave Escape, Space Cadet и Direct зависят от выбранного профиля.
+[Каталог функций](../FEATURES.md) описывает настройку и ограничения. NKRO, блокировка GUI, Grave Escape, Space Cadet и Direct зависят от выбранного профиля.
 
 ## Ограничения модулей
 

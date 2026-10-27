@@ -8,7 +8,7 @@ Choosing a profile changes the firmware. Switching a layer in Vial cannot add an
 
 | Profile | Purpose |
 | --- | --- |
-| [main](main.md) | Universal reference configuration. |
+| [main](main.md) | Universal reference configuration with Auto Shift; GUI lock is excluded. |
 | [game](game.md) | Games with NKRO, GUI lock and Direct. |
 | [mmo](mmo.md) | Multi-action game bindings; Tap Dance replaces Key Overrides. |
 | [typing](typing.md) | Text entry with Auto Shift and Space Cadet. |
@@ -30,7 +30,7 @@ All ten profiles provide:
 - QMK Settings for supported timing parameters.
 - C (Caps Lock) and W (active layer above zero) indicators, and host control of OS.
 
-The [feature catalog](../FEATURES.md) describes configuration and limits. NKRO, Grave Escape, Space Cadet and Direct depend on the selected profile.
+The [feature catalog](../FEATURES.md) describes configuration and limits. NKRO, GUI lock, Grave Escape, Space Cadet and Direct depend on the selected profile.
 
 ## Module limits
 

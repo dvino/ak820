@@ -40,10 +40,72 @@ def run_case(fw,name,setup,checks):
     expected={label:value for label,addr,value in observations}
     return {'name':name,'pass':actual==expected,'observations':actual,'expected':expected,**stack}
 
+def pulse_angles(fw):
+    """Exhaust the actual linked helper; scratch ROM/RAM exists only in C52."""
+    target=fw.address('_gui_pulse_angle')
+    # 0x2000 is simulator scratch code, 0x2700 is its stop address, and
+    # XRAM 0x3000..0x37cf holds results. The supplied IHX file is never changed.
+    commands=fw.initialize()
+    for phase in range(2000):
+        code=[]
+        for register in range(8):
+            code += [0x78+register,0x11*(register+1)]
+        code += [0x90,phase>>8,phase&255,0x12,target>>8,target&255,
+                 0x85,0x82,0xf0,0x90,0x30+(phase>>8),phase&255,0xe5,0xf0,0xf0]
+        for register in range(8):
+            # Equal sentinels skip the failure loop; a clobber times out.
+            code += [0xe8+register,0xb4,0x11*(register+1),2,0x80,3,0x02,0x20,0]
+        code += [0x02,0x27,0]
+        commands += [emitted.memory('rom',0x2000,code),'run 0x2000 0x2700']
+    commands += fw.dump('pulse_angles@','xram',0x3000,2000)
+    log,stack=fw.execute('gui-lock-all-angles-registers',commands)
+    actual=fw.extract(log,'pulse_angles@',0x3000,2000)
+    expected=[(192+phase*16//125)&255 for phase in range(2000)]
+    return {'name':'gui-lock-all-angles-registers','pass':actual==expected,
+            'cases':2000,'helper_address':target,
+            'preserved_registers':[f'R{i}' for i in range(8)],**stack}
+
 def cases(fw):
     dma=fw.address('_ak820_led_dma')+0x11c
     mode=fw.address('_ak820_os_indicator_mode')
     setup=fw.initialize()+fw.write('_USB_SleepStatus',[0])
+    # When compact GUI lock is in this exact image, exercise its production
+    # state accessor together with the shared W indicator and breathing curve.
+    # The 2 s cycle is sampled at quarter periods; timer fixtures wrap at 16 bits.
+    if '_ak820_gui_lock_is_active' in fw.symbols:
+        yield pulse_angles(fw)
+        def gui_lock_call(active):
+            return (fw.write('_ak820_gui_process_PARM_2',[1])+
+                    fw.call('_ak820_gui_process',0x700a if active else 0x7009))
+        pulse_dma=fw.address('_ak820_led_dma')+0x13c
+        yield run_case(fw,'gui-lock-default-disabled',setup,[
+            ('normal-base','xram',pulse_dma,[0,0],fw.clock(100)+
+             fw.write_scalar('_layer_state',1)+fw.write_scalar('_default_layer_state',1)+
+             fw.call('_ak820_update_indicators'))])
+        pulse_checks=[]
+        for t,w in ((100,1),(600,128),(1100,255),(1600,128),(2100,1)):
+            transition=(fw.clock(t)+(gui_lock_call(True) if t==100 else [])+
+                        fw.write_scalar('_layer_state',1)+fw.write_scalar('_default_layer_state',1)+
+                        fw.call('_ak820_update_indicators'))
+            pulse_checks.append((f'gui-lock-pulse-{t}','xram',pulse_dma,[255,w],transition))
+        pulse_checks.append(('gui-lock-caps-independent','xram',
+                             fw.address('_ak820_led_dma')+0x11c,[255,255],
+                             fw.write('_KB_USB_SetReport',[2])+fw.call('_ak820_update_indicators')))
+        pulse_checks.append(('gui-lock-layer-priority','xram',pulse_dma,[255,255],
+                             fw.clock(2200)+fw.write_scalar('_layer_state',2)+
+                             fw.call('_ak820_update_indicators')))
+        pulse_checks.append(('gui-lock-default-layer-priority','xram',pulse_dma,[255,255],
+                             fw.write_scalar('_layer_state',1)+fw.write_scalar('_default_layer_state',4)+
+                             fw.call('_ak820_update_indicators')))
+        pulse_checks.append(('gui-lock-suspend-clears','xram',pulse_dma,[0,0],
+                             fw.write('_USB_SleepStatus',[2])+fw.call('_ak820_update_indicators')))
+        yield run_case(fw,'gui-lock-w-pulse-priority-suspend',setup,pulse_checks)
+        wrap_checks=[]
+        wrap_checks.append(('timer-wrap-quarter-cycle','xram',pulse_dma,[255,128],
+                            fw.clock(65500)+gui_lock_call(True)+fw.write_scalar('_layer_state',1)+
+                            fw.write_scalar('_default_layer_state',1)+fw.call('_ak820_update_indicators')+
+                            fw.clock(66000)+fw.call('_ak820_update_indicators')))
+        yield run_case(fw,'gui-lock-w-pulse-timer-wrap',setup,wrap_checks)
     # The production wire task owns the request, validates it and sets the lease.
     for mac in ((0,1) if "_ak820_mac_mode" in fw.symbols else (0,)):
         for caps in (0,255):

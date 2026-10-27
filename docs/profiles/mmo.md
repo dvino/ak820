@@ -24,6 +24,8 @@ Added: NKRO keyboard reports; NKRO on/off controls; GUI lock: block Win/Command 
 
 Removed: Leader: a prefix followed by one 1–0 or A–F key selects one of 16 saved Vial macros; Key Overrides: eight modifier-dependent key replacements.
 
+Auto Shift is not included.
+
 ## Limits
 
 Tap Dance: eight entries with four outputs using basic keys or keys with modifiers. Macro, layer and mouse actions are rejected.

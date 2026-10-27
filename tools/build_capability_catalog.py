@@ -160,6 +160,56 @@ def module_contract(configuration, limits):
         'physical_behavior_verified': False, 'power_loss_persistence_verified': False}
 
 
+def direct_contract(build, configuration):
+    """Describe v1 only when exact build sources and linked symbols prove it."""
+    enabled = 'vialrgb-direct' in configuration['optional_features']
+    if not enabled:
+        return {'available': False}
+    report = configured.load_json(build / 'build-report.json')
+    sources = report.get('sources', [])
+    for relative in ('quantum/vialrgb.c', 'quantum/vialrgb.h'):
+        path = configured.QMK / relative
+        matches = [row for row in sources if row.get('origin') == 'source' and
+                   row.get('path','').replace('\\','/') == relative]
+        configured.require(len(matches) == 1 and matches[0].get('sha256') == configured.sha(path),
+                           'Direct contract source not bound to compiled image: ' + relative)
+    map_path = build / 'ajazz_ak820_vial.map'
+    code_symbols = configured.read_symbols(map_path)
+    # SDCC uses C: for CODE and D: for data. D: addresses here are absolute
+    # XDATA addresses, not offsets from XSEG's 0x440 origin. Check each exact
+    # symbol record before using the shared CODE parser, which collapses duplicates.
+    expected = {'_ak820_direct_tick': ('C', 1), '_ak820_direct_cancel': ('C', 1),
+                '_ak820_direct_stage': ('D', 246), '_ak820_direct_state': ('D', 1)}
+    records = {name: [] for name in expected}
+    for line in map_path.read_text().splitlines():
+        for name in expected:
+            if re.search(r'(?<!\S)' + re.escape(name) + r'(?!\S)', line):
+                match = re.fullmatch(r'([CD]):[ \t]+([0-9A-Fa-f]{8})[ \t]+' +
+                                     re.escape(name) + r'(?:[ \t]+\S+)?[ \t]*', line)
+                configured.require(match is not None, 'Malformed Direct v1 linked symbol: ' + name)
+                records[name].append((match[1], int(match[2], 16)))
+    for name, (space, size) in expected.items():
+        configured.require(len(records[name]) == 1, 'Direct v1 linked symbols missing or duplicate: ' + name)
+        actual_space, address = records[name][0]
+        configured.require(actual_space == space, 'Direct v1 linked symbol address space differs: ' + name)
+        if space == 'C':
+            configured.require(code_symbols.get(name) == address and
+                               any(lo <= address < hi for lo, hi in configured.WINDOWS),
+                               'Direct v1 CODE symbol outside linked windows: ' + name)
+        else:
+            configured.require(0x440 <= address and address + size <= 0x1000,
+                               'Direct v1 XDATA symbol outside application RAM: ' + name)
+    stage = records['_ak820_direct_stage'][0][1]
+    state = records['_ak820_direct_state'][0][1]
+    configured.require(not stage <= state < stage + 246, 'Direct v1 XDATA symbols overlap')
+    return {'available': True, 'version': 1, 'capabilities': 3, 'count': 82,
+            'encoding': 'HSV8', 'mapping': 1, 'maximum_brightness': 160,
+            'read_chunk': 7, 'upload_chunk': 8, 'timeout_ms': 1000,
+            'runtime_negotiation_required': True, 'storage': 'RAM-only',
+            'commit': 'logical-palette; display-publication-may-be-pending',
+            'physical_display_verified': False}
+
+
 def inspect_entry(build, toolchain):
     build = Path(build).resolve()
     inspected = configured.inspect(build, toolchain)
@@ -195,6 +245,7 @@ def inspect_entry(build, toolchain):
               'features': sorted(configuration['base_features'] + configuration['optional_features']),
               'timing_ms': configuration['timing_ms'], 'fixed_limits': limits,
               'module_storage': module_contract(configuration, limits),
+              'direct': direct_contract(build, configuration),
               'resources': inspected['resources'],
               'runtime_qmk_settings': configuration['runtime_qmk_settings'],
               'evidence_sha256': {'configuration': configured.sha(build / 'configuration-report.json'),

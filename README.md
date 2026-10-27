@@ -39,17 +39,29 @@ Vial macros, eight two-key Combos, media and system keys, Caps Word, Repeat and
 Alt Repeat, Tri Layer, Mod-Tap and Layer-Tap, and built-in RGB effects. The **C**
 indicator follows Caps Lock; **W** shows an active layer above layer 0.
 
+The current source also supports Caps Word as a Combo output and a saved macro
+on tap with a layer on hold for physical keys. See [Tap and hold](docs/TAP-HOLD.md)
+for the new action; packaged release availability is listed in [Status](docs/STATUS.md).
+
+VialRGB Direct supports coherent palette snapshots and complete-frame updates
+through its versioned protocol. Its 82 HSV8 colors remain in RAM. The W indicator
+uses a slow pulse while GUI lock is active; another active or default layer above
+0 takes priority and lights W steadily. See [Direct](docs/DIRECT.md) and
+[indicators](docs/INDICATORS.md).
+
 All functions do not fit in the controller memory at once. Ten modular
 [profiles](docs/profiles/README.md) select different sets of functions. The default
 `main` adds One Shot, Leader, two temporary macro recordings, eight Key Overrides,
-QMK Settings, host control of the OS indicator and VialRGB Direct. Other profiles
-provide NKRO and GUI lock, Tap Dance, Auto Shift, Space Cadet, Grave Escape,
+Auto Shift, QMK Settings, host control of the OS indicator and VialRGB Direct.
+GUI lock remains in `game` and `mmo`, not `main`. Other profiles provide NKRO,
+Tap Dance, Space Cadet, Grave Escape,
 Mouse Keys or modifier swaps by exchanging selected modules.
 
-The Windows and Linux installer supports choosing a profile while the
-[AK Configurator](https://github.com/dvino/ak-configurator) companion is still
-in development. See [Status](docs/STATUS.md) for available releases and hardware
-limits, and the [feature catalog](docs/FEATURES.md) for function details.
+The beta.3 release uses Python installation scripts for Windows and Linux
+x86_64. Standalone GUI installers are not included. The separate
+[AK Configurator](https://github.com/dvino/ak-configurator) companion remains in
+development. See [Status](docs/STATUS.md) for release and hardware limits, and
+the [feature catalog](docs/FEATURES.md) for function details.
 
 ## Disclaimer
 

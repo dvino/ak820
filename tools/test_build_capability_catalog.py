@@ -26,14 +26,14 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(contract['modules'][module]['enabled_entries'],
                                  8 if feature in selected['optional_features'] else 0)
             self.assertEqual(contract['modules']['qmk_settings']['enabled_qsids'],
-                             [1,2,4,7,18,19] if name == 'typing' else [1,2,7,18,19])
+                             [1,2,4,7,18,19] if name in ('main', 'typing') else [1,2,7,18,19])
             self.assertFalse(contract['restore']['write_authorization_granted'])
             self.assertFalse(contract['physical_behavior_verified'])
 
     def test_individual_module_contracts_are_capability_aware(self):
         limits={'tap_dance':8,'key_overrides':8}
         for name,td,ko,qsids in (('creative',8,0,[1,2,7,18,19]),
-                ('main',0,8,[1,2,7,18,19]), ('onehand',8,0,[1,2,7,18,19])):
+                ('main',0,8,[1,2,4,7,18,19]), ('onehand',8,0,[1,2,7,18,19])):
             with self.subTest(name=name):
                 contract=catalog.module_contract(config.profiles.configuration(name),limits)
                 modules=contract['modules']
@@ -43,8 +43,8 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(modules['tap_dance']['stored_entries'],8)
                 self.assertEqual(modules['key_overrides']['stored_entries'],8)
                 fields={f['qsid']:f for f in modules['qmk_settings']['fields']}
-                self.assertFalse(fields[4]['enabled'])
-                self.assertEqual(fields[4]['consumers'],[])
+                self.assertEqual(fields[4]['enabled'], name == 'main')
+                self.assertEqual(fields[4]['consumers'], ['compact-auto-shift'] if name == 'main' else [])
                 self.assertEqual(fields[7]['maximum'],1000)
                 self.assertFalse(contract['limits']['qmk_settings']['tap_dance_term_uses_qsid7'])
                 self.assertFalse(contract['restore']['write_authorization_granted'])
@@ -189,6 +189,8 @@ class EntryEvidenceTests(unittest.TestCase):
         self.inspect_patch.start(); self.addCleanup(self.inspect_patch.stop)
         self.code_patch = patch.object(config, 'diagnostic_build', return_value={0x28a0: 2, 0x3027: 0x22})
         self.code_patch.start(); self.addCleanup(self.code_patch.stop)
+        direct_patch = patch.object(catalog, 'direct_contract', return_value={'available': True, 'version': 1})
+        direct_patch.start(); self.addCleanup(direct_patch.stop)
         profile = {'format': 'ak820-profile-tests-1', 'profile': 'main', 'identity': self.identity,
             'passed': True, 'hardware_validated': False, 'physical_device_commands': 0,
             'source_files': config.test_source_snapshot(), 'tests': []}
@@ -287,6 +289,67 @@ class EntryEvidenceTests(unittest.TestCase):
         self.inspected['configuration']['optional_features'] = ['os-indicators']
         with self.assertRaisesRegex(ValueError, 'configuration differs'):
             catalog.inspect_entry(self.build, self.toolchain)
+
+
+
+class DirectContractTests(unittest.TestCase):
+    def test_no_direct_is_explicitly_unavailable(self):
+        self.assertEqual(catalog.direct_contract(Path('/unused'),
+            config.profiles.configuration('typing')), {'available':False})
+
+    def test_feature_alone_cannot_assert_support(self):
+        with patch.object(config,'load_json',return_value={'sources':[]}):
+            with self.assertRaisesRegex(ValueError,'source not bound'):
+                catalog.direct_contract(Path('/unused'), config.profiles.configuration('main'))
+
+    MAP = """ASxxxx Linker V05.50.4-SDLD, page 17.
+XSEG                                00000440    00000AC3 = 2755. bytes (REL,CON,XDATA)
+D:   00000DDF  _ak820_direct_stage                vialrgb
+D:   00000ED5  _ak820_direct_state                vialrgb
+C:   0000B6B0  _ak820_direct_tick                 vialrgb
+C:   00002EF2  _ak820_direct_cancel               ak820_rgb_shared
+"""
+
+    def contract(self, text):
+        sources = [{'origin': 'source', 'path': name, 'sha256': config.sha(config.QMK/name)}
+                   for name in ('quantum/vialrgb.c', 'quantum/vialrgb.h')]
+        with tempfile.TemporaryDirectory() as temporary:
+            build = Path(temporary)
+            (build/'ajazz_ak820_vial.map').write_text(text)
+            with patch.object(config, 'load_json', return_value={'sources': sources}):
+                return catalog.direct_contract(build, config.profiles.configuration('main'))
+
+    def test_bound_source_still_requires_linked_symbols(self):
+        with self.assertRaisesRegex(ValueError, 'linked symbols'):
+            self.contract('')
+
+    def test_source_and_symbols_enable_runtime_negotiated_contract(self):
+        result = self.contract(self.MAP)
+        self.assertEqual(result['version'], 1)
+        self.assertTrue(result['runtime_negotiation_required'])
+        self.assertFalse(result['physical_display_verified'])
+
+    def test_missing_swapped_malformed_and_duplicate_symbols_fail_closed(self):
+        for name in ('stage', 'state', 'tick', 'cancel'):
+            line = next(line for line in self.MAP.splitlines(True)
+                        if '_ak820_direct_' + name in line)
+            for replacement in ('', line.replace('D:', 'C:') if line.startswith('D:')
+                                else line.replace('C:', 'D:'),
+                                line.replace('0000', 'zzzz', 1), line + line,
+                                'prefix ' + line):
+                with self.subTest(name=name, replacement=replacement):
+                    with self.assertRaises(ValueError):
+                        self.contract(self.MAP.replace(line, replacement))
+
+    def test_absolute_xdata_bounds_and_overlap(self):
+        for old, new in (('00000DDF', '0000043F'), ('00000DDF', '00000F0B'),
+                         ('00000ED5', '00001000'), ('00000ED5', '00000DDF'),
+                         ('0000B6B0', '0000C700'), ('00002EF2', '00003000')):
+            with self.subTest(address=new):
+                with self.assertRaises(ValueError):
+                    self.contract(self.MAP.replace(old, new))
+        self.contract(self.MAP.replace('00000DDF', '00000440').replace('00000ED5', '00000FFF'))
+        self.contract(self.MAP.replace('00000DDF', '00000F0A').replace('00000ED5', '00000440'))
 
 
 if __name__ == '__main__':

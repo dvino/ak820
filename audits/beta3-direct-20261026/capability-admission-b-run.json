@@ -1,0 +1,108 @@
+{
+  "task": "beta3-canonical-capability-regeneration-group-b",
+  "source_snapshot": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb",
+  "cwd": "/tmp/ak820-beta3-isolated/b",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "/tmp/ak820-beta3-isolated/b/tools/build_capability_catalog.py",
+    "--build-dir",
+    "/tmp/ak820-beta3-isolated/b/qmk-8051-ak820/.build/beta3-release/typing",
+    "--build-dir",
+    "/tmp/ak820-beta3-isolated/b/qmk-8051-ak820/.build/beta3-release/code",
+    "--build-dir",
+    "/tmp/ak820-beta3-isolated/b/qmk-8051-ak820/.build/beta3-release/multios",
+    "--toolchain",
+    "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0",
+    "--output",
+    "/tmp/ak820-beta3-isolated/b/work-logs/beta3-admission-capabilities.json"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 95.20873475074768,
+  "stdout_stderr_log": "audits/beta3-direct-20261026/origin-capabilities/admission-b.log",
+  "log_sha256": "5eb2075c7418f824e9465e6802bf1badde781f225b330c9bc874e67020d7c05f",
+  "output": "audits/beta3-direct-20261026/origin-capabilities/admission-b.json",
+  "output_sha256": "358fd6abe3df32727579af3ddc737b8d541e5b1c1f6243a33511070b9e5fd77a",
+  "output_matches_origin_byte_for_byte": true,
+  "validation": {
+    "profile_rows": [
+      "typing",
+      "code",
+      "multios"
+    ],
+    "development_only": true,
+    "release_approved_false_global_and_per_profile": true,
+    "hardware_validated_false_global_and_per_profile": true,
+    "flashing_authorized_false_global_and_per_profile": true,
+    "settings_writes_authorized_false_global_and_per_profile": true,
+    "all_direct_unavailable": true,
+    "unique_code_ihx_pairs": true
+  },
+  "build_tree_origin_central_equal_before": true,
+  "build_tree_origin_central_equal_after": true,
+  "build_tree_unchanged": true,
+  "per_profile_complete_tree_manifests_before": {
+    "typing": {
+      "origin": {
+        "entries": 6337,
+        "manifest_sha256": "f369ebb739c29dbc03b714cb59949751cb342296d60d39a98a4fea6d232d08b9"
+      },
+      "central": {
+        "entries": 6337,
+        "manifest_sha256": "f369ebb739c29dbc03b714cb59949751cb342296d60d39a98a4fea6d232d08b9"
+      }
+    },
+    "code": {
+      "origin": {
+        "entries": 6280,
+        "manifest_sha256": "00b058f571bd0acf6830c286f1e9a44da1af56198853f041345e011278ecfb30"
+      },
+      "central": {
+        "entries": 6280,
+        "manifest_sha256": "00b058f571bd0acf6830c286f1e9a44da1af56198853f041345e011278ecfb30"
+      }
+    },
+    "multios": {
+      "origin": {
+        "entries": 6732,
+        "manifest_sha256": "6c4ec7b87246a4800d1338f68926eeef95bcd2781c6cd53a59a199ad011a4f31"
+      },
+      "central": {
+        "entries": 6732,
+        "manifest_sha256": "6c4ec7b87246a4800d1338f68926eeef95bcd2781c6cd53a59a199ad011a4f31"
+      }
+    }
+  },
+  "per_profile_complete_tree_manifests_after": {
+    "typing": {
+      "origin": {
+        "entries": 6337,
+        "manifest_sha256": "f369ebb739c29dbc03b714cb59949751cb342296d60d39a98a4fea6d232d08b9"
+      },
+      "central": {
+        "entries": 6337,
+        "manifest_sha256": "f369ebb739c29dbc03b714cb59949751cb342296d60d39a98a4fea6d232d08b9"
+      }
+    },
+    "code": {
+      "origin": {
+        "entries": 6280,
+        "manifest_sha256": "00b058f571bd0acf6830c286f1e9a44da1af56198853f041345e011278ecfb30"
+      },
+      "central": {
+        "entries": 6280,
+        "manifest_sha256": "00b058f571bd0acf6830c286f1e9a44da1af56198853f041345e011278ecfb30"
+      }
+    },
+    "multios": {
+      "origin": {
+        "entries": 6732,
+        "manifest_sha256": "6c4ec7b87246a4800d1338f68926eeef95bcd2781c6cd53a59a199ad011a4f31"
+      },
+      "central": {
+        "entries": 6732,
+        "manifest_sha256": "6c4ec7b87246a4800d1338f68926eeef95bcd2781c6cd53a59a199ad011a4f31"
+      }
+    }
+  },
+  "changed_profiles": []
+}

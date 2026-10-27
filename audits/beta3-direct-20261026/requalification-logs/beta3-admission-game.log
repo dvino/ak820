@@ -1,0 +1,406 @@
+{"modules": 76, "functions": 706, "retained": 460, "removed_count": 246}
+PASS30 replay game: 24.145s
+RUN RUNTIME startup
+RUN RUNTIME irq
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/00.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/01.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/02.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/03.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/04.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/05.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/06.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/07.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tools/check_docs.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/08.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_usb/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/09.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_keymap/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/10.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_caps_word/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/11.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_macro_guard/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/12.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_diagnostic/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/13.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_optimization/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/14.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_rgb/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/15.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_via_decode/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/16.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_combo/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/17.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_bounded/run.py
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/18.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_tapping/run.py --negative-controls --output /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/tapping-host.json
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/19.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_features/run.py --build-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game --s51 /workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/ak820_features
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/20.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_unlock/run.py --build-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game --s51 /workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/ak820_unlock
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/21.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_tri_layer/run.py --build-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game --s51 /workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/ak820_tri_layer
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/22.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_iap/run.py --build-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game --s51 /workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/ak820_iap --iap-fault-profile guarded-erase
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/23.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_rgb/emitted.py --build-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game --s51 /workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/rgb
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/24.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_bounded/emitted.py --build-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game --s51 /workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/bounded
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/25.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_tapping/emitted.py --build-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game --s51 /workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/tapping
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/26.txt
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 tests/ak820_combo/emitted.py --build-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game --s51 /workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0/bin/s51 --output-dir /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/combo
+PASS /tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game/qualification-logs-pfdwnxpf/27.txt
+RUN PROFILE gates
+PASS PROFILE gates: 5.983s (test 0.324s)
+RUN PROFILE firmware-matrix-gates
+PASS PROFILE firmware-matrix-gates: 5.994s (test 0.358s)
+RUN PROFILE catalog-bundle-gates
+PASS PROFILE catalog-bundle-gates: 6.053s (test 0.406s)
+RUN PROFILE settings-catalog-gates
+PASS PROFILE settings-catalog-gates: 27.471s (test 22.027s)
+RUN PROFILE capability-catalog-gates
+PASS PROFILE capability-catalog-gates: 5.341s (test 0.511s)
+RUN PROFILE outline-gates
+PASS PROFILE outline-gates: 6.637s (test 1.882s)
+RUN PROFILE short-call-gates
+PASS PROFILE short-call-gates: 5.310s (test 0.149s)
+RUN PROFILE core-compact-host
+PASS PROFILE core-compact-host: 7.359s (test 2.185s)
+RUN PROFILE core-compact-linked
+PASS PROFILE core-compact-linked: 5.638s (test 1.066s)
+RUN PROFILE emitted-linked
+PASS PROFILE emitted-linked: 5.042s (test 0.692s)
+RUN PROFILE transport-linked
+PASS PROFILE transport-linked: 6.318s (test 1.758s)
+RUN PROFILE stack-gates
+PASS PROFILE stack-gates: 5.054s (test 0.095s)
+RUN PROFILE runtime-safety-gates
+PASS PROFILE runtime-safety-gates: 6.171s (test 0.079s)
+RUN PROFILE delay-abi
+PASS PROFILE delay-abi: 5.906s (test 0.242s)
+RUN PROFILE startup-gates
+PASS PROFILE startup-gates: 5.583s (test 0.054s)
+RUN PROFILE startup-stack
+PASS PROFILE startup-stack: 6.205s (test 0.257s)
+RUN PROFILE irq-gates
+PASS PROFILE irq-gates: 5.468s (test 0.143s)
+RUN PROFILE release-safety-gates
+PASS PROFILE release-safety-gates: 5.946s (test 0.297s)
+RUN PROFILE outline-integrity
+PASS PROFILE outline-integrity: 7.104s (test 0.924s)
+RUN PROFILE vialrgb-linked
+PASS PROFILE vialrgb-linked: 43.279s (test 38.129s)
+RUN PROFILE nkro-control-host
+PASS PROFILE nkro-control-host: 4.916s (test 0.098s)
+RUN PROFILE nkro-control-linked
+PASS PROFILE nkro-control-linked: 5.782s (test 0.494s)
+RUN PROFILE one-shot-host
+PASS PROFILE one-shot-host: 19.790s (test 15.229s)
+RUN PROFILE one-shot-linked
+PASS PROFILE one-shot-linked: 5.986s (test 0.882s)
+RUN PROFILE key-overrides-host
+PASS PROFILE key-overrides-host: 5.204s (test 0.530s)
+RUN PROFILE key-overrides-linked
+PASS PROFILE key-overrides-linked: 5.712s (test 1.286s)
+RUN PROFILE qmk-settings-host
+PASS PROFILE qmk-settings-host: 4.948s (test 0.489s)
+RUN PROFILE qmk-settings-linked
+PASS PROFILE qmk-settings-linked: 5.663s (test 1.071s)
+RUN PROFILE os-indicators-host
+PASS PROFILE os-indicators-host: 9.665s (test 4.492s)
+RUN PROFILE os-indicators-linked
+PASS PROFILE os-indicators-linked: 8.869s (test 3.950s)
+RUN PROFILE dynamic-macro-host
+PASS PROFILE dynamic-macro-host: 10.831s (test 5.887s)
+RUN PROFILE dynamic-macro-linked
+PASS PROFILE dynamic-macro-linked: 7.426s (test 2.286s)
+RUN PROFILE gui-lock-host
+PASS PROFILE gui-lock-host: 4.601s (test 0.099s)
+RUN PROFILE gui-lock-linked
+PASS PROFILE gui-lock-linked: 5.717s (test 1.257s)
+{
+  "format": "ak820-configured-build-1",
+  "configuration": {
+    "format": "ak820-build-configuration-1",
+    "profile": "game",
+    "optional_features": [
+      "one-shot",
+      "dynamic-macros",
+      "os-indicators",
+      "qmk-settings",
+      "key-overrides",
+      "vialrgb-direct",
+      "nkro",
+      "nkro-control",
+      "gui-lock"
+    ],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "tri-layer",
+      "rgb-effects",
+      "nkro-reports",
+      "vialrgb-direct-ram"
+    ],
+    "nvm_schema": 532483,
+    "make_options": {
+      "AK820_NKRO": "yes",
+      "AK820_GRAVE_ESCAPE": "no",
+      "AK820_VIALRGB_DIRECT": "yes",
+      "AK820_COMPACT_TAP_DANCE": "no",
+      "AK820_COMPACT_KEY_OVERRIDE": "yes",
+      "AK820_QMK_SETTINGS": "yes",
+      "AK820_MAC_PC": "no",
+      "AK820_OS_INDICATORS": "yes",
+      "AK820_COMPACT_LEADER": "no",
+      "AK820_NKRO_CONTROL": "yes",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "no",
+      "AK820_COMPACT_MOUSEKEY": "no",
+      "AK820_COMPACT_AUTOSHIFT": "no",
+      "AK820_COMPACT_GUI_LOCK": "yes",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+    },
+    "runtime_qmk_settings": [
+      1,
+      2,
+      7,
+      18,
+      19
+    ],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200,
+      "os_indicator_lease": 3000,
+      "os_indicator_period": 4096,
+      "dynamic_macro_phase": 10
+    },
+    "release_approved": false
+  },
+  "identity": {
+    "profile": "game",
+    "configuration_sha256": "0e94ff00e43e3b3088ab944df8b0b9487365fc0b06f29891b8f16d256eab461a",
+    "ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+    "map_sha256": "424ce3127567aa841a23477d9df0bcfc7ed0792d3d7c7235c73474558bac0432",
+    "mem_sha256": "cdf5be41506939c28e15be2f3830c5af50d11f43a894f03ebd3736e0351990e0",
+    "build_report_sha256": "602112e4aedc02b116a0ca655f9cfc19e8840ee613627963f01b10d409ee9cf6",
+    "source_manifest_sha256": "5a36b263e41762088044b4f384f1c52f62bec0994c458258222c890693a7b6b7",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "nvm_schema": 532483
+  },
+  "short_calls": {
+    "algorithm": "foreground-short-transfers-v2",
+    "report": ".build/beta3-release/game/short-calls.json",
+    "report_sha256": "6a0b009bde99fd172652dc418414d25c2c835d58f445ff02814a4aa447f0a4c4",
+    "selected": 499,
+    "saved_bytes": 499
+  },
+  "optimization": {
+    "contract": "ak820-audited-pass30-1",
+    "reports": {
+      "parameter_spills": "424aa58793849b985e522e9fc952f38d525408b1ce2993f72fdc0d561b219bf7",
+      "register_saves": "57b96a45403946a8f30dda65a73505c32648e8d31dbd0d0d97c8f0da603fb6d7",
+      "tail_share": "7ca122c60adc3a1494862384db8cc39a56aadc26b2e2a84f25f8ae00065074c0"
+    }
+  },
+  "resources": {
+    "code_bytes": 40462,
+    "code_windows": [
+      {
+        "name": "low",
+        "start": 10400,
+        "end_exclusive": 12288,
+        "occupied_bytes": 1882,
+        "highest_address": 12281,
+        "trailing_free_bytes": 6
+      },
+      {
+        "name": "main",
+        "start": 12327,
+        "end_exclusive": 50944,
+        "occupied_bytes": 38580,
+        "highest_address": 50911,
+        "trailing_free_bytes": 32
+      }
+    ],
+    "xram": {
+      "start": 1088,
+      "end_inclusive": 4019,
+      "bytes": 2932,
+      "capacity": 3008,
+      "reserved_bytes": 64,
+      "total_bytes": 2996,
+      "physical_capacity": 3072
+    },
+    "internal_ram": {
+      "static_bytes": 79,
+      "initial_sp": 78,
+      "stack_capacity": 177,
+      "runtime_stack_bound": 160,
+      "stack_margin": 17,
+      "stack_qualified": true
+    },
+    "protected_windows_clear": true,
+    "absolute_xram": [
+      {
+        "symbol": "_ak820_led_dma",
+        "start": 512,
+        "reserved_end_exclusive": 1024
+      },
+      {
+        "symbol": "_ak820_flash_stage",
+        "start": 1024,
+        "reserved_end_exclusive": 1088,
+        "bytes": 64
+      }
+    ]
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "offline_tests_passed": true,
+  "release_approved": false,
+  "release_blockers": [
+    "No approved installer/settings transition for this feature identity.",
+    "No independent release approval for this image and source."
+  ],
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image.",
+  "source": {
+    "commit": "b35b77cddbefdb509058f1fbaaeafaa3982ce172",
+    "dirty": true
+  },
+  "runtime_analysis": {
+    "format": "ak820-runtime-safety-1",
+    "passed": true,
+    "identity": {
+      "profile": "game",
+      "configuration_sha256": "0e94ff00e43e3b3088ab944df8b0b9487365fc0b06f29891b8f16d256eab461a",
+      "ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "map_sha256": "424ce3127567aa841a23477d9df0bcfc7ed0792d3d7c7235c73474558bac0432",
+      "mem_sha256": "cdf5be41506939c28e15be2f3830c5af50d11f43a894f03ebd3736e0351990e0",
+      "build_report_sha256": "602112e4aedc02b116a0ca655f9cfc19e8840ee613627963f01b10d409ee9cf6",
+      "source_manifest_sha256": "5a36b263e41762088044b4f384f1c52f62bec0994c458258222c890693a7b6b7",
+      "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+      "nvm_schema": 532483
+    },
+    "source_files": {
+      "tools/configure_firmware.py": "83e0a8b627db8f8f5be4683d4a3f7267bc0c5a1c1960d6c6d584250890d3dc81",
+      "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+      "qmk-8051-ak820/tests/ak820_stack/analyze.py": "1b4c4b50d6e4e5ba2abfdc76829d57cead2aedd2e47e964ad216eab4d803b795",
+      "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+      "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+      "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+      "qmk-8051-ak820/tests/ak820_iap/run.py": "fc97a63d72fe8166312e10ab5dd0e7a3f1a087535411bfb011ffcfe7b9b78c33",
+      "qmk-8051-ak820/tests/ak820_emitted/run.py": "3c07c85cdb6b1144ad27835f3e6e813c3c2b0b6949328707713a55390bc60e73",
+      "qmk-8051-ak820/util/ak820_linked_inventory.py": "b2cd080da7dcce101105c9a3ed1e22aa35fab63b26d6d0d1628428f61dd189b1",
+      "qmk-8051-ak820/util/pack_ak820.py": "d392ed795cf34f3c0e1a2e58e07b5a35f1e14500c5bd91c6bcaccfd4f9a7cc7c"
+    },
+    "root_bounds": {
+      "_main": 98,
+      "_ak820_timer_irq": 2,
+      "_USB_DeviceInterrupt": 5,
+      "_ak820_led_irq": 2
+    },
+    "unresolved_roots": [],
+    "foreground_bound": 98,
+    "main_entry_frame_bound": 2,
+    "pre_main_bound": 2,
+    "irq_bound": 60,
+    "stack_bound": 160,
+    "stack_capacity": 177,
+    "stack_margin": 17,
+    "whole_program_stack_qualified": true,
+    "release_approved": false,
+    "hardware_validated": false,
+    "physical_device_commands": 0,
+    "limits": [
+      "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+      "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+      "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+      "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+      "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+    ],
+    "reports": {
+      "foreground": {
+        "path": "runtime-stack.json",
+        "sha256": "84ac1e5b31cacff07d68470adcd8f076d68c92a4452a4075b5a40c90d847182c"
+      },
+      "startup": {
+        "path": "runtime-safety/startup.json",
+        "sha256": "b17b5bc8fcb7f3a03152b6aef1cafea7912359c8234f5775debd465b01c243e2"
+      },
+      "irq": {
+        "path": "runtime-safety/irq/results.json",
+        "sha256": "c4c364afa237e4de3282b216804516e1bae366ab3be2a7f0127c7579772a9344"
+      }
+    },
+    "logs": {
+      "startup": "ec03c0cf3763e9d013166ae4ef37df03752e84a7703c6013f4712d14318b1499",
+      "irq": "c4c364afa237e4de3282b216804516e1bae366ab3be2a7f0127c7579772a9344"
+    },
+    "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+  },
+  "qualification": {
+    "sha256": "32739cd7a34dafb1596bc9468fddcba411eb3e51536d399a4f49f0c6956a8492",
+    "suites": 28,
+    "unit_tests": {
+      "run": 351,
+      "skipped": 0
+    }
+  },
+  "profile_tests": {
+    "sha256": "ee2a8ce0b9b36623171d7bc3737691e2ec426c10414f77700fbabc0338f1ffbb",
+    "suites": [
+      "gates",
+      "firmware-matrix-gates",
+      "catalog-bundle-gates",
+      "settings-catalog-gates",
+      "capability-catalog-gates",
+      "outline-gates",
+      "short-call-gates",
+      "core-compact-host",
+      "core-compact-linked",
+      "emitted-linked",
+      "transport-linked",
+      "stack-gates",
+      "runtime-safety-gates",
+      "delay-abi",
+      "startup-gates",
+      "startup-stack",
+      "irq-gates",
+      "release-safety-gates",
+      "outline-integrity",
+      "vialrgb-linked",
+      "nkro-control-host",
+      "nkro-control-linked",
+      "one-shot-host",
+      "one-shot-linked",
+      "key-overrides-host",
+      "key-overrides-linked",
+      "qmk-settings-host",
+      "qmk-settings-linked",
+      "os-indicators-host",
+      "os-indicators-linked",
+      "dynamic-macro-host",
+      "dynamic-macro-linked",
+      "gui-lock-host",
+      "gui-lock-linked"
+    ],
+    "source_files_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+  }
+}

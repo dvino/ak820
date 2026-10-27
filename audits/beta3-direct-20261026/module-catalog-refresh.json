@@ -1,0 +1,263 @@
+{
+  "schema": "ak820-beta3-module-catalog-refresh-1",
+  "file": "web/module-descriptions.json",
+  "before_sha256": "4da879c27fb543dc3879de37df2f3bd52364a2b80cd0025e93c2f0241ed98782",
+  "after_sha256": "2947032a7f53c43d906c3ab909a7fb0beb31d83bae4e44368db422ef18afffc6",
+  "registry_sha256": "485b8b40d4b78a80e568018ec7736700a11ea460739f4bc8f96a212ef1e056a2",
+  "preserved": {
+    "profile_ids_and_order": true,
+    "default_profile": "main",
+    "feature_description_rows_byte_values": true,
+    "profile_descriptive_fields": true
+  },
+  "derived_profile_differences": [
+    {
+      "profile": "main",
+      "derived_changes": {
+        "optional_features": {
+          "before": [
+            "one-shot",
+            "leader",
+            "dynamic-macros",
+            "os-indicators",
+            "qmk-settings",
+            "key-overrides",
+            "vialrgb-direct"
+          ],
+          "after": [
+            "one-shot",
+            "leader",
+            "dynamic-macros",
+            "os-indicators",
+            "qmk-settings",
+            "key-overrides",
+            "vialrgb-direct",
+            "auto-shift"
+          ]
+        },
+        "features": {
+          "before": [
+            "alternate-repeat",
+            "caps-word",
+            "compact-tap-hold",
+            "dynamic-macros",
+            "eight-two-key-combos",
+            "encoder-map",
+            "key-overrides",
+            "leader",
+            "media-keys",
+            "one-shot",
+            "os-indicators",
+            "qmk-settings",
+            "repeat",
+            "rgb-effects",
+            "six-layers",
+            "sixteen-vial-macros",
+            "tri-layer",
+            "vialrgb-direct",
+            "vialrgb-direct-ram"
+          ],
+          "after": [
+            "alternate-repeat",
+            "auto-shift",
+            "caps-word",
+            "compact-tap-hold",
+            "dynamic-macros",
+            "eight-two-key-combos",
+            "encoder-map",
+            "key-overrides",
+            "leader",
+            "media-keys",
+            "one-shot",
+            "os-indicators",
+            "qmk-settings",
+            "repeat",
+            "rgb-effects",
+            "six-layers",
+            "sixteen-vial-macros",
+            "tri-layer",
+            "vialrgb-direct",
+            "vialrgb-direct-ram"
+          ]
+        },
+        "configuration": {
+          "before": {
+            "format": "ak820-build-configuration-1",
+            "profile": "main",
+            "optional_features": [
+              "one-shot",
+              "leader",
+              "dynamic-macros",
+              "os-indicators",
+              "qmk-settings",
+              "key-overrides",
+              "vialrgb-direct"
+            ],
+            "base_features": [
+              "six-layers",
+              "sixteen-vial-macros",
+              "eight-two-key-combos",
+              "compact-tap-hold",
+              "encoder-map",
+              "media-keys",
+              "caps-word",
+              "repeat",
+              "alternate-repeat",
+              "tri-layer",
+              "rgb-effects",
+              "vialrgb-direct-ram"
+            ],
+            "nvm_schema": 532483,
+            "make_options": {
+              "AK820_NKRO": "no",
+              "AK820_GRAVE_ESCAPE": "no",
+              "AK820_VIALRGB_DIRECT": "yes",
+              "AK820_COMPACT_TAP_DANCE": "no",
+              "AK820_COMPACT_KEY_OVERRIDE": "yes",
+              "AK820_QMK_SETTINGS": "yes",
+              "AK820_MAC_PC": "no",
+              "AK820_OS_INDICATORS": "yes",
+              "AK820_COMPACT_LEADER": "yes",
+              "AK820_NKRO_CONTROL": "no",
+              "AK820_COMPACT_ONESHOT": "yes",
+              "AK820_COMPACT_SPACE_CADET": "no",
+              "AK820_COMPACT_MOUSEKEY": "no",
+              "AK820_COMPACT_AUTOSHIFT": "no",
+              "AK820_COMPACT_GUI_LOCK": "no",
+              "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+              "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+            },
+            "runtime_qmk_settings": [
+              1,
+              2,
+              7,
+              18,
+              19
+            ],
+            "timing_ms": {
+              "combo": 40,
+              "tap_hold": 200,
+              "os_indicator_lease": 3000,
+              "os_indicator_period": 4096,
+              "leader": 300,
+              "dynamic_macro_phase": 10
+            },
+            "release_approved": false
+          },
+          "after": {
+            "format": "ak820-build-configuration-1",
+            "profile": "main",
+            "optional_features": [
+              "one-shot",
+              "leader",
+              "dynamic-macros",
+              "os-indicators",
+              "qmk-settings",
+              "key-overrides",
+              "vialrgb-direct",
+              "auto-shift"
+            ],
+            "base_features": [
+              "six-layers",
+              "sixteen-vial-macros",
+              "eight-two-key-combos",
+              "compact-tap-hold",
+              "encoder-map",
+              "media-keys",
+              "caps-word",
+              "repeat",
+              "alternate-repeat",
+              "tri-layer",
+              "rgb-effects",
+              "vialrgb-direct-ram"
+            ],
+            "nvm_schema": 532483,
+            "make_options": {
+              "AK820_NKRO": "no",
+              "AK820_GRAVE_ESCAPE": "no",
+              "AK820_VIALRGB_DIRECT": "yes",
+              "AK820_COMPACT_TAP_DANCE": "no",
+              "AK820_COMPACT_KEY_OVERRIDE": "yes",
+              "AK820_QMK_SETTINGS": "yes",
+              "AK820_MAC_PC": "no",
+              "AK820_OS_INDICATORS": "yes",
+              "AK820_COMPACT_LEADER": "yes",
+              "AK820_NKRO_CONTROL": "no",
+              "AK820_COMPACT_ONESHOT": "yes",
+              "AK820_COMPACT_SPACE_CADET": "no",
+              "AK820_COMPACT_MOUSEKEY": "no",
+              "AK820_COMPACT_AUTOSHIFT": "yes",
+              "AK820_COMPACT_GUI_LOCK": "no",
+              "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+              "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+            },
+            "runtime_qmk_settings": [
+              1,
+              2,
+              4,
+              7,
+              18,
+              19
+            ],
+            "timing_ms": {
+              "combo": 40,
+              "tap_hold": 200,
+              "os_indicator_lease": 3000,
+              "os_indicator_period": 4096,
+              "leader": 300,
+              "auto_shift": 175,
+              "dynamic_macro_phase": 10
+            },
+            "release_approved": false
+          }
+        }
+      }
+    },
+    {
+      "profile": "game",
+      "derived_changes": {}
+    },
+    {
+      "profile": "mmo",
+      "derived_changes": {}
+    },
+    {
+      "profile": "typing",
+      "derived_changes": {}
+    },
+    {
+      "profile": "code",
+      "derived_changes": {}
+    },
+    {
+      "profile": "pointer",
+      "derived_changes": {}
+    },
+    {
+      "profile": "onehand",
+      "derived_changes": {}
+    },
+    {
+      "profile": "creative",
+      "derived_changes": {}
+    },
+    {
+      "profile": "shortcuts",
+      "derived_changes": {}
+    },
+    {
+      "profile": "multios",
+      "derived_changes": {}
+    }
+  ],
+  "validation": "validate_module_descriptions: PASS",
+  "settings_run_source_binding": {
+    "path": "audits/beta3-direct-20261026/settings-run.json",
+    "contains_module_descriptions_json": false
+  },
+  "verification": {
+    "validator": "tools.build_beta_release_assets.validate_module_descriptions(current JSON bytes): PASS",
+    "existing_test_command": "PYTHONPATH=tools python3 -m unittest test_build_beta_release_assets -v",
+    "existing_test_result": "PASS (13 tests)"
+  }
+}

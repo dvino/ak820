@@ -13,7 +13,11 @@
  * and blocks held sources after clear_keyboard(). */
 static keyrecord_t as_saved;
 static uint8_t as_state; /* 0 idle, 1 pending, 2 plain down, 3 shifted down */
+#if defined(__SDCC_mcs51)
+static __bit as_enabled = true;
+#else
 static bool as_enabled = true;
+#endif
 
 static void as_emit(bool shifted) {
     as_state = shifted ? 3 : 2;

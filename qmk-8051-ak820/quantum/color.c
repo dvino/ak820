@@ -25,17 +25,178 @@
 #    define CIE_INDEX(v) (v)
 #endif
 
-/* Exact 8x8 unsigned product high byte. SDCC widens explicit uint16_t
- * products to its __mulint ABI, so use the native 8051 instruction here. */
-#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
-static uint8_t mulhi8(uint8_t x, uint8_t y) __naked {
-    x; y;
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
+/* SDCC large-model ABI: input is in DPTR; the remaining arguments are
+ * XDATA parameter slots. Read all three input bytes before writing output,
+ * so in-place conversion is supported. R0-R7, A, B and DPTR are caller-saved.
+ * The selected region needs only one ramp (q for odd regions, t for even).
+ * Native MUL keeps the exact high-byte arithmetic of the portable version.
+ */
+void hsv_to_rgb_into(const HSV __xdata *input, bool use_cie, RGB __xdata *output) __naked {
+    input; use_cie; output;
     __asm
-        mov b,dpl
-        mov dptr,#_mulhi8_PARM_2
         movx a,@dptr
+        mov r7,a
+        inc dptr
+        movx a,@dptr
+        mov r6,a
+        inc dptr
+        movx a,@dptr
+        mov r5,a
+    __endasm;
+#ifdef USE_CIE1931_CURVE
+    __asm
+        mov dptr,#_hsv_to_rgb_into_PARM_2
+        movx a,@dptr
+        jz 01001$
+        mov a,r5
+    __endasm;
+#    if !defined(AK820_FULL_CIE)
+    __asm
+        rr a
+        rr a
+        rr a
+        anl a,#0x1f
+    __endasm;
+#    endif
+    __asm
+        mov dptr,#_CIE1931_CURVE
+        movc a,@a+dptr
+        mov r5,a
+01001$:
+    __endasm;
+#endif
+    __asm
+        mov a,r6
+        jnz 01002$
+        mov ar2,r5
+        mov ar3,r5
+        ljmp 01010$
+01002$:
+        ; region = (6*h + 1 + high(6*h)) >> 8
+        mov a,r7
+        mov b,#6
         mul ab
-        mov dpl,b
+        add a,#1
+        add a,b
+        mov a,b
+        addc a,#0
+        mov r4,a
+        ; remainder = (2*h - 85*region)*3, modulo 256
+        mov b,#85
+        mul ab
+        mov r3,a
+        mov a,r7
+        add a,r7
+        clr c
+        subb a,r3
+        mov b,#3
+        mul ab
+        mov r3,a
+        ; p = high(v*(255-s))
+        mov a,r6
+        cpl a
+        mov b,r5
+        mul ab
+        mov r2,b
+        ; odd regions use remainder; even regions use its complement
+        mov a,r4
+        jb acc.0,01003$
+        mov a,r3
+        cpl a
+        mov r3,a
+01003$:
+        mov a,r3
+        mov b,r6
+        mul ab
+        mov a,b
+        cpl a
+        mov b,r5
+        mul ab
+        mov r3,b
+        ; Permute (v, ramp, p) to RGB using swaps.
+        mov a,r4
+        jz 01010$
+        cjne a,#6,01004$
+        sjmp 01010$
+01004$:
+        dec a
+        jz 01011$
+        dec a
+        jz 01012$
+        dec a
+        jz 01013$
+        dec a
+        jz 01014$
+        ; region 5: (v,p,q)
+        mov a,r2
+        xch a,r3
+        mov r2,a
+        sjmp 01010$
+01011$: ; region 1: (q,v,p)
+        mov a,r5
+        xch a,r3
+        mov r5,a
+        sjmp 01010$
+01012$: ; region 2: (p,v,t)
+        mov a,r5
+        xch a,r3
+        xch a,r2
+        mov r5,a
+        sjmp 01010$
+01013$: ; region 3: (p,q,v)
+        mov a,r5
+        xch a,r2
+        mov r5,a
+        sjmp 01010$
+01014$: ; region 4: (t,p,v)
+        mov a,r5
+        xch a,r2
+        xch a,r3
+        mov r5,a
+01010$:
+        ; R5 = red, R3 = green, R2 = blue
+        mov dptr,#_hsv_to_rgb_into_PARM_3
+        movx a,@dptr
+        mov r0,a
+        inc dptr
+        movx a,@dptr
+        mov dph,a
+        mov dpl,r0
+    __endasm;
+#    if WS2812_BYTE_ORDER == WS2812_BYTE_ORDER_GRB
+    __asm
+        mov a,r3
+        movx @dptr,a
+        inc dptr
+        mov a,r5
+        movx @dptr,a
+        inc dptr
+        mov a,r2
+    __endasm;
+#    elif WS2812_BYTE_ORDER == WS2812_BYTE_ORDER_RGB
+    __asm
+        mov a,r5
+        movx @dptr,a
+        inc dptr
+        mov a,r3
+        movx @dptr,a
+        inc dptr
+        mov a,r2
+    __endasm;
+#    else
+    __asm
+        mov a,r2
+        movx @dptr,a
+        inc dptr
+        mov a,r3
+        movx @dptr,a
+        inc dptr
+        mov a,r5
+    __endasm;
+#    endif
+    __asm
+        movx @dptr,a
         ret
     __endasm;
 }
@@ -43,12 +204,8 @@ static uint8_t mulhi8(uint8_t x, uint8_t y) __naked {
 static uint8_t mulhi8(uint8_t x, uint8_t y) {
     return ((uint16_t)x * y) >> 8;
 }
-#endif
 
-#if defined(AK820_BOARD) && defined(__SDCC_mcs51) && defined(__SDCC_MODEL_LARGE)
-/* Capture each needed HSV component before conversion or output writes. */
-void hsv_to_rgb_into(const HSV __xdata *input, bool use_cie, RGB __xdata *output) {
-#elif defined(AK820_BOARD)
+#if defined(AK820_BOARD)
 void hsv_to_rgb_into(HSV hsv, bool use_cie, RGB __xdata *output) {
 #else
 RGB hsv_to_rgb_impl(HSV hsv, bool use_cie) {
@@ -144,6 +301,8 @@ RGB hsv_to_rgb_impl(HSV hsv, bool use_cie) {
     return rgb;
 #endif
 }
+
+#endif /* portable conversion */
 
 #ifdef AK820_BOARD
 /* Keep QMK's public aggregate API for other users. AK820's renderer uses the

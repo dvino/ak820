@@ -25,6 +25,8 @@ int main(void) {
  assert(writes==8&&clears==8&&flushes==8);
  unsigned old=writes;assert(dynamic_keymap_set_combo(8,&e));assert(writes==old);
  e.input[2]=7;assert(dynamic_keymap_set_combo(0,&e));assert(writes==old);e.input[2]=0;
+ e.output=0x7c73;assert(!dynamic_keymap_set_combo(0,&e));assert(!dynamic_keymap_get_combo(0,&got));assert(got.output==0x7c73);old=writes;
+ e.output=0x7c72;assert(dynamic_keymap_set_combo(0,&e));assert(writes==old);e.output=0x104;
  healthy=false;assert(dynamic_keymap_set_combo(0,&e));assert(writes==old);healthy=true;
  bytes[0x658]=0xff;assert(!dynamic_keymap_get_combo(0,&got));assert(!got.input[0]);assert(!dynamic_keymap_set_combo(0,&e));
  bytes[0x65c]=0;assert(!dynamic_keymap_get_combo(0,&got));assert(!got.input[0]);

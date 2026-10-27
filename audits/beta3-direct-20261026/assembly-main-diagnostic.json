@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "/tmp/ak820-beta3-isolated/a/audits/beta3-direct-20261026/assemble_origins.py",
+    "--worker",
+    "main",
+    "--builds-root",
+    "qmk-8051-ak820/.build/beta3-release",
+    "--policies-root",
+    "ci/profiles",
+    "--settings-catalog",
+    "tools/installer/settings-catalog.json",
+    "--toolchain",
+    "toolchains/sdcc-4.6.0",
+    "--source-commit",
+    "d7a32214a972d8b690fcf1ba40f79affc7f20549",
+    "--output",
+    ".build/beta3-assembly-diagnostic-main"
+  ],
+  "cwd": "/tmp/ak820-beta3-isolated/a",
+  "exit_code": 1,
+  "log": "/tmp/ak820-beta3-worker-main-diagnostic.log",
+  "log_sha256": "4378b1eeda2d9322cd017ced4ec148bc37db01240c6d12d046f74a341789c991",
+  "retained_log": "audits/beta3-direct-20261026/assembly-main-diagnostic.log",
+  "seconds": 34.371
+}

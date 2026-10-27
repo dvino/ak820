@@ -8,10 +8,10 @@ Other profiles exchange selected `main` modules for task-specific functions;
 these are complete compositions, not arbitrary toggles. Historical names remain
 for reproduction; historical Typing uses `legacy-typing` in current builds.
 
-Published beta.1 on 2026-10-25 supplied nine catalog profiles and standalone
-Windows/Linux installers for exact `work`. The ten-profile source and installer
-selection work does not announce beta.2 publication or a device installation.
-See [Status](STATUS.md) for the separate artifact and hardware state.
+Beta.2 is published. The beta.3 source adds Caps Word Combo output, macro
+Layer-Tap, Auto Shift in `main`, Direct snapshots and complete-frame updates,
+and the GUI-lock W pulse. Qualification, release and hardware state are
+recorded in [Status](STATUS.md).
 
 ## Configurator
 
@@ -28,7 +28,22 @@ settings the selected image cannot represent. See the
 [requirements](../web/docs/REQUIREMENTS.md), [plan](../web/docs/PLAN.md) and
 [development catalog](DEVELOPMENT-CATALOG.md).
 
-## Module limits
+## Next work
+
+- Integrate the firmware contracts into the separate AK Configurator project.
+  The companion should identify the exact image before showing controls, read
+  the Direct palette as one coherent snapshot, and submit complete frames through
+  the begin/chunk/commit protocol. A partial upload must not replace the active
+  palette. The firmware handoff documents the protocol.
+- Validate Direct color conversion and LED publication on supported hardware.
+  Host-side and source checks do not establish physical LED behavior.
+- Continue hardware validation of the W indicator, including GUI lock timing,
+  active and default layer priority, suspend and resume.
+
+Future functions still require exact-image resource and runtime evidence
+before release review.
+
+## Current module limits
 
 Tap Dance has eight entries with four basic or modified-basic outputs, one
 pending decision and at most two presses per gesture; resolved holds may
@@ -38,7 +53,7 @@ modifiers, not layers. Dynamic recording stores two temporary sequences of up
 to 16 completed key taps each, separately from the 16 persistent Vial macros.
 
 QMK Settings exposes QSID 1, 2, 7, 18 and 19 in all ten profiles, plus QSID 4
-for Auto Shift in `typing`. Its typed, versioned 24-byte record has a CRC.
+for Auto Shift in `main` and `typing`. Its typed, versioned 24-byte record has a CRC.
 Tap Dance uses its row term rather than QSID 7. Individual guides describe
 rejected inputs and remaining limits.
 

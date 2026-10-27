@@ -14,6 +14,7 @@ includes = ['.', 'tests/ak820_usb', 'tmk_core', 'tmk_core/protocol',
             'quantum', 'platforms', 'platforms/mcs51', 'lib/ch555']
 defines = ['AK820_BOARD', 'AK820_USB_HOST_TEST', 'QMK_MCU_CH555',
            'PROTOCOL_CH555', 'RAW_ENABLE', 'SHARED_EP_ENABLE', 'MOUSE_ENABLE',
+           'VIALRGB_ENABLE', 'RGB_MATRIX_ENABLE',
            'MOUSE_SHARED_EP', 'EXTRAKEY_ENABLE', 'NKRO_ENABLE',
            'MATRIX_ROWS=16', 'MATRIX_COLS=8', 'EEPROM_CUSTOM', 'EEPROM_SIZE=0x2800',
            'FIXED_CONTROL_ENDPOINT_SIZE=64', 'FIXED_NUM_CONFIGURATIONS=1',
@@ -27,6 +28,8 @@ if '--os-indicators' in sys.argv:
     defines.append('AK820_OS_INDICATORS')
 if '--mac-pc' in sys.argv:
     defines.append('AK820_MAC_PC')
+if '--gui-lock' in sys.argv:
+    defines.append('AK820_COMPACT_GUI_LOCK')
 if '--without-mouse' in sys.argv:
     defines = [item for item in defines if item not in ('MOUSE_ENABLE','MOUSE_SHARED_EP')]
 with tempfile.TemporaryDirectory(prefix='ak820-usb-') as temp:

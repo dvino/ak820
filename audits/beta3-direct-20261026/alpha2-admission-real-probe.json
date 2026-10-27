@@ -1,0 +1,42 @@
+{
+  "actual_alpha2_plan": {
+    "backup_manifest_sha256": "0b1684136e4d39d398ebf2097d99917abf0bd5e92c46385f87998e7a8abf7029",
+    "combo_count": 0,
+    "combo_restore": {
+      "plan_combo_entries": null,
+      "source_combos_version": null,
+      "target_policy": "preserve-existing"
+    },
+    "encoder_count": 12,
+    "key_count": 498,
+    "offline_only": true,
+    "passed": true,
+    "physical_device_commands": 0,
+    "source": "f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e",
+    "source_case": "alpha2-saved-rom",
+    "source_scope": "Offline-derived full-ROM fixture; no device capture or getter validation",
+    "target": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+    "target_profile": "main"
+  },
+  "canonical_safety_result": {
+    "build_identity": {
+      "ihx": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "map": "b41f7d63286ec4da78ca870b4995f0bc6b5bff763e8fc7954fc0e458b19aac23",
+      "mem": "feef725ef6f57080cbf4b348c6e4da38df1399a0134e8d8c68ea32da5e6d7fc3"
+    },
+    "foreground_bound": 98,
+    "irq_bound": 60,
+    "main_entry_frame_bound": 2,
+    "manifest_sha256": "7d07525a082c26d9f5a5d7b384625d57c4f2544cbf63a2f2e6576ea77a6ce3c0",
+    "scope": "Reviewed control-stack/IRQ/transition proof under the documented MCS-51 architectural contract; no physical validation.",
+    "stack_bound": 160,
+    "stack_capacity": 182,
+    "stack_margin": 22
+  },
+  "checker_sha256": "f941074b58f04454e3beb395b9db750dfd097cd375e9fbb479ddc7896493b4e9",
+  "format": "ak820-real-alpha2-admission-probe-1",
+  "hardware_validated": false,
+  "passed": true,
+  "physical_device_commands": 0,
+  "scope": "Isolated real-input canonical validator probe after correction. Not final policy generation, independent approval or release authorization; complete requalification and strict regeneration remain mandatory."
+}

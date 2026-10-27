@@ -13,8 +13,11 @@ The [shared functions](README.md#shared-functions) are included.
 - Dynamic Macros: two temporary recordings of up to 16 completed key taps each.
 - Host-controlled OS indicator.
 - QMK Settings: supported timing parameters.
+- Compact Auto Shift for supported text keys.
 - Key Overrides: eight modifier-dependent key replacements.
 - VialRGB Direct: direct RGB control from a compatible application.
+
+GUI lock is not included in this profile.
 
 ## Changes from main
 

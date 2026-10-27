@@ -20,6 +20,13 @@
 #define LED_FLAG_ALL 255
 #define LED_FLAG_KEYLIGHT 4
 #define EECONFIG_RGB_MATRIX ((void *)0)
+#define VIALRGB_BUFFER
+enum { AK820_DIRECT_IDLE, AK820_DIRECT_UPLOAD, AK820_DIRECT_RENDER,
+       AK820_DIRECT_QUEUED, AK820_DIRECT_PUBLISH, AK820_DIRECT_DONE,
+       AK820_DIRECT_CANCELLED };
+static uint8_t ak820_direct_stage[246];
+static volatile uint8_t ak820_direct_state;
+static void ak820_direct_tick(void) {}
 enum { RGB_MATRIX_NONE, RGB_MATRIX_SOLID_COLOR, RGB_MATRIX_BREATHING,
        RGB_MATRIX_CYCLE_ALL, RGB_MATRIX_CYCLE_LEFT_RIGHT, RGB_MATRIX_VIALRGB_DIRECT,
        RGB_MATRIX_SOLID_REACTIVE_SIMPLE, RGB_MATRIX_EFFECT_MAX };
@@ -63,7 +70,7 @@ static void breathing(void) {
     phase = 0;
     for (unsigned i = 0; i < 256; ++i) {
         frame(16);
-        unsigned value = (160u * sine8(frame_phase - 64)) >> 8;
+        unsigned value = (160u * ak820_breathing_wave(frame_phase - 64)) >> 8;
         unsigned actual = output[0].r;
         unsigned old_actual = CIE1931_CURVE[value >> 3];
         unsigned reference = reference_cie[value];
@@ -108,7 +115,7 @@ static void breathing(void) {
         frame_at = now;
         for (unsigned tick = 0; tick < 2048; ++tick) {
             frame(16);
-            uint8_t value = ((unsigned)values[v] * sine8(frame_phase - 64)) >> 8;
+            uint8_t value = ((unsigned)values[v] * ak820_breathing_wave(frame_phase - 64)) >> 8;
             RGB reference = rc4_hsv_to_rgb_impl((HSV){hues[h],saturations[s],value},true);
             const uint8_t *a = (void *)&output[0], *b = (void *)&reference;
             for (unsigned channel = 0; channel < 3; ++channel) {

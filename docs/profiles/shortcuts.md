@@ -21,6 +21,8 @@ Added: Tap Dance: eight entries with tap, hold, double-tap and tap-hold outputs.
 
 Removed: Dynamic Macros: two temporary recordings of up to 16 completed key taps each; VialRGB Direct: direct RGB control from a compatible application.
 
+Auto Shift is not included.
+
 ## Limits
 
 Tap Dance: eight entries with four outputs using basic keys or keys with modifiers. Macro, layer and mouse actions are rejected.

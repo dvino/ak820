@@ -22,6 +22,8 @@ Added: Tap Dance: eight entries with tap, hold, double-tap and tap-hold outputs.
 
 Removed: Key Overrides: eight modifier-dependent key replacements.
 
+Auto Shift is not included.
+
 ## Limits
 
 Tap Dance: eight entries with four outputs using basic keys or keys with modifiers. Macro, layer and mouse actions are rejected.

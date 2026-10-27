@@ -87,6 +87,9 @@ bool ak820_gui_process(uint16_t code, bool pressed) {
     return true;
 #    endif
 }
+#    ifdef AK820_COMPACT_GUI_LOCK
+bool ak820_gui_lock_is_active(void) { return gui_disabled; }
+#    endif
 #endif
 #ifdef AK820_COMPACT_TAPPING
 /* Raw temporary modifiers (Caps Word, macros) and held action owners are

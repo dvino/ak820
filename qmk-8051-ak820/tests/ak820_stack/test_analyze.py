@@ -390,6 +390,53 @@ class StackTests(unittest.TestCase):
         self.assertEqual(proof['rom_slots'],list(range(0x300,0x314,2)))
         self.assertEqual(proof['getter_peak'],3)
         self.assertEqual(analyzer.bound(0)['bound'],5)
+        # The exact outliner can move only the multiply pair into a leaf.
+        multiply = raw.index(bytes.fromhex('75f002a4'))
+        outlined_raw = bytearray(raw[:multiply] + bytes.fromhex('120250') + raw[multiply+4:])
+        # Both forward guard exits cross the shortened multiplication site.
+        outlined_raw[10] -= 1
+        outlined_raw[15] -= 1
+        inline_rows = dict(rows)
+        rows = {pc: row for pc, row in inline_rows.items() if pc >= 0x200}
+        add(0, bytes(outlined_raw))
+        add(0x4d, b'\x22'); add(0x5e, b'\x22')
+        add(len(outlined_raw), b'\xd0\x05\xd0\x06\x22')
+        add(0x250, bytes.fromhex('75f002a422'))
+        outlined_rows = dict(rows)
+        outlined_code = {pc+i:value for pc,row in rows.items() for i,value in enumerate(row)}
+        outlined_code.update({0x300+i:value for i,value in enumerate(b'\x00\x04'*10)})
+        outlined = m.Analyzer(rows,outlined_code,{0x123})
+        outlined_proof = outlined.compact_rom_callback_dispatch(0)
+        self.assertIsNotNone(outlined_proof)
+        self.assertEqual(outlined_proof['multiply_peak'],2)
+        self.assertTrue({0x250,0x253,0x254}.issubset(outlined_proof['reachable']))
+        self.assertEqual(outlined.bound(0)['bound'],5)
+        for address, replacement in ((0x250,b'\x75\xf0\x03'),
+                                     (0x253,b'\x00'),(0x254,b'\x00')):
+            changed = dict(outlined_rows)
+            changed[address] = replacement
+            with self.subTest(outlined_multiply=address):
+                self.assertIsNone(m.Analyzer(changed,outlined_code,{0x123})
+                                  .compact_rom_callback_dispatch(0))
+        missing_helper = dict(outlined_rows); del missing_helper[0x254]
+        missing_code = dict(outlined_code); del missing_code[0x254]
+        self.assertIsNone(m.Analyzer(missing_helper,missing_code,{0x123})
+                          .compact_rom_callback_dispatch(0))
+        self.assertIsNone(m.Analyzer(outlined_rows,outlined_code)
+                          .compact_rom_callback_dispatch(0))
+        for address, replacement in ((14,b'\x50\x3d'),(33,b'\x74\x02'),
+                                     (36,b'\x6f'),(68,b'\x12\x02\x41')):
+            changed = {**outlined_rows,address:replacement}
+            with self.subTest(outlined_guard=address):
+                try:
+                    self.assertIsNone(m.Analyzer(changed,outlined_code,{0x123})
+                                      .compact_rom_callback_dispatch(0))
+                except ValueError:
+                    pass
+        missing_rom = dict(outlined_code); del missing_rom[0x313]
+        self.assertIsNone(m.Analyzer(outlined_rows,missing_rom,{0x123})
+                          .compact_rom_callback_dispatch(0))
+        rows = inline_rows
         # Structural opcodes and register identities are part of the proof. Changed helper
         # bodies, memory writes and register clobbers must not grant targets.
         for address in (0,2,3,4,6,12,14,17,19,21,25,28,32,35,37,40,

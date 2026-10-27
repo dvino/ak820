@@ -237,7 +237,7 @@ jobs:
           def allowed_path(path):
               if path == WORKFLOW or path.startswith("audits/"):
                   return True
-              if path == "ci/beta2-release-notes.md":
+              if path == "ci/beta3-release-notes.md":
                   return True
               if re.fullmatch(r"(?:README(?:[^/]*)|docs/.+)\.md", path):
                   return True
@@ -347,124 +347,9 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  windows-package:
-    name: Native Windows package build and smoke
-    needs: linux-assembly
-    runs-on: windows-2022
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          name: ak820-fresh-ci-firmware
-          path: dist/ci-firmware
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: '3.12'
-          cache: pip
-          cache-dependency-path: tools/installer/requirements-build-windows.txt
-      - name: Install pinned package build requirements
-        run: python -m pip install -r tools/installer/requirements-build-windows.txt
-      - name: Run Windows packaging regressions
-        run: python tools/test_build_windows_installer.py
-      - name: Verify and overlay fresh CI firmware
-        shell: pwsh
-        env:
-          SOURCE_COMMIT: ${{ github.sha }}
-        run: |
-          if ((git rev-parse HEAD).Trim() -cne $env:SOURCE_COMMIT) {
-            throw "Windows checkout does not match firmware source commit $env:SOURCE_COMMIT"
-          }
-          $catalog = Get-Content tools/installer/profile-catalog.json -Raw | ConvertFrom-Json
-          foreach ($profile in $catalog.profiles) {
-            $bundle = Resolve-Path "dist/ci-firmware/profiles/$($profile.id)"
-            $attestation = Get-Content "$bundle/reports/build-attestation.json" -Raw | ConvertFrom-Json
-            if ($attestation.source_commit -cne $env:SOURCE_COMMIT) { throw "Stale CI bundle: $($profile.id)" }
-            $target = "releases/beta2/$($profile.id)"
-            New-Item $target -ItemType Directory -Force | Out-Null
-            Copy-Item "$bundle/*" $target -Recurse -Force
-          }
-      - name: Build and smoke-test approved package
-        run: python tools/build_windows_installer.py --output dist/AK820-Windows
-      - name: Write package checksum
-        shell: pwsh
-        run: |
-          $hash = (Get-FileHash dist/AK820-Windows.zip -Algorithm SHA256).Hash.ToLowerInvariant()
-          "$hash  AK820-Windows.zip" | Set-Content -NoNewline dist/AK820-Windows.zip.sha256
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        if: always()
-        with:
-          name: ak820-reviewed-windows-portable
-          path: |
-            dist/AK820-Windows.zip
-            dist/AK820-Windows.zip.sha256
-          if-no-files-found: error
-          compression-level: 0
-          retention-days: 30
-
-  linux-package:
-    name: Native Linux x86_64 package build and smoke
-    needs: linux-assembly
-    runs-on: ubuntu-22.04
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          name: ak820-fresh-ci-firmware
-          path: dist/ci-firmware
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: '3.12'
-          cache: pip
-          cache-dependency-path: tools/installer/requirements-build-linux.txt
-      - name: Install native Linux package dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes build-essential libudev-dev libusb-1.0-0-dev python3-tk xvfb xauth
-      - name: Install pinned build requirements with HIDRAW backend
-        env:
-          HIDAPI_WITH_HIDRAW: '1'
-          HIDAPI_WITH_LIBUSB: '0'
-        run: python -m pip install --no-binary=hidapi --no-cache-dir -r tools/installer/requirements-build-linux.txt
-      - name: Verify and overlay fresh CI firmware
-        env:
-          SOURCE_COMMIT: ${{ github.sha }}
-        run: |
-          python - <<'PYTHON'
-          import json, os, shutil, subprocess
-          from pathlib import Path
-          if subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip() != os.environ['SOURCE_COMMIT']:
-              raise SystemExit('Linux checkout and firmware source commit differ')
-          catalog = json.loads(Path('tools/installer/profile-catalog.json').read_text())
-          for profile in catalog['profiles']:
-              bundle = Path('dist/ci-firmware/profiles') / profile['id']
-              attestation = json.loads((bundle / 'reports/build-attestation.json').read_text())
-              if attestation['source_commit'] != os.environ['SOURCE_COMMIT']:
-                  raise SystemExit('Stale CI bundle: ' + profile['id'])
-              target = Path('releases/beta2') / profile['id']
-              shutil.copytree(bundle, target)
-          PYTHON
-      - name: Run Linux packaging regressions
-        run: python -B -m unittest discover -s tools -p test_build_linux_installer.py
-      - name: Build and smoke-test approved Linux package
-        run: python tools/build_linux_installer.py --output dist/AK820-Linux-x86_64
-      - name: Write Linux package checksum
-        run: (cd dist && sha256sum AK820-Linux-x86_64.tar.gz > AK820-Linux-x86_64.tar.gz.sha256)
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        if: success()
-        with:
-          name: ak820-reviewed-linux-portable
-          path: |
-            dist/AK820-Linux-x86_64.tar.gz
-            dist/AK820-Linux-x86_64.tar.gz.sha256
-          if-no-files-found: error
-          compression-level: 0
-          retention-days: 30
-
   publish:
     name: Publish tagged version from main
-    needs: [linux-assembly, windows-package, linux-package]
+    needs: [linux-assembly]
     if: startsWith(github.ref, 'refs/tags/v') && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.qualified_run_id != ''))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -476,16 +361,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: ak820-reviewed-windows-portable
-          path: dist/windows
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
           name: ak820-fresh-ci-firmware
           path: dist/firmware
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          name: ak820-reviewed-linux-portable
-          path: dist/linux
       - name: Verify release trigger and asset hashes
         id: release
         shell: bash
@@ -496,10 +373,8 @@ jobs:
           python tools/release_version.py "$TAG_NAME" >> "$GITHUB_OUTPUT"
           git fetch origin main:refs/remotes/origin/main
           git merge-base --is-ancestor "$SOURCE_COMMIT" refs/remotes/origin/main
-          (cd dist/windows && sha256sum --check AK820-Windows.zip.sha256)
-          (cd dist/linux && sha256sum --check AK820-Linux-x86_64.tar.gz.sha256)
           python - <<'PY'
-          import hashlib, json, os, tarfile, zipfile, shutil
+          import json, os, shutil
           from pathlib import Path
           catalog = json.loads(Path('tools/installer/profile-catalog.json').read_text())
           bundles = {}
@@ -509,32 +384,7 @@ jobs:
               if attestation.get('source_commit') != os.environ['SOURCE_COMMIT']:
                   raise SystemExit('firmware bundle source commit mismatch: ' + profile['id'])
               bundles[profile['id']] = bundle
-          shutil.copytree('dist/firmware/profiles', 'releases/beta2')
-          with zipfile.ZipFile('dist/windows/AK820-Windows.zip') as package:
-              for app in ('AK820', 'AK820-cli'):
-                  prefix = f'AK820-Windows/{app}/_internal/'
-                  for profile, bundle in bundles.items():
-                    manifest = json.loads((bundle / 'installer-release.json').read_text())
-                    checks = [(bundle / 'installer-release.json', f'releases/beta2/{profile}/installer-release.json')]
-                    checks.extend((bundle / name, f'releases/beta2/{profile}/' + name) for name in manifest['files'])
-                    checks.append((bundle / 'approved-release.json', f'releases/beta2/{profile}/approved-release.json'))
-                    for source, packaged in checks:
-                      if hashlib.sha256(package.read(prefix + packaged)).hexdigest() != hashlib.sha256(source.read_bytes()).hexdigest():
-                        raise SystemExit(f'{app} package input mismatch: {profile}/{source.name}')
-          with tarfile.open('dist/linux/AK820-Linux-x86_64.tar.gz', 'r:gz') as package:
-              for app in ('AK820', 'AK820-cli'):
-                  prefix = f'AK820-Linux-x86_64/{app}/_internal/'
-                  for profile, bundle in bundles.items():
-                    manifest = json.loads((bundle / 'installer-release.json').read_text())
-                    checks = [(bundle / 'installer-release.json', f'releases/beta2/{profile}/installer-release.json')]
-                    checks.extend((bundle / name, f'releases/beta2/{profile}/' + name) for name in manifest['files'])
-                    checks.append((bundle / 'approved-release.json', f'releases/beta2/{profile}/approved-release.json'))
-                    for source, packaged in checks:
-                      member = package.getmember(prefix + packaged)
-                      if not member.isfile(): raise SystemExit('Linux approved input is not a regular file')
-                      with package.extractfile(member) as stream: actual = hashlib.sha256(stream.read()).hexdigest()
-                      if actual != hashlib.sha256(source.read_bytes()).hexdigest():
-                        raise SystemExit(f'{app} Linux package input mismatch: {profile}/{source.name}')
+          shutil.copytree('dist/firmware/profiles', 'releases/beta3')
           PY
       - name: Use catalogs measured from the approved CI images
         run: |
@@ -545,9 +395,15 @@ jobs:
       - name: Prepare companion catalogs and installation guides
         run: >-
           python tools/build_beta_release_assets.py
-          --bundles-root releases/beta2
+          --bundles-root releases/beta3
           --output dist/catalog
           --tag "${{ github.ref_name }}"
+      - name: Verify Python package and catalog checksums
+        run: |
+          cd dist/catalog
+          sha256sum --check AK820-Windows.zip.sha256
+          sha256sum --check AK820-Linux-x86_64.tar.gz.sha256
+          sha256sum --check AK820-Beta3-Catalog.zip.sha256
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -556,16 +412,16 @@ jobs:
         run: |
           args=(
             "$RELEASE_TAG"
-            dist/windows/AK820-Windows.zip dist/windows/AK820-Windows.zip.sha256
-            dist/linux/AK820-Linux-x86_64.tar.gz dist/linux/AK820-Linux-x86_64.tar.gz.sha256
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
-            dist/catalog/AK820-Beta2-Catalog.zip dist/catalog/AK820-Beta2-Catalog.zip.sha256
+            dist/catalog/AK820-Windows.zip dist/catalog/AK820-Windows.zip.sha256
+            dist/catalog/AK820-Linux-x86_64.tar.gz dist/catalog/AK820-Linux-x86_64.tar.gz.sha256
+            dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta3-Catalog.zip.sha256
             dist/catalog/firmware-matrix.json dist/catalog/capability-catalog.json
             dist/catalog/module-descriptions.json dist/catalog/release-catalog.json
             dist/catalog/release-manifest.json dist/catalog/SHA256SUMS
             dist/catalog/INSTALL-en.md dist/catalog/INSTALL-ru.md
             --title "AK820 $RELEASE_TAG"
-            --notes-file ci/beta2-release-notes.md
+            --notes-file ci/beta3-release-notes.md
           )
           if [[ "$RELEASE_PRERELEASE" == true ]]; then
             gh release create "${args[@]}" --verify-tag --prerelease

@@ -23,6 +23,8 @@ Added: Space Cadet: Shift when held, parenthesis when tapped; Grave Escape: Esca
 
 Removed: VialRGB Direct: direct RGB control from a compatible application.
 
+Auto Shift is not included.
+
 ## Limits
 
 Key Overrides: eight modifier-dependent replacements.

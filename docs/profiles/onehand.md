@@ -22,6 +22,8 @@ Added: Mouse Keys: pointer movement, scrolling and mouse buttons; Tap Dance: eig
 
 Removed: Key Overrides: eight modifier-dependent key replacements; VialRGB Direct: direct RGB control from a compatible application.
 
+Auto Shift is not included.
+
 ## Limits
 
 Tap Dance: eight entries with four outputs using basic keys or keys with modifiers. Macro, layer and mouse actions are rejected.

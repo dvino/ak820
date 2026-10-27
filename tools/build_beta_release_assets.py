@@ -2,12 +2,15 @@
 """Assemble beta catalog assets from exact, independently approved bundles."""
 from __future__ import annotations
 import argparse
+import gzip
 import hashlib
+import io
 import json
 import re
 import shutil
 import sys
 import tempfile
+import tarfile
 import zipfile
 from pathlib import Path, PurePosixPath
 
@@ -24,6 +27,7 @@ import configure_firmware
 import pack_ak820
 from build_ci_release import PUBLIC_FILES as CI_PUBLIC_FILES
 from build_windows_installer import guide_files
+from ak820_release_manifest import HOST_FILES
 
 CANDIDATE_ZIP = ROOT / 'audits/rc6/beta-catalog-20261024/final/ak820-beta-catalog-20261024.zip'
 CANDIDATE_SHA256 = '6f165df7685f72c30d80536868af5827719880b923d3cfc8e13a193f34cbbe7c'
@@ -33,6 +37,14 @@ WORK_IDENTITY = ROOT / 'audits/rc6/beta1-release-20261025/work-packed-identity.j
 FORMAT = 'ak820-beta-release-catalog-1'
 RELEASE_PROFILES = ('main', 'game', 'mmo', 'typing', 'code', 'pointer',
                     'onehand', 'creative', 'shortcuts', 'multios')
+
+PYTHON_PACKAGE_FILES = tuple(sorted(HOST_FILES | {
+    'AK820.cmd', 'AK820.sh', 'tools/installer/ak820.py',
+    'tools/installer/settings_backup.py', 'tools/installer/settings_workflow.py',
+    'tools/installer/i18n.py', 'tools/installer/profile-catalog.json',
+    'tools/installer/settings-catalog.json', 'tools/installer/requirements.txt',
+    'tools/installer/70-ak820.rules',
+}))
 
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
@@ -178,6 +190,57 @@ def validate_work_identity() -> dict:
     if identity.get('ihx_sha256') != WORK_IHX or identity.get('code_sha256') != WORK_CODE:
         raise ValueError('Pinned packed CODE identity does not match the approved work record')
     return identity
+
+def python_package_files(contexts) -> dict[str, bytes]:
+    """Collect Python source, launch scripts and approved profile inputs only."""
+    files = {}
+    for name in PYTHON_PACKAGE_FILES:
+        path = _checked_file(ROOT, name)
+        files[name] = path.read_bytes()
+    for name in guide_files():
+        path = _checked_file(ROOT, name)
+        files[name] = path.read_bytes()
+    for lang, source in (('en', ROOT / 'docs/INSTALL.md'), ('ru', ROOT / 'docs/ru/INSTALL.md')):
+        files[f'INSTALL-{lang}.md'] = standalone_guide(source)
+    for context in contexts:
+        profile = context.profile
+        bundle = _checked_bundle(context.bundle)
+        manifest = json.loads((bundle / 'installer-release.json').read_bytes())
+        for name in ('installer-release.json', *manifest['files'], 'approved-release.json'):
+            path = _checked_file(bundle, name)
+            data = path.read_bytes()
+            if name in manifest['files']:
+                item = manifest['files'][name]
+                if len(data) != item['size'] or sha(data) != item['sha256']:
+                    raise ValueError(f'Profile package input changed: {profile}/{name}')
+            files[f'releases/beta3/{profile}/{name}'] = data
+    return files
+
+def write_python_packages(stage: Path, files: dict[str, bytes]) -> dict[str, str]:
+    """Write deterministic source-only Windows ZIP and Linux tar.gz packages."""
+    windows = stage / 'AK820-Windows.zip'
+    with zipfile.ZipFile(windows, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        for name, data in sorted(files.items()):
+            info = zipfile.ZipInfo('AK820-Python/' + _safe_name(name), (1980,1,1,0,0,0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o100644 << 16
+            archive.writestr(info, data)
+    linux = stage / 'AK820-Linux-x86_64.tar.gz'
+    with linux.open('wb') as raw:
+        with gzip.GzipFile(filename='', mode='wb', fileobj=raw, mtime=0) as compressed:
+            with tarfile.open(fileobj=compressed, mode='w', format=tarfile.PAX_FORMAT) as archive:
+                for name, data in sorted(files.items()):
+                    info = tarfile.TarInfo('AK820-Python/' + _safe_name(name))
+                    info.size = len(data)
+                    info.mode = 0o755 if name == 'AK820.sh' else 0o644
+                    info.mtime = 0
+                    archive.addfile(info, io.BytesIO(data))
+    checksums = {}
+    for name in (windows.name, linux.name):
+        digest = sha((stage / name).read_bytes())
+        (stage / (name + '.sha256')).write_text(f'{digest}  {name}\n', encoding='ascii')
+        checksums[name] = digest
+    return checksums
 
 def _identity_from_bundle(context) -> tuple[dict, dict]:
     manifest = context.manifest
@@ -389,16 +452,20 @@ def build(bundles_root: Path, output: Path, tag: str) -> dict:
         stage = Path(tmp) / 'assets'; stage.mkdir()
         for name, data in payload.items():
             dest = stage / _safe_name(name); dest.parent.mkdir(parents=True, exist_ok=True); dest.write_bytes(data)
-        archive = stage / 'AK820-Beta2-Catalog.zip'
+        python_files = python_package_files(contexts)
+        package_hashes = write_python_packages(stage, python_files)
+        archive = stage / 'AK820-Beta3-Catalog.zip'
         with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
             for name in sorted(payload):
                 info = zipfile.ZipInfo(name, (1980,1,1,0,0,0)); info.compress_type = zipfile.ZIP_DEFLATED; info.external_attr = 0o100644 << 16
                 zf.writestr(info, payload[name])
         digest = sha(archive.read_bytes())
-        (stage / 'AK820-Beta2-Catalog.zip.sha256').write_text(digest + '  AK820-Beta2-Catalog.zip\n')
-        (stage / 'SHA256SUMS').write_text(''.join(sha((stage / n).read_bytes()) + '  ' + n + '\n' for n in sorted(payload)) + digest + '  AK820-Beta2-Catalog.zip\n')
+        (stage / 'AK820-Beta3-Catalog.zip.sha256').write_text(digest + '  AK820-Beta3-Catalog.zip\n')
+        checksum_names = sorted(set(payload) | {'AK820-Beta3-Catalog.zip',
+                                                'AK820-Windows.zip', 'AK820-Linux-x86_64.tar.gz'})
+        (stage / 'SHA256SUMS').write_text(''.join(sha((stage / n).read_bytes()) + '  ' + n + '\n' for n in checksum_names))
         stage.rename(output)
-    return {'output': str(output), 'tag': tag, 'profiles': len(profile_ids), 'installable_profiles': profile_ids, 'zip_sha256': digest}
+    return {'output': str(output), 'tag': tag, 'profiles': len(profile_ids), 'installable_profiles': profile_ids, 'zip_sha256': digest, 'python_package_sha256': package_hashes}
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)

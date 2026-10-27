@@ -2,11 +2,15 @@
 
 # Two-key Combos
 
-Configure eight two-key combinations that send one key or modified key.
+Configure eight two-key combinations that send one key, a modified key or toggle Caps Word.
+
+Caps Word is a valid output in the current source candidate. Published beta.2
+images do not support this output; check [Status](STATUS.md) for release
+availability.
 
 Pressing two configured keys within the selected interval sends one key or
 modified key instead, for example J + K → Escape or F + D → Ctrl+C. The interval
-defaults to 40 ms; the QMK Settings module in the `settings` profile can change
+defaults to 40 ms; profiles with the QMK Settings module can change
 it from 1 to 1000 ms. See [Status](STATUS.md) for release and device state.
 
 ## Configure in Vial
@@ -18,13 +22,15 @@ firmware rejects a value, choose a supported key or output instead.
 
 Inputs must be ordinary keyboard keys from `KC_A` through `KC_EXSEL`. Outputs
 can be ordinary keyboard keys, one of the eight modifier keys, or a modifier
-combined with an ordinary key. For example, Ctrl+C is supported. Inputs cannot
+combined with an ordinary key, or Caps Word (`CW_TOGG`). For example, A + S
+can toggle Caps Word; the next matching Combo turns it off. Releasing the
+input keys does not turn Caps Word off. Inputs cannot
 be modifiers, Mod-Tap, Layer-Tap, macros, Repeat, encoder events or other
 quantum keycodes. Outputs cannot be macros, layer actions, Mod-Tap, Layer-Tap,
 Repeat, consumer or system keys, or reset. The Vial editor may display choices
 that this firmware does not support.
 
-The interval defaults to 40 ms. In the `settings` profile, change it from 1 to
+The interval defaults to 40 ms. With QMK Settings enabled, change it from 1 to
 1000 ms through QSID 2; all slots share the same interval. Three-key
 and four-key Combos are not supported. Duplicate pairs are allowed; if a
 pair appears in more than one slot, the lowest numbered slot takes priority.

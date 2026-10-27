@@ -4,11 +4,16 @@
 
 Temporarily suppress or restore GUI modifier output.
 
+It starts off and lasts until restart.
 
-The `mouse-typing` and `system` packages include GUI lock. `system` also
-includes Ctrl/GUI swapping. The low-level CLI retains older `full-*` profile
-names for reproducing earlier builds. These source profiles are not included
-in published alpha.3.
+
+GUI lock is available in the `game` and `mmo` profiles; `main` does not include
+it. The low-level CLI retains older `full-*` profile names for reproducing
+earlier builds.
+
+While GUI lock is on, W pulses through a 2000 ms brightness cycle. Turning the
+lock off stops the pulse. An active or default layer above 0 takes priority and
+lights W steadily. C and OS remain independent.
 
 | Keycode | Action |
 | --- | --- |

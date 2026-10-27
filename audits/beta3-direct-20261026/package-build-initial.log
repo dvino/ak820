@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/772c1403f0df/ak820/tools/build_beta_release_assets.py", line 479, in <module>
+    if __name__ == '__main__': raise SystemExit(main())
+                                                ^^^^^^
+  File "/workspace/scratch/772c1403f0df/ak820/tools/build_beta_release_assets.py", line 476, in main
+    print(json.dumps(build(args.bundles_root, args.output, args.tag), sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/772c1403f0df/ak820/tools/build_beta_release_assets.py", line 423, in build
+    validate_profile_links(payload, contexts, settings_catalog, capability_catalog,
+  File "/workspace/scratch/772c1403f0df/ak820/tools/build_beta_release_assets.py", line 290, in validate_profile_links
+    validate_module_descriptions(module_descriptions)
+  File "/workspace/scratch/772c1403f0df/ak820/tools/build_beta_release_assets.py", line 361, in validate_module_descriptions
+    raise ValueError('Module description profile configuration/features differ from registry: ' + profile)
+ValueError: Module description profile configuration/features differ from registry: main

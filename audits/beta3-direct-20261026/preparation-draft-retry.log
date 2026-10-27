@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/772c1403f0df/ak820/audits/beta3-direct-20261026/prepare_release.py", line 448, in <module>
+    main()
+  File "/workspace/scratch/772c1403f0df/ak820/audits/beta3-direct-20261026/prepare_release.py", line 71, in main
+    prepare(args)
+  File "/workspace/scratch/772c1403f0df/ak820/audits/beta3-direct-20261026/prepare_release.py", line 346, in prepare
+    profile = s.load_profile(Path(filename), stock)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/772c1403f0df/ak820/tools/installer/settings_backup.py", line 107, in load_profile
+    require(ihx_sha256 in images,
+  File "/workspace/scratch/772c1403f0df/ak820/tools/installer/settings_backup.py", line 71, in require
+    raise ValueError(message)
+ValueError: Unsupported firmware build for settings preservation

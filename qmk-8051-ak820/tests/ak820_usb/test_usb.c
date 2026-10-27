@@ -26,6 +26,12 @@ static struct {
 void wait_ms(uint16_t value) { (void)value; }
 void wait_us(uint16_t value) { (void)value; }
 bool ak820_nvm_ok(void) { return nvm_good; }
+bool ak820_direct_request(void) {
+    if (!((raw_buffer[0] == 8 && raw_buffer[1] >= ak820_direct_info && raw_buffer[1] <= ak820_direct_status) ||
+          (raw_buffer[0] == 7 && raw_buffer[1] >= ak820_direct_begin && raw_buffer[1] <= ak820_direct_abort))) return false;
+    raw_buffer[2] = 0x5a;
+    return true;
+}
 void ak820_nvm_begin(void) { ++begins; }
 void ak820_nvm_flush(void) { ++flushes; }
 void ak820_nvm_end(void) { ++ends; }
@@ -123,6 +129,18 @@ uint8_t test_read_code(uint16_t address) {
     }
     return test_rom[address];
 }
+#ifdef AK820_COMPACT_GUI_LOCK
+static bool gui_active;
+bool ak820_gui_lock_is_active(void) { return gui_active; }
+uint8_t ak820_breathing_wave(uint8_t theta) {
+    static const uint8_t c[8]={0,49,49,41,90,27,117,10};
+    uint8_t o=theta, f, v;
+    if(theta&0x40) o=255-o;
+    o&=0x3f; f=o&15; if(theta&0x40) ++f;
+    v=c[(o>>4)*2]+(((uint16_t)c[(o>>4)*2+1]*f)>>4);
+    return (theta&0x80)?128-v:128+v;
+}
+#endif
 
 static void fresh(void) {
     memset((void *)test_mmio,0,sizeof(test_mmio));
@@ -366,6 +384,22 @@ static void test_raw_lifecycle(void) {
     out(packet,31,true); assert(raw_state == RAW_IDLE && (D0_EP0RES & MASK_UEP_T_RES) == UEP_T_RES_STALL);
 }
 
+static void test_direct_transport(void) {
+    uint8_t packet[32] = {8, ak820_direct_info};
+    for (unsigned fault=0; fault<2; ++fault) {
+        fresh(); configure(); nvm_good=!fault;
+        raw_request(packet); ak820_usb_raw_task();
+        assert(!received && !begins && !flushes && !ends);
+        assert(raw_state==RAW_TX_WAIT && D0_EP3T_L==32);
+        assert(pUSB_BUF_DEV0[UX_EP3_ADDR]==8 && pUSB_BUF_DEV0[UX_EP3_ADDR+1]==ak820_direct_info && pUSB_BUF_DEV0[UX_EP3_ADDR+2]==0x5a);
+        in(3);
+    }
+    fresh(); configure(); packet[0]=id_get_protocol_version; packet[1]=0;
+    raw_request(packet); ak820_usb_raw_task();
+    assert(received==1 && begins==1 && flushes==1 && ends==1 && raw_state==RAW_TX_WAIT);
+    in(3);
+}
+
 /* Explicit expected wire requests; the loops also cover every unknown byte
  * value at each command/subcommand level. Actual VIA/Vial authorization is
  * outside this transport harness and is not replaced by the reply whitelist. */
@@ -411,6 +445,7 @@ static void test_recovery_reply_policy(void) {
             packet[1] = group == 0 ? 0 : group == 2 ? vial_dynamic_entry_op : value;
             packet[2] = group == 2 ? value : 0;
             if (group == 0 && value == 0xfd) continue; /* separate FD00 tests */
+            if (group == 4 && value >= ak820_direct_info && value <= ak820_direct_status) continue; /* dedicated Direct transport fixture */
             bool allowed = false;
             for (size_t i = 0; i < sizeof(recovery_requests) / sizeof(recovery_requests[0]); ++i)
                 if (!memcmp(packet,recovery_requests[i],3)) allowed = true;
@@ -559,11 +594,15 @@ int main(void) {
     test_descriptors();
     test_hid_control();
     test_raw_lifecycle();
+    test_direct_transport();
     test_recovery_reply_policy();
     test_halt_reset_and_diagnostics();
     test_boot_feature();
 #ifdef AK820_OS_INDICATORS
     test_os_indicators();
+#endif
+#ifdef AK820_COMPACT_GUI_LOCK
+    test_gui_lock_w_channel();
 #endif
     puts("PASS: production AK820 USB/descriptor sources: stale RX_LEN, ordered two-ACK SETUP, UTF-16 strings, EP0 segmentation, HID control, Raw32 ownership/reset, original-request recovery whitelist, persistence gate, read-only FD00/FD01 and EP0 AKBT diagnostics");
 }

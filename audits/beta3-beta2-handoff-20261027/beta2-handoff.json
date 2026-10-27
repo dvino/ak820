@@ -1,0 +1,1720 @@
+{
+  "format": "ak820-beta2-beta3-handoff-check-1",
+  "status": "PASS",
+  "scope": "Authenticates public beta.2 inputs and delivered beta.3 images/catalog; rechecks retained offline transition plans. Does not freshly execute plan_restore and does not validate hardware or arbitrary settings.",
+  "evidence": {
+    "beta2_bundle_sha256": "8aa5176f657271f20834b35b4e80f79eb63ab7a6d3b5512478bf04a56031b1ce",
+    "beta2_matrix_sha256": "e646cb3cb58c50c55a184538b77674db92e0d54750b1a9734d1b092a6c20a08e",
+    "beta3_outer_sha256": "14661efef8ce3577770327863a095168fbd0b6e392b083282c2672ba3d412a85",
+    "beta3_catalog_sha256": "b36ad538101ebc0463b3fec4c4e51610f7e7a2d5f5d534481f32cbcf46f62702",
+    "beta3_repo_catalog_sha256": "b36ad538101ebc0463b3fec4c4e51610f7e7a2d5f5d534481f32cbcf46f62702",
+    "beta3_web_matrix_sha256": "b36ad538101ebc0463b3fec4c4e51610f7e7a2d5f5d534481f32cbcf46f62702",
+    "beta3_firmware_bundle_sha256": "c0b4a1a920ae0d5a6c2c4743c4703ec97dd9fc119d941e87a11dfe611d85d046",
+    "transition_preflight_sha256": "537284bef5e3e7fcdaa17b07f5a5e0dd3415d908d30e8b5a718e6c47d72a0e0a",
+    "beta2_input_fixtures_sha256": "6ca01f18548fdf4ef2a08ecc37526a620cdb714dd466a9697a44b527f54e4299",
+    "packing_preflight_sha256": "297d849706430ba0e4bf949a710087752dcceef9d6067ecb212bcf7ad7c24c11",
+    "preserved_profiles_record_sha256": "489f81b6dde818f59cf9eea11787486ab63dd1ac2f7468d601dd299773ec3323",
+    "preserved_registry_sha256": "485b8b40d4b78a80e568018ec7736700a11ea460739f4bc8f96a212ef1e056a2",
+    "beta2_historical_descriptors_verified": 10,
+    "beta2_catalog_transition_edges_verified": 100
+  },
+  "profiles": [
+    {
+      "profile": "main",
+      "beta2_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "beta2_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "beta3_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "beta3_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14"
+    },
+    {
+      "profile": "game",
+      "beta2_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "beta2_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "beta3_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "beta3_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9"
+    },
+    {
+      "profile": "mmo",
+      "beta2_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "beta2_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "beta3_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "beta3_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923"
+    },
+    {
+      "profile": "typing",
+      "beta2_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "beta2_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "beta3_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "beta3_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f"
+    },
+    {
+      "profile": "code",
+      "beta2_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "beta2_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "beta3_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "beta3_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47"
+    },
+    {
+      "profile": "pointer",
+      "beta2_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "beta2_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "beta3_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "beta3_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395"
+    },
+    {
+      "profile": "onehand",
+      "beta2_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "beta2_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "beta3_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "beta3_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374"
+    },
+    {
+      "profile": "creative",
+      "beta2_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "beta2_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "beta3_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "beta3_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23"
+    },
+    {
+      "profile": "shortcuts",
+      "beta2_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "beta2_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "beta3_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "beta3_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861"
+    },
+    {
+      "profile": "multios",
+      "beta2_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "beta2_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "beta3_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "beta3_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8"
+    }
+  ],
+  "pair_count": 100,
+  "pairs": [
+    {
+      "source_profile": "main",
+      "target_profile": "main",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "game",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "typing",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "code",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "creative",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "main",
+      "target_profile": "multios",
+      "source_ihx_sha256": "4544d1fe4bb8e9baf262feef8bab0db60a9e98ca2d547266e6d5ecbc10fb4843",
+      "source_settings_code_sha256": "aa5961bf45ae1733de9410b8720501f432da20bc03215c27ea16574ba5aaaaca",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "287d7d00352c273af1326e4ef4735b80eb3da1133f2cb5b6ff2ddea496c058b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "main",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "game",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "typing",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "code",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "creative",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "game",
+      "target_profile": "multios",
+      "source_ihx_sha256": "8963ce6e5e09f32e2cb4ef8c243f03baf90cc90cedd86c4773076239690025bc",
+      "source_settings_code_sha256": "3949b4a169f61a733e97d16e71b013c5f706006583206253737d1110d1a04ddd",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "f2a7a73e6b5bbd2168c36201c898523786dd82dda196f04ea78fafc2606258ff",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "main",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "game",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "typing",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "code",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "creative",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "mmo",
+      "target_profile": "multios",
+      "source_ihx_sha256": "8c684a8697bd332e72e993b59dd5fd112eb48630ab90266443b6c8d72b4a06a1",
+      "source_settings_code_sha256": "eaf0a661a5237d4052e2900f0307b9a8b6496b40c7f563fdce10d65bf710fbf8",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "01e7ee46d75be9ff41238bb61c13c3918c1b54ce322e3615e94b50d34093effa",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "main",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "game",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "typing",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "code",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "creative",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "typing",
+      "target_profile": "multios",
+      "source_ihx_sha256": "131d3fb8d53d7f374fd1edfb85f72237ce6976b28c78269f7405a833407de692",
+      "source_settings_code_sha256": "f00f5cd4402620b1da3ca07ab8c4240c2cc9eaacfc2aadc09e12f0ae7084cbdb",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "2590cd564f1c0f40a5bea3a031d467a93149edf466f5c8bb2b26f8965a63e8b4",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "main",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "game",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "typing",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "code",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "creative",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "code",
+      "target_profile": "multios",
+      "source_ihx_sha256": "7ace8ee559a0fe0b21286ba6f4f1923d3bcb13d72763072eb361743efc7b53f8",
+      "source_settings_code_sha256": "dfe7f4c7027dc38a27de2f3c5fd1b10ca56715f0a2ac755aeb315560e8aa6d0c",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "30af5bcaa4280c69842f48c8833f3c7b6d5807624d87883ac5a6cd2ca08531eb",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "main",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "game",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "typing",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "code",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "creative",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "pointer",
+      "target_profile": "multios",
+      "source_ihx_sha256": "eec168e2ed8bbef3e603e811b89a92103ca210764fc383159ef7024578b36b7d",
+      "source_settings_code_sha256": "bb0afd1c44cfbcac6e57fee829c435a2a8469ab0fdd88a7f7f7ff33f91197fd8",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "b9a6398e600f6ce2aedfb8c435d14737ed821fb82c981733b0f8334096c1aaa0",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "main",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "game",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "typing",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "code",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "creative",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "onehand",
+      "target_profile": "multios",
+      "source_ihx_sha256": "068e7810a6838e96615b20815ba2b050a28a1e359600f9f73e2fbfc1ab4d7153",
+      "source_settings_code_sha256": "4b679db58611143f0c74fe3cbd5f66e92496c62129caeae7655740aa9aed2d51",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bcffff964c6b1960d5b47c2871eeba39cc3782f8df0909acdd8cc27363c7af81",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "main",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "game",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "typing",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "code",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "creative",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "creative",
+      "target_profile": "multios",
+      "source_ihx_sha256": "9818eb5042d5d26b95e5ecdd6cb27ece1aeff709a2dbaaf8929a8b19fe0b75f4",
+      "source_settings_code_sha256": "68442f34287f75c56b874d6cdf0cbcf76c4214a241d55bc2fcaf5c30611ce301",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "179e298c6894141cb93eefdabea478ec5d2fd24bd9f846d8bbe46ca9ec6e3722",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "main",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "game",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "typing",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "code",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "creative",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "shortcuts",
+      "target_profile": "multios",
+      "source_ihx_sha256": "b1dd7d7e97005feec624992ee0786a9b38e25ba622154a1b7651c1ad04ad6004",
+      "source_settings_code_sha256": "a07ec03a2854c31d9a0b90d20d23317f2e64b7106cb2721e63d9a30fefdeda1c",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "d7f7c3d4c6867685223bf5d89e36a29c7bd06cdea1ed7332bfa4aa25f4760bd9",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "main",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+      "target_settings_code_sha256": "d1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "game",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+      "target_settings_code_sha256": "7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "mmo",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+      "target_settings_code_sha256": "91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "typing",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14",
+      "target_settings_code_sha256": "95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "code",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb",
+      "target_settings_code_sha256": "7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "pointer",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946",
+      "target_settings_code_sha256": "baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "onehand",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f",
+      "target_settings_code_sha256": "1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "creative",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+      "target_settings_code_sha256": "8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "shortcuts",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64",
+      "target_settings_code_sha256": "ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    },
+    {
+      "source_profile": "multios",
+      "target_profile": "multios",
+      "source_ihx_sha256": "d8467f3cdd50bf6a4bca14ab1c4c05804f7bdd9a1d55a4ef589e4fdc51fa62c0",
+      "source_settings_code_sha256": "077b05ca588f7afe2d6f696432c5f90297a88c046e1d1482db7dd95393ebe98e",
+      "target_ihx_sha256": "670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f",
+      "target_settings_code_sha256": "098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8",
+      "passed_retained_plan": true,
+      "transfer_semantics": {
+        "key_count": 498,
+        "encoder_count": 12,
+        "combo_count": 8,
+        "backup_manifest_sha256": "bceeb7bdff7f30320cee217cc7d2da4a12405331ccd314b7687d7df935655b24",
+        "scope": "Offline-derived full-ROM fixture; no device capture or getter validation"
+      }
+    }
+  ],
+  "limitations": [
+    "No fresh plan_restore execution in this audit.",
+    "No keyboard connection, hardware validation, or settings write.",
+    "Curated beta.2 profile settings identities only; this is not universal compatibility for arbitrary settings backups.",
+    "Alpha compatibility remains outside this prioritized beta.2 handoff."
+  ],
+  "execution": {
+    "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "script": "/workspace/scratch/772c1403f0df/ak820/audits/beta3-beta2-handoff-20261027/verify_beta2_handoff.py",
+    "argv": [
+      "audits/beta3-beta2-handoff-20261027/verify_beta2_handoff.py",
+      "--repo",
+      "/workspace/scratch/772c1403f0df/ak820",
+      "--beta2-bundle",
+      "/workspace/scratch/772c1403f0df/beta2-public-input/firmware-bundle.zip",
+      "--beta2-matrix",
+      "/workspace/scratch/772c1403f0df/beta2-public-input/firmware-matrix.json",
+      "--beta3-outer",
+      "/workspace/scratch/772c1403f0df/alpha2-prior-release/AK820-v0.6.0-beta.3-release.zip",
+      "--output",
+      "audits/beta3-beta2-handoff-20261027/beta2-handoff.json"
+    ],
+    "cwd": "/workspace/scratch/772c1403f0df/ak820"
+  }
+}

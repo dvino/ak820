@@ -477,12 +477,15 @@ def settings_matrix_from_builds(builds_root: Path, toolchain: Path,
     if len(identities) != len(set(identities)):
         raise ValueError('Release profiles do not have unique exact image identities')
     historical = {source['ihx_sha256'] for source in catalog.get('historical_sources', [])}
+    historical.update(row['settings_identity']['ihx_sha256']
+                      for row in catalog.get('historical_profiles', []))
     if set(catalog_images) != set(identities) | historical:
-        raise ValueError('Settings catalog does not contain exactly the measured and pinned historical identities')
+        raise ValueError('Settings catalog does not contain exactly the measured and historical identities')
     result = firmware_matrix.matrix(measured)
     result['settings_transitions'] = catalog['settings_transitions']
-    if 'historical_sources' in catalog:
-        result['historical_sources'] = catalog['historical_sources']
+    for section in ('historical_sources', 'historical_profiles'):
+        if section in catalog:
+            result[section] = catalog[section]
     if any(row.get('release_approved') is not False or row.get('installable') is not False
            for row in result['profiles']):
         raise ValueError('Measured candidate matrix must remain unapproved until bundle gates pass')

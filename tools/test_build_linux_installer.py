@@ -14,7 +14,7 @@ import build_linux_installer as builder
 
 class LinuxBuildTests(unittest.TestCase):
     def fixture(self, root):
-        names = ['releases/beta2/main/installer-release.json', 'releases/beta2/main/approved-release.json']
+        names = ['releases/beta3/main/installer-release.json', 'releases/beta3/main/approved-release.json']
         for name in names:
             path = root/name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -40,7 +40,7 @@ class LinuxBuildTests(unittest.TestCase):
 
     def context(self, root, binaries):
         return (patch.object(builder, 'ROOT', root),
-                patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta2/main'),)),
+                patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta3/main'),)),
                 patch.object(builder.shared, 'ROOT', root),
                 patch.dict(os.environ, {'PATH': str(binaries)+os.pathsep+os.environ['PATH']}))
 
@@ -109,7 +109,7 @@ class LinuxBuildTests(unittest.TestCase):
                 result = subprocess.CompletedProcess([], 0, 'AK820_FROZEN_HIDRAW_OK')
                 outcomes = [result]*3
                 outcomes[stage] = subprocess.CalledProcessError(1, 'fixture')
-                with patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta2/main'),)), \
+                with patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta3/main'),)), \
                      patch.object(builder.shared, 'ROOT', root), \
                      patch.object(builder.subprocess, 'run', side_effect=outcomes), self.assertRaises(subprocess.CalledProcessError):
                     builder.write_package(output, archive, names, hashes)
@@ -126,7 +126,7 @@ class LinuxBuildTests(unittest.TestCase):
                     if mutation:
                         (root/names[0]).write_bytes(b'changed')
                     return subprocess.CompletedProcess([], 0, 'AK820_FROZEN_HIDRAW_OK' if mutation else '')
-                with patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta2/main'),)), \
+                with patch.object(builder.shared.ak820, 'release_contexts', return_value=(SimpleNamespace(profile='main', bundle=root/'releases/beta3/main'),)), \
                      patch.object(builder.shared, 'ROOT', root), patch.object(builder.subprocess, 'run', side_effect=smoke), \
                      self.assertRaises(RuntimeError):
                     builder.write_package(output, archive, names, hashes)

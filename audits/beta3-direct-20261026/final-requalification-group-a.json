@@ -1,0 +1,190 @@
+{
+  "date_utc": "2026-10-26",
+  "format": "ak820-beta3-canonical-requalification-group-1",
+  "group": "A",
+  "hardware_validated": false,
+  "notes": [
+    "Canonical runtime-first qualification completed; no compilation or relinking was performed.",
+    "All 4 assigned profiles passed 28 base suites, 351 unit tests with 0 skipped, runtime analysis, and every applicable profile suite.",
+    "Original linked IHX, MAP, MEM, and build-report hashes match the frozen original qualification records.",
+    "Source snapshot remained identical across all profiles.",
+    "Main outer-session stdout capture was truncated; no claim of complete outer stdout is made. Complete per-suite logs and result records remain in the profile build directory."
+  ],
+  "origin_report": {
+    "path": "/tmp/ak820-beta3-isolated/a/audits/beta3-direct-20261026/final-requalification-group-a.json",
+    "sha256": "e78a937e400444741e036978b079293246ffc76cc8cb446a5f75790dfff3203f"
+  },
+  "overall_passed": true,
+  "physical_device_commands": 0,
+  "profiles": [
+    {
+      "central_sync": "completed; exact path/size/hash validation; no symlinks",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/a/tools/configure_firmware.py",
+        "qualify",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/main",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0"
+      ],
+      "duration_seconds": null,
+      "exit_code": 0,
+      "firmware_hashes": {
+        "ajazz_ak820_vial.ihx": "391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e",
+        "ajazz_ak820_vial.map": "b41f7d63286ec4da78ca870b4995f0bc6b5bff763e8fc7954fc0e458b19aac23",
+        "ajazz_ak820_vial.mem": "feef725ef6f57080cbf4b348c6e4da38df1399a0134e8d8c68ea32da5e6d7fc3",
+        "build-report.json": "b5f2ad06f883e8af86892634fee0fd36112d377707ce4fe678518b00098f4f47"
+      },
+      "firmware_hashes_before_after_unchanged": true,
+      "frozen_original_firmware_hashes_match": true,
+      "hardware_validated": false,
+      "log": "/tmp/ak820-beta3-isolated/a/work-logs/beta3-admission-main.log",
+      "log_capture_scope": "outer exec stream truncated; complete per-suite logs and result JSON retained",
+      "log_sha256": "b611eda98169274461ef0bd3096552a4bdf642c5ccc3aa68761445f2cbfdb8c5",
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "main",
+      "profile_test_sha256": "1f0f254b6ea7e65b8335f19c9743fee30a22b2f70b1d6ca5ac20f5c39b506eed",
+      "profile_test_suites": 34,
+      "qualification": {
+        "sha256": "ff5481f962170d4e6b560661d4c4ea4bd7882e6201e26f4fda8f73b6fdef99ac",
+        "suites": 28,
+        "unit_tests": {
+          "run": 351,
+          "skipped": 0
+        }
+      },
+      "retained_log": "audits/beta3-direct-20261026/requalification-logs/beta3-admission-main.log",
+      "runtime_analysis_passed": true,
+      "source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+    },
+    {
+      "central_sync": "completed; exact path/size/hash validation; no symlinks",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/a/tools/configure_firmware.py",
+        "qualify",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/game",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0"
+      ],
+      "duration_seconds": 459.521,
+      "exit_code": 0,
+      "firmware_hashes": {
+        "ajazz_ak820_vial.ihx": "5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005",
+        "ajazz_ak820_vial.map": "424ce3127567aa841a23477d9df0bcfc7ed0792d3d7c7235c73474558bac0432",
+        "ajazz_ak820_vial.mem": "cdf5be41506939c28e15be2f3830c5af50d11f43a894f03ebd3736e0351990e0",
+        "build-report.json": "602112e4aedc02b116a0ca655f9cfc19e8840ee613627963f01b10d409ee9cf6"
+      },
+      "firmware_hashes_before_after_unchanged": true,
+      "frozen_original_firmware_hashes_match": true,
+      "hardware_validated": false,
+      "log": "/tmp/ak820-beta3-isolated/a/work-logs/beta3-admission-game.log",
+      "log_capture_scope": "full stdout and stderr",
+      "log_sha256": "c7cc6fa67dafe7090c3bdee5e4518cb9f7e77070c6d433878daa1b3dc8ab466d",
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "game",
+      "profile_test_sha256": "ee2a8ce0b9b36623171d7bc3737691e2ec426c10414f77700fbabc0338f1ffbb",
+      "profile_test_suites": 34,
+      "qualification": {
+        "sha256": "32739cd7a34dafb1596bc9468fddcba411eb3e51536d399a4f49f0c6956a8492",
+        "suites": 28,
+        "unit_tests": {
+          "run": 351,
+          "skipped": 0
+        }
+      },
+      "retained_log": "audits/beta3-direct-20261026/requalification-logs/beta3-admission-game.log",
+      "runtime_analysis_passed": true,
+      "source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+    },
+    {
+      "central_sync": "completed; exact path/size/hash validation; no symlinks",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/a/tools/configure_firmware.py",
+        "qualify",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/mmo",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0"
+      ],
+      "duration_seconds": 417.219,
+      "exit_code": 0,
+      "firmware_hashes": {
+        "ajazz_ak820_vial.ihx": "963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821",
+        "ajazz_ak820_vial.map": "b3c32755e78eadc77075940bdb0857f6e3769b9813a7b7de840ec2ecb762a222",
+        "ajazz_ak820_vial.mem": "8a82f60b72ee0cea8a268c2e48d0821b48a2681d2b50b1ac7c0b656f7a7dc438",
+        "build-report.json": "720e657193e72cbe241ea8e554fa4403c30d2931e42a22ac3c4051b9fd82e06c"
+      },
+      "firmware_hashes_before_after_unchanged": true,
+      "frozen_original_firmware_hashes_match": true,
+      "hardware_validated": false,
+      "log": "/tmp/ak820-beta3-isolated/a/work-logs/beta3-admission-mmo.log",
+      "log_capture_scope": "full stdout and stderr",
+      "log_sha256": "d365e070042005863f39dd87da39f8c1c21990c5253b2a914f1827ebedc37206",
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "mmo",
+      "profile_test_sha256": "f83cab816c614e95dc618173ba07cb62403c2e7f59a2c0e04d5eb649996da61c",
+      "profile_test_suites": 34,
+      "qualification": {
+        "sha256": "ef0e39674cdd464e6340c27847a1d9343f27366fb34955dd81c2aa625f8fcfb5",
+        "suites": 28,
+        "unit_tests": {
+          "run": 351,
+          "skipped": 0
+        }
+      },
+      "retained_log": "audits/beta3-direct-20261026/requalification-logs/beta3-admission-mmo.log",
+      "runtime_analysis_passed": true,
+      "source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+    },
+    {
+      "central_sync": "completed; exact path/size/hash validation; no symlinks",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/ak820-beta3-isolated/a/tools/configure_firmware.py",
+        "qualify",
+        "--build-dir",
+        "/tmp/ak820-beta3-isolated/a/qmk-8051-ak820/.build/beta3-release/creative",
+        "--toolchain",
+        "/workspace/scratch/772c1403f0df/ak820/toolchains/sdcc-4.6.0"
+      ],
+      "duration_seconds": 440.011,
+      "exit_code": 0,
+      "firmware_hashes": {
+        "ajazz_ak820_vial.ihx": "476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38",
+        "ajazz_ak820_vial.map": "be428967e5aad9efa9b56df5af42b44b0400469f42e224f3d379ab773bbadeb3",
+        "ajazz_ak820_vial.mem": "645980852ff7442faddbfda4efd12a02ff16fed7c81290d305da9b422ef7c5c2",
+        "build-report.json": "2edd8c8a7f070932a17a7da2eec45f46e1f8ccaad4cf88a4a8e93543ec483cc3"
+      },
+      "firmware_hashes_before_after_unchanged": true,
+      "frozen_original_firmware_hashes_match": true,
+      "hardware_validated": false,
+      "log": "/tmp/ak820-beta3-isolated/a/work-logs/beta3-admission-creative.log",
+      "log_capture_scope": "full stdout and stderr",
+      "log_sha256": "d2a87ec66d85da219d8010727e8e87c32273a960b9c64be77b14df5946426a09",
+      "offline_tests_passed": true,
+      "physical_device_commands": 0,
+      "profile": "creative",
+      "profile_test_sha256": "a7986b327c6738f9ee5b62ed73e9babc23c283d8acf7982280c92007645efb7c",
+      "profile_test_suites": 32,
+      "qualification": {
+        "sha256": "bff1bdba08e2da3980014800224294a3d869d540822e591b7268b07675bb6e2a",
+        "suites": 28,
+        "unit_tests": {
+          "run": 351,
+          "skipped": 0
+        }
+      },
+      "retained_log": "audits/beta3-direct-20261026/requalification-logs/beta3-admission-creative.log",
+      "runtime_analysis_passed": true,
+      "source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+    }
+  ],
+  "source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+}

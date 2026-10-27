@@ -36,6 +36,9 @@ void send_keyboard_report(void);
 #if defined(AK820_COMPACT_GUI_LOCK) || defined(AK820_COMPACT_CTRL_GUI_SWAP) || defined(AK820_MAC_PC)
 bool ak820_gui_process(uint16_t code, bool pressed);
 #endif
+#ifdef AK820_COMPACT_GUI_LOCK
+bool ak820_gui_lock_is_active(void);
+#endif
 
 /* key */
 inline void add_key(uint8_t key) {

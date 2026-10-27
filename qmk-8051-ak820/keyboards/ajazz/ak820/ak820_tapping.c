@@ -11,6 +11,7 @@
 #ifdef VIAL_ENABLE
 #    include "vial.h"
 #endif
+#include "dynamic_keymap.h"
 
 #define SOURCES (MATRIX_ROWS * MATRIX_COLS + 2 * NUM_ENCODERS)
 #define SOURCE_ACTIVE 1
@@ -105,6 +106,10 @@ bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
     id = ak820_tapping_source(record->event.key);
     if (id == NONE) return true;
     code = record->keycode;
+    kind = code >> 8;
+    /* This compact encoding is a physical matrix-key feature. Reject it
+     * before a non-matrix source can acquire pending or hold state. */
+    if ((kind >= 0x40 && kind <= 0x45) && (code & 0x00f0) == 0x00f0 && id >= MATRIX_ROWS * MATRIX_COLS) return false;
 #ifdef AK820_COMPACT_SPACE_CADET
     if (code == SC_LSPO) { code = MT(MOD_LSFT, KC_9); sc_mods = MOD_BIT(KC_LEFT_SHIFT); }
     else if (code == SC_RSPC) { code = MT(MOD_RSFT, KC_0); sc_mods = MOD_BIT(KC_RIGHT_SHIFT); }
@@ -122,6 +127,13 @@ bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
 #ifdef AK820_COMPACT_SPACE_CADET
         if (sc_mods) add_owned_mods(sc_mods);
 #endif
+        /* F0..FF are the compact layer-tap macro form. The source check
+         * above admits matrix keys only; generated macro/Repeat records do
+         * not enter this physical event path. */
+        if (id < MATRIX_ROWS * MATRIX_COLS && (code & 0x00f0) == 0x00f0 && kind >= 0x40 && kind <= 0x45) {
+            dynamic_keymap_macro_send(code & 15);
+            return false;
+        }
         /* NO and transparent are opaque dual-role taps that emit nothing.
          * All other accepted basic bytes use the real basic decoder/pipeline. */
         record->keycode = (uint8_t)code;

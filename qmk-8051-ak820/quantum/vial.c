@@ -47,7 +47,11 @@ _Static_assert(VIAL_UNLOCK_COUNTER_MAX > 0 && VIAL_UNLOCK_COUNTER_MAX <= 255, "u
 
 #ifndef VIAL_INSECURE
 static uint32_t vial_unlock_timer;
+#if defined(__SDCC_mcs51)
+static __bit vial_unlock_holding;
+#else
 static bool vial_unlock_holding;
+#endif
 static uint8_t vial_unlock_combo_rows[] = VIAL_UNLOCK_COMBO_ROWS;
 static uint8_t vial_unlock_combo_cols[] = VIAL_UNLOCK_COMBO_COLS;
 #define VIAL_UNLOCK_NUM_KEYS (sizeof(vial_unlock_combo_rows)/sizeof(vial_unlock_combo_rows[0]))
@@ -136,10 +140,11 @@ __attribute__((unused)) static uint16_t vial_keycode_firewall(uint16_t in) {
 }
 
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
-static void vial_fill_packet(uint8_t __xdata *msg, uint8_t value) {
-    for (uint8_t i = 0; i < VIAL_RAW_EPSIZE; ++i) msg[i] = value;
+extern __xdata uint8_t raw_buffer[VIAL_RAW_EPSIZE];
+static void vial_fill_packet(uint8_t value) {
+    for (uint8_t i = 0; i < VIAL_RAW_EPSIZE; ++i) raw_buffer[i] = value;
 }
-#    define VIAL_FILL_PACKET(msg, value, length) vial_fill_packet(msg, value)
+#    define VIAL_FILL_PACKET(msg, value, length) vial_fill_packet(value)
 #else
 #    define VIAL_FILL_PACKET(msg, value, length) memset(msg, value, length)
 #endif
@@ -179,9 +184,11 @@ static void vial_release_held_state(void) {
 
 void vial_handle_cmd(uint8_t *data, uint8_t length) {
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
-    /* USB hands off its fixed XDATA packet buffer. Keep the generic public
-     * signature while giving SDCC the concrete address space within the parser. */
-    uint8_t __xdata *msg = (uint8_t __xdata *)data;
+    /* The sole target caller forwards the transport's fixed packet buffer. */
+    extern __xdata uint8_t raw_buffer[VIAL_RAW_EPSIZE];
+    if (data != raw_buffer || length != VIAL_RAW_EPSIZE) return;
+#    define msg raw_buffer
+#    define length VIAL_RAW_EPSIZE
 #else
     uint8_t *msg = data;
 #endif
@@ -465,49 +472,35 @@ void vial_handle_cmd(uint8_t *data, uint8_t length) {
 
 uint16_t g_vial_magic_keycode_override;
 
-void vial_keycode_down(uint16_t keycode) {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+#    undef length
+#    undef msg
+#endif
+
+/* Keep the two public directions on one decoder. SDCC tail-jumps from the
+ * wrappers, preserving their call depth while sharing the event construction. */
+static void vial_keycode_event(uint16_t keycode, bool pressed) {
 #ifdef AK820_COMPACT_TAPPING
-    /* Macro commands already specify tap/down/up. Preserve their established
-     * basic-byte action without inventing a physical tap-hold position. */
     if (keycode >= QK_MOD_TAP && keycode <= QK_LAYER_TAP_MAX) {
         keycode = (uint8_t)keycode;
         if (keycode <= KC_TRANSPARENT) return;
     }
 #endif
     g_vial_magic_keycode_override = keycode;
-
     if (keycode <= QK_MODS_MAX) {
-        register_code16(keycode);
+        if (pressed) register_code16(keycode);
+        else unregister_code16(keycode);
     } else {
         keyevent_t dummy_event = {
             .type = KEY_EVENT,
-            .key = {.row = VIAL_MATRIX_MAGIC, .col = VIAL_MATRIX_MAGIC}, .pressed = 1, .time = (timer_read() | 1) /* time should not be 0 */
+            .key = {.row = VIAL_MATRIX_MAGIC, .col = VIAL_MATRIX_MAGIC},
+            .pressed = pressed, .time = (timer_read() | 1)
         };
         AK820_ACTION_EXEC(dummy_event);
     }
 }
-
-void vial_keycode_up(uint16_t keycode) {
-#ifdef AK820_COMPACT_TAPPING
-    /* Macro commands already specify tap/down/up. Preserve their established
-     * basic-byte action without inventing a physical tap-hold position. */
-    if (keycode >= QK_MOD_TAP && keycode <= QK_LAYER_TAP_MAX) {
-        keycode = (uint8_t)keycode;
-        if (keycode <= KC_TRANSPARENT) return;
-    }
-#endif
-    g_vial_magic_keycode_override = keycode;
-
-    if (keycode <= QK_MODS_MAX) {
-        unregister_code16(keycode);
-    } else {
-        keyevent_t dummy_event = {
-            .type = KEY_EVENT,
-            .key = {.row = VIAL_MATRIX_MAGIC, .col = VIAL_MATRIX_MAGIC}, .pressed = 0, .time = (timer_read() | 1) /* time should not be 0 */
-        };
-        AK820_ACTION_EXEC(dummy_event);
-    }
-}
+void vial_keycode_down(uint16_t keycode) { vial_keycode_event(keycode, true); }
+void vial_keycode_up(uint16_t keycode) { vial_keycode_event(keycode, false); }
 
 void vial_keycode_tap(uint16_t keycode) {
     vial_keycode_down(keycode);

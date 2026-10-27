@@ -53,10 +53,12 @@ useful. Public release notes describe only user-visible changes, features,
 fixes and relevant limits. Do not include test results, packaging or licence
 details, installed state, audit or agent process, or repeat the README.
 
-Owner's release rule, 2026-10-24: each public release includes standalone
-Windows and Linux x86_64 installers with SHA256 files, plus English and Russian
-installation instructions for both systems. Explain how to download the
-matching package, check its checksum, extract it and launch the application.
+Owner's release rule, 2026-10-26: releases provide Python installation scripts
+for Windows and Linux x86_64 with matching SHA256 files and English and Russian
+instructions. Do not build or publish standalone GUI installers or their
+bundled runtime dependencies unless a later request changes this rule. Explain
+how to download the matching package, check its checksum, extract it, install
+the minimal Python dependency and run the script.
 
 ## Current work boundary
 
@@ -105,4 +107,4 @@ authorized on 2026-10-23; it does not authorize flashing.
 - Update documentation alongside implementation. State separately what is known about source, built artifacts and installed firmware, and distinguish static checks, builds, host/CPU models, read-only device diagnosis and device behavior.
 - No agent may write to USB, enter bootloader, reset or flash the keyboard without the owner's explicit confirmation for that operation. Read-only diagnosis authorization does not grant flash authorization.
 
-Owner's release clarification, 2026-10-25: beta.1 provides the nine-profile firmware catalog for companion design, plus standalone Windows/Linux x86_64 installers that install the exact `work` image. The other eight profiles remain catalog candidates. Keep the installers until the companion is ready. Preserve exact image identities and state installation and hardware limits clearly. This does not authorize device writes.
+Owner's release clarification, 2026-10-26: beta.3 excludes standalone GUI installers and their bundled dependencies. Keep the Python installation scripts for Windows and Linux x86_64, preserve exact image identities and all ten catalog profiles, and state installation and hardware limits clearly. Companion integration will follow separately. This does not authorize device writes. The 2026-10-25 beta.1 installer direction is superseded for beta.3.

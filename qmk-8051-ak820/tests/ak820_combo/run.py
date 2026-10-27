@@ -14,6 +14,7 @@ with tempfile.TemporaryDirectory(prefix='ak820-combo-') as d:
 #define MATRIX_COLS 8
 #define VIAL_COMBO_ENTRIES 8
 #define QK_MOD_TAP 0x2000
+#define QK_CAPS_WORD_TOGGLE 0x7c73
 #define KC_A 4
 #define KC_EXSEL 164
 #define KC_LEFT_CTRL 224

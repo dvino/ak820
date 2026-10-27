@@ -11,7 +11,11 @@ static uint8_t source = NONE, trigger, active = NONE, previous_mods;
 /* This engine never dispatches records, reports or callbacks. Helpers share
  * one synchronous context instead of model-large parameter spill slots. */
 static uint8_t current_mods, current_layer;
+#if defined(__SDCC_mcs51)
+static __bit enabled = true, blocked, hidden;
+#else
 static bool enabled = true, blocked, hidden;
+#endif
 
 /* Inline this tiny predicate: a model-large helper spills its argument and
  * saves registers at each of the three call sites. */

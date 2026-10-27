@@ -671,8 +671,20 @@ class Analyzer:
         lengths = (1,2,1,2,3,2,1,2,2,1,2,1,3,1,3,2,2,2,3,2,1,1,
                    3,1,3,1,2,2,2,3,1,1,1,1,1,2,2,3,3)
         r, addresses, at = [], [], pc
-        for length in lengths:
+        multiply_call = None
+        for index, length in enumerate(lengths):
+            # The exact outliner may replace MOV B,#2 / MUL AB with one
+            # LCALL. Keep logical row numbers stable; prove its complete body
+            # below before granting any callback targets.
+            if index == 25 and multiply_call is not None:
+                r.append(b'\xa4'); addresses.append(addresses[-1])
+                continue
             row = self.peek_instruction(at)
+            if index == 24 and row is not None and row[0] == 0x12:
+                multiply_call = row
+                r.append(b'\x75\xf0\x02'); addresses.append(at)
+                at += len(row)
+                continue
             if row is None or len(row) != length:
                 return None
             r.append(row); addresses.append(at); at += length
@@ -741,6 +753,8 @@ class Analyzer:
                     return False
                 seen.add(cursor+offset); offset += len(row)
             return offset == len(expected)
+        if (multiply_call is not None and not body(multiply_call, b'\x75\xf0\x02\xa4\x22')):
+            return None
         if (getter_peak is None or not body(r[29], b'\x35\xf0\xf5\x83\xe4\x93\x22')
                 or not body(r[37], b'\x8d\x82\x8e\x83\x22')
                 or not body(r[38], b'\xe4\x73')):
@@ -755,7 +769,7 @@ class Analyzer:
         return {'targets': sorted({self.code[slot] | self.code[slot+1]<<8 for slot in slots}),
                 'default': relative(8), 'continuation': at, 'rom_slots': slots,
                 'direct_target': int.from_bytes(r[4][1:], 'big'), 'direct_continuation': relative(5),
-                'getter_peak': getter_peak, 'spill': spill, 'reachable': sorted(set(addresses)|seen)}
+                'getter_peak': getter_peak, 'multiply_peak': 2 if multiply_call is not None else 0, 'spill': spill, 'reachable': sorted(set(addresses)|seen)}
 
     def bound(self, entry, context=frozenset()):
         key = (entry, context)
@@ -809,7 +823,8 @@ class Analyzer:
             if compact is not None:
                 self.guarded_callback_transfers[pc] = compact
                 transitive.update(compact['reachable'])
-                maximum = max(maximum, height + 2 + compact['getter_peak'], height + 4)
+                maximum = max(maximum, height + 2 + compact['getter_peak'],
+                              height + compact['multiply_peak'], height + 4)
                 work.append((compact['default'], height, flags))
                 work.append((compact['continuation'], height + 2, flags))
                 work.append((compact['direct_continuation'], height, flags))

@@ -1,0 +1,63 @@
+{
+  "results": [
+    {
+      "configuration": "compact-1",
+      "differential_cases": 1703936,
+      "exact_alias_cases": 256,
+      "status": "PASS",
+      "hashes": {
+        "test.ihx": "2f30fe1ceaa19cd2ade8292b36298af7c30c9fbf82daefcd5368a6b9b5751e3e",
+        "cpu.log": "cd6364153c1e4b319021bfdf56bf00c62a0ddbfee0bedd7f1b488ab1caa40766",
+        "kernel.c": "94c1199b35ca85e47de8189bc25e265ffaebd81b446d09b0325b5b616642679e",
+        "reference.c": "b485c793f7a2b37bcbb385cb5aa3455551cd336473b5b04a4947bb925359a346",
+        "main.c": "683640ac034afc80391997d021551852d7834df040152ac0d332866498ef10a7",
+        "table.c": "f48faef9e55eea4144cfa46caa5116515146f3a9e44c43d14d87969acd0ad91f"
+      }
+    },
+    {
+      "configuration": "full-1",
+      "differential_cases": 1703936,
+      "exact_alias_cases": 256,
+      "status": "PASS",
+      "hashes": {
+        "test.ihx": "ac8dec251752a09704a19937aa19744bca4dbe42cf841adb526fc667bf761174",
+        "cpu.log": "b263f2658c863e32eea9e891d584d5739b7c9011d728dd3135bb3e8f33e0bc14",
+        "kernel.c": "94c1199b35ca85e47de8189bc25e265ffaebd81b446d09b0325b5b616642679e",
+        "reference.c": "b485c793f7a2b37bcbb385cb5aa3455551cd336473b5b04a4947bb925359a346",
+        "main.c": "683640ac034afc80391997d021551852d7834df040152ac0d332866498ef10a7",
+        "table.c": "f48faef9e55eea4144cfa46caa5116515146f3a9e44c43d14d87969acd0ad91f"
+      }
+    },
+    {
+      "configuration": "compact-0",
+      "differential_cases": 32768,
+      "exact_alias_cases": 16,
+      "status": "PASS",
+      "hashes": {
+        "test.ihx": "ae25d5f4ec6b9dbe50ac0f6b5dd6a82a2a1c4904e2476b97dca437dbae886aff",
+        "cpu.log": "f51f10cc257bccb2841a059044b8934a6fe7ef93c8f9c64867ba25f5bcf07cd5",
+        "kernel.c": "94c1199b35ca85e47de8189bc25e265ffaebd81b446d09b0325b5b616642679e",
+        "reference.c": "b485c793f7a2b37bcbb385cb5aa3455551cd336473b5b04a4947bb925359a346",
+        "main.c": "1b95020f36b6e272fae423de837810e5d92c15ba7ad87230de3f9322d2d39676",
+        "table.c": "f48faef9e55eea4144cfa46caa5116515146f3a9e44c43d14d87969acd0ad91f"
+      }
+    },
+    {
+      "configuration": "compact-2",
+      "differential_cases": 32768,
+      "exact_alias_cases": 16,
+      "status": "PASS",
+      "hashes": {
+        "test.ihx": "59dcbf0267acf4c05826c52a5600462db4114261fba9f1ac1224d334d897288e",
+        "cpu.log": "d43e47f73ce098dcb785293f975ee59b8cb110d4aec7d07aac03305ea57126b9",
+        "kernel.c": "94c1199b35ca85e47de8189bc25e265ffaebd81b446d09b0325b5b616642679e",
+        "reference.c": "b485c793f7a2b37bcbb385cb5aa3455551cd336473b5b04a4947bb925359a346",
+        "main.c": "1b95020f36b6e272fae423de837810e5d92c15ba7ad87230de3f9322d2d39676",
+        "table.c": "f48faef9e55eea4144cfa46caa5116515146f3a9e44c43d14d87969acd0ad91f"
+      }
+    }
+  ],
+  "total_differential_cases": 3473408,
+  "total_exact_alias_cases": 544,
+  "scope": "Actual standalone8051 CPU; productionkernel vs typed-output adapted RC4 arithmetic. Broadrun predates3overlap alias extension; quick4 coversall3overlapdirections separately."
+}

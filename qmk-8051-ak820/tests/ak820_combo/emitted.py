@@ -39,9 +39,9 @@ def vial_counts(fw):
     return [8 if flags[0]=='yes' else 0,8,8 if flags[1]=='yes' else 0]
 
 def entry(a=4,b=5,out=6,marker=0x0820,version=1):return list(struct.pack('<5H',a,b,marker,version,out))
-def setup(fw,name,out=6,nkro=False):
+def setup(fw,name,out=6,nkro=False,b=5):
     t=tapping.Trace(fw,name)
-    t.commands += [linked.memory('rom',BASE,entry(out=out))]+fw.call('_ak820_combo_reload')
+    t.commands += [linked.memory('rom',BASE,entry(b=b,out=out))]+fw.call('_ak820_combo_reload')
     for p,c in [((0,0),4),((0,1),5),((0,2),7)]:t.map(p,c)
     if nkro:
         t.width=32;t.commands=[c.replace(f'{t.report_address+7:#x} 16;',f'{t.report_address+31:#x} 16;') for c in t.commands]
@@ -90,7 +90,24 @@ def cases(fw):
         t=setup(fw,f'output-{output:04x}',out=output);t.event((0,0),1,100);t.event((0,1),1,101);t.check('active',report(False,2,*([6] if output==0x0206 else [])));t.event((0,0),0,102);t.event((0,1),0,103);t.check('released',report());tests.append(finish(t))
     t=setup(fw,'physical-output-owner');t.map((0,2),6);t.event((0,2),1,90);t.event((0,0),1,100);t.event((0,1),1,101);t.event((0,0),0,102);t.check('physical-survives',report(False,0,6));t.event((0,1),0,103);t.event((0,2),0,104);t.check('last-owner',report());tests.append(finish(t))
     t=setup(fw,'repeat-output-owner');t.map((0,2),0x7c79);t.event((0,0),1,100);t.event((0,1),1,101);t.event((0,2),1,102);t.event((0,0),0,103);t.check('repeat-survives',report(False,0,6));t.event((0,1),0,104);t.event((0,2),0,105);t.check('repeat-release',report());tests.append(finish(t))
-    t=setup(fw,'caps-word-output');t.commands+=fw.call('_caps_word_on');t.event((0,0),1,100);t.event((0,1),1,101);t.check('shifted-output',report(False,2,6));t.event((0,0),0,102);t.event((0,1),0,103);t.check('caps-word-weak-shift',report(False,2));t.commands+=fw.call('_clear_keyboard');t.check('cleared',report());tests.append(finish(t))
+    t=setup(fw,'caps-word-ordinary-output');t.commands+=fw.call('_caps_word_on');t.event((0,0),1,100);t.event((0,1),1,101);t.check('shifted-output',report(False,2,6));t.event((0,0),0,102);t.event((0,1),0,103);t.check('caps-word-weak-shift',report(False,2));t.commands+=fw.call('_clear_keyboard');t.check('cleared',report());tests.append(finish(t))
+    for nkro in ((False,True) if options.get('AK820_NKRO')=='yes' else (False,)):
+        for order in ((0,1),(1,0)):
+            for release in ((0,1),(1,0)):
+                p=lambda mod=0,*k:report(nkro,mod,*k)
+                t=setup(fw,f'caps-word-combo-toggle-{int(nkro)}-{order[0]}-{release[0]}',out=0x7c73,b=22,nkro=nkro)
+                t.map((0,1),22)
+                t.map((0,2),4)
+                t.event((0,order[0]),1,100);t.check('first-source-suppressed',[0]*32 if nkro else p())
+                t.event((0,order[1]),1,101);t.check('toggle-on-no-key-leak',[0]*32 if nkro else p())
+                t.event((0,release[0]),0,102);t.check('first-release-no-key-leak',[0]*32 if nkro else p())
+                t.event((0,release[1]),0,103);t.check('released-no-key-leak',[0]*32 if nkro else p())
+                t.event((0,2),1,104);t.tick(144);t.check('caps-word-on-shifts-a',p(2,4));t.event((0,2),0,145)
+                t.map((0,2),22);t.event((0,2),1,146);t.tick(186);t.check('caps-word-on-shifts-s',p(2,22));t.event((0,2),0,187)
+                t.event((0,order[0]),1,200);t.event((0,order[1]),1,201);t.check('toggle-off-no-key-leak',p())
+                t.event((0,release[0]),0,202);t.event((0,release[1]),0,203)
+                t.map((0,2),4);t.event((0,2),1,210);t.tick(250);t.check('caps-word-off-does-not-shift-a',p(0,4));t.event((0,2),0,251);t.check('released',p())
+                tests.append(finish(t))
     for active in (False,True):
         t=setup(fw,'clear-'+str(active));t.event((0,0),1,100)
         if active:t.event((0,1),1,101)

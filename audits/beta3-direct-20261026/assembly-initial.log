@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/772c1403f0df/ak820/audits/beta3-direct-20261026/assemble_origins.py", line 329, in <module>
+    main()
+  File "/workspace/scratch/772c1403f0df/ak820/audits/beta3-direct-20261026/assemble_origins.py", line 325, in main
+    (worker if args.worker else orchestrate)(args)
+  File "/workspace/scratch/772c1403f0df/ak820/audits/beta3-direct-20261026/assemble_origins.py", line 269, in orchestrate
+    subprocess.run(command, cwd=origin, stdout=stream, stderr=subprocess.STDOUT, check=True)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12', '/tmp/ak820-beta3-isolated/a/audits/beta3-direct-20261026/assemble_origins.py', '--worker', 'main', '--builds-root', 'qmk-8051-ak820/.build/beta3-release', '--policies-root', 'ci/profiles', '--settings-catalog', 'tools/installer/settings-catalog.json', '--toolchain', 'toolchains/sdcc-4.6.0', '--source-commit', 'd7a32214a972d8b690fcf1ba40f79affc7f20549', '--output', '.build/.beta3-release-assembled.stage-za84gwkn/worker-main']' returned non-zero exit status 1.

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 AK820_BOARD = yes
 CUSTOM_MATRIX = yes
-SRC += ak820_oneshot.c ak820_combo.c ak820_tapping.c ak820_board.c ak820_indicators.c matrix.c ak820_crc.c ak820_nvm.c ak820_flash.c ak820_timer.c ak820_boot.c ak820_macro.c ak820_startup.c
+SRC += ak820_oneshot.c ak820_combo.c ak820_tapping.c ak820_board.c ak820_indicators.c ak820_rgb_shared.c matrix.c ak820_crc.c ak820_nvm.c ak820_flash.c ak820_timer.c ak820_boot.c ak820_macro.c ak820_startup.c
 EEPROM_DRIVER = custom
 ENCODER_ENABLE = yes
 ENCODER_MAP_ENABLE = yes

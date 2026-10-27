@@ -87,6 +87,37 @@ def manifest_name(configuration):
             if name in RELEASE_PROFILES else 'ci/release-safety.json')
 
 
+ALPHA2_IHX_SHA256 = 'f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e'
+ALPHA2_COMBO_RESTORE = {'source_combos_version': None, 'plan_combo_entries': None,
+                       'target_policy': 'preserve-existing'}
+
+
+def validate_alpha2_preflight(transition, root, ihx_hash, profile):
+    """Admit only the pinned Combo-less source and its exact preservation plan."""
+    preflight = transition.get('actual_alpha2_preflight')
+    require(isinstance(preflight, dict), 'alpha2 transition preflight incomplete')
+    actual_path = safe_path(root, preflight.get('result_path'))
+    require(sha(actual_path.read_bytes()) == preflight.get('result_sha256'),
+            'alpha2 preflight evidence changed')
+    actual = load(actual_path)
+    require(actual == {key: value for key, value in preflight.items()
+                       if key not in ('result_path', 'result_sha256')},
+            'alpha2 preflight content differs from transition')
+    require(actual.get('source') == ALPHA2_IHX_SHA256
+            and type(transition.get('source_images')) is list
+            and ALPHA2_IHX_SHA256 in transition['source_images']
+            and actual.get('source_case') == 'alpha2-saved-rom'
+            and actual.get('target') == ihx_hash and actual.get('target_profile') == profile,
+            'alpha2 preflight source/target differs from exact images')
+    require(actual.get('passed') is True and actual.get('offline_only') is True
+            and type(actual.get('physical_device_commands')) is int
+            and actual['physical_device_commands'] == 0
+            and all(type(actual.get(key)) is int and actual[key] == count
+                    for key, count in (('key_count', 498), ('encoder_count', 12), ('combo_count', 0)))
+            and actual.get('combo_restore') == ALPHA2_COMBO_RESTORE,
+            'alpha2 transition preservation preflight incomplete')
+
+
 def validate(report, root=ROOT):
     root = Path(root)
     configuration = report.get('configuration')
@@ -185,12 +216,7 @@ def validate(report, root=ROOT):
         require(sha(log.read_bytes()) == test.get('log_sha256'), 'transition log changed')
     required_transition = {name for name in REQUIRED_SOURCES if name.startswith('tools/') or name.endswith('/verify_transition.py')}
     require(required_transition <= transition_sources, 'incomplete transition implementation/test source closure')
-    preflight = transition.get('actual_alpha2_preflight', {})
-    require(preflight.get('passed') is True and preflight.get('key_count') == 498
-            and preflight.get('encoder_count') == 12 and preflight.get('combo_count') == 8,
-            'alpha2 transition preflight incomplete')
-    actual_preflight = safe_path(root, preflight.get('result_path'))
-    require(sha(actual_preflight.read_bytes()) == preflight.get('result_sha256'), 'alpha2 preflight evidence changed')
+    validate_alpha2_preflight(transition, root, ihx_hash, configuration['profile'])
     return {'manifest_sha256': sha(manifest.read_bytes()), 'foreground_bound': bounds['_main'],
             'main_entry_frame_bound': entry, 'irq_bound': irq_total, 'stack_bound': total,
             'stack_capacity': capacity, 'stack_margin': capacity - total,

@@ -13,6 +13,7 @@ English source of truth: [Documentation](../INDEX.md).
 | Настроить комбинации двух клавиш | [Combo](COMBOS.md) |
 | Caps Word, Repeat, Grave Escape и Tri Layer | [Действия клавиш](CONFIGURATION.md) |
 | Макросы и эффекты RGB | [Настройка](CONFIGURATION.md) |
+| Читать или менять палитру Direct | [Direct](DIRECT.md) |
 | Сохранить или восстановить настройки | [Резервные копии](SETTINGS-BACKUP.md) |
 | Mod-Tap и Layer-Tap | [Mod-Tap и Layer-Tap](TAP-HOLD.md) |
 | Использовать One Shot, Space Cadet и управление NKRO | [Настройка](CONFIGURATION.md) |
