@@ -237,6 +237,8 @@ jobs:
           def allowed_path(path):
               if path == WORKFLOW or path.startswith("audits/"):
                   return True
+              if path == "web/module-descriptions.json":
+                  return True
               if path == "ci/beta4-release-notes.md":
                   return True
               if re.fullmatch(r"(?:README(?:[^/]*)|docs/.+)\.md", path):
@@ -350,7 +352,7 @@ jobs:
   publish:
     name: Publish tagged version from main
     needs: [linux-assembly]
-    if: startsWith(github.ref, 'refs/tags/v') && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.qualified_run_id != ''))
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
