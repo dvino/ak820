@@ -23,3 +23,13 @@ The [independent review](independent-review.md) covers the checker, its actual
 output and this scope. The existing release ZIP remains valid. A small follow-up
 Git bundle adds only this verification and documentation to commit
 `59d323f5d1ca7b15b82b9050223b531056378ede`.
+
+## Acceptance correction, 2026-10-27
+
+The checker now counts catalog edges and rejects a repeated beta.2 transition,
+even when the total row count stays at 330. Four regression tests cover complete,
+duplicate, missing and truncated catalogs. The actual committed catalog contains
+each of the 100 expected beta.2 transitions exactly once. The retained report and
+earlier archive verification remain unchanged; the original delivery ZIP was not
+replayed during this correction. The earlier review describes its original
+checker hash. Release acceptance of the revised checker is recorded separately.

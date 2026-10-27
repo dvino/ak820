@@ -98,8 +98,10 @@ authorize a device write. Changed source or host bytes require renewed evidence.
 ## Publication and local checks
 
 Only a qualifying SemVer tag on a checked commit in `main` can publish after
-required jobs pass. Branch pushes, pull requests and manual checks produce
-artifacts without publishing. Only the publication job receives write access.
+required jobs pass. Branch pushes and pull requests produce artifacts without
+publishing. A manual run on a version tag can also publish when an explicit
+`qualified_run_id` passes all artifact-reuse checks. Other manual runs only
+produce artifacts. Only the publication job receives write access.
 Local tests do not create tags or releases. Release assets use Python scripts
 for Windows and Linux x86_64, matching SHA256 files and English and Russian
 instructions. Exact publication results are recorded separately in Status.

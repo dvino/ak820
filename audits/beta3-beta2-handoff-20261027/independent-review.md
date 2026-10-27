@@ -1,5 +1,9 @@
 # Independent review: beta.2 to beta.3 handoff
 
+Historical review of the original checker hash below. The 2026-10-27 acceptance
+correction strengthens duplicate-edge checking; this earlier execution does not
+approve or claim replay of the revised checker.
+
 Approved for the bounded offline evidence check on 2026-10-27.
 
 Reviewed helper SHA256:

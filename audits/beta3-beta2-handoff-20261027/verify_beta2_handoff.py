@@ -3,12 +3,18 @@
 from __future__ import annotations
 import argparse, hashlib, io, json, zipfile, sys
 from pathlib import Path
+from collections import Counter
 
 PROFILES = ['main','game','mmo','typing','code','pointer','onehand','creative','shortcuts','multios']
 EXPECTED = {'beta2_bundle':('8aa5176f657271f20834b35b4e80f79eb63ab7a6d3b5512478bf04a56031b1ce',2704055), 'beta2_matrix':('e646cb3cb58c50c55a184538b77674db92e0d54750b1a9734d1b092a6c20a08e',879783), 'beta3_outer':('14661efef8ce3577770327863a095168fbd0b6e392b083282c2672ba3d412a85',None)}
 def sha(b): return hashlib.sha256(b).hexdigest()
 def need(ok,msg):
     if not ok: raise ValueError(msg)
+def checked_transition_edges(transitions, expected_edges):
+    edges = Counter((row['source'], row['target']) for row in transitions)
+    need(len(transitions) == 330 and all(edges[edge] == 1 for edge in expected_edges),
+         'catalog must contain each beta2->beta3 settings transition exactly once')
+    return edges
 def readjson(b,label):
     try: return json.loads(b)
     except Exception as e: raise ValueError(f'{label}: invalid JSON: {e}')
@@ -90,9 +96,8 @@ def main():
         pre.append({'profile':p,'beta2_ihx_sha256':b2profiles[p]['ihx'],'beta2_settings_code_sha256':b2profiles[p]['code'],'beta3_ihx_sha256':ihx,'beta3_settings_code_sha256':ccode})
     need({n.split('/')[1] for n in b3zip.namelist() if n.startswith('profiles/')}==set(PROFILES),'beta3 firmware ZIP profile set mismatch')
     need(len(transitions)==330,'retained transition plan expected 330 rows')
-    catalog_edges={(x['source'],x['target']) for x in catalog['settings_transitions']}
     expected_edges={(historical[sp]['settings_identity']['ihx_sha256'],next(x for x in catalog['profiles'] if x['profile']==tp)['identity']['ihx_sha256']) for sp in PROFILES for tp in PROFILES}
-    need(len(catalog['settings_transitions'])==330 and expected_edges <= catalog_edges,'catalog is missing one or more beta2->beta3 settings transitions')
+    catalog_edges=checked_transition_edges(catalog['settings_transitions'], expected_edges)
     selected=[c for c in transitions if c['source_case'].startswith('beta2-')]
     need(len(selected)==100,'expected exactly 100 beta2 transitions')
     rows=[]

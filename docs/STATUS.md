@@ -34,9 +34,13 @@ The GUI installer is excluded; the companion application is separate. Firmware
 qualification, package assembly and independent approval have separate
 records for each exact image. Source evidence is indexed in
 `audits/beta3-direct-20261026/README.md`.
-No GitHub tag, push or publication, and no hardware or device writes, have
-occurred. Physical USB, LED and DMA timing, and power-loss or durable-storage
-behavior remain unverified.
+Release acceptance on 2026-10-27 passed 303 host tests, 186 installer/settings
+tests, four catalog-edge regression tests and checks of 79 public documents.
+Independent firmware and host reviews are retained alongside the source evidence.
+Publication requires successful CI for the final merged `main` commit and its
+release tag. No hardware or device writes were performed during acceptance.
+Physical USB, LED and DMA timing, and power-loss or durable-storage behavior
+remain unverified.
 
 The last historical installation was alpha.3 on 2026-10-24, image SHA256
 `d505d4f420f745dbd5e98a0e3638c8f3ae6d7719c8729dad274595b71b641f18`. This is
