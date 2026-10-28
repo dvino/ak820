@@ -1,8 +1,8 @@
+Русский перевод: [План развития профилей](ru/PROFILE-IMPROVEMENTS-PLAN.md).
+
 # Plan: profile improvements and custom firmware builds
 
 This is a discussion plan, not a claim that proposed features are implemented or that firmware is ready to install. The measurements below were supplied by the owner as provisional figures for particular built images; they may change with the sources. Space in separate CODE windows is not interchangeable. The cost of modules and settings can only be determined after linking the specific combination. This document does not authorize changes to the current optimization work or flashing a device.
-
-[Русская версия](ru/PROFILE-IMPROVEMENTS-PLAN.md)
 
 ## Common foundation
 
