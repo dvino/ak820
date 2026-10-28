@@ -523,3 +523,6 @@ CONST 0. The latest TD bootstrap already fills ordinary XRAM (3,008 / 3,008),
 so this variant was restored and rejected rather than trading a physical XRAM
 overflow for an object-only CODE reduction. No equivalence test or firmware
 image was built; object savings are not linked savings.
+Passing the union member directly to the setter rather than copying it through
+an additional local produced the same 0x598 CSEG / 0x18 XSEG and was also
+restored; the extra four XRAM bytes did not come from the explicit copy alone.
