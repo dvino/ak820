@@ -206,6 +206,8 @@ class OfflineRunnerTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(report['repeat_cpu_check'], 'skipped: SDCC or s51 unavailable')
         self.assertEqual(report['macro_cpu_check'], 'skipped: SDCC or s51 unavailable')
+        tap_dance = next(row['command'] for row in report['tests'] if 'tests/ak820_tap_dance/host.py' in row['command'])
+        self.assertNotIn('--sdcc', tap_dance)
         self.assertFalse(any('tests/ak820_repeat/cpu.py' in row['command'] for row in report['tests']))
         self.assertFalse(any('tests/ak820_macro_guard/cpu.py' in row['command'] for row in report['tests']))
 
