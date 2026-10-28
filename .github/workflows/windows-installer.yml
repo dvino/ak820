@@ -239,9 +239,6 @@ jobs:
           def allowed_path(path):
               if path == WORKFLOW or path.startswith("audits/"):
                   return True
-              if path in ("tools/build_beta_release_assets.py",
-                          "tools/test_build_beta_release_assets.py"):
-                  return True
               if path == "web/module-descriptions.json":
                   return True
               if path == "ci/beta4-release-notes.md":
@@ -409,25 +406,36 @@ jobs:
       - name: Install pinned external sources for catalog verification
         run: python tools/install_lufa_dependency.py --fetch
       - name: Prepare companion catalogs and installation guides
-        run: >-
-          python tools/build_beta_release_assets.py
-          --bundles-root releases/beta3
-          --output dist/catalog
-          --tag "${{ github.ref_name }}"
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          case "$RELEASE_TAG" in
+            v0.6.0-beta.4) CATALOG_TAG="$RELEASE_TAG" ;;
+            v0.6.0-beta.4.1) CATALOG_TAG="v0.6.0-beta.4" ;;
+            *) echo "Unsupported AK820 release tag: $RELEASE_TAG" >&2; exit 1 ;;
+          esac
+          python tools/build_beta_release_assets.py \
+            --bundles-root releases/beta3 \
+            --output dist/catalog \
+            --tag "$CATALOG_TAG"
       - name: Name the beta.4 catalog archive
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          if [[ "$RELEASE_TAG" == "v0.6.0-beta.4.1" ]]; then
-            python ci/beta41_catalog.py --catalog-dir dist/catalog --tag "$RELEASE_TAG"
-            mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4.1-Catalog.zip
-            rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
-            CATALOG_ARCHIVE=AK820-Beta4.1-Catalog.zip
-          else
-            mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4-Catalog.zip
-            rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
-            CATALOG_ARCHIVE=AK820-Beta4-Catalog.zip
-          fi
+          case "$RELEASE_TAG" in
+            v0.6.0-beta.4.1)
+              python ci/beta41_catalog.py --catalog-dir dist/catalog --tag "$RELEASE_TAG"
+              mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4.1-Catalog.zip
+              rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
+              CATALOG_ARCHIVE=AK820-Beta4.1-Catalog.zip
+              ;;
+            v0.6.0-beta.4)
+              mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4-Catalog.zip
+              rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
+              CATALOG_ARCHIVE=AK820-Beta4-Catalog.zip
+              ;;
+            *) echo "Unsupported AK820 release tag: $RELEASE_TAG" >&2; exit 1 ;;
+          esac
           echo "CATALOG_ARCHIVE=$CATALOG_ARCHIVE" >> "$GITHUB_ENV"
           cd dist/catalog
           sha256sum "$CATALOG_ARCHIVE" > "$CATALOG_ARCHIVE.sha256"
@@ -458,10 +466,11 @@ jobs:
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
           RELEASE_PRERELEASE: ${{ steps.release.outputs.prerelease }}
         run: |
-          notes_file=ci/beta4-release-notes.md
-          if [[ "$RELEASE_TAG" == "v0.6.0-beta.4.1" ]]; then
-            notes_file=ci/beta4.1-release-notes.md
-          fi
+          case "$RELEASE_TAG" in
+            v0.6.0-beta.4) notes_file=ci/beta4-release-notes.md ;;
+            v0.6.0-beta.4.1) notes_file=ci/beta4.1-release-notes.md ;;
+            *) echo "Unsupported AK820 release tag: $RELEASE_TAG" >&2; exit 1 ;;
+          esac
           args=(
             "$RELEASE_TAG"
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256

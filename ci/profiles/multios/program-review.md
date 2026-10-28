@@ -8,7 +8,7 @@
   "hardware_validated": false,
   "ihx_sha256": "871f9d60715a40261808a5433085cf4f829083c3dd0ae2e1230792dd46522998",
   "physical_device_commands": 0,
-  "policy_sha256": "e1276a6f9f1877d92e855de87e7c6e3859adccbc20e0f3e97510ae1e615db68c",
+  "policy_sha256": "dc9b171f60df925dbbca2d321a97e66cddcb8e4a1aed5b81931405219a271dfd",
   "profile": "multios",
   "review_report": "ci/profiles/multios/program-review.md#exact-tree-review-record",
   "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/multios-qualified/multios/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
