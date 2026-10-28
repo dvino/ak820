@@ -8,7 +8,7 @@
   "hardware_validated": false,
   "ihx_sha256": "05f49d16b380a8f40b55c3a38c0e863a25d884237d4fd8d6aaef51b6fd95c389",
   "physical_device_commands": 0,
-  "policy_sha256": "7530acc3877c723eaf31a6c8ec148c065af1ee42c84d3a27e67f9125f26a5a3d",
+  "policy_sha256": "769d4080613754c07a22f030cb13c5f376e4c298ee3b61d9abc5606bf8d2c240",
   "profile": "main",
   "review_report": "ci/profiles/main/program-review.md#exact-tree-review-record",
   "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/glibc-profiles/main/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
