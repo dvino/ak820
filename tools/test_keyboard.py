@@ -108,6 +108,8 @@ def main(argv=None):
             for name in ('ak820_repeat', 'ak820_macro_guard', 'ak820_tap_dance'):
                 suites.append((QMK, [py, f'tests/{name}/cpu.py', '--sdcc', tool_records['sdcc']['path'],
                                      '--simulator', tool_records['s51']['path']]))
+            suites.append((QMK, [py, 'tests/ak820_tapping/compact_cpu.py', '--sdcc', tool_records['sdcc']['path'],
+                                 '--simulator', tool_records['s51']['path']]))
         suites.append((QMK, [py, 'tests/ak820_tapping/run.py', '--negative-controls',
                             '--output', str((logdir / 'tapping-host.json').resolve())]))
     build = None

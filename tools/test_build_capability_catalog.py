@@ -233,6 +233,13 @@ class EntryEvidenceTests(unittest.TestCase):
             'ak820_usb', 'ak820_keymap', 'ak820_caps_word', 'ak820_macro_guard',
             'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_via_decode',
             'ak820_bounded', 'ak820_combo')])
+        commands.extend([[py, 'tests/ak820_macro_guard/' + name + '.py'] for name in ('parse', 'powercut')])
+        commands.extend([[py, script, '--sdcc', str(self.toolchain / 'bin/sdcc')] for script in
+            ('tests/ak820_tap_dance/host.py', 'tests/ak820_repeat/table.py')])
+        commands.extend([[py, script, '--sdcc', str(self.toolchain / 'bin/sdcc'),
+                          '--simulator', str(self.toolchain / 'bin/s51')] for script in
+            ('tests/ak820_repeat/cpu.py', 'tests/ak820_macro_guard/cpu.py',
+             'tests/ak820_tap_dance/cpu.py', 'tests/ak820_tapping/compact_cpu.py')])
         commands.append([py, 'tests/ak820_tapping/run.py', '--negative-controls', '--output', '/tmp/tapping.json'])
         for script in [*(f'tests/{name}/run.py' for name in ('ak820_features', 'ak820_unlock', 'ak820_tri_layer', 'ak820_iap')),
                        *(f'tests/{name}/emitted.py' for name in ('ak820_rgb', 'ak820_bounded', 'ak820_tapping', 'ak820_combo'))]:
@@ -252,7 +259,7 @@ class EntryEvidenceTests(unittest.TestCase):
         self.write('qualification.json', {'format': 'ak820-offline-tests-1', 'passed': True,
             'require_toolchain': True, 'build_unchanged': True, 'build_hashes': hashes,
             'hardware_validated': False, 'physical_device_commands': 0, 'iap_fault_profile': 'guarded-erase',
-            'tools': {'s51': {'path': str(self.toolchain / 'bin/s51')}},
+            'tools': {name: {'path': str(self.toolchain / 'bin' / name)} for name in ('sdcc', 's51')},
             'unit_tests': {'run': len(rows), 'skipped': 0}, 'tests': rows})
 
     def test_entry_is_deterministic_and_development_only(self):

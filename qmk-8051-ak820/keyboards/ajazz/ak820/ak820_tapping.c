@@ -47,11 +47,24 @@ static uint8_t pending = NONE;
 #endif
 static uint16_t pending_time, pending_code;
 
-#ifndef AK820_COMPACT_ONESHOT
-/* Keep the existing private ABI when no external One Shot caller exists. */
+#ifdef __SDCC_mcs51
+uint8_t ak820_tapping_source_ptr(const keypos_t AK820_STATE_MEM *key) {
+    if (key->row < MATRIX_ROWS && key->col < MATRIX_COLS) return key->row * MATRIX_COLS + key->col;
+    if (key->col < NUM_ENCODERS) {
+        if (key->row == KEYLOC_ENCODER_CW) return MATRIX_ROWS * MATRIX_COLS + key->col;
+        if (key->row == KEYLOC_ENCODER_CCW) return MATRIX_ROWS * MATRIX_COLS + NUM_ENCODERS + key->col;
+    }
+    return NONE;
+}
+#    ifdef AK820_COMPACT_ONESHOT
+uint8_t ak820_tapping_source(keypos_t key) { return ak820_tapping_source_ptr(&key); }
+#    endif
+#    define source_of(key) ak820_tapping_source_ptr(&(key))
+#else
+#    ifndef AK820_COMPACT_ONESHOT
 #define ak820_tapping_source source
 static
-#endif
+#    endif
 uint8_t ak820_tapping_source(keypos_t key) {
     if (key.row < MATRIX_ROWS && key.col < MATRIX_COLS) return key.row * MATRIX_COLS + key.col;
     if (key.col < NUM_ENCODERS) {
@@ -60,6 +73,8 @@ uint8_t ak820_tapping_source(keypos_t key) {
     }
     return NONE;
 }
+#    define source_of(key) ak820_tapping_source(key)
+#endif
 static void hold(uint16_t code, bool pressed) {
     if (code < QK_LAYER_TAP) {
         uint8_t mods = (code >> 8) & 31;
@@ -79,7 +94,7 @@ static void commit_pending(void) {
     hold(pending_code, true);
 }
 bool ak820_tapping_before(const keyevent_t AK820_STATE_MEM *event) {
-    uint8_t id = ak820_tapping_source(event->key);
+    uint8_t id = source_of(event->key);
 #ifdef VIAL_ENABLE
     if (vial_unlock_in_progress) {
         if (IS_EVENT(*event) && id != NONE && !event->pressed) source_state_set(id, source_state_get(id) & ~SOURCE_BLOCKED);
@@ -105,7 +120,7 @@ bool ak820_tapping_process(keyrecord_t AK820_STATE_MEM *record) {
     uint8_t sc_mods = 0;
 #endif
     if (IS_NOEVENT(record->event)) return true;
-    id = ak820_tapping_source(record->event.key);
+    id = source_of(record->event.key);
     if (id == NONE) return true;
     code = record->keycode;
     kind = code >> 8;

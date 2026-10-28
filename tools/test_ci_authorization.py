@@ -36,6 +36,14 @@ def full_qualification_tests(hashes):
     for name in ('ak820_usb','ak820_keymap','ak820_caps_word','ak820_macro_guard',
                  'ak820_diagnostic','ak820_optimization','ak820_rgb','ak820_via_decode','ak820_bounded','ak820_combo'):
         commands.append((root+'/qmk-8051-ak820', [py,'tests/'+name+'/run.py'],0))
+    for script in ('tests/ak820_macro_guard/parse.py', 'tests/ak820_macro_guard/powercut.py'):
+        commands.append((root+'/qmk-8051-ak820', [py,script],0))
+    for script in ('tests/ak820_tap_dance/host.py', 'tests/ak820_repeat/table.py'):
+        commands.append((root+'/qmk-8051-ak820', [py,script,'--sdcc','/ci/sdcc/bin/sdcc'],0))
+    for script in ('tests/ak820_repeat/cpu.py', 'tests/ak820_macro_guard/cpu.py',
+                   'tests/ak820_tap_dance/cpu.py', 'tests/ak820_tapping/compact_cpu.py'):
+        commands.append((root+'/qmk-8051-ak820', [py,script,'--sdcc','/ci/sdcc/bin/sdcc',
+                         '--simulator','/ci/sdcc/bin/s51'],0))
     commands.append((root+'/qmk-8051-ak820', [py,'tests/ak820_tapping/run.py','--negative-controls',
                      '--output','/ci/logs/tapping-host.json'],0))
     for script in ('ak820_features/run.py','ak820_unlock/run.py','ak820_tri_layer/run.py',
@@ -207,9 +215,9 @@ class AuthorizationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             bundle, _, _ = self.bundle_fixture(folder)
             report=json.loads((bundle/'reports/qualification.json').read_bytes())
-            self.assertEqual(len(report['tests']),28)
+            self.assertEqual(len(report['tests']),36)
             auth.validate_qualification_contract(report)
-            for index in range(28):
+            for index in range(36):
                 with self.subTest(omitted=index):
                     bad=json.loads(json.dumps(report));del bad['tests'][index]
                     with self.assertRaises(ValueError): auth.validate_qualification_contract(bad)
@@ -225,8 +233,14 @@ class AuthorizationTests(unittest.TestCase):
                 row=next(t for t in r['tests'] if 'tests/ak820_tapping/run.py' in t['command'])
                 row['command'].remove('--negative-controls')
             def cpu_tool(r): r['tests'][-1]['command'][5]='/wrong/s51'
+            def sdcc_host_tool(r):
+                next(t for t in r['tests'] if 'tests/ak820_tap_dance/host.py' in t['command'])['command'][3] = '/wrong/sdcc'
+            def sdcc_cpu_compiler(r):
+                next(t for t in r['tests'] if 'tests/ak820_tapping/compact_cpu.py' in t['command'])['command'][3] = '/wrong/sdcc'
+            def sdcc_cpu_simulator(r):
+                next(t for t in r['tests'] if 'tests/ak820_tapping/compact_cpu.py' in t['command'])['command'][5] = '/wrong/s51'
             def zero(r): r['tests'][0]['unit_tests']['run']=0;r['unit_tests']['run']-=1
-            for mutate in (iap_missing,tapping_controls_missing,cpu_tool,zero,
+            for mutate in (iap_missing,tapping_controls_missing,cpu_tool,sdcc_host_tool,sdcc_cpu_compiler,sdcc_cpu_simulator,zero,
                            lambda r:r['tests'].append(r['tests'][0]),
                            lambda r:r['unit_tests'].update(run=99),
                            lambda r:r['tests'][0]['command'].append('--extra'),

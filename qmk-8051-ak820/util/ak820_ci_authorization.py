@@ -191,16 +191,21 @@ def validate_qualification_contract(report: dict) -> None:
         'ak820_features', 'ak820_unlock', 'ak820_tri_layer', 'ak820_iap')}
     cpu |= {'tests/ak820_rgb/emitted.py', 'tests/ak820_bounded/emitted.py', 'tests/ak820_tapping/emitted.py', 'tests/ak820_combo/emitted.py'}
     tapping_host = 'tests/ak820_tapping/run.py'
-    expected = {('discover', *item) for item in discovery} | {('host', item) for item in host}
+    host_extra = {'tests/ak820_macro_guard/parse.py', 'tests/ak820_macro_guard/powercut.py'}
+    sdcc_only = {'tests/ak820_tap_dance/host.py', 'tests/ak820_repeat/table.py'}
+    sdcc_cpu = {'tests/ak820_repeat/cpu.py', 'tests/ak820_macro_guard/cpu.py',
+                'tests/ak820_tap_dance/cpu.py', 'tests/ak820_tapping/compact_cpu.py'}
+    expected = {('discover', *item) for item in discovery} | {('host', item) for item in host | host_extra}
     expected |= {('cpu', item) for item in cpu} | {('docs', 'tools/check_docs.py'), ('host', tapping_host)}
+    expected |= {('sdcc', item) for item in sdcc_only} | {('sdcc-cpu', item) for item in sdcc_cpu}
     tests = report.get('tests')
     require(isinstance(tests, list), 'Qualification has no test records')
     seen, roots, qmk_roots, builds = set(), set(), set(), set()
     total = {'run': 0, 'skipped': 0}
     tools = report.get('tools', {})
-    require(isinstance(tools, dict) and isinstance(tools.get('s51'), dict)
-            and isinstance(tools['s51'].get('path'), str) and bool(tools['s51']['path']),
-            'Qualification lacks simulator path')
+    require(isinstance(tools, dict) and all(isinstance(tools.get(tool), dict)
+            and isinstance(tools[tool].get('path'), str) and bool(tools[tool]['path'])
+            for tool in ('sdcc', 's51')), 'Qualification lacks compiler or simulator path')
     for test in tests:
         command = test.get('command')
         require(isinstance(command, list) and len(command) >= 2
@@ -212,8 +217,17 @@ def validate_qualification_contract(report: dict) -> None:
             roots.add(test.get('cwd'))
         elif args == ['tools/check_docs.py']:
             identity = ('docs', args[0]); roots.add(test.get('cwd'))
-        elif len(args) == 1 and args[0] in host:
+        elif len(args) == 1 and args[0] in host | host_extra:
             identity = ('host', args[0]); qmk_roots.add(test.get('cwd'))
+        elif args[0] in sdcc_only:
+            require(len(args) == 3 and args[1:] == ['--sdcc', tools['sdcc']['path']],
+                    'SDCC host fixture compiler differs from required toolchain')
+            identity = ('sdcc', args[0]); qmk_roots.add(test.get('cwd'))
+        elif args[0] in sdcc_cpu:
+            require(len(args) == 5 and args[1:] == ['--sdcc', tools['sdcc']['path'],
+                    '--simulator', tools['s51']['path']],
+                    'SDCC CPU fixture tools differ from required toolchain')
+            identity = ('sdcc-cpu', args[0]); qmk_roots.add(test.get('cwd'))
         elif args[0] == tapping_host:
             require(len(args) == 4 and args[1:3] == ['--negative-controls', '--output']
                     and PurePosixPath(args[3]).is_absolute(), 'Tapping host qualification needs negative controls and output')

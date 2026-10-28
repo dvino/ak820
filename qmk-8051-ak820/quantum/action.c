@@ -407,7 +407,11 @@ void process_record(keyrecord_t AK820_RECORD_MEM *record_argument) {
         !ak820_dynamic_macro_process(get_record_keycode(record, true), record->event.pressed)) return;
 #endif
 #ifdef AK820_COMPACT_ONESHOT
+#    ifdef __SDCC_mcs51
+    uint8_t oneshot_source = ak820_tapping_source_ptr(&record->event.key);
+#    else
     uint8_t oneshot_source = ak820_tapping_source(record->event.key);
+#    endif
     bool oneshot_pressed = record->event.pressed;
     record->keycode = get_record_keycode(record, true);
     if (!ak820_oneshot_process(record->keycode, oneshot_source, oneshot_pressed)) return;

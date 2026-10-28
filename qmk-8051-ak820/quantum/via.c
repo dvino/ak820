@@ -316,8 +316,18 @@ void raw_hid_receive(uint8_t *packet, uint8_t length) {
         case id_set_keyboard_value: {
             switch (command_data[0]) {
                 case id_layout_options: {
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+                    /* SDCC mcs51 stores uint32_t least significant byte first. */
+                    union { uint32_t value; uint8_t bytes[4]; } value;
+                    value.bytes[3] = command_data[1];
+                    value.bytes[2] = command_data[2];
+                    value.bytes[1] = command_data[3];
+                    value.bytes[0] = command_data[4];
+                    via_set_layout_options(value.value);
+#else
                     uint32_t value = ((uint32_t)command_data[1] << 24) | ((uint32_t)command_data[2] << 16) | ((uint32_t)command_data[3] << 8) | (uint32_t)command_data[4];
                     via_set_layout_options(value);
+#endif
                     break;
                 }
                 default: {
