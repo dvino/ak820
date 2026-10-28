@@ -20,14 +20,15 @@ class Beta41CatalogTests(unittest.TestCase):
             rows.append({'profile': profile, 'settings_identity': {
                 'ihx_sha256': sha(ihx), 'code_sha256': sha(code)}})
             images.append({'profile': profile, 'flashing_authorized': False,
-                           'release_approved': True, 'hardware_validated': False,
+                           'release_approved': False, 'hardware_validated': False,
                            'settings_writes_authorized': False})
         payload['firmware-matrix.json'] = canonical({'profiles': rows})
         payload['capability-catalog.json'] = canonical({
             'format': 'ak820-development-capability-catalog-1',
             'release_approved': False, 'flashing_authorized': False,
             'hardware_validated': False, 'settings_writes_authorized': False,
-            'images': images})
+            # Catalog producers may order images independently of the firmware matrix.
+            'images': list(reversed(images))})
         payload['INSTALL-en.md'] = b'install instructions\n'
         payload['INSTALL-ru.md'] = 'инструкция\n'.encode()
         descriptor = {'format': 'ak820-beta-release-catalog-1', 'tag': SOURCE_TAG,
@@ -69,6 +70,8 @@ class Beta41CatalogTests(unittest.TestCase):
             self.assertTrue(capabilities['flashing_authorized'])
             self.assertFalse(capabilities['hardware_validated'])
             self.assertFalse(capabilities['settings_writes_authorized'])
+            self.assertEqual([image['profile'] for image in capabilities['images']],
+                             list(PROFILES))
             for image in capabilities['images']:
                 self.assertTrue(image['flashing_authorized'])
                 self.assertFalse(image['hardware_validated'])
