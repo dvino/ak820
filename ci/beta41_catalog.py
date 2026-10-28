@@ -94,8 +94,14 @@ def promote(directory: Path, tag: str = TARGET_TAG) -> str:
     if descriptor.get('installable_profiles') != list(PROFILES):
         raise ValueError('Release catalog profile set differs from the matrix')
     images = capabilities.get('images')
-    if not isinstance(images, list) or [image.get('profile') for image in images] != list(PROFILES):
+    if (not isinstance(images, list) or len(images) != len(PROFILES)
+            or any(not isinstance(image, dict) for image in images)):
         raise ValueError('Capability catalog profile set differs from the matrix')
+    image_rows = {image.get('profile'): image for image in images}
+    if len(image_rows) != len(PROFILES) or set(image_rows) != set(PROFILES):
+        raise ValueError('Capability catalog profile set differs from the matrix')
+    images = [image_rows[profile] for profile in PROFILES]
+    capabilities['images'] = images
     if any(image.get('flashing_authorized') is not False
            or image.get('settings_writes_authorized') is not False
            or image.get('hardware_validated') is not False for image in images):
