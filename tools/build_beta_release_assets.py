@@ -365,8 +365,8 @@ def validate_module_descriptions(value: dict | bytes) -> None:
         raise ValueError('Module descriptions omit or duplicate a registered feature')
 
 def build(bundles_root: Path, output: Path, tag: str) -> dict:
-    if not re.fullmatch(r'v?\d+\.\d+\.\d+-beta\.\d+', tag):
-        raise ValueError('Tag must be a beta version such as v0.6.0-beta.2')
+    if not re.fullmatch(r'v?\d+\.\d+\.\d+-beta\.\d+(?:\.\d+)?', tag):
+        raise ValueError('Tag must be a beta version such as v0.6.0-beta.4 or v0.6.0-beta.4.1')
     contexts = ak820.release_contexts(approved=True)
     if len(contexts) != 10:
         raise ValueError('Beta.2 catalog requires all ten approved installer profiles')

@@ -239,6 +239,9 @@ jobs:
           def allowed_path(path):
               if path == WORKFLOW or path.startswith("audits/"):
                   return True
+              if path in ("tools/build_beta_release_assets.py",
+                          "tools/test_build_beta_release_assets.py"):
+                  return True
               if path == "web/module-descriptions.json":
                   return True
               if path == "ci/beta4-release-notes.md":
