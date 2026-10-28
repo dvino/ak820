@@ -246,6 +246,9 @@ jobs:
               if path in ("tools/build_beta_release_assets.py",
                           "tools/test_build_beta_release_assets.py"):
                   return True
+              if path in ("web/docs/CAPABILITY-CATALOG.md",
+                          "web/docs/ru/CAPABILITY-CATALOG.md"):
+                  return True
               if re.fullmatch(r"(?:README(?:[^/]*)|docs/.+)\.md", path):
                   return True
               return any(path == f"ci/profiles/{profile}/{name}" for profile in PROFILES
