@@ -94,8 +94,10 @@ underscore. Other ordinary keys that are not letters or listed word characters
 end it. The mode also ends after five seconds without a key press. For example, type `user_name7` with
 Caps Word on, then press Space to turn the mode off as the next word begins.
 
-The saved ruleset defaults to English. QSID 22 selects English (`0`) or Russian
-(`1`); it does not change the host keyboard layout or detect it. Russian rules
+New settings default to Russian. Existing saved English (`0`) selections remain
+unchanged; to fix premature termination on Russian letters such as `б`, explicitly
+set QSID 22 to Russian (`1`) or use keycode `0x7e01`. The English mode remains
+available (`0`); the firmware cannot detect or switch the host keyboard layout. Russian rules
 add `х`, `ъ`, `ж`, `э`, `б`, `ю` and `ё` on `LBRC`, `RBRC`, `SCLN`, `QUOT`,
 `COMM`, `DOT` and `GRV`. These seven key positions act as letters for Caps Word;
 their punctuation output still follows the computer's layout. The firmware does

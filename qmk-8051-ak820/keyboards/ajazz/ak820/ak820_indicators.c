@@ -12,6 +12,7 @@
 #    include "timer.h"
 #    include "usb_device.h"
 #endif
+#include "caps_word.h"
 #ifdef AK820_OS_INDICATORS
 #    include "ak820_os_indicators.h"
 #endif
@@ -100,7 +101,8 @@ void ak820_update_indicators(void) {
     __bit irq_enabled = IE_PWM_I2C;
 
     if (D0UsbConfig && !(USB_SleepStatus & 2)) {
-        caps = (uint8_t)(0u - ((KB_USB_SetReport >> 1) & 1));
+        /* C reflects host Caps Lock OR local Caps Word; neither changes the USB LED report. */
+        caps = (uint8_t)(0u - (((KB_USB_SetReport >> 1) & 1u) | (uint8_t)is_caps_word_on()));
         if ((layer_state | default_layer_state) & (layer_state_t)~1) {
             layer = 0xff;
 #ifdef AK820_COMPACT_GUI_LOCK

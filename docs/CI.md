@@ -49,7 +49,7 @@ closed; creating a linked image alone does not satisfy this gate.
 Assembly also exports the capability catalog from those exact CI builds. Publication uses this catalog and the measured firmware matrix, so path-dependent MAP and report hashes refer to the approved CI files. It does not replace them with hashes from local builds.
 
 The assembly job produces approved firmware bundles. The tagged release job
-checks their source commit, copies all ten profiles to `releases/beta3`, builds
+checks their source commit, copies all ten profiles to `releases/beta4`, builds
 the Python Windows and Linux x86_64 packages and companion catalog, and checks
 the published package checksums. It does not build standalone GUI installers.
 

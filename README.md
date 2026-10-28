@@ -37,7 +37,7 @@ Keep the original recovery files and read [stock firmware recovery](docs/INSTALL
 The firmware provides six editable layers, per-layer encoder actions, 16 saved
 Vial macros, eight two-key Combos, media and system keys, Caps Word, Repeat and
 Alt Repeat, Tri Layer, Mod-Tap and Layer-Tap, and built-in RGB effects. The **C**
-indicator follows Caps Lock; **W** shows an active layer above layer 0.
+indicator follows Caps Lock or Caps Word; **W** shows an active layer above layer 0.
 
 The current source also supports selectable Caps Word rules, session controls
 for Combos, saved Auto Shift and One Shot settings, and a saved macro on tap

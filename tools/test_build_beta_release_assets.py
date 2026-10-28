@@ -231,7 +231,7 @@ class PromotionTests(unittest.TestCase):
                 self.assertIn('AK820-Python/AK820.cmd', package_members)
                 self.assertIn('AK820-Python/INSTALL-en.md', package_members)
                 self.assertIn('AK820-Python/INSTALL-ru.md', package_members)
-                self.assertIn('AK820-Python/releases/beta3/main/firmware/application.ihx', package_members)
+                self.assertIn('AK820-Python/releases/beta4/main/firmware/application.ihx', package_members)
                 self.assertFalse(any(name.endswith('.exe') for name in package_members))
                 self.assertFalse(any(name.endswith(('/gui.py', '/build_windows_installer.py',
                     '/build_linux_installer.py', '/requirements-build-windows.txt',
@@ -243,7 +243,7 @@ class PromotionTests(unittest.TestCase):
                 self.assertIn('AK820-Python/AK820.sh', package_members)
                 self.assertIn('AK820-Python/INSTALL-en.md', package_members)
                 self.assertIn('AK820-Python/INSTALL-ru.md', package_members)
-                self.assertIn('AK820-Python/releases/beta3/main/firmware/application.ihx', package_members)
+                self.assertIn('AK820-Python/releases/beta4/main/firmware/application.ihx', package_members)
                 self.assertFalse(any(name.endswith('.exe') for name in package_members))
                 self.assertFalse(any(name.endswith(('/gui.py', '/build_windows_installer.py',
                     '/build_linux_installer.py', '/requirements-build-windows.txt',

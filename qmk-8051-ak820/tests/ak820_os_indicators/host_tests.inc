@@ -1,5 +1,7 @@
 /* Production functions, host MMIO and a controlled 32-bit clock. */
 #include "../../keyboards/ajazz/ak820/ak820_os_indicators.c"
+static bool caps_word_led_active;
+bool is_caps_word_on(void) { return caps_word_led_active; }
 #include "../../keyboards/ajazz/ak820/ak820_indicators.c"
 static uint32_t os_now;
 static unsigned os_clock_reads;
@@ -81,6 +83,7 @@ static void test_os_indicators(void) {
     assert(ak820_os_indicator_get()==0);
     os_request(1,2,0,2); reset(); assert(ak820_os_indicator_get()==0);
     configure(); os_request(0,0,0,0);
+    caps_word_led_active = false;
     /* C and W retain their existing channels; OS owns component 3 only.
      * Shared intensity must keep W full while OS is off or breathing. */
     for (uint8_t irq=0;irq<2;++irq) for (uint8_t mode=0;mode<4;++mode)
@@ -108,6 +111,15 @@ static void test_os_indicators(void) {
             for (unsigned i=0;i<512;++i) if(i!=0x11c&&i!=0x11d&&i!=0x13c&&i!=0x13d&&i!=0x13f) assert(ak820_led_dma[i]==0x69);
         }
     }
+    /* Local Caps Word lights C without modifying the host LED report. */
+    KB_USB_SetReport=0; caps_word_led_active=true; ak820_update_indicators();
+    assert(ak820_led_dma[0x11c]==255 && ak820_led_dma[0x11d]==255);
+    KB_USB_SetReport=2; ak820_update_indicators();
+    assert(ak820_led_dma[0x11c]==255 && ak820_led_dma[0x11d]==255);
+    caps_word_led_active=false; ak820_update_indicators();
+    assert(ak820_led_dma[0x11c]==255 && ak820_led_dma[0x11d]==255);
+    KB_USB_SetReport=0; ak820_update_indicators();
+    assert(ak820_led_dma[0x11c]==0 && ak820_led_dma[0x11d]==0);
 #ifdef AK820_MAC_PC
     for (unsigned mac=0;mac<2;++mac) {
         ak820_mac_mode=mac; os_now=100; os_request(1,1,0,1);
@@ -120,12 +132,14 @@ static void test_os_indicators(void) {
     for (unsigned sleeping=0;sleeping<2;++sleeping) {
         os_now=5000; os_request(1,2,0,2);
         layer_state=default_layer_state=2; KB_USB_SetReport=2;
+        caps_word_led_active = true;
         if(sleeping) USB_SleepStatus=2; else D0UsbConfig=0;
         ak820_update_indicators();
         assert(ak820_led_dma[0x11c]==0 && ak820_led_dma[0x11d]==0);
         assert(ak820_led_dma[0x13c]==0 && ak820_led_dma[0x13d]==0 && ak820_led_dma[0x13f]==0);
         USB_SleepStatus=0; D0UsbConfig=1;
     }
+    caps_word_led_active = false;
     /* Long unattended gaps and 32-bit wrap cannot resurrect a stale override. */
     os_now=0xfffffff0; os_request(1,1,0,1);
     os_now=0x00000ba7; os_request(0,0,0,1);

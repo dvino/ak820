@@ -25,6 +25,7 @@ class ProfileSelectionTests(unittest.TestCase):
             path.parent.mkdir(parents=True)
             path.write_text(json.dumps({'configuration': app.ak820_profiles.configuration(row['id'])}))
             (path.parents[1] / 'installer-release.json').write_text(row['id'])
+            (path.parents[1] / 'approved-release.json').write_text('test approval')
 
     def load(self, bundle, approval, *, approved):
         return {'files': {'firmware/application.ihx': {'sha256': bundle.name},
@@ -37,7 +38,7 @@ class ProfileSelectionTests(unittest.TestCase):
         self.assertEqual([c.profile for c in contexts], [r['id'] for r in self.catalog['profiles']])
         self.assertEqual(app.release_context(approved=True).profile, 'main')
         for context in contexts:
-            self.assertEqual(context.bundle, self.root / ('releases/beta3/' + context.profile))
+            self.assertEqual(context.bundle, self.root / ('releases/beta4/' + context.profile))
             self.assertEqual(context.approval, context.bundle / 'approved-release.json')
         self.assertTrue(all(c.kwargs['approved'] for c in self.loader.call_args_list))
 
@@ -54,8 +55,28 @@ class ProfileSelectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'catalog is missing'):
             app.release_context('main', approved=True)
 
+    def test_release_directory_must_be_reviewed_and_paths_cannot_escape(self):
+        path = self.root / 'tools/installer/profile-catalog.json'
+        for version in ('../beta4', 'beta4/../../elsewhere', 'beta5', '', None):
+            bad = copy.deepcopy(self.catalog)
+            bad['release_dir'] = version
+            path.write_text(json.dumps(bad))
+            with self.assertRaisesRegex(ValueError, 'release directory'):
+                app.profile_catalog()
+        bad = copy.deepcopy(self.catalog)
+        bad['profiles'][0]['bundle'] = 'releases/beta3/main'
+        path.write_text(json.dumps(bad))
+        with self.assertRaisesRegex(ValueError, 'asset path'):
+            app.profile_catalog()
+        path.write_text(json.dumps(self.catalog))
+        # An absent or mixed release is rejected before opening the keyboard.
+        missing = self.root / self.catalog['profiles'][0]['bundle'] / 'approved-release.json'
+        missing.unlink(missing_ok=True)
+        with self.assertRaisesRegex(ValueError, 'Exact approved profile assets'):
+            app.release_context('main', approved=True)
+
     def test_wrong_image_profile_and_unbound_catalog(self):
-        report = self.root / 'releases/beta3/game/reports/build-report.json'
+        report = self.root / 'releases/beta4/game/reports/build-report.json'
         report.write_text(json.dumps({'configuration': app.ak820_profiles.configuration('main')}))
         with self.assertRaisesRegex(ValueError, 'build configuration'):
             app.release_context('game', approved=True)

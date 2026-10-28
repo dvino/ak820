@@ -108,7 +108,7 @@ python3 tools/build_release_bundle.py \
 `docs/REVIEW.md` indexes review evidence; it is not the exact-build approval
 record. Bundle assembly does not authorize device operations. A changed source
 or host input invalidates earlier evidence. Current installer selection uses `tools/installer/profile-catalog.json`. Each
-profile needs its complete approved bundle under `releases/beta3/<profile>`,
+profile needs its complete approved bundle under `releases/beta4/<profile>`,
 including its own `approved-release.json`. The all-profile CI assembler writes
 these bundles under `dist/ci-firmware/profiles`; packaging stages them at the
 selected paths. Missing or mismatched approval blocks packaging.

@@ -29,9 +29,9 @@
 /* Language controls share this main CODE unit, leaving the small state
  * machine in its independently bounded low application window. */
 #ifdef __SDCC_mcs51
-__bit caps_word_ru;
+__bit caps_word_ru = 1;
 #else
-bool caps_word_ru;
+bool caps_word_ru = true;
 #endif
 void ak820_caps_word_configure(uint8_t ru) {
     if (caps_word_ru != (ru != 0)) caps_word_off();

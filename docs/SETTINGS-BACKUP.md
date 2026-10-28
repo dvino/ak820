@@ -5,6 +5,8 @@
 Use the Python installer script to save or restore settings. The script checks
 the exact firmware image and stops if the saved data is unsupported. Settings
 restore does not change the selected profile or save Direct colors to EEPROM.
+The selected profile must have its complete, exactly approved release assets.
+A mismatched or absent beta.4 profile catalog/approval blocks restore before USB access; a beta.3 image is never silently substituted.
 
 ## Run the script
 

@@ -213,7 +213,7 @@ def python_package_files(contexts) -> dict[str, bytes]:
                 item = manifest['files'][name]
                 if len(data) != item['size'] or sha(data) != item['sha256']:
                     raise ValueError(f'Profile package input changed: {profile}/{name}')
-            files[f'releases/beta3/{profile}/{name}'] = data
+            files[f'releases/beta4/{profile}/{name}'] = data
     return files
 
 def write_python_packages(stage: Path, files: dict[str, bytes]) -> dict[str, str]:

@@ -149,13 +149,16 @@ def profile_catalog():
     require(value.get('format') == 'ak820-installer-profile-catalog-1' and
             value.get('default_profile') == 'main' and type(value.get('profiles')) is list,
             'Invalid installer profile catalog')
+    release_dir = value.get('release_dir')
+    require(release_dir in ('beta3', 'beta4'),
+            'Unknown installer release directory; select an exact approved catalog')
     ids = []
     for row in value['profiles']:
         name = row.get('id')
         require(name in PROFILE_IDS
                 and name not in ids, 'Unknown or duplicate installer profile')
-        require(row.get('bundle') == 'releases/beta3/' + name and
-                row.get('approval') == 'releases/beta3/' + name + '/approved-release.json',
+        require(row.get('bundle') == 'releases/' + release_dir + '/' + name and
+                row.get('approval') == 'releases/' + release_dir + '/' + name + '/approved-release.json',
                 'Invalid profile asset path')
         require(all(type(row.get(key)) is dict and all(type(row[key].get(lang)) is str for lang in ('en','ru'))
                     for key in ('name','description')), 'Missing bilingual profile description')
@@ -176,6 +179,9 @@ def release_context(profile=None, *, approved):
     row = next((r for r in catalog['profiles'] if r['id'] == profile), None)
     require(row is not None, 'Unknown installer profile: ' + str(profile))
     bundle, approval = ROOT / row['bundle'], ROOT / row['approval']
+    require(bundle.is_dir() and approval.is_file(),
+            'Exact approved profile assets are missing for ' + profile + '; '
+            'restore/update is blocked before any device access. Use the matching reviewed release package.')
     manifest = _load_release(bundle, approval, approved=approved)
     report = json.loads((bundle / 'reports/build-report.json').read_text(encoding='utf-8'))
     configuration = ak820_profiles.validate_configuration(report.get('configuration'))

@@ -397,7 +397,7 @@ jobs:
               if attestation.get('source_commit') != os.environ['SOURCE_COMMIT']:
                   raise SystemExit('firmware bundle source commit mismatch: ' + profile['id'])
               bundles[profile['id']] = bundle
-          shutil.copytree('dist/firmware/profiles', 'releases/beta3')
+          shutil.copytree('dist/firmware/profiles', 'releases/beta4')
           PY
       - name: Use catalogs measured from the approved CI images
         run: |
@@ -415,7 +415,7 @@ jobs:
             *) echo "Unsupported AK820 release tag: $RELEASE_TAG" >&2; exit 1 ;;
           esac
           python tools/build_beta_release_assets.py \
-            --bundles-root releases/beta3 \
+            --bundles-root releases/beta4 \
             --output dist/catalog \
             --tag "$CATALOG_TAG"
       - name: Name the beta.4 catalog archive

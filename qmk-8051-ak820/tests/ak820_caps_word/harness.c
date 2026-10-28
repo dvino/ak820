@@ -200,6 +200,42 @@ int main(void) {
         assert(key(code, true) && is_caps_word_on() && weak_mods == MOD_BIT(KC_LSFT));
         assert(key(code, false) && is_caps_word_on());
     }
+    /* Full 33-letter Russian host-layout matrix, including seven keys that
+     * are punctuation in EN, and the owner-observed "вообще" regression. */
+    {
+        const uint8_t ru_letters[] = {
+            KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P,
+            KC_LBRC, KC_RBRC, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J,
+            KC_K, KC_L, KC_SCLN, KC_QUOT, KC_Z, KC_X, KC_C, KC_V, KC_B,
+            KC_N, KC_M, KC_COMM, KC_DOT, KC_GRV
+        };
+        const uint8_t word[] = {KC_D, KC_J, KC_J, KC_COMM, KC_O, KC_T};
+        const uint8_t extra[] = {KC_LBRC, KC_RBRC, KC_SCLN, KC_QUOT,
+                                 KC_COMM, KC_DOT, KC_GRV};
+        ak820_caps_word_configure(1);
+        for (unsigned i = 0; i < sizeof(ru_letters); ++i) {
+            caps_word_off(); clear_weak_mods(); caps_word_on();
+            assert(key(ru_letters[i], true) && is_caps_word_on() &&
+                   weak_mods == MOD_BIT(KC_LSFT));
+            assert(key(ru_letters[i], false) && is_caps_word_on());
+        }
+        caps_word_off(); clear_weak_mods(); caps_word_on();
+        for (unsigned i = 0; i < sizeof(word); ++i) {
+            assert(key(word[i], true) && is_caps_word_on() &&
+                   weak_mods == MOD_BIT(KC_LSFT));
+            assert(key(word[i], false) && is_caps_word_on());
+        }
+        assert(key(KC_SPACE, true) && !is_caps_word_on() && !weak_mods);
+        ak820_caps_word_configure(0);
+        for (unsigned i = 0; i < sizeof(extra); ++i) {
+            caps_word_on();
+            assert(key(extra[i], true) && !is_caps_word_on() && !weak_mods);
+        }
+        caps_word_on();
+        assert(key(KC_A, true) && is_caps_word_on());
+        assert(key(KC_SPACE, true) && !is_caps_word_on() && !weak_mods);
+        caps_word_on();
+    }
     const uint16_t unshifted[] = {KC_1, KC_0, KC_BSPC, KC_DEL, KC_UNDS};
     for (unsigned i = 0; i < sizeof(unshifted) / sizeof(unshifted[0]); ++i) {
         assert(key(unshifted[i], true) && is_caps_word_on() && !weak_mods);

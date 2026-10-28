@@ -4,7 +4,7 @@
 
 The keyboard has three separate indicators:
 
-- **C** follows the Caps Lock state reported by the computer. Caps Word does not turn it on.
+- **C** lights when either Caps Lock is reported by the computer or local Caps Word is active. Caps Word does not change the computer's Caps Lock state.
 - **W** lights when any layer above layer 0 is active, including a held, toggled or default layer. When no such layer is active, GUI lock makes W pulse through a 2000 ms brightness cycle. This port uses W for layers.
 - **OS** belongs to the optional Mac/PC and host-layout modules below. These modules do not change C or W.
 
