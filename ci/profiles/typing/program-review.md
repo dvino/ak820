@@ -8,7 +8,7 @@
   "hardware_validated": false,
   "ihx_sha256": "382e5e965740ce917b165ddc01d8a7078525173882016310a755bbb54a8b63a9",
   "physical_device_commands": 0,
-  "policy_sha256": "e9d7686929bb38f3c10a1c1681f4768ee397ab5e5167a3c4f6f8004c29aeacd6",
+  "policy_sha256": "75a19894739a17fe7c34fdad8423862827896930cde16904cdd440ec2d363ad2",
   "profile": "typing",
   "review_report": "ci/profiles/typing/program-review.md#exact-tree-review-record",
   "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/typing-qualified/typing/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",

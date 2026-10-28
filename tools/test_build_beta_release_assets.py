@@ -87,6 +87,15 @@ class BundleValidationTests(unittest.TestCase):
 
 
 class PromotionTests(unittest.TestCase):
+    def test_accepts_patch_beta_tag_syntax(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            bundles = root / 'bundles'
+            bundles.mkdir()
+            with patch.object(assets.ak820, 'release_contexts', return_value=()), \
+                    self.assertRaisesRegex(ValueError, 'all ten approved installer profiles'):
+                assets.build(bundles, root / 'out', 'v0.6.0-beta.4.1')
+
     def assert_packaged_markdown_links_resolve(self, members, prefix):
         files = {name[len(prefix):] for name in members if name.startswith(prefix)}
         for name in sorted(files):
