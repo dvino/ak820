@@ -514,3 +514,12 @@ is `747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628`.
 Independent full-image qualification, representative hardware and main+TD CODE
 fit are still open. Source and per-suite logs are retained, while simulator
 traces not needed for the findings remain in the ignored build/work directory.
+
+A source-only VIA layout-option assembly screen wrote the four packet bytes to
+an SDCC little-endian `uint32_t` union, preserving all four callback bytes in
+principle. Same-flags TD-enabled production `via.c` object CSEG changed 0x5c6 →
+0x598 (−46 bytes), but XSEG increased 0x14 → 0x18 (+4), BSEG stayed 2 and
+CONST 0. The latest TD bootstrap already fills ordinary XRAM (3,008 / 3,008),
+so this variant was restored and rejected rather than trading a physical XRAM
+overflow for an object-only CODE reduction. No equivalence test or firmware
+image was built; object savings are not linked savings.
