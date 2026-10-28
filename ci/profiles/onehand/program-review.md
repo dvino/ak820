@@ -8,7 +8,7 @@
   "hardware_validated": false,
   "ihx_sha256": "32bfa36b3b5a9d4b674b69d0b55b891045c43d575c716384aa77a6ebe6e6b99e",
   "physical_device_commands": 0,
-  "policy_sha256": "35c207248eacfec141a42513852ea7a2e29222fc6d4f3a2ab5f41eef9c4e139c",
+  "policy_sha256": "4c06f06d91ed6814c8b34361bbc3e6f45c8c146c540003f186120aca029cb1c4",
   "profile": "onehand",
   "review_report": "ci/profiles/onehand/program-review.md#exact-tree-review-record",
   "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/onehand-preliminary-final/onehand/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
