@@ -1,0 +1,161 @@
+{
+  "format": "ak820-configured-build-1",
+  "configuration": {
+    "compact_controls_version": 2,
+    "format": "ak820-build-configuration-1",
+    "profile": "main",
+    "optional_features": [
+      "one-shot",
+      "leader",
+      "dynamic-macros",
+      "os-indicators",
+      "qmk-settings",
+      "key-overrides",
+      "vialrgb-direct",
+      "auto-shift"
+    ],
+    "base_features": [
+      "six-layers",
+      "sixteen-vial-macros",
+      "eight-two-key-combos",
+      "compact-tap-hold",
+      "encoder-map",
+      "media-keys",
+      "caps-word",
+      "repeat",
+      "alternate-repeat",
+      "tri-layer",
+      "rgb-effects",
+      "vialrgb-direct-ram"
+    ],
+    "nvm_schema": 532483,
+    "make_options": {
+      "AK820_NKRO": "no",
+      "AK820_GRAVE_ESCAPE": "no",
+      "AK820_VIALRGB_DIRECT": "yes",
+      "AK820_COMPACT_TAP_DANCE": "no",
+      "AK820_COMPACT_KEY_OVERRIDE": "yes",
+      "AK820_QMK_SETTINGS": "yes",
+      "AK820_MAC_PC": "no",
+      "AK820_OS_INDICATORS": "yes",
+      "AK820_COMPACT_LEADER": "yes",
+      "AK820_NKRO_CONTROL": "no",
+      "AK820_COMPACT_ONESHOT": "yes",
+      "AK820_COMPACT_SPACE_CADET": "no",
+      "AK820_COMPACT_MOUSEKEY": "no",
+      "AK820_COMPACT_AUTOSHIFT": "yes",
+      "AK820_COMPACT_GUI_LOCK": "no",
+      "AK820_COMPACT_CTRL_GUI_SWAP": "no",
+      "AK820_COMPACT_DYNAMIC_MACRO": "yes"
+    },
+    "runtime_qmk_settings": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      18,
+      19,
+      22
+    ],
+    "timing_ms": {
+      "combo": 40,
+      "tap_hold": 200,
+      "os_indicator_lease": 3000,
+      "os_indicator_period": 4096,
+      "leader": 300,
+      "auto_shift": 175,
+      "dynamic_macro_phase": 10
+    },
+    "release_approved": false
+  },
+  "identity": {
+    "profile": "main",
+    "configuration_sha256": "ff139f9af8e47733ef39f88d2b581656749de753f2a70ed00a0f12de59297d6d",
+    "ihx_sha256": "ace7932c5dd6c7f60b904cadf613bc71764b29d1099b102d10395660cb4298b0",
+    "map_sha256": "2d5eb57d5c71c6a394f36e64d0ce4280c077543049edffc4a56228105e75e9af",
+    "mem_sha256": "6b3c7a477a94ff5dc89a2a5663342e75b5dbfc2add52dcfa54bbf93fd4ee88df",
+    "build_report_sha256": "f9aa335527634b321c4f1ff2c5bbb2776d92ac06a566f97b6155378ce141400a",
+    "source_manifest_sha256": "0dbd99f6d03297e6e6be81965443830ca0f9ff19cfa871991a4a2ce4595e851b",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "nvm_schema": 532483
+  },
+  "short_calls": {
+    "algorithm": "foreground-short-transfers-v2",
+    "report": ".build/goal-main-usbbit-diagnostic/short-calls.json",
+    "report_sha256": "66928b3c41e76aa0c6654d458616ca935d9bcc584d9dd952cf30dc3bf0014e67",
+    "selected": 509,
+    "saved_bytes": 509
+  },
+  "optimization": {
+    "contract": "ak820-audited-pass30-1",
+    "reports": {
+      "parameter_spills": "d96591ce16c04f466039f69912990db0d0cce8a10853df55305cd91624dd9bff",
+      "register_saves": "a84fd0321881b365146f70d4a36015103e56baad0215435363445ea40f89a4c4",
+      "tail_share": "a55df36aabd1c28cac9270c1f801afceebd23c7b99dcfd0c2a54cabd62e6e9f6"
+    }
+  },
+  "resources": {
+    "code_bytes": 40408,
+    "code_windows": [
+      {
+        "name": "low",
+        "start": 10400,
+        "end_exclusive": 12288,
+        "occupied_bytes": 1883,
+        "highest_address": 12282,
+        "trailing_free_bytes": 5
+      },
+      {
+        "name": "main",
+        "start": 12327,
+        "end_exclusive": 50944,
+        "occupied_bytes": 38525,
+        "highest_address": 50856,
+        "trailing_free_bytes": 87
+      }
+    ],
+    "xram": {
+      "start": 1088,
+      "end_inclusive": 3937,
+      "bytes": 2850,
+      "capacity": 3008,
+      "reserved_bytes": 64,
+      "total_bytes": 2914,
+      "physical_capacity": 3072
+    },
+    "internal_ram": {
+      "static_bytes": 77,
+      "initial_sp": 76,
+      "stack_capacity": 179,
+      "runtime_stack_bound": null,
+      "stack_margin": null,
+      "stack_qualified": false
+    },
+    "protected_windows_clear": true,
+    "absolute_xram": [
+      {
+        "symbol": "_ak820_led_dma",
+        "start": 512,
+        "reserved_end_exclusive": 1024
+      },
+      {
+        "symbol": "_ak820_flash_stage",
+        "start": 1024,
+        "reserved_end_exclusive": 1088,
+        "bytes": 64
+      }
+    ]
+  },
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "offline_tests_passed": false,
+  "release_approved": false,
+  "release_blockers": [
+    "Run check-runtime to establish the exact-image foreground/startup/IRQ stack bound.",
+    "No approved installer/settings transition for this feature identity.",
+    "No independent release approval for this image and source."
+  ],
+  "settings_compatibility": "Same schema is insufficient; installer requires an exact approved image."
+}

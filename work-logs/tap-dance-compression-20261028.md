@@ -543,3 +543,22 @@ A VIA layout sequential-shift alternative retained XSEG 0x14 and changed CSEG
 0x5c6 → 0x5c3 (−3 object bytes); it was restored because the tiny unlinked
 saving does not justify changing a public-protocol path without linked and
 callback equivalence tests.
+
+A fresh USB-bit main diagnostic was built with a fresh bootstrap-derived spill
+context, same pinned toolchain, profile and optimization chain as the earlier
+main controls. Occupied CODE 40,408 (38,525 main, 1,883 low): 87 bytes less
+than original 40,495, and 7 less than previous 40,415. Free space is 92 main
+and 5 low bytes, separate windows; highest CODE 0xc6a8. XRAM 2,850 / 3,008,
+one byte less than preceding 2,851. This is main WITHOUT Tap Dance. The image
+IHX SHA256 is ace7932c5dd6c7f60b904cadf613bc71764b29d1099b102d10395660cb4298b0.
+The full host+target offline suite passes all 35 suites with required toolchain
+and guarded-erase profile, unchanged image/map, zero skipped; exact-image
+runtime check passes with 161 / 179 stack bytes, 18 bytes margin and qualified
+foreground/startup/IRQ bound. First suite invocation failed RGB and Combo
+because the manually built image lacked configuration-report.json; `inspect`
+prints the report instead of creating it, so it was extracted as JSON and bound
+to this image, then the full suite reran successfully. The first failure and
+its logs are kept separately, not rewritten. No device was opened, flashed,
+or validated; no release or installer/settings transition is approved. The
+main+TD invalid 1,533-outside-window diagnostic predates this USB change and
+must not be conflated with this valid-window main-only image.

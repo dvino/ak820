@@ -1,0 +1,70 @@
+RUN /usr/local/bin/python3 -B -m unittest discover -s tools/installer -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/00.txt
+RUN /usr/local/bin/python3 -B -m unittest discover -s tools -p test_build_release_bundle.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/01.txt
+RUN /usr/local/bin/python3 -B -m unittest discover -s tools -p test_build_windows_installer.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/02.txt
+RUN /usr/local/bin/python3 -B -m unittest discover -s tools -p test_keyboard_runner.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/03.txt
+RUN /usr/local/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_tests.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/04.txt
+RUN /usr/local/bin/python3 -B -m unittest discover -s tools -p test_ak820_device_protocol.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/05.txt
+RUN /usr/local/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_package -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/06.txt
+RUN /usr/local/bin/python3 -B -m unittest discover -s qmk-8051-ak820/tests/ak820_inventory -p test_*.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/07.txt
+RUN /usr/local/bin/python3 tools/check_docs.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/08.txt
+RUN /usr/local/bin/python3 tests/ak820_usb/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/09.txt
+RUN /usr/local/bin/python3 tests/ak820_keymap/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/10.txt
+RUN /usr/local/bin/python3 tests/ak820_caps_word/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/11.txt
+RUN /usr/local/bin/python3 tests/ak820_macro_guard/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/12.txt
+RUN /usr/local/bin/python3 tests/ak820_diagnostic/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/13.txt
+RUN /usr/local/bin/python3 tests/ak820_optimization/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/14.txt
+RUN /usr/local/bin/python3 tests/ak820_rgb/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/15.txt
+RUN /usr/local/bin/python3 tests/ak820_via_decode/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/16.txt
+RUN /usr/local/bin/python3 tests/ak820_combo/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/17.txt
+RUN /usr/local/bin/python3 tests/ak820_macro_guard/parse.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/18.txt
+RUN /usr/local/bin/python3 tests/ak820_macro_guard/powercut.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/19.txt
+RUN /usr/local/bin/python3 tests/ak820_tap_dance/host.py --sdcc /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/20.txt
+RUN /usr/local/bin/python3 tests/ak820_bounded/run.py
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/21.txt
+RUN /usr/local/bin/python3 tests/ak820_repeat/table.py --sdcc /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/22.txt
+RUN /usr/local/bin/python3 tests/ak820_repeat/cpu.py --sdcc /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc --simulator /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/23.txt
+RUN /usr/local/bin/python3 tests/ak820_macro_guard/cpu.py --sdcc /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc --simulator /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/24.txt
+RUN /usr/local/bin/python3 tests/ak820_tap_dance/cpu.py --sdcc /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc --simulator /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/25.txt
+RUN /usr/local/bin/python3 tests/ak820_tapping/run.py --negative-controls --output /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/tapping-host.json
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/26.txt
+RUN /usr/local/bin/python3 tests/ak820_features/run.py --build-dir /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-usbbit-diagnostic --s51 /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/ak820_features
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/27.txt
+RUN /usr/local/bin/python3 tests/ak820_unlock/run.py --build-dir /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-usbbit-diagnostic --s51 /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/ak820_unlock
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/28.txt
+RUN /usr/local/bin/python3 tests/ak820_tri_layer/run.py --build-dir /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-usbbit-diagnostic --s51 /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/ak820_tri_layer
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/29.txt
+RUN /usr/local/bin/python3 tests/ak820_iap/run.py --build-dir /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-usbbit-diagnostic --s51 /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/ak820_iap --iap-fault-profile guarded-erase
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/30.txt
+RUN /usr/local/bin/python3 tests/ak820_rgb/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-usbbit-diagnostic --s51 /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/rgb
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/31.txt
+RUN /usr/local/bin/python3 tests/ak820_bounded/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-usbbit-diagnostic --s51 /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/bounded
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/32.txt
+RUN /usr/local/bin/python3 tests/ak820_tapping/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-usbbit-diagnostic --s51 /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/tapping
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/33.txt
+RUN /usr/local/bin/python3 tests/ak820_combo/emitted.py --build-dir /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-usbbit-diagnostic --s51 /home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51 --output-dir /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/combo
+PASS /home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/usbbit-tests/guarded-results-logs-n37tmyn9/34.txt
