@@ -64,6 +64,20 @@ def cases(fw):
         t=Trace(fw,'padded-entry-'+str(index));t.entry(index,(8,9,10,11));t.map((0,0),0x5700+index);t.short();t.tick(300);t.check('released',tap.packet());t.require(tap.packet(0,8));yield t.result()
     t=Trace(fw,'encoder-excluded');t.commands += [tap.linked.memory('rom',0xcd40,[0x57,0])];t.press(100,(253,0));t.release(101,(253,0));t.tick(400);t.check('empty',tap.packet());r=t.result();r['pass'] &= not any(p[2] in (4,5,6,7) for p in r['hid_send_trace']);yield r
 
+def auto_shift_case(fw):
+    t=Trace(fw,'auto-shift-interrupt');t.map((0,2),8);t.short();t.press(110,(0,2));t.require(tap.packet(0,4));t.check('ordinary-pending',tap.packet());t.tick(285);t.check('ordinary-shifted',tap.packet(2,8));t.release(286,(0,2));t.check('released',tap.packet());return t.result()
+
+def grave_escape_case(fw):
+    t=Trace(fw,'grave-escape-interrupt');t.map((0,2),0x7c16);t.press();t.press(120,(0,2));t.check('dance-and-escape',tap.packet(0,4,41));t.release(121);t.check('escape-survives',[0,0,0,41,0,0,0,0]);t.release(122,(0,2));t.check('released',tap.packet());return t.result()
+
+def mouse_case(fw):
+    fw.symbols['_mouse_snapshot']=fw.address('_input_snapshot')+40
+    fw.symbol_spaces['_mouse_snapshot']=fw.symbol_space('_input_snapshot')
+    t=Trace(fw,'mouse-button-interrupt');t.map((0,2),0xd1);t.press();t.press(120,(0,2));t.check('dance-held',tap.packet(0,4));t.check_memory('mouse-down','_mouse_snapshot',0,[2,1,0,0,0,0]);t.release(121);t.check('dance-released',tap.packet());t.check_memory('mouse-still-down','_mouse_snapshot',0,[2,1,0,0,0,0]);t.release(122,(0,2));t.check_memory('mouse-up','_mouse_snapshot',0,[2,0,0,0,0,0]);return t.result()
+
+def ctrl_gui_case(fw):
+    t=Trace(fw,'ctrl-gui-switch-held');t.entry(0,(4,0xe0,6,7));t.map((0,2),0x701b);t.press();t.tick(300);t.check('ctrl-held',tap.packet(1));t.press(301,(0,2));t.check('gui-after-swap',tap.packet(8));t.release(302,(0,2));t.release(303);t.check('released',tap.packet());return t.result()
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--build-dir',type=Path,required=True)
@@ -74,6 +88,16 @@ def main():
     if any(0x2600<=address<0x2703 or address>=0xc700 for address in fw.code):
         raise ValueError('Image overlaps simulator trampoline or NVM fixture')
     tests=list(cases(fw))
+    if '_process_grave_esc' in fw.symbols:
+        tests.append(grave_escape_case(fw))
+    if '_mousekey_on' in fw.symbols:
+        tests.append(mouse_case(fw))
+    report=json.loads((a.build_dir / 'build-report.json').read_text())
+    if 'ctrl-gui-swap' in report['configuration']['optional_features']:
+        tests.append(ctrl_gui_case(fw))
+    if '_ak820_autoshift_process' in fw.symbols:
+        as_fw=tap.linked.Firmware(a.build_dir.resolve(),a.s51.resolve(),a.output_dir.resolve(),auto_shift=True)
+        tests.append(auto_shift_case(as_fw))
     r={'pass':all(t['pass'] for t in tests),'tests':tests,'image_sha256':hashlib.sha256(fw.image.read_bytes()).hexdigest(),'runner_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'hardware_validated':False,'limits':'Exact linked CPU with simulated ROM/USB-ready fixtures. No physical timing, USB transfer, NVM persistence, power-loss or interrupt overlap proof.'}
     (fw.output/'results.json').write_text(json.dumps(r,indent=2)+'\n')
     print(json.dumps({'pass':r['pass'],'tests':len(tests),'failed':[t['name'] for t in tests if not t['pass']],'peak_sp':max(t['peak_sp'] for t in tests)},indent=2))

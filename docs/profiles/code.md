@@ -16,16 +16,19 @@ The [shared functions](README.md#shared-functions) are included.
 - Key Overrides: eight modifier-dependent key replacements.
 - Space Cadet: Shift when held, parenthesis when tapped.
 - Grave Escape: Escape or grave/tilde according to modifiers.
+- Tap Dance: eight entries for basic or modified key actions on tap and hold.
 
 ## Changes from main
 
-Added: Space Cadet: Shift when held, parenthesis when tapped; Grave Escape: Escape or grave/tilde according to modifiers.
+Added: Space Cadet: Shift when held, parenthesis when tapped; Grave Escape: Escape or grave/tilde according to modifiers; Tap Dance for basic or modified key actions.
 
 Removed: VialRGB Direct: direct RGB control from a compatible application.
 
 Auto Shift is not included.
 
 ## Limits
+
+Tap Dance has eight entries; its outputs cannot be macros, layers, mouse actions or nested special actions.
 
 Key Overrides: eight modifier-dependent replacements.
 

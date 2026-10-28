@@ -2,7 +2,7 @@
 
 # typing — Text entry
 
-Text entry with Auto Shift and Space Cadet.
+Text entry with Auto Shift, Space Cadet and Tap Dance.
 
 The [shared functions](README.md#shared-functions) are included.
 
@@ -16,16 +16,19 @@ The [shared functions](README.md#shared-functions) are included.
 - Key Overrides: eight modifier-dependent key replacements.
 - Auto Shift for supported text keys.
 - Space Cadet: Shift when held, parenthesis when tapped.
+- Tap Dance: eight configurable keys for tap, hold and repeated-tap actions.
 
 ## Changes from main
 
-Added: Space Cadet: Shift when held, parenthesis when tapped.
+Added: Space Cadet and Tap Dance.
 
 Removed: VialRGB Direct: direct RGB control from a compatible application.
 
 ## Limits
 
 Key Overrides: eight modifier-dependent replacements.
+
+Tap Dance supports basic keyboard keys, modifiers and keys with encoded modifiers; layers, macros and mouse actions are not supported.
 
 Leader selects one of 16 saved Vial macros with a prefix and one 1–0 or A–F key.
 

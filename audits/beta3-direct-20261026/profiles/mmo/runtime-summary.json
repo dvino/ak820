@@ -3,15 +3,15 @@
   "format": "ak820-runtime-safety-1",
   "hardware_validated": false,
   "identity": {
-    "build_report_sha256": "799ffbc1e2b951b237f6cb63b7c859990ac598effcb4751712773b05a597277b",
+    "build_report_sha256": "a503463fe7d79127ee3a39e7b6c8c69b560442efa3410a7a5e6ea0a00daf1c46",
     "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
     "configuration_sha256": "d4c053c17585f674b73c12cac3b5c850ddae7d84daf9cbd33db5a1e49ac0bc48",
-    "ihx_sha256": "ae5232a4d183d9cecf5b8f1cde917ea14961ed7d8db6b76ee93f85d348ddea54",
-    "map_sha256": "ac3000a2f0fb1885b06db5a3e3903067a8d5f0d9762474b7134c3b74a8b40f15",
-    "mem_sha256": "6de36667a829249c9463a05827afc26d51442a4f43e872e25edd61cb1ab04023",
+    "ihx_sha256": "ee7316e555049a63c6d3216886857333137924261db4c820e4692392fb485559",
+    "map_sha256": "e260afd072db461acf7ee150584a992060f43eaa915b2abafadbe1aa732a72d1",
+    "mem_sha256": "ce94993ad7ce6cc86631e9d54c0cb8988ccb32c0fb46e831f3f494b584009e13",
     "nvm_schema": 532483,
     "profile": "mmo",
-    "source_manifest_sha256": "0d04f134b425923a22d665e0e0b522a2cb279a9998d9fb84cd430861ee279711"
+    "source_manifest_sha256": "173ca4f7ac8744c39eecd9ee99a6bd40f6701bba69b2f22426072485a4e1fe15"
   },
   "irq_bound": 60,
   "limits": [
@@ -22,8 +22,8 @@
     "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
   ],
   "logs": {
-    "irq": "428a7ccf22d1735947083a90d09595e9d6ee61af33cea27ba26fb9bdceff8af0",
-    "startup": "09280a0e3b01790a81b3db18492fee74907e9db6591a97935c1c450413fb52bf"
+    "irq": "625571178efb9d499c2ea8161077174c28dad6deb18a48e905883b1951b99442",
+    "startup": "79fffd2112d94ce4046b309b0915dddb70e193b3f466e5bd885e4b338a59c158"
   },
   "main_entry_frame_bound": 2,
   "passed": true,
@@ -33,15 +33,15 @@
   "reports": {
     "foreground": {
       "path": "runtime-stack.json",
-      "sha256": "82d09f2797d3bbcfd75bfc528f36991addebdff52a1d6e9024cbec39c1e0b9df"
+      "sha256": "1e70b59fa11090afbce830681dd0470b2986f1a45c5ca73dec4b6ea0164b6d58"
     },
     "irq": {
       "path": "runtime-safety/irq/results.json",
-      "sha256": "428a7ccf22d1735947083a90d09595e9d6ee61af33cea27ba26fb9bdceff8af0"
+      "sha256": "625571178efb9d499c2ea8161077174c28dad6deb18a48e905883b1951b99442"
     },
     "startup": {
       "path": "runtime-safety/startup.json",
-      "sha256": "3718eea4f7e5ef15c74bf4a80af659036efd26a84b86dab1f454ec3294b274e8"
+      "sha256": "74eb903b3d420a66ad82cb8ca789b1936985430355613d1fd003f9a1529337aa"
     }
   },
   "root_bounds": {
@@ -64,8 +64,8 @@
     "tools/configure_firmware.py": "45e078e39c2689433366b511c058c9f9dadb9b6e712c6be0e4dc4dad498ca105"
   },
   "stack_bound": 165,
-  "stack_capacity": 179,
-  "stack_margin": 14,
+  "stack_capacity": 182,
+  "stack_margin": 17,
   "unresolved_roots": [],
   "whole_program_stack_qualified": true
 }

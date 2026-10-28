@@ -6,14 +6,13 @@
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "871f9d60715a40261808a5433085cf4f829083c3dd0ae2e1230792dd46522998",
+  "ihx_sha256": "150e207cd164777f2d01d468a9184b57248bae412266e6979923165ae3b440dd",
   "physical_device_commands": 0,
-  "policy_sha256": "dc9b171f60df925dbbca2d321a97e66cddcb8e4a1aed5b81931405219a271dfd",
+  "policy_sha256": "fbf98e20b6ad98f87d070563bab410109190960b3f3243203aceeca78a1c4e16",
   "profile": "multios",
   "review_report": "ci/profiles/multios/program-review.md#exact-tree-review-record",
-  "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/multios-qualified/multios/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
+  "scope": "Independent AI read-only exact-tree artifact review (2026-10-28): recomputed policy source/host and safety source/witness digests and sizes, packing receipt digest, linked IHX and canonical MAP symbol identity; inspected 36 successful base suites, 356 unit tests, zero skips and retained log digests, profile qualification and runtime records. Validated 30 exact source identities against 10 current targets (300 offline transition cases). The reviewer did not rerun builds or tests, inspect private OEM data, perform physical device operations, or grant release approval. This record does not claim human review or hardware validation.",
   "status": "passed",
-  "symbols_sha256": "480a19d2f90fc66d11f4211726f2f3c3bd55bcc869f7cc4ee7fa1c781c85e8e6",
-  "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+  "symbols_sha256": "2aa0319a6e2881932af2a5f2ba23d32f4e808c74ef09aca487abb1923ef9e058"
 }
 ```

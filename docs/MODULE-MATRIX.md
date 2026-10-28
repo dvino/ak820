@@ -10,20 +10,20 @@ The firmware is modular because all implemented functions do not fit in controll
 | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | auto-shift | ✓ | — | — | ✓ | — | — | — | — | — | — |
 | ctrl-gui-swap | — | — | — | — | — | — | — | — | — | ✓ |
-| dynamic-macros | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ |
+| dynamic-macros | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | grave-escape | — | — | — | — | ✓ | — | — | — | — | — |
 | gui-lock | — | ✓ | ✓ | — | — | — | — | — | — | — |
 | key-overrides | ✓ | ✓ | — | ✓ | ✓ | ✓ | — | — | ✓ | ✓ |
 | leader | ✓ | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | mac-pc | — | — | — | — | — | — | — | — | — | ✓ |
 | mouse-keys | — | — | — | — | — | ✓ | ✓ | — | — | — |
-| nkro | — | ✓ | ✓ | — | — | — | — | — | — | — |
-| nkro-control | — | ✓ | ✓ | — | — | — | — | — | — | — |
+| nkro | — | ✓ | ✓ | — | — | — | — | ✓ | ✓ | — |
+| nkro-control | — | ✓ | ✓ | — | — | — | — | ✓ | ✓ | — |
 | one-shot | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | os-indicators | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | qmk-settings | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | space-cadet | — | — | — | ✓ | ✓ | — | — | — | — | — |
-| tap-dance | — | — | ✓ | — | — | — | ✓ | ✓ | ✓ | — |
+| tap-dance | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | vialrgb-direct | ✓ | ✓ | ✓ | — | — | — | — | ✓ | — | — |
 
 Every profile also includes six layers, 16 persistent Vial macros with a shared 8192-byte buffer, eight two-key Combos, Mod-Tap/Layer-Tap, encoder mapping, media keys, Caps Word, Repeat/Alt Repeat, Tri Layer and built-in RGB effects. Without Direct, global mode, color, brightness and speed remain available; per-LED host frames require Direct.

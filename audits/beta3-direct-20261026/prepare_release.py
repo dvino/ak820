@@ -82,7 +82,7 @@ def add_generated_backup(backups, generated, label, profile, create):
 
 def produce_transition_evidence(root, audit, profile, report, packed, tests):
     """Produce the same scoped witness consumed by the exact-image safety gate."""
-    previous_path = audit / 'previous-beta-catalog.json'
+    previous_path = audit / 'previous-beta4-catalog.json'
     catalog_path = audit / 'settings-catalog-draft.json'
     matrix_path = audit / 'transition-preflight.json'
     previous = beta_policy.load_previous_catalog(previous_path)
@@ -165,7 +165,7 @@ def main():
                 'check_module_matrix.py', 'module-matrix-check.json')}
             source_names |= {relative(AUDIT / 'origin-measurements' / profile / leaf)
                              for leaf in ('binding.json', 'matrix.json', 'measurement.log')}
-            source_names |= {relative(AUDIT / name) for name in ('previous-beta-catalog.json', 'settings-catalog-draft.json', 'transition-preflight.json')}
+            source_names |= {relative(AUDIT / name) for name in ('previous-beta4-catalog.json', 'settings-catalog-draft.json', 'transition-preflight.json')}
             source_names |= {name for test in tests for name in test['source_files']}
             sources = {name: record(ROOT / name) for name in sorted(source_names)}
             symbols = authorization.symbols_sha256(build / 'ajazz_ak820_vial.map')
@@ -189,11 +189,12 @@ def main():
             write(dest / 'packing-validation.json', receipt)
             required = set(host_manifest(ROOT)) | set(sources) | set(guide_files()) | {
                 '.github/workflows/windows-installer.yml', '.github/workflows/firmware-catalog.yml',
+                'ci/beta41_catalog.py', 'ci/test_beta41_catalog.py', 'ci/beta5-release-notes.md',
                 'tools/ci_checks.py', 'tools/test_keyboard.py', 'tools/build_ci_release.py', 'tools/build_ci_profiles.py',
                 'qmk-8051-ak820/dependencies/lufa.json', relative(dest / 'release-safety.json')}
             required |= {relative(evidence / (name + '.json')) for name in ('stack', 'startup', 'irq', 'transition')}
-            required |= {relative(AUDIT / name) for name in ('transition-preflight.json', 'settings-catalog-draft.json', 'previous-beta-catalog.json')}
-            required |= {relative(AUDIT / name) for name in ('packing-preflight.json', 'previous-beta-catalog.json')}
+            required |= {relative(AUDIT / name) for name in ('transition-preflight.json', 'settings-catalog-draft.json', 'previous-beta4-catalog.json')}
+            required |= {relative(AUDIT / name) for name in ('packing-preflight.json', 'previous-beta4-catalog.json')}
             required |= {t['log_path'] for t in tests}
             required |= set(configured.test_source_snapshot())
             required |= {'qmk-8051-ak820/' + row['path'].replace('\\', '/') for row in report['sources']
@@ -223,18 +224,18 @@ def preparation_arguments(parser):
     parser.add_argument('--private-output', required=True, type=Path,
                         help='New private directory outside the repository for packed ROMs and fixtures')
     parser.add_argument('--historical-catalog', required=True, type=Path,
-                        help='Authenticated published beta.3 catalog; only its current ten profiles remain source-only')
+                        help='Authenticated beta.4.1 catalog; published beta.3 and beta.4/4.1 profiles remain source-only')
     parser.add_argument('--source-backups-root', required=True, type=Path,
-                        help='Private validated backups covering exactly previous beta.3 and current beta images')
+                        help='Private validated backups covering exactly beta.3, beta.4/4.1 and current images')
     parser.add_argument('--source-rom', action='append', default=[], metavar='NAME=FILE',
-                        help='Saved ROM of previous beta.3 or this beta; derive offline backup, never a live capture')
+                        help='Saved ROM of beta.3, beta.4/4.1 or this beta; derive offline backup, never a live capture')
     parser.add_argument('--source-bundle', action='append', default=[], metavar='NAME=DIR',
-                        help='Authenticated previous beta.3/current bundle; derive an offline packed-default fixture')
+                        help='Authenticated beta.3, beta.4/4.1 or current bundle; derive an offline packed-default fixture')
     historical = parser.add_mutually_exclusive_group()
     historical.add_argument('--historical-builds-root', type=Path,
-                        help='Optional exact previous beta.3 ten-profile builds for offline default fixtures')
+                        help='Optional exact beta.4/4.1 ten-profile builds for offline default fixtures' )
     historical.add_argument('--historical-bundles-root', type=Path,
-                        help='Extracted authenticated beta.3 firmware-bundle profiles directory')
+                        help='Extracted authenticated beta.4/4.1 firmware-bundle profiles directory')
     parser.add_argument('--write-policies', action='store_true',
                         help='Also replace current catalogs and ci/profiles drafts; never writes review approval')
 
@@ -271,21 +272,18 @@ def make_backup(folder, rom, profile):
 
 
 def historical_default_rom(rom, profile):
-    """Reconstruct a beta.3 default with its v1 settings record.
-
-    The current packer creates v2 defaults when repacking an older IHX. The
-    published beta.3 catalog has no v2 capability, so that synthetic default
-    is not a valid historical settings fixture.
-    """
+    """Reconstruct defaults according to the authenticated source contract."""
     import settings_backup as s
     image = s._profile_images(profile)[profile['ihx_sha256']]
-    require(image.get('settings_record_version', 1) == 1,
-            'Historical image unexpectedly declares a newer settings record')
+    version = image.get('settings_record_version', 1)
+    require(version in (1, 2), 'Unsupported historical settings record version')
     result = bytearray(rom)
-    start = s.pack.NVM_START + s.extensions.SETTINGS_ADDR
-    result[start:start+24] = s.extensions.settings_record(version=1)
-    nvm = bytes(result[s.pack.NVM_START:s.pack.NVM_END])
-    result[s.pack.MANIFEST_START+48:s.pack.MANIFEST_START+64] = bytes.fromhex(s.pack.digest(nvm))[:16]
+    if version == 1:
+        # The current packer supplies v2 defaults even for a beta.3 IHX.
+        start = s.pack.NVM_START + s.extensions.SETTINGS_ADDR
+        result[start:start+24] = s.extensions.settings_record(version=1)
+        nvm = bytes(result[s.pack.NVM_START:s.pack.NVM_END])
+        result[s.pack.MANIFEST_START+48:s.pack.MANIFEST_START+64] = bytes.fromhex(s.pack.digest(nvm))[:16]
     s.validate_rom(bytes(result), profile)
     return bytes(result)
 
@@ -401,7 +399,7 @@ def prepare(args):
         require(profile['ihx_sha256'] in all_sources, 'Historical bundle image absent from retained catalog')
         rom = bytearray(stock)
         rom[p.APP_START:p.APP_END] = profile['payload']
-        backups[label] = make_backup(private / 'backups' / label, bytes(rom), first)
+        backups[label] = make_backup(private / 'backups' / label, historical_default_rom(rom, profile), first)
     generated = {}
     if args.historical_builds_root or args.historical_bundles_root:
         for name in matrix.candidate_names():
@@ -481,7 +479,7 @@ def prepare(args):
                 'source_ihx_sha256': profile['ihx_sha256'], 'source_code_sha256': profile['code_sha256'],
                 'target_ihx_sha256': target['ihx_sha256'], 'target_code_sha256': target['code_sha256'],
                 'matrix_keycode': '0x43f0', 'macro_data_sha256': p.digest(stream), 'passed': True})
-    frozen = AUDIT / 'previous-beta-catalog.json'
+    frozen = AUDIT / 'previous-beta4-catalog.json'
     if frozen.exists():
         require(json.loads(frozen.read_text()) == old, 'Frozen historical catalog differs from supplied input')
     else:

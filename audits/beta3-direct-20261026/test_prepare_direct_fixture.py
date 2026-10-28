@@ -14,6 +14,29 @@ sys.path.insert(0, str(prepare.ROOT / 'tools/installer'))
 
 
 class DirectFixtureMetadata(unittest.TestCase):
+    def test_historical_default_uses_authenticated_record_version(self):
+        import settings_backup as settings
+        start = settings.pack.NVM_START + settings.extensions.SETTINGS_ADDR
+        rom = bytearray(settings.pack.MANIFEST_START + 64)
+        record_v2 = settings.extensions.settings_record(version=2)
+        rom[start:start + 24] = record_v2
+        profile = {'ihx_sha256': '1' * 64}
+        for version in (1, 2):
+            with self.subTest(version=version), \
+                 patch.object(settings, '_profile_images', return_value={profile['ihx_sha256']: {'settings_record_version': version}}), \
+                 patch.object(settings, 'validate_rom') as validate:
+                result = prepare.historical_default_rom(bytes(rom), profile)
+                self.assertEqual(result[start:start + 24], settings.extensions.settings_record(version=version))
+                if version == 2:
+                    self.assertEqual(result, bytes(rom))
+                else:
+                    nvm = result[settings.pack.NVM_START:settings.pack.NVM_END]
+                    self.assertEqual(result[settings.pack.MANIFEST_START + 48:settings.pack.MANIFEST_START + 64], bytes.fromhex(settings.pack.digest(nvm))[:16])
+                validate.assert_called_once_with(result, profile)
+        with patch.object(settings, '_profile_images', return_value={profile['ihx_sha256']: {'settings_record_version': 3}}):
+            with self.assertRaises(ValueError):
+                prepare.historical_default_rom(bytes(rom), profile)
+
     def test_direct_capability_is_forwarded_from_exact_image_identity(self):
         import settings_backup as settings
         calls = []

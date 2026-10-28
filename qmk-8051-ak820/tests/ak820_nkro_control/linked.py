@@ -34,6 +34,13 @@ results.append(f.run_case(fw,'mode-switch-cancels-tap-and-physical-modifier',set
  ('new_tap','_actual_keyboard_report',4,[6,0,0,0],fw.transition(f.rows(key),370)+fw.transition(f.rows(),390)),
 ]))
 features=set(json.loads((fw.build/'build-report.json').read_text())['configuration']['optional_features'])
+if 'tap-dance' in features:
+    setup=fw.initialize()+f.assign(*control,0x7011)+f.assign(*key,0x5700)+[f.emitted.memory('rom',0xcdc0,[4,0,0xe0,0,6,0,7,0,200,0])]
+    results.append(f.run_case(fw,'mode-switch-cancels-tap-dance-hold',setup,[
+        ('held_ctrl','_owned_mods',1,[1],fw.transition(f.rows(key),100)+fw.transition(f.rows(key),310)),
+        ('cancelled','_owned_mods',1,[0],fw.transition(f.rows(key,control),330)),
+        ('release_no_resurrection','_owned_mods',1,[0],fw.transition(f.rows(),350)),
+    ]))
 if 'one-shot' in features:
     for state in ('queued','held','consuming'):
         setup=fw.initialize()+f.assign(*control,0x7011)+f.assign(*mod,0x52a1)

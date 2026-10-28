@@ -11,13 +11,13 @@ Choosing a profile changes the firmware. Switching a layer in Vial cannot add an
 | [main](main.md) | Universal reference configuration with Auto Shift; GUI lock is excluded. |
 | [game](game.md) | Games with NKRO, GUI lock and Direct. |
 | [mmo](mmo.md) | Multi-action game bindings; Tap Dance replaces Key Overrides. |
-| [typing](typing.md) | Text entry with Auto Shift and Space Cadet. |
-| [code](code.md) | Manual-shift coding with Space Cadet and Grave Escape. |
-| [pointer](pointer.md) | Keyboard pointer control with macros and Leader retained. |
+| [typing](typing.md) | Text entry with Auto Shift, Space Cadet and Tap Dance. |
+| [code](code.md) | Manual-shift coding with Space Cadet, Grave Escape and Tap Dance. |
+| [pointer](pointer.md) | Keyboard pointer control with Tap Dance, macros and Leader retained. |
 | [onehand](onehand.md) | Reduced-reach pointer and basic tap/hold bindings. |
 | [creative](creative.md) | Application shortcut keys with Direct and runtime recording. |
 | [shortcuts](shortcuts.md) | Prepared persistent commands and modifier overrides. |
-| [multios](multios.md) | Modifier switching between host workflows with built-in lighting. |
+| [multios](multios.md) | Modifier switching and Tap Dance between host workflows with built-in lighting. |
 
 ## Shared functions
 

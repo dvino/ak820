@@ -4,16 +4,18 @@ import hashlib
 import json
 from pathlib import Path
 import tempfile
+import sys
 import unittest
 from unittest.mock import patch
 import ak820_beta_transition_policy as policy
 
 
 def previous():
-    rows = [{'profile': name, 'settings_identity': {'ihx_sha256': ihx, 'code_sha256': code},
-             'configuration': {'profile': name}} for name, (ihx, code) in policy.PREVIOUS_IDENTITIES.items()]
-    return {'profiles': rows, 'historical_profiles': [{'profile': 'older-beta'}],
-            'historical_sources': [{'ihx_sha256': 'alpha-legacy'}],
+    def rows(identities):
+        return [{'profile': name, 'settings_identity': {'ihx_sha256': ihx, 'code_sha256': code},
+                 'configuration': {'profile': name}} for name, (ihx, code) in identities.items()]
+    return {'profiles': rows(policy.BETA4_IDENTITIES), 'historical_profiles': rows(policy.PREVIOUS_IDENTITIES),
+            'historical_sources': [],
             'settings_transitions': [{'source': 'obsolete', 'target': 'obsolete'}]}
 
 
@@ -36,24 +38,24 @@ class PreviousBetaPolicyTests(unittest.TestCase):
         old, new = previous(), fresh()
         before = deepcopy((old, new))
         result = policy.compose_catalog(new, old)
-        self.assertEqual(result['historical_profiles'], old['profiles'])
+        self.assertEqual(result['historical_profiles'], old['profiles'] + old['historical_profiles'])
         self.assertEqual(result['historical_sources'], [])
         self.assertEqual((old, new), before)
 
     def test_transition_scope_is_previous_and_current_to_current_only(self):
         result = policy.compose_catalog(fresh(), previous())
         current = {r['settings_identity']['ihx_sha256'] for r in result['profiles']}
-        old = {p[0] for p in policy.PREVIOUS_IDENTITIES.values()}
+        old = {p[0] for identities in (policy.PREVIOUS_IDENTITIES, policy.BETA4_IDENTITIES) for p in identities.values()}
         edges = {(r['source'], r['target']) for r in result['settings_transitions']}
         self.assertEqual(edges, {(source, target) for source in old | current for target in current})
-        self.assertEqual(len(edges), 200)
+        self.assertEqual(len(edges), 300)
         self.assertFalse(any(target in old for _, target in edges))
 
     def test_previous_validation_catalog_drops_ancestry(self):
         old = previous()
         result = policy.previous_source_catalog(old)
         self.assertEqual(result['profiles'], [])
-        self.assertEqual(result['historical_profiles'], old['profiles'])
+        self.assertEqual(result['historical_profiles'], old['profiles'] + old['historical_profiles'])
         self.assertEqual(result['historical_sources'], [])
         self.assertEqual(result['settings_transitions'], [])
 
@@ -111,10 +113,36 @@ class PreviousBetaPolicyTests(unittest.TestCase):
         old, new = previous(), fresh()
         new['profiles'][0] = deepcopy(old['profiles'][0])
         result = policy.compose_catalog(new, old)
-        self.assertEqual(len(policy.source_identities(result)), 19)
+        self.assertEqual(len(policy.source_identities(result)), 29)
         new['profiles'][0]['configuration']['changed'] = True
         with self.assertRaisesRegex(ValueError, 'conflicting settings contract'):
             policy.compose_catalog(new, old)
+
+    def test_published_beta4_catalog_retains_beta3_and_beta4_sources(self):
+        path = Path(__file__).resolve().parents[1] / 'audits/beta3-direct-20261026/previous-beta4-catalog.json'
+        old = policy.load_previous_catalog(path)
+        result = policy.compose_catalog(fresh(), old)
+        sources = policy.source_identities(result)
+        for identities in (policy.PREVIOUS_IDENTITIES, policy.BETA4_IDENTITIES):
+            for ihx, code in identities.values():
+                self.assertEqual(sources[ihx], code)
+        self.assertEqual(len(sources), 30)
+        sys.path.insert(0, str(Path(__file__).resolve().parent / 'installer'))
+        try:
+            import settings_backup
+            validated = settings_backup._catalog_images(policy.previous_source_catalog(old))
+            self.assertEqual(set(validated), set(policy.source_identities(policy.previous_source_catalog(old))))
+            poisoned = policy.previous_source_catalog(old)
+            poisoned['historical_profiles'][0]['configuration']['optional_features'].append('mouse-keys')
+            with self.assertRaises(ValueError):
+                settings_backup._catalog_images(poisoned)
+        finally:
+            sys.path.pop(0)
+        for key in ('profiles', 'historical_profiles'):
+            altered = deepcopy(old)
+            altered[key][0]['settings_identity']['code_sha256'] = '0' * 64
+            with self.assertRaisesRegex(ValueError, 'Previous beta image'):
+                policy.compose_catalog(fresh(), altered)
 
     def test_catalog_digest_is_checked_before_admitting_input(self):
         raw = json.dumps(previous()).encode()
@@ -123,7 +151,7 @@ class PreviousBetaPolicyTests(unittest.TestCase):
             path.write_bytes(raw)
             with self.assertRaisesRegex(ValueError, 'authenticated published'):
                 policy.load_previous_catalog(path)
-            # Unit-only synthetic pin; production keeps the published beta.3 hash.
+            # Unit-only synthetic pin; production keeps the published beta.4.1 hash.
             with patch.object(policy, 'PREVIOUS_CATALOG_SHA256', hashlib.sha256(raw).hexdigest()):
                 self.assertEqual(policy.load_previous_catalog(path), previous())
                 path.write_bytes(raw + b' ')

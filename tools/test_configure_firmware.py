@@ -74,13 +74,13 @@ class ProfileTests(unittest.TestCase):
             'main': (set(), {'auto-shift'}),
             'game': ({'leader'}, {'nkro', 'nkro-control', 'gui-lock'}),
             'mmo': ({'leader', 'key-overrides'}, {'nkro', 'nkro-control', 'gui-lock', 'tap-dance'}),
-            'typing': ({'vialrgb-direct'}, {'auto-shift', 'space-cadet'}),
-            'code': ({'vialrgb-direct'}, {'space-cadet', 'grave-escape'}),
-            'pointer': ({'vialrgb-direct'}, {'mouse-keys'}),
+            'typing': ({'vialrgb-direct'}, {'auto-shift', 'space-cadet', 'tap-dance'}),
+            'code': ({'vialrgb-direct'}, {'space-cadet', 'grave-escape', 'tap-dance'}),
+            'pointer': ({'vialrgb-direct'}, {'mouse-keys', 'tap-dance'}),
             'onehand': ({'vialrgb-direct', 'key-overrides'}, {'mouse-keys', 'tap-dance'}),
-            'creative': ({'key-overrides'}, {'tap-dance'}),
-            'shortcuts': ({'vialrgb-direct', 'dynamic-macros'}, {'tap-dance'}),
-            'multios': ({'vialrgb-direct'}, {'mac-pc', 'ctrl-gui-swap'}),
+            'creative': ({'key-overrides'}, {'tap-dance', 'nkro', 'nkro-control'}),
+            'shortcuts': ({'vialrgb-direct'}, {'tap-dance', 'nkro', 'nkro-control'}),
+            'multios': ({'vialrgb-direct'}, {'mac-pc', 'ctrl-gui-swap', 'tap-dance'}),
         }
         for name, (remove, add) in variants.items():
             value = config.profiles.configuration(name)
@@ -102,6 +102,19 @@ class ProfileTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             config.profiles.validate_configuration(old)
         self.assertNotEqual(old, config.profiles.configuration('main'))
+
+    def test_previous_typing_remains_a_source_but_not_a_current_build(self):
+        features = ('one-shot', 'leader', 'dynamic-macros', 'os-indicators',
+                    'qmk-settings', 'key-overrides', 'auto-shift', 'space-cadet')
+        for current in (False, True):
+            old = config.profiles._configuration('typing', features, current=current)
+            self.assertEqual(config.profiles.validate_source_configuration(old), old)
+            with self.assertRaises(ValueError):
+                config.profiles.validate_configuration(old)
+            altered = copy.deepcopy(old)
+            altered['make_options']['AK820_COMPACT_TAP_DANCE'] = 'yes'
+            with self.assertRaises(ValueError):
+                config.profiles.validate_source_configuration(altered)
 
     def test_old_typing_metadata_has_an_explicit_reader_and_build_alias(self):
         old = config.profiles.legacy_configuration('typing')

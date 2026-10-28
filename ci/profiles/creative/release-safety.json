@@ -14,6 +14,7 @@
         "alternate-repeat",
         "tri-layer",
         "rgb-effects",
+        "nkro-reports",
         "vialrgb-direct-ram"
       ],
       "compact_controls_version": 2,
@@ -31,8 +32,8 @@
         "AK820_COMPACT_TAP_DANCE": "yes",
         "AK820_GRAVE_ESCAPE": "no",
         "AK820_MAC_PC": "no",
-        "AK820_NKRO": "no",
-        "AK820_NKRO_CONTROL": "no",
+        "AK820_NKRO": "yes",
+        "AK820_NKRO_CONTROL": "yes",
         "AK820_OS_INDICATORS": "yes",
         "AK820_QMK_SETTINGS": "yes",
         "AK820_VIALRGB_DIRECT": "yes"
@@ -45,7 +46,9 @@
         "os-indicators",
         "qmk-settings",
         "vialrgb-direct",
-        "tap-dance"
+        "tap-dance",
+        "nkro",
+        "nkro-control"
       ],
       "profile": "creative",
       "release_approved": false,
@@ -67,8 +70,8 @@
         "tap_hold": 200
       }
     },
-    "ihx_sha256": "05c61ebfea8c5d362b8a69e71ec689e26c284137c0a593d1b6501ea1713adbf7",
-    "symbols_sha256": "a92c9c00ee330a18b4f23a8f6978425afa359e18bc152355e24cfec21bad2ecc"
+    "ihx_sha256": "eb457d201ab4e1ee79db3ecba8066b07ea7d068620e1036299f8a63b390a7fb2",
+    "symbols_sha256": "aae765480ac9728152d2d979af7a71866b96217ffaaeb2946b3b5a0b22d27eff"
   },
   "source_files": {
     "AK820.cmd": {
@@ -88,36 +91,36 @@
       "size": 1468
     },
     "audits/beta3-direct-20261026/measure_origin.py": {
-      "sha256": "e8e366c04d7bd27dde984489aafa2bd31cd6091c9110d3d627571abb40c71bca",
-      "size": 5101
+      "sha256": "b0c6eaf4372c912f0948e1416dfc1ecf5d43811d219ead533607e7cb1def36fd",
+      "size": 5168
     },
     "audits/beta3-direct-20261026/module-matrix-check.json": {
       "sha256": "b6423193ebc2dee2c42744620335e1c028819d8ee7b938085ae048844fcc304e",
       "size": 767
     },
     "audits/beta3-direct-20261026/origin-measurements/creative/binding.json": {
-      "sha256": "5c3f8e173517b077d47f2e14772bffc9041543f24289b80a80c523071e7598ff",
-      "size": 916966
+      "sha256": "ba94c4e7aa2e220dce747b3b8d92eed33baf99c6b830e9e435142201773593d1",
+      "size": 817285
     },
     "audits/beta3-direct-20261026/origin-measurements/creative/matrix.json": {
-      "sha256": "0b88b27e5191aaebae429444b9483e07b6a63a0c00525b36e2956be02c89eb83",
-      "size": 323494
+      "sha256": "15fe5fcfad251a8ac7ce622ba52e30ec4cd92cce1cc2e7ca90c3b455dfeabf3f",
+      "size": 325474
     },
     "audits/beta3-direct-20261026/origin-measurements/creative/measurement.log": {
-      "sha256": "4d98d30bc5b22d5b8be1c4ef4b5c22beebc465797cfa984823dafeccfabe81fc",
+      "sha256": "3418481b30744ef4372a1b63f9c819e148fe018c589cde9b9bd39af74836c4bb",
       "size": 156
     },
     "audits/beta3-direct-20261026/prepare_release.py": {
-      "sha256": "952ae27a38ed8e8f7053f764643eb8e1e4c9b1dce9e5c982693fe10e148e7f77",
-      "size": 33105
+      "sha256": "eceb12e3e2a7ad6403d51f634e79b0bcbd1751a4a1ac06652388b539bba8b1be",
+      "size": 33157
     },
-    "audits/beta3-direct-20261026/previous-beta-catalog.json": {
-      "sha256": "d07cbc6bb562e84193f6de121733d13e21aceb129b653e9ff97ae954da36920c",
-      "size": 2605541
-    },
-    "audits/beta3-direct-20261026/settings-catalog-draft.json": {
+    "audits/beta3-direct-20261026/previous-beta4-catalog.json": {
       "sha256": "8bf90526a51e9879870a61d7de1c59b1df38e3489b77a67e67496503f0307658",
       "size": 5049090
+    },
+    "audits/beta3-direct-20261026/settings-catalog-draft.json": {
+      "sha256": "7af11a460b0e914b20faa8f22850edc61c14602ec653211e8e16e92c9d43f3cb",
+      "size": 7561028
     },
     "audits/beta3-direct-20261026/test_measure_origin.py": {
       "sha256": "6f1a9ea687840af5c90b1b805ed3ea9cf13ca9b52caacf062c183ab0d38e2413",
@@ -128,8 +131,8 @@
       "size": 1976
     },
     "audits/beta3-direct-20261026/transition-preflight.json": {
-      "sha256": "3e3df640395f016beaf4c0bb2aa16f0b56dbd5c493dfe92ee930355128cafd4e",
-      "size": 275440
+      "sha256": "feb41c3557d8bc1fa38e18932243271ab584b4d57ed1eeba31b9dfb7d8b93988",
+      "size": 355320
     },
     "qmk-8051-ak820/keyboards/ajazz/ak820/tests/include/eeprom.h": {
       "sha256": "dce049c152ca46c640edb0948d7225b2b1dc8fc402a2710aa3943b89ba7031f7",
@@ -148,8 +151,8 @@
       "size": 34355
     },
     "qmk-8051-ak820/quantum/repeat_key.c": {
-      "sha256": "d477f09b3598d13a91ceed6fde314e5c43d7f3f3af3f43fc7a808ceb2b6645f2",
-      "size": 11628
+      "sha256": "50787ba80648242ac5c4faf4032547e380612f820f7771ed0c41e7c23b52174e",
+      "size": 11998
     },
     "qmk-8051-ak820/tests/ak820_autoshift/host.c": {
       "sha256": "e77ebd5d0eb9fac286b24bbdb677e27a21fd27e03e7a5e66e199af3a1ef5e011",
@@ -176,8 +179,8 @@
       "size": 7912
     },
     "qmk-8051-ak820/tests/ak820_caps_word/harness.c": {
-      "sha256": "b51c2ecd90a0da7415e4690a1362853bcf618a79537ca117958e17f508a3b141",
-      "size": 10494
+      "sha256": "0143d1ca28e13e4fc22a149eb04b807b05418f25f1f27976182e97980b2edb4f",
+      "size": 12927
     },
     "qmk-8051-ak820/tests/ak820_caps_word/run.py": {
       "sha256": "50e5298deea03051e695fafe58104f4d594315090635ae0eec6d024bb9f20ecb",
@@ -208,8 +211,8 @@
       "size": 12186
     },
     "qmk-8051-ak820/tests/ak820_combo/harness.c": {
-      "sha256": "c8577015c9f0c45c3e91905fc50e34e22e4bb81836117f396582c34bb9809cc6",
-      "size": 4063
+      "sha256": "4248f3a39ccbca706a9bd46972373d77512ccc2bb826ff2a9158c3b84ca2f2da",
+      "size": 4990
     },
     "qmk-8051-ak820/tests/ak820_combo/run.py": {
       "sha256": "ad775b0a8f9ec4b35a7856aab4f14eb64f56357c18d151689d68e60c06d60a6f",
@@ -308,16 +311,16 @@
       "size": 5910
     },
     "qmk-8051-ak820/tests/ak820_dynamic_macro/linked.py": {
-      "sha256": "379b4eef5adbe9c4d863449542962af22e801a5998c7b4bbc40c602fc18f461d",
-      "size": 11319
+      "sha256": "c3017f1d0af0d8429414644c2e82aad40da6f43e7948fdb152bfde144ca5260b",
+      "size": 11691
     },
     "qmk-8051-ak820/tests/ak820_emitted/run.py": {
       "sha256": "5a8b6b376f4e0590e29df46616d8e1100bea6afdb7ac5539a997ab13a024ca2d",
       "size": 21735
     },
     "qmk-8051-ak820/tests/ak820_extensions/storage.py": {
-      "sha256": "fde2457c7f1367de011c1ad221158bb731d5e5ae912fe41f20c2509dc2b1f17f",
-      "size": 7597
+      "sha256": "8315ee8e43d57a86fd5d871671411fdf21d70bbcfa167fcafdac595dbeaaec3c",
+      "size": 8485
     },
     "qmk-8051-ak820/tests/ak820_features/run.py": {
       "sha256": "cf528a1e5623d91ee44298b7ea2e6ecb22cf6d994c387c656707b67c69509dfe",
@@ -415,9 +418,21 @@
       "sha256": "f9b981668fe5905d15a10898deeacb80ba12ea06a4712e9bcc5a55f3ede5d2bf",
       "size": 12514
     },
+    "qmk-8051-ak820/tests/ak820_macro_guard/cpu.py": {
+      "sha256": "7afe0802ea2e0ada2a283d6bf84f454e974c430feb87ad986ea254e6867229e8",
+      "size": 2736
+    },
     "qmk-8051-ak820/tests/ak820_macro_guard/harness.c": {
       "sha256": "13b902163e6e3ebbafdac71d872302f3e667f589a1b7f45ec9a8b19421e5b508",
       "size": 6932
+    },
+    "qmk-8051-ak820/tests/ak820_macro_guard/parse.py": {
+      "sha256": "e66a73b99a6bf6514baa08153bd86d12b514ae10adc551b1f403ccba9ce7e4a1",
+      "size": 2352
+    },
+    "qmk-8051-ak820/tests/ak820_macro_guard/powercut.py": {
+      "sha256": "3a4d71c0212a407a92ebc0e8214f1737ad34c1df41f30baa3ed0c0fd966a5d31",
+      "size": 1662
     },
     "qmk-8051-ak820/tests/ak820_macro_guard/run.py": {
       "sha256": "71789c345cccffad8250830e2ef2bb5fb1260fac6de658a5e185a17546824203",
@@ -444,8 +459,8 @@
       "size": 2101
     },
     "qmk-8051-ak820/tests/ak820_nkro_control/linked.py": {
-      "sha256": "c1e0afc0acd6abc3978a8b3e75c5aa49b9736581eb72e0aad204e1199d77df7c",
-      "size": 4708
+      "sha256": "b9839f7f512756add444bd5496f1fc65d2c2c0faac84ed82e229c6d2dce05d2b",
+      "size": 5228
     },
     "qmk-8051-ak820/tests/ak820_oneshot/linked.py": {
       "sha256": "947a9e0460592a97162b5349b57a69f3f8075093f0ec5c75937b8372693d7594",
@@ -520,8 +535,8 @@
       "size": 1120
     },
     "qmk-8051-ak820/tests/ak820_os_indicators/host_tests.inc": {
-      "sha256": "7d0e767831b2d0e4aaef87fe7547281076241ac4d08ec24ece5911807c47b7c9",
-      "size": 8091
+      "sha256": "57469dc4a1b1e2a1ec537a684c077283ec13f8edecc3da185d2d17c26f63ae37",
+      "size": 8871
     },
     "qmk-8051-ak820/tests/ak820_os_indicators/linked.py": {
       "sha256": "38e60d6121e115a3f9b38dfb626afcad292e445cffb1d782674e201955735626",
@@ -619,6 +634,14 @@
       "sha256": "4c6a0d66a623d2be62bff42bf8f469e7d18922378b7521998aa27533e38b17b5",
       "size": 6434
     },
+    "qmk-8051-ak820/tests/ak820_repeat/cpu.py": {
+      "sha256": "f5cc15b027f651c703518dfa2772427ebd63e14838dd007d0650ee7cba78b97c",
+      "size": 2936
+    },
+    "qmk-8051-ak820/tests/ak820_repeat/table.py": {
+      "sha256": "91a2e394985f819a374eca5f6c8f34634b515371de00b35d595e328cbce48933",
+      "size": 2770
+    },
     "qmk-8051-ak820/tests/ak820_rgb/emitted.py": {
       "sha256": "8df6849ebe4ec4b0d667ac6088e061c7f77c7e9164b6dee088731d08b1d34143",
       "size": 10537
@@ -640,8 +663,8 @@
       "size": 1130
     },
     "qmk-8051-ak820/tests/ak820_settings/linked.py": {
-      "sha256": "fadf2a8672d7454155d33d381d203bb4eeeef8bb6deb1c8831b80f9012125c98",
-      "size": 18194
+      "sha256": "2c6f65b6de30be444fd0d523844937f18cbac056bd65991c7766d98e6c477309",
+      "size": 18254
     },
     "qmk-8051-ak820/tests/ak820_shortcalls/test_shortcalls.py": {
       "sha256": "162122eda125d9b88a4ac7ebc867f0943ca4af78a44190fbefc21a7d5b75b012",
@@ -671,13 +694,17 @@
       "sha256": "5d4752805f925f0937881f5394c1befd313c9628b87883ed798b1a31eeaeb6de",
       "size": 6286
     },
+    "qmk-8051-ak820/tests/ak820_tap_dance/cpu.py": {
+      "sha256": "a8e22dabf4ebd53891cd11632493b564a945370869cc4021f8201b36f3cc910f",
+      "size": 4194
+    },
     "qmk-8051-ak820/tests/ak820_tap_dance/host.py": {
-      "sha256": "5e08ba0ea5a1b730f0d9cc9533b7c0128054af37e5c12d6fa7f4a084c23b97b2",
-      "size": 6981
+      "sha256": "9f40ba2b5963b6e4cae578f03d43f7845cb0ab0656cc023a2c2bcc1576308e71",
+      "size": 7891
     },
     "qmk-8051-ak820/tests/ak820_tap_dance/linked.py": {
-      "sha256": "6ab56703f30df7531e9aa11bf98ddc968c59f14188f72105759d61d6ce101b31",
-      "size": 6920
+      "sha256": "ec961e5c2b94ae7448f49c12458bc3cb840952c21a1ba4684d0c59290b4fb892",
+      "size": 8958
     },
     "qmk-8051-ak820/tests/ak820_tap_state_experiment/harness.c": {
       "sha256": "14ea3b9b2620e58e3ff9abcb163f9702c6fa8f97b3fed94ecad3c1a24ab702b7",
@@ -691,13 +718,17 @@
       "sha256": "695b7fd9ef52d4f2d62e756f6d9ce1d58d7d1a8322e67941068ff5f27db731ef",
       "size": 4822
     },
+    "qmk-8051-ak820/tests/ak820_tapping/compact_cpu.py": {
+      "sha256": "edd8f01ae1b09d6895750a7aa4653962b857a3bedabf5cff16fbc3a759513f60",
+      "size": 4488
+    },
     "qmk-8051-ak820/tests/ak820_tapping/differential.py": {
       "sha256": "35aeea2da02fee7387b7e83ce557ce1f9ca5ed657e4e0e8dbf01856ecfc6a7f9",
       "size": 2304
     },
     "qmk-8051-ak820/tests/ak820_tapping/emitted.py": {
-      "sha256": "1d0b186d896d83b4c8fca4f960daa7efe3fb88d56ea4a0cb4aac5a8fee8e2e5e",
-      "size": 30230
+      "sha256": "bd05780b480c2f6a82d1d9786dd64a09d2787b701ccbd3bb7c59e477cfaa79e8",
+      "size": 30296
     },
     "qmk-8051-ak820/tests/ak820_tapping/harness.c": {
       "sha256": "25bea3555e7d375fd97580a2a17845ee1daa2520a42032902df49720c4b1574d",
@@ -804,8 +835,8 @@
       "size": 6985
     },
     "qmk-8051-ak820/util/ak820_ci_authorization.py": {
-      "sha256": "da9f487b214e23c66cb88b436ea42b5025a61de03ea43153fa354172b89a6032",
-      "size": 14511
+      "sha256": "2df13f5680d387fe2ac84eac1eded39ab83531c99dadbfa0079fa168ef4daebf",
+      "size": 15624
     },
     "qmk-8051-ak820/util/ak820_compile_cache.py": {
       "sha256": "d6d88469505cbc84eea0fb88cbe6e6ae0fbbbe4f0da616af20e4c518d7ad3dda",
@@ -840,8 +871,8 @@
       "size": 37623
     },
     "qmk-8051-ak820/util/ak820_profiles.py": {
-      "sha256": "b3dfc0d1174898ca656cda1a7aaae650d36a0ccc25f1bdf6c5b715bcc3398f24",
-      "size": 13600
+      "sha256": "8d5cf746f104308e40901833270044ea4127c78ad0b38eaa09e97328a2c11768",
+      "size": 14005
     },
     "qmk-8051-ak820/util/ak820_register_saves.py": {
       "sha256": "3b47823a7b534f9b17c73aa1e2890156f5ec44621c4f45c4d49d5b56596094bf",
@@ -904,7 +935,7 @@
       "size": 6340
     },
     "qmk-8051-ak820/util/test_ak820_settings.c": {
-      "sha256": "665f3ccc8e8b3ea08bb440def0f6d51fc0211b061c355be66b9c021dc73c21c6",
+      "sha256": "b3bdf76ef83027258b055bfdd42fe47056da6d730c22a947c0d67c8b89ac605f",
       "size": 7450
     },
     "qmk-8051-ak820/util/uf2conv.py": {
@@ -1036,12 +1067,12 @@
       "size": 10962
     },
     "tests/test_compact_key_overrides.py": {
-      "sha256": "14293718c2137c52b3ed9709e7dbe118aaf003323330e7901226f0a7c554e886",
-      "size": 6151
+      "sha256": "6d61188c5dd8c1faf7ce898d5b6a9e18cd084301aa2d3750d66602ecea285d43",
+      "size": 6441
     },
     "tools/ak820_beta_transition_policy.py": {
-      "sha256": "c1792815004dd21c0f0cadefe3b37589041e41d52a53d947982d7d08e1592e39",
-      "size": 9337
+      "sha256": "5658649f65d9835ac773f040596b5a8c6f6367478d420fbb202039996f74563a",
+      "size": 11301
     },
     "tools/ak820_device_protocol.py": {
       "sha256": "86868d094ed6d225329f21598b62bcfc34d03f053ee063c76795267dfb9ff71d",
@@ -1060,7 +1091,7 @@
       "size": 8285
     },
     "tools/build_beta_release_assets.py": {
-      "sha256": "93f4315c47c7563b6486cc2b6520fdfaa3dc460fd7ca6d80fd278366089ab663",
+      "sha256": "1dbc7e42822009eab6d6ce5001392bd5642fed280cae900580a06e0ff79099ef",
       "size": 27403
     },
     "tools/build_capability_catalog.py": {
@@ -1144,8 +1175,8 @@
       "size": 339
     },
     "tools/installer/ak820.py": {
-      "sha256": "6ce93cce23a6b8fc5be0032ad46eb7c7034cc23131de8a1c5985354ada474c22",
-      "size": 57815
+      "sha256": "73131f4a0888b7f7ef7b5d83053756cb0f850e027c33acbf04939ce1d6360e31",
+      "size": 58264
     },
     "tools/installer/gui.py": {
       "sha256": "87192b4982e876fad76f38c7eb8b500521e7dd942c4e11fea5a8d9c4546cf38b",
@@ -1156,16 +1187,16 @@
       "size": 21250
     },
     "tools/installer/profile-catalog.json": {
-      "sha256": "2142f639846930dd267556d5218c12743727e73f9e56ecc2a1d974bcf0758423",
-      "size": 7176
+      "sha256": "baec696168d53dc70243a5d4ef1f8164dc7be0701b53c048b0d54c96851974bc",
+      "size": 7202
     },
     "tools/installer/requirements.txt": {
       "sha256": "6e78c6c5a61dbebf36f570a14685c795efcdb3d8bb6b6118b6aa78dd0aca54d4",
       "size": 15
     },
     "tools/installer/settings-catalog.json": {
-      "sha256": "8bf90526a51e9879870a61d7de1c59b1df38e3489b77a67e67496503f0307658",
-      "size": 5049090
+      "sha256": "7af11a460b0e914b20faa8f22850edc61c14602ec653211e8e16e92c9d43f3cb",
+      "size": 7561028
     },
     "tools/installer/settings_backup.py": {
       "sha256": "02e641b3e3af8c84a047bec34574fe9cc91c05ee0f976576afe242b3c5eab292",
@@ -1176,8 +1207,8 @@
       "size": 12798
     },
     "tools/installer/test_catalog_settings.py": {
-      "sha256": "1b3acdbfa20a799f920c9853238e6a71ec9f516f2807c712af98ec383fe109e6",
-      "size": 37655
+      "sha256": "cb82975dfa927c7c5ba7c8cb0e08823e7a196555f1e7697897dc1fcb0b9627a4",
+      "size": 37708
     },
     "tools/installer/test_extension_backup.py": {
       "sha256": "5fadf6cdded5db4b02f154c4f774ceb78e730150050da348e59304a7b6e01818",
@@ -1200,8 +1231,8 @@
       "size": 15438
     },
     "tools/installer/test_profile_selection.py": {
-      "sha256": "f4051ade2b495732d07f7bd301ebab036e7cedc0d77ae9bb6efc6a0bdcc9dfdf",
-      "size": 8515
+      "sha256": "21d2694fa1d0a810e7f26be8be4545fc7048c3e234efc804c1ccc3070297cacc",
+      "size": 9710
     },
     "tools/installer/test_runtime_paths.py": {
       "sha256": "f5dd98b7e622701c238ef4a5928aa06c160577b2e3861e0df1f20a3708405840",
@@ -1224,8 +1255,8 @@
       "size": 1067
     },
     "tools/test_ak820_beta_transition_policy.py": {
-      "sha256": "dc76b098a9a7d6735c8c921dd187f9cda9738ddde72ec42a871c67706883d1bd",
-      "size": 6519
+      "sha256": "324cd3a7fa210f7f21a41cddde35e9f8967f55cb28b3696e846063c044f31519",
+      "size": 8183
     },
     "tools/test_ak820_device_protocol.py": {
       "sha256": "1037ec3b8c8fcd853cfa78c1dedce88227bced9821eb072d644e70e8de52fba4",
@@ -1244,12 +1275,12 @@
       "size": 9009
     },
     "tools/test_build_beta_release_assets.py": {
-      "sha256": "0ed28a31916a6b6d96bbbd9f4c5eca83c22076adcc18be714657c289b6b41b07",
+      "sha256": "0ed348ab70a394758e166f4d39d12563065f6808e92488caf725923fcdcaeded",
       "size": 23766
     },
     "tools/test_build_capability_catalog.py": {
-      "sha256": "0b41a334e5f5499fc0075d088f61f5f6455acbc876657b7d54033b7301dfb0c7",
-      "size": 22319
+      "sha256": "af19fa9cb3ecea6bc10727a7fbd2e5d07740d6248d5c0dd955642f9961e52e71",
+      "size": 22964
     },
     "tools/test_build_ci_profiles.py": {
       "sha256": "13fd83cb26bce0872a9789903a5b82d9c191966413a5d4e8b759a7d920b472f6",
@@ -1260,7 +1291,7 @@
       "size": 29097
     },
     "tools/test_build_linux_installer.py": {
-      "sha256": "f9fde23ced9d2c2ffc91a6ae5db8bae0f63221703fc3f2bcdbf21d9826825f6f",
+      "sha256": "5a35ad1339a5fd7a40a9fdaf9e32341ae231021b0ab7fe5c1c2b37226401be33",
       "size": 10989
     },
     "tools/test_build_profile_catalog.py": {
@@ -1272,12 +1303,12 @@
       "size": 16390
     },
     "tools/test_build_windows_installer.py": {
-      "sha256": "a3c876002ba08e28f8f8fa99517a8d6d1f1c0e613d51311b4eaa33076b7e98f4",
+      "sha256": "b97a40ce892bc507cf23c88342675772d1eff7d24ec62a4edbc6b3a292d14e1c",
       "size": 15351
     },
     "tools/test_ci_authorization.py": {
-      "sha256": "584fd2926e00b6a00df3b88b273955a09da103366bcb1213d9728ab7a5ecfb35",
-      "size": 15157
+      "sha256": "cf7045cc4b129610134c3ee9019de9671250ae78b683a6af7388d6fd4bfe9564",
+      "size": 16368
     },
     "tools/test_ci_checks.py": {
       "sha256": "61ebce5309a37bc80df622f591a7045ce055b01cb88ce2e2976d8b7c41bb55bf",
@@ -1292,12 +1323,12 @@
       "size": 9441
     },
     "tools/test_configure_firmware.py": {
-      "sha256": "be108aecf7cbee9ad17c98fedfb46b6a546b887554477d9e20e49d6ed5ab92c4",
-      "size": 44429
+      "sha256": "a1d240c04f37fc6c01935aa2249de3340664d3bdd6e7dd727b3cbc10d3ea9693",
+      "size": 45297
     },
     "tools/test_firmware_matrix.py": {
-      "sha256": "4c91d8047aa525944f39b039d8e413c65f5390265ba80d4e284027ea960f6b3c",
-      "size": 9258
+      "sha256": "b87243d72c6f367f800d7206658d7b5ef397428715e1f34d2acd34477909114b",
+      "size": 9501
     },
     "tools/test_flash_reviewed_release_once.py": {
       "sha256": "613ed2d09de25c87b883ad8199436d5290fc4275be438a1a6293a5620ccfe137",
@@ -1312,20 +1343,20 @@
       "size": 6871
     },
     "tools/test_keyboard.py": {
-      "sha256": "74d9717d26162b7be90659c201cf0308daf2c3eb72f027aaa1af388a9dd21d73",
-      "size": 9523
+      "sha256": "6fcc560adfa3e31933bdc2d7e3db493600ec7e51825a7187e5c2cb60246339da",
+      "size": 11151
     },
     "tools/test_keyboard_runner.py": {
-      "sha256": "b505884ba935e85c248de2436b5d67bf84315e3d7ccd1dbce3dcb5be3f2f2a0d",
-      "size": 10718
+      "sha256": "927cf42636de5f1bc5463a6368a3bc83bc65bc8ee616f056ed37357cfb0b4d3c",
+      "size": 13968
     },
     "tools/test_pass30_cache.py": {
       "sha256": "a34ce7ce72dbab3f62d2b7096d98fa871e66bb7ebe793ea4aa9ac73a14a69c83",
       "size": 8303
     },
     "tools/test_release_safety.py": {
-      "sha256": "30e9c70c18e05af932678813f601256a7ac88c384d00e5db06d9e7a83bdbc1a9",
-      "size": 29607
+      "sha256": "71d23cee68ba7760b58be2eed478adbc26502680262e7a308c9b956fc26f83a0",
+      "size": 29809
     },
     "tools/test_release_version.py": {
       "sha256": "1d424901fde11cde94f9339a1939fa1a76f203d2169ca127501f552396ece124",
@@ -1339,23 +1370,23 @@
   "witnesses": {
     "irq": {
       "path": "audits/beta3-direct-20261026/profiles/creative/irq.json",
-      "sha256": "a5646764d05fc5f2fdc8e57aa7bddda49f0fdcd0411884def0ea4bbf55db82ac",
-      "size": 48250
+      "sha256": "54d3af6516fc0432d9bebf9acdcdc3d4b6e6fa650450992cc9d5bb3ece9868dc",
+      "size": 48548
     },
     "stack": {
       "path": "audits/beta3-direct-20261026/profiles/creative/stack.json",
-      "sha256": "b9e7d8379922925040883c2b5bd900b75239f4812316865396e4adb3561800e7",
-      "size": 319789
+      "sha256": "871283fbfe8afc91e9e1912cddea481e04cf7de09ed864ae73ac16db4ec0d52e",
+      "size": 322932
     },
     "startup": {
       "path": "audits/beta3-direct-20261026/profiles/creative/startup.json",
-      "sha256": "be56ef1446c4fb7acb0ea54f209dc03ff32933d6e18a0a7ed02d30a6a32bdd3a",
-      "size": 10145
+      "sha256": "588df9f5e8c14c95fbe69167d9991499881adba772d214800c8b93ce36081683",
+      "size": 10149
     },
     "transition": {
       "path": "audits/beta3-direct-20261026/profiles/creative/transition.json",
-      "sha256": "9984ee635f64257c1fc10a0549c38ea2175792a0f29d65ca6ed6ed8f4382dba9",
-      "size": 40583
+      "sha256": "549bf88a1566a4213977567eed8a87c0c4b1351b845ffa47055b5c034ec7d60e",
+      "size": 42225
     }
   }
 }

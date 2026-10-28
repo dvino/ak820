@@ -15,16 +15,19 @@ The [shared functions](README.md#shared-functions) are included.
 - QMK Settings: supported timing parameters.
 - Key Overrides: eight modifier-dependent key replacements.
 - Mouse Keys: pointer movement, scrolling and mouse buttons.
+- Tap Dance: eight entries for basic or modified key actions on tap and hold.
 
 ## Changes from main
 
-Added: Mouse Keys: pointer movement, scrolling and mouse buttons.
+Added: Mouse Keys: pointer movement, scrolling and mouse buttons; Tap Dance for basic or modified key actions.
 
 Removed: VialRGB Direct: direct RGB control from a compatible application.
 
 Auto Shift is not included.
 
 ## Limits
+
+Tap Dance has eight entries; its outputs cannot be mouse actions, macros, layers or nested special actions.
 
 Key Overrides: eight modifier-dependent replacements.
 

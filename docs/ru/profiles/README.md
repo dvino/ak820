@@ -11,13 +11,13 @@ English source of truth: [Profiles](../../profiles/README.md).
 | [main](main.md) | Повседневная работа: Auto Shift, настройки, замены сочетаний, оба вида макросов и Direct; без блокировки GUI. |
 | [game](game.md) | NKRO и блокировка Win; Direct сохраняется. Leader убран, чтобы не запускать команды-префиксы во время игры. |
 | [mmo](mmo.md) | Tap Dance даёт четыре базовых/модифицированных действия на слот; NKRO, блокировка Win и Direct сохраняются. Key Overrides обменивается на Tap Dance ради выбранного состава. |
-| [typing](typing.md) | Auto Shift для поддерживаемых клавиш и Shift/скобки через Space Cadet. Встроенные RGB-эффекты сохраняются, Direct уступает место функциям ввода. |
-| [code](code.md) | Space Cadet для скобок, Grave Escape для совмещённой Esc/обратной кавычки. Автоматический Shift не включён; Direct уступает место этим функциям. |
-| [pointer](pointer.md) | Mouse Keys добавляет курсор, прокрутку и кнопки мыши. Leader и макросы сохраняются; Direct уступает место управлению курсором. |
+| [typing](typing.md) | Auto Shift, Shift/скобки через Space Cadet и Tap Dance для нескольких действий на клавише. Встроенные RGB-эффекты сохраняются, Direct уступает место функциям ввода. |
+| [code](code.md) | Space Cadet для скобок, Grave Escape для совмещённой Esc/обратной кавычки и Tap Dance для нескольких действий. Автоматический Shift не включён; Direct уступает место этим функциям. |
+| [pointer](pointer.md) | Mouse Keys добавляет курсор, прокрутку и кнопки мыши; Tap Dance — дополнительные действия на клавишах. Leader и макросы сохраняются; Direct уступает место управлению курсором. |
 | [onehand](onehand.md) | Mouse Keys, One Shot и Tap Dance для управления указателем и нескольких действий на доступных клавишах. Key Overrides и Direct уступают место этому набору. |
 | [creative](creative.md) | Tap Dance для одиночных/двойных нажатий и удержаний с базовыми клавишами и модификаторами; сохранены Direct и запись макросов. Key Overrides обменивается на Tap Dance. |
-| [shortcuts](shortcuts.md) | Сохранены Key Overrides, Leader и 16 заранее заданных макросов Vial; добавлен Tap Dance для базовых действий. Direct и запись макросов на лету убраны. |
-| [multios](multios.md) | Mac/PC и обмен Ctrl/GUI для переключения модификаторов; OS-индикатор сохраняется. Используются встроенные RGB-эффекты. |
+| [shortcuts](shortcuts.md) | Key Overrides, Leader, макросы Vial и временная запись; добавлен Tap Dance. Direct убран. |
+| [multios](multios.md) | Mac/PC, обмен Ctrl/GUI и Tap Dance для работы с разными системами; OS-индикатор сохраняется. Используются встроенные RGB-эффекты. |
 
 ## Общие функции
 

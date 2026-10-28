@@ -35,12 +35,12 @@ class MatrixTests(unittest.TestCase):
             self.assertEqual(row['build_recipe']['pass30']['outline_max_helpers'], 400)
 
     def test_exact_then_smallest_superset_catalog_tiebreak(self):
-        self.assertEqual(matrix.resolve([])[0], 'shortcuts')
-        self.assertEqual(matrix.resolve(['leader'])[0], 'shortcuts')
-        self.assertEqual(matrix.resolve(['one-shot'])[0], 'shortcuts')
+        self.assertEqual(matrix.resolve([])[0], 'onehand')
+        self.assertEqual(matrix.resolve(['leader'])[0], 'onehand')
+        self.assertEqual(matrix.resolve(['one-shot'])[0], 'onehand')
         self.assertEqual(matrix.resolve(['nkro', 'gui-lock'])[0], 'game')
-        self.assertEqual(matrix.resolve(['leader', 'mouse-keys']), ['pointer', 'onehand'])
-        self.assertEqual(matrix.resolve(['nkro', 'leader']), [])
+        self.assertEqual(matrix.resolve(['leader', 'mouse-keys']), ['onehand', 'pointer'])
+        self.assertEqual(matrix.resolve(['nkro', 'leader']), ['creative', 'shortcuts'])
         self.assertEqual(matrix.resolve(matrix.profiles.configuration('main')['optional_features'])[0], 'main')
 
     def test_unknown_and_duplicate_features_rejected(self):
@@ -80,6 +80,9 @@ class MatrixTests(unittest.TestCase):
         self.assertEqual(len(result['feature_pairs']), len(matrix.profiles.SWITCHES) *
                          (len(matrix.profiles.SWITCHES) - 1) // 2)
         pair = next(row for row in result['feature_pairs'] if row['features'] == ['leader', 'nkro-control'])
+        self.assertIsNone(pair['disabled_reason'])
+        self.assertEqual(pair['profiles'], ['creative', 'shortcuts'])
+        pair = next(row for row in result['feature_pairs'] if row['features'] == ['leader', 'gui-lock'])
         self.assertEqual(pair['disabled_reason'], 'no_catalog_profile')
         self.assertEqual(pair['profiles'], [])
 

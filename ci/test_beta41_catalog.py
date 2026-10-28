@@ -9,7 +9,7 @@ from beta41_catalog import ARCHIVE, PROFILES, SOURCE_TAG, TARGET_TAG, canonical,
 
 
 class Beta41CatalogTests(unittest.TestCase):
-    def fixture(self, directory: Path) -> None:
+    def fixture(self, directory: Path, source_tag: str = SOURCE_TAG) -> None:
         payload = {}
         rows = []
         images = []
@@ -31,7 +31,7 @@ class Beta41CatalogTests(unittest.TestCase):
             'images': list(reversed(images))})
         payload['INSTALL-en.md'] = b'install instructions\n'
         payload['INSTALL-ru.md'] = 'инструкция\n'.encode()
-        descriptor = {'format': 'ak820-beta-release-catalog-1', 'tag': SOURCE_TAG,
+        descriptor = {'format': 'ak820-beta-release-catalog-1', 'tag': source_tag,
                       'status': 'beta', 'default_profile': 'main',
                       'installable_profiles': list(PROFILES),
                       'catalog_profiles': list(PROFILES),
@@ -40,7 +40,7 @@ class Beta41CatalogTests(unittest.TestCase):
                       'assets': file_records(payload)}
         payload['release-catalog.json'] = canonical(descriptor)
         payload['release-manifest.json'] = canonical({
-            'format': 'ak820-beta-release-manifest-1', 'tag': SOURCE_TAG,
+            'format': 'ak820-beta-release-manifest-1', 'tag': source_tag,
             'files': file_records(payload)})
         (directory / 'release-catalog.json').write_bytes(payload['release-catalog.json'])
         (directory / 'capability-catalog.json').write_bytes(payload['capability-catalog.json'])
@@ -92,12 +92,28 @@ class Beta41CatalogTests(unittest.TestCase):
             for name in ('release-catalog.json', 'capability-catalog.json', 'release-manifest.json'):
                 self.assertEqual((directory / name).read_bytes(), payload[name])
 
+    def test_beta5_requires_beta5_source_and_preserves_write_gate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            self.fixture(directory, 'v0.6.0-beta.5')
+            promote(directory, 'v0.6.0-beta.5')
+            descriptor = json.loads((directory / 'release-catalog.json').read_text())
+            self.assertEqual(descriptor['tag'], 'v0.6.0-beta.5')
+            self.assertTrue(descriptor['flashing_authorized'])
+            self.assertFalse(descriptor['settings_writes_authorized'])
+            self.assertFalse(descriptor['hardware_validated'])
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            self.fixture(directory)
+            with self.assertRaisesRegex(ValueError, 'Source catalog'):
+                promote(directory, 'v0.6.0-beta.5')
+
     def test_wrong_tag_and_writable_source_catalog_fail_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
             self.fixture(directory)
             with self.assertRaisesRegex(ValueError, 'Only the exact beta.4.1'):
-                promote(directory, 'v0.6.0-beta.5')
+                promote(directory, 'v0.6.0-beta.6')
 
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)

@@ -46,7 +46,8 @@ def measured_row(build, origin, toolchain, native_reference, output):
     original = origin / relative
     # Qualification normalizes the toolchain path before recording commands.
     # An isolated source root may share the pinned toolchain through a symlink.
-    original_tools = (origin / toolchain.resolve().relative_to(ROOT)).resolve()
+    original_tools = (toolchain.resolve() if origin == ROOT else
+                      (origin / toolchain.resolve().relative_to(ROOT)).resolve())
     inputs = source_files(build)
 
     def compare_sources():

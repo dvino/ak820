@@ -6,14 +6,13 @@
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "ae5232a4d183d9cecf5b8f1cde917ea14961ed7d8db6b76ee93f85d348ddea54",
+  "ihx_sha256": "ee7316e555049a63c6d3216886857333137924261db4c820e4692392fb485559",
   "physical_device_commands": 0,
-  "policy_sha256": "0c74a15beeef10d0d71c7fdefa54f887a1a33872191dd4389ead7f0aa804279a",
+  "policy_sha256": "e9b91c1f903b78f2343c9c890deeb378a6acffc3c56b5099a559a2fc2654ba41",
   "profile": "mmo",
   "review_report": "ci/profiles/mmo/program-review.md#exact-tree-review-record",
-  "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/mmo-preliminary-final/mmo/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
+  "scope": "Independent AI read-only exact-tree artifact review (2026-10-28): recomputed policy source/host and safety source/witness digests and sizes, packing receipt digest, linked IHX and canonical MAP symbol identity; inspected 36 successful base suites, 356 unit tests, zero skips and retained log digests, profile qualification and runtime records. Validated 30 exact source identities against 10 current targets (300 offline transition cases). The reviewer did not rerun builds or tests, inspect private OEM data, perform physical device operations, or grant release approval. This record does not claim human review or hardware validation.",
   "status": "passed",
-  "symbols_sha256": "1b6babf7796bae31ca7684e1476d75c5c10d038571f6bf3439f8b4eda88de32a",
-  "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+  "symbols_sha256": "f2a5a394abe2cdd604cc2fa94217d03e9a68aff36645d10cf2040b4c517883f8"
 }
 ```

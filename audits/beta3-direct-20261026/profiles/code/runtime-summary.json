@@ -1,17 +1,17 @@
 {
-  "foreground_bound": 99,
+  "foreground_bound": 103,
   "format": "ak820-runtime-safety-1",
   "hardware_validated": false,
   "identity": {
-    "build_report_sha256": "96176473c434cd660ef705f9589969922c1bb8a95ce57515d2708ccaad2fcb45",
+    "build_report_sha256": "01da381bb1eebb5b55f8a090387ab2b8ad337f60bea2b5be7bf63742579ac8b3",
     "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
-    "configuration_sha256": "0858e3c24d1e496825fd1accbb8661b0fe2854ae60c9337ccfa4848b5eb92498",
-    "ihx_sha256": "fdfeb3cd0d793f54e58c26fa004c2f583db98098a7703a4dec7b0c72925336c3",
-    "map_sha256": "396bd7521e8e978331806d9379d83763f6d8f6bc7e949dadc71f62fd0ff3c620",
-    "mem_sha256": "ece7fd9bca97f7022a602b006c400c0a05a4b79414d0f36ef304858d1f4b28da",
+    "configuration_sha256": "840c65f6b1cc0b5d43a85d81a9240e1a4d317bcf1faa55f6ffd9487858325451",
+    "ihx_sha256": "33146bc1d62a4a7b009c5653bb1ac3d68f3bd6f15b169187ee1b2e3ec747e888",
+    "map_sha256": "4b98fbef114549930dadc32588ca12ab81e1aea196aedd5f88a21abf6b208179",
+    "mem_sha256": "4034a3c1482f546d660bca0dacb525929edcca7cc1ba17f6be8766bcd2260005",
     "nvm_schema": 532483,
     "profile": "code",
-    "source_manifest_sha256": "369804c4d6ec5abc2f56eb09f189512434b2c46c239e9b457905eb98c65cf829"
+    "source_manifest_sha256": "180f6005add7fd2b2a6a96cc45dd33dea2fcd54498f98be47ab7313dbdab53e5"
   },
   "irq_bound": 60,
   "limits": [
@@ -22,7 +22,7 @@
     "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
   ],
   "logs": {
-    "irq": "65b0f4e9d1849487ba825aca21abcd3ca8d7980870825606ecb36bac68fc950e",
+    "irq": "a3ee05adba6fb9d7c68246b81c24510bb555a5438d1af51f8823ced72d0a561a",
     "startup": "8317234a61f2df5028f702799ba6593129a9919484f8613151419f0739fef6f3"
   },
   "main_entry_frame_bound": 2,
@@ -33,22 +33,22 @@
   "reports": {
     "foreground": {
       "path": "runtime-stack.json",
-      "sha256": "8aa068cf3b90454a95b323bc0bcab39530afea696a75a7206a90fa483ee96c4f"
+      "sha256": "55ee22b7d354c116914a8a71822c9e59242087a66f6bf5d9b242f656f0debc95"
     },
     "irq": {
       "path": "runtime-safety/irq/results.json",
-      "sha256": "65b0f4e9d1849487ba825aca21abcd3ca8d7980870825606ecb36bac68fc950e"
+      "sha256": "a3ee05adba6fb9d7c68246b81c24510bb555a5438d1af51f8823ced72d0a561a"
     },
     "startup": {
       "path": "runtime-safety/startup.json",
-      "sha256": "cd7a4f57b0f6fc3e4433be07bb667482770641aec8b0385192c7e197d60a0460"
+      "sha256": "aeb1936adc52d7767a4ef83997177989250bc074687745e417b1ff7dc9e697be"
     }
   },
   "root_bounds": {
     "_USB_DeviceInterrupt": 5,
     "_ak820_led_irq": 2,
     "_ak820_timer_irq": 2,
-    "_main": 99
+    "_main": 103
   },
   "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
   "source_files": {
@@ -63,9 +63,9 @@
     "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
     "tools/configure_firmware.py": "45e078e39c2689433366b511c058c9f9dadb9b6e712c6be0e4dc4dad498ca105"
   },
-  "stack_bound": 161,
+  "stack_bound": 165,
   "stack_capacity": 184,
-  "stack_margin": 23,
+  "stack_margin": 19,
   "unresolved_roots": [],
   "whole_program_stack_qualified": true
 }

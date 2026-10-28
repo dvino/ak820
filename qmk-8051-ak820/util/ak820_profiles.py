@@ -93,13 +93,13 @@ PROFILES = {
     'main': _variant(add=('auto-shift',)),
     'game': _variant(('leader',), ('nkro', 'nkro-control', 'gui-lock')),
     'mmo': _variant(('leader', 'key-overrides'), ('nkro', 'nkro-control', 'gui-lock', 'tap-dance')),
-    'typing': _variant(('vialrgb-direct',), ('auto-shift', 'space-cadet')),
-    'code': _variant(('vialrgb-direct',), ('space-cadet', 'grave-escape')),
-    'pointer': _variant(('vialrgb-direct',), ('mouse-keys',)),
+    'typing': _variant(('vialrgb-direct',), ('auto-shift', 'space-cadet', 'tap-dance')),
+    'code': _variant(('vialrgb-direct',), ('space-cadet', 'grave-escape', 'tap-dance')),
+    'pointer': _variant(('vialrgb-direct',), ('mouse-keys', 'tap-dance')),
     'onehand': _variant(('vialrgb-direct', 'key-overrides'), ('mouse-keys', 'tap-dance')),
-    'creative': _variant(('key-overrides',), ('tap-dance',)),
-    'shortcuts': _variant(('vialrgb-direct', 'dynamic-macros'), ('tap-dance',)),
-    'multios': _variant(('vialrgb-direct',), ('mac-pc', 'ctrl-gui-swap')),
+    'creative': _variant(('key-overrides',), ('tap-dance', 'nkro', 'nkro-control')),
+    'shortcuts': _variant(('vialrgb-direct',), ('tap-dance', 'nkro', 'nkro-control')),
+    'multios': _variant(('vialrgb-direct',), ('mac-pc', 'ctrl-gui-swap', 'tap-dance')),
     **PROFILES,
 }
 CONFLICTS = []
@@ -178,8 +178,15 @@ def validate_source_configuration(value):
         return value
     if name in PROFILES and value == _configuration(name, PROFILES[name]):
         return value
-    if name in _BETA2_VARIANTS and value == historical_configuration(name):
-        return value
+    if name in _BETA2_VARIANTS:
+        remove, add = _BETA2_VARIANTS[name]
+        previous = tuple(f for f in _BETA2_MAIN if f not in remove) + add
+        if name == 'main':
+            previous += ('auto-shift',)
+        if any(value == _configuration(name, previous, current=current) for current in (False, True)):
+            return value
+        if value == historical_configuration(name):
+            return value
     raise ValueError('Source configuration differs from a known package')
 
 

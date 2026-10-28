@@ -1,10 +1,23 @@
-"""Exact previous-beta-only settings transition policy; no device operations."""
+"""Exact published beta.3/4/4.1 settings transition policy; no device operations."""
 from copy import deepcopy
 import hashlib
 import json
 
-PREVIOUS_BETA_TAG = 'v0.6.0-beta.3'
-PREVIOUS_CATALOG_SHA256 = 'd07cbc6bb562e84193f6de121733d13e21aceb129b653e9ff97ae954da36920c'
+PREVIOUS_BETA_TAG = 'v0.6.0-beta.4.1'
+# beta.4 and beta.4.1 published the same settings catalog, byte-for-byte.
+PREVIOUS_CATALOG_SHA256 = '8bf90526a51e9879870a61d7de1c59b1df38e3489b77a67e67496503f0307658'
+BETA4_IDENTITIES = {
+    'main': ('05f49d16b380a8f40b55c3a38c0e863a25d884237d4fd8d6aaef51b6fd95c389', '70cf0f668b3839f67387f01e4cca600b68ceac27c38cb7230d0c4828c390e2de'),
+    'game': ('aa7452fb3ebc68b01b4e675c5423b868806ecee6f79b5fe5786be6fd19d9d67a', '8cd041d28df837df230334f2f502b5540dbda7dec779d4d4a2c03d197874834e'),
+    'mmo': ('ae5232a4d183d9cecf5b8f1cde917ea14961ed7d8db6b76ee93f85d348ddea54', 'd902e7e828b0cfea888c95e8d8138281e80e513cdf4e442303a637f5187db59f'),
+    'typing': ('382e5e965740ce917b165ddc01d8a7078525173882016310a755bbb54a8b63a9', '7293446873b861d18087949547ab7c3ece7eba3c617b751bbed25f7867aa864f'),
+    'code': ('fdfeb3cd0d793f54e58c26fa004c2f583db98098a7703a4dec7b0c72925336c3', '0cd0f22230eee4424af3e409670d16c17f9361cc07fda9347a64c82878e5b23a'),
+    'pointer': ('c08d1bfefb705df10c17b545d90d156708f0482464de0e9e0aeb66afeb5ba19e', '0f1d088346d23ad50ae70efd27b333f5fc2bdf6c32b60938daa7eb6a4f0887fb'),
+    'onehand': ('32bfa36b3b5a9d4b674b69d0b55b891045c43d575c716384aa77a6ebe6e6b99e', '8568924693c33bfb55dd2b8fac1895293dbdda81321059e2b51e6a496d5bd6cf'),
+    'creative': ('05c61ebfea8c5d362b8a69e71ec689e26c284137c0a593d1b6501ea1713adbf7', '6be41cc2c497c64df4eaab97cddbed56f07bdff9215085014cb3c8bdb46d4180'),
+    'shortcuts': ('1df6f4fc00eb36bca75b2fe8b3a46dbed63529ea00d9474f708dfee51dd1421d', 'b109452ff0dea42f2736a7436e518c5f2c287c0c8a95895308fe3b35ee426a5a'),
+    'multios': ('871f9d60715a40261808a5433085cf4f829083c3dd0ae2e1230792dd46522998', '8456cf93ac153b3155b44b44e5bb430e46ffce4d7a5c92681dc28fe851cb3f81'),
+}
 # Published beta.3 profile identities, retained unchanged for source validation.
 PREVIOUS_IDENTITIES = {'main': ('391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e', 'd1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14'), 'game': ('5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005', '7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9'), 'mmo': ('963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821', '91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923'), 'typing': ('57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14', '95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f'), 'code': ('35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb', '7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47'), 'pointer': ('6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946', 'baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395'), 'onehand': ('f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f', '1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374'), 'creative': ('476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38', '8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23'), 'shortcuts': ('3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64', 'ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861'), 'multios': ('670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f', '098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8')}
 
@@ -15,20 +28,24 @@ def require(value, message):
 
 
 def _previous_rows(catalog):
-    rows = catalog.get('profiles')
-    require(type(rows) is list and [r.get('profile') for r in rows] == list(PREVIOUS_IDENTITIES),
-            'Previous beta must contain the exact published ten profiles')
-    for row in rows:
-        identity = row.get('settings_identity', {})
-        require((identity.get('ihx_sha256'), identity.get('code_sha256')) ==
-                PREVIOUS_IDENTITIES[row['profile']], 'Previous beta image identity differs')
+    rows = []
+    for key, identities in (('profiles', BETA4_IDENTITIES), ('historical_profiles', PREVIOUS_IDENTITIES)):
+        published = catalog.get(key)
+        require(type(published) is list and [r.get('profile') for r in published] == list(identities),
+                'Previous beta must contain the exact published ten profiles')
+        for row in published:
+            identity = row.get('settings_identity', {})
+            require((identity.get('ihx_sha256'), identity.get('code_sha256')) ==
+                    identities[row['profile']], 'Previous beta image identity differs')
+        rows.extend(published)
+    require(catalog.get('historical_sources', []) == [], 'Legacy source admission is disabled')
     return deepcopy(rows)
 
 
 def load_previous_catalog(path):
     raw = path.read_bytes()
     require(hashlib.sha256(raw).hexdigest() == PREVIOUS_CATALOG_SHA256,
-            'Previous beta catalog differs from authenticated published beta.3')
+            'Previous beta catalog differs from authenticated published beta.4.1')
     catalog = json.loads(raw)
     _previous_rows(catalog)
     return catalog
@@ -52,15 +69,17 @@ def compose_catalog(fresh, previous):
     current_by_id = {r['settings_identity']['ihx_sha256']: r for r in current}
     require(len(current_by_id) == len(current), 'Duplicate new beta image identity')
     retained = []
+    known = dict(current_by_id)
     for row in _previous_rows(previous):
         ihx = row['settings_identity']['ihx_sha256']
-        if ihx in current_by_id:
-            same = current_by_id[ihx]
+        if ihx in known:
+            same = known[ihx]
             require(same['settings_identity'] == row['settings_identity'] and
                     same.get('configuration') == row.get('configuration'),
                     'Unchanged image has a conflicting settings contract')
         else:
             retained.append(row)
+            known[ihx] = row
     result['historical_sources'] = []
     result['historical_profiles'] = retained
     sources = source_identities(result)
@@ -68,7 +87,7 @@ def compose_catalog(fresh, previous):
         {'source': source, 'target': row['settings_identity']['ihx_sha256']}
         for source in sorted(sources) for row in current]
     result['compatibility_scope'] = (
-        'Settings sources are exact published beta.3 profiles and this beta profiles; '
+        'Settings sources are exact published beta.3, beta.4, beta.4.1 profiles and this beta profiles; '
         'restore targets are this beta only. Earlier releases are unsupported. '
         'Offline plans do not prove physical restore.')
     return result
@@ -93,7 +112,7 @@ def validate_backup_scope(backups, catalog):
     actual = {tuple(backup['source_identity']) for backup in backups.values()}
     require(len(actual) == len(backups), 'Duplicate backup image identity')
     require(actual == expected,
-            'Backups must cover exactly previous beta.3 and current beta images')
+            'Backups must cover exactly previous beta.3/4/4.1 and current beta images')
 
 
 def validate_catalog_scope(catalog, previous):

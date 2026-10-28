@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Promote the verified beta.4 catalog payload to beta.4.1 metadata."""
+"""Authorize verified beta.4.1 or beta.5 catalog payloads."""
 from __future__ import annotations
 
 import argparse
@@ -34,11 +34,12 @@ def file_records(payload: dict[str, bytes]) -> dict[str, dict[str, object]]:
 
 
 def promote(directory: Path, tag: str = TARGET_TAG) -> str:
-    if tag != TARGET_TAG:
-        raise ValueError('Only the exact beta.4.1 catalog may authorize flashing')
+    if tag not in (TARGET_TAG, 'v0.6.0-beta.5'):
+        raise ValueError('Only the exact beta.4.1 or beta.5 catalog may authorize flashing')
+    source_tag = SOURCE_TAG if tag == TARGET_TAG else tag
     archive_path = directory / ARCHIVE
     if archive_path.is_symlink() or not archive_path.is_file():
-        raise ValueError('Missing regular beta.4 catalog archive')
+        raise ValueError('Missing regular source catalog archive')
     with zipfile.ZipFile(archive_path) as archive:
         names = archive.namelist()
         if len(names) != len(set(names)) or any(name.startswith('/') or '\\' in name
@@ -54,13 +55,13 @@ def promote(directory: Path, tag: str = TARGET_TAG) -> str:
         path = directory / name
         if path.is_symlink() or not path.is_file() or path.read_bytes() != payload[name]:
             raise ValueError('Standalone metadata differs from its catalog archive: ' + name)
-    if descriptor.get('tag') != SOURCE_TAG or descriptor.get('format') != 'ak820-beta-release-catalog-1':
-        raise ValueError('Source catalog is not the published beta.4 format')
+    if descriptor.get('tag') != source_tag or descriptor.get('format') != 'ak820-beta-release-catalog-1':
+        raise ValueError('Source catalog tag or format differs')
     if descriptor.get('assets') != file_records({name: data for name, data in payload.items()
                                                   if name not in ('release-catalog.json',
                                                                   'release-manifest.json')}):
         raise ValueError('Source release catalog file identities do not match the archive')
-    if (manifest.get('tag') != SOURCE_TAG
+    if (manifest.get('tag') != source_tag
             or manifest.get('files') != file_records({name: data for name, data in payload.items()
                                                         if name != 'release-manifest.json'})):
         raise ValueError('Source release manifest does not match the archive')
@@ -72,7 +73,7 @@ def promote(directory: Path, tag: str = TARGET_TAG) -> str:
             or capabilities.get('flashing_authorized') is not False
             or capabilities.get('settings_writes_authorized') is not False
             or capabilities.get('hardware_validated') is not False):
-        raise ValueError('Source beta.4 catalog is not the expected read-only release')
+        raise ValueError('Source catalog is not the expected read-only release')
     rows = matrix.get('profiles')
     if not isinstance(rows, list) or [row.get('profile') for row in rows] != list(PROFILES):
         raise ValueError('Firmware matrix is not the exact ordered ten-profile set')
@@ -105,7 +106,7 @@ def promote(directory: Path, tag: str = TARGET_TAG) -> str:
     if any(image.get('flashing_authorized') is not False
            or image.get('settings_writes_authorized') is not False
            or image.get('hardware_validated') is not False for image in images):
-        raise ValueError('Source beta.4 image capabilities are not read-only')
+        raise ValueError('Source image capabilities are not read-only')
 
     capabilities['release_approved'] = True
     capabilities['flashing_authorized'] = True
@@ -120,7 +121,7 @@ def promote(directory: Path, tag: str = TARGET_TAG) -> str:
     payload['capability-catalog.json'] = canonical(capabilities)
 
     descriptor.update({
-        'tag': TARGET_TAG,
+        'tag': tag,
         'release_approved': True,
         'flashing_authorized': True,
         'flashing_authorized_images': profile_identities,
@@ -132,7 +133,7 @@ def promote(directory: Path, tag: str = TARGET_TAG) -> str:
                                                          'release-manifest.json')})
     payload['release-catalog.json'] = canonical(descriptor)
 
-    manifest['tag'] = TARGET_TAG
+    manifest['tag'] = tag
     manifest['files'] = file_records({name: data for name, data in payload.items()
                                       if name != 'release-manifest.json'})
     payload['release-manifest.json'] = canonical(manifest)

@@ -243,7 +243,7 @@ jobs:
                   return True
               if path == "ci/beta4-release-notes.md":
                   return True
-              if path == "ci/beta4.1-release-notes.md":
+              if path in ("ci/beta4.1-release-notes.md", "ci/beta5-release-notes.md"):
                   return True
               if path in ("ci/beta41_catalog.py", "ci/test_beta41_catalog.py"):
                   return True
@@ -410,7 +410,7 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           case "$RELEASE_TAG" in
-            v0.6.0-beta.4) CATALOG_TAG="$RELEASE_TAG" ;;
+            v0.6.0-beta.4|v0.6.0-beta.5) CATALOG_TAG="$RELEASE_TAG" ;;
             v0.6.0-beta.4.1) CATALOG_TAG="v0.6.0-beta.4" ;;
             *) echo "Unsupported AK820 release tag: $RELEASE_TAG" >&2; exit 1 ;;
           esac
@@ -418,7 +418,7 @@ jobs:
             --bundles-root releases/beta4 \
             --output dist/catalog \
             --tag "$CATALOG_TAG"
-      - name: Name the beta.4 catalog archive
+      - name: Authorize and name the beta catalog archive
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
@@ -428,6 +428,12 @@ jobs:
               mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4.1-Catalog.zip
               rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
               CATALOG_ARCHIVE=AK820-Beta4.1-Catalog.zip
+              ;;
+            v0.6.0-beta.5)
+              python ci/beta41_catalog.py --catalog-dir dist/catalog --tag "$RELEASE_TAG"
+              mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta5-Catalog.zip
+              rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
+              CATALOG_ARCHIVE=AK820-Beta5-Catalog.zip
               ;;
             v0.6.0-beta.4)
               mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4-Catalog.zip
@@ -469,6 +475,7 @@ jobs:
           case "$RELEASE_TAG" in
             v0.6.0-beta.4) notes_file=ci/beta4-release-notes.md ;;
             v0.6.0-beta.4.1) notes_file=ci/beta4.1-release-notes.md ;;
+            v0.6.0-beta.5) notes_file=ci/beta5-release-notes.md ;;
             *) echo "Unsupported AK820 release tag: $RELEASE_TAG" >&2; exit 1 ;;
           esac
           args=(

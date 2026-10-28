@@ -10,20 +10,24 @@ The [shared functions](README.md#shared-functions) are included.
 
 - One Shot modifiers.
 - Leader: a prefix followed by one 1–0 or A–F key selects one of 16 saved Vial macros.
+- Dynamic Macros: two temporary recordings of up to 16 completed key taps each.
 - Host-controlled OS indicator.
 - QMK Settings: supported timing parameters.
 - Key Overrides: eight modifier-dependent key replacements.
 - Tap Dance: eight entries with tap, hold, double-tap and tap-hold outputs.
+- NKRO keyboard reports and on/off controls.
 
 ## Changes from main
 
-Added: Tap Dance: eight entries with tap, hold, double-tap and tap-hold outputs.
+Added: Tap Dance: eight entries with tap, hold, double-tap and tap-hold outputs; NKRO reports and controls.
 
-Removed: Dynamic Macros: two temporary recordings of up to 16 completed key taps each; VialRGB Direct: direct RGB control from a compatible application.
+Removed: VialRGB Direct: direct RGB control from a compatible application.
 
 Auto Shift is not included.
 
 ## Limits
+
+NKRO control is volatile and switching clears held keys and pending actions; host support is required.
 
 Tap Dance: eight entries with four outputs using basic keys or keys with modifiers. Macro, layer and mouse actions are rejected.
 
@@ -31,7 +35,7 @@ Key Overrides: eight modifier-dependent replacements.
 
 Leader selects one of 16 saved Vial macros with a prefix and one 1–0 or A–F key.
 
-Runtime macro recording is absent; the 16 persistent Vial macros remain available.
+The two runtime recordings of up to 16 completed key taps are temporary and lost after restart. They are separate from the 16 persistent Vial macros.
 
 OS uses a host-refreshed indicator lease; the firmware does not detect the OS or layout.
 

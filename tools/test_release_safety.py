@@ -49,15 +49,17 @@ class ReleaseSafetyTests(unittest.TestCase):
                     'selector_cases': {'input_values_checked': 256, 'bounded_table_entries': 16},
                     'emitted_contracts': {'compiler_register_bank': 0, 'shared_helper_masked_init_calls': [1], 'nonoverlay_allocations': [1]}},
             'transition': {}}
-        self.previous = {'profiles': [
-            {'profile': name, 'settings_identity': {'ihx_sha256': hashes[0], 'code_sha256': hashes[1]}}
-            for name, hashes in gate.beta_policy.PREVIOUS_IDENTITIES.items()]}
+        self.previous = {
+            key: [{'profile': name, 'settings_identity': {'ihx_sha256': hashes[0], 'code_sha256': hashes[1]}}
+                  for name, hashes in identities.items()]
+            for key, identities in [('profiles', gate.beta_policy.BETA4_IDENTITIES),
+                                    ('historical_profiles', gate.beta_policy.PREVIOUS_IDENTITIES)]}
         raw = json.dumps(self.previous).encode()
         pin = patch.object(gate.beta_policy, 'PREVIOUS_CATALOG_SHA256', gate.sha(raw))
         pin.start()
         self.addCleanup(pin.stop)
         self.audit = self.root / 'audit'
-        self.write('audit/previous-beta-catalog.json', raw)
+        self.write('audit/previous-beta4-catalog.json', raw)
         rows = []
         for name in gate.beta_policy.PREVIOUS_IDENTITIES:
             config = self.configuration if name == 'main' else configuration(name)
@@ -214,8 +216,8 @@ class ReleaseSafetyTests(unittest.TestCase):
     def test_actual_producer_generates_complete_previous_current_witness(self):
         transition = self.data['transition']
         self.assertEqual(transition['format'], 'ak820-settings-transition-2')
-        self.assertEqual(len(transition['source_images']), 20)
-        self.assertEqual(len(self.matrix['cases']), 200)
+        self.assertEqual(len(transition['source_images']), 30)
+        self.assertEqual(len(self.matrix['cases']), 300)
         self.assertNotIn('actual_alpha2_preflight', transition)
         self.assertEqual(self.validate()['stack_bound'], 93)
 
@@ -392,7 +394,7 @@ class ReleaseSafetyTests(unittest.TestCase):
         rows[1] = copy.deepcopy(previous['profiles'][1])
         catalog = gate.beta_policy.compose_catalog({'profiles': rows}, previous)
         backups, generated, calls = {}, {}, []
-        for prefix, source_rows in [('historical', previous['profiles']), ('fresh', rows)]:
+        for prefix, source_rows in [('beta3', previous['historical_profiles']), ('historical', previous['profiles']), ('fresh', rows)]:
             for row in source_rows:
                 identity = row['settings_identity']
                 profile = dict(identity, schema='same-schema', definition_sha256='definition',
@@ -403,8 +405,8 @@ class ReleaseSafetyTests(unittest.TestCase):
                     return {'source_identity': (profile['ihx_sha256'], profile['code_sha256'])}
                 self.producer.add_generated_backup(backups, generated, label, profile, create)
         gate.beta_policy.validate_backup_scope(backups, catalog)
-        self.assertEqual(len(backups), 19)
-        self.assertEqual(len(calls), 19)
+        self.assertEqual(len(backups), 29)
+        self.assertEqual(len(calls), 29)
         self.assertNotIn('fresh-game', calls)
         self.assertIn('historical-game', backups)
         matrix = copy.deepcopy(self.matrix)
@@ -424,8 +426,8 @@ class ReleaseSafetyTests(unittest.TestCase):
              'settings_code_sha256': rows[0]['settings_identity']['code_sha256']},
             self.data['transition']['tests'])
         self.assertTrue(witness['passed'])
-        self.assertEqual(len(witness['source_images']), 19)
-        self.assertEqual(len(matrix['cases']), 190)
+        self.assertEqual(len(witness['source_images']), 29)
+        self.assertEqual(len(matrix['cases']), 290)
 
     def test_generated_duplicate_conflicts_fail_before_creation(self):
         profile = {'ihx_sha256': 'a' * 64, 'code_sha256': 'b' * 64,

@@ -15,16 +15,19 @@ The [shared functions](README.md#shared-functions) are included.
 - QMK Settings: supported timing parameters.
 - VialRGB Direct: direct RGB control from a compatible application.
 - Tap Dance: eight entries with tap, hold, double-tap and tap-hold outputs.
+- NKRO keyboard reports and on/off controls.
 
 ## Changes from main
 
-Added: Tap Dance: eight entries with tap, hold, double-tap and tap-hold outputs.
+Added: Tap Dance: eight entries with tap, hold, double-tap and tap-hold outputs; NKRO reports and controls.
 
 Removed: Key Overrides: eight modifier-dependent key replacements.
 
 Auto Shift is not included.
 
 ## Limits
+
+NKRO control is volatile and switching clears held keys and pending actions; host support is required.
 
 Tap Dance: eight entries with four outputs using basic keys or keys with modifiers. Macro, layer and mouse actions are rejected.
 

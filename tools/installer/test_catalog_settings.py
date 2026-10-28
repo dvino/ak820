@@ -546,7 +546,7 @@ class CatalogSettings(unittest.TestCase):
                     config = s.ak820_profiles.configuration(target_name)
                     api.settings_query = Mock(return_value=config['runtime_qmk_settings'])
                     api.get_setting = lambda qsid:s.extensions.decode_settings(bytes(raw.nvm[0x6a8:0x6c0]))[str(qsid)]
-                    api.dynamic_entry_counts = Mock(return_value=(0,8,8))
+                    api.dynamic_entry_counts = Mock(return_value=(8 if 'tap-dance' in config['optional_features'] else 0,8,8))
                     api.get_extension = lambda kind,index:bytes(raw.nvm[s.extensions.slot_offset(kind,index):s.extensions.slot_offset(kind,index)+10])
                     try:
                         with patch('ak820_device_protocol.time.sleep'):

@@ -6,14 +6,13 @@
 {
   "format": "ak820-ci-program-review-1",
   "hardware_validated": false,
-  "ihx_sha256": "05c61ebfea8c5d362b8a69e71ec689e26c284137c0a593d1b6501ea1713adbf7",
+  "ihx_sha256": "eb457d201ab4e1ee79db3ecba8066b07ea7d068620e1036299f8a63b390a7fb2",
   "physical_device_commands": 0,
-  "policy_sha256": "0f4b1d604393a13c877904b1441d364d17ed2cd3ec9bf618e01bf26a676d3e1c",
+  "policy_sha256": "0226c76c8cf02addfd18ce982c6e1b73f65ed01ee53efa36275c29d326cd8c4c",
   "profile": "creative",
   "review_report": "ci/profiles/creative/program-review.md#exact-tree-review-record",
-  "scope": "Independent beta.4 exact-tree policy/evidence review recorded in this file (2026-10-28). Verified this profile's current policy source/host/witness manifests against worktree bytes; current linked IHX and canonical MAP symbol identity; matching packing receipt digest/program identity; and passing unchanged-build qualification at `qmk-8051-ak820/.build/creative-preliminary-final/creative/qualification.json` (28 suites, 353 unit tests, zero skips). The beta.3/current-only settings transition matrix passed the repository validator. Scope is artifact, source-binding and evidence integrity; it does not assess all firmware behavior or establish hardware validation, release approval, or publication.",
+  "scope": "Independent AI read-only exact-tree artifact review (2026-10-28): recomputed policy source/host and safety source/witness digests and sizes, packing receipt digest, linked IHX and canonical MAP symbol identity; inspected 36 successful base suites, 356 unit tests, zero skips and retained log digests, profile qualification and runtime records. Validated 30 exact source identities against 10 current targets (300 offline transition cases). The reviewer did not rerun builds or tests, inspect private OEM data, perform physical device operations, or grant release approval. This record does not claim human review or hardware validation.",
   "status": "passed",
-  "symbols_sha256": "a92c9c00ee330a18b4f23a8f6978425afa359e18bc152355e24cfec21bad2ecc",
-  "test_source_snapshot_sha256": "0eff203551cefa725d98822eea494713a0a4837da52b8b9966e6a66fb312b7eb"
+  "symbols_sha256": "aae765480ac9728152d2d979af7a71866b96217ffaaeb2946b3b5a0b22d27eff"
 }
 ```
