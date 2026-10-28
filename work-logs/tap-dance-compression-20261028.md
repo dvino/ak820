@@ -292,3 +292,12 @@ and multiplication on event paths. The candidate was restored and rejected:
 its 257-byte object CODE/CONST growth undermines the already-overfull CODE
 window, and no equivalence/CPU-time validation was performed. Thus this is a
 screen, not a proposed deployed change.
+
+A second map-format screen encoded each two nine-valued entries as a 7-bit
+base-9 pair, packing 64 pairs into 56 bytes. Its 8051 same-flags object used
+XSEG 0x8a instead of 0x8f (net −5 after extra temporaries), CSEG 0x837 instead
+of 0x725 (+274), and CONST remained zero. The source was restored; the screen
+was rejected without behavioral or timing validation because it worsens the
+constrained CODE budget. These are pre-link object figures, not a firmware
+measurement. The independently reviewed duplicate-source regression and its
+`--host` runner integration had no source-review findings.
