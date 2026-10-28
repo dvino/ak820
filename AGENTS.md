@@ -81,21 +81,19 @@ and hardware limits. Companion integration is separate from the beta.3 packet.
 - The lead checks current state and ownership, coordinates integration and
   evidence, and assigns bounded tasks with explicit owned files. Avoid duplicate
   work and concurrent builds sharing a working tree or output paths.
-- For long-running builds and checks, immediately assign a monitor tied to the
-  actual process, CI run or completion report. The lead and subagents must hand
-  off observation to that monitor instead of repeatedly polling logs themselves.
-  Keep it quiet while state is unchanged; report completion, failure or required
-  action. If no platform monitor is available, start one persistent native
-  watcher on the exact process/run and follow that watcher rather than launching
-  repeated status commands. Never start a duplicate build to obtain progress.
-- Use fresh GPT-6 Luna at medium reasoning for small edits, docs and routine
-  builds; GPT-6.1 Terra (`gpt-6.1-terra`) at low for bounded code implementation/refactoring,
-  native UI and visual/browser/desktop tasks. Use GPT-6.1 Sol at low for complex
-  ABI/NVM/contracts and independent review. The lead may adjust effort and routing
-  within these role limits when the task requires it.
-- GPT-6.1 Sol at high is a last resort for architecture/complex planning. Before
-  delegation, record the unresolved question and why ordinary work/review cannot
-  settle it. Do not use this route for routine work.
+- For any long-running operation, including CI, immediately start one persistent
+  watcher script or native wait command tied to the exact process, container or
+  CI run. Wait for that watcher; an agent repeatedly checking logs or status is
+  not a watcher. Stay quiet while unchanged and report completion, failure or
+  needed action. Never start a duplicate operation to obtain progress.
+- Use fresh GPT-6 Luna at medium reasoning for small edits, simple implementation
+  and refactoring, documentation, builds and visual browser/desktop tasks;
+  GPT-6.1 Terra at low for complex implementation/refactoring and native UI;
+  GPT-6.1 Terra at medium for complex ABI/NVM/contracts and independent review.
+- GPT-6.1 Sol at low is a last resort for architecture and complex planning.
+  Before delegation, record the unresolved question and why ordinary work or
+  review cannot settle it. Do not use it for routine work or tasks a simpler
+  model can handle. The lead may adjust effort and routing within these roles.
 - Use fresh contexts for new bounded tasks or grown context. Give a concise
   handoff with ownership, current facts, evidence, dependencies and stop
   conditions rather than the full routine-task conversation. Communicate with
