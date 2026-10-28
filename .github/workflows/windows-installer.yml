@@ -406,33 +406,26 @@ jobs:
       - name: Install pinned external sources for catalog verification
         run: python tools/install_lufa_dependency.py --fetch
       - name: Prepare companion catalogs and installation guides
+        run: >-
+          python tools/build_beta_release_assets.py
+          --bundles-root releases/beta3
+          --output dist/catalog
+          --tag "${{ github.ref_name }}"
+      - name: Name the beta.4 catalog archive
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          catalog_build_tag="$RELEASE_TAG"
-          if [[ "$RELEASE_TAG" == "v0.6.0-beta.4.1" ]]; then
-            catalog_build_tag="v0.6.0-beta.4"
-          fi
-          python tools/build_beta_release_assets.py \
-            --bundles-root releases/beta3 \
-            --output dist/catalog \
-            --tag "$catalog_build_tag"
           if [[ "$RELEASE_TAG" == "v0.6.0-beta.4.1" ]]; then
             python ci/beta41_catalog.py --catalog-dir dist/catalog --tag "$RELEASE_TAG"
+            mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4.1-Catalog.zip
+            rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
+            CATALOG_ARCHIVE=AK820-Beta4.1-Catalog.zip
+          else
+            mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4-Catalog.zip
+            rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
+            CATALOG_ARCHIVE=AK820-Beta4-Catalog.zip
           fi
-      - name: Name the beta catalog archive
-        env:
-          RELEASE_TAG: ${{ github.ref_name }}
-        run: |
-          beta_suffix="${RELEASE_TAG##*-beta.}"
-          if [[ ! "$beta_suffix" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
-            echo "Unexpected beta tag: $RELEASE_TAG" >&2
-            exit 1
-          fi
-          CATALOG_ARCHIVE="AK820-Beta${beta_suffix}-Catalog.zip"
           echo "CATALOG_ARCHIVE=$CATALOG_ARCHIVE" >> "$GITHUB_ENV"
-          mv dist/catalog/AK820-Beta3-Catalog.zip "dist/catalog/$CATALOG_ARCHIVE"
-          rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
           cd dist/catalog
           sha256sum "$CATALOG_ARCHIVE" > "$CATALOG_ARCHIVE.sha256"
           python - "$CATALOG_ARCHIVE" <<'PY'
@@ -462,11 +455,10 @@ jobs:
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
           RELEASE_PRERELEASE: ${{ steps.release.outputs.prerelease }}
         run: |
-          case "$RELEASE_TAG" in
-            v0.6.0-beta.4) notes_file=ci/beta4-release-notes.md ;;
-            v0.6.0-beta.4.1) notes_file=ci/beta4.1-release-notes.md ;;
-            *) echo "No release notes are defined for $RELEASE_TAG" >&2; exit 1 ;;
-          esac
+          notes_file=ci/beta4-release-notes.md
+          if [[ "$RELEASE_TAG" == "v0.6.0-beta.4.1" ]]; then
+            notes_file=ci/beta4.1-release-notes.md
+          fi
           args=(
             "$RELEASE_TAG"
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
