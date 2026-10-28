@@ -102,6 +102,8 @@ if args.sdcc:
         (p/'module.c').write_text(target+source+'\nstatic void reenter(void) {}\n')
         subprocess.run([str(args.sdcc),'--std-c11','--model-large','-mmcs51','-c',str(p/'module.c'),'-o',str(p/'module.rel')],check=True)
         print('compact Tap Dance SDCC mcs51 compile passed (isolated ABI fixture)')
+else:
+    print('SKIP compact Tap Dance SDCC compile: no SDCC path supplied')
 
 # Shared production storage regression; no device access.
 import sys
