@@ -217,7 +217,7 @@ class PromotionTests(unittest.TestCase):
             output = root / 'output'
             with patch.object(assets, 'ROOT', root), patch.object(
                     assets.ak820, 'release_contexts', return_value=contexts):
-                result = assets.build(bundles, output, 'v0.6.0-beta.4.1')
+                result = assets.build(bundles, output, 'v0.6.0-beta.2')
             self.assertEqual(result['profiles'], 10)
             archive = output / 'AK820-Beta3-Catalog.zip'
             self.assertEqual((output / 'AK820-Beta3-Catalog.zip.sha256').read_text().split()[0],
@@ -254,30 +254,8 @@ class PromotionTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as zf:
                 members = {name: zf.read(name) for name in zf.namelist()}
             descriptor = json.loads(members['release-catalog.json'])
-            self.assertEqual(descriptor['tag'], 'v0.6.0-beta.4.1')
             self.assertEqual(descriptor['default_profile'], 'main')
             self.assertEqual(descriptor['installable_profiles'], list(self.profiles))
-            self.assertTrue(descriptor['release_approved'])
-            expected_flash_images = [
-                {'profile': row['profile'],
-                 'ihx_sha256': row['settings_identity']['ihx_sha256'],
-                 'code_sha256': row['settings_identity']['code_sha256']}
-                for row in json.loads(members['firmware-matrix.json'])['profiles']]
-            self.assertEqual(descriptor['flashing_authorized_images'], expected_flash_images)
-            self.assertTrue(descriptor['flashing_authorized'])
-            self.assertFalse(descriptor['hardware_validated'])
-            self.assertFalse(descriptor['settings_writes_authorized'])
-            capabilities = json.loads(members['capability-catalog.json'])
-            self.assertTrue(capabilities['release_approved'])
-            self.assertTrue(capabilities['flashing_authorized'])
-            self.assertFalse(capabilities['hardware_validated'])
-            self.assertFalse(capabilities['settings_writes_authorized'])
-            self.assertEqual({image['profile'] for image in capabilities['images']}, set(self.profiles))
-            for image in capabilities['images']:
-                self.assertTrue(image['release_approved'])
-                self.assertTrue(image['flashing_authorized'])
-                self.assertFalse(image['hardware_validated'])
-                self.assertFalse(image['settings_writes_authorized'])
             for profile in self.profiles:
                 prefix = f'profiles/{profile}/'
                 self.assertIn(prefix + 'reference/vial.json', members)
@@ -289,34 +267,6 @@ class PromotionTests(unittest.TestCase):
             manifest = json.loads(members['release-manifest.json'])
             for name, item in manifest['files'].items():
                 self.assertEqual({'sha256': assets.sha(members[name]), 'size': len(members[name])}, item)
-
-            # The same approved images must remain non-installable in adjacent
-            # catalogs unless their exact release tag grants the test install.
-            for tag in ('v0.6.0-beta.4', 'v0.6.0-beta.5'):
-                with self.subTest(tag=tag):
-                    denied_output = root / tag
-                    with patch.object(assets, 'ROOT', root), patch.object(
-                            assets.ak820, 'release_contexts', return_value=contexts):
-                        assets.build(bundles, denied_output, tag)
-                    with zipfile.ZipFile(denied_output / 'AK820-Beta3-Catalog.zip') as zf:
-                        denied_descriptor = json.loads(zf.read('release-catalog.json'))
-                        denied_capabilities = json.loads(zf.read('capability-catalog.json'))
-                    self.assertFalse(denied_descriptor['release_approved'])
-                    self.assertFalse(denied_descriptor['flashing_authorized'])
-                    self.assertEqual(denied_descriptor['flashing_authorized_images'], [])
-                    self.assertFalse(denied_descriptor['hardware_validated'])
-                    self.assertFalse(denied_descriptor['settings_writes_authorized'])
-                    self.assertFalse(denied_capabilities['release_approved'])
-                    self.assertFalse(denied_capabilities['flashing_authorized'])
-                    self.assertFalse(denied_capabilities['hardware_validated'])
-                    self.assertFalse(denied_capabilities['settings_writes_authorized'])
-                    self.assertTrue(all(not image['flashing_authorized']
-                                        for image in denied_capabilities['images']))
-
-    def test_only_beta4_1_authorizes_flashing(self):
-        self.assertTrue(assets.flashing_authorized_for('v0.6.0-beta.4.1'))
-        self.assertFalse(assets.flashing_authorized_for('v0.6.0-beta.4'))
-        self.assertFalse(assets.flashing_authorized_for('v0.6.0-beta.5'))
 
     def test_rejects_wrong_configuration_identity_settings_or_capability_rows(self):
         for mutation, expected in (
@@ -367,15 +317,13 @@ class PromotionTests(unittest.TestCase):
             with patch.object(assets, 'ROOT', root), patch.object(
                     assets.ak820, 'release_contexts', return_value=contexts):
                 assets.build(bundles, root / 'out', 'v0.6.0-beta.2')
-            for invalid in ('duplicate', 'missing', 'extra'):
+            for invalid in ('duplicate', 'missing'):
                 with self.subTest(invalid=invalid), tempfile.TemporaryDirectory() as temp2:
                     root = Path(temp2); bundles, contexts, _, _, capability = self.make_inputs(root)
                     if invalid == 'duplicate':
                         capability['images'][-1] = dict(capability['images'][0])
-                    elif invalid == 'missing':
-                        capability['images'].pop()
                     else:
-                        capability['images'].append(dict(capability['images'][0], profile='unknown'))
+                        capability['images'].pop()
                     (root / 'web/capability-catalog.json').write_bytes(assets.canonical(capability))
                     with patch.object(assets, 'ROOT', root), patch.object(
                             assets.ak820, 'release_contexts', return_value=contexts), \

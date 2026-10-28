@@ -49,11 +49,6 @@ PYTHON_PACKAGE_FILES = tuple(sorted(HOST_FILES | {
 def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
-
-def flashing_authorized_for(tag: str) -> bool:
-    """Only the explicit beta.4.1 test catalog authorizes firmware flashing."""
-    return tag == 'v0.6.0-beta.4.1'
-
 def canonical(value) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode() + b'\n'
 
@@ -370,8 +365,8 @@ def validate_module_descriptions(value: dict | bytes) -> None:
         raise ValueError('Module descriptions omit or duplicate a registered feature')
 
 def build(bundles_root: Path, output: Path, tag: str) -> dict:
-    if not re.fullmatch(r'v?\d+\.\d+\.\d+-beta\.\d+(?:\.\d+)*', tag):
-        raise ValueError('Tag must be a beta version such as v0.6.0-beta.2 or v0.6.0-beta.4.1')
+    if not re.fullmatch(r'v?\d+\.\d+\.\d+-beta\.\d+', tag):
+        raise ValueError('Tag must be a beta version such as v0.6.0-beta.2')
     contexts = ak820.release_contexts(approved=True)
     if len(contexts) != 10:
         raise ValueError('Beta.2 catalog requires all ten approved installer profiles')
@@ -428,41 +423,23 @@ def build(bundles_root: Path, output: Path, tag: str) -> dict:
     validate_profile_links(payload, contexts, settings_catalog, capability_catalog,
                            payload['module-descriptions.json'])
     caps = capability_catalog
-    flashing_authorized = flashing_authorized_for(tag)
-    caps['release_approved'] = flashing_authorized
+    caps['release_approved'] = False
     caps['hardware_validated'] = False
-    # The released firmware images are approved for an explicitly confirmed
-    # beta installation test. This does not claim physical validation or allow
-    # writes to the mutable settings store.
-    caps['flashing_authorized'] = flashing_authorized
+    caps['flashing_authorized'] = False
     caps['settings_writes_authorized'] = False
-    caps['status'] = ('beta-catalog; installation requires fresh in-app confirmation'
-                      if flashing_authorized else 'beta-catalog; flashing is not authorized')
+    caps['status'] = 'beta-catalog; physical operations require fresh consent'
     for image in caps.get('images', []):
         image['release_approved'] = image.get('profile') in profile_ids
-        image['flashing_authorized'] = (flashing_authorized
-                                        and image.get('profile') in profile_ids)
+        image['flashing_authorized'] = False
         image['settings_writes_authorized'] = False
         image['hardware_validated'] = False
     payload['capability-catalog.json'] = canonical(caps)
     for lang, source in (('en', ROOT / 'docs/INSTALL.md'), ('ru', ROOT / 'docs/ru/INSTALL.md')):
         payload['INSTALL-' + lang + '.md'] = standalone_guide(source)
     files = {name: {'sha256': sha(data), 'size': len(data)} for name, data in sorted(payload.items())}
-    flashing_images = []
-    if flashing_authorized:
-        for row in matrix['profiles']:
-            identity = row.get('settings_identity')
-            if not isinstance(identity, dict):
-                raise ValueError('Installable profile lacks an exact image identity: ' + row['profile'])
-            flashing_images.append({'profile': row['profile'],
-                                    'ihx_sha256': identity['ihx_sha256'],
-                                    'code_sha256': identity['code_sha256']})
-    descriptor = {'format': FORMAT, 'tag': tag, 'status': 'beta',
-                  'release_approved': flashing_authorized,
-                  'default_profile': 'main',
+    descriptor = {'format': FORMAT, 'tag': tag, 'status': 'beta', 'default_profile': 'main',
                   'installable_profiles': profile_ids, 'catalog_profiles': [r['profile'] for r in matrix['profiles']],
-                  'flashing_authorized_images': flashing_images,
-                  'hardware_validated': False, 'flashing_authorized': flashing_authorized,
+                  'hardware_validated': False, 'flashing_authorized': False,
                   'settings_writes_authorized': False, 'assets': files}
     payload['release-catalog.json'] = canonical(descriptor)
     manifest = {'format': 'ak820-beta-release-manifest-1', 'tag': tag, 'files': {

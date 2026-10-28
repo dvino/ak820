@@ -65,6 +65,8 @@ jobs:
             qmk-8051-ak820/util/prepare_ak820_trial.py
       - name: Run all host tool unit tests
         run: python -B -m unittest discover -s tools -p 'test_*.py' -v
+      - name: Check beta.4.1 catalog authorization contract
+        run: python -B -m unittest discover -s ci -p 'test_beta41_catalog.py' -v
       - name: Check compiler version selection
         run: python -B -m unittest discover -s qmk-8051-ak820/tests/ak820_compiler -p 'test_*.py' -v
       - name: Check compiler metadata capture contracts
@@ -243,8 +245,7 @@ jobs:
                   return True
               if path == "ci/beta4.1-release-notes.md":
                   return True
-              if path in ("tools/build_beta_release_assets.py",
-                          "tools/test_build_beta_release_assets.py"):
+              if path in ("ci/beta41_catalog.py", "ci/test_beta41_catalog.py"):
                   return True
               if path in ("web/docs/CAPABILITY-CATALOG.md",
                           "web/docs/ru/CAPABILITY-CATALOG.md"):
@@ -405,11 +406,20 @@ jobs:
       - name: Install pinned external sources for catalog verification
         run: python tools/install_lufa_dependency.py --fetch
       - name: Prepare companion catalogs and installation guides
-        run: >-
-          python tools/build_beta_release_assets.py
-          --bundles-root releases/beta3
-          --output dist/catalog
-          --tag "${{ github.ref_name }}"
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          catalog_build_tag="$RELEASE_TAG"
+          if [[ "$RELEASE_TAG" == "v0.6.0-beta.4.1" ]]; then
+            catalog_build_tag="v0.6.0-beta.4"
+          fi
+          python tools/build_beta_release_assets.py \
+            --bundles-root releases/beta3 \
+            --output dist/catalog \
+            --tag "$catalog_build_tag"
+          if [[ "$RELEASE_TAG" == "v0.6.0-beta.4.1" ]]; then
+            python ci/beta41_catalog.py --catalog-dir dist/catalog --tag "$RELEASE_TAG"
+          fi
       - name: Name the beta catalog archive
         env:
           RELEASE_TAG: ${{ github.ref_name }}
@@ -426,11 +436,18 @@ jobs:
           cd dist/catalog
           sha256sum "$CATALOG_ARCHIVE" > "$CATALOG_ARCHIVE.sha256"
           python - "$CATALOG_ARCHIVE" <<'PY'
+          import hashlib
           from pathlib import Path
           import sys
-          path = Path('SHA256SUMS')
-          path.write_text(path.read_text().replace(
-              'AK820-Beta3-Catalog.zip', sys.argv[1]))
+          names = [line.split('  ', 1)[1].strip()
+                   for line in Path('SHA256SUMS').read_text().splitlines()]
+          names = [sys.argv[1] if name == 'AK820-Beta3-Catalog.zip' else name
+                   for name in names]
+          lines = []
+          for name in names:
+              lines.append(hashlib.sha256(Path(name).read_bytes()).hexdigest()
+                           + '  ' + name + '\n')
+          Path('SHA256SUMS').write_text(''.join(lines))
           PY
       - name: Verify Python package and catalog checksums
         run: |
