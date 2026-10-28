@@ -1,0 +1,21 @@
+DIAGNOSTIC COMMAND: /usr/local/bin/python3 util/build_ak820.py --profile main-tap-dance-diagnostic --toolchain ../toolchains/sdcc-4.6.0 --qmk-bin .venv-goal-glibc/bin/qmk --compress-default-keymap --nvm-update-block-asm --nvm-read-block-asm --keymap-words-asm --trim-register-saves --tail-share --outline-max-helpers 400 --short-calls --build-dir .build/goal-tap-physical-current3
+{"modules": 79, "functions": 732, "retained": 479, "removed_count": 253}
+Traceback (most recent call last):
+  File "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/util/build_ak820.py", line 556, in <module>
+    main()
+    ~~~~^^
+  File "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/util/build_ak820.py", line 378, in main
+    short_plan = shortcalls.prepare(short_input, build/'shortcalls', diagnostic_link)
+  File "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/util/ak820_shortcalls.py", line 393, in prepare
+    link(source, image, 'shortcalls-baseline', False)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/util/build_ak820.py", line 377, in diagnostic_link
+    return run(label, link_command(tree,image,0x10000), allow_page_errors=allow_page_errors)
+  File "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/util/build_ak820.py", line 276, in run
+    raise RuntimeError(label+' failed; see '+str(log))
+RuntimeError: shortcalls-baseline failed; see /home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-tap-physical-current3/shortcalls-baseline.log
+DIAGNOSTIC RETURN: .build/goal-tap-physical-current3 1
+DIAGNOSTIC COMMAND: /usr/local/bin/python3 util/build_ak820.py --profile main-tap-dance-diagnostic --toolchain ../toolchains/sdcc-4.6.0 --qmk-bin .venv-goal-glibc/bin/qmk --compress-default-keymap --nvm-update-block-asm --nvm-read-block-asm --keymap-words-asm --trim-register-saves --tail-share --outline-max-helpers 400 --short-calls --build-dir .build/goal-tap-expanded-current --xram-end 0x1100 --code-end 0xe000
+{"modules": 79, "functions": 732, "retained": 479, "removed_count": 253}
+{"image": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-tap-expanded-current/ajazz_ak820_vial.ihx", "code_bytes": 42667, "highest_address": "0xcf7b", "hardware_validated": false}
+DIAGNOSTIC RETURN: .build/goal-tap-expanded-current 0
