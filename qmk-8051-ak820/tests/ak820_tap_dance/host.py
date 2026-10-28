@@ -56,6 +56,12 @@ const uint8_t expected_pattern[9]={0,1,2,3,4,5,6,7,8};uint8_t expected[TD_SOURCE
 assert(sizeof(td_map)==(TD_SOURCES+1)/2);
 for(unsigned i=0;i<TD_SOURCES;i++){expected[i]=expected_pattern[i%9];td_map_set(i,expected[i]);}
 for(unsigned i=0;i<TD_SOURCES;i++)assert(td_map_get(i)==expected[i]);
+/* Every internal setter value must preserve the other packed source. */
+for(unsigned i=0;i<TD_SOURCES;i++)for(unsigned prior=0;prior<=TD_MAP_NONE;prior++)
+    for(unsigned value=0;value<=TD_MAP_NONE;value++){
+        unsigned neighbor=i^1;td_map_set(neighbor,prior);td_map_set(i,value);
+        assert(td_map_get(i)==value);assert(td_map_get(neighbor)==prior);
+    }
 fresh();event(0,1,0x5700);event(0,0,0x5700);assert(!downs[4]);expire();assert(downs[4]==1&&!refs[4]);
 fresh();event(0,1,0x5700);expire();assert(refs[5]==1);event(0,0,4);assert(!refs[5]);
 fresh();event(0,1,0x5700);event(0,0,0x5700);event(0,1,0x5700);event(0,0,0x5700);expire();assert(downs[6]==1&&!refs[6]);

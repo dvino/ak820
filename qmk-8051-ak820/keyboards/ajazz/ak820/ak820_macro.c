@@ -61,7 +61,7 @@ static void commit_length(uint16_t length) {
 static bool parse_byte(macro_parse_t AK820_XDATA *state, uint8_t value) {
     if (state->terminated == DYNAMIC_KEYMAP_MACRO_COUNT) return value == 0;
     if (state->arguments == 3) {
-        if (value < 1 || value > 7) return false;
+        if ((uint8_t)(value - 1) >= 7) return false;
         state->arguments = value <= 3 ? 1 : 2;
     } else if (state->arguments) {
         if (!value) return false;

@@ -68,6 +68,8 @@ def main(argv=None):
                         help='Expected IAP failure path for the selected image; guarded-erase is the new candidate')
     parser.add_argument('--output', type=Path, default=ROOT / 'host/runs/offline-tests.json')
     args = parser.parse_args(argv)
+    if args.require_toolchain and not args.host:
+        parser.error('--require-toolchain requires --host so compiler and CPU checks run')
     try:
         env, tool_records = tool_environment(args.toolchain,
                                             required=args.require_toolchain or bool(args.build_dir))
@@ -91,7 +93,17 @@ def main(argv=None):
         for name in ('ak820_usb', 'ak820_keymap', 'ak820_caps_word', 'ak820_macro_guard',
                      'ak820_diagnostic', 'ak820_optimization', 'ak820_rgb', 'ak820_via_decode', 'ak820_combo'):
             suites.append((QMK, [py, f'tests/{name}/run.py']))
+        suites.append((QMK, [py, 'tests/ak820_macro_guard/parse.py']))
+        suites.append((QMK, [py, 'tests/ak820_macro_guard/powercut.py']))
         suites.append((QMK, [py, 'tests/ak820_bounded/run.py']))
+        repeat_table = [py, 'tests/ak820_repeat/table.py']
+        if tool_records['sdcc']:
+            repeat_table.extend(['--sdcc', tool_records['sdcc']['path']])
+        suites.append((QMK, repeat_table))
+        if tool_records['sdcc'] and tool_records['s51']:
+            for name in ('ak820_repeat', 'ak820_macro_guard'):
+                suites.append((QMK, [py, f'tests/{name}/cpu.py', '--sdcc', tool_records['sdcc']['path'],
+                                     '--simulator', tool_records['s51']['path']]))
         suites.append((QMK, [py, 'tests/ak820_tapping/run.py', '--negative-controls',
                             '--output', str((logdir / 'tapping-host.json').resolve())]))
     build = None
@@ -146,6 +158,10 @@ def main(argv=None):
               'unit_tests': {key: sum(r['unit_tests'][key] for r in records)
                              for key in ('run', 'skipped')},
               'passed': all(r['exit_code'] == 0 for r in records)}
+    if args.host:
+        for key, name in (('repeat_cpu_check', 'ak820_repeat'), ('macro_cpu_check', 'ak820_macro_guard')):
+            cpu = next((r for r in records if f'tests/{name}/cpu.py' in r['command']), None)
+            report[key] = ('passed' if cpu['exit_code'] == 0 else 'failed') if cpu else 'skipped: SDCC or s51 unavailable'
     if args.require_toolchain and report['unit_tests']['skipped']:
         report['passed'] = False
     if build:

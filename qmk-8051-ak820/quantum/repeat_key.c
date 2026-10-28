@@ -163,16 +163,26 @@ void repeat_key_invoke(const keyevent_t AK820_RECORD_MEM *event) {
  * table of pairs of basic keycodes, the function finds the pair containing
  * `target` and returns the other keycode in the pair.
  */
-static uint8_t find_alt_keycode(const uint8_t (*table)[2], uint8_t table_size_bytes, uint8_t target) {
-    const uint8_t* keycodes = (const uint8_t*)table;
+#if defined(AK820_BOARD) && defined(__SDCC_mcs51)
+/* All callers use static const tables in CODE. Avoid generic-pointer reads. */
+#    define ALT_TABLE_MEM __code
+#    define ALT_TABLE_READ(p) (*(p))
+#else
+#    define ALT_TABLE_MEM
+#    define ALT_TABLE_READ(p) pgm_read_byte(p)
+#endif
+static uint8_t find_alt_keycode(const uint8_t ALT_TABLE_MEM (*table)[2], uint8_t table_size_bytes, uint8_t target) {
+    const uint8_t ALT_TABLE_MEM *keycodes = (const uint8_t ALT_TABLE_MEM *)table;
     for (uint8_t i = 0; i < table_size_bytes; ++i) {
-        if (target == pgm_read_byte(keycodes + i)) {
+        if (target == ALT_TABLE_READ(keycodes + i)) {
             // Xor (i ^ 1) the index to get the other element in the pair.
-            return pgm_read_byte(keycodes + (i ^ 1));
+            return ALT_TABLE_READ(keycodes + (i ^ 1));
         }
     }
     return KC_NO;
 }
+#undef ALT_TABLE_MEM
+#undef ALT_TABLE_READ
 
 uint16_t get_alt_repeat_key_keycode(void) {
     uint16_t keycode = last_record.keycode;

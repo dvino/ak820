@@ -22,10 +22,13 @@ static uint8_t td_map_get(uint8_t id) {
     uint8_t packed = td_map[id >> 1];
     return (id & 1) ? packed >> 4 : packed & 15;
 }
+/* Callers pass only slot indices 0..7 or TD_MAP_NONE. */
 static void td_map_set(uint8_t id, uint8_t value) {
     uint8_t AK820_STATE_MEM *packed = td_map + (id >> 1);
-    if (id & 1) *packed = (*packed & 15) | ((value & 15) << 4);
-    else *packed = (*packed & 240) | (value & 15);
+    uint8_t shift = id & 1;
+    uint8_t mask = shift ? 15 : 240;
+    if (shift) value <<= 4;
+    *packed = (*packed & mask) | value;
 }
 static keyrecord_t td_record;
 static uint8_t td_step;

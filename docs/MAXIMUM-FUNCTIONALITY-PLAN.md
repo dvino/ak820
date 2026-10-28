@@ -2,6 +2,37 @@
 
 # Fit the complete AK820 feature set
 
+## Current priority: Tap Dance in main
+
+The 2026-10-28 task narrows the next milestone to adding Tap Dance to the
+current `main` profile without removing or changing its existing functions.
+The complete union below remains a longer-term objective, not a prerequisite
+for this milestone. The older 14-module and nine-profile counts below describe
+that earlier plan: the current registry has 17 switches and ten release
+profiles. Pass 30 and the rejected follow-up experiments are recorded in
+[compression status](MAXIMUM-FUNCTIONALITY-STATUS.md); their diagnostic sizes
+are not measurements of the current `main` plus Tap Dance.
+
+1. The initial `main` and diagnostic `main` plus Tap Dance measurements are
+   recorded in the [work log](../work-logs/tap-dance-compression-20261028.md).
+   The combined bootstrap exceeded ordinary XRAM; an expanded diagnostic is
+   not an installable image. Its final physical placement and exact-image
+   stack bounds remain unknown. Do not infer union cost from another profile.
+2. Rank the remaining deficit against linked listings and prior experiments.
+   Develop small, independently reviewable compression changes without
+   removing capabilities or changing external contracts. Use isolated
+   component screens for now: the owner deferred further changed firmware
+   images until profile composition is decided. Once composition is decided,
+   measure the linked changes and reject those that violate the resource,
+   semantic, timing or stack constraints below.
+3. Once the combination fits, enable it in `main`, update catalog contracts,
+   tests and English/Russian documentation together. Prove the exact image's
+   startup, foreground and enabled interrupt stack bounds before running the
+   complete offline regression suites, including combined feature cases.
+4. Obtain independent review and record the source, build and test evidence.
+   Distinguish offline evidence from physical validation; do not flash or
+   publish release artifacts without separate authorization.
+
 ## Objective and fixed contracts
 
 The first candidate contains all 14 optional modules from `qmk-8051-ak820/util/ak820_profiles.py`, together with every existing base feature. It retains OS indicators, six layers, 16 Vial macros and their 8192-byte store, eight two-key Combos, eight Tap Dance and eight Key Override entries, both encoder directions, NKRO reports and control, and the existing runtime settings. Maximum means simultaneous functionality in one image. The nine-profile catalog is the control, not the endpoint.

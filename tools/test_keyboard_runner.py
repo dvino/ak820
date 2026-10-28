@@ -69,11 +69,18 @@ class OfflineRunnerTests(unittest.TestCase):
 
     def test_selected_toolchain_reaches_all_suites_and_report(self):
         with tempfile.TemporaryDirectory() as temporary:
-            code, report, _ = self.run_fixture(Path(temporary), required=True)
+            code, report, _ = self.run_fixture(Path(temporary), required=True, host=True)
         self.assertEqual(code, 0)
         self.assertTrue(report['require_toolchain'])
         self.assertEqual(set(report['tools']), {'sdcc', 's51'})
         self.assertTrue(all(len(item['sha256']) == 64 for item in report['tools'].values()))
+
+    def test_required_toolchain_without_host_is_rejected(self):
+        with contextlib.redirect_stderr(io.StringIO()) as errors:
+            with self.assertRaises(SystemExit) as result:
+                runner.main(['--require-toolchain'])
+        self.assertEqual(result.exception.code, 2)
+        self.assertIn('--require-toolchain requires --host', errors.getvalue())
 
     def test_default_uses_current_pinned_pair_without_mutating_process_environment(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -106,12 +113,12 @@ class OfflineRunnerTests(unittest.TestCase):
     def test_skips_are_reported_and_fail_required_qualification(self):
         for required in (False, True):
             with self.subTest(required=required), tempfile.TemporaryDirectory() as temporary:
-                code, report, _ = self.run_fixture(Path(temporary), required=required,
+                code, report, _ = self.run_fixture(Path(temporary), required=required, host=True,
                     suite_output='Ran 4 tests in 0.01s\n\nOK (skipped=2)\n')
-            self.assertEqual(code, int(required))
-            self.assertEqual(report['unit_tests'], {'run': 4 * len(report['tests']),
-                                                    'skipped': 2 * len(report['tests'])})
-            self.assertTrue(all(test['exit_code'] == 0 for test in report['tests']))
+                self.assertEqual(code, int(required))
+                self.assertEqual(report['unit_tests'], {'run': 4 * len(report['tests']),
+                                                        'skipped': 2 * len(report['tests'])})
+                self.assertTrue(all(test['exit_code'] == 0 for test in report['tests']))
 
     def test_launch_failure_is_saved_in_complete_failed_report(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -171,11 +178,34 @@ class OfflineRunnerTests(unittest.TestCase):
         commands = [' '.join(record['command']) for record in report['tests']]
         self.assertTrue(any('ak820_inventory' in command for command in commands))
         self.assertTrue(any('ak820_bounded/run.py' in command for command in commands))
+        self.assertTrue(any('ak820_macro_guard/parse.py' in command for command in commands))
+        self.assertTrue(any('ak820_macro_guard/powercut.py' in command for command in commands))
         self.assertTrue(any('ak820_via_decode/run.py' in command for command in commands))
         self.assertTrue(any('ak820_combo/run.py' in command for command in commands))
+        self.assertTrue(any('ak820_repeat/table.py' in command for command in commands))
+        cpu = next(row['command'] for row in report['tests'] if 'tests/ak820_repeat/cpu.py' in row['command'])
+        self.assertEqual(cpu[cpu.index('--sdcc') + 1], report['tools']['sdcc']['path'])
+        self.assertEqual(cpu[cpu.index('--simulator') + 1], report['tools']['s51']['path'])
+        self.assertEqual(report['repeat_cpu_check'], 'passed')
+        macro_cpu = next(row['command'] for row in report['tests'] if 'tests/ak820_macro_guard/cpu.py' in row['command'])
+        self.assertEqual(macro_cpu[macro_cpu.index('--sdcc') + 1], report['tools']['sdcc']['path'])
+        self.assertEqual(macro_cpu[macro_cpu.index('--simulator') + 1], report['tools']['s51']['path'])
+        self.assertEqual(report['macro_cpu_check'], 'passed')
         tapping = next(row['command'] for row in report['tests'] if 'tests/ak820_tapping/run.py' in row['command'])
         self.assertIn('--negative-controls', tapping)
         self.assertIn('--output', tapping)
+
+    def test_missing_toolchain_reports_repeat_cpu_skip(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            env = {'AK820_SDCC_BIN': str(directory / 'toolchain/bin')}
+            with mock.patch.object(runner, 'tool_environment', return_value=(env, {'sdcc': None, 's51': None})):
+                code, report, _ = self.run_fixture(directory, host=True, linked=False)
+        self.assertEqual(code, 0)
+        self.assertEqual(report['repeat_cpu_check'], 'skipped: SDCC or s51 unavailable')
+        self.assertEqual(report['macro_cpu_check'], 'skipped: SDCC or s51 unavailable')
+        self.assertFalse(any('tests/ak820_repeat/cpu.py' in row['command'] for row in report['tests']))
+        self.assertFalse(any('tests/ak820_macro_guard/cpu.py' in row['command'] for row in report['tests']))
 
     def test_transient_ihx_or_map_mutation_fails_even_after_restoration(self):
         for suffix in ('ihx', 'map'):

@@ -1,0 +1,520 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 77.617,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/00.txt",
+      "log_sha256": "23c3bb1a879de6c37381432b7f24abb05661325fe992840e195dc2d5cbfe4b81",
+      "unit_tests": {
+        "run": 189,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.321,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/01.txt",
+      "log_sha256": "03281d5ee5e47ee24e9dc0a4e6e7af852abf9db28102f3813c1a1c9e73c0243c",
+      "unit_tests": {
+        "run": 13,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.357,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/02.txt",
+      "log_sha256": "4e53e52b1039d58cb3bd706e512c8ec5b3f1746a68e403694c53f2db5b964d59",
+      "unit_tests": {
+        "run": 16,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.374,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/03.txt",
+      "log_sha256": "0ace1daa937f201b99b66ba71c40b3803faae5aba5810654e58fcbe8226d9984",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.583,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/04.txt",
+      "log_sha256": "dbbb5275d91070b967392e641bd220b473d73682bfa7f8b41122d16c5b29847b",
+      "unit_tests": {
+        "run": 20,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.13,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/05.txt",
+      "log_sha256": "9236bc32ab70cbe00d83da674654ed10e4d456c753878383a1bed4d233e68042",
+      "unit_tests": {
+        "run": 21,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.165,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/06.txt",
+      "log_sha256": "ae6d41dde4983b368fa6dd2ad582abcb0190b42aa6522bd04621b9c37b609656",
+      "unit_tests": {
+        "run": 77,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.122,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/07.txt",
+      "log_sha256": "6ff8cb6673e52248481ba0fa0eca3657ce430b443dbc93e93c7a3e25938b7877",
+      "unit_tests": {
+        "run": 8,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.063,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/08.txt",
+      "log_sha256": "4aec65ea148dc8e2ec9ef7e9866ccfd015df6c3f141bb78d8a4e8a554ad0f6b4",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.874,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/09.txt",
+      "log_sha256": "021cbdc9c6ef34691c87cbc71158e7a365f3539d72b19d3f9b5b00b980250b24",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.688,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.611,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/11.txt",
+      "log_sha256": "f6a8dcaa9fca225d1ce22eccb6e37823baa116a70cc39c43a582517661ff387f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.237,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/12.txt",
+      "log_sha256": "2ae1a06370222cfd4042b160f898fc26384944e4c8cc32ccb18fc13d4ad25459",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.357,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.363,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.922,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.091,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.349,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/17.txt",
+      "log_sha256": "16d8ea4a2206f0178cea28b8c5a0e978e95acd5490eae33038d5cc6de4ce31d2",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_macro_guard/parse.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.139,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/18.txt",
+      "log_sha256": "fca68704d8398a5c9aeb9023d2ae7f09881ef953934e7ed6e3455f0dfa3d7d5c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_macro_guard/powercut.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.499,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/19.txt",
+      "log_sha256": "12b57ad4e539ed09ca994b7033560fe030d522cb25d46674c10de4555f0c1178",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.446,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/20.txt",
+      "log_sha256": "5e6957a1eea658cb39448866736856adb87367db802d33ecde9ecace9920cbfd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_repeat/table.py",
+        "--sdcc",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc"
+      ],
+      "exit_code": 0,
+      "seconds": 0.342,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/21.txt",
+      "log_sha256": "b15eece4966ec5ce6c99eab40333b39ee6889f6ccb7afeba8149f2289092ddb7",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_repeat/cpu.py",
+        "--sdcc",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc",
+        "--simulator",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51"
+      ],
+      "exit_code": 0,
+      "seconds": 0.372,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/22.txt",
+      "log_sha256": "1c23b2b0df3e614fe2d07be408fa4b025f86e710e2a22764c0e5159942404d4f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_macro_guard/cpu.py",
+        "--sdcc",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc",
+        "--simulator",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51"
+      ],
+      "exit_code": 0,
+      "seconds": 0.236,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/23.txt",
+      "log_sha256": "60111109cc586a8fb274a2837220a9861b35808a25ff67f4ed4b3228a474bce9",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 17.198,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-offline-tests-logs-9c3djabn/24.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {},
+      "build_after": {}
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 356,
+    "skipped": 0
+  },
+  "passed": true,
+  "repeat_cpu_check": "passed",
+  "macro_cpu_check": "passed"
+}
