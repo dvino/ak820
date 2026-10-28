@@ -21,10 +21,10 @@ are not measurements of the current `main` plus Tap Dance.
 2. Rank the remaining deficit against linked listings and prior experiments.
    Develop small, independently reviewable compression changes without
    removing capabilities or changing external contracts. Use isolated
-   component screens for now: the owner deferred further changed firmware
-   images until profile composition is decided. Once composition is decided,
-   measure the linked changes and reject those that violate the resource,
-   semantic, timing or stack constraints below.
+   component screens and local diagnostic builds as needed; the owner permits
+   diagnostic builds without asking again, while the final build comes later.
+   Do not publish or flash diagnostic images. Measure linked changes and reject
+   those that violate the resource, semantic, timing or stack constraints below.
 3. Once the combination fits, enable it in `main`, update catalog contracts,
    tests and English/Russian documentation together. Prove the exact image's
    startup, foreground and enabled interrupt stack bounds before running the
