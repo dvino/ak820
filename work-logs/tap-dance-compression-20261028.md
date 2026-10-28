@@ -387,3 +387,22 @@ directory. These offline checks are not qualification of an installable image.
 An independent Pi review checked the pair7 bootstrap, context provenance,
 physical failure, non-qualified spill report, and restored source/profile;
 it found no issues in the recorded conclusions and did not approve flashing.
+
+### Comparable current main CODE measurement
+
+The owner permits periodic diagnostic builds without asking, while the final
+build is deferred; diagnostic images are not published or flashed. A fresh
+local `main` build (no Tap Dance), pinned SDCC 4.6.0 and the same profile and
+optimization settings as the `origin/dev` control, used a newly generated
+bootstrap context certificate for the parameter-spill pass. Its bootstrap is
+40,939 occupied CODE bytes versus 40,968 at baseline (29 bytes less). The
+physical-window diagnostic after all passes is **40,464 occupied CODE bytes
+versus 40,495 at baseline: 31 bytes saved (0.0766%)**. This comprises 38,581
+versus 38,609 in main (28 bytes less) and 1,883 versus 1,886 in the low window
+(3 bytes less). The highest occupied address is 0xc6e0 versus 0xc6fc; this is
+not the same as the occupied-byte delta. Physical ordinary XRAM is 2,852 / 3,008.
+The spill pass selected 74 changes and is postlink-qualified by its own audit;
+this does not establish whole-program safety or hardware qualification. Both
+build reports and logs are recorded in `tap-dance-current-diagnostic/`. These
+are measurements of the current main without Tap Dance; its 31-byte saving must
+not be confused with the cost or fit of main plus Tap Dance.
