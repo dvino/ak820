@@ -572,3 +572,15 @@ XRAM increase already exceeds the one byte recently freed from the previous
 fully occupied TD bootstrap; public-wrapper DCE and whole-image allocation are
 not established. All changes were restored, with no behavior, target CPU,
 stack/reentry or linked test; the candidate is not accepted or qualified.
+
+Final independent Pi source/evidence review found no issues in reporting the
+bounded outcome: main-only has 40,408 occupied CODE and exact-image runtime
+bound 161/179; separate offline record passes 356 unit tests and 35 suites with
+no skips. The runtime report itself retains `offline_tests_passed: false`; the
+separate suite pass does not set that approval flag. The last physical-XRAM
+main+TD diagnostic predates the USB-bit change and its 1,533 out-of-window
+bytes are neither an exact latest-source deficit nor proof all layouts cannot
+fit. Reviewer did not independently rebuild, recompute hashes or inspect a
+device; it reviewed a provided committed source diff, whose completeness it did
+not independently verify. Merge verdict OK with notes for bounded reporting,
+not release or hardware validation.
