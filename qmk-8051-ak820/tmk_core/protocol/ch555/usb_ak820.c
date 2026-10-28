@@ -63,7 +63,7 @@ enum { OUTPUT_NONE, OUTPUT_RAW, OUTPUT_LED, OUTPUT_SHARED_LED };
 
 static volatile __xdata uint8_t raw_state;
 __xdata uint8_t raw_buffer[RAW_EPSIZE];
-static bool raw_reply_without_nvm; /* main only; classified before handler edits */
+static __bit raw_reply_without_nvm; /* main only; classified before handler edits */
 static volatile __xdata uint8_t keyboard_reset;
 /* Keep each report independently: EP2 multiplexes several report IDs. */
 #define SNAPSHOT_KEYBOARD 0

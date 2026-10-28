@@ -526,3 +526,20 @@ image was built; object savings are not linked savings.
 Passing the union member directly to the setter rather than copying it through
 an additional local produced the same 0x598 CSEG / 0x18 XSEG and was also
 restored; the extra four XRAM bytes did not come from the explicit copy alone.
+
+An independent one-byte XRAM candidate changes private USB
+`raw_reply_without_nvm` to `__bit`, without touching IRQ handshakes or recursion
+guards. Same-flags TD-enabled isolated production object changed XSEG 0x7c →
+0x7b, CSEG 0x12ad → 0x12a7 and BSEG 13 → 14 bits; CONST stayed 0x1a. The
+production USB host harness passed, including original-request recovery
+whitelist, persistence gate and reset scenarios. This remains an object screen,
+not linked or physical validation. An attempt to invoke the separate recovery
+fixture without its mandatory `--build-dir` only printed its usage and did not
+run it. Awaiting independent USB-context review and an exact linked build.
+Independent USB source review found no defect in the bit candidate; main-only
+request lifetime and reset ownership remain unchanged. Host shim maps `__bit`
+to `bool`, so target execution and exact-image stack/IRQ proofs remain open.
+A VIA layout sequential-shift alternative retained XSEG 0x14 and changed CSEG
+0x5c6 → 0x5c3 (−3 object bytes); it was restored because the tiny unlinked
+saving does not justify changing a public-protocol path without linked and
+callback equivalence tests.
