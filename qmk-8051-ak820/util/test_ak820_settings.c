@@ -32,8 +32,8 @@ int main(void) {
     assert(healthy && !writes && ak820_settings_combo_term() == 40);
     assert(ak820_settings_tapping_term() == 200 && ak820_settings_caps_delay() == 80);
     assert(ak820_settings_tap_code_delay() == 0 && ak820_settings_autoshift_timeout() == 175);
-    assert(ak820_settings_autoshift_flags() == 1 && ak820_settings_caps_word_language() == 0);
-    assert(ak820_settings_oneshot_timeout() == 0 && applied_language == 0);
+    assert(ak820_settings_autoshift_flags() == 1 && ak820_settings_caps_word_language() == 1);
+    assert(ak820_settings_oneshot_timeout() == 0 && applied_language == 1);
     ak820_settings_query(1, out, sizeof(out));
     {
         static const uint8_t expected[] = {2,
@@ -148,7 +148,7 @@ int main(void) {
         memcpy(good, legacy, sizeof(good)); good[16] = 1;
         unsigned crc = ak820_crc16(good, 22); good[22] = crc; good[23] = crc >> 8;
         memcpy(storage + AK820_SETTINGS_ADDR, good, sizeof(good));
-        healthy = true; ak820_settings_init(); assert(!healthy && applied_language == 0);
+        healthy = true; ak820_settings_init(); assert(!healthy && applied_language == 1);
     }
     puts("AK820 settings host model PASS");
 }

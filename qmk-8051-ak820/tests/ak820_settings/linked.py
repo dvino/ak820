@@ -58,7 +58,7 @@ def api(t,operation,qsid=0,data=None,expected=0,label='api'):
             positions={1:5,2:6,3:16,4:14,6:18,7:8,18:10,19:12,22:17}
             pos=positions[qsid];width=1 if qsid in (1,3,22) else 2
             reply[1:1+width]=t.settings_record[pos:pos+width]
-        if operation=='reset' and expected==0:t.settings_record=record()
+        if operation=='reset' and expected==0:t.settings_record=record(caps_word_language=1)
         if operation=='set' and expected==0:
             positions={1:5,2:6,3:16,4:14,6:18,7:8,18:10,19:12,22:17}
             pos=positions[qsid];width=1 if qsid in (1,3,22) else 2
@@ -124,7 +124,7 @@ def cases(fw):
     page=[0x5a]*40+record(combo=60)
     t.commands+=fw.write('_page_data',page)+fw.write_scalar('_cached_page',0x6a8//64)+fw.write('_page_valid',[1])+fw.write('_batch_depth',[1])
     api(t,'reset',label='reset-packet')
-    t.check_memory('reset-cached-record','_page_data',0,[0x5a]*40+record())
+    t.check_memory('reset-cached-record','_page_data',0,[0x5a]*40+record(caps_word_language=1))
     api(t,'get',2,label='reset-value');observe(t,'reset-combo',BUFFER,[40,0])
     results.append(t.run())
     t=setup(fw,'settings-v1-ram-migration',version=1,combo=60)
@@ -157,7 +157,7 @@ def cases(fw):
     results.append(t.run())
     t=setup(fw,'settings-malformed-reboot')
     bad=record(combo=60);bad[6]^=1
-    t.settings_record=record()
+    t.settings_record=record(caps_word_language=1)
     t.commands += [emitted.memory('rom',0xc700+0x6a8,bad)]+fw.call('_ak820_settings_init')
     observe(t,'schema-fault',fw.address('_storage_failed'),[1],fw.symbol_space('_storage_failed'))
     api(t,'get',2,label='fault-default-get');observe(t,'fault-default-value',BUFFER,[40,0])

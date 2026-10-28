@@ -183,6 +183,20 @@ static void layer_tap_bounds(void) {
 int main(void) {
     assert(!is_caps_word_on());
     shift_activation();
+#ifdef AK820_BOARD
+    /* A physical selector press changes only the Caps Word ruleset; release
+     * must not toggle it a second time. A change ends the active word. */
+    ak820_caps_word_configure(1);
+    caps_word_on();
+    assert(!physical_event(AK820_CW_LANG_TOGGLE, true, 100, 0, 0));
+    assert(!caps_word_ru && !is_caps_word_on());
+    assert(!physical_event(AK820_CW_LANG_TOGGLE, false, 101, 0, 0));
+    assert(!caps_word_ru);
+    assert(!physical_event(AK820_CW_LANG_TOGGLE, true, 102, 0, 0));
+    assert(caps_word_ru);
+    assert(!physical_event(AK820_CW_LANG_TOGGLE, false, 103, 0, 0));
+    assert(caps_word_ru);
+#endif
 #ifdef AK820_COMPACT_TAPPING
     /* Synthetic macro keycodes cannot change the active language selector. */
     ak820_caps_word_select(AK820_CW_LANG_EN);

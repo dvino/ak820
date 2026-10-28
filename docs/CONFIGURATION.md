@@ -230,8 +230,8 @@ formula, example and limits. Earlier firmware does not support this action.
 
 ## Caps and layer indicators
 
-The dedicated **C** indicator follows the host's Caps Lock state. Caps Word
-does not turn it on by itself. **W** lights when any layer above layer 0 is
+The dedicated **C** indicator lights when host Caps Lock or local Caps Word is
+active. **W** lights when any layer above layer 0 is
 active, including held, toggled or default layers. These indicators work
 independently of key lighting. See [C, W and OS indicators](INDICATORS.md) and [Mac/PC mode](MAC-PC.md).
 
