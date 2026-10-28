@@ -37,6 +37,7 @@ class Trace:
     def check_memory(self,label,symbol,offset,expected):
         # Reuse observation parsing with a stable synthetic symbol alias.
         alias=f'_fixture_{label}';self.fw.symbols[alias]=self.fw.address(symbol)+offset
+        self.fw.symbol_spaces[alias]=self.fw.symbol_space(symbol)
         self.commands+=self.fw.dump_symbol(label,alias,len(expected));self.expected.append((label,alias,expected))
     def map(self,pos,code,layer=0):
         row,col=pos;self.commands += [linked.memory('rom',0xc740+layer*256+(row*8+col)*2,[code>>8,code&255])]

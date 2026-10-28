@@ -1,0 +1,10 @@
+DIAGNOSTIC: /usr/local/bin/python3 util/build_ak820.py --profile main-tap-dance-diagnostic --toolchain ../toolchains/sdcc-4.6.0 --qmk-bin .venv-goal-glibc/bin/qmk --build-dir .build/goal-tap-twolocal-physical --compress-default-keymap --nvm-update-block-asm --nvm-read-block-asm --keymap-words-asm --trim-register-saves --tail-share --outline-max-helpers 400 --short-calls --trim-parameter-spills --parameter-spills-context .build/goal-tap-twolocal-bootstrap/parameter-spills-context.json
+{"modules": 79, "functions": 732, "retained": 479, "removed_count": 253}
+Traceback (most recent call last):
+  File "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/util/build_ak820.py", line 556, in <module>
+    main()
+    ~~~~^^
+  File "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/util/build_ak820.py", line 407, in main
+    raise ValueError('Linked code outside permitted interval: '+hex(min(invalid))+'..'+hex(max(invalid)))
+ValueError: Linked code outside permitted interval: 0xc700..0xccfc
+RETURN: 1

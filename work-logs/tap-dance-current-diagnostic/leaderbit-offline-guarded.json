@@ -1,0 +1,963 @@
+{
+  "format": "ak820-offline-tests-1",
+  "hardware_validated": false,
+  "physical_device_commands": 0,
+  "tests": [
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/installer",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 77.805,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/00.txt",
+      "log_sha256": "cbce5bd728c31f21167ca95675468d2b177287a1ceb44e3ebe2cc1571b3b465c",
+      "unit_tests": {
+        "run": 189,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_release_bundle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.34,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/01.txt",
+      "log_sha256": "c96719f1d89513af007564e19a45913b2025aea21ca2d077da0ae242ec31c0ec",
+      "unit_tests": {
+        "run": 13,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_build_windows_installer.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.348,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/02.txt",
+      "log_sha256": "d6e74d92ec1b8ef2ee9c4d11373dc3439da4ff4fda7b221541341e02d8ae230a",
+      "unit_tests": {
+        "run": 16,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_keyboard_runner.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.352,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/03.txt",
+      "log_sha256": "3dcfb9fc66f79ff607f275906b3e6a0df242d9f62b0ad93c12f239b2f57a7f3a",
+      "unit_tests": {
+        "run": 12,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_tests.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.415,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/04.txt",
+      "log_sha256": "43cf5c3e29d213f7dbce26b23cb39a3175a8e77bc536e99abf76f9f1eca52ed0",
+      "unit_tests": {
+        "run": 20,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_ak820_device_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.118,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/05.txt",
+      "log_sha256": "5c4fa7ff70d8c635fafb800ad9e4cd51b5f366237c2741dbc00cb4477a53fe73",
+      "unit_tests": {
+        "run": 21,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_package",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.112,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/06.txt",
+      "log_sha256": "d4c2870ec7f9c1534731b719d9706864245e44033818e433f2762852dbc1028e",
+      "unit_tests": {
+        "run": 77,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "qmk-8051-ak820/tests/ak820_inventory",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.129,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/07.txt",
+      "log_sha256": "6ff8cb6673e52248481ba0fa0eca3657ce430b443dbc93e93c7a3e25938b7877",
+      "unit_tests": {
+        "run": 8,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027",
+      "command": [
+        "/usr/local/bin/python3",
+        "tools/check_docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/08.txt",
+      "log_sha256": "4aec65ea148dc8e2ec9ef7e9866ccfd015df6c3f141bb78d8a4e8a554ad0f6b4",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_usb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.894,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/09.txt",
+      "log_sha256": "021cbdc9c6ef34691c87cbc71158e7a365f3539d72b19d3f9b5b00b980250b24",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_keymap/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.672,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/10.txt",
+      "log_sha256": "96e725ed5a3496c57e591d0ce5b3bfa1de6d0323167ba5f785c76611c8f21b6e",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_caps_word/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.599,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/11.txt",
+      "log_sha256": "f6a8dcaa9fca225d1ce22eccb6e37823baa116a70cc39c43a582517661ff387f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_macro_guard/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.241,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/12.txt",
+      "log_sha256": "2ae1a06370222cfd4042b160f898fc26384944e4c8cc32ccb18fc13d4ad25459",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_diagnostic/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.362,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/13.txt",
+      "log_sha256": "48056f94fccb468f7f387eef26d3a82d41036e5bbbfda90c743d1b566d305bc3",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_optimization/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.653,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/14.txt",
+      "log_sha256": "f5e61bd5a3de06485ab86d9e182c9726d0e495f4acd2eb4b28dd0932ce443bca",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_rgb/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.966,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/15.txt",
+      "log_sha256": "6db7f0a4110b2329e09f690a268b23491f46a4c28c0a47f295c5099d8500677b",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_via_decode/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.091,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/16.txt",
+      "log_sha256": "6d5e562c915cb7c919219e63ac85d641016fa382b04535e0b3d24f65abe0e7dd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_combo/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.285,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/17.txt",
+      "log_sha256": "ec31c2b6a621f1d328a231799c60e7417d6bf61c4a50c1a680c1f0b24d66533a",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_macro_guard/parse.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.118,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/18.txt",
+      "log_sha256": "fca68704d8398a5c9aeb9023d2ae7f09881ef953934e7ed6e3455f0dfa3d7d5c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_macro_guard/powercut.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.506,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/19.txt",
+      "log_sha256": "12b57ad4e539ed09ca994b7033560fe030d522cb25d46674c10de4555f0c1178",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_tap_dance/host.py",
+        "--sdcc",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc"
+      ],
+      "exit_code": 0,
+      "seconds": 1.047,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/20.txt",
+      "log_sha256": "5c00c0831fda4c2a39915e978ee3f045db4601f55629d9fc90d629db937d16ba",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_bounded/run.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.455,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/21.txt",
+      "log_sha256": "5e6957a1eea658cb39448866736856adb87367db802d33ecde9ecace9920cbfd",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_repeat/table.py",
+        "--sdcc",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc"
+      ],
+      "exit_code": 0,
+      "seconds": 0.337,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/22.txt",
+      "log_sha256": "b15eece4966ec5ce6c99eab40333b39ee6889f6ccb7afeba8149f2289092ddb7",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_repeat/cpu.py",
+        "--sdcc",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc",
+        "--simulator",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51"
+      ],
+      "exit_code": 0,
+      "seconds": 0.38,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/23.txt",
+      "log_sha256": "1c23b2b0df3e614fe2d07be408fa4b025f86e710e2a22764c0e5159942404d4f",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_macro_guard/cpu.py",
+        "--sdcc",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc",
+        "--simulator",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51"
+      ],
+      "exit_code": 0,
+      "seconds": 0.239,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/24.txt",
+      "log_sha256": "60111109cc586a8fb274a2837220a9861b35808a25ff67f4ed4b3228a474bce9",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_tap_dance/cpu.py",
+        "--sdcc",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc",
+        "--simulator",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51"
+      ],
+      "exit_code": 0,
+      "seconds": 0.377,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/25.txt",
+      "log_sha256": "b375ae092db579f0d6ea50dd8270e30bb6eb01f24828d09c5957c9021d158063",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_tapping/run.py",
+        "--negative-controls",
+        "--output",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/tapping-host.json"
+      ],
+      "exit_code": 0,
+      "seconds": 16.904,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/26.txt",
+      "log_sha256": "f3ae834bf0c00770d78caa32ba7ece5fdd2aed80806563a604e696e3c5d737e1",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_features/run.py",
+        "--build-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-leaderbit-diagnostic",
+        "--s51",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/ak820_features"
+      ],
+      "exit_code": 0,
+      "seconds": 2.8,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/27.txt",
+      "log_sha256": "53cae6e7f1ad71c61f4ba4326ef0086c0aebed0ac0da8e479c9849c1366f53c4",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_unlock/run.py",
+        "--build-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-leaderbit-diagnostic",
+        "--s51",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/ak820_unlock"
+      ],
+      "exit_code": 0,
+      "seconds": 1.439,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/28.txt",
+      "log_sha256": "292376f64c683e53ed5df7cd593f36dad8151aea99dc183dd347162486414bba",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_tri_layer/run.py",
+        "--build-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-leaderbit-diagnostic",
+        "--s51",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/ak820_tri_layer"
+      ],
+      "exit_code": 0,
+      "seconds": 1.249,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/29.txt",
+      "log_sha256": "7b596976424abc3b01b9f0de381358ecae35aa0df9c36d61f8f507410f5b7e98",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_iap/run.py",
+        "--build-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-leaderbit-diagnostic",
+        "--s51",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/ak820_iap",
+        "--iap-fault-profile",
+        "guarded-erase"
+      ],
+      "exit_code": 0,
+      "seconds": 6.404,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/30.txt",
+      "log_sha256": "13a45aaa0f103921f43d1a5492f7feff6060f75064a08e7363d51c50c2b2eb1c",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_rgb/emitted.py",
+        "--build-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-leaderbit-diagnostic",
+        "--s51",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/rgb"
+      ],
+      "exit_code": 0,
+      "seconds": 0.564,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/31.txt",
+      "log_sha256": "73eaec47c488f58524b61b8a7937ce69d1a689d13e490262b47498d28272df07",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_bounded/emitted.py",
+        "--build-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-leaderbit-diagnostic",
+        "--s51",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/bounded"
+      ],
+      "exit_code": 0,
+      "seconds": 1.404,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/32.txt",
+      "log_sha256": "273ba450da7232302013703b21f9243117147367ea06607cc6ee87946f37a849",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_tapping/emitted.py",
+        "--build-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-leaderbit-diagnostic",
+        "--s51",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/tapping"
+      ],
+      "exit_code": 0,
+      "seconds": 7.268,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/33.txt",
+      "log_sha256": "2b753b33c6c46772ec66bf3c91caff570dd50a4e0e11dfb11e17db49cd1248af",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    },
+    {
+      "cwd": "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820",
+      "command": [
+        "/usr/local/bin/python3",
+        "tests/ak820_combo/emitted.py",
+        "--build-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/qmk-8051-ak820/.build/goal-main-leaderbit-diagnostic",
+        "--s51",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+        "--output-dir",
+        "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/combo"
+      ],
+      "exit_code": 0,
+      "seconds": 2.645,
+      "log": "/home/danil/ChatGPT/ak820-beta-release-20261027/work-logs/tap-dance-current-diagnostic/leaderbit-tests/offline-tests-guarded-logs-xw6znpdc/34.txt",
+      "log_sha256": "a6a20102c3ff969c02aea0ad7f69d49fe06c165b58aec444aa76d37446b519c5",
+      "unit_tests": {
+        "run": 0,
+        "skipped": 0
+      },
+      "build_before": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      },
+      "build_after": {
+        "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+        "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+      }
+    }
+  ],
+  "tools": {
+    "sdcc": {
+      "path": "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/sdcc",
+      "sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891"
+    },
+    "s51": {
+      "path": "/home/danil/ChatGPT/ak820-beta-release-20261027/toolchains/sdcc-4.6.0/bin/s51",
+      "sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd"
+    }
+  },
+  "require_toolchain": true,
+  "test_environment": {},
+  "unit_tests": {
+    "run": 356,
+    "skipped": 0
+  },
+  "passed": true,
+  "repeat_cpu_check": "passed",
+  "macro_cpu_check": "passed",
+  "tap_dance_cpu_check": "passed",
+  "iap_fault_profile": "guarded-erase",
+  "build_hashes": {
+    "ihx": "747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628",
+    "map": "c235e82c8e455b05f90ac38de1b84bc9e4d44adc3b8e75ab1911121a00d06b0f"
+  },
+  "build_unchanged": true
+}

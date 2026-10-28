@@ -56,7 +56,11 @@ static void td_prepare(void) {
 }
 static void td_finish(bool interrupted) {
     uint8_t choice = 0, state;
+#ifdef __SDCC_mcs51
+    __bit extra = false;
+#else
     bool extra = false;
+#endif
     if (ak820_td_invoking) return;
     if (!td_wait) return;
     ak820_td_invoking = true;

@@ -449,3 +449,68 @@ passed, but this is not a whole-image or hardware qualification. Its report
 and logs are preserved under `tap-dance-current-diagnostic/`; no image was
 published or flashed. The updated Tap Dance validator is not enabled in this
 `main` measurement, so its object gains are not included in these 42 bytes.
+
+Additional component screen: changing the compact action dispatcher's three
+byte-only basic/modifier/system ranges to unsigned subtraction increased the
+production object CSEG 0xc10 → 0xc17 (+7 bytes), XSEG 0x39 unchanged. It was
+rejected and restored; byte-range shortening is not assumed profitable in other
+compiler contexts.
+
+Two temporary SDCC-only `__bit` recursion guards made the expanded-CODE
+main+Tap Dance bootstrap fit exactly 3,008 / 3,008 XRAM and occupy 42,612 CODE
+bytes. The earlier expanded diagnostic occupied 42,667 bytes but allowed XRAM
+through 0x1100, so the 55-byte comparison is approximate, not a same-layout
+final-image delta. The listing placed the guards in independent bits 0x17 and
+0x38 with JNB/SETB/CLR. However, exact bootstrap stack analysis stopped with
+`ValueError: Private guard object declaration/address contract changed: quantum/dynamic_keymap.c`:
+the analyzer's proven recursion-guard contract recognizes private XRAM bools,
+not bit-addressed guards. Both bit-guard source edits were reverted; bypassing
+the analyzer or assuming it understands bit instructions is not acceptable.
+No context certificate or physical-CODE link was produced for that variant.
+
+A separate candidate changes only Tap Dance's local `extra` to an SDCC bit;
+the recursion guards remain original byte bools. In same-flags production
+objects it changes XSEG 0x8e → 0x8d, BSEG 4 → 5 bits, CSEG 0x716 → 0x709.
+Its host TD/storage and isolated SDCC compile pass, but target execution,
+reentry/IRQ review, whole-image accounting and stack proof remain outstanding.
+
+`leader_waiting` changed to an independent target bit (ordinary bool retained
+for host); `leader_running` and all three recursion guards remain unchanged.
+Its production object XSEG 0x1b → 0x1a, BSEG 1 → 2 bits, CSEG 0x269 →
+0x249. Combined with TD `extra`, a physical-XRAM/excess-CODE bootstrap reached
+3,008 / 3,008 XRAM, and runtime analyzer generated a context certificate. The
+subsequent normal-CODE-window diagnostic rejected addresses 0xc700–0xccfc;
+its invalid temporary IHX has 42,028 occupied bytes, 1,533 outside approved
+CODE windows. No invalid image was published or flashed. An earlier physical
+attempt with only byte-range changes had failed at 3,010 / 3,008 XRAM.
+
+Independent review found the linked Leader test used a synthetic alias without
+copying symbol address space, reading XRAM for a bit symbol. Fixed
+`qmk-8051-ak820/tests/ak820_tapping/emitted.py` to copy the source symbol's
+space and received independent re-review. The physical-window main-without-TD
+image's 26 linked Leader cases passed; listing showed `_leader_waiting` at
+bit 0x0d and the preheld-release fixture read `bits 0xd` = 1. Isolated
+production TD fixture on 8051 now checks both `extra` branches and nested
+reentry (3 CPU cases); it is registered in the standard runner with explicit
+pass/skip reporting and reviewed independently. Host and isolated CPU tests do
+not establish TD's behavior in a linked main+TD image or IRQ/hardware safety.
+
+Comparable physical main diagnostic without TD uses 40,415 occupied CODE
+bytes (80 fewer than original 40,495; 38 fewer than the prior 40,453).
+38,532 / 38,617 main-window bytes and 1,883 / 1,888 low-window bytes occupied:
+85 + 5 free bytes in separate windows. Highest address 0xc6af; XRAM 2,851 /
+3,008. The actual image was not flashed or released.
+
+The first 35-suite `--host --require-toolchain --build-dir` run failed IAP,
+RGB and Combo because the invocation used the default `legacy-iap` expectation
+for the guarded-erase image and the manually constructed build lacked the
+identity-bound `configuration-report.json`; Combo expected zero Key Overrides
+instead of the image's eight and RGB refused to proceed. The first failure
+report and original logs are retained separately, not rewritten as a pass.
+Generated the report using the standard `configure_firmware.inspect`, then
+reran with `--iap-fault-profile guarded-erase`: all 35 suites passed, 356 unit
+tests, zero skipped, tested IHX/map hashes unchanged. The linked image SHA256
+is `747817d1256ddc0393954f1b4ab68332c170b6a9ba8b023383c947d9c43a1628`.
+Independent full-image qualification, representative hardware and main+TD CODE
+fit are still open. Source and per-suite logs are retained, while simulator
+traces not needed for the findings remain in the ignored build/work directory.

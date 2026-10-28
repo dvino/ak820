@@ -193,6 +193,10 @@ class OfflineRunnerTests(unittest.TestCase):
         self.assertEqual(macro_cpu[macro_cpu.index('--sdcc') + 1], report['tools']['sdcc']['path'])
         self.assertEqual(macro_cpu[macro_cpu.index('--simulator') + 1], report['tools']['s51']['path'])
         self.assertEqual(report['macro_cpu_check'], 'passed')
+        td_cpu = next(row['command'] for row in report['tests'] if 'tests/ak820_tap_dance/cpu.py' in row['command'])
+        self.assertEqual(td_cpu[td_cpu.index('--sdcc') + 1], report['tools']['sdcc']['path'])
+        self.assertEqual(td_cpu[td_cpu.index('--simulator') + 1], report['tools']['s51']['path'])
+        self.assertEqual(report['tap_dance_cpu_check'], 'passed')
         tapping = next(row['command'] for row in report['tests'] if 'tests/ak820_tapping/run.py' in row['command'])
         self.assertIn('--negative-controls', tapping)
         self.assertIn('--output', tapping)
@@ -206,10 +210,12 @@ class OfflineRunnerTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(report['repeat_cpu_check'], 'skipped: SDCC or s51 unavailable')
         self.assertEqual(report['macro_cpu_check'], 'skipped: SDCC or s51 unavailable')
+        self.assertEqual(report['tap_dance_cpu_check'], 'skipped: SDCC or s51 unavailable')
         tap_dance = next(row['command'] for row in report['tests'] if 'tests/ak820_tap_dance/host.py' in row['command'])
         self.assertNotIn('--sdcc', tap_dance)
         self.assertFalse(any('tests/ak820_repeat/cpu.py' in row['command'] for row in report['tests']))
         self.assertFalse(any('tests/ak820_macro_guard/cpu.py' in row['command'] for row in report['tests']))
+        self.assertFalse(any('tests/ak820_tap_dance/cpu.py' in row['command'] for row in report['tests']))
 
     def test_transient_ihx_or_map_mutation_fails_even_after_restoration(self):
         for suffix in ('ihx', 'map'):

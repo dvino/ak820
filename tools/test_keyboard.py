@@ -105,7 +105,7 @@ def main(argv=None):
             repeat_table.extend(['--sdcc', tool_records['sdcc']['path']])
         suites.append((QMK, repeat_table))
         if tool_records['sdcc'] and tool_records['s51']:
-            for name in ('ak820_repeat', 'ak820_macro_guard'):
+            for name in ('ak820_repeat', 'ak820_macro_guard', 'ak820_tap_dance'):
                 suites.append((QMK, [py, f'tests/{name}/cpu.py', '--sdcc', tool_records['sdcc']['path'],
                                      '--simulator', tool_records['s51']['path']]))
         suites.append((QMK, [py, 'tests/ak820_tapping/run.py', '--negative-controls',
@@ -163,7 +163,8 @@ def main(argv=None):
                              for key in ('run', 'skipped')},
               'passed': all(r['exit_code'] == 0 for r in records)}
     if args.host:
-        for key, name in (('repeat_cpu_check', 'ak820_repeat'), ('macro_cpu_check', 'ak820_macro_guard')):
+        for key, name in (('repeat_cpu_check', 'ak820_repeat'), ('macro_cpu_check', 'ak820_macro_guard'),
+                          ('tap_dance_cpu_check', 'ak820_tap_dance')):
             cpu = next((r for r in records if f'tests/{name}/cpu.py' in r['command']), None)
             report[key] = ('passed' if cpu['exit_code'] == 0 else 'failed') if cpu else 'skipped: SDCC or s51 unavailable'
     if args.require_toolchain and report['unit_tests']['skipped']:

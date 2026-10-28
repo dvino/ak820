@@ -10,7 +10,12 @@ _Static_assert(LEADER_SOURCES < NONE, "Leader source index width");
 /* Suppress only releases whose press this engine consumed. Tapping admission
  * rejects duplicates and blocks held sources across shared cancellation. */
 static uint8_t leader_suppressed[(LEADER_SOURCES + 7) / 8];
-static bool leader_waiting, leader_running;
+#ifdef __SDCC_mcs51
+static __bit leader_waiting;
+#else
+static bool leader_waiting;
+#endif
+static bool leader_running;
 static uint16_t leader_started;
 static uint8_t leader_pending = NONE;
 
