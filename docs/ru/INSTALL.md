@@ -2,7 +2,7 @@ English source of truth: [Installation](../INSTALL.md).
 
 # Установка
 
-В beta.4 доступны пакеты с исходным кодом Python для Windows и Linux x86_64.
+В beta.4.1 доступны пакеты с исходным кодом Python для Windows и Linux x86_64.
 В них входят сценарии установщика и все десять профилей прошивки. Графического
 приложения в пакетах нет. Требуется Python 3.10 или новее: в Windows
 используйте команду `python`, в Linux — `python3`.
@@ -13,7 +13,7 @@ English source of truth: [Installation](../INSTALL.md).
 
 ## Загрузка и проверка пакета
 
-На [странице beta.4](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.4)
+На [странице beta.4.1](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.4.1)
 скачайте архив и соответствующий файл `.sha256`:
 
 - Windows: `AK820-Windows.zip` и `AK820-Windows.zip.sha256`.
@@ -107,6 +107,6 @@ cd AK820-Python
 
 ## Каталог для компаньона
 
-Архив `AK820-Beta4-Catalog.zip` содержит прошивки и данные для интеграции с
+Архив `AK820-Beta4.1-Catalog.zip` содержит прошивки и данные для интеграции с
 компаньоном, но не настольное приложение. Интеграция будет подготовлена
 отдельно.

@@ -57,6 +57,9 @@ Source support, a qualified development image and installed firmware remain
 separate. A source feature or a profile name cannot identify an installed image.
 A future consumer needs complete installed-image verification before showing
 that image's development capabilities. Partial reads and unknown images provide
-no capability authorization. The catalog explicitly sets `release_approved` and
-`hardware_validated` to false, grants no settings writes or flashing, and lists
-no compatible transitions. Existing release and installer gates still apply.
+no capability authorization. The development catalog explicitly sets
+`release_approved` and `hardware_validated` to false, grants no settings writes
+or flashing, and lists no compatible transitions. A release catalog may
+separately approve exact images for a beta installation test; that does not
+change physical-validation status or authorize settings writes. Existing
+installer checks and fresh per-operation confirmation still apply.

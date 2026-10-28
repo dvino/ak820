@@ -241,6 +241,11 @@ jobs:
                   return True
               if path == "ci/beta4-release-notes.md":
                   return True
+              if path == "ci/beta4.1-release-notes.md":
+                  return True
+              if path in ("tools/build_beta_release_assets.py",
+                          "tools/test_build_beta_release_assets.py"):
+                  return True
               if re.fullmatch(r"(?:README(?:[^/]*)|docs/.+)\.md", path):
                   return True
               return any(path == f"ci/profiles/{profile}/{name}" for profile in PROFILES
@@ -402,19 +407,34 @@ jobs:
           --bundles-root releases/beta3
           --output dist/catalog
           --tag "${{ github.ref_name }}"
-      - name: Name the beta.4 catalog archive
+      - name: Name the beta catalog archive
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          mv dist/catalog/AK820-Beta3-Catalog.zip dist/catalog/AK820-Beta4-Catalog.zip
+          beta_suffix="${RELEASE_TAG##*-beta.}"
+          if [[ ! "$beta_suffix" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+            echo "Unexpected beta tag: $RELEASE_TAG" >&2
+            exit 1
+          fi
+          CATALOG_ARCHIVE="AK820-Beta${beta_suffix}-Catalog.zip"
+          echo "CATALOG_ARCHIVE=$CATALOG_ARCHIVE" >> "$GITHUB_ENV"
+          mv dist/catalog/AK820-Beta3-Catalog.zip "dist/catalog/$CATALOG_ARCHIVE"
           rm dist/catalog/AK820-Beta3-Catalog.zip.sha256
           cd dist/catalog
-          sha256sum AK820-Beta4-Catalog.zip > AK820-Beta4-Catalog.zip.sha256
-          sed -i 's/AK820-Beta3-Catalog.zip/AK820-Beta4-Catalog.zip/g' SHA256SUMS
+          sha256sum "$CATALOG_ARCHIVE" > "$CATALOG_ARCHIVE.sha256"
+          python - "$CATALOG_ARCHIVE" <<'PY'
+          from pathlib import Path
+          import sys
+          path = Path('SHA256SUMS')
+          path.write_text(path.read_text().replace(
+              'AK820-Beta3-Catalog.zip', sys.argv[1]))
+          PY
       - name: Verify Python package and catalog checksums
         run: |
           cd dist/catalog
           sha256sum --check AK820-Windows.zip.sha256
           sha256sum --check AK820-Linux-x86_64.tar.gz.sha256
-          sha256sum --check AK820-Beta4-Catalog.zip.sha256
+          sha256sum --check "$CATALOG_ARCHIVE.sha256"
           sha256sum --check SHA256SUMS
       - name: Create GitHub release
         env:
@@ -422,18 +442,23 @@ jobs:
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
           RELEASE_PRERELEASE: ${{ steps.release.outputs.prerelease }}
         run: |
+          case "$RELEASE_TAG" in
+            v0.6.0-beta.4) notes_file=ci/beta4-release-notes.md ;;
+            v0.6.0-beta.4.1) notes_file=ci/beta4.1-release-notes.md ;;
+            *) echo "No release notes are defined for $RELEASE_TAG" >&2; exit 1 ;;
+          esac
           args=(
             "$RELEASE_TAG"
             dist/firmware/firmware-bundle.zip dist/firmware/firmware-bundle.zip.sha256
             dist/catalog/AK820-Windows.zip dist/catalog/AK820-Windows.zip.sha256
             dist/catalog/AK820-Linux-x86_64.tar.gz dist/catalog/AK820-Linux-x86_64.tar.gz.sha256
-            dist/catalog/AK820-Beta4-Catalog.zip dist/catalog/AK820-Beta4-Catalog.zip.sha256
+            "dist/catalog/$CATALOG_ARCHIVE" "dist/catalog/$CATALOG_ARCHIVE.sha256"
             dist/catalog/firmware-matrix.json dist/catalog/capability-catalog.json
             dist/catalog/module-descriptions.json dist/catalog/release-catalog.json
             dist/catalog/release-manifest.json dist/catalog/SHA256SUMS
             dist/catalog/INSTALL-en.md dist/catalog/INSTALL-ru.md
             --title "AK820 $RELEASE_TAG"
-            --notes-file ci/beta4-release-notes.md
+            --notes-file "$notes_file"
           )
           if [[ "$RELEASE_PRERELEASE" == true ]]; then
             gh release create "${args[@]}" --verify-tag --prerelease

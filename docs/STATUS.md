@@ -2,14 +2,23 @@
 
 # Project status
 
-## v0.6.0-beta.4, release preparation
+## v0.6.0-beta.4, published 2026-10-28
 
 All ten beta.4 profiles passed offline exact-image firmware qualification:
 28 base suites, 353 unit tests without skips per profile, and each profile's
 supplementary regression suites. The offline settings suite passed 188 tests
 without skips. The candidate supports settings transitions from the immediately
-preceding beta.3 build and between its own profiles. Release approval,
-publication and physical device testing remain pending.
+preceding beta.3 build and between its own profiles. The release is published.
+The published catalog does not authorize flashing, and no physical device
+testing has been performed.
+
+## Next beta catalog policy
+
+The next beta release catalog will authorize firmware flashing through the
+configurator's existing fresh confirmation, backup, exact-image and readback
+flow. `hardware_validated` and `settings_writes_authorized` remain false. This
+is preparation for an owner-run physical test, not evidence that the firmware
+has already been tested on a keyboard.
 
 | Profile | CODE bytes | XRAM bytes / 3008 | Stack bound / capacity | Margin |
 | --- | ---: | ---: | ---: | ---: |
