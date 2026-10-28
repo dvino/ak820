@@ -301,3 +301,89 @@ was rejected without behavioral or timing validation because it worsens the
 constrained CODE budget. These are pre-link object figures, not a firmware
 measurement. The independently reviewed duplicate-source regression and its
 `--host` runner integration had no source-review findings.
+
+## Fresh diagnostic with user permission
+
+The user explicitly permitted a local main + Tap Dance diagnostic with all
+main features intact, without publishing or flashing the image. The temporary
+`main-tap-dance-diagnostic` profile adds only `tap-dance` to main; it was
+inserted into `util/ak820_profiles.py` for each build and restored in a
+`finally` block. No release profile was changed. The initial invocation used
+the wrong virtual environment and failed with `ModuleNotFoundError: No module
+named 'qmk_cli'`; the retry used the existing pinned `.venv-goal-glibc`.
+
+With pinned SDCC 4.6.0, `--compress-default-keymap`, both NVM assembly kernels,
+`--keymap-words-asm`, `--trim-register-saves`, `--tail-share`,
+`--outline-max-helpers 400` and `--short-calls`, the normal physical-XRAM
+bootstrap failed before short-call planning with `?ASlink-Error-Insufficient
+EXTERNAL RAM memory.` The linker map reports ordinary XRAM 3,011 / 3,008 bytes
+at 0x0440–0x1002: three bytes over. This is a bootstrap build without the
+context-dependent parameter-spill pass, and not a completed final-image fit
+measurement. Its baseline CODE is not a final physical-placement result.
+
+For diagnosis only, a second otherwise identical build widened XRAM to
+0x1100 and CODE end to 0xe000. It linked with 42,667 occupied CODE bytes
+(40,784 main, 1,883 low), maximum address 0xcf7b, 3,011 ordinary XRAM bytes,
+498 short-call substitutions, and no parameter-spill pass. Its local IHX
+SHA256 is `353825c8831eaa8a71ff0b1e25110b4116c9045d9e9c02b2e7d8db9d8d188aa8`.
+Those widened bounds do not describe hardware: **the image is invalid and must
+not be flashed**. The physical main CODE window ends at 0xc700, but the
+address difference is not a precise final CODE deficit because placement and
+qualified parameter-spill trimming can change. Neither build demonstrates a
+legal image, an exact final deficit, stack/IRQ qualification or hardware
+behavior. Build logs, the failed physical memory map and the expanded report
+are stored in `work-logs/tap-dance-current-diagnostic/`; the image itself is
+ignored locally and is not published. The control comparison, before matching
+final passes, is 42,704 → 42,667 occupied CODE bytes and 3,012 → 3,011 XRAM.
+
+Correction to the earlier 7-bit pair screen: its initial byte-offset formula
+was wrong and UBSan caught `runtime error: index 56 out of bounds for type
+'uint8_t [56]'`; its size figures describe a defective experiment and cannot
+be used as a valid optimization result. A corrected offset passed the host
+fixture, all neighbor/value checks and isolated SDCC compilation, but has not
+been validated on target CPU or for timing. It remains diagnostic-only and was
+restored after testing. Independent review found no issue in the fresh build
+record and explicitly did not approve release or flashing.
+
+### Temporary pair7 experiment with the context-dependent pass
+
+To get past bootstrap XRAM without disabling a feature, a **temporary**
+corrected 7-bit pair map (56 bytes rather than 64) was used only for another
+diagnostic, and then source and the temporary profile were restored. The host
+fixture passed all allowed-value/neighbor checks, the duplicate-source trace,
+and an isolated SDCC compile. It did not prove target CPU equivalence,
+timing, or hardware safety, so this representation is not adopted.
+
+Its expanded-CODE bootstrap used the physical XRAM window and linked at 3,006
+of 3,008 bytes XRAM, 42,989 occupied CODE bytes and highest 0xd0bd. Bootstrap
+stack analysis produced foreground 103 bytes and IRQ roots 2/5/2 bytes, but
+explicitly did not qualify the whole program; the context certificate was
+then generated for this exact bootstrap. The next build used the physical CODE
+and XRAM windows and the context-dependent parameter-spill pass. It selected
+78 transformations, 711 object bytes, **not postlink-qualified**; its physical
+XRAM remained 3,006 / 3,008 bytes. The builder rejected the linked result:
+`ValueError: Linked code outside permitted interval: 0xc700..0xcebb`. This
+address range is the particular rejected experimental layout, not a universal
+or precise minimum savings requirement; the candidate also adds CODE and has
+unmeasured event latency. Since the address check failed, later postlink
+qualification did not run. No firmware image was published or flashed.
+Logs, memory map, spill report and bootstrap stack report are saved alongside
+the previous diagnostic evidence.
+The diagnostic-only source change is retained as `pair7-diagnostic.patch`
+(SHA256 `b686e9c5ccc8eab917dfe0c6b673e623bea78c4c330f6bfd9d6ce0a81edd86f1`)
+for reproducibility; it is not applied to the working source. The fixture's
+size assertion was temporarily adjusted for this representation during its
+host screen, then restored.
+A follow-up temporary UBSan fixture also checked every one of the 128 source
+values after each neighbor/value update, including adjacent packed-pair
+boundaries; it passed. This remains a host check, not target CPU or timing
+qualification.
+
+After restoring the temporary pair7 source, the pinned
+`tools/test_keyboard.py --host --require-toolchain` run passed all 26 suites,
+including both target-CPU Repeat and Macro checks. The report and individual
+logs are `work-logs/tap-dance-host-current.json` and its associated logs
+directory. These offline checks are not qualification of an installable image.
+An independent Pi review checked the pair7 bootstrap, context provenance,
+physical failure, non-qualified spill report, and restored source/profile;
+it found no issues in the recorded conclusions and did not approve flashing.

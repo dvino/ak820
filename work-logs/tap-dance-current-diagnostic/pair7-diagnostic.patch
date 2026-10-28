@@ -1,0 +1,37 @@
+--- a/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_tap_dance.c
++++ b/qmk-8051-ak820/keyboards/ajazz/ak820/ak820_tap_dance.c
+@@ -17,18 +17,25 @@
+ static uint16_t td_time;
+ /* Values 0..7 select a slot; 8 means consumed until physical release. */
+ #define TD_MAP_NONE 8
+-static uint8_t td_map[(TD_SOURCES + 1) / 2];
++static uint8_t td_map[(TD_SOURCES * 7 + 15) / 16];
++static uint8_t td_pair_get(uint8_t id) {
++    uint8_t pair = id >> 1, pos = pair - ((pair + 7) >> 3), shift = (-pair) & 7;
++    uint8_t value = td_map[pos] >> shift;
++    if (shift > 1) value |= td_map[pos + 1] << (8 - shift);
++    return value & 127;
++}
+ static uint8_t td_map_get(uint8_t id) {
+-    uint8_t packed = td_map[id >> 1];
+-    return (id & 1) ? packed >> 4 : packed & 15;
++    uint8_t pair = td_pair_get(id);
++    return (id & 1) ? pair / 9 : pair % 9;
+ }
+-/* Callers pass only slot indices 0..7 or TD_MAP_NONE. */
+ static void td_map_set(uint8_t id, uint8_t value) {
+-    uint8_t AK820_STATE_MEM *packed = td_map + (id >> 1);
+-    uint8_t shift = id & 1;
+-    uint8_t mask = shift ? 15 : 240;
+-    if (shift) value <<= 4;
+-    *packed = (*packed & mask) | value;
++    uint8_t pair = td_pair_get(id);
++    uint8_t index = id >> 1, pos = index - ((index + 7) >> 3), shift = (-index) & 7;
++    uint16_t mask = (uint16_t)127 << shift;
++    if (id & 1) pair = (pair % 9) + 9 * value;
++    else pair = (pair / 9) * 9 + value;
++    td_map[pos] = (td_map[pos] & ~(uint8_t)mask) | (uint8_t)(pair << shift);
++    if (shift > 1) td_map[pos + 1] = (td_map[pos + 1] & ~(uint8_t)(mask >> 8)) | (uint8_t)((uint16_t)pair << shift >> 8);
+ }
+ static keyrecord_t td_record;
+ static uint8_t td_step;
