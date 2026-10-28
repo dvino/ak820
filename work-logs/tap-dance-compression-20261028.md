@@ -562,3 +562,13 @@ its logs are kept separately, not rewritten. No device was opened, flashed,
 or validated; no release or installer/settings transition is approved. The
 main+TD invalid 1,533-outside-window diagnostic predates this USB change and
 must not be conflated with this valid-window main-only image.
+
+One Shot/tapping source-decoder ABI screen retained the by-value public wrapper
+and introduced a target XDATA pointer helper for its three existing callers.
+Against identical TD-enabled compile flags, tapping object CSEG 0x632 → 0x62c
+and XSEG 0x9f → 0xa1; action object CSEG 0xc2d → 0xc15, XSEG 0x39 unchanged.
+The combined 30-object-byte reduction is not a linked saving. The two-byte
+XRAM increase already exceeds the one byte recently freed from the previous
+fully occupied TD bootstrap; public-wrapper DCE and whole-image allocation are
+not established. All changes were restored, with no behavior, target CPU,
+stack/reentry or linked test; the candidate is not accepted or qualified.
