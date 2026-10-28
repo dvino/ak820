@@ -986,7 +986,8 @@
         "qmk-settings",
         "key-overrides",
         "auto-shift",
-        "space-cadet"
+        "space-cadet",
+        "tap-dance"
       ],
       "configuration": {
         "compact_controls_version": 2,
@@ -1000,7 +1001,8 @@
           "qmk-settings",
           "key-overrides",
           "auto-shift",
-          "space-cadet"
+          "space-cadet",
+          "tap-dance"
         ],
         "base_features": [
           "six-layers",
@@ -1020,7 +1022,7 @@
           "AK820_NKRO": "no",
           "AK820_GRAVE_ESCAPE": "no",
           "AK820_VIALRGB_DIRECT": "no",
-          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_TAP_DANCE": "yes",
           "AK820_COMPACT_KEY_OVERRIDE": "yes",
           "AK820_QMK_SETTINGS": "yes",
           "AK820_MAC_PC": "no",
@@ -1076,6 +1078,7 @@
         "six-layers",
         "sixteen-vial-macros",
         "space-cadet",
+        "tap-dance",
         "tri-layer"
       ]
     },
@@ -1103,7 +1106,8 @@
         "qmk-settings",
         "key-overrides",
         "space-cadet",
-        "grave-escape"
+        "grave-escape",
+        "tap-dance"
       ],
       "configuration": {
         "compact_controls_version": 2,
@@ -1117,7 +1121,8 @@
           "qmk-settings",
           "key-overrides",
           "space-cadet",
-          "grave-escape"
+          "grave-escape",
+          "tap-dance"
         ],
         "base_features": [
           "six-layers",
@@ -1138,7 +1143,7 @@
           "AK820_NKRO": "no",
           "AK820_GRAVE_ESCAPE": "yes",
           "AK820_VIALRGB_DIRECT": "no",
-          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_TAP_DANCE": "yes",
           "AK820_COMPACT_KEY_OVERRIDE": "yes",
           "AK820_QMK_SETTINGS": "yes",
           "AK820_MAC_PC": "no",
@@ -1192,6 +1197,7 @@
         "six-layers",
         "sixteen-vial-macros",
         "space-cadet",
+        "tap-dance",
         "tri-layer"
       ]
     },
@@ -1218,7 +1224,8 @@
         "os-indicators",
         "qmk-settings",
         "key-overrides",
-        "mouse-keys"
+        "mouse-keys",
+        "tap-dance"
       ],
       "configuration": {
         "compact_controls_version": 2,
@@ -1231,7 +1238,8 @@
           "os-indicators",
           "qmk-settings",
           "key-overrides",
-          "mouse-keys"
+          "mouse-keys",
+          "tap-dance"
         ],
         "base_features": [
           "six-layers",
@@ -1251,7 +1259,7 @@
           "AK820_NKRO": "no",
           "AK820_GRAVE_ESCAPE": "no",
           "AK820_VIALRGB_DIRECT": "no",
-          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_TAP_DANCE": "yes",
           "AK820_COMPACT_KEY_OVERRIDE": "yes",
           "AK820_QMK_SETTINGS": "yes",
           "AK820_MAC_PC": "no",
@@ -1305,6 +1313,7 @@
         "rgb-effects",
         "six-layers",
         "sixteen-vial-macros",
+        "tap-dance",
         "tri-layer"
       ]
     },
@@ -1444,7 +1453,9 @@
         "os-indicators",
         "qmk-settings",
         "vialrgb-direct",
-        "tap-dance"
+        "tap-dance",
+        "nkro",
+        "nkro-control"
       ],
       "configuration": {
         "compact_controls_version": 2,
@@ -1457,7 +1468,9 @@
           "os-indicators",
           "qmk-settings",
           "vialrgb-direct",
-          "tap-dance"
+          "tap-dance",
+          "nkro",
+          "nkro-control"
         ],
         "base_features": [
           "six-layers",
@@ -1471,11 +1484,12 @@
           "alternate-repeat",
           "tri-layer",
           "rgb-effects",
+          "nkro-reports",
           "vialrgb-direct-ram"
         ],
         "nvm_schema": 532483,
         "make_options": {
-          "AK820_NKRO": "no",
+          "AK820_NKRO": "yes",
           "AK820_GRAVE_ESCAPE": "no",
           "AK820_VIALRGB_DIRECT": "yes",
           "AK820_COMPACT_TAP_DANCE": "yes",
@@ -1484,7 +1498,7 @@
           "AK820_MAC_PC": "no",
           "AK820_OS_INDICATORS": "yes",
           "AK820_COMPACT_LEADER": "yes",
-          "AK820_NKRO_CONTROL": "no",
+          "AK820_NKRO_CONTROL": "yes",
           "AK820_COMPACT_ONESHOT": "yes",
           "AK820_COMPACT_SPACE_CADET": "no",
           "AK820_COMPACT_MOUSEKEY": "no",
@@ -1521,6 +1535,9 @@
         "encoder-map",
         "leader",
         "media-keys",
+        "nkro",
+        "nkro-control",
+        "nkro-reports",
         "one-shot",
         "os-indicators",
         "qmk-settings",
@@ -1553,10 +1570,13 @@
       "optional_features": [
         "one-shot",
         "leader",
+        "dynamic-macros",
         "os-indicators",
         "qmk-settings",
         "key-overrides",
-        "tap-dance"
+        "tap-dance",
+        "nkro",
+        "nkro-control"
       ],
       "configuration": {
         "compact_controls_version": 2,
@@ -1565,10 +1585,13 @@
         "optional_features": [
           "one-shot",
           "leader",
+          "dynamic-macros",
           "os-indicators",
           "qmk-settings",
           "key-overrides",
-          "tap-dance"
+          "tap-dance",
+          "nkro",
+          "nkro-control"
         ],
         "base_features": [
           "six-layers",
@@ -1581,11 +1604,12 @@
           "repeat",
           "alternate-repeat",
           "tri-layer",
-          "rgb-effects"
+          "rgb-effects",
+          "nkro-reports"
         ],
         "nvm_schema": 532483,
         "make_options": {
-          "AK820_NKRO": "no",
+          "AK820_NKRO": "yes",
           "AK820_GRAVE_ESCAPE": "no",
           "AK820_VIALRGB_DIRECT": "no",
           "AK820_COMPACT_TAP_DANCE": "yes",
@@ -1594,14 +1618,14 @@
           "AK820_MAC_PC": "no",
           "AK820_OS_INDICATORS": "yes",
           "AK820_COMPACT_LEADER": "yes",
-          "AK820_NKRO_CONTROL": "no",
+          "AK820_NKRO_CONTROL": "yes",
           "AK820_COMPACT_ONESHOT": "yes",
           "AK820_COMPACT_SPACE_CADET": "no",
           "AK820_COMPACT_MOUSEKEY": "no",
           "AK820_COMPACT_AUTOSHIFT": "no",
           "AK820_COMPACT_GUI_LOCK": "no",
           "AK820_COMPACT_CTRL_GUI_SWAP": "no",
-          "AK820_COMPACT_DYNAMIC_MACRO": "no"
+          "AK820_COMPACT_DYNAMIC_MACRO": "yes"
         },
         "runtime_qmk_settings": [
           1,
@@ -1617,7 +1641,8 @@
           "tap_hold": 200,
           "os_indicator_lease": 3000,
           "os_indicator_period": 4096,
-          "leader": 300
+          "leader": 300,
+          "dynamic_macro_phase": 10
         },
         "release_approved": false
       },
@@ -1625,11 +1650,15 @@
         "alternate-repeat",
         "caps-word",
         "compact-tap-hold",
+        "dynamic-macros",
         "eight-two-key-combos",
         "encoder-map",
         "key-overrides",
         "leader",
         "media-keys",
+        "nkro",
+        "nkro-control",
+        "nkro-reports",
         "one-shot",
         "os-indicators",
         "qmk-settings",
@@ -1665,7 +1694,8 @@
         "qmk-settings",
         "key-overrides",
         "mac-pc",
-        "ctrl-gui-swap"
+        "ctrl-gui-swap",
+        "tap-dance"
       ],
       "configuration": {
         "compact_controls_version": 2,
@@ -1679,7 +1709,8 @@
           "qmk-settings",
           "key-overrides",
           "mac-pc",
-          "ctrl-gui-swap"
+          "ctrl-gui-swap",
+          "tap-dance"
         ],
         "base_features": [
           "six-layers",
@@ -1699,7 +1730,7 @@
           "AK820_NKRO": "no",
           "AK820_GRAVE_ESCAPE": "no",
           "AK820_VIALRGB_DIRECT": "no",
-          "AK820_COMPACT_TAP_DANCE": "no",
+          "AK820_COMPACT_TAP_DANCE": "yes",
           "AK820_COMPACT_KEY_OVERRIDE": "yes",
           "AK820_QMK_SETTINGS": "yes",
           "AK820_MAC_PC": "yes",
@@ -1752,6 +1783,7 @@
         "rgb-effects",
         "six-layers",
         "sixteen-vial-macros",
+        "tap-dance",
         "tri-layer"
       ]
     }
