@@ -95,6 +95,10 @@ def main(argv=None):
             suites.append((QMK, [py, f'tests/{name}/run.py']))
         suites.append((QMK, [py, 'tests/ak820_macro_guard/parse.py']))
         suites.append((QMK, [py, 'tests/ak820_macro_guard/powercut.py']))
+        tap_dance = [py, 'tests/ak820_tap_dance/host.py']
+        if tool_records['sdcc']:
+            tap_dance.extend(['--sdcc', tool_records['sdcc']['path']])
+        suites.append((QMK, tap_dance))
         suites.append((QMK, [py, 'tests/ak820_bounded/run.py']))
         repeat_table = [py, 'tests/ak820_repeat/table.py']
         if tool_records['sdcc']:

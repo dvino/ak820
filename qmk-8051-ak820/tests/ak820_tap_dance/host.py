@@ -62,6 +62,12 @@ for(unsigned i=0;i<TD_SOURCES;i++)for(unsigned prior=0;prior<=TD_MAP_NONE;prior+
         unsigned neighbor=i^1;td_map_set(neighbor,prior);td_map_set(i,value);
         assert(td_map_get(i)==value);assert(td_map_get(neighbor)==prior);
     }
+/* Repeated press with a changed keycode can leave multiple live slots for
+ * one physical source. The latest explicit map entry, not the first matching
+ * source, determines which slot the release addresses. */
+fresh();event(0,1,0x5700);event(0,1,0x5701);
+assert(td_slots[0].state&&td_slots[1].state&&td_slots[0].source==0&&td_slots[1].source==0);
+assert(td_map_get(0)==1);event(0,0,0x5701);assert(!(td_slots[1].state&TD_DOWN));assert(td_slots[0].state&TD_DOWN);
 fresh();event(0,1,0x5700);event(0,0,0x5700);assert(!downs[4]);expire();assert(downs[4]==1&&!refs[4]);
 fresh();event(0,1,0x5700);expire();assert(refs[5]==1);event(0,0,4);assert(!refs[5]);
 fresh();event(0,1,0x5700);event(0,0,0x5700);event(0,1,0x5700);event(0,0,0x5700);expire();assert(downs[6]==1&&!refs[6]);

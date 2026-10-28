@@ -253,3 +253,42 @@ A separate `as_emit` branch rewrite reduced its isolated translation-unit
 CSEG 0x2c9 → 0x2c7 (2 bytes), with XSEG unchanged. Not retained: tiny object
 benefit is outweighed by new behavior/reentrancy testing and unknown post-pass
 linked result. The original source was restored.
+
+Default-keymap format opportunity (Pi scout): the diagnostic's generated
+layout uses 64 class bytes + 114 payload bytes + 32 row offsets = 210 bytes.
+In this particular source, both layers share the same KC_NO mask and layer 1
+has 21 exceptional positions (12 one-byte values, nine with high byte 0x78).
+A validated sorted-exception format could reduce these data to 174 bytes, at
+most 36 bytes before decoder cost; a linear lookup would scan as many as 21
+records instead of at most eight classes. It would require generator fallback
+for arbitrary edited defaults, all-cell/bounds/reset tests and a target timing
+bound. Not adopted: the maximum data-only gain is small, the required decoder
+has unknown net size, and worst-case lookup timing would regress. This is not
+an estimate of the image deficit or a general compression lower bound.
+
+A 16-byte sentinel bitmap plus a first-match scan of eight existing slots
+would nominally save 48 XRAM bytes, but is not equivalent. Starting from
+cancel, two presses for the same source with TD(0) then TD(1), without an
+intervening release, leave both slots live with the same source while the map
+selects slot 1; the release clears slot 1, not slot 0. The current admission
+API accepts that trace. A host regression executes this counterexample; a Pi
+researcher independently reached the same conclusion. No claim is made that
+normal debounced physical input generates duplicate presses. The proposed
+bitmap-only substitution was rejected, preserving existing behavior; exact
+base-9 packing would need target CODE/latency screens and proofs.
+
+The Tap Dance host fixture (including the counterexample and generated-storage
+cases) is now included in `--host` and uses the selected SDCC for a standalone
+component compile when available. A full pinned `--host --require-toolchain`
+run with this addition passed all 26 suites. The ordinary host environment has
+no `cc`; the fixture was run in the pinned container instead.
+
+A separate source-only base-9 map packing screen preserved nine representable
+values per source in principle (five values per 16-bit word, 52-byte map).
+The same diagnostic flags compiled production TU XSEG 0x8f → 0x83 (−12),
+CSEG 0x725 → 0x81c (+247) and CONST 0 → 0x0a (+10), before runtime-library,
+post-pass, final-link or timing effects. The map uses runtime 16-bit division
+and multiplication on event paths. The candidate was restored and rejected:
+its 257-byte object CODE/CONST growth undermines the already-overfull CODE
+window, and no equivalence/CPU-time validation was performed. Thus this is a
+screen, not a proposed deployed change.

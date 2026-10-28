@@ -180,6 +180,8 @@ class OfflineRunnerTests(unittest.TestCase):
         self.assertTrue(any('ak820_bounded/run.py' in command for command in commands))
         self.assertTrue(any('ak820_macro_guard/parse.py' in command for command in commands))
         self.assertTrue(any('ak820_macro_guard/powercut.py' in command for command in commands))
+        tap_dance = next(row['command'] for row in report['tests'] if 'tests/ak820_tap_dance/host.py' in row['command'])
+        self.assertEqual(tap_dance[tap_dance.index('--sdcc') + 1], report['tools']['sdcc']['path'])
         self.assertTrue(any('ak820_via_decode/run.py' in command for command in commands))
         self.assertTrue(any('ak820_combo/run.py' in command for command in commands))
         self.assertTrue(any('ak820_repeat/table.py' in command for command in commands))
