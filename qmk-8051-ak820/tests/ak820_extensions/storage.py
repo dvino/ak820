@@ -30,7 +30,7 @@ for module in ('tap_dance', 'key_override'):
     source = (ROOT / f'keyboards/ajazz/ak820/ak820_{module}.c').read_text()
     validator = function(source, f'ak820_{module}_valid')
     if module == 'key_override':
-        validator = 'typedef bool ak820_key_override_result_t;\n' + '\n'.join(re.findall(r'^#define (?:basic\([^\n]*|ACTIVATIONS [^\n]*)', source, re.M)) + '\n' + validator
+        validator = 'typedef bool ak820_key_override_result_t;\n' + '\n'.join(re.findall(r'^#define (?:basic(?:_byte)?\([^\n]*|ACTIVATIONS [^\n]*)', source, re.M)) + '\n' + validator
     production.insert(0, '#ifdef AK820_COMPACT_' + module.upper() + '\n' + validator + '\n#endif')
     production.append('#ifdef AK820_COMPACT_' + module.upper())
     for operation in ('get', 'set'):
@@ -108,9 +108,25 @@ int main(void) {
 #endif
 #ifdef AK820_COMPACT_TAP_DANCE
  TEST(vial_tap_dance_entry_t,tap_dance,AK820_TAP_DANCE_ADDR,td,td_bad);
+ /* Compare the actual production validator against the previous predicate
+  * over the complete 16-bit domain of a Tap Dance output. */
+ for(unsigned value=0;value<=0xffff;++value) {
+  unsigned lo=value & 255, hi=value >> 8;
+  bool expected=value==0 || (hi<32 && ((lo>=KC_A && lo<=KC_EXSEL) ||
+                                       (lo>=KC_LEFT_CTRL && lo<=KC_RIGHT_GUI)));
+  td_bad=td;td_bad.on_tap=value;assert(ak820_tap_dance_valid(&td_bad)==expected);
+ }
 #endif
 #ifdef AK820_COMPACT_KEY_OVERRIDE
  TEST(vial_key_override_entry_t,key_override,AK820_KEY_OVERRIDE_ADDR,ko,ko_bad);
+ /* Exercise every byte of both real predicate call sites against the
+  * original inclusive-range semantics, including wraparound below KC_A. */
+ for(unsigned key=0;key<256;++key) {
+  bool expected=key>=KC_A && key<=KC_EXSEL;
+  ko_bad=ko;ko_bad.trigger=key;assert(ak820_key_override_valid(&ko_bad)==expected);
+  ko_bad=ko;ko_bad.replacement=key;
+  assert(ak820_key_override_valid(&ko_bad)==(key==0 || expected));
+ }
 #endif
  const uint16_t invalid[]={1,2,3,165,223,232,255,0x2004,0x5700,0xffff};
  for(unsigned i=0;i<sizeof invalid/sizeof *invalid;++i) {

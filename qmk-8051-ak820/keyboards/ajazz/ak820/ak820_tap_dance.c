@@ -40,8 +40,8 @@ bool ak820_tap_dance_valid(const vial_tap_dance_entry_t AK820_STATE_MEM *entry) 
     for (uint8_t i = 0; i < 4; ++i, bytes += 2) {
         uint8_t basic = bytes[0], mods = bytes[1];
         if (!(basic | mods)) continue;
-        if (mods >= 32 || !((basic >= KC_A && basic <= KC_EXSEL) ||
-            (basic >= KC_LEFT_CTRL && basic <= KC_RIGHT_GUI))) return false;
+        if (mods >= 32 || !(((uint8_t)(basic - KC_A) <= (KC_EXSEL - KC_A)) ||
+            ((uint8_t)(basic - KC_LEFT_CTRL) <= (KC_RIGHT_GUI - KC_LEFT_CTRL)))) return false;
     }
     return true;
 }

@@ -406,3 +406,46 @@ this does not establish whole-program safety or hardware qualification. Both
 build reports and logs are recorded in `tap-dance-current-diagnostic/`. These
 are measurements of the current main without Tap Dance; its 31-byte saving must
 not be confused with the cost or fit of main plus Tap Dance.
+
+### Validator range screens after the comparable main measurement
+
+The Key Override validator's two byte-only basic-key checks were changed to
+wrapping unsigned byte ranges, keeping the original full-width predicate for
+the 16-bit event key. The target production object changed CSEG 0x589 → 0x587
+(2 bytes), XSEG 0x65 unchanged. The actual host validator is checked for all
+256 basic-key bytes and the existing engine fixture exhausts 16-bit trigger,
+replacement and layers; an added engine case checks wide keycode 0x0104
+passes through despite matching the trigger's low byte. Pi review caught an
+earlier incorrect attempt that used the byte predicate at the 16-bit event
+call site; that attempt was fixed before acceptance, not treated as a saving.
+
+Tap Dance's two basic/modifier ranges now use the same byte-safe arithmetic.
+Its production object changed CSEG 0x725 → 0x716 (15 bytes) and XSEG
+0x8f → 0x8e (1 byte). The production validator is checked against the old
+predicate over all 65,536 possible 16-bit output values, and the host/storage
+and isolated SDCC compile suites passed. These are object sizes only, not
+linked main-plus-Tap-Dance savings, and do not establish physical fit, target
+timing or hardware behavior. The already reported 31-byte main saving and
+41-byte total split-window space precede these latest changes.
+
+The corresponding Combo validator byte ranges were screened while keeping the
+full-width event path unchanged. Its actual production object CSEG changed
+0x431 → 0x429 (8 bytes), XSEG 0x3e unchanged. New host/UBSan checks cover
+all 256 input bytes for each input, all 65,536 output keycodes, and event
+0x0104 passing through. Independent Pi reviewers approved the corrected Key
+Override, both Tap Dance range checks, and Combo source/test changes; these
+reviews are not hardware qualification. All 26 host/toolchain suites passed,
+including target-CPU Repeat and Macro checks.
+
+A subsequent comparable physical-window `main`-without-Tap-Dance diagnostic
+measured 40,453 occupied CODE bytes: **42 bytes below the initial 40,495**, and
+11 below the previous 40,464. Main window usage is 38,570 of 38,617 (47 bytes
+unoccupied), low window 1,883 of 1,888 (5 unoccupied); the windows are separate,
+so 52 aggregate bytes are not necessarily usable as one contiguous block. The
+highest CODE address is 0xc6d5, leaving 42 consecutive bytes to 0xc6ff. XRAM
+is 2,852 / 3,008. The build used the pinned toolchain and the same optimization
+settings with a freshly generated bootstrap context; its spill-specific audit
+passed, but this is not a whole-image or hardware qualification. Its report
+and logs are preserved under `tap-dance-current-diagnostic/`; no image was
+published or flashed. The updated Tap Dance validator is not enabled in this
+`main` measurement, so its object gains are not included in these 42 bytes.

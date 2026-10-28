@@ -57,6 +57,10 @@ int main(void) {
         probe.layers=v;assert(ak820_key_override_valid(&probe)==reference_valid(&probe));probe.layers=63;
     }
     for (unsigned v=0;v<256;++v) {probe.options=v;assert(ak820_key_override_valid(&probe)==reference_valid(&probe));}
+    /* Full-width non-basic keycodes sharing a trigger's low byte pass
+       through; only the validator's byte predicate may truncate. */
+    setup(7);assert(event(0,0x0104,true,1));assert(!ak820_key_override_key());
+    assert(event(0,0x0104,false,1));assert(!ak820_key_override_key());
     setup(7);assert(!event(0,4,true,1));assert(ak820_key_override_key()==5);
     assert(ak820_key_override_mods(1|8)==(2|8));
     /* A physical/macro owner of replacement usage remains in its own report

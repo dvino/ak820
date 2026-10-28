@@ -20,6 +20,8 @@ static bool enabled = true, blocked, hidden;
 /* Inline this tiny predicate: a model-large helper spills its argument and
  * saves registers at each of the three call sites. */
 #define basic(key) ((key) >= KC_A && (key) <= KC_EXSEL)
+/* Validator inputs are bytes; do not use this for the 16-bit event key. */
+#define basic_byte(key) ((uint8_t)((key) - KC_A) <= (KC_EXSEL - KC_A))
 ak820_key_override_result_t ak820_key_override_valid(const vial_key_override_entry_t AK820_STATE_MEM *e) {
     const uint8_t AK820_STATE_MEM *bytes = (const uint8_t AK820_STATE_MEM *)e;
     uint8_t any = 0;
@@ -27,11 +29,11 @@ ak820_key_override_result_t ak820_key_override_valid(const vial_key_override_ent
      * every other row receives the same validation, enabled or disabled. */
     for (uint8_t i = 0; i < 10; ++i) any |= bytes[i];
     if (!any) return true;
-    if (bytes[1] || !basic(bytes[0])) return false;
+    if (bytes[1] || !basic_byte(bytes[0])) return false;
     if (bytes[5] || !bytes[4] || (bytes[4] & 0xC0)) return false;
     if ((bytes[9] & 0x40) || !(bytes[9] & ACTIVATIONS)) return false;
     /* Replacement is KC_NO or an ordinary usage with QK_MODS prefixes. */
-    if (bytes[2] | bytes[3]) return bytes[3] < 32 && basic(bytes[2]);
+    if (bytes[2] | bytes[3]) return bytes[3] < 32 && basic_byte(bytes[2]);
     return true;
 }
 /* A mask containing both sides means either side, as in upstream QMK. */

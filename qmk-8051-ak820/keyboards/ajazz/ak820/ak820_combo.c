@@ -15,6 +15,8 @@
  * also allow modifiers, unmodified consumer usages and Caps Word toggle.
  * No generated record re-enters this engine. */
 #define COMBO_INPUT(code) ((code) >= KC_A && (code) <= KC_EXSEL)
+/* Validator inputs are bytes; event keycodes must use the full-width check. */
+#define COMBO_INPUT_BYTE(code) ((uint8_t)((code) - KC_A) <= (KC_EXSEL - KC_A))
 static struct { uint8_t a, b; uint16_t output; } combos[VIAL_COMBO_ENTRIES];
 static keyrecord_t saved;
 #ifdef __SDCC_mcs51
@@ -44,10 +46,10 @@ ak820_combo_result_t ak820_combo_valid(const vial_combo_entry_t AK820_STATE_MEM 
     if (bytes[1] | bytes[3] | bytes[4] | bytes[5] | bytes[6] | bytes[7]) return false;
     a = bytes[0]; b = bytes[2]; lo = bytes[8]; hi = bytes[9];
     if (!(a | b)) return !(lo | hi);
-    if (a == b || !COMBO_INPUT(a) || !COMBO_INPUT(b)) return false;
+    if (a == b || !COMBO_INPUT_BYTE(a) || !COMBO_INPUT_BYTE(b)) return false;
     if (hi == (QK_CAPS_WORD_TOGGLE >> 8) && lo == (uint8_t)QK_CAPS_WORD_TOGGLE) return true;
     if (!hi && lo >= KC_AUDIO_MUTE && lo <= KC_LAUNCHPAD) return true;
-    return hi < (QK_MOD_TAP >> 8) && (COMBO_INPUT(lo) || (lo >= KC_LEFT_CTRL && lo <= KC_RIGHT_GUI));
+    return hi < (QK_MOD_TAP >> 8) && (COMBO_INPUT_BYTE(lo) || ((uint8_t)(lo - KC_LEFT_CTRL) <= (KC_RIGHT_GUI - KC_LEFT_CTRL)));
 }
 /* A Combo settings write or unlock calls clear_keyboard(), whose shared cancellation
  * path drops every owner and blocks still-held physical sources. */
