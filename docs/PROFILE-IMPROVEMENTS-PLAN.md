@@ -4,13 +4,19 @@
 
 This is a discussion plan, not a claim that proposed features are implemented or that firmware is ready to install. The measurements below were supplied by the owner as provisional figures for particular built images; they may change with the sources. Space in separate CODE windows is not interchangeable. The cost of modules and settings can only be determined after linking the specific combination. This document does not authorize changes to the current optimization work or flashing a device.
 
+## Beta.5 outcome and remaining work
+
+Beta.5 adds Tap Dance to `typing`, `code`, `pointer` and `multios`; NKRO and its control to `creative`; and Dynamic Macros, NKRO and its control to `shortcuts`. The final ten images passed offline exact-image qualification; no physical keyboard validation is claimed. Selected candidates that did not fit were not added, and no CODE optimization experiments were used. See the current [profile descriptions](profiles/README.md) and [module matrix](MODULE-MATRIX.md) for the released compositions.
+
+The Leader timeout, Combo + Auto Shift behavior, and other settings and interaction ideas below remain investigations, not implemented beta.5 features. The custom firmware builder remains outside this firmware work. The candidate table and its headroom numbers below describe the **pre-beta.5 baseline**, not the current profiles or remaining capacity.
+
 ## Common foundation
 
 All ten profiles contain six layers, encoder actions, 16 persistent Vial macros, eight two-key Combos, Mod-Tap/Layer-Tap, One Shot, Caps Word, Repeat/Alt Repeat, Tri Layer, basic lighting and the supported QMK Settings. A profile is a firmware composition, not a switchable layer. Actions configurable in Vial do not add a module that is absent from the firmware. See the [module matrix](MODULE-MATRIX.md) and [profile descriptions](profiles/README.md).
 
 Compare current contents against `qmk-8051-ak820/util/ak820_profiles.py`, not just the descriptions or an older build. “Maximize” means maximizing usefulness for the profile's purpose while preserving existing features, not promising that every module will fit.
 
-## Candidates for each profile
+## Historical baseline and candidates for each profile
 
 Free bytes in the table are main CODE / low CODE / XRAM. CODE headroom is window size minus occupied bytes, not necessarily trailing space or capacity where new code can be placed; XRAM headroom is ordinary external RAM capacity minus its used size. The [measurement record](../work-logs/profile-headroom-20261028/measurements.md) identifies the measured images, source manifests and method. Candidate order reflects usefulness, not proven size; each addition requires separate measurement and interaction tests. Do not remove existing features to make room without a separate owner decision.
 

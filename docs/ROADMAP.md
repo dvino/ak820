@@ -10,7 +10,7 @@ for reproduction; historical Typing uses `legacy-typing` in current builds.
 
 Beta.3 is published with Caps Word Combo output, macro Layer-Tap, Auto Shift
 in `main`, Direct snapshots and complete-frame updates, and the GUI-lock W
-pulse. Beta.4 is being prepared with compact controls. Qualification, release
+pulse. Beta.5 is published with updated profile compositions. Qualification, release
 and hardware state are recorded in [Status](STATUS.md).
 
 ## Configurator

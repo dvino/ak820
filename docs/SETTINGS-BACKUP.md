@@ -6,7 +6,7 @@ Use the Python installer script to save or restore settings. The script checks
 the exact firmware image and stops if the saved data is unsupported. Settings
 restore does not change the selected profile or save Direct colors to EEPROM.
 The selected profile must have its complete, exactly approved release assets.
-A mismatched or absent beta.4 profile catalog/approval blocks restore before USB access; a beta.3 image is never silently substituted.
+A mismatched or absent beta.5 profile catalog/approval blocks restore before USB access; an older image is never silently substituted.
 
 ## Run the script
 
@@ -44,8 +44,10 @@ palette readback. This API does not select Direct mode or save the palette to
 EEPROM. Older backups without the sidecar cannot recover Direct colors. See
 [Direct palette](DIRECT.md) for the protocol and limits.
 
-Restore the same image by default. During beta, cross-release transitions are
-limited to the immediately preceding build; older release sources are unsupported.
+For beta.5, recognized settings sources are the exact published beta.3, beta.4,
+beta.4.1 and beta.5 images; targets must be beta.5 images. This recognition and
+offline transition testing do not authorize settings writes: the beta.5 catalog
+keeps `settings_writes_authorized` false. Other release sources are unsupported.
 Transitions between profiles of the current release must be explicitly listed
 and still pass schema, feature and value checks. Keep configuration
 software closed during backup; the firmware does not pause while settings are

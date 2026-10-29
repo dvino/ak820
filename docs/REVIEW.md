@@ -2,7 +2,7 @@
 
 # Independent reviews
 
-The published release is `v0.6.0-beta.3`. The last recorded physical installation
+The current published release is `v0.6.0-beta.5`. The last recorded physical installation
 was `v0.6.0-alpha.3`; it does not verify beta hardware behavior.
 Exact images, checks and limits are recorded in [Status](STATUS.md).
 

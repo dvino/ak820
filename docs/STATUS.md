@@ -2,6 +2,10 @@
 
 # Project status
 
+## v0.6.0-beta.5
+
+[Beta.5](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.5) is published. All ten profiles passed offline exact-image qualification (36 base suites, 356 unit tests and zero skips per profile, plus profile-specific suites). The release CI also revalidated and assembled all ten images. Settings migration was checked offline for beta.3, beta.4, beta.4.1 and beta.5 sources to beta.5 targets. The catalog authorizes installation only for its exact images; settings writes and hardware validation remain false. No physical keyboard test is claimed.
+
 ## v0.6.0-beta.4, published 2026-10-28
 
 All ten beta.4 profiles passed offline exact-image firmware qualification:
@@ -12,13 +16,9 @@ preceding beta.3 build and between its own profiles. The release is published.
 The published catalog does not authorize flashing, and no physical device
 testing has been performed.
 
-## Next beta catalog policy
+### Beta.4 offline measurements
 
-The next beta release catalog will authorize firmware flashing through the
-configurator's existing fresh confirmation, backup, exact-image and readback
-flow. `hardware_validated` and `settings_writes_authorized` remain false. This
-is preparation for an owner-run physical test, not evidence that the firmware
-has already been tested on a keyboard.
+These historical measurements describe beta.4, not beta.5.
 
 | Profile | CODE bytes | XRAM bytes / 3008 | Stack bound / capacity | Margin |
 | --- | ---: | ---: | ---: | ---: |

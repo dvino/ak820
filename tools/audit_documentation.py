@@ -2,7 +2,7 @@
 """Check active project documentation links and bilingual feature/profile registries."""
 from __future__ import annotations
 
-import ast
+import importlib.util
 import html
 import json
 import re
@@ -43,18 +43,12 @@ def active_markdown() -> list[Path]:
 
 def source_registries() -> dict[str, object]:
     source = ROOT / "qmk-8051-ak820/util/ak820_profiles.py"
-    tree = ast.parse(source.read_text(encoding="utf-8"))
-    wanted = {"BASE_FEATURES", "SWITCHES", "RELEASE_PROFILES", "PROFILES", "DEFAULT_PROFILE"}
-    values: dict[str, object] = {}
-    for node in tree.body:
-        if not isinstance(node, ast.Assign):
-            continue
-        for target in node.targets:
-            if isinstance(target, ast.Name) and target.id in wanted:
-                values[target.id] = ast.literal_eval(node.value)
-    missing = wanted - values.keys()
-    if missing:
-        raise ValueError(f"Missing source registries: {', '.join(sorted(missing))}")
+    spec = importlib.util.spec_from_file_location("ak820_profiles", source)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    wanted = ("BASE_FEATURES", "SWITCHES", "RELEASE_PROFILES", "PROFILES", "DEFAULT_PROFILE")
+    values = {name: getattr(module, name) for name in wanted}
+    values["CONFIGURATIONS"] = {name: module.configuration(name) for name in module.RELEASE_PROFILES}
     return values
 
 
@@ -70,7 +64,7 @@ def check_catalog(errors: list[str]) -> None:
         errors.append("module-descriptions.json has duplicate feature IDs")
     if {item.get("id") for item in features if item.get("kind") == "base"} != set(registries["BASE_FEATURES"]):
         errors.append("Feature catalog base IDs differ from BASE_FEATURES")
-    if {item.get("id") for item in features if item.get("kind") == "optional"} != set(registries["SWITCHES"]):
+    if {item.get("id") for item in features if item.get("kind") == "optional"} != set(registries["SWITCHES"]) | {"nkro-reports", "vialrgb-direct-ram"}:
         errors.append("Feature catalog optional IDs differ from SWITCHES")
     if profile_ids != list(registries["RELEASE_PROFILES"]):
         errors.append("Profile catalog IDs/order differ from RELEASE_PROFILES")
@@ -84,6 +78,11 @@ def check_catalog(errors: list[str]) -> None:
         expected = list(source_profiles.get(identifier, ()))
         if profile.get("optional_features") != expected:
             errors.append(f"Profile catalog feature set differs from source: {identifier}")
+        configuration = registries["CONFIGURATIONS"].get(identifier)
+        if configuration is None or profile.get("configuration") != configuration:
+            errors.append(f"Profile catalog configuration differs from source: {identifier}")
+        if configuration is None or profile.get("features") != sorted(configuration["base_features"] + configuration["optional_features"]):
+            errors.append(f"Profile catalog derived features differ from source: {identifier}")
         for field in ("title", "summary", "purpose"):
             value = profile.get(field, {})
             if not all(isinstance(value.get(language), str) and value[language].strip()

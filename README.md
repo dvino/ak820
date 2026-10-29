@@ -60,11 +60,10 @@ GUI lock remains in `game` and `mmo`, not `main`. Other profiles provide NKRO,
 Tap Dance, Space Cadet, Grave Escape,
 Mouse Keys or modifier swaps by exchanging selected modules.
 
-The beta.4 release is published with Python installation scripts for Windows
-and Linux x86_64. Standalone GUI installers are not planned. The beta.4.1
-catalog update is being prepared so the separate [AK Configurator](https://github.com/dvino/ak-configurator)
-can install the exact beta.4 images for an owner-run device test. This catalog
-change does not claim hardware validation or authorize settings writes. See
+The beta.5 release is published with Python installation scripts for Windows
+and Linux x86_64. Standalone GUI installers are not planned. Its catalog authorizes
+only the exact beta.5 images for installation through compatible clients; it does
+not claim hardware validation or authorize settings writes. See
 [Status](docs/STATUS.md) for release and hardware limits, and the
 [feature catalog](docs/FEATURES.md) for function details.
 

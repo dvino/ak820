@@ -470,7 +470,7 @@ def consent(log, plan, *, recovery, image='permanent', context=None):
     print('AK820 keyboard input will temporarily stop after confirmation. '
           'Keep another keyboard or on-screen input available.')
     if not recovery:
-        print(RELEASE.upper() + ' ' + image.upper() + ': ' +
+        print(image.upper() + ': ' +
               ('reset enters the OEM loader after the trial clears its marker.' if image == 'trial' else
                'the boot marker is retained so the application can restart after power loss.'))
         if image == 'permanent':

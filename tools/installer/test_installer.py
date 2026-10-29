@@ -404,9 +404,11 @@ class OfflineTests(BaseCase):
                 with self.assertRaises(app.Cancelled):
                     app.consent(self.log, plan, recovery=False)
                 flash.assert_not_called()
-        with patch('builtins.input', side_effect=['yes']), \
-             contextlib.redirect_stdout(io.StringIO()):
+        output = io.StringIO()
+        with patch('builtins.input', side_effect=['yes']), contextlib.redirect_stdout(output):
             result = app.consent(self.log, plan, recovery=False)
+        self.assertIn('PERMANENT:', output.getvalue())
+        self.assertNotIn('RC6 PERMANENT:', output.getvalue())
         self.assertTrue(result['reset'] and result['erase'] and result['flash'] and result['restart'])
 
     def fixture_release(self, *, use_bad_rc3=False, reproduction=False):
