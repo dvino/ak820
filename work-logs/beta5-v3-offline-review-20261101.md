@@ -32,3 +32,11 @@ output is not evidence of physical device operations. No hardware test, write,
 reset or flash was performed. The earlier ten-image qualification used the
 previous source snapshot and must be repeated against the final host sources.
 Draft results, synthetic tests and this review do not approve a release.
+
+For requalification with a read-only source checkout, two Mouse Keys tests now
+place temporary build directories under `.build`. Independent review found that
+the assertions and builder path checks remain intact. The focused suite passed
+13 tests. For this run, `.build` must already exist, resolve beneath the
+builder's source root and allow the qualification user to create and remove
+entries; the source is mounted read-only. The review did not verify the mounts or the complete qualification
+suite.

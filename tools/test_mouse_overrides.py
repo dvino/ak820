@@ -26,7 +26,9 @@ class MouseOverrideTests(unittest.TestCase):
         injected = {'PATH': '/tools', 'NOLTO_CFLAGS': '--include override.h',
                     'CFLAGS': '--include override.h', 'CPATH': '/tmp/include',
                     'MAKEFLAGS': '-e', 'LD_PRELOAD': '/tmp/inject.so'}
-        with tempfile.TemporaryDirectory(dir=config.QMK) as tmp:
+        build_root = config.QMK / '.build'
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=build_root) as tmp:
             argv = ['build_ak820.py', '--profile', 'pointer', '--mouse-cursor-step', '9',
                     '--build-dir', str(Path(tmp) / 'build')]
             def version(command, *, env, text):
@@ -41,7 +43,9 @@ class MouseOverrideTests(unittest.TestCase):
                 build_ak820.main()
 
     def test_builder_explicitly_clears_indirect_make_flags(self):
-        with tempfile.TemporaryDirectory(dir=config.QMK) as tmp:
+        build_root = config.QMK / '.build'
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=build_root) as tmp:
             argv = ['build_ak820.py', '--profile', 'pointer', '--build-dir', str(Path(tmp) / 'build')]
             def compile_command(command, *, cwd, env, stdout, stderr, timeout):
                 self.assertIn('NOLTO_CFLAGS=', command)
