@@ -3,6 +3,13 @@
 Default execution writes audit evidence only. Review the draft catalog, install
 its identical bytes in both catalog locations, freeze sources and run settings
 tests before using --write-policies with a new private output directory.
+In opt-in evidence mode policies are staged only; integration is separate.
+Use an isolated, trusted, non-concurrent workspace; parent directories must not change.
+Draft runs are disposable and unapproved: they may measure before catalog-dependent
+backup checks, but never publish policies; use fresh isolated outputs.
+Policy staging requires frozen catalog backup preflight and supplied validated backups;
+--source-rom and --source-bundle are draft-only. No installation is performed.
+Final-tree integration design and exact-image validation remain mandatory before approval.
 --settings-run accepts a successful record with command, exit_code, source_files,
 log_path and log_sha256; every source and log is checked before reuse. Previous-beta
 bundles must be authenticated before this script is run. Earlier releases are not admitted. Their linked
@@ -19,6 +26,7 @@ from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[2]
 AUDIT = Path(__file__).resolve().parent
+OUTPUT = AUDIT
 sys.path.insert(0, str(ROOT / 'qmk-8051-ak820/util'))
 sys.path.insert(0, str(ROOT / 'tools'))
 import configure_firmware as configured
@@ -44,11 +52,103 @@ def relative(path):
 
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
+    mode = 'x' if OUTPUT != AUDIT and path.is_relative_to(OUTPUT) else 'w'
+    with path.open(mode) as stream:
+        stream.write(json.dumps(value, indent=2, sort_keys=True) + '\n')
+
+def copy_evidence(source, target):
+    if OUTPUT == AUDIT:
+        shutil.copyfile(source, target)
+    else:
+        with source.open('rb') as src, target.open('xb') as dst:
+            shutil.copyfileobj(src, dst)
 
 def require(value, message):
     if not value:
         raise ValueError(message)
+
+def fresh_evidence(path, inputs=(), reserve=True):
+    """Validate a destination; optionally reserve it on a trusted, stable filesystem."""
+    require(not path.is_absolute() and path.parts and
+            all(part not in ('.', '..') for part in str(path).split('/')),
+            'Evidence destination must be a relative path without traversal')
+    destination = ROOT / path
+    current = ROOT
+    for part in path.parts:
+        current = current / part
+        require(not current.is_symlink(), 'Symlink in evidence destination')
+    require(not destination.exists(), 'Evidence destination already exists')
+    protected = [item for item in ROOT.iterdir() if item.name != 'audits']
+    audits = ROOT / 'audits'
+    if audits.is_dir():
+        protected.extend(audits.iterdir())
+    protected.append(AUDIT)
+    protected += [Path(item).resolve() for item in inputs if item]
+    for item in protected:
+        require(not destination.is_relative_to(item) and not item.is_relative_to(destination),
+                'Evidence destination overlaps an input or protected path')
+    require(destination.parent.is_dir(), 'Evidence destination parent must exist')
+    if reserve:
+        destination.mkdir()
+    return destination
+
+
+def evidence_inputs(args):
+    """Validate selected paths and output separation before reserving either output."""
+    directories = [args.builds_root, args.toolchain, args.oem_reference_dir,
+                   args.source_backups_root, args.historical_builds_root,
+                   args.historical_bundles_root]
+    files = [args.historical_catalog, args.settings_run]
+    names = set(sum((list(group) for group in GROUPS.values()), []))
+    for values, kind, profile in ((args.profile_build, directories, True),
+                                   (args.profile_origin, directories, True),
+                                   (args.source_rom, files, False),
+                                   (args.source_bundle, directories, False)):
+        seen = set()
+        for value in values:
+            label, separator, path = value.partition('=')
+            require(separator and path and label and label not in seen and
+                    (label in names if profile else
+                     label not in ('.', '..') and all(c.isalnum() or c in '-_' for c in label)),
+                    'Invalid or duplicate path argument')
+            seen.add(label)
+            kind.append(Path(path))
+    paths = []
+    for path in directories:
+        if path is not None:
+            require(path.is_dir(), 'Missing input directory: ' + str(path))
+            paths.append(path.resolve())
+    for path in files:
+        if path is not None:
+            require(path.is_file(), 'Missing input file: ' + str(path))
+            paths.append(path.resolve())
+    labels = set()
+    for folder in args.source_backups_root.iterdir():
+        if folder.is_dir() and (folder / 'manifest.json').is_file():
+            require(folder.name not in labels, 'Duplicate source fixture label: ' + folder.name)
+            labels.add(folder.name)
+    reserved = {prefix + name for prefix in ('fresh-', 'historical-', 'caps-word-', 'macro-layer-')
+                for name in names}
+    require(not labels.intersection(reserved), 'Source fixture label reserved for generated evidence')
+    for item in args.source_rom + args.source_bundle:
+        label = item.partition('=')[0]
+        require(label not in labels and label not in reserved, 'Duplicate or reserved source fixture label: ' + label)
+        labels.add(label)
+    private = args.private_output.resolve()
+    require(not private.is_relative_to(ROOT) and not private.exists() and
+            private.parent.is_dir(), 'Private output must be a new directory outside the repository')
+    for path in paths:
+        if path != ROOT:
+            require(not private.is_relative_to(path) and not path.is_relative_to(private),
+                    'Private output overlaps an input')
+    return [path for path in paths if path != ROOT] + [private]
+
+
+def require_frozen_catalog(catalog):
+    data = (json.dumps(catalog, indent=2, sort_keys=True) + '\n').encode()
+    for target in ('tools/installer/settings-catalog.json', 'web/firmware-matrix.json'):
+        require((ROOT / target).read_bytes() == data, 'Frozen catalog differs: ' + target)
+
 
 def profile_build(args, name):
     path = args.build_overrides.get(name, args.builds_root / name)
@@ -110,19 +210,30 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--settings-run', type=Path)
     preparation_arguments(parser)
+    parser.add_argument('--evidence-output', type=Path, help='Fresh repository-relative evidence directory')
     args = parser.parse_args()
+    global OUTPUT
     if args.settings_run:
         test = json.loads(args.settings_run.read_text())
         require(test['exit_code'] == 0 and test['command'] and test['source_files'], 'Failed or incomplete settings test record')
+        if args.evidence_output is not None:
+            require(test.get('unit_tests', {}).get('run', 0) > 0 and
+                    test['unit_tests'].get('skipped') == 0, 'Empty or skipped settings tests')
         for name, sha in test['source_files'].items():
             require(digest(safety.safe_path(ROOT, name)) == sha, 'Stale settings test source: ' + name)
         require(digest(safety.safe_path(ROOT, test['log_path'])) == test['log_sha256'], 'Stale settings test log')
+    if args.evidence_output is not None:
+        require(not args.write_policies or not (args.source_rom or args.source_bundle),
+                'Policy staging requires validated source backups; ROM and bundle fixtures are draft-only')
+        require(not args.write_policies or args.settings_run is not None,
+                '--write-policies requires a frozen successful --settings-run record')
+        OUTPUT = fresh_evidence(args.evidence_output, evidence_inputs(args), reserve=False)
     prepare(args)
     if not args.write_policies:
         print('Prepared draft catalog, packing and transitions; policies were not changed.')
         return
-    packing = json.loads((AUDIT / 'packing-preflight.json').read_text())
-    transitions = json.loads((AUDIT / 'transition-preflight.json').read_text())
+    packing = json.loads((OUTPUT / 'packing-preflight.json').read_text())
+    transitions = json.loads((OUTPUT / 'transition-preflight.json').read_text())
     require(packing['offline_only'] and packing['physical_device_commands'] == 0, "Preparation input check failed: packing['offline_only'] and packing['physical_device_commands'] == 0")
     require(all(c['passed'] for c in transitions['cases']), 'Failed transition preflight')
     tests = []
@@ -149,28 +260,30 @@ def main():
             require(pack['build']['ihx_sha256'] == ihx, "Preparation input check failed: pack['build']['ihx_sha256'] == ihx")
             cases = [c for c in transitions['cases'] if c['target_profile'] == profile]
             require(len(cases) == transitions['sources_per_target'] and all(c['target'] == ihx for c in cases), 'Incomplete target transition coverage')
-            evidence = AUDIT / 'profiles' / profile
-            evidence.mkdir(parents=True, exist_ok=True)
+            evidence = OUTPUT / 'profiles' / profile
+            evidence.mkdir(parents=True, exist_ok=OUTPUT == AUDIT)
             for src, dst in [('runtime-stack.json', 'stack.json'),
                              ('runtime-safety/startup.json', 'startup.json'),
                              ('runtime-safety/irq/results.json', 'irq.json'),
                              ('runtime-safety/summary.json', 'runtime-summary.json')]:
-                shutil.copyfile(build / src, evidence / dst)
+                copy_evidence(build / src, evidence / dst)
             transition = produce_transition_evidence(
-                ROOT, AUDIT, profile, report, pack, tests)
+                ROOT, OUTPUT, profile, report, pack, tests)
             write(evidence / 'transition.json', transition)
             source_names = set(safety.REQUIRED_SOURCES) | set(summary['source_files']) | {relative(Path(__file__).resolve())}
             source_names |= {relative(AUDIT / leaf) for leaf in (
                 'measure_origin.py', 'test_measure_origin.py', 'test_prepare_paths.py',
                 'check_module_matrix.py', 'module-matrix-check.json')}
-            source_names |= {relative(AUDIT / 'origin-measurements' / profile / leaf)
+            source_names |= {relative(OUTPUT / 'origin-measurements' / profile / leaf)
                              for leaf in ('binding.json', 'matrix.json', 'measurement.log')}
-            source_names |= {relative(AUDIT / name) for name in ('previous-beta4-catalog.json', 'settings-catalog-draft.json', 'transition-preflight.json')}
+            source_names |= {relative(OUTPUT / name) for name in ('previous-beta4-catalog.json', 'settings-catalog-draft.json', 'transition-preflight.json')}
             source_names |= {name for test in tests for name in test['source_files']}
             sources = {name: record(ROOT / name) for name in sorted(source_names)}
             symbols = authorization.symbols_sha256(build / 'ajazz_ak820_vial.map')
             program = {'ihx_sha256': ihx, 'symbols_sha256': symbols, 'schema': report['build_id']}
-            dest = ROOT / 'ci/profiles' / profile
+            policy_dest = ROOT / 'ci/profiles' / profile
+            dest = (OUTPUT / 'policies' / profile if args.evidence_output is not None
+                    else policy_dest)
             require(args.write_policies, 'Use --write-policies to replace current policy drafts after reviewing preparation inputs')
             write(dest / 'release-safety.json', {'format': 'ak820-release-safety-1',
                 'program': {'ihx_sha256': ihx, 'symbols_sha256': symbols, 'configuration': report['configuration']},
@@ -191,10 +304,10 @@ def main():
                 '.github/workflows/windows-installer.yml', '.github/workflows/firmware-catalog.yml',
                 'ci/beta41_catalog.py', 'ci/test_beta41_catalog.py', 'ci/beta5-release-notes.md',
                 'tools/ci_checks.py', 'tools/test_keyboard.py', 'tools/build_ci_release.py', 'tools/build_ci_profiles.py',
-                'qmk-8051-ak820/dependencies/lufa.json', relative(dest / 'release-safety.json')}
+                'qmk-8051-ak820/dependencies/lufa.json', relative(policy_dest / 'release-safety.json')}
             required |= {relative(evidence / (name + '.json')) for name in ('stack', 'startup', 'irq', 'transition')}
-            required |= {relative(AUDIT / name) for name in ('transition-preflight.json', 'settings-catalog-draft.json', 'previous-beta4-catalog.json')}
-            required |= {relative(AUDIT / name) for name in ('packing-preflight.json', 'previous-beta4-catalog.json')}
+            required |= {relative(OUTPUT / name) for name in ('transition-preflight.json', 'settings-catalog-draft.json', 'previous-beta4-catalog.json')}
+            required |= {relative(OUTPUT / name) for name in ('packing-preflight.json', 'previous-beta4-catalog.json')}
             required |= {t['log_path'] for t in tests}
             required |= set(configured.test_source_snapshot())
             required |= {'qmk-8051-ak820/' + row['path'].replace('\\', '/') for row in report['sources']
@@ -202,10 +315,14 @@ def main():
             write(dest / 'release-policy.json', {'format': 'ak820-ci-program-policy-1',
                 'program': dict(program, keyboard='ajazz/ak820', keymap='vial', sdcc_version='4.6.0'),
                 'host_files': host_manifest(ROOT), 'packing_receipt_sha256': digest(dest / 'packing-validation.json'),
-                'source_files': {name: record(ROOT / name) for name in sorted(required)}})
+                'source_files': {name: record(dest / 'release-safety.json'
+                    if name == relative(policy_dest / 'release-safety.json') else ROOT / name)
+                    for name in sorted(required)}})
             outputs.append({'profile': profile, 'ihx_sha256': ihx, 'runtime_passed': True,
                             'transition_tests_supplied': bool(tests), 'independently_reviewed': False})
-    write(AUDIT / 'profile-policy-preparation.json', {'format': 'ak820-caps-word-policy-preparation-1',
+    if args.evidence_output is not None:
+        print('Policies staged as evidence only; no installed policies were replaced.')
+    write(OUTPUT / 'profile-policy-preparation.json', {'format': 'ak820-caps-word-policy-preparation-1',
         'hardware_validated': False, 'physical_device_commands': 0, 'profiles': outputs,
         'gates': ['Refresh source and test hashes after freeze', 'Complete full exact-image regression',
                   *(['Supply frozen settings test record'] if not tests else []), 'Obtain independent exact-tree policy review',
@@ -237,7 +354,7 @@ def preparation_arguments(parser):
     historical.add_argument('--historical-bundles-root', type=Path,
                         help='Extracted authenticated beta.4/4.1 firmware-bundle profiles directory')
     parser.add_argument('--write-policies', action='store_true',
-                        help='Also replace current catalogs and ci/profiles drafts; never writes review approval')
+                        help='Prepare policies; opt-in evidence mode stages them without installation')
 
 
 def make_backup(folder, rom, profile):
@@ -289,6 +406,103 @@ def historical_default_rom(rom, profile):
     return bytes(result)
 
 
+def preflight_origin(build, origin, toolchain):
+    """Check the same source, tree and interpreter bindings before any measurement."""
+    import measure_origin
+    build, origin = build.resolve(), origin.resolve()
+    original = origin / build.relative_to(ROOT)
+    original_tools = (toolchain.resolve() if origin == ROOT else
+                      (origin / toolchain.resolve().relative_to(ROOT)).resolve())
+    require(original_tools.is_dir(), 'Missing original toolchain')
+    for name, sha in measure_origin.source_files(build).items():
+        path = (origin / name).resolve()
+        require(path.is_relative_to(origin) and path.is_file() and digest(path) == sha,
+                'Original-root source differs: ' + name)
+    require(measure_origin.tree(build) == measure_origin.tree(original),
+            'Copied build differs from its original tree')
+    retained = json.loads((original / 'profile-tests/results.json').read_text())
+    interpreter = Path(retained['tests'][0]['command'][0])
+    require(interpreter.is_absolute() and interpreter.is_file() and
+            digest(interpreter) == digest(Path(sys.executable)),
+            'Original qualification used another Python binary')
+
+
+def preflight_backup_files(root, settings):
+    """Check backup structure and immutable file records before image qualification."""
+    for folder in sorted(root.iterdir()):
+        if folder.is_dir() and (folder / 'manifest.json').is_file():
+            require(not folder.is_symlink(), 'Backup must be a real directory')
+            raw = settings._read_file(folder, 'manifest.json', 65536)
+            manifest = settings._json(raw)
+            require(isinstance(manifest, dict) and manifest.get('format') in
+                    (settings.FORMAT, settings.FORMAT_V2), 'Unknown backup format')
+            records = manifest.get('files')
+            require(isinstance(records, dict) and set(records) in
+                    (set(settings.FILES), set(settings.FILES) | {'direct-ram.json'}),
+                    'Unexpected backup files')
+            limits = dict(settings.FILES)
+            if 'direct-ram.json' in records:
+                limits['direct-ram.json'] = 4096
+            for name, limit in limits.items():
+                data = settings._read_file(folder, name, limit)
+                require(records[name] == settings._record(data), 'Backup hash/size mismatch: ' + name)
+            require(settings._read_file(folder, 'manifest.json', 65536) == raw,
+                    'Backup manifest changed during read')
+
+
+def preflight_frozen_backups(args, settings, stock, previous):
+    """Validate policy-phase backup semantics using the already frozen catalog."""
+    catalogs = [ROOT / 'tools/installer/settings-catalog.json', ROOT / 'web/firmware-matrix.json']
+    raw = catalogs[0].read_bytes()
+    require(catalogs[1].read_bytes() == raw, 'Frozen catalogs differ')
+    catalog = json.loads(raw)
+    beta_policy.validate_catalog_scope(catalog, previous)
+    require(not args.source_rom and not args.source_bundle,
+            'Policy staging requires validated source backups; ROM and bundle fixtures are draft-only')
+    definition = ROOT / 'qmk-8051-ak820/keyboards/ajazz/ak820/keymaps/vial/vial.json'
+    profiles = []
+    for row in catalog['profiles']:
+        build = profile_build(args, row['profile'])
+        files = {'firmware/application.ihx': (build / 'ajazz_ak820_vial.ihx').read_bytes(),
+                 'firmware/application.map': (build / 'ajazz_ak820_vial.map').read_bytes(),
+                 'reports/build-report.json': (build / 'build-report.json').read_bytes(),
+                 'reference/vial.json': definition.read_bytes()}
+        profile = settings.load_profile(ROOT, stock, trusted_catalog=catalog, release_files=files)
+        expected = row['settings_identity']
+        require(profile['ihx_sha256'] == expected['ihx_sha256'] and
+                profile['code_sha256'] == expected['code_sha256'],
+                'Frozen target image differs: ' + row['profile'])
+        profiles.append(profile)
+    identities = beta_policy.source_identities(catalog)
+    for folder in sorted(args.source_backups_root.iterdir()):
+        if folder.is_dir() and (folder / 'manifest.json').is_file():
+            backup = settings.validate_backup(folder, profiles[0])
+            ihx, code = backup['source_identity']
+            require(identities.get(ihx) == code, 'Backup image absent from retained catalog')
+            for profile in profiles:
+                settings.plan_restore(backup, profile)
+
+
+def preflight_historical_inputs(args, settings, stock, source_catalog, previous):
+    if not (args.historical_builds_root or args.historical_bundles_root):
+        return
+    definition = ROOT / 'qmk-8051-ak820/keyboards/ajazz/ak820/keymaps/vial/vial.json'
+    for row in previous['profiles']:
+        name = row['profile']
+        if args.historical_builds_root:
+            build = args.historical_builds_root / name
+            files = {'firmware/application.ihx': (build / 'ajazz_ak820_vial.ihx').read_bytes(),
+                     'firmware/application.map': (build / 'ajazz_ak820_vial.map').read_bytes(),
+                     'reports/build-report.json': (build / 'build-report.json').read_bytes(),
+                     'reference/vial.json': definition.read_bytes()}
+            image = settings.load_profile(ROOT, stock, trusted_catalog=source_catalog, release_files=files)
+        else:
+            image = settings.load_profile(args.historical_bundles_root / name, stock, trusted_catalog=source_catalog)
+        expected = row['settings_identity']
+        require(image['ihx_sha256'] == expected['ihx_sha256'] and
+                image['code_sha256'] == expected['code_sha256'], 'Historical build identity differs: ' + name)
+
+
 def prepare(args):
     """Remeasure every image, pack privately, and exercise explicit forward plans."""
     import os
@@ -325,6 +539,21 @@ def prepare(args):
     s._catalog_images(source_catalog)
     require(tuple(row['profile'] for row in old['profiles']) == matrix.candidate_names(),
             'Historical catalog must retain the previous ten-profile catalog')
+    if args.evidence_output is not None:
+        for name in matrix.candidate_names():
+            build = profile_build(args, name)
+            for leaf in ('build-report.json', 'ajazz_ak820_vial.ihx', 'ajazz_ak820_vial.map',
+                         'runtime-stack.json', 'runtime-safety/summary.json',
+                         'runtime-safety/startup.json', 'runtime-safety/irq/results.json'):
+                require((build / leaf).is_file(), 'Missing profile input: ' + name + '/' + leaf)
+            preflight_origin(build, args.profile_origins.get(name, ROOT), args.toolchain)
+        preflight_backup_files(args.source_backups_root, s)
+        preflight_historical_inputs(args, s, stock, source_catalog, old)
+        if args.write_policies:
+            preflight_frozen_backups(args, s, stock, old)
+    if args.evidence_output is not None:
+        # Exclusive reservation assumes no untrusted process can replace parent directories.
+        OUTPUT.mkdir()
     private.mkdir(mode=0o700)
     (private / '.gitignore').write_text('*\n')
     rows, packs, profiles = [], [], {}
@@ -337,7 +566,7 @@ def prepare(args):
         evidence = private / 'measurements' / name
         require({path.name for path in evidence.iterdir()} == {'binding.json', 'matrix.json', 'measurement.log'},
                 'Unexpected original-root measurement output')
-        shutil.copytree(evidence, AUDIT / 'origin-measurements' / name, dirs_exist_ok=True)
+        shutil.copytree(evidence, OUTPUT / 'origin-measurements' / name, dirs_exist_ok=args.evidence_output is None)
         require(row['profile'] == name and row['runtime_status'] == 'exact-image-pass' and
                 row['offline_tests_status'] == 'exact-image-pass', 'Unqualified exact image: ' + name)
         row['reproducible_identity'] = ci.reproducible_identity(build, row['identity'])
@@ -480,14 +709,14 @@ def prepare(args):
                 'source_ihx_sha256': profile['ihx_sha256'], 'source_code_sha256': profile['code_sha256'],
                 'target_ihx_sha256': target['ihx_sha256'], 'target_code_sha256': target['code_sha256'],
                 'matrix_keycode': '0x43f0', 'macro_data_sha256': p.digest(stream), 'passed': True})
-    frozen = AUDIT / 'previous-beta4-catalog.json'
+    frozen = OUTPUT / 'previous-beta4-catalog.json'
     if frozen.exists():
         require(json.loads(frozen.read_text()) == old, 'Frozen historical catalog differs from supplied input')
     else:
-        shutil.copyfile(args.historical_catalog, frozen)
+        copy_evidence(args.historical_catalog, frozen)
     beta_policy.load_previous_catalog(frozen)
-    write(AUDIT / 'settings-catalog-draft.json', catalog)
-    write(AUDIT / 'packing-preflight.json', {'format': 'ak820-caps-word-packing-preflight-1',
+    write(OUTPUT / 'settings-catalog-draft.json', catalog)
+    write(OUTPUT / 'packing-preflight.json', {'format': 'ak820-caps-word-packing-preflight-1',
         'offline_only': True, 'physical_device_commands': 0, 'hardware_validated': False,
         'native_reference_sha256': p.digest(stock), 'profiles': packs})
     transition_matrix = {'format': 'ak820-settings-transition-matrix-2',
@@ -498,8 +727,10 @@ def prepare(args):
         'limitations': ['Default packed fixtures and supplied offline backups; no physical restore proof.',
                         'No transition to historical images is authorized.']}
     beta_policy.validate_transition_matrix(transition_matrix, catalog, old)
-    write(AUDIT / 'transition-preflight.json', transition_matrix)
-    if args.write_policies:
+    write(OUTPUT / 'transition-preflight.json', transition_matrix)
+    if args.write_policies and args.evidence_output is not None:
+        require_frozen_catalog(catalog)
+    if args.write_policies and args.evidence_output is None:
         for target in ('tools/installer/settings-catalog.json', 'web/firmware-matrix.json'):
             write(ROOT / target, catalog)
 

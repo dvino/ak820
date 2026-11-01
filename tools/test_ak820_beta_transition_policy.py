@@ -33,6 +33,71 @@ def backups(catalog):
             for ihx, code in policy.source_identities(catalog).items()}
 
 
+def matrix_fixture(catalog):
+    sources = policy.source_identities(catalog)
+    cases = []
+    for source, code in sources.items():
+        for row in catalog['profiles']:
+            identity = row['settings_identity']
+            cases.append({'source': source, 'source_code_sha256': code,
+                          'target_profile': row['profile'], 'target': identity['ihx_sha256'],
+                          'target_code_sha256': identity['code_sha256'], 'source_case': source,
+                          'passed': True, 'offline_only': True, 'physical_device_commands': 0,
+                          'key_count': 498, 'encoder_count': 12, 'combo_count': 8,
+                          'source_scope': 'offline', 'backup_manifest_sha256': 'a' * 64})
+    caps, macro = [], []
+    for source in catalog['profiles']:
+        for target in catalog['profiles']:
+            case = {'source_profile': source['profile'], 'target_profile': target['profile'],
+                    'source_ihx_sha256': source['settings_identity']['ihx_sha256'],
+                    'source_code_sha256': source['settings_identity']['code_sha256'],
+                    'target_ihx_sha256': target['settings_identity']['ihx_sha256'],
+                    'target_code_sha256': target['settings_identity']['code_sha256'], 'passed': True}
+            caps.append(dict(case, combo_hex='0400160000000000737c'))
+            macro.append(dict(case, matrix_keycode='0x43f0',
+                              macro_data_sha256=hashlib.sha256(b'x' + bytes(16)).hexdigest()))
+    return {'format': 'ak820-settings-transition-matrix-2', 'offline_only': True,
+            'hardware_validated': False, 'physical_device_commands': 0,
+            'sources_per_target': len(sources), 'cases': cases,
+            'caps_word_combo_cases': caps, 'macro_layer_tap_cases': macro}
+
+
+class ActionMatrixTests(unittest.TestCase):
+    def setUp(self):
+        self.old = previous()
+        self.catalog = policy.compose_catalog(fresh(), self.old)
+        self.matrix = matrix_fixture(self.catalog)
+
+    def test_complete_and_reordered(self):
+        policy.validate_transition_matrix(self.matrix, self.catalog, self.old)
+        for field in ('caps_word_combo_cases', 'macro_layer_tap_cases'):
+            self.matrix[field].reverse()
+        policy.validate_transition_matrix(self.matrix, self.catalog, self.old)
+
+    def test_tampered_action_arrays_fail_closed(self):
+        for field in ('caps_word_combo_cases', 'macro_layer_tap_cases'):
+            original = self.matrix[field]
+            invalid = [None, {}, [], original[:-1], original + [original[0]],
+                       [None] + original[1:], [original[1]] + original[1:]]
+            for key, value in [('source_profile', []), ('target_profile', 'historical'),
+                               ('source_ihx_sha256', 'bad'), ('source_code_sha256', 'bad'),
+                               ('target_ihx_sha256', 'bad'), ('target_code_sha256', 'bad'),
+                               ('passed', 1), ('passed', False),
+                               ('combo_hex' if field.startswith('caps') else 'macro_data_sha256', 'bad')]:
+                invalid.append([dict(original[0], **{key: value})] + original[1:])
+            if field.startswith('macro'):
+                invalid.append([dict(original[0], matrix_keycode='bad')] + original[1:])
+            for value in invalid:
+                with self.subTest(field=field, value=str(value)[:80]):
+                    matrix = dict(self.matrix, **{field: value})
+                    with self.assertRaises(ValueError):
+                        policy.validate_transition_matrix(matrix, self.catalog, self.old)
+            matrix = dict(self.matrix)
+            del matrix[field]
+            with self.assertRaises(ValueError):
+                policy.validate_transition_matrix(matrix, self.catalog, self.old)
+
+
 class PreviousBetaPolicyTests(unittest.TestCase):
     def test_only_previous_published_profiles_retained_without_mutation(self):
         old, new = previous(), fresh()

@@ -2,7 +2,19 @@
 
 # Project status
 
-## Current source experiment
+## Current candidate
+
+The current main image ends at `0xc6a5`, below the exclusive `0xc700` CODE
+limit. Its offline stack bound is 165 of 183 bytes. All ten profiles passed
+CI qualification in [CI run 41297661542](https://github.com/dvino/ak820/actions/runs/41297661542),
+but release assembly failed on stale exact-image safety witnesses; publication
+and physical validation remain unconfirmed.
+
+## Earlier source experiments
+
+The following section records the candidate and inspection state before
+2026-11-01. Present-tense statements in it describe that earlier state, not the
+current candidate or the CI result above.
 
 The permissive-hold action seam is experimental, disabled and not wired into
 catalog builds. A synthetic SDCC test of a deliberately nested callback found
@@ -126,8 +138,8 @@ admitted. Beta.4 and beta.4.1 images have identical image identities, so they
 cannot be distinguished by image identity. This policy does not qualify the
 candidate, authorize settings writes or establish physical restore behavior.
 
-This candidate policy is separate from the original published beta.5 results
-below; completed candidate migration qualification or publication is not claimed.
+These are historical candidate-policy observations; they do not establish
+qualification or publication of the current beta.5 candidate.
 
 The source candidate adds runtime Leader timeout storage and a linked default
 marker. Focused host tests cover the codec, synthetic marker checks and blocked
@@ -214,7 +226,10 @@ build metadata do not identify this option; see [Compact Auto Shift](COMPACT_AUT
 
 ## v0.6.0-beta.5
 
-[Beta.5](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.5) is published. All ten profiles passed offline exact-image qualification (36 base suites, 356 unit tests and zero skips per profile, plus profile-specific suites). The release CI also revalidated and assembled all ten images. Settings migration was checked offline for beta.3, beta.4, beta.4.1 and beta.5 sources to beta.5 targets. The catalog authorizes installation only for its exact images; settings writes and hardware validation remain false. No physical keyboard test is claimed.
+Beta.5 is not yet published. The ten profiles passed offline qualification in
+CI run 41297661542, but release assembly failed because the configuration differs from the reviewed
+exact-image witness. The safety evidence must be updated and checked before
+release. No physical keyboard test is claimed.
 
 ## v0.6.0-beta.4, published 2026-10-28
 

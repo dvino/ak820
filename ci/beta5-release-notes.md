@@ -5,9 +5,10 @@ and settings catalogs. Typing, Code, Pointer and Multi-OS add Tap Dance;
 Creative adds NKRO control; Shortcuts adds Dynamic Macros and NKRO control.
 See the profile documentation for the full feature sets and limitations.
 
-Settings backups now retain the Leader key timeout together with the other
-settings, so a restore returns the timeout to the value saved from the
-source image.
+Leader-enabled firmware adds build-time and runtime timeout settings from
+1 to 1000 ms, with a 300 ms default. Current clients do not expose the runtime
+setting. Settings backups retain the timeout, but settings writes, including
+restore and transfer, are not authorized in beta.5.
 
 Caps Word gestures (both Shifts, double left Shift) are build-time switches
 now; the default profile behavior is unchanged. Profiles that enable Mouse
@@ -20,7 +21,5 @@ be distinguished by image identity. Other source identities are unsupported.
 Back up settings before updating; image identity and compatibility checks
 remain mandatory.
 
-The release is based on offline build, simulator, packing and migration
-checks. It has **not** been validated on physical hardware. Settings writes
-remain separately gated; follow the installation guide and retain a recovery
-backup.
+This release has **not** been validated on physical hardware. Follow the
+installation guide and retain a recovery backup.

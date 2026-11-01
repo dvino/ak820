@@ -168,4 +168,28 @@ def validate_transition_matrix(matrix, catalog, previous):
         source_records[source] = binding
     require(seen == {(source, name) for source in sources for name in targets},
             'Incomplete beta transition source/target pairs')
+    expected_pairs = {(source, target) for source in targets for target in targets}
+    for field, payload, expected in (
+        ('caps_word_combo_cases', 'combo_hex', '0400160000000000737c'),
+        ('macro_layer_tap_cases', 'macro_data_sha256', hashlib.sha256(b'x' + bytes(16)).hexdigest()),
+    ):
+        actions = matrix.get(field)
+        require(type(actions) is list and len(actions) == len(expected_pairs),
+                'Incomplete action transition cases: ' + field)
+        action_seen = set()
+        for case in actions:
+            require(type(case) is dict, 'Invalid action transition case')
+            source, target = case.get('source_profile'), case.get('target_profile')
+            require(type(source) is str and type(target) is str and
+                    (source, target) in expected_pairs and (source, target) not in action_seen,
+                    'Invalid or duplicate action transition pair')
+            require(case.get('passed') is True and case.get(payload) == expected and
+                    (field != 'macro_layer_tap_cases' or case.get('matrix_keycode') == '0x43f0'),
+                    'Invalid action transition payload')
+            for side, name in (('source', source), ('target', target)):
+                require(all(case.get(side + '_' + key) == targets[name][key]
+                            for key in ('ihx_sha256', 'code_sha256')),
+                        'Action transition image identity differs')
+            action_seen.add((source, target))
+        require(action_seen == expected_pairs, 'Incomplete action transition pairs')
     return sources

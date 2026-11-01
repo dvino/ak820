@@ -60,12 +60,10 @@ GUI lock remains in `game` and `mmo`, not `main`. Other profiles provide NKRO,
 Tap Dance, Space Cadet, Grave Escape,
 Mouse Keys or modifier swaps by exchanging selected modules.
 
-The beta.5 release is published with Python installation scripts for Windows
-and Linux x86_64. Standalone GUI installers are not planned. Its catalog authorizes
-only the exact beta.5 images for installation through compatible clients; it does
-not claim hardware validation or authorize settings writes. See
-[Status](docs/STATUS.md) for release and hardware limits, and the
-[feature catalog](docs/FEATURES.md) for function details.
+Beta.5 is being prepared with Python installation scripts for Windows and Linux
+x86_64. Standalone GUI installers are not planned. Publication and hardware
+validation are not yet confirmed. See [Status](docs/STATUS.md) for release and
+hardware limits, and the [feature catalog](docs/FEATURES.md) for function details.
 
 ## Disclaimer
 

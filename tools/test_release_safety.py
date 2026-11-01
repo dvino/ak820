@@ -16,6 +16,21 @@ import ak820_release_safety as gate
 from ak820_profiles import configuration
 
 
+def action_cases(rows):
+    caps, macro = [], []
+    for source in rows:
+        for target in rows:
+            case = {'source_profile': source['profile'], 'target_profile': target['profile'],
+                    'source_ihx_sha256': source['settings_identity']['ihx_sha256'],
+                    'source_code_sha256': source['settings_identity']['code_sha256'],
+                    'target_ihx_sha256': target['settings_identity']['ihx_sha256'],
+                    'target_code_sha256': target['settings_identity']['code_sha256'], 'passed': True}
+            caps.append(dict(case, combo_hex='0400160000000000737c'))
+            macro.append(dict(case, matrix_keycode='0x43f0',
+                              macro_data_sha256=hashlib.sha256(b'x' + bytes(16)).hexdigest()))
+    return caps, macro
+
+
 class ReleaseSafetyTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -81,6 +96,7 @@ class ReleaseSafetyTests(unittest.TestCase):
                     'key_count': 498, 'encoder_count': 12, 'combo_count': 8,
                     'source_scope': 'Synthetic policy unit model; no device capture',
                     'backup_manifest_sha256': gate.sha(source.encode())})
+        self.matrix['caps_word_combo_cases'], self.matrix['macro_layer_tap_cases'] = action_cases(rows)
         self.write('audit/settings-catalog-draft.json', json.dumps(self.catalog).encode())
         self.write('audit/transition-preflight.json', json.dumps(self.matrix).encode())
         log = self.write('evidence/transition.log', b'synthetic successful log')
@@ -249,6 +265,8 @@ class ReleaseSafetyTests(unittest.TestCase):
 
     def test_reject_semantically_invalid_matrix_even_with_rebound_hash(self):
         for mutation in (
+            lambda m: m['caps_word_combo_cases'][0].update(combo_hex='bad'),
+            lambda m: m['macro_layer_tap_cases'][0].update(target_code_sha256='0' * 64),
             lambda m: m['cases'].pop(),
             lambda m: m['cases'].__setitem__(1, copy.deepcopy(m['cases'][0])),
             lambda m: m['cases'][0].update(source='f1c4347e60ca5f7ea6c557debe60272259f4ddf9acfac9897fa992210bf7ef2e'),
@@ -420,6 +438,7 @@ class ReleaseSafetyTests(unittest.TestCase):
             if case['target_profile'] == 'game':
                 case['target'] = rows[1]['settings_identity']['ihx_sha256']
                 case['target_code_sha256'] = rows[1]['settings_identity']['code_sha256']
+        matrix['caps_word_combo_cases'], matrix['macro_layer_tap_cases'] = action_cases(rows)
         self.write('audit/settings-catalog-draft.json', json.dumps(catalog).encode())
         self.write('audit/transition-preflight.json', json.dumps(matrix).encode())
         witness = self.producer.produce_transition_evidence(
