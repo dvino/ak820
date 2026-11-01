@@ -10,6 +10,11 @@ CI qualification in [CI run 41297661542](https://github.com/dvino/ak820/actions/
 but release assembly failed on stale exact-image safety witnesses; publication
 and physical validation remain unconfirmed.
 
+A fresh split offline run qualified all ten images and remeasured their linked,
+stack, interrupt and regression evidence together. Draft release preparation
+then stopped at the pending settings v3 identity gate; this run does not approve
+a release, a settings write or a physical restore.
+
 ## Earlier source experiments
 
 The following section records the candidate and inspection state before
@@ -226,7 +231,7 @@ build metadata do not identify this option; see [Compact Auto Shift](COMPACT_AUT
 
 ## v0.6.0-beta.5
 
-Beta.5 is not yet published. The ten profiles passed offline qualification in
+The current beta.5 candidate is not yet published. The ten profiles passed offline qualification in
 CI run 41297661542, but release assembly failed because the configuration differs from the reviewed
 exact-image witness. The safety evidence must be updated and checked before
 release. No physical keyboard test is claimed.

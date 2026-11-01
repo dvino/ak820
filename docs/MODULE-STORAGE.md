@@ -2,11 +2,12 @@
 
 # Module settings storage
 
-All ten current beta.2 profiles use NVM schema `0x082003`. The low-level packer API defaults to legacy schema `0x082002` unless a target
-schema is selected explicitly. The beta.2 profile build selects schema `0x082003`;
-the low-level API default does not change its format.
-The schema adds typed storage for eight Tap Dance entries, eight Key Override
-entries and QMK Settings.
+The current candidate uses NVM schema `0x082003` in all ten profiles. The
+low-level packer API defaults to legacy schema `0x082002` unless a target schema
+is selected explicitly; profile builds select their schema independently. Schema
+`0x082003` adds typed storage for eight Tap Dance entries, eight Key Override
+entries and QMK Settings. This describes source state, not a published or
+qualified release.
 
 The six keymap layers, encoder table at `0x640`, eight ten-byte Combos at
 `0x658`, macro metadata at `0x7f0` and macro buffer at `0x800..0x27ff`
@@ -23,14 +24,20 @@ Each entry table places rows 0–5 at `base + index*10` and rows 6–7 at
 `base + 64 + (index-6)*10`. A row never crosses a 64-byte journal page.
 Padding is reserved.
 
-The settings record starts with `QS`, version 1, payload length 11 and
-capabilities `0x3f`. Grave Escape flags occupy byte 5. Little-endian words
-at 6, 8, 10, 12 and 14 store Combo term, tapping term, tap delay, Caps Lock
-delay and Auto Shift timeout. Defaults are 0, 40, 200, 0, 80 and 175.
-Terms and Auto Shift timeout accept 1–1000 ms; delays accept 0–100 ms;
-Grave Escape flags accept 0–15. Bytes 16–21 are zero. Bytes 22–23 hold
-CRC16-CCITT, initial value `0xffff`, over bytes 0–21, little endian.
-An entirely zero or erased record means defaults. Other invalid records fail.
+The 24-byte `QS` record has three versions: v1 length 11/capabilities `0x3f`,
+v2 length 15/`0x7f`, and v3 length 17/`0xff`. All use CRC16-CCITT (initial
+`0xffff`) over bytes 0–21, stored little endian at 22–23. Common values are
+Grave Escape flags (byte 5, 0–15), Combo term (6), tapping term (8), tap delay
+(10), Caps Lock delay (12) and Auto Shift timeout (14). Defaults are 0, 40,
+200, 0, 80 and 175; terms/timeouts accept 1–1000 ms and delays 0–100 ms.
+Version 2 adds QSID 3 at byte 16 (one byte, 0–29; valid bits 0, 2–4), QSID
+6 at byte 18 (two bytes, 0–30000), and QSID 22 at byte 17 (one-bit boolean).
+Version 3 retains QSID 22 at byte 17 and adds QSID 23, a little-endian Leader
+timeout of 1–1000 ms at bytes 20–21; its default comes from the exact target
+image. Firmware treats all-zero
+or all-`ff` records as defaults; malformed nonblank records fail. Offline backup
+must not infer unknown source values from that behavior: blank v2/v3 records are
+rejected when source QSID 22 cannot be authenticated.
 
 Tap Dance outputs accept KC_NO or basic and modified basic keycodes below
 `0x2000`, with low byte `0x04..0xa4` or `0xe0..0xe7`. Term zero means
@@ -51,12 +58,12 @@ values as active settings. It will stop before writing if a backup contains
 inactive values that cannot be reproduced by the target.
 
 `pack.migrate_vial_nvm(..., target_build_id=pack.EXTENSION_BUILD_ID)` explicitly
-initializes schema `0x082003` from schema `0x082001` or `0x082002`. Schema02
-fields, including nonempty Combos, are copied. Existing schema01 macro capacity
-checks still apply. Copies already using schema03 remain byte exact; downgrade
-to schema02 is rejected. Low-level `pack` and `verify_payload` also require an
-explicit target to produce schema03. The ordinary low-level packaging default
-remains schema02.
+migrates NVM schemas `0x082001` or `0x082002` to `0x082003`. Schema02 fields,
+including nonempty Combos, are copied; schema01 macro capacity checks remain.
+Settings records migrate monotonically v1→v2/v3 and v2→v3; downgrade is
+rejected. Adding QSID 23 requires the exact target-image Leader default.
+Low-level `pack` and `verify_payload` require an explicit target for schema03;
+the ordinary low-level packaging default remains schema02.
 
 The installer uses typed backup format `ak820-settings-backup-2` for these
 profiles. It includes all extension tables and settings, and checks exact image
@@ -66,10 +73,11 @@ when target tables are empty and QMK Settings are at defaults. A schema03
 backup cannot be restored to schema02. The approved profile image identities
 and offline transition limits are in [Status](STATUS.md).
 
-Format and schema support do not admit an image as a candidate settings source
-or restore target. The separate exact-image policy in
-[Settings backup and restore](SETTINGS-BACKUP.md) must also pass; support for
-legacy formats does not admit beta.3 sources or authorize settings writes.
+Format and schema support do not admit an image as a settings source or restore
+target. The separate exact-image policy in [Settings backup and
+restore](SETTINGS-BACKUP.md) must also pass. Current candidate v3 loading,
+restore planning and protocol writes remain blocked; offline codec support does
+not qualify images or authorize settings writes.
 
 Direct RGB palette values and volatile module state are not part of the backup.
 A value that the target cannot reproduce stops restore before its first write.

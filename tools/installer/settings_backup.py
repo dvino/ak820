@@ -89,7 +89,15 @@ def _json(raw):
 
 
 def load_profile(bundle, native_backup, *, trusted_catalog=None, release_files=None):
-    """Reconstruct exact packed CODE from approved inputs and valid OEM bytes.
+    """Reconstruct a production-facing profile; v3 remains blocked."""
+    profile = _load_profile_offline(bundle, native_backup, trusted_catalog=trusted_catalog, release_files=release_files)
+    if profile['compatible_images'][profile['ihx_sha256']].get('settings_record_version') == 3:
+        raise ValueError('Settings v3 exact-image qualification and identity gates are pending')
+    return profile
+
+
+def _load_profile_offline(bundle, native_backup, *, trusted_catalog=None, release_files=None):
+    """Reconstruct exact packed CODE from candidate inputs and valid OEM bytes.
 
     The installer must separately validate release approval. The optional
     trusted matrix supplies development settings contracts for offline/desktop
@@ -134,7 +142,6 @@ def load_profile(bundle, native_backup, *, trusted_catalog=None, release_files=N
         map_text = (mapfile.read_bytes() if release_files is None else release_files['firmware/application.map']).decode('ascii')
         require(ak820_leader_marker.extract(map_text, code, payload[:pack.CODE_END-pack.APP_START]) == image['leader_default'],
                 'Leader default differs from the exact packed image')
-        raise ValueError('Settings v3 exact-image qualification and identity gates are pending')
     return {'payload': payload, 'backup': native_backup, 'native_backup': native_backup,
             'definition': definition, 'code': code,
             'definition_sha256': pack.digest(canonical(definition)), 'schema': schema,
@@ -731,6 +738,19 @@ def macro_chunks(stream):
 
 
 def plan_restore(backup, profile, target_nvm=None):
+    """Plan a production-facing restore; v3 remains blocked."""
+    prepared = _prepare_restore(backup, profile, target_nvm)
+    if prepared[5].get('settings_record_version', 1) == 3:
+        raise ValueError('Settings v3 exact-image qualification and identity gates are pending')
+    return _plan_restore_prepared(*prepared)
+
+
+def _plan_restore_offline(backup, profile, target_nvm=None):
+    """Compute unapproved offline evidence, not permission to write."""
+    return _plan_restore_prepared(*_prepare_restore(backup, profile, target_nvm))
+
+
+def _prepare_restore(backup, profile, target_nvm):
     backup = validate_backup(backup['path'], profile, backup['identity'])
     target_nvm = bytes(target_nvm if target_nvm is not None else
                        profile['payload'][pack.NVM_START-pack.APP_START:pack.NVM_END-pack.APP_START])
@@ -739,16 +759,18 @@ def plan_restore(backup, profile, target_nvm=None):
     require(not ('extensions' in backup['settings'] and target_schema != extensions.SCHEMA), 'Schema03 backup downgrade is forbidden')
     require(target_schema == _profile_images(profile)[profile['ihx_sha256']]['build_id'],
             'Target NVM schema differs from exact image')
-    settings, nvm = backup['settings'], backup['nvm']
-    target_identity = (profile['ihx_sha256'], profile['code_sha256'])
     images = list(_profile_images(profile).values())
     target_image = _profile_images(profile)[profile['ihx_sha256']]
+    source_image = _profile_images(profile)[backup['source_identity'][0]]
+    return backup, profile, target_nvm, target_schema, images, target_image, source_image
+
+
+def _plan_restore_prepared(backup, profile, target_nvm, target_schema, images, target_image, source_image):
+    settings, nvm = backup['settings'], backup['nvm']
+    target_identity = (profile['ihx_sha256'], profile['code_sha256'])
     target_features = target_image.get('features', ())
     target_version = target_image.get('settings_record_version', 1)
     target_default = target_image.get('leader_default', {}).get('milliseconds')
-    source_image = _profile_images(profile)[backup['source_identity'][0]]
-    if target_version == 3:
-        raise ValueError('Settings v3 exact-image qualification and identity gates are pending')
     require(set(target_features) <= MODULE_FEATURES, 'Unknown settings feature profile')
     source_rank = next(i for i, image in enumerate(images)
                        if (image['ihx_sha256'], image['code_sha256']) == backup['source_identity'])

@@ -118,7 +118,7 @@ class EvidenceOutput(unittest.TestCase):
         old = {'profiles': [{'profile': name, 'settings_identity': {'ihx_sha256': 'good', 'code_sha256': 'good'}} for name in names]}
         fake = types.SimpleNamespace(pack=types.SimpleNamespace(validate_native=lambda *a: None),
                     _catalog_images=lambda catalog: None,
-                    load_profile=lambda *a, **k: {'ihx_sha256': 'bad', 'code_sha256': 'good'})
+                    _load_profile_offline=lambda *a, **k: {'ihx_sha256': 'bad', 'code_sha256': 'good'})
         modules = {'settings_backup': fake, 'firmware_matrix': types.SimpleNamespace(candidate_names=lambda: tuple(names)),
                    'build_ci_release': types.SimpleNamespace()}
         private = self.root.parent / (self.root.name + '-private')
@@ -174,8 +174,8 @@ class EvidenceOutput(unittest.TestCase):
             if profile['ihx_sha256'] == names[-1]:
                 raise ValueError('Unsupported keycode')
         fake = types.SimpleNamespace(pack=types.SimpleNamespace(validate_native=lambda *a: None),
-                 _catalog_images=lambda catalog: None, load_profile=load_profile,
-                 validate_backup=lambda *a: {'source_identity': ('source', 'code')}, plan_restore=plan)
+                 _catalog_images=lambda catalog: None, _load_profile_offline=load_profile,
+                 validate_backup=lambda *a: {'source_identity': ('source', 'code')}, _plan_restore_offline=plan)
         old = {'profiles': rows}
         modules = {'settings_backup': fake, 'firmware_matrix': types.SimpleNamespace(candidate_names=lambda: tuple(names)),
                    'build_ci_release': types.SimpleNamespace()}
@@ -257,7 +257,7 @@ class EvidenceOutput(unittest.TestCase):
         fake_settings = types.SimpleNamespace(pack=fake_pack, _catalog_images=lambda *a: None,
             _read_file=settings._read_file, _json=settings._json, _record=settings._record,
             FORMAT=settings.FORMAT, FORMAT_V2=settings.FORMAT_V2, FILES=settings.FILES,
-            load_profile=lambda *a, **k: {}, validate_backup=settings.validate_backup)
+            _load_profile_offline=lambda *a, **k: {}, validate_backup=settings.validate_backup)
         fake_matrix = types.SimpleNamespace(candidate_names=lambda: tuple(names), matrix=lambda rows: {})
         fake_ci = types.SimpleNamespace(reproducible_identity=lambda *a: {})
         modules = {'settings_backup': fake_settings, 'firmware_matrix': fake_matrix,
@@ -364,7 +364,7 @@ class EvidenceOutput(unittest.TestCase):
         (backup / 'manifest.json').write_text('{}')
         args = types.SimpleNamespace(build_overrides={}, builds_root=build.parent,
                                      source_backups_root=backup.parent, source_rom=[], source_bundle=[])
-        settings = types.SimpleNamespace(load_profile=lambda *a, **k: {'ihx_sha256': 'a' * 64, 'code_sha256': 'b' * 64},
+        settings = types.SimpleNamespace(_load_profile_offline=lambda *a, **k: {'ihx_sha256': 'a' * 64, 'code_sha256': 'b' * 64},
             validate_backup=lambda *a: (_ for _ in ()).throw(ValueError('invalid NVM')))
         with patch.object(producer.beta_policy, 'validate_catalog_scope'), \
              patch.object(subprocess, 'run') as run, self.assertRaisesRegex(ValueError, 'invalid NVM'):
@@ -372,6 +372,55 @@ class EvidenceOutput(unittest.TestCase):
         run.assert_not_called()
         self.assertFalse((self.root / 'audits/new').exists())
         self.assertEqual([json.loads(p.read_text()) for p in installed], [catalog, catalog])
+
+    def test_frozen_preflight_rejects_authenticated_v3_unrestorable_backup(self):
+        settings_path = str(HERE.parents[1] / 'tools/installer')
+        with patch.object(sys, 'path', [settings_path] + sys.path):
+            import test_catalog_settings as fixtures
+        settings = fixtures.s
+        profile, row = fixtures.profile_for('main', 191)
+        catalog = fixtures.catalog_for(row)
+        fixtures.bind(catalog, profile)
+        raw_catalog = json.dumps(catalog).encode()
+        installed = [self.root / 'tools/installer/settings-catalog.json',
+                     self.root / 'web/firmware-matrix.json']
+        for path in installed:
+            path.write_bytes(raw_catalog)
+        policy = self.root / 'ci/profiles/main/release-policy.json'
+        policy.parent.mkdir(parents=True)
+        policy.write_bytes(b'unchanged policy')
+        build = self.root / 'qmk-8051-ak820/build/main'
+        build.mkdir(parents=True)
+        for name in ('ajazz_ak820_vial.ihx', 'ajazz_ak820_vial.map', 'build-report.json'):
+            (build / name).write_bytes(b'synthetic')
+        definition = self.root / 'qmk-8051-ak820/keyboards/ajazz/ak820/keymaps/vial/vial.json'
+        definition.parent.mkdir(parents=True)
+        definition.write_bytes(b'{}')
+        backup = self.root / 'backups/one'
+        backup.mkdir(parents=True)
+        fixtures.backup_at(backup, profile)
+        args = types.SimpleNamespace(build_overrides={}, builds_root=build.parent,
+                                     source_backups_root=backup.parent, source_rom=[], source_bundle=[])
+        # Synthetic profile reconstruction is substituted; backup validation and planning are real.
+        settings_proxy = types.SimpleNamespace(_load_profile_offline=lambda *a, **k: profile,
+            validate_backup=settings.validate_backup, _plan_restore_offline=settings._plan_restore_offline)
+        with patch.object(producer.beta_policy, 'validate_catalog_scope'), \
+             patch.object(producer.beta_policy, 'source_identities',
+                          return_value={profile['ihx_sha256']: profile['code_sha256']}), \
+             patch.object(subprocess, 'run') as run:
+            producer.preflight_frozen_backups(args, settings_proxy, b'stock', {})
+            nvm = bytearray(profile['payload'][fixtures.p.NVM_START-fixtures.p.APP_START:
+                                               fixtures.p.NVM_END-fixtures.p.APP_START])
+            nvm[2] ^= 1
+            fixtures.backup_at(backup, profile, nvm)
+            before = {path: path.read_bytes() for path in self.root.rglob('*') if path.is_file()}
+            dirs = {path for path in self.root.rglob('*') if path.is_dir()}
+            with self.assertRaisesRegex(ValueError, 'Core NVM configuration'):
+                producer.preflight_frozen_backups(args, settings_proxy, b'stock', {})
+            self.assertEqual({path: path.read_bytes() for path in self.root.rglob('*') if path.is_file()}, before)
+            self.assertEqual({path for path in self.root.rglob('*') if path.is_dir()}, dirs)
+            run.assert_not_called()
+        self.assertFalse((self.root / 'audits/new').exists())
 
     def test_policy_rejects_unplanned_rom_and_bundle_fixtures(self):
         for leaf in ('tools/installer/settings-catalog.json', 'web/firmware-matrix.json'):

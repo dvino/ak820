@@ -4,9 +4,11 @@
 
 **Beta.5 does not authorize settings writes.** Catalog approval, image
 recognition and offline migration checks do not authorize restore or settings
-transfer. The guidance below describes restore only if writes become authorized.
+transfer. Backup and export for the current candidate's v3 images are also
+blocked pending exact-image qualification. The guidance below describes backup
+where supported and restore only if writes become authorized.
 
-Use the Python installer script to save settings. For a permitted restore, the
+For a supported image, use the Python installer script to save settings. For a permitted restore, the
 script checks the exact firmware image and stops if the saved data is unsupported. Settings
 restore does not change the selected profile or save Direct colors to EEPROM.
 The selected profile must have its complete, exactly approved release assets.
@@ -29,7 +31,7 @@ python3 tools/installer/ak820.py --profile main backup --help
 python3 tools/installer/ak820.py --profile main restore --help
 ```
 
-Supply paths as arguments: `backup --session OEM_DIR --output BACKUP_DIR`
+For a supported image, supply paths as arguments: `backup --session OEM_DIR --output BACKUP_DIR`
 uses the original private OEM recovery session (`permanent-session` inside
 the installation session folder) and a separate settings backup directory. If settings writes become authorized, restore uses
 `restore --session OEM_DIR --backup BACKUP_DIR`. These are subcommands of the
@@ -39,8 +41,8 @@ and outside source control. See [installation](INSTALL.md) for setup.
 
 ## What is saved
 
-The durable settings backup contains key and encoder assignments, macros,
-supported options and RGB settings. The typed schema 03 format also preserves
+The durable settings backup format covers key and encoder assignments, macros,
+supported options and RGB settings; format support does not make v3 export available. The typed schema 03 format also preserves
 the supported extension data. Exact image identities and permitted transitions
 are checked before restore. Unsupported keycodes, extension entries, settings,
 or profile transitions stop restore before its first settings write.
@@ -57,21 +59,32 @@ palette readback. This API does not select Direct mode or save the palette to
 EEPROM. Older backups without the sidecar cannot recover Direct colors. See
 [Direct palette](DIRECT.md) for the protocol and limits.
 
-For the original published beta.5, recognized settings sources are the exact published beta.3, beta.4,
-beta.4.1 and beta.5 images; targets must be beta.5 images. This recognition and
-offline transition testing do not authorize settings writes: the beta.5 catalog
-keeps `settings_writes_authorized` false. Other release sources are unsupported.
-Transitions between profiles of the current release must be explicitly listed
-and still pass schema, feature and value checks. Keep configuration
-software closed during backup; the firmware does not pause while settings are
-read. A failed read, timeout or mismatch stops the operation.
+The original beta.5 release was published on 2026-10-29. Preserved release
+metadata records 16 assets, the release notes, and beta.3, beta.4, beta.4.1
+and the original beta.5 images as settings sources with beta.5 targets. Handoff evidence records passing
+release CI run `40826926074`, verification of 16 release-file SHA256 values,
+and a match between the ten published IHX files and then-qualified local
+images. The release is no longer available at its former GitHub page. These
+historical checks do not qualify the current candidate or establish physical
+behavior. Its catalog keeps `settings_writes_authorized` false. Other release
+sources are unsupported. Transitions between profiles of a release must be
+explicitly listed and pass schema, feature and value checks. Keep configuration
+software closed during backup; firmware does not pause while settings are read.
+A failed read, timeout or mismatch stops the operation.
 
-The current, unqualified candidate admits only authenticated published beta.4.1
-profile image identities and its own current profile image identities as settings
-sources; restore targets are candidate profiles only. Beta.3 sources are not
-admitted. Beta.4 and beta.4.1 images have identical image identities, so they
-cannot be distinguished by image identity. This policy does not qualify the
-candidate, authorize settings writes or establish physical restore behavior.
+The current local tag `v0.6.0-beta.5` points to commit
+`2ab372dab7f084b76b57aa98a9543c249a6d0c30`, tagged 2026-11-01. Do not identify
+this candidate with the earlier release: its release page is unavailable, and
+the current candidate has not been qualified for release.
+
+The current candidate for possible re-publication is not release-qualified. Its policy
+admits only authenticated beta.4.1 profile identities and its own current
+profile identities as settings sources; targets are candidate profiles only.
+Beta.3 sources are not admitted. Beta.4 and beta.4.1 images have identical
+image identities, so they cannot be distinguished by image identity. The v3
+exact-image loading and migration gates remain pending. This policy does not
+qualify the candidate, authorize settings writes or establish physical restore
+behavior.
 
 The backup format and migration rules are described in
 [module storage](MODULE-STORAGE.md). Current release identities and status are

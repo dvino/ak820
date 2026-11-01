@@ -467,7 +467,7 @@ def preflight_frozen_backups(args, settings, stock, previous):
                  'firmware/application.map': (build / 'ajazz_ak820_vial.map').read_bytes(),
                  'reports/build-report.json': (build / 'build-report.json').read_bytes(),
                  'reference/vial.json': definition.read_bytes()}
-        profile = settings.load_profile(ROOT, stock, trusted_catalog=catalog, release_files=files)
+        profile = settings._load_profile_offline(ROOT, stock, trusted_catalog=catalog, release_files=files)
         expected = row['settings_identity']
         require(profile['ihx_sha256'] == expected['ihx_sha256'] and
                 profile['code_sha256'] == expected['code_sha256'],
@@ -480,7 +480,7 @@ def preflight_frozen_backups(args, settings, stock, previous):
             ihx, code = backup['source_identity']
             require(identities.get(ihx) == code, 'Backup image absent from retained catalog')
             for profile in profiles:
-                settings.plan_restore(backup, profile)
+                settings._plan_restore_offline(backup, profile)
 
 
 def preflight_historical_inputs(args, settings, stock, source_catalog, previous):
@@ -495,9 +495,9 @@ def preflight_historical_inputs(args, settings, stock, source_catalog, previous)
                      'firmware/application.map': (build / 'ajazz_ak820_vial.map').read_bytes(),
                      'reports/build-report.json': (build / 'build-report.json').read_bytes(),
                      'reference/vial.json': definition.read_bytes()}
-            image = settings.load_profile(ROOT, stock, trusted_catalog=source_catalog, release_files=files)
+            image = settings._load_profile_offline(ROOT, stock, trusted_catalog=source_catalog, release_files=files)
         else:
-            image = settings.load_profile(args.historical_bundles_root / name, stock, trusted_catalog=source_catalog)
+            image = settings._load_profile_offline(args.historical_bundles_root / name, stock, trusted_catalog=source_catalog)
         expected = row['settings_identity']
         require(image['ihx_sha256'] == expected['ihx_sha256'] and
                 image['code_sha256'] == expected['code_sha256'], 'Historical build identity differs: ' + name)
@@ -605,7 +605,7 @@ def prepare(args):
             (build / 'build-report.json', 'reports/build-report.json'),
             (ROOT / 'qmk-8051-ak820/keyboards/ajazz/ak820/keymaps/vial/vial.json', 'reference/vial.json')):
             shutil.copyfile(source, bundle / dest)
-        return s.load_profile(bundle, stock, trusted_catalog=contracts)
+        return s._load_profile_offline(bundle, stock, trusted_catalog=contracts)
 
     for name in matrix.candidate_names():
         profiles[name] = load_build(profile_build(args, name), name, catalog)
@@ -625,7 +625,7 @@ def prepare(args):
         require(separator and label and label not in ('.', '..') and
                 all(char.isalnum() or char in '-_' for char in label), 'Invalid source bundle label')
         require(label not in backups, 'Duplicate source fixture label: ' + label)
-        profile = s.load_profile(Path(filename), stock, trusted_catalog=catalog)
+        profile = s._load_profile_offline(Path(filename), stock, trusted_catalog=catalog)
         require(profile['ihx_sha256'] in all_sources, 'Historical bundle image absent from retained catalog')
         rom = bytearray(stock)
         rom[p.APP_START:p.APP_END] = profile['payload']
@@ -635,7 +635,7 @@ def prepare(args):
         for name in matrix.candidate_names():
             profile = (load_build(args.historical_builds_root / name, 'historical-' + name, source_catalog)
                        if args.historical_builds_root else
-                       s.load_profile(args.historical_bundles_root / name, stock, trusted_catalog=source_catalog))
+                       s._load_profile_offline(args.historical_bundles_root / name, stock, trusted_catalog=source_catalog))
             expected = next(row['settings_identity'] for row in old['profiles'] if row['profile'] == name)
             require(profile['ihx_sha256'] == expected['ihx_sha256'] and
                     profile['code_sha256'] == expected['code_sha256'], 'Historical build identity differs: ' + name)
@@ -658,7 +658,7 @@ def prepare(args):
     cases = []
     for name, profile in profiles.items():
         for label, backup in backups.items():
-            plan = s.plan_restore(backup, profile)
+            plan = s._plan_restore_offline(backup, profile)
             cases.append({'source': backup['source_identity'][0], 'target': profile['ihx_sha256'],
                 'source_code_sha256': backup['source_identity'][1],
                 'target_code_sha256': profile['code_sha256'],
@@ -677,7 +677,7 @@ def prepare(args):
         rom[at:at+10] = s.DeviceAPI.stored_combo(action)
         backup = make_backup(private / 'backups' / ('caps-word-' + name), bytes(rom), profile)
         for target_name, target in profiles.items():
-            plan = s.plan_restore(backup, target)
+            plan = s._plan_restore_offline(backup, target)
             require(plan['combo_entries'][0] == action.hex(), 'Caps Word Combo changed during planning')
             action_cases.append({'source_profile': name, 'target_profile': target_name,
                                  'source_ihx_sha256': profile['ihx_sha256'],
@@ -699,7 +699,7 @@ def prepare(args):
         require(any(key['keycode'] == 0x43F0 for key in backup['settings']['keys']),
                 'Macro Layer-Tap fixture key was lost')
         for target_name, target in profiles.items():
-            plan = s.plan_restore(backup, target)
+            plan = s._plan_restore_offline(backup, target)
             require(b''.join(chunk for offset, chunk in plan['macro_chunks']) == stream,
                     'Tap macro bytes changed during planning')
             require(s.image_keycode_supported(0x43F0,

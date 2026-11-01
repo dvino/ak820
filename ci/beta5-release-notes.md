@@ -7,18 +7,20 @@ See the profile documentation for the full feature sets and limitations.
 
 Leader-enabled firmware adds build-time and runtime timeout settings from
 1 to 1000 ms, with a 300 ms default. Current clients do not expose the runtime
-setting. Settings backups retain the timeout, but settings writes, including
-restore and transfer, are not authorized in beta.5.
+setting. The settings format includes the timeout, but backup and export for
+v3 images are not yet available. Settings writes, including restore and
+transfer, are not authorized in beta.5.
 
 Caps Word gestures (both Shifts, double left Shift) are build-time switches
 now; the default profile behavior is unchanged. Profiles that enable Mouse
 Keys accept build-time overrides for the cursor and wheel step and period.
 
-Settings migration recognizes the exact published beta.4.1 image identities
-and current image identities; restore targets must be current beta.5 images.
+The intended settings compatibility policy admits the exact published beta.4.1
+and current image identities as sources, with current beta.5 images as targets.
+V3 backup and migration gates remain pending.
 The published beta.4 and beta.4.1 images have identical identities and cannot
 be distinguished by image identity. Other source identities are unsupported.
-Back up settings before updating; image identity and compatibility checks
+Keep a settings backup where available; image identity and compatibility checks
 remain mandatory.
 
 This release has **not** been validated on physical hardware. Follow the
