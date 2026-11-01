@@ -114,15 +114,30 @@ DEFERRED = {
 }
 
 
-def configuration(name: str) -> dict:
+MOUSE_DEFAULTS = {'cursor_step': 8, 'cursor_period': 20, 'wheel_step': 1, 'wheel_period': 80}
+MOUSE_DEFINES = {key: 'AK820_MOUSE_' + key.upper() for key in MOUSE_DEFAULTS}
+
+
+def configuration(name: str, *, mouse_keys=None) -> dict:
     if not isinstance(name, str) or name not in PROFILES:
         raise ValueError('Unknown profile: ' + str(name))
-    return _configuration(name, PROFILES[name], current=True)
+    value = _configuration(name, PROFILES[name], current=3)
+    if mouse_keys is not None:
+        if 'mouse-keys' not in PROFILES[name] or not isinstance(mouse_keys, dict) or set(mouse_keys) != set(MOUSE_DEFAULTS):
+            raise ValueError('Invalid Mouse Keys overrides')
+        if any(type(v) is not int or not 1 <= v <= (127 if k.endswith('step') else 255)
+               for k, v in mouse_keys.items()):
+            raise ValueError('Mouse Keys step must be 1..127 and period 1..255 ms')
+        if mouse_keys != MOUSE_DEFAULTS:
+            value['mouse_keys'] = dict(mouse_keys)
+            value['timing_ms']['mouse_cursor'] = mouse_keys['cursor_period']
+            value['timing_ms']['mouse_wheel'] = mouse_keys['wheel_period']
+    return value
 
 
 def _configuration(name, enabled, *, current=False):
     return {
-        **({'compact_controls_version': 2} if current else {}),
+        **({'compact_controls_version': 3 if current == 3 else 2} if current else {}),
         'format': FORMAT, 'profile': name, 'optional_features': list(enabled),
         'base_features': list(BASE_FEATURES) + [label for feature, label in
             (('nkro', 'nkro-reports'), ('grave-escape', 'grave-escape'),
@@ -130,7 +145,7 @@ def _configuration(name, enabled, *, current=False):
         'nvm_schema': EXTENSION_SCHEMA if any(f in enabled for f in ('tap-dance', 'key-overrides', 'qmk-settings')) else SCHEMA,
         'make_options': {switch: 'yes' if feature in enabled else 'no'
                          for feature, switch in SWITCHES.items()},
-        'runtime_qmk_settings': sorted([1, 2, 7, 18, 19] + ([4] if 'auto-shift' in enabled else []) + ([22] + ([3] if 'auto-shift' in enabled else []) + ([6] if 'one-shot' in enabled else []) if current else [])) if 'qmk-settings' in enabled else [],
+        'runtime_qmk_settings': sorted([1, 2, 7, 18, 19] + ([4] if 'auto-shift' in enabled else []) + ([22] + ([3] if 'auto-shift' in enabled else []) + ([6] if 'one-shot' in enabled else []) if current else []) + ([23] if current == 3 and 'leader' in enabled else [])) if 'qmk-settings' in enabled else [],
         'timing_ms': {'combo': 40, 'tap_hold': 200,
                       **({'os_indicator_lease': 3000, 'os_indicator_period': 4096}
                          if 'os-indicators' in enabled else {}),
@@ -176,7 +191,7 @@ def validate_source_configuration(value):
         raise ValueError('Invalid source profile')
     if name in PROFILES and value == configuration(name):
         return value
-    if name in PROFILES and value == _configuration(name, PROFILES[name]):
+    if name in PROFILES and any(value == _configuration(name, PROFILES[name], current=current) for current in (False, True)):
         return value
     if name in _BETA2_VARIANTS:
         remove, add = _BETA2_VARIANTS[name]
@@ -238,10 +253,44 @@ def validate_legacy_configuration(value: dict) -> dict:
     return value
 
 
-def validate_configuration(value: dict) -> dict:
-    if not isinstance(value, dict) or value != configuration(value.get('profile')):
+def validate_build_configuration(value: dict) -> dict:
+    if not isinstance(value, dict):
+        raise ValueError('Invalid build configuration')
+    expected = configuration(value.get('profile'), mouse_keys=value.get('mouse_keys'))
+    timing = value.get('timing_ms')
+    if not isinstance(timing, dict) or any(type(item) is not int for item in timing.values()):
+        raise ValueError('Build timing values must be integers')
+    if value != expected:
         raise ValueError('Build configuration differs from the selected profile')
     return value
+
+
+def validate_configuration(value: dict) -> dict:
+    validate_build_configuration(value)
+    if value != configuration(value.get('profile')):
+        raise ValueError('Build configuration differs from the selected profile')
+    return value
+
+
+HISTORICAL_COMPILER_INPUT_PAIR = (
+    '5d6e4f9eacab8bfe5e2b6e34f376f5825e60eba3a5c9b60900755bee3fd7bc01',
+    '359a0fc97c2239090b84812a5000ed5dd8b6a91bdb5b14e62489857cb5949b25',
+)
+
+
+def historical_compiler_inputs(report: dict) -> bool:
+    paths = ('util/build_ak820.py', 'keyboards/ajazz/ak820/ak820_mousekey.c')
+    sources = report.get('sources', [])
+    if not isinstance(sources, list):
+        return False
+    hashes = []
+    for path in paths:
+        rows = [row for row in sources if isinstance(row, dict) and row.get('origin') == 'source'
+                and isinstance(row.get('path'), str) and row['path'].replace('\\', '/') == path]
+        if len(rows) != 1:
+            return False
+        hashes.append(rows[0].get('sha256'))
+    return tuple(hashes) == HISTORICAL_COMPILER_INPUT_PAIR and report.get('builder_sha256') == hashes[0]
 
 
 def require_release_qualification(report: dict) -> None:
@@ -251,8 +300,14 @@ def require_release_qualification(report: dict) -> None:
     release policy. Configured images require the committed exact-image safety
     witnesses as well as the caller's existing build/review checks.
     """
+    if report.get('compiler_input_contract') == 'unverified':
+        raise ValueError('Unverified compiler-input contract cannot qualify for release')
+    if 'compiler_input_contract' in report:
+        raise ValueError('Unknown compiler-input contract cannot qualify for release')
     if 'configuration' in report:
         validate_configuration(report['configuration'])
+        if not historical_compiler_inputs(report):
+            raise ValueError('Compiler-input contract is not closed; configured build is not approved')
         from ak820_release_safety import validate
         validate(report)
         return

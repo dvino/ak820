@@ -1,5 +1,6 @@
 """Exact factory keymap decoding; no firmware build or physical operations."""
 import struct
+import subprocess
 from pathlib import Path
 import sys
 import unittest
@@ -10,6 +11,21 @@ import pack_ak820 as packer
 
 
 class DefaultKeymapsTest(unittest.TestCase):
+    def test_generator_records_actual_nested_commands_and_failures(self):
+        invocations = []
+        command = [sys.executable, '-s', '-c', 'import sys; sys.exit(3)']
+        with self.assertRaises(subprocess.CalledProcessError):
+            defaults.run_compiler(command, invocations)
+        self.assertEqual(invocations[0]['argv'], command)
+        self.assertEqual(invocations[0]['exit_code'], 3)
+        self.assertEqual(invocations[0]['cwd'], str(Path.cwd()))
+        self.assertIn('PATH', invocations[0]['environment'])
+        good = [sys.executable, '-s', '-c', 'import sys; assert sys.flags.no_user_site == 1; print("ok")']
+        result = defaults.run_compiler(good, invocations, stdout=subprocess.PIPE, text=True)
+        self.assertEqual(result.stdout, 'ok\n')
+        self.assertEqual(invocations[1]['argv'], good)
+        self.assertEqual(invocations[1]['exit_code'], 0)
+
     def fixture(self, words=None):
         # Exercise implicit NO/TRNS and one/two-byte payloads within 255 bytes.
         words = words or ([0, 1, 2, 255, 256, 0xffff, 0, 1] * 16 + [0, 1] * 64)

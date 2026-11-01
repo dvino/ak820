@@ -63,12 +63,59 @@ class WorkflowTests(unittest.TestCase):
         host = self.host()
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder)
+            for name in (*workflow.settings.FILES, 'manifest.json'):
+                (path/name).write_bytes(b'')
             (path/'manifest.json').write_text('old')
             pinned = workflow.fingerprint(path)
             (path/'manifest.json').write_text('new')
             with patch.object(workflow.settings, 'validate_backup', return_value={}):
                 with self.assertRaisesRegex(ValueError, 'changed'):
                     workflow.check_backup(host, path, pinned, {}, {})
+
+    def test_fingerprint_rejects_extra_oversized_file_and_symlink_without_reading(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder)
+            for name in (*workflow.settings.FILES, 'manifest.json'):
+                (path/name).write_bytes(b'')
+            self.assertEqual(set(workflow.fingerprint(path)), {*workflow.settings.FILES, 'manifest.json'})
+            extra = path/'extra'
+            with extra.open('wb') as file:
+                file.truncate(1024 * 1024 * 1024)
+            with self.assertRaisesRegex(ValueError, 'Unexpected backup directory entries'):
+                workflow.fingerprint(path)
+            extra.unlink()
+            extra.symlink_to(path/'manifest.json')
+            with self.assertRaisesRegex(ValueError, 'Unexpected backup directory entries'):
+                workflow.fingerprint(path)
+            extra.unlink()
+            (path/'settings.json').unlink()
+            (path/'settings.json').symlink_to(path/'manifest.json')
+            with self.assertRaisesRegex(ValueError, 'linked backup file'):
+                workflow.fingerprint(path)
+            (path/'settings.json').unlink()
+            (path/'settings.json').mkdir()
+            with self.assertRaisesRegex(ValueError, 'linked backup file'):
+                workflow.fingerprint(path)
+            (path/'settings.json').rmdir()
+            (path/'settings.json').touch()
+            (path/'unexpected-directory').mkdir()
+            with self.assertRaisesRegex(ValueError, 'Unexpected backup directory entries'):
+                workflow.fingerprint(path)
+            (path/'unexpected-directory').rmdir()
+            with (path/'settings.json').open('wb') as file:
+                file.truncate(workflow.settings.FILES['settings.json'] + 1)
+            with self.assertRaisesRegex(ValueError, 'Oversized backup file'):
+                workflow.fingerprint(path)
+            (path/'settings.json').write_bytes(b'')
+            import io
+            original_open = Path.open
+            def grew_during_read(file, *args, **kwargs):
+                if file == path/'settings.json':
+                    return io.BytesIO(b'x' * (workflow.settings.FILES['settings.json'] + 1))
+                return original_open(file, *args, **kwargs)
+            with patch.object(Path, 'open', new=grew_during_read):
+                with self.assertRaisesRegex(ValueError, 'Backup file grew during read'):
+                    workflow.fingerprint(path)
 
     def test_failed_backup_always_closes_api(self):
         host = self.host()
@@ -87,6 +134,7 @@ class WorkflowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output = Path(folder)
             with patch.object(workflow, 'backup', return_value={'path': output}), \
+                 patch.object(workflow, 'select_backup', return_value=(workflow.freeze_backup({'path': output}), (), ())), \
                  patch.object(workflow.settings, 'plan_restore', side_effect=ValueError('unsupported')), \
                  patch.object(workflow, 'physical_unlock') as unlock:
                 with self.assertRaisesRegex(ValueError, 'unsupported'):
@@ -289,7 +337,9 @@ class EndToEndWorkflowTests(unittest.TestCase):
             raw.enter_vial_loader = lambda: events.append(('loader', 1))
             release_context = app.ReleaseContext('legacy', root, root/'approval', {})
             context = {'release_context': release_context, 'profile': profile, 'native': profile['backup'], 'target': root/'target',
-                       'plan': {'sha256': app.sha(profile['payload'])}, 'pins': {}}
+                       'references': (profile['backup'], profile['backup'][wire.p.APP_START:wire.p.APP_END]),
+                       'plan': {'sha256': app.sha(profile['payload'])}, 'pins': {},
+                       'verification': ()}
             selected = {'path': b'wire-app'}
             progress = []
             stack.enter_context(patch.object(app, 'RUNS', root/'runs'))
@@ -306,6 +356,7 @@ class EndToEndWorkflowTests(unittest.TestCase):
             stack.enter_context(patch.object(workflow, 'recheck_pins'))
             stack.enter_context(patch('ak820_device_protocol.time.sleep'))
             def flash(*_args, **kwargs):
+                kwargs['payload_guard'](profile['payload'], profile['backup'])
                 kwargs['phase_guard']('erase_and_flash', image='permanent',
                                       sha256=context['plan']['sha256'], loader_path=b'wire-app')
                 events.append(('flash', 1))
@@ -317,6 +368,7 @@ class EndToEndWorkflowTests(unittest.TestCase):
                     raw.rom_patch[at] = profile['payload'][-1] ^ 1
                 kwargs['phase_guard']('restart', image='permanent',
                                       sha256=context['plan']['sha256'], loader_path=b'wire-app')
+            actual_flash = app.transport.flash
             stack.enter_context(patch.object(app.transport, 'flash', side_effect=flash))
             def run(args):
                 if gui:
@@ -335,15 +387,218 @@ class EndToEndWorkflowTests(unittest.TestCase):
                      contextlib.redirect_stdout(io.StringIO()):
                     return app.main(args, progress=lambda stage, payload: progress.append((stage, payload)))
             saved = root/'source-settings'
+            if failure in ('valid_restore_swap', 'valid_update_swap', 'valid_setter_swap', 'valid_swap_back', 'valid_flash_swap', 'valid_flash_swap_back'):
+                import shutil
+                alternate = root/'alternate-settings'
+                original_nvm = bytes(raw.nvm)
+                raw.nvm = wire.base_nvm(); raw.ram_rgb = bytearray(raw.nvm[24:32])
+                self.assertEqual(run(['backup', '--session', str(root), '--output', str(alternate)]), 0)
+                raw.nvm = original_nvm; raw.ram_rgb = bytearray(raw.nvm[24:32])
+                def substitute(path, source=alternate):
+                    for item in path.iterdir():
+                        if item.is_dir(): shutil.rmtree(item)
+                        else: item.unlink()
+                    for item in source.iterdir():
+                        if item.is_dir(): shutil.copytree(item, path/item.name)
+                        else: shutil.copy2(item, path/item.name)
+                if failure in ('valid_restore_swap', 'valid_swap_back'):
+                    select = workflow.select_backup
+                    def select_and_swap(*args, **kwargs):
+                        result = select(*args, **kwargs)
+                        path = Path(args[1])
+                        if failure == 'valid_swap_back':
+                            original = root/'original-copy'
+                            shutil.copytree(path, original)
+                        substitute(path)
+                        if failure == 'valid_swap_back':
+                            substitute(path, original)
+                        return result
+                    stack.enter_context(patch.object(workflow, 'select_backup', side_effect=select_and_swap))
+                elif failure in ('valid_flash_swap', 'valid_flash_swap_back'):
+                    loader = fixtures.TransportTests.loader(self)
+                    loader_descriptor = fixtures.descriptor('LOADER')
+                    expected_setters = []
+                    context['target'].mkdir()
+                    original_device = loader.device
+                    def device_with_swap():
+                        device = original_device()
+                        read = device.get_feature_report
+                        def get_report(*args):
+                            reply = read(*args)
+                            if device.command == 2:
+                                source = wire.settings.validate_backup(saved, profile)
+                                source_snapshot = workflow.freeze_backup(source)
+                                other = wire.settings.validate_backup(alternate, profile)
+                                self.assertNotEqual(source['identity'], other['identity'])
+                                self.assertNotEqual(source['settings'], other['settings'])
+                                source = workflow.thaw_backup(source_snapshot)
+                                plan = wire.settings.plan_restore(source, profile, other['nvm'])
+                                original = root/'original-copy'
+                                shutil.copytree(saved, original)
+                                substitute(saved)
+                                substituted = wire.settings.validate_backup(saved, profile)
+                                self.assertEqual(substituted['identity'], other['identity'])
+                                self.assertEqual(substituted['settings'], other['settings'])
+                                self.assertIsNone(plan['combo_entries'])
+                                self.assertIsNone(plan['extension_data'])
+                                def packet(*values):
+                                    return bytes(values).ljust(32, b'\0')
+                                for item in source['settings']['keys']:
+                                    at = workflow.DeviceAPI.key_offset(item['layer'], (item['row'], item['column']))
+                                    value = item['keycode']
+                                    if other['nvm'][at:at+2] != value.to_bytes(2, 'big'):
+                                        expected_setters.append(packet(5, item['layer'], item['row'], item['column'], value >> 8, value & 255))
+                                for item in source['settings']['encoders']:
+                                    at = workflow.DeviceAPI.encoder_offset(item['layer'], item['direction'])
+                                    value = item['keycode']
+                                    if other['nvm'][at:at+2] != value.to_bytes(2, 'big'):
+                                        expected_setters.append(packet(254, 4, item['layer'], 0, item['direction'], value >> 8, value & 255))
+                                layout = source['settings']['layout_options']
+                                if other['nvm'][40] != layout:
+                                    expected_setters.append(packet(3, 2, 0, 0, 0, layout))
+                                stream = bytes.fromhex(source['settings']['macros']['data_hex'])
+                                if (other['nvm'][wire.p.MACRO_ADDR:wire.p.MACRO_ADDR+len(stream)] != stream or
+                                    int.from_bytes(other['nvm'][wire.p.MACRO_BUSY_ADDR+1:wire.p.MACRO_BUSY_ADDR+3], 'little') != len(stream)):
+                                    for offset, data in plan['macro_chunks']:
+                                        expected_setters.append(packet(15, offset >> 8, offset & 255, len(data), *data))
+                                if other['nvm'][24:32] != plan['rgb_saved_config']:
+                                    expected_setters.append(packet(7, 0x41, *plan['rgb_saved_mode']))
+                                    if not plan['rgb_saved_config'][0] & 3:
+                                        expected_setters.append(packet(7, 0x41, *plan['rgb_effective_mode']))
+                                    expected_setters.append(packet(9))
+                                self.assertTrue(expected_setters)
+                                events.append(('flash', 1))
+                                raw.nvm = wire.base_nvm()
+                                raw.ram_rgb = bytearray(raw.nvm[24:32])
+                                raw.unlocked = False
+                            if device.command == 4 and failure == 'valid_flash_swap_back':
+                                substitute(saved, root/'original-copy')
+                            return reply
+                        device.get_feature_report = get_report
+                        return device
+                    loader.device = device_with_swap
+                    manifest = {'nvm_provenance': {'mode': 'native_backup', 'source_sha256': app.sha(profile['backup'])}}
+                    stack.enter_context(patch.object(app.transport, 'session_image', return_value=(manifest, profile['payload'], profile['backup'])))
+                    stack.enter_context(patch.object(app.transport, 'validate_native'))
+                    stack.enter_context(patch.object(app.transport, 'hid_module', return_value=loader))
+                    stack.enter_context(patch.object(app.transport.time, 'sleep'))
+                    stack.enter_context(patch.object(app, 'wait_state', side_effect=lambda _hid, state, **kw: loader_descriptor if state == 'LOADER' else selected))
+                    stack.enter_context(patch.object(app.transport, 'flash', side_effect=actual_flash))
+                elif failure == 'valid_setter_swap':
+                    armed = [False]
+                    original_restore = workflow.settings.restore_settings
+                    def restore_with_arm(*args, **kwargs):
+                        guard = kwargs['before_write']
+                        def before_write(*a, **k):
+                            result = guard(*a, **k)
+                            armed[0] = True
+                            return result
+                        kwargs['before_write'] = before_write
+                        return original_restore(*args, **kwargs)
+                    original_status = workflow.DeviceAPI.status
+                    def status_with_swap(api):
+                        result = original_status(api)
+                        if armed[0]:
+                            armed[0] = False
+                            substitute(saved)
+                        return result
+                    stack.enter_context(patch.object(workflow.settings, 'restore_settings', side_effect=restore_with_arm))
+                    stack.enter_context(patch.object(workflow.DeviceAPI, 'status', status_with_swap))
+                else:
+                    existing_backup = workflow.backup
+                    def backup_and_swap(*args, **kwargs):
+                        result = existing_backup(*args, **kwargs)
+                        if kwargs.get('purpose') == 'update' and Path(args[4]).name == 'after-update-settings':
+                            substitute(saved)
+                        return result
+                    stack.enter_context(patch.object(workflow, 'backup', side_effect=backup_and_swap))
+            target = []
+            if failure in ('target_source_swap', 'target_setter_swap', 'target_status_swap'):
+                real_backup = workflow.backup
+                def capture_target(*args, **kwargs):
+                    result = real_backup(*args, **kwargs)
+                    if kwargs.get('purpose') == 'restore': target.append(result['path'])
+                    return result
+                stack.enter_context(patch.object(workflow, 'backup', side_effect=capture_target))
+                def corrupt_target():
+                    path = next(p for p in target[0].rglob('*') if p.is_file())
+                    path.write_bytes(path.read_bytes() + b'changed')
+                if failure == 'target_source_swap':
+                    real_recheck = workflow.settings.recheck_source
+                    def recheck(*args, **kwargs):
+                        result = real_recheck(*args, **kwargs)
+                        corrupt_target()
+                        return result
+                    stack.enter_context(patch.object(workflow.settings, 'recheck_source', side_effect=recheck))
+                elif failure == 'target_status_swap':
+                    armed = [False]
+                    original_restore = workflow.settings.restore_settings
+                    def restore_with_arm(*args, **kwargs):
+                        guard = kwargs['before_write']
+                        def before_write(*a, **k):
+                            result = guard(*a, **k)
+                            armed[0] = True
+                            return result
+                        kwargs['before_write'] = before_write
+                        return original_restore(*args, **kwargs)
+                    original_status = workflow.DeviceAPI.status
+                    def status_with_swap(api):
+                        result = original_status(api)
+                        if armed[0]:
+                            armed[0] = False
+                            corrupt_target()
+                        return result
+                    stack.enter_context(patch.object(workflow.settings, 'restore_settings', side_effect=restore_with_arm))
+                    stack.enter_context(patch.object(workflow.DeviceAPI, 'status', status_with_swap))
+                else:
+                    original_raw = raw.raw
+                    def raw_with_swap(packet):
+                        before = len(raw.writes)
+                        result = original_raw(packet)
+                        if len(raw.writes) == before + 1 and before == 0:
+                            corrupt_target()
+                        return result
+                    raw.raw = raw_with_swap
+            if failure == 'update_target_swap':
+                original_restore = workflow.restore
+                def nested_with_swap(*args, **kwargs):
+                    result = original_restore(*args, **kwargs)
+                    path = next(p for p in kwargs['target_backup']['path'].rglob('*') if p.is_file())
+                    path.write_bytes(path.read_bytes() + b'changed')
+                    return result
+                stack.enter_context(patch.object(workflow, 'restore', side_effect=nested_with_swap))
             if operation == 'restore':
                 self.assertEqual(run(['backup', '--session', str(root), '--output', str(saved)]), 0)
                 self.assertEqual(raw.writes, [])
                 raw.nvm = wire.base_nvm()
                 raw.ram_rgb = bytearray(raw.nvm[24:32])
-                self.assertEqual(run(['restore', '--session', str(root), '--backup', str(saved)]), 0)
+                status = run(['restore', '--session', str(root), '--backup', str(saved)])
+                if failure in ('target_source_swap', 'target_setter_swap', 'target_status_swap', 'valid_restore_swap', 'valid_setter_swap'):
+                    self.assertEqual(status, 1)
+                    self.assertEqual(len(raw.writes), 1 if failure == 'target_setter_swap' else 0)
+                    self.assertNotIn(('flash', 1), events)
+                    return [kind for kind, _ in progress]
+                self.assertEqual(status, 0)
                 self.assertNotIn(('flash', 1), events)
             else:
                 status = run(['update', '--session', str(root), '--backup-dir', str(saved)])
+                if failure in ('valid_update_swap', 'valid_flash_swap'):
+                    self.assertEqual(status, 1)
+                    self.assertEqual(events.count(('flash', 1)), 1)
+                    self.assertEqual(raw.writes, [])
+                    if failure == 'valid_flash_swap': self.assertEqual(loader.commands, [1, 2, 3, 4])
+                    return [kind for kind, _ in progress]
+                if failure == 'valid_flash_swap_back':
+                    self.assertEqual(loader.commands, [1, 2, 3, 4, 5])
+                    self.assertEqual(len(raw.writes), len(expected_setters))
+                    for index, (actual, expected) in enumerate(zip(raw.writes, expected_setters)):
+                        with self.subTest(setter=index, command=expected[:2].hex()):
+                            self.assertEqual(actual, expected)
+                if failure == 'update_target_swap':
+                    self.assertEqual(status, 1)
+                    self.assertTrue(raw.writes)
+                    self.assertNotIn('complete', [kind for kind, _ in progress])
+                    return [kind for kind, _ in progress]
                 if failure == 'manifest':
                     self.assertEqual(status, 1)
                     self.assertEqual([value for kind, value in events if kind == 'unlock'], [8, 6])
@@ -361,6 +616,12 @@ class EndToEndWorkflowTests(unittest.TestCase):
             self.assertTrue(raw.writes)
             return [kind for kind, _ in progress]
 
+    def test_target_backup_swaps_stop_before_any_further_setter(self):
+        for failure in ('target_source_swap', 'target_setter_swap', 'target_status_swap'):
+            with self.subTest(failure=failure):
+                stages = self.run_scenario(failure=failure)
+                self.assertEqual(stages.count('complete'), 1)  # The earlier source backup only.
+
     def test_cli_and_gui_use_same_actual_backup_restore_backend(self):
         cli = self.run_scenario(gui=False)
         gui = self.run_scenario(gui=True)
@@ -372,6 +633,28 @@ class EndToEndWorkflowTests(unittest.TestCase):
     def test_changed_manifest_config_hash_stops_before_restore_unlock(self):
         stages = self.run_scenario(operation='update', failure='manifest')
         self.assertNotIn('restore_unlock_wait', stages)
+
+    def test_distinct_valid_backup_replacement_is_rejected(self):
+        for operation, failure in (('restore', 'valid_restore_swap'), ('update', 'valid_update_swap'),
+                                   ('restore', 'valid_setter_swap')):
+            with self.subTest(operation=operation):
+                stages = self.run_scenario(operation=operation, failure=failure)
+                if failure != 'valid_setter_swap':
+                    self.assertNotIn('restoring', stages)
+
+    def test_valid_backup_swap_back_keeps_selected_a(self):
+        for operation, failure in (('restore', 'valid_swap_back'), ('update', 'valid_flash_swap_back')):
+            with self.subTest(operation=operation):
+                stages = self.run_scenario(operation=operation, failure=failure)
+                self.assertIn('complete', stages)
+
+    def test_valid_backup_swap_after_fake_loader_erase_stops_before_restart(self):
+        self.run_scenario(operation='update', failure='valid_flash_swap')
+
+    def test_update_rejects_target_swap_after_nested_restore(self):
+        stages = self.run_scenario(operation='update', failure='update_target_swap')
+        self.assertIn('verifying', stages)
+        self.assertNotIn('complete', stages)
 
     def test_update_one_flash_then_second_unlock_and_real_typed_restore(self):
         stages = self.run_scenario(operation='update')
@@ -402,12 +685,15 @@ class FrozenPreparationTests(unittest.TestCase):
             host = SimpleNamespace(ROOT=root, BUNDLE=bundle, APPROVAL=root/'approval.json', RECOVERY_REFERENCE=refs,
                 load_release=Mock(return_value={'files':['firmware/application.ihx'], 'host_files':names}),
                 copy_recovery=Mock(return_value=(session, b'native')), prepare_trial=Mock(return_value=(target, {})),
+                operation_references=Mock(return_value=(b'native', b'expected')),
+                require_operation_recovery=Mock(), require_operation_references=Mock(),
                 transport=SimpleNamespace(session_image=Mock(return_value=(None,b'payload',b'native')),IMAGES={'permanent':'permanent.bin'}),
                 require=lambda ok, message: None if ok else (_ for _ in ()).throw(ValueError(message)),
                 sha=lambda data: hashlib.sha256(data).hexdigest())
             with patch.object(workflow, '__file__', str(root/'settings_workflow.py')), \
                     patch.object(workflow.settings, '__file__', str(root/'settings_backup.py')), \
-                    patch.object(workflow.settings, 'load_profile', return_value={'payload':b'payload'}):
-                context = workflow.prepare(host, Mock(), source, release_context=SimpleNamespace(profile='legacy', bundle=bundle, approval=root/'approval.json', nvm_schema=0x082002))
+                    patch.object(workflow.settings, 'load_profile', return_value={'payload':b'payload'}), \
+                    patch.object(workflow, 'revalidate'):
+                context = workflow.prepare(host, Mock(), source, release_context=SimpleNamespace(profile='legacy', bundle=bundle, approval=root/'approval.json', nvm_schema=0x082002, snapshot=SimpleNamespace(files={})))
             self.assertTrue(all(root/name in context['pins'] for name in names))
             self.assertNotIn(root/'settings_workflow.py', context['pins'])

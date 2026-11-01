@@ -93,6 +93,14 @@ static void commit_pending(void) {
     source_state_set(id, source_state_get(id) | SOURCE_HELD);
     hold(pending_code, true);
 }
+/* A cancelled event must update blocking without entering the action pipeline. */
+void ak820_tapping_discard(const keyevent_t AK820_STATE_MEM *event) {
+    if (!IS_EVENT(*event)) return;
+    uint8_t id = source_of(event->key);
+    if (id == NONE) return;
+    uint8_t state = source_state_get(id);
+    source_state_set(id, event->pressed ? state | SOURCE_BLOCKED : state & ~SOURCE_BLOCKED);
+}
 bool ak820_tapping_before(const keyevent_t AK820_STATE_MEM *event) {
     uint8_t id = source_of(event->key);
 #ifdef VIAL_ENABLE

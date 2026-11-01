@@ -5,10 +5,11 @@
 #include "ak820_combo.h"
 static vial_combo_entry_t entries[VIAL_COMBO_ENTRIES];
 static keyrecord_t logbuf[64];
-static unsigned n, traces;
+static unsigned n, traces, clears;
+static bool cancel_on_next_record;
 int dynamic_keymap_get_combo(uint8_t i,vial_combo_entry_t *e) {*e=entries[i];return 0;}
-void process_record(keyrecord_t *r) {assert(n<64);logbuf[n++]=*r;}
-void clear_keyboard(void) {ak820_combo_cancel();}
+void process_record(keyrecord_t *r) {assert(n<64);logbuf[n++]=*r;if(cancel_on_next_record){cancel_on_next_record=false;ak820_combo_cancel();}}
+void clear_keyboard(void) {clears++;ak820_combo_cancel();}
 static void event(uint8_t id,uint16_t code,bool down,uint16_t time) {
     keyrecord_t r={.event={{id/8,id%8},down,time},.keycode=code};
     ak820_combo_tick(time);
@@ -53,5 +54,46 @@ int main(void) {
     reset();event(0,4,true,0);event(1,4,true,1);assert(n==1);expect(0,4,true);ak820_combo_tick(41);expect(1,4,true);
     reset();e=(vial_combo_entry_t){{4,5,0,0},KC_AUDIO_MUTE};assert(ak820_combo_valid(&e));e.output=KC_LAUNCHPAD;assert(ak820_combo_valid(&e));e.output=0x100|KC_AUDIO_MUTE;assert(!ak820_combo_valid(&e));
     reset();event(0,4,true,0);event(3,QK_COMBO_OFF,true,1);assert(n==1);expect(0,4,true);event(1,5,true,2);expect(1,5,true);event(3,QK_COMBO_ON,true,3);
-    printf("compact combo production engine: %u traces and configuration validation PASS (host C/UBSan; no hardware)\n",traces);
+    /* ON/OFF/TOGGLE from both states: observed via combo emission and clear count. */
+    for(unsigned initial=0;initial<2;initial++) for(unsigned action=0;action<3;action++) {
+        uint16_t establish=initial?QK_COMBO_ON:QK_COMBO_OFF;
+        event(7,establish,true,10); event(7,establish,false,11);
+        unsigned before=clears;
+        uint16_t command=action==0?QK_COMBO_ON:action==1?QK_COMBO_OFF:QK_COMBO_TOGGLE;
+        event(7,command,true,12); event(7,command,false,13);
+        bool result=action==0?true:action==1?false:!initial;
+        assert(clears==before+(result!=(bool)initial));
+        reset(); event(0,4,true,20);event(1,5,true,21);
+        assert((n==1&&logbuf[0].keycode==6)==result);
+    }
+    /* Both adjacent full-width values remain ordinary presses; 0x7c53 must pass through. */
+    reset();event(7,0x7c4f,true,30);assert(n==1&&logbuf[0].keycode==0x7c4f);
+    reset();event(7,0x7c53,true,31);assert(n==1&&logbuf[0].keycode==0x7c53);
+    /* OFF flushes pending candidate before clear; cancelling flush is exercised below. */
+    reset();event(0,4,true,40);event(7,QK_COMBO_OFF,true,41);assert(n>=1&&logbuf[0].keycode==4);
+    /* Repeated toggle transitions, including releases that must be inert. */
+    reset(); unsigned c=clears;
+    for(unsigned i=0;i<4;i++){event(7,QK_COMBO_TOGGLE,true,50+i*2);event(7,QK_COMBO_TOGGLE,false,51+i*2);assert(clears==c+i+1);}
+    /* Pending candidate control flush is cancelled synchronously: OFF must not commit. */
+    event(7,QK_COMBO_ON,true,60);event(7,QK_COMBO_ON,false,61);
+    event(0,4,true,62);cancel_on_next_record=true;unsigned cancel_clear_count=clears;
+    event(7,QK_COMBO_OFF,true,63);
+    assert(!cancel_on_next_record&&clears==cancel_clear_count);
+    reset();event(0,4,true,70);event(1,5,true,71);assert(n==1&&logbuf[0].keycode==6);
+    unsigned before_off=clears;event(7,QK_COMBO_OFF,true,72);assert(clears==before_off+1);
+    event(0,4,false,73);event(1,5,false,74);
+    /* Releases for each control and neighboring full-width values are inert. */
+    reset();unsigned after_pending=clears;
+    for(unsigned i=0;i<3;i++){uint16_t k=(uint16_t)(QK_COMBO_ON+i);event(7,k,false,79+i);assert(clears==after_pending);}
+    event(7,0x7c4f,false,79);event(7,0x7c53,false,79);assert(clears==after_pending);
+    /* A control release alone never changes state or clears an active combo. */
+    event(7,QK_COMBO_ON,false,80);assert(clears==after_pending);
+    event(7,QK_COMBO_ON,true,80);assert(clears<=after_pending+1);
+    /* Active combo control clears exactly once and prevents stale releases. */
+    event(0,4,true,81);event(1,5,true,82);assert(logbuf[n-1].keycode==6);
+    unsigned before_active=clears, active_log_count=n;event(7,QK_COMBO_OFF,true,83);assert(clears==before_active+1);
+    unsigned after=clears;event(7,QK_COMBO_OFF,false,84);assert(clears==after);
+    event(0,4,false,85);event(1,5,false,86);assert(clears==after&&n<=active_log_count+2);
+    for(unsigned i=active_log_count;i<n;i++)assert(logbuf[i].keycode!=6);
+    printf("compact combo production engine: %u fixture resets (not control cases); configuration validation PASS (host C/UBSan; no hardware)\n",traces);
 }

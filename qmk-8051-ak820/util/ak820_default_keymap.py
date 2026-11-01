@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 from ak820_build_inputs import dependency_paths, input_snapshot
+from ak820_capture_compile import capture_environment
 
 
 def sha(path):
@@ -106,6 +107,22 @@ def verify_final(assembly, bootstrap):
             raise ValueError('Final default table differs: ' + name)
 
 
+def run_compiler(command, invocations, dependency=None, **kwargs):
+    environment = capture_environment(os.environ)
+    if dependency is not None:
+        dependency.unlink(missing_ok=True)
+    result = subprocess.run(command, env=environment, check=False, **kwargs)
+    record = {'argv': command, 'cwd': os.getcwd(), 'environment': environment,
+              'exit_code': result.returncode}
+    if dependency is not None and result.returncode == 0 and dependency.is_file():
+        record['fresh_dependency'] = str(dependency)
+    invocations.append(record)
+    result.check_returncode()
+    if dependency is not None and not dependency.is_file():
+        raise ValueError('Compiler did not generate dependency file: ' + str(dependency))
+    return result
+
+
 def compile_current(argv):
     reject_phase_overrides(argv)
     compiler = Path(shutil.which(argv[0]) or argv[0]).resolve()
@@ -113,11 +130,30 @@ def compile_current(argv):
     toolchain = compiler.parents[1]
     if '-c' not in argv or argv.count('-o') != 1 or '--model-large' not in argv:
         raise ValueError('Unsupported compiler invocation')
-    if '4.6.0' not in subprocess.check_output([str(compiler), '--version'], text=True):
-        raise ValueError('Default compression requires SDCC 4.6.0')
+    invocations = []
     output = Path(argv[argv.index('-o') + 1])
-    # obj_TARGET/quantum/output.o -> BUILD/default-keymap (not object ASM manifest).
-    directory = output.parent.parent.parent / 'default-keymap'
+    actual_dep = output.with_suffix('.d')
+    if [arg for arg in argv if arg.startswith('-Wp,-MD,-MF,')] != ['-Wp,-MD,-MF,' + str(actual_dep)]:
+        raise ValueError('Compiler dependency/output mismatch')
+    primary = argv[argv.index('-o') - 1]
+    build_name, objects_name = (os.environ.get(name) for name in
+                                ('AK820_CAPTURE_BUILD_ROOT', 'AK820_CAPTURE_OBJECT_ROOT'))
+    if not build_name and not objects_name:
+        # Legacy direct make is unqualified; captured builds require parent roots.
+        build, objects = output.parent.parent.parent.resolve(), output.parent.parent.resolve()
+    elif not build_name or not objects_name or not Path(build_name).is_absolute() or not Path(objects_name).is_absolute():
+        raise ValueError('Missing trusted compiler roots')
+    else:
+        build, objects = Path(build_name).resolve(), Path(objects_name).resolve()
+    directory = build / 'default-keymap'
+    if (not build.is_dir() or not objects.is_relative_to(build) or objects == build or
+            not output.resolve().is_relative_to(objects) or
+            not actual_dep.resolve().is_relative_to(objects) or
+            not directory.resolve().is_relative_to(build)):
+        raise ValueError('Invalid compiler build or output root')
+    if '4.6.0' not in run_compiler([str(compiler), '--version'], invocations,
+                                   stdout=subprocess.PIPE, text=True).stdout:
+        raise ValueError('Default compression requires SDCC 4.6.0')
     directory.mkdir(parents=True, exist_ok=True)
     include = directory / 'ak820_default_keymap.inc'
     include.unlink(missing_ok=True)
@@ -126,8 +162,10 @@ def compile_current(argv):
     output.with_suffix('.rel').unlink(missing_ok=True)
     bootstrap, dep = directory/'bootstrap.asm', directory/'bootstrap.d'
     before = input_snapshot(root, toolchain)
-    for path in (root/'.build').rglob('*'):
-        if path.is_file() and path.suffix in {'.h', '.inc'}:
+    for path in build.rglob('*'):
+        if path.is_file() and path.suffix in {'.c', '.h', '.inc'}:
+            if not path.resolve().is_relative_to(build):
+                raise ValueError('Generated compiler input escapes build root')
             before[path.resolve()] = sha(path)
     wrapper_sha, compiler_sha = sha(__file__), sha(compiler)
     base = [str(compiler)] + argv[1:]
@@ -148,15 +186,10 @@ def compile_current(argv):
     bootstrap_cmd += ['-DAK820_DEFAULT_KEYMAP_EXTRACT', '-o', str(bootstrap)]
     dependency_cmd = bootstrap_cmd[:-2]
     dependency_cmd[dependency_cmd.index('-S')] = '-E'
-    subprocess.run(dependency_cmd, check=True, stdout=subprocess.DEVNULL)
-    paths = dependency_paths(dep, root)
-    # Generated QMK headers already exist but are excluded by the broad source
-    # snapshot. Hash their exact discovered closure before the bootstrap compile.
-    for path in paths:
-        if path not in before and '.build' in path.parts:
-            before[path] = sha(path)
-    subprocess.run(bootstrap_cmd, check=True)
-    if dependency_paths(dep, root) != paths:
+    run_compiler(dependency_cmd, invocations, dependency=dep, stdout=subprocess.DEVNULL)
+    paths = dependency_paths(dep, root, target=output.name, primary=primary)
+    run_compiler(bootstrap_cmd, invocations, dependency=dep)
+    if dependency_paths(dep, root, target=output.name, primary=primary) != paths:
         raise ValueError('Dependency closure changed during generation')
     def verify():
         if sha(__file__) != wrapper_sha or sha(compiler) != compiler_sha:
@@ -190,18 +223,16 @@ def compile_current(argv):
         else:
             final_discovery.append(item)
     try:
-        subprocess.run(final_discovery, check=True, stdout=subprocess.DEVNULL)
-        final_paths = dependency_paths(final_dep, root)
+        run_compiler(final_discovery, invocations, dependency=final_dep, stdout=subprocess.DEVNULL)
+        final_paths = dependency_paths(final_dep, root, target=output.name, primary=primary)
         def verify_final_inputs():
             verify()
             for path in final_paths:
                 if final_before.get(path) != sha(path):
                     raise ValueError('Source changed during final compilation: ' + str(path))
         verify_final_inputs()
-        subprocess.run(final_cmd, check=True)
-        actual_dep = next(Path(arg[len('-Wp,-MD,-MF,'):]) for arg in final_cmd
-                          if arg.startswith('-Wp,-MD,-MF,'))
-        if dependency_paths(actual_dep, root) != final_paths:
+        run_compiler(final_cmd, invocations, dependency=actual_dep)
+        if dependency_paths(actual_dep, root, target=output.name, primary=primary) != final_paths:
             raise ValueError('Final dependency closure changed during compilation')
         verify_final_inputs()
         verify_final(output.with_suffix('.asm').read_text(), bootstrap.read_text())
@@ -210,7 +241,8 @@ def compile_current(argv):
         output.unlink(missing_ok=True)
         output.with_suffix('.rel').unlink(missing_ok=True)
         raise
-    report = {'dependency_command': dependency_cmd, 'bootstrap_command': bootstrap_cmd, 'final_command': final_cmd,
+    report = {'compiler_invocations': invocations,
+              'dependency_command': dependency_cmd, 'bootstrap_command': bootstrap_cmd, 'final_command': final_cmd,
               'compiler_sha256': compiler_sha, 'generator_sha256': wrapper_sha,
               'dependencies': {str(path): sha(path) for path in sorted(paths)},
               'bootstrap_sha256': sha(bootstrap), 'dependency_sha256': sha(dep),

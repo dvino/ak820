@@ -269,7 +269,7 @@ class SettingsTests(unittest.TestCase):
         output.mkdir()
         profile = self.profile if profile is None else profile
         raw = WireDevice(profile, nvm)
-        api = DeviceAPI(profile, output, lambda: raw, allow_writes=writes)
+        api = DeviceAPI(profile, output, lambda: raw, allow_writes=writes, verification=())
         self.addCleanup(api.close)
         return api, raw
 
@@ -303,6 +303,9 @@ class SettingsTests(unittest.TestCase):
             settings.export_settings(api, saved['path'], self.profile)
         self.assertEqual(raw.requests, [])
         self.assertEqual((saved['path']/'.gitignore').read_bytes(), b'*\n')
+        import settings_workflow as workflow
+        pinned = workflow.fingerprint(saved['path'])
+        self.assertEqual(set(pinned), {*settings.FILES, 'manifest.json'})
 
     def test_complete_restore_all_six_layers_encoders_binary_macros_and_off_RGB(self):
         macro = b'\1\1\xe0\1\4\xff\x80\1\5\1\xffx\0'
@@ -692,12 +695,217 @@ class ComboTests(unittest.TestCase):
         api, _ = self.api(source, profile=candidate)
         backup = settings.export_settings(api, self.root/'combo', candidate)
         target, raw = self.api(writes=True, profile=candidate)
-        settings.restore_settings(target, backup, candidate)
+        stages = []
+        with patch.object(target, 'set_combo', wraps=target.set_combo) as setter:
+            settings.restore_settings(target, backup, candidate, before_write=stages.append)
+        self.assertTrue(setter.called)
+        self.assertGreaterEqual(stages.count('combo:0'), 3)
+        self.assertFalse(hasattr(target, '_before_setter'))
         self.assertEqual(target.get_combo(0), data)
         empty, _ = self.api(profile=candidate)
         clear = settings.export_settings(empty, self.root/'clear', candidate)
         settings.restore_settings(target, clear, candidate)
         self.assertEqual(raw.nvm[0x658:0x662], DeviceAPI.stored_combo(bytes(10)))
+
+    def test_restore_wires_target_guard_through_combo_internal_read(self):
+        import ak820 as host
+        import settings_workflow as workflow
+        _, candidate = self.candidate()
+        nvm = base_nvm()
+        nvm[0x658:0x662] = DeviceAPI.stored_combo(bytes.fromhex('04000500000000000600'))
+        source, _ = self.api(nvm, profile=candidate)
+        saved = settings.export_settings(source, self.root/'race-source', candidate)
+        target, raw = self.api(writes=True, profile=candidate)
+        fresh = settings.export_settings(target, self.root/'race-target', candidate)
+        pinned = workflow.fingerprint(fresh['path'])
+        original_setter = target.set_combo
+        count_before = []
+        def invoke(*args):
+            count_before.append(len(raw.writes))
+            def corrupt(_device, packet, _reply):
+                if packet[:2] == b'\xfd\x01':
+                    path = fresh['path'] / 'settings.json'
+                    path.write_bytes(path.read_bytes() + b' ')
+            raw.fault = corrupt
+            return original_setter(*args)
+        def guard(_stage):
+            workflow.check_backup(host, fresh['path'], pinned, candidate, fresh['identity'])
+        with patch.object(target, 'set_combo', side_effect=invoke):
+            with self.assertRaisesRegex(ValueError, 'Backup hash/size mismatch'):
+                settings.restore_settings(target, saved, candidate, before_write=guard, target_backup=fresh)
+        self.assertEqual(len(count_before), 1)
+        self.assertEqual(len(raw.writes), count_before[0])
+        self.assertFalse(any(packet.startswith(b'\xfe\x0d\x04') for packet in raw.requests))
+        self.assertFalse(hasattr(target, '_before_setter'))
+
+    def test_restore_checks_both_backups_without_callback_during_internal_read(self):
+        _, candidate = self.candidate()
+        for which in ('source', 'target'):
+            with self.subTest(which=which):
+                nvm = base_nvm()
+                nvm[0x658:0x662] = DeviceAPI.stored_combo(bytes.fromhex('04000500000000000600'))
+                source, _ = self.api(nvm, profile=candidate)
+                saved = settings.export_settings(source, self.root/('src-'+which), candidate)
+                target, raw = self.api(writes=True, profile=candidate)
+                fresh = settings.export_settings(target, self.root/('tgt-'+which), candidate)
+                original_setter = target.set_combo; prior = []
+                def invoke(*args):
+                    prior.append(len(raw.writes))
+                    def corrupt(_device, packet, _reply):
+                        if packet[:2] == b'\xfd\x01':
+                            path = (saved if which == 'source' else fresh)['path'] / 'settings.json'
+                            path.write_bytes(path.read_bytes() + b' ')
+                    raw.fault = corrupt
+                    return original_setter(*args)
+                with patch.object(target, 'set_combo', side_effect=invoke):
+                    with self.assertRaisesRegex(ValueError, 'Backup hash/size mismatch'):
+                        settings.restore_settings(target, saved, candidate, target_backup=fresh)
+                self.assertEqual(len(prior), 1)
+                self.assertEqual(len(raw.writes), prior[0])
+                self.assertFalse(any(packet.startswith(b'\xfe\x0d\x04') for packet in raw.requests))
+                self.assertFalse(hasattr(target, '_before_setter'))
+
+    def test_prior_guard_chaining_reentrancy_and_ownership(self):
+        import threading
+        _, candidate = self.candidate()
+        for case in ('success', 'error', 'nested', 'concurrent'):
+            with self.subTest(case=case):
+                nvm = base_nvm()
+                nvm[0x658:0x662] = DeviceAPI.stored_combo(bytes.fromhex('04000500000000000600'))
+                source, _ = self.api(nvm, profile=candidate)
+                saved = settings.export_settings(source, self.root/('guard-src-'+case), candidate)
+                target, raw = self.api(writes=True, profile=candidate)
+                fresh = settings.export_settings(target, self.root/('guard-tgt-'+case), candidate)
+                calls = []; failures = []
+                def prior():
+                    calls.append(1)
+                    if case == 'error': raise ValueError('prior guard failure')
+                    if case == 'nested': target.set_key(0, (0, 0), 4)
+                    if case == 'concurrent':
+                        def other():
+                            try: target.set_key(0, (0, 0), 4)
+                            except ValueError as error: failures.append(str(error))
+                        thread = threading.Thread(target=other); thread.start(); thread.join(timeout=2)
+                        self.assertFalse(thread.is_alive())
+                target._before_setter = prior
+                if case in ('error', 'nested'):
+                    with self.assertRaisesRegex(ValueError, 'prior guard failure' if case == 'error' else 'Reentrant setter'):
+                        settings.restore_settings(target, saved, candidate, target_backup=fresh)
+                    self.assertEqual(raw.writes, [])
+                else:
+                    settings.restore_settings(target, saved, candidate, target_backup=fresh)
+                self.assertTrue(calls)
+                self.assertIs(target._before_setter, prior)
+                if case == 'concurrent':
+                    self.assertTrue(failures)
+                    self.assertTrue(all('owned by another operation' in error for error in failures))
+
+    def test_preliminary_callback_cannot_nest_setter_and_preserves_guard(self):
+        _, candidate = self.candidate()
+        for prior in ('absent', 'none', 'callable'):
+            for callback_index in (1, 2, 3):
+                with self.subTest(prior=prior, callback=callback_index):
+                    nvm = base_nvm()
+                    nvm[0x658:0x662] = DeviceAPI.stored_combo(bytes.fromhex('04000500000000000600'))
+                    source, _ = self.api(nvm, profile=candidate)
+                    saved = settings.export_settings(source, self.root/f'pre-src-{prior}-{callback_index}', candidate)
+                    target, raw = self.api(writes=True, profile=candidate)
+                    fresh = settings.export_settings(target, self.root/f'pre-tgt-{prior}-{callback_index}', candidate)
+                    original = lambda: None
+                    if prior != 'absent': target._before_setter = None if prior == 'none' else original
+                    calls = []
+                    def callback(_stage):
+                        calls.append(1)
+                        if len(calls) == callback_index: target.set_key(0, (0, 0), 4)
+                    with self.assertRaisesRegex(ValueError, 'Reentrant setter'):
+                        settings.restore_settings(target, saved, candidate, before_write=callback, target_backup=fresh)
+                    self.assertEqual(raw.writes, [])
+                    self.assertEqual(hasattr(target, '_before_setter'), prior != 'absent')
+                    if prior != 'absent': self.assertIs(target._before_setter, None if prior == 'none' else original)
+
+    def test_prior_setter_guard_cannot_start_nested_restore(self):
+        _, candidate = self.candidate()
+        source, _ = self.api(profile=candidate)
+        saved = settings.export_settings(source, self.root/'nested-src', candidate)
+        target, raw = self.api(writes=True, profile=candidate)
+        fresh = settings.export_settings(target, self.root/'nested-tgt', candidate)
+        def prior():
+            settings.restore_settings(target, saved, candidate, before_write=lambda _stage: None, target_backup=fresh)
+        target._before_setter = prior
+        with self.assertRaisesRegex(ValueError, 'Reentrant settings restore'):
+            target.set_key(0, (0, 0), 4)
+        self.assertEqual(raw.writes, [])
+        self.assertIs(target._before_setter, prior)
+        self.assertFalse(target._guard_active)
+        self.assertFalse(target._restore_active)
+
+    def test_setter_ownership_covers_internal_read_before_restore(self):
+        import threading
+        _, candidate = self.candidate()
+        source, _ = self.api(profile=candidate)
+        saved = settings.export_settings(source, self.root/'owner-src', candidate)
+        target, raw = self.api(writes=True, profile=candidate)
+        fresh = settings.export_settings(target, self.root/'owner-tgt', candidate)
+        entered = threading.Event(); release = threading.Event(); errors = []
+        read = target.read_nvm
+        def paused(*args, **kwargs):
+            value = read(*args, **kwargs)
+            entered.set()
+            if not release.wait(5): raise RuntimeError('test timeout')
+            return value
+        def setter():
+            try: target.set_combo(0, bytes.fromhex('04000500000000000600'))
+            except Exception as error: errors.append(error)
+        with patch.object(target, 'read_nvm', side_effect=paused):
+            thread = threading.Thread(target=setter); thread.start()
+            try:
+                self.assertTrue(entered.wait(5))
+                with self.assertRaisesRegex(ValueError, 'owned by another operation'):
+                    settings.restore_settings(target, saved, candidate, target_backup=fresh)
+                self.assertEqual(raw.writes, [])
+            finally:
+                release.set(); thread.join(5)
+            self.assertFalse(thread.is_alive())
+        self.assertEqual(errors, [])
+        self.assertEqual(len(raw.writes), 1)  # The original setter continued after the failed restore.
+
+    def test_operation_guard_blocks_three_internal_read_races(self):
+        import ak820 as host
+        import settings_workflow as workflow
+        _, candidate = self.candidate()
+        saved_api, _ = self.api(profile=candidate)
+        backup = settings.export_settings(saved_api, self.root/'guard-target', candidate)
+        pinned = workflow.fingerprint(backup['path'])
+        for kind, mode in ((kind, mode) for kind in ('combo', 'extension', 'setting') for mode in ('backup', 'locked')):
+            with self.subTest(kind=kind, mode=mode):
+                profile = dict(candidate)
+                profile['compatible_images'] = {key: dict(value) for key, value in candidate['compatible_images'].items()}
+                profile['compatible_images'][profile['ihx_sha256']]['settings_record_version'] = 2
+                nvm = base_nvm()
+                if kind != 'combo':
+                    nvm, _ = p.migrate_vial_nvm(nvm, p.BUILD_ID, target_build_id=p.EXTENSION_BUILD_ID)
+                    payload = bytearray(profile['payload'])
+                    payload[p.NVM_START-p.APP_START:p.NVM_END-p.APP_START] = nvm
+                    profile['payload'] = bytes(payload)
+                api, raw = self.api(nvm, writes=True, profile=profile)
+                path = backup['path'] / 'settings.json'
+                original = path.read_bytes()
+                def corrupt(_device, packet, reply):
+                    if packet[:2] == b'\xfd\x01':
+                        if mode == 'backup': path.write_bytes(original + b' ')
+                        else: reply[17] = 0
+                raw.fault = corrupt
+                api._before_setter = lambda: workflow.check_backup(host, backup['path'], pinned, candidate, backup['identity'])
+                with self.assertRaisesRegex(ValueError, 'Backup hash/size mismatch' if mode == 'backup' else 'Vial locked during pre-write NVM read'):
+                    if kind == 'combo': api.set_combo(0, bytes.fromhex('04000500000000000600'))
+                    elif kind == 'extension': api.set_extension('tap_dance', 0, bytes(10))
+                    else: api.set_setting(3, 0)
+                self.assertTrue(any(packet[:2] == b'\xfd\x01' for packet in raw.requests))
+                setter_prefix = {'combo': b'\xfe\x0d\x04', 'extension': b'\xfe\x0d\x02',
+                                 'setting': b'\xfe\x0b'}[kind]
+                self.assertFalse(any(packet.startswith(setter_prefix) for packet in raw.requests))
+                self.assertEqual(raw.writes, [])
+                path.write_bytes(original)
 
     def test_legacy_does_not_clear_candidate(self):
         old, candidate = self.candidate()
@@ -793,6 +1001,8 @@ class DirectBackupTests(unittest.TestCase):
         self.assertNotIn('direct_ram',saved['settings'])
         self.assertEqual(raw.writes,[])
         self.assertIn('direct-ram.json',saved['manifest']['files'])
+        import settings_workflow as workflow
+        self.assertIn('direct-ram.json', workflow.fingerprint(saved['path']))
 
     def test_exact_capability_requires_runtime_support(self):
         self.capable()

@@ -97,8 +97,15 @@ class DeviceTests(unittest.TestCase):
 
     def api(self, fault=None):
         raw = RawFixture(fault)
+        # This wire fixture tests setter/readback behavior, not image approval.
+        profile = {'definition': raw.definition, 'ihx_sha256': 'mock',
+                   'code_sha256': 'mock', 'settings_record_version': 2}
+        approved = mock.patch.object(protocol, '_approved_write_profile',
+            return_value=(types.SimpleNamespace(validate_rom=lambda *args: None), profile))
+        approved.start()
+        self.addCleanup(approved.stop)
         api = protocol.DeviceAPI({'definition': raw.definition}, self.output, lambda: raw,
-                                 allow_writes=True)
+                                 allow_writes=True, verification=('mock', 'mock', 'mock'))
         self.addCleanup(api.close)
         return api, raw
 
@@ -212,8 +219,10 @@ class DeviceTests(unittest.TestCase):
         (release/'reports').mkdir()
         (release/'reports/build-report.json').write_text(json.dumps({
             'configuration': protocol.profiles.configuration('main')}))
+        snapshot = types.SimpleNamespace(manifest={'release':'fixture'}, files={name: (release/name).read_bytes() for name in (
+            'firmware/application.ihx', 'firmware/application.map', 'reports/build-report.json')})
         spec = types.SimpleNamespace(name='fixture_installer', loader=types.SimpleNamespace(
-            exec_module=lambda module:setattr(module,'_load_release',lambda *args, **kwargs:None)))
+            exec_module=lambda module:setattr(module,'_release_snapshot',lambda *args, **kwargs:snapshot)))
         for failure in ('ihx_sha256','map_sha256','CODE'):
             selected = dict(images)
             if failure != 'CODE': selected[failure] = 'wrong'
@@ -221,7 +230,7 @@ class DeviceTests(unittest.TestCase):
                  mock.patch.object(protocol.importlib.util,'module_from_spec',return_value=types.SimpleNamespace()), \
                  mock.patch.object(protocol.transport,'session_image',return_value=(selected,b'\0',bytes(65536))), \
                  mock.patch.object(protocol.pack,'validate_native'), \
-                 mock.patch.object(protocol.diag,'diagnostic_build',return_value={protocol.pack.APP_START:1}), \
+                 mock.patch.object(protocol.diag,'diagnostic_build_bytes',return_value={protocol.pack.APP_START:1}), \
                  mock.patch.object(protocol.transport,'select_application') as opened:
                 with self.subTest(failure=failure), self.assertRaisesRegex(ValueError,'different build|CODE differs'):
                     protocol.bind(release,self.output/'session',self.output/'approval')
@@ -241,16 +250,19 @@ class DeviceTests(unittest.TestCase):
                     (release / ('firmware/application.' + suffix)).write_bytes(suffix.encode())
                 images = {'ihx_sha256':protocol.pack.digest(b'ihx'),
                           'map_sha256':protocol.pack.digest(b'map')}
-                checked = mock.Mock()
+                snapshot = types.SimpleNamespace(manifest={'release':'fixture'}, files={name: (release/name).read_bytes() for name in (
+                    'firmware/application.ihx', 'firmware/application.map', 'reports/build-report.json', 'reference/vial.json')})
+                checked = mock.Mock(return_value=snapshot)
                 spec = types.SimpleNamespace(name='fixture_selected_installer', loader=types.SimpleNamespace(
-                    exec_module=lambda module:setattr(module,'_load_release',checked)))
+                    exec_module=lambda module:setattr(module,'_release_snapshot',checked)))
                 with mock.patch.object(protocol.importlib.util,'spec_from_file_location',return_value=spec), \
                      mock.patch.object(protocol.importlib.util,'module_from_spec',return_value=types.SimpleNamespace()), \
                      mock.patch.object(protocol.transport,'session_image',return_value=(images,b'\1',bytes(65536))) as session, \
                      mock.patch.object(protocol.pack,'validate_native'), \
-                     mock.patch.object(protocol.diag,'diagnostic_build',return_value={protocol.pack.APP_START:1}):
+                     mock.patch.object(protocol.diag,'diagnostic_build_bytes',return_value={protocol.pack.APP_START:1}):
                     binding = protocol.bind(release,self.output/'personal',self.output/'approval')
-                checked.assert_called_once_with(release,self.output/'approval',approved=True)
+                checked.assert_called_once_with(release,self.output/'approval',approved=True,
+                                                manifest_bytes=(release/'installer-release.json').read_bytes())
                 self.assertEqual(binding['nvm_schema'],protocol.pack.EXTENSION_BUILD_ID)
                 session.assert_called_once_with(self.output/'personal','permanent',
                                                 target_build_id=protocol.pack.EXTENSION_BUILD_ID)

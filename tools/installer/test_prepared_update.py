@@ -93,7 +93,7 @@ class PreparedUpdateTests(unittest.TestCase):
             stack.enter_context(patch.object(app.transport, 'verify_live'))
             if target_build_id != app.packer.BUILD_ID:
                 stack.enter_context(patch.object(app, 'require_session_release'))
-            stack.enter_context(patch.object(app.diagnostic, 'diagnostic_build', return_value={1: 2}))
+            stack.enter_context(patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={1: 2}))
             stack.enter_context(patch.object(app.diagnostic, 'capture', side_effect=capture))
             stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
             error = None
@@ -101,7 +101,11 @@ class PreparedUpdateTests(unittest.TestCase):
                 app.update_prepared(Mock(folder=root), Mock(), source,
                     context=app.ReleaseContext('legacy' if target_build_id == app.packer.BUILD_ID else 'work',
                                                root, root/'approval', release,
-                                               nvm_schema=target_build_id))
+                                               nvm_schema=target_build_id,
+                                               snapshot=app.ReleaseSnapshot(b'', {
+                                                   'firmware/application.ihx': b'ihx',
+                                                   'firmware/application.map': b'map',
+                                                   'reports/build-report.json': b'report'}, {}, b'')))
             except (app.Cancelled, TimeoutError, ValueError) as caught:
                 error = caught
             self.assertTrue((root / 'before-update-readback' / 'rom.bin').is_file())

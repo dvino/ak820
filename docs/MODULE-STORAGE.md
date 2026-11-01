@@ -66,6 +66,11 @@ when target tables are empty and QMK Settings are at defaults. A schema03
 backup cannot be restored to schema02. The approved profile image identities
 and offline transition limits are in [Status](STATUS.md).
 
+Format and schema support do not admit an image as a candidate settings source
+or restore target. The separate exact-image policy in
+[Settings backup and restore](SETTINGS-BACKUP.md) must also pass; support for
+legacy formats does not admit beta.3 sources or authorize settings writes.
+
 Direct RGB palette values and volatile module state are not part of the backup.
 A value that the target cannot reproduce stops restore before its first write.
 These format checks do not establish physical key behavior or persistence after

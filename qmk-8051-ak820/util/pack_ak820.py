@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import re
 import struct
@@ -45,8 +46,17 @@ def digest(data):
 
 
 def read_ihex(path):
+    return _parse_ihex(path.read_text())
+
+
+def parse_ihex_bytes(raw):
+    with io.TextIOWrapper(io.BytesIO(raw)) as stream:
+        return _parse_ihex(stream.read())
+
+
+def _parse_ihex(text):
     data, base, eof = {}, 0, False
-    for line in path.read_text().splitlines():
+    for line in text.splitlines():
         if eof or not line.startswith(':'):
             raise ValueError('Malformed HEX or record after EOF')
         record = bytes.fromhex(line[1:])
@@ -75,8 +85,19 @@ def read_ihex(path):
 
 
 def read_symbols(path):
+    return _parse_symbols(path.read_text())
+
+
+def parse_symbols_bytes(raw):
+    with io.TextIOWrapper(io.BytesIO(raw)) as stream:
+        return _parse_symbols(stream.read())
+
+
+def _parse_symbols(text):
+    # SDCC MAPs can repeat truncated names; the legacy parser keeps the last.
+    # These entries cannot establish symbol-name uniqueness.
     return {name:int(address,16) for address,name in
-            re.findall(r'^C:\s+([0-9A-Fa-f]{8})\s+(\S+)',path.read_text(),re.M)}
+            re.findall(r'^C:\s+([0-9A-Fa-f]{8})\s+(\S+)',text,re.M)}
 
 
 def code_bytes(data,address,count):

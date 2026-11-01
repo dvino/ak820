@@ -1,6 +1,7 @@
 """Offline versioned compact controls and historical image ABI boundaries."""
 import binascii
 import struct
+import threading
 import unittest
 from unittest.mock import Mock
 from installer import settings_backup as s
@@ -8,6 +9,16 @@ from ak820_device_protocol import DeviceAPI
 
 e=s.extensions
 p=s.ak820_profiles
+
+def api_fixture():
+    api=object.__new__(DeviceAPI)
+    api._operation_lock=threading.RLock()
+    api._guard_active=False
+    api._restore_active=False
+    api._setter_depth=0
+    # These tests cover codec and durable readback, not image authorization.
+    api._require_writes=Mock()
+    return api
 
 class CompactContract(unittest.TestCase):
     def test_v1_roundtrip_and_forward_only_normalization(self):
@@ -46,7 +57,10 @@ class CompactContract(unittest.TestCase):
             self.assertNotIn('compact_controls_version',old)
             self.assertFalse(set((3,6,22)) & set(old['runtime_qmk_settings']))
             current=p.configuration(name)
-            self.assertEqual(current['compact_controls_version'],2)
+            self.assertEqual(current['compact_controls_version'],3)
+            previous=p._configuration(name,p.PROFILES[name],current=True)
+            self.assertEqual(previous['compact_controls_version'],2)
+            p.validate_source_configuration(previous)
             self.assertEqual(current['optional_features'],old['optional_features'])
             image=s._settings_identity(old,'a'*64,'b'*64,'c'*64,combo_actions=['caps-word-toggle'],macro_layer_tap=True)
             self.assertNotIn('settings_record_version',image)
@@ -63,7 +77,7 @@ class CompactContract(unittest.TestCase):
                     before[37:40]=e.SCHEMA.to_bytes(3,'little')
                     before[0x6a8:0x6c0]=record
                     before=bytes(before)
-                    api=object.__new__(DeviceAPI)
+                    api=api_fixture()
                     api.binding={'settings_record_version':2}
                     api.allow_writes=True
                     api.read_nvm=Mock(return_value=before)
@@ -93,7 +107,7 @@ class CompactContract(unittest.TestCase):
             before=bytearray(0x2800)
             before[37:40]=e.SCHEMA.to_bytes(3,'little')
             before[0x6a8:0x6c0]=record
-            api=object.__new__(DeviceAPI)
+            api=api_fixture()
             api.binding={'settings_record_version':1}
             api.allow_writes=True
             api.read_nvm=Mock(return_value=bytes(before))
@@ -108,7 +122,7 @@ class CompactContract(unittest.TestCase):
     def test_media_write_requires_explicit_exact_capability_before_transport(self):
         for binding in ({},{'settings_record_version':1},{'settings_record_version':1,'combo_media':True},{'settings_record_version':2},
                         {'ihx_sha256':'old','combo_media':True,'compatible_images':{'old':{'settings_record_version':1}}}):
-            api=object.__new__(DeviceAPI)
+            api=api_fixture()
             api.binding=binding
             api.allow_writes=True
             api.exchange=Mock()
@@ -126,7 +140,7 @@ class CompactContract(unittest.TestCase):
         after[DeviceAPI.COMBO_OFFSET:DeviceAPI.COMBO_OFFSET+10]=DeviceAPI.stored_combo(data)
         for binding in ({'settings_record_version':2,'combo_media':True},
                         {'ihx_sha256':'current','compatible_images':{'current':{'settings_record_version':2,'combo_media':True}}}):
-            api=object.__new__(DeviceAPI)
+            api=api_fixture()
             api.binding=binding
             api.allow_writes=True
             api.read_nvm=Mock(side_effect=[before,bytes(after)])
@@ -137,7 +151,7 @@ class CompactContract(unittest.TestCase):
             api.exchange.assert_called_once()
 
     def test_legacy_protocol_rejects_new_fields_before_transport(self):
-        api=object.__new__(DeviceAPI)
+        api=api_fixture()
         api.binding={'settings_record_version':1}
         api.allow_writes=True
         api.exchange=Mock()

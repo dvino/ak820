@@ -280,8 +280,7 @@ bool encoder_read(void) {
     for (uint8_t i = 0; i < thisCount; i++) {
         uint8_t new_status = (readPin(encoders_pad_a[i]) << 0) | (readPin(encoders_pad_b[i]) << 1);
         if ((encoder_state[i] & 0x3) != new_status) {
-            encoder_state[i] <<= 2;
-            encoder_state[i] |= new_status;
+            encoder_state[i] = (encoder_state[i] << 2) | new_status;
             changed |= encoder_update(i, encoder_state[i]);
         }
     }

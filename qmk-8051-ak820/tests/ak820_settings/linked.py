@@ -17,11 +17,18 @@ emitted=tapping.linked
 BUFFER=0x2400
 
 def record(grave=0,combo=40,tapping_term=200,tap_delay=0,caps_delay=80,autoshift=175,
-           autoshift_flags=1,caps_word_language=0,oneshot_timeout=0,version=2):
-    result=bytearray((b'QS\x01\x0b\x3f' if version==1 else b'QS\x02\x0f\x7f')+bytes([grave]))
+           autoshift_flags=1,caps_word_language=0,oneshot_timeout=0,leader=300,version=3):
+    if version==1:
+        header=b'QS\x01\x0b\x3f';tail=bytes(6)
+    elif version==2:
+        header=b'QS\x02\x0f\x7f';tail=(bytes([autoshift_flags,caps_word_language])+
+                                        oneshot_timeout.to_bytes(2,'little')+bytes(2))
+    else:
+        header=b'QS\x03\x11\xff';tail=(bytes([autoshift_flags,caps_word_language])+
+                                        oneshot_timeout.to_bytes(2,'little')+leader.to_bytes(2,'little'))
+    result=bytearray(header+bytes([grave]))
     for value in (combo,tapping_term,tap_delay,caps_delay,autoshift):result+=value.to_bytes(2,'little')
-    result+=(bytes(6) if version==1 else bytes([autoshift_flags,caps_word_language])+
-             oneshot_timeout.to_bytes(2,'little')+bytes(2))
+    result+=tail
     result+=binascii.crc_hqx(result,0xffff).to_bytes(2,'little')
     assert len(result)==24
     return list(result)
@@ -55,12 +62,12 @@ def api(t,operation,qsid=0,data=None,expected=0,label='api'):
         # The transport changes only status plus the width bytes of a Get.
         reply=packet[:];reply[0]=expected&255
         if operation=='get' and expected==0:
-            positions={1:5,2:6,3:16,4:14,6:18,7:8,18:10,19:12,22:17}
+            positions={1:5,2:6,3:16,4:14,6:18,7:8,18:10,19:12,22:17,23:20}
             pos=positions[qsid];width=1 if qsid in (1,3,22) else 2
             reply[1:1+width]=t.settings_record[pos:pos+width]
         if operation=='reset' and expected==0:t.settings_record=record(caps_word_language=1)
         if operation=='set' and expected==0:
-            positions={1:5,2:6,3:16,4:14,6:18,7:8,18:10,19:12,22:17}
+            positions={1:5,2:6,3:16,4:14,6:18,7:8,18:10,19:12,22:17,23:20}
             pos=positions[qsid];width=1 if qsid in (1,3,22) else 2
             t.settings_record[pos:pos+width]=data[:width]
         observe(t,label+'-full-packet',fw.address('_raw_buffer'),reply)
@@ -89,6 +96,8 @@ def cases(fw):
     has_autoshift='_ak820_autoshift_process' in fw.symbols
     has_oneshot='_ak820_oneshot_process' in fw.symbols
     ids=[1,2]+([3,4] if has_autoshift else [])+([6] if has_oneshot else [])+[7,18,19,22]
+    has_leader='_ak820_leader_process' in fw.symbols
+    if has_leader:ids += [23]
     api(t,'query',0,label='query')
     expected=sum(([v,0] for v in ids),[])+[255]*(32-len(ids)*2)
     observe(t,'query-values',fw.address('_raw_buffer'),expected)
@@ -98,7 +107,10 @@ def cases(fw):
     for qsid,value,width in fields:
         api(t,'get',qsid,label=f'get-{qsid}')
         observe(t,f'value-{qsid}',BUFFER,list(value.to_bytes(width,'little')))
-    for qsid in (0,5,8,21,23,0x101,0xffff):
+    unsupported=(0,5,8,21,0x101,0xffff)+(23,)if not has_leader else(0,5,8,21,0x101,0xffff)
+    if has_leader:
+        api(t,'get',23,label='get-23');observe(t,'value-23',BUFFER,[300&255,300>>8])
+    for qsid in unsupported:
         api(t,'get',qsid,expected=-1,label=f'get-unsupported-{qsid}')
         api(t,'set',qsid,[40,0],expected=-1,label=f'set-unsupported-{qsid}')
     for qsid in (1,2,21,22,0x100,0xffff):

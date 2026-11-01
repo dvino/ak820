@@ -306,7 +306,7 @@ def validate_prepared_update(session, snapshot=None, *, target_build_id=BUILD_ID
 def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
           application_descriptor=None,loader_descriptor=None,phase_guard=None,
           native_install=False, prepared_update_snapshot=None, host_update_snapshot=None,
-          target_build_id=BUILD_ID):
+          target_build_id=BUILD_ID, payload_guard=None, reference_bytes=None):
     """Use the unchanged OEM loader protocol with optional orchestration guards.
 
     A guard is called before reset/erase/restart, after the corresponding local
@@ -315,9 +315,12 @@ def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
     ``reference_dir`` avoids depending on a historical archive directory layout.
     """
     manifest,payload,backup=session_image(session,name,target_build_id=target_build_id)
-    references=Path(reference_dir) if reference_dir is not None else ROOT/'reference'
-    stock=(references/'stock-full.bin').read_bytes()
-    native=(references/'native-installed.bin').read_bytes()
+    if reference_bytes is None:
+        references=Path(reference_dir) if reference_dir is not None else ROOT/'reference'
+        stock=(references/'stock-full.bin').read_bytes()
+        native=(references/'native-installed.bin').read_bytes()
+    else:
+        stock,native=reference_bytes
     validate_native(backup,stock,native)
     if native_install:
         if (name != 'permanent' or not enter_loader or phase_guard is None or application_descriptor is None or
@@ -328,7 +331,8 @@ def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
     if prepared_update:
         if name != 'permanent' or enter_loader or native_install or phase_guard is None or loader_descriptor is None:
             raise ValueError('Prepared update requires a guarded, explicitly authorized loader')
-        validate_prepared_update(session, prepared_update_snapshot, target_build_id=target_build_id)
+        if validate_prepared_update(session, prepared_update_snapshot, target_build_id=target_build_id) != (manifest, payload, backup):
+            raise ValueError('Prepared update bytes changed after initial read')
     host_update = host_update_snapshot is not None
     if host_update:
         if (name != 'permanent' or enter_loader or native_install or prepared_update or
@@ -340,6 +344,8 @@ def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
             raise ValueError('Host update requires an original OEM migration')
     if name=='permanent' and not native_install and not prepared_update and not host_update and (not accept_hardware_check or 'permanent_prepared_from_verified_trial' not in manifest):
         raise ValueError('Verify physical operation of the trial, run prepare-permanent, then explicitly pass --accept-hardware-check')
+    if payload_guard is not None:
+        payload_guard(payload, backup)
     log=[]
     logfile=session/f'flash-{name}-{time.time_ns()}.json'
     def record(event,**fields):
@@ -395,6 +401,8 @@ def flash(session,name,enter_loader,accept_hardware_check,*,reference_dir=None,
         if phase_guard is not None:
             phase_guard('erase_and_flash',image=name,sha256=digest(payload),
                         loader_path=loader['path'])
+        if payload_guard is not None:
+            payload_guard(payload, backup)
         command(2,7.0)
         command(3,.1,APP_START,len(payload)//64)
         for offset in range(0,len(payload),64):

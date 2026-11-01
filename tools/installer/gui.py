@@ -12,6 +12,12 @@ from i18n import (LanguageSession, localize_output, localize_prompt,
                   needs_unlock_dialog, progress_text, text as tr)
 
 
+def finished_text(status, language):
+    if status == ak820.OEM_PRESENT_UNVERIFIED_EXIT:
+        return tr('oem_present_unverified', language)
+    return tr('completed', language, code=status)
+
+
 def backup_destination(parent_dir, timestamp=None):
     """Return a unique new child directory, as required by the backup writer."""
     timestamp = timestamp or datetime.now().strftime('%Y%m%d-%H%M%S-%f')
@@ -194,7 +200,7 @@ def main(argv=None):
         if current_stage is None:
             instructions.set(tr('instructions', language_now))
             if current_status is not None:
-                state.set(tr('completed', language_now, code=current_status))
+                state.set(finished_text(current_status, language_now))
             else:
                 state.set(tr('ready', language_now))
             return
@@ -243,7 +249,7 @@ def main(argv=None):
 
     def start(command_args):
         nonlocal current_stage, current_stage_data, current_status
-        if command_args[0] in ('prepare', 'install', 'recover', 'check-device', 'update-prepared') and reference_folder.get().strip():
+        if command_args[0] in ('prepare', 'install', 'recover', 'check-device', 'update-prepared', 'backup', 'restore', 'update') and reference_folder.get().strip():
             command_args = command_args + ['--reference-dir', reference_folder.get().strip()]
         if profile_rows:
             command_args = command_args + ['--profile', profile_choice.get()]
@@ -451,7 +457,7 @@ def main(argv=None):
                 current_stage_data = {}
                 current_status = value
                 instructions.set(tr('instructions', controller.language.language))
-                state.set(tr('completed', controller.language.language, code=value))
+                state.set(finished_text(value, controller.language.language))
                 for button in controls:
                     button.configure(state='readonly' if button is profile_selector else 'normal')
         root.after(100, poll)

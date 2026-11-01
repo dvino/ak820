@@ -19,19 +19,22 @@ class ProfileSelectionTests(unittest.TestCase):
         path.write_text(json.dumps(self.catalog))
         self.addCleanup(patch.stopall)
         patch.object(app, 'ROOT', self.root).start()
-        self.loader = patch.object(app, '_load_release', side_effect=self.load).start()
+        self.loader = patch.object(app, '_release_snapshot', side_effect=self.load).start()
         for row in self.catalog['profiles']:
             path = self.root / row['bundle'] / 'reports/build-report.json'
             path.parent.mkdir(parents=True)
             path.write_text(json.dumps({'configuration': app.ak820_profiles.configuration(row['id'])}))
-            (path.parents[1] / 'installer-release.json').write_text(row['id'])
+            (path.parents[1] / 'installer-release.json').write_text(json.dumps({'profile': row['id']}))
             (path.parents[1] / 'approved-release.json').write_text('test approval')
 
-    def load(self, bundle, approval, *, approved):
-        return {'files': {'firmware/application.ihx': {'sha256': bundle.name},
-                          'firmware/application.map': {'sha256': bundle.name + '-map'}},
-                'host_files': {'tools/installer/profile-catalog.json': {}},
-                'install_modes': ['permanent','trial']}
+    def load(self, bundle, approval, *, approved, catalog_bytes=None, manifest=None):
+        manifest = manifest or {'files': {'firmware/application.ihx': {'sha256': bundle.name},
+                                           'firmware/application.map': {'sha256': bundle.name + '-map'}},
+                                'host_files': {'tools/installer/profile-catalog.json': {}},
+                                'install_modes': ['permanent','trial']}
+        return app.ReleaseSnapshot(json.dumps(manifest).encode(),
+                                   {'reports/build-report.json': (bundle / 'reports/build-report.json').read_bytes()},
+                                   {}, None)
 
     def test_all_ten_contexts_and_default(self):
         contexts = app.release_contexts(approved=True)
@@ -80,7 +83,7 @@ class ProfileSelectionTests(unittest.TestCase):
         report.write_text(json.dumps({'configuration': app.ak820_profiles.configuration('main')}))
         with self.assertRaisesRegex(ValueError, 'build configuration'):
             app.release_context('game', approved=True)
-        self.loader.side_effect = lambda *a, **kw: {'host_files': {}}
+        self.loader.side_effect = lambda *a, **kw: self.load(*a, **kw, manifest={'host_files': {}})
         with self.assertRaisesRegex(ValueError, 'bound to approved'):
             app.release_context('main', approved=True)
 
@@ -89,7 +92,8 @@ class ProfileSelectionTests(unittest.TestCase):
         self.loader.side_effect = ValueError('Approval does not match exact release bytes')
         with self.assertRaisesRegex(ValueError, 'Approval'):
             app.load_release(approved=True, context=context)
-        self.loader.side_effect = lambda *a, **kw: {'host_files': {'tools/installer/profile-catalog.json': {}}, 'changed': True}
+        self.loader.side_effect = lambda *a, **kw: self.load(*a, **kw, manifest={
+            'host_files': {'tools/installer/profile-catalog.json': {}}, 'changed': True})
         with self.assertRaisesRegex(ValueError, 'inputs changed'):
             app.load_release(approved=True, context=context)
 
@@ -112,21 +116,31 @@ class ProfileSelectionTests(unittest.TestCase):
             state.assert_not_called()
 
     def test_trial_preparation_uses_selected_assets_and_records_identity(self):
-        context = app.release_context('mmo', approved=True)
+        selected = app.release_context('mmo', approved=True)
+        files = {'firmware/application.ihx': b'approved ihx', 'firmware/application.map': b'approved map'}
+        manifest = selected.manifest
+        manifest['files'] = {name: {'sha256': app.sha(data)} for name, data in files.items()}
+        snapshot = app.ReleaseSnapshot(json.dumps(manifest).encode(), files, {}, None)
+        context = app.ReleaseContext('mmo', selected.bundle, selected.approval, manifest,
+                                     nvm_schema=selected.nvm_schema, snapshot=snapshot)
         folder = self.root / 'session-log'
         folder.mkdir()
         backup = bytes(65536)
         def write_trial(ihx, mapfile, stock, native, before, dest, *, target_build_id):
             self.assertEqual(target_build_id, app.packer.EXTENSION_BUILD_ID)
             dest.mkdir()
-            return {'images': {'ak820-vial-trial.bin': {}, 'restore-native.bin': {}}, 'migration': {}}
+            return {'images': {'ak820-vial-trial.bin': {}, 'restore-native.bin': {}}, 'migration': {},
+                    'ihx_sha256': app.sha(ihx), 'map_sha256': app.sha(mapfile)}
         plan = {'sha256': app.sha(backup[app.packer.APP_START:app.packer.APP_END])}
         with patch.object(app, 'capture_references'), patch.object(app, 'RECOVERY_REFERENCE', self.root), \
-             patch.object(app, 'write_trial', side_effect=write_trial) as writer, \
+             patch.object(app.packer, 'validate_native'), \
+             patch.object(app, 'write_trial_retained', side_effect=write_trial) as writer, \
+             patch.object(app, 'require_operation_recovery'), \
              patch.object(app.transport, 'plan', return_value=plan):
-            session, _ = app.prepare_trial(Mock(folder=folder), backup, image='trial', context=context)
+            session, _ = app.prepare_trial(Mock(folder=folder), backup, image='trial', context=context,
+                                           reference_bytes=(backup, backup[app.packer.APP_START:app.packer.APP_END]))
         self.assertEqual(writer.call_args.args[:2],
-                         (context.bundle/'firmware/application.ihx', context.bundle/'firmware/application.map'))
+                         (files['firmware/application.ihx'], files['firmware/application.map']))
         metadata = json.loads((session/'images.json').read_text())
         self.assertEqual(metadata['installer_release'], app.session_release_identity(context))
 
@@ -136,10 +150,16 @@ class ProfileSelectionTests(unittest.TestCase):
         payload = bytes(app.packer.APP_END-app.packer.APP_START)
         metadata = {'installer_release': app.session_release_identity(context)}
         plan = {'sha256': app.sha(payload)}
-        with patch.object(app, 'confirm_preparation'), \
+        (self.root / 'stock-full.bin').write_bytes(backup)
+        (self.root / 'native-installed.bin').write_bytes(b'native')
+        with patch.object(app, 'RECOVERY_REFERENCE', self.root), \
+             patch.object(app, 'capture_references'), patch.object(app.packer, 'validate_native'), \
+             patch.object(app, 'confirm_preparation'), \
              patch.object(app, 'inventory', return_value=('OEM_APP', {'path': b'fake'})), \
              patch.object(app, 'capture_native', return_value=backup), \
              patch.object(app, 'prepare_trial', return_value=(self.root, plan)) as prepare, \
+             patch.object(app, 'expected_install_payload', return_value=payload), \
+             patch.object(app, 'require_session_build'), \
              patch.object(app, 'consent', return_value={}) as consent, \
              patch.object(app.transport, 'flash') as flash, \
              patch.object(app, 'wait_state', return_value={'path': b'fake'}), \

@@ -84,6 +84,10 @@ class StackTests(unittest.TestCase):
             proof = m.Analyzer(rows,code).guarded_pop_split_dispatch(guard)
             self.assertEqual(proof['stack_delta'], -2)
             self.assertEqual(m.Analyzer(rows,code).bound(base)['bound'], 2)
+            unlisted = dict(rows); del unlisted[addresses[3]]
+            claimed = m.Analyzer(unlisted,code)
+            self.assertEqual(claimed.bound(base)['bound'],2)
+            self.assertEqual(claimed.owners[addresses[3]+1],addresses[3])
             for entry in (addresses[9], addresses[-1]):
                 self.assertIsNone(m.Analyzer(rows,code).bound(entry)['bound'])
             # Each instruction contract is essential; register POPs may not
@@ -124,6 +128,11 @@ class StackTests(unittest.TestCase):
         code = {pc+i:v for pc,raw in instructions.items() for i,v in enumerate(raw)}
         code.update({19:48, 20:48, 21:0, 22:0})
         self.assertEqual(m.Analyzer(instructions,code).bound(0)['bound'], 0)
+        unlisted = dict(instructions); del unlisted[1]
+        claimed = m.Analyzer(unlisted,code)
+        self.assertEqual(claimed.bound(0)['bound'],0)
+        self.assertEqual(claimed.owners[2],1)
+        self.assertIsNone(claimed.bound(2)['bound'])
         for pc, raw in ((0,'ef'), (1,'24fd'), (3,'503b'), (11,'ef'), (12,'24ff')):
             with self.subTest(pc=pc):
                 self.assertIsNone(m.Analyzer({**instructions,pc:bytes.fromhex(raw)},code).bound(0)['bound'])
@@ -153,6 +162,10 @@ class StackTests(unittest.TestCase):
         code = {pc+i:v for pc,raw in rows.items() for i,v in enumerate(raw)}
         code.update({at:96,at+1:96,at+2:0,at+3:0})
         self.assertEqual(m.Analyzer(rows,code).bound(0)['bound'], 0)
+        unlisted = dict(rows); del unlisted[addresses[2]]
+        claimed = m.Analyzer(unlisted,code)
+        self.assertEqual(claimed.bound(0)['bound'],0)
+        self.assertEqual(claimed.owners[addresses[2]+1],addresses[2])
         for index, raw in ((10,'7479'), (9,'9f'), (14,'24e1'), (8,'741f'), (5,'4003')):
             with self.subTest(index=index):
                 self.assertIsNone(m.Analyzer({**rows,addresses[index]:bytes.fromhex(raw)},code).bound(0)['bound'])
@@ -170,6 +183,12 @@ class StackTests(unittest.TestCase):
                 10:'90000e', 13:'73', 14:'020017', 17:'020017', 23:'22',
                 48:'900100', 51:'e0', 52:'ff', 53:'22'}
         self.assertEqual(self.analyze(rows)['bound'], 2)
+        instructions = {pc:bytes.fromhex(raw) for pc,raw in rows.items()}
+        code = {pc+i:v for pc,row in instructions.items() for i,v in enumerate(row)}
+        del instructions[48]
+        claimed = m.Analyzer(instructions,code)
+        self.assertEqual(claimed.bound(0)['bound'],2)
+        self.assertEqual(claimed.owners[49],48)
         for pc, raw in ((52,'fe'), (3,'24fd'), (5,'5010'), (53,'32')):
             with self.subTest(pc=pc):
                 self.assertIsNone(self.analyze({**rows,pc:raw})['bound'])
@@ -179,6 +198,12 @@ class StackTests(unittest.TestCase):
                 9:'8002', 11:'8000', 13:'22', 32:'900100', 35:'e0',
                 36:'03', 37:'5401', 39:'22'}
         self.assertEqual(self.analyze(rows)['bound'], 2)
+        instructions = {pc:bytes.fromhex(raw) for pc,raw in rows.items()}
+        code = {pc+i:v for pc,row in instructions.items() for i,v in enumerate(row)}
+        del instructions[37]
+        claimed = m.Analyzer(instructions,code)
+        self.assertEqual(claimed.bound(0)['bound'],2)
+        self.assertEqual(claimed.owners[38],37)
         for pc, raw in ((37,'5403'), (39,'32'), (36,'04'), (3,'ff'), (11,'73')):
             with self.subTest(pc=pc):
                 self.assertIsNone(self.analyze({**rows,pc:raw})['bound'])
@@ -187,6 +212,12 @@ class StackTests(unittest.TestCase):
         rows = {0:'5401', 2:'ff', 3:'2f', 4:'2f', 5:'900009', 8:'73',
                 9:'c280', 11:'22', 12:'c281', 14:'22'}
         self.assertEqual(self.analyze(rows)['bound'], 0)
+        instructions = {pc:bytes.fromhex(raw) for pc,raw in rows.items()}
+        code = {pc+i:v for pc,row in instructions.items() for i,v in enumerate(row)}
+        del instructions[5]
+        claimed = m.Analyzer(instructions,code)
+        self.assertEqual(claimed.bound(0)['bound'],0)
+        self.assertEqual(claimed.owners[6],5)
         for pc, raw in ((0,'5403'), (2,'fe'), (3,'2e'), (5,'90000a'), (12,'d281')):
             with self.subTest(pc=pc):
                 self.assertIsNone(self.analyze({**rows,pc:raw})['bound'])
@@ -246,6 +277,10 @@ class StackTests(unittest.TestCase):
         analyzer=m.Analyzer(instructions,code)
         result=analyzer.bound(0)
         self.assertEqual(result['bound'],7)  # saved pair + argument + call PC + pushed pointer
+        unlisted = dict(instructions); del unlisted[10]
+        claimed = m.Analyzer(unlisted,code)
+        self.assertEqual(claimed.bound(0)['bound'],7)
+        self.assertEqual(claimed.owners[11],10)
         pointer=analyzer.pointer_transfers[0]
         self.assertEqual((pointer['target'],pointer['rom_slot']), (64,128))
         self.assertEqual(pointer['height_at_callback'],5)  # Pointer consumed; CALL frame retained.
@@ -303,11 +338,37 @@ class StackTests(unittest.TestCase):
         analyzer = m.Analyzer(instructions)
         analyzer.configure_guards({0x123})
         self.assertEqual(analyzer.bound(0)['bound'], 2)
+        code = {pc+i:v for pc,row in instructions.items() for i,v in enumerate(row)}
+        unlisted = {pc:row for pc,row in instructions.items() if pc not in (3,4,6)}
+        claimed = m.Analyzer(unlisted,code)
+        claimed.configure_guards({0x123})
+        self.assertEqual(claimed.bound(0,frozenset({0x123}))['bound'],0)
+        self.assertEqual(claimed.owners[3],3)
+        self.assertEqual(claimed.owners[5],4)
+        self.assertIsNone(claimed.bound(5)['bound'])
         for pc, raw in ((10,'7400'), (4,'7001'), (7,'900124')):
             with self.subTest(pc=pc):
                 mutant = m.Analyzer({**instructions,pc:bytes.fromhex(raw)})
                 mutant.configure_guards({0x123})
                 self.assertIsNone(mutant.bound(0)['bound'])
+
+    def test_proof_claims_rollback_on_failure_and_exception(self):
+        analyzer = m.Analyzer({0:b'\x22'}, {0:0x22,0x100:0x90,0x101:0x22,0x102:0x00})
+        snapshot = (analyzer.instructions.copy(),analyzer.owners.copy(),analyzer.decoded_from_image.copy())
+        def failed():
+            self.assertEqual(analyzer.peek_instruction(0x100),b'\x90\x22\x00')
+            return None
+        self.assertIsNone(analyzer.claim_proof(failed))
+        self.assertEqual((analyzer.instructions,analyzer.owners,analyzer.decoded_from_image),snapshot)
+        def raises():
+            failed()
+            raise RuntimeError('proof failed')
+        with self.assertRaisesRegex(RuntimeError,'proof failed'):
+            analyzer.claim_proof(raises)
+        self.assertEqual((analyzer.instructions,analyzer.owners,analyzer.decoded_from_image),snapshot)
+        self.assertIsNone(analyzer.claim_proof(analyzer.rom_pointer_thunk,0x100))
+        self.assertEqual((analyzer.instructions,analyzer.owners,analyzer.decoded_from_image),snapshot)
+        self.assertEqual(analyzer.instruction(0x101),b'\x22')
 
     def test_guard_callee_must_preserve_ancestor_ownership(self):
         rows = {0:'900123',3:'e0',4:'6001',6:'22',7:'900123',10:'7401',
@@ -338,6 +399,10 @@ class StackTests(unittest.TestCase):
         code.update({0x300+i:value for i,value in enumerate(b'\x00\x04'*10)})
         analyzer = m.Analyzer(rows,code)
         self.assertEqual(analyzer.bound(0)['bound'],5)
+        unlisted = dict(rows); del unlisted[0x210]
+        claimed = m.Analyzer(unlisted,code)
+        self.assertEqual(claimed.bound(0)['bound'],5)
+        self.assertEqual(claimed.owners[0x211],0x210)
         proof = analyzer.guarded_rom_callback_dispatch(0)
         self.assertEqual(len(proof['rom_slots']),10)
         # Range polarity/limit, saved register identity, XOR, local reload,
@@ -390,6 +455,92 @@ class StackTests(unittest.TestCase):
         self.assertEqual(proof['rom_slots'],list(range(0x300,0x314,2)))
         self.assertEqual(proof['getter_peak'],3)
         self.assertEqual(analyzer.bound(0)['bound'],5)
+        # The DPTR helper can tail-jump to an identical leaf; the target must
+        # still be decoded and verified, not trusted by symbol or proximity.
+        tail_rows = {pc: row for pc, row in rows.items() if not 0x230 <= pc < 0x235}
+        tail_rows.update({0x230:b'\x41\x60', 0x260:b'\x8d\x82', 0x262:b'\x8e\x83', 0x264:b'\x22'})
+        tail_code = {pc+i:value for pc,row in tail_rows.items() for i,value in enumerate(row)}
+        tail_code.update({0x300+i:value for i,value in enumerate(b'\x00\x04'*10)})
+        tail = m.Analyzer(tail_rows,tail_code,{0x123})
+        self.assertEqual(tail.bound(0)['bound'],5)
+        self.assertTrue({0x230,0x260,0x262,0x264}.issubset(tail.compact_rom_callback_dispatch(0)['reachable']))
+        for address, replacement in ((0x230,b'\x41\x61'), (0x260,b'\x8e\x82'), (0x264,b'\x00')):
+            changed = {**tail_rows,address:replacement}
+            self.assertIsNone(m.Analyzer(changed,tail_code,{0x123}).compact_rom_callback_dispatch(0))
+        # LJMP retains the helper's call frame and must prove its exact leaf.
+        long_rows = {**tail_rows, 0x230:b'\x02\x02\x60'}
+        for i in range(10):
+            long_rows[0x500+2*i] = b'\x22'
+        long_code = {pc+i:value for pc,row in long_rows.items() for i,value in enumerate(row)}
+        long_code.update({0x300+2*i+j:value for i in range(10)
+                          for j,value in enumerate((0x500+2*i).to_bytes(2,'little'))})
+        long = m.Analyzer(long_rows,long_code,{0x123})
+        proof = long.compact_rom_callback_dispatch(0)
+        self.assertEqual(proof['targets'],list(range(0x500,0x514,2)))
+        result = long.bound(0)
+        self.assertEqual(result['bound'],5)  # getter peak dominates the callback frame
+        self.assertTrue({0x230,0x260,0x262,0x264,*range(0x500,0x514,2)}.issubset(result['reachable']))
+        # Both the LJMP and its overlapping leaf are decoded only from the image.
+        call = raw.index(bytes.fromhex('120230'))
+        overlap_rows = {pc:row for pc,row in long_rows.items() if pc != 0x230}
+        overlap_rows[call] = b'\x12\x8d\x81'
+        overlap_code = {**long_code,call+1:0x8d,call+2:0x81,
+                        **{0x8d81+i:v for i,v in enumerate(bytes.fromhex('028d828e8322'))}}
+        overlap = m.Analyzer(overlap_rows,overlap_code,{0x123})
+        self.assertIsNone(overlap.compact_rom_callback_dispatch(0))
+        self.assertIsNone(overlap.bound(0)['bound'])
+        # A callback or later call must not enter an image-decoded jump operand.
+        unlisted = {pc:row for pc,row in long_rows.items() if pc not in (0x230,0x260,0x262,0x264)}
+        unlisted_code = {**long_code,0x230:0x02,0x231:0x22,0x232:0x00,
+                         **{0x2200+i:v for i,v in enumerate(bytes.fromhex('8d828e8322'))}}
+        accepted = m.Analyzer(unlisted,unlisted_code,{0x123})
+        self.assertEqual(accepted.bound(0)['bound'],5)
+        self.assertEqual(accepted.owners[0x231],0x230)
+        self.assertEqual(accepted.owners[0x2201],0x2200)
+        self.assertIsNone(accepted.bound(0x231)['bound'])
+        callback_code = {**unlisted_code,0x300:0x31,0x301:0x02}
+        candidate = m.Analyzer(unlisted,callback_code,{0x123})
+        result = candidate.bound(0)
+        self.assertIsNone(result['bound'])
+        self.assertTrue(any('overlapping' in failure['reason'] for failure in result['unresolved']))
+        reverse = m.Analyzer(unlisted,callback_code,{0x123})
+        self.assertEqual(reverse.bound(0x231)['bound'],0)
+        self.assertIsNone(reverse.bound(0)['bound'])
+        direct_rows = {**unlisted,0x700:b'\x12\x02\x31',0x703:b'\x22'}
+        direct = m.Analyzer(direct_rows,unlisted_code,{0x123})
+        self.assertEqual(direct.bound(0)['bound'],5)
+        self.assertIsNone(direct.bound(0x700)['bound'])
+        reverse = m.Analyzer(direct_rows,unlisted_code,{0x123})
+        self.assertEqual(reverse.bound(0x700)['bound'],2)
+        self.assertIsNone(reverse.bound(0)['bound'])
+        for address, replacement in ((0x230,b'\x02\x02\x61'),
+                                     (0x260,b'\x8e\x82'),(0x262,b'\x8e\x82'),
+                                     (0x264,b'\x00')):
+            changed = {**long_rows,address:replacement}
+            changed_code = {**long_code,**{address+i:v for i,v in enumerate(replacement)}}
+            candidate = m.Analyzer(changed,changed_code,{0x123})
+            self.assertIsNone(candidate.compact_rom_callback_dispatch(0))
+            self.assertIsNone(candidate.bound(0)['bound'])
+        for address in (0x230,0x260,0x264):
+            changed = dict(long_rows); del changed[address]
+            changed_code = dict(long_code)
+            for i in range(len(long_rows[address])):
+                del changed_code[address+i]
+            candidate = m.Analyzer(changed,changed_code,{0x123})
+            self.assertIsNone(candidate.compact_rom_callback_dispatch(0))
+            self.assertIsNone(candidate.bound(0)['bound'])
+        for entry in (0x240, raw.index(bytes.fromhex('900123e075f002a4'))):
+            self.assertIsNone(m.Analyzer(long_rows,long_code,{0x123}).bound(entry)['bound'])
+        deeper_rows = {**long_rows,0x600:b'\xc0\xe0',0x602:b'\xc0\xe0',
+                       0x604:b'\xd0\xe0',0x606:b'\xd0\xe0',0x608:b'\x22'}
+        deeper_code = {**long_code,0x300:0x00,0x301:0x06,
+                       **{pc+i:v for pc in (0x600,0x602,0x604,0x606,0x608)
+                          for i,v in enumerate(deeper_rows[pc])}}
+        self.assertEqual(m.Analyzer(deeper_rows,deeper_code,{0x123}).bound(0)['bound'],6)
+        missing_rom = dict(long_code); del missing_rom[0x313]
+        candidate = m.Analyzer(long_rows,missing_rom,{0x123})
+        self.assertIsNone(candidate.compact_rom_callback_dispatch(0))
+        self.assertIsNone(candidate.bound(0)['bound'])
         # The exact outliner can move only the multiply pair into a leaf.
         multiply = raw.index(bytes.fromhex('75f002a4'))
         outlined_raw = bytearray(raw[:multiply] + bytes.fromhex('120250') + raw[multiply+4:])

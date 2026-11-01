@@ -1,4 +1,4 @@
-"""Exact published beta.3/4/4.1 settings transition policy; no device operations."""
+"""Authenticated previous beta.4.1/current settings transition policy; no device operations."""
 from copy import deepcopy
 import hashlib
 import json
@@ -18,8 +18,6 @@ BETA4_IDENTITIES = {
     'shortcuts': ('1df6f4fc00eb36bca75b2fe8b3a46dbed63529ea00d9474f708dfee51dd1421d', 'b109452ff0dea42f2736a7436e518c5f2c287c0c8a95895308fe3b35ee426a5a'),
     'multios': ('871f9d60715a40261808a5433085cf4f829083c3dd0ae2e1230792dd46522998', '8456cf93ac153b3155b44b44e5bb430e46ffce4d7a5c92681dc28fe851cb3f81'),
 }
-# Published beta.3 profile identities, retained unchanged for source validation.
-PREVIOUS_IDENTITIES = {'main': ('391d6dbca948b46cfc4be989b0055f310fbdfaf832bdc634c76ff2bf5e23b34e', 'd1a9421a865be4a46c6fef546a5bd7aa906eda21880debcec2dc8885e70ffa14'), 'game': ('5351cfafa6eb8bc55272c55e67f86d60ab0dac04809cbe3f25df14c2137f5005', '7e7ea48b2cc2eea8072fdb517f7a86bc241b0be7bb267ce73635a8ffde1151d9'), 'mmo': ('963aff70931a3ac4530fa8a8fd9f2dd4ad43125c3dce963ce1c8a7cce3009821', '91554fe0d9eaa32fa636a213973956d619e23f351d92e97d74ef2530aa04d923'), 'typing': ('57ec708eb400a885b6c1b803d934383709e9942688e619299259d0a0068fda14', '95d79868a22b01a120503e8015cc602a5486ee76906d820e53578229e758444f'), 'code': ('35803dda2c647d7b4b1c2208de2b7ce9a03405a6d87d05e0d3f5e91d5ff195fb', '7990de5224b91332592c423fd966ecfa5c2719eecdd406d2836754f79bf70d47'), 'pointer': ('6a97adeb76cc6333ee465b3b75dc000093843b884c08167e65a33f2ebba36946', 'baf75ef3479954ac6032a2f39bd6d28d0f51ffbe7ca7f6c92bbff6d00a991395'), 'onehand': ('f78f5f91f8382da4e8b60709a46b0e5cfb022f9a5cb925082434b04a3fb0fb8f', '1fe51dafd668feda3eaf25ed1ff9475e046e7d4c360dfbff6ba2cd0802a81374'), 'creative': ('476b1c667613712dfe302a4518f6bbd947bf994bc9e6fcb05323d5544b2b8c38', '8526e40cc1404a22d2aaf802ec4846c4dde8303167d101bf7114b5b9b906ca23'), 'shortcuts': ('3154808d2012f55b5c46098d52c96bc5a0056bcfb9a4c8e3ec991090aab45f64', 'ad24be0e1ffb3c184baa5ec382b19d183722f92fec5550961927282fe0703861'), 'multios': ('670b523bdc1a3e6eb28a3e874574bd3ba64eb7357d7040b40278a8ed37157a9f', '098c385abdf630eaf65553b252063f310d6bb76486143bac06c5bd4a4d2df4b8')}
 
 
 def require(value, message):
@@ -28,16 +26,13 @@ def require(value, message):
 
 
 def _previous_rows(catalog):
-    rows = []
-    for key, identities in (('profiles', BETA4_IDENTITIES), ('historical_profiles', PREVIOUS_IDENTITIES)):
-        published = catalog.get(key)
-        require(type(published) is list and [r.get('profile') for r in published] == list(identities),
-                'Previous beta must contain the exact published ten profiles')
-        for row in published:
-            identity = row.get('settings_identity', {})
-            require((identity.get('ihx_sha256'), identity.get('code_sha256')) ==
-                    identities[row['profile']], 'Previous beta image identity differs')
-        rows.extend(published)
+    rows = catalog.get('profiles')
+    require(type(rows) is list and [r.get('profile') for r in rows] == list(BETA4_IDENTITIES),
+            'Previous beta must contain the exact published ten profiles')
+    for row in rows:
+        identity = row.get('settings_identity', {})
+        require((identity.get('ihx_sha256'), identity.get('code_sha256')) ==
+                BETA4_IDENTITIES[row['profile']], 'Previous beta image identity differs')
     require(catalog.get('historical_sources', []) == [], 'Legacy source admission is disabled')
     return deepcopy(rows)
 
@@ -64,7 +59,7 @@ def compose_catalog(fresh, previous):
     """Keep previous published images as sources, never as restore targets."""
     result = deepcopy(fresh)
     current = result.get('profiles')
-    require(type(current) is list and [r.get('profile') for r in current] == list(PREVIOUS_IDENTITIES),
+    require(type(current) is list and [r.get('profile') for r in current] == list(BETA4_IDENTITIES),
             'New beta must contain the canonical ten profiles')
     current_by_id = {r['settings_identity']['ihx_sha256']: r for r in current}
     require(len(current_by_id) == len(current), 'Duplicate new beta image identity')
@@ -87,8 +82,8 @@ def compose_catalog(fresh, previous):
         {'source': source, 'target': row['settings_identity']['ihx_sha256']}
         for source in sorted(sources) for row in current]
     result['compatibility_scope'] = (
-        'Settings sources are exact published beta.3, beta.4, beta.4.1 profiles and this beta profiles; '
-        'restore targets are this beta only. Earlier releases are unsupported. '
+        'Settings sources are authenticated published beta.4.1 profiles and this beta profiles; '
+        'restore targets are this beta only. Earlier releases are unsupported; byte-identical beta.4 identities cannot be distinguished. '
         'Offline plans do not prove physical restore.')
     return result
 
@@ -112,7 +107,7 @@ def validate_backup_scope(backups, catalog):
     actual = {tuple(backup['source_identity']) for backup in backups.values()}
     require(len(actual) == len(backups), 'Duplicate backup image identity')
     require(actual == expected,
-            'Backups must cover exactly previous beta.3/4/4.1 and current beta images')
+            'Backups must cover exactly previous beta.4.1 and current beta images')
 
 
 def validate_catalog_scope(catalog, previous):

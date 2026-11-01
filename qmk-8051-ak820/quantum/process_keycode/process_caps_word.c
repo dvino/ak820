@@ -121,7 +121,7 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
 #else
     keyrecord_t* record = event_record;
 #endif
-#if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
+#if defined(AK820_COMPACT_TAPPING)
 #    ifdef __SDCC_mcs51
     __bit eligible;
 #    else
@@ -134,7 +134,9 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
         && !ak820_macro_primitive;
     /* Generated events cannot trigger gestures or language selection. */
     if ((keycode >> 8) == (AK820_CW_LANG_EN >> 8) && (uint8_t)keycode <= (uint8_t)AK820_CW_LANG_TOGGLE) {
+#    ifdef DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
         shift_tap_armed = false;
+#    endif
         if (eligible && record->event.pressed) ak820_caps_word_select(keycode);
         return false;
     }
@@ -176,6 +178,16 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
 #endif // NO_ACTION_ONESHOT
 
     if (!is_caps_word_on()) {
+#if defined(AK820_COMPACT_TAPPING) && defined(BOTH_SHIFTS_TURNS_ON_CAPS_WORD)
+        if (eligible && record->event.pressed && (keycode == KC_LSFT || keycode == KC_RSFT) &&
+            (mods | MOD_BIT(keycode)) == MOD_MASK_SHIFT) {
+#    ifdef DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
+            shift_tap_armed = false;
+#    endif
+            caps_word_on();
+            return true;
+        }
+#endif
 #if defined(AK820_COMPACT_TAPPING) && defined(DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD)
         if (!eligible) {
             shift_tap_armed = false;
@@ -186,8 +198,7 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
         } else {
             uint8_t shift_mods = mods | (keycode == KC_LSFT ? MOD_BIT(KC_LSFT) : MOD_BIT(KC_RSFT));
             caps_word_shift_task();
-            if (shift_mods == MOD_MASK_SHIFT ||
-                (keycode == KC_LSFT && shift_tap_armed && shift_tap_released && !(shift_mods & ~MOD_MASK_SHIFT))) {
+            if (keycode == KC_LSFT && shift_tap_armed && shift_tap_released && !(shift_mods & ~MOD_MASK_SHIFT)) {
                 shift_tap_armed = false;
                 caps_word_on();
                 return true;
@@ -196,7 +207,12 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* event_record) {
             if (keycode == KC_LSFT && shift_mods == MOD_BIT(KC_LSFT)) {
                 shift_tap_armed = true;
                 shift_tap_released = false;
-                shift_tap_deadline = record->event.time + GET_TAPPING_TERM(keycode, record);
+                shift_tap_deadline = record->event.time +
+#    ifdef AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM
+                    AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM;
+#    else
+                    GET_TAPPING_TERM(keycode, record);
+#    endif
             }
         }
 #endif

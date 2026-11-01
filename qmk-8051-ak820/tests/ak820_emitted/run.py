@@ -165,23 +165,59 @@ class Firmware:
 
     @staticmethod
     def dump(label: str, space: str, address: int, count: int) -> list[str]:
-        return [f"echo @@{label}", f"dump {space} {address:#x} {address + count - 1:#x} 16"]
+        mode = '/h ' if space == 'rom' else ''
+        return [f"echo @@{label}", f"dump {mode}{space} {address:#x} {address + count - 1:#x} 16"]
 
     def dump_symbol(self, label: str, name: str, count: int) -> list[str]:
         return self.dump(label, self.symbol_space(name), self.address(name), count)
 
     @staticmethod
-    def extract(log: str, label: str, address: int, count: int) -> list[int]:
-        if "@@" + label not in log:
-            raise ValueError(f"Simulator observation missing: {label}")
-        tail = log.rsplit("@@" + label, 1)[1]
-        values = {}
-        for row, data in re.findall(r"^0x([0-9a-f]+)\s+((?:[0-9a-f]{1,2}\s+)+)", tail, re.M):
-            for offset, value in enumerate(data.split()):
-                values[int(row, 16) + offset] = int(value, 16)
-            if all(address + index in values for index in range(count)):
-                return [values[address + index] for index in range(count)]
-        raise ValueError(f"Incomplete simulator observation: {label}")
+    def extract(log: str, label: str, address: int, count: int, *,
+                console_space: str | None = None, terminal: str | None = None) -> list[int]:
+        lines = log.splitlines()
+        if (console_space is None) != (terminal is None):
+            raise ValueError(f"Incomplete console observation contract: {label}")
+        if terminal is not None:
+            prefix = Firmware.dump(label, console_space, address, count) + ['echo ' + terminal, '@@' + label]
+            if lines[:4] != prefix:
+                raise ValueError(f"Invalid console observation commands: {label}")
+        markers = [i for i, line in enumerate(lines) if line == '@@' + label]
+        if len(markers) != 1:
+            raise ValueError(f"Simulator observation missing or ambiguous: {label}")
+        index = markers[0] + 1
+        echoed = terminal is None and index < len(lines) and lines[index].startswith('dump ')
+        bits = console_space == 'bits'
+        if echoed:
+            command = re.fullmatch(r'dump (?:(/h) )?(\w+) (0x[0-9a-f]+) (0x[0-9a-f]+) 16', lines[index])
+            if (not command or (command[1] == '/h') != (command[2] == 'rom') or
+                    int(command[3], 16) != address or int(command[4], 16) != address + count - 1):
+                raise ValueError(f"Invalid simulator dump command: {label}")
+            bits = command[2] == 'bits'
+            index += 1
+        values = []
+        while len(values) < count:
+            if index >= len(lines):
+                raise ValueError(f"Incomplete simulator observation: {label}")
+            size = min(16, count - len(values))
+            digits = '[01]' if bits else '[0-9a-f]{2}'
+            # partial final rows pad the hex column to sixteen bytes; allow
+            # the exact simulator padding for any short final row.
+            padding = (r'(?: {' + str((16 - size) * 3) + r'})?'
+                       if not bits and size != 16 and len(values) >= 16 else '')
+            row = re.fullmatch(r'0x([0-9a-f]+)\s+((?:' + digits + r' ){' + str(size) + r'})' + padding + r'(.{' + str(size) + r'})', lines[index])
+            if not row or int(row[1], 16) != address + len(values):
+                raise ValueError(f"Malformed simulator observation: {label}")
+            data = [int(v, 16) for v in row[2].split()]
+            if row[3] != ''.join(chr(v) if 32 <= v <= 126 else '.' for v in data):
+                raise ValueError(f"Malformed simulator rendering: {label}")
+            values.extend(data)
+            index += 1
+        boundary = (re.escape(terminal) if terminal is not None else
+                    r'(?:set memory |fill |echo @@|dump |timer |break |run |delete |step |exec |reset(?: |$)|state$|quit$).*'
+                    if echoed else r'Simulation started, PC=0x[0-9a-f]+')
+        if index >= len(lines) or not re.fullmatch(boundary, lines[index]) or (terminal is not None and index != len(lines) - 1):
+            raise ValueError(f"Malformed simulator observation boundary: {label}")
+        return values
 
     def execute(self, name: str, commands: list[str]) -> tuple[str, dict]:
         script = "\n".join(commands + ["state", "quit"]) + "\n"

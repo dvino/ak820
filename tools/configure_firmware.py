@@ -24,9 +24,11 @@ ROOT = Path(__file__).resolve().parents[1]
 QMK = ROOT / 'qmk-8051-ak820'
 sys.path.insert(0, str(QMK / 'util'))
 import ak820_profiles as profiles
-from build_ak820 import AK820_CALLEE_SAVES
+from build_ak820 import AK820_CALLEE_SAVES, build_environment
 import ak820_shortcalls as shortcalls
-from ak820_build_inputs import validate_inputs
+from ak820_build_inputs import dependency_paths, validate_inputs
+from ak820_pointer_compile_policy import POLICY as POINTER_POLICY, validate_pointer_commands
+from ak820_profiles_compile_policy import POLICY as CANONICAL_POLICY, validate_commands as validate_canonical_commands
 from ak820_diagnose import diagnostic_build
 from pack_ak820 import read_symbols, validate_startup
 from ak820_ci_authorization import validate_qualification_contract
@@ -61,17 +63,21 @@ def canonical(value):
     return (json.dumps(value, sort_keys=True, indent=2) + '\n').encode()
 
 
-def load_json(path):
+def parse_json(data):
     def pairs(items):
         result = {}
         for key, value in items:
             require(key not in result, 'Duplicate JSON field: ' + key)
             result[key] = value
         return result
-    value = json.loads(Path(path).read_text(), object_pairs_hook=pairs,
+    value = json.loads(data, object_pairs_hook=pairs,
                        parse_constant=lambda value: (_ for _ in ()).throw(ValueError('Invalid JSON number')))
     require(isinstance(value, dict), 'Expected a JSON object')
     return value
+
+
+def load_json(path):
+    return parse_json(Path(path).read_bytes())
 
 
 def validate_tools(toolchain):
@@ -212,12 +218,12 @@ def retained_static_symbols(report, build, code):
 
 def check_feature_symbols(symbols, selected, code):
     for feature, symbol in SYMBOLS.items():
-        if feature == 'qmk-settings' and selected.get('compact_controls_version') == 2:
+        if feature == 'qmk-settings' and selected.get('compact_controls_version') in (2, 3):
             symbol = COMPACT_SETTINGS_SYMBOL
         require((symbol in symbols and symbols[symbol] in code) ==
                 (feature in selected['optional_features']), 'Compiled feature differs from profile: ' + feature)
     if 'qmk-settings' in selected['optional_features']:
-        unexpected = (SYMBOLS['qmk-settings'] if selected.get('compact_controls_version') == 2
+        unexpected = (SYMBOLS['qmk-settings'] if selected.get('compact_controls_version') in (2, 3)
                       else COMPACT_SETTINGS_SYMBOL)
         require(unexpected not in symbols, 'Compiled feature differs from profile: qmk-settings')
     for feature, symbol in STATIC_BITS.items():
@@ -225,7 +231,74 @@ def check_feature_symbols(symbols, selected, code):
                 'Compiled feature state differs from profile: ' + feature)
 
 
-def check_feature_defines(report, build, selected):
+def check_compiler_marker(report):
+    if 'compiler_input_contract' not in report:
+        return False
+    require(report['compiler_input_contract'] in (POINTER_POLICY, CANONICAL_POLICY) and
+            not profiles.historical_compiler_inputs(report),
+            'Unknown compiler-input contract or provenance')
+    return True
+
+
+def check_pointer_compiler_inputs(report, build, toolchain, selected):
+    marker = report.get('compiler_input_contract')
+    require(marker in (POINTER_POLICY, CANONICAL_POLICY), 'Unknown compiler-input policy')
+    if marker == POINTER_POLICY:
+        require(selected == profiles.configuration('pointer'), 'Unknown compiler-input configuration')
+    objects = report.get('expected_objects')
+    require(isinstance(objects, list) and all(isinstance(name, str) for name in objects),
+            'Missing compiler object manifest')
+    records = {}
+    for row in report.get('artifacts', []):
+        name = row.get('path')
+        require(isinstance(name, str) and '\\' not in name and name not in records,
+                'Invalid or duplicate compiler artifact')
+        records[name] = row
+    def bound(path):
+        path = Path(path).resolve()
+        require(path.is_relative_to(build) and path.is_file(), 'Missing compiler artifact')
+        name = path.relative_to(QMK).as_posix()
+        row = records.get(name)
+        require(row is not None and row.get('sha256') == sha(path) and
+                row.get('size') == path.stat().st_size, 'Unbound compiler artifact: ' + name)
+        return path
+    manifest = bound(build / 'obj_ajazz_ak820_vial/obj.txt')
+    require(manifest.read_text().split() == objects, 'Compiler object manifest differs from report')
+    bound(build / 'default-keymap/generation.json')
+    sources = {(row.get('origin'), row.get('path')) for row in report.get('sources', [])}
+    policy_sources = ['util/ak820_capture_compile.py', 'util/ak820_default_keymap.py',
+                      'util/ak820_pointer_compile_policy.py', 'util/ak820_pointer_compile_environment.py']
+    if marker == CANONICAL_POLICY:
+        policy_sources.append('util/ak820_profiles_compile_policy.py')
+    for name in policy_sources:
+        require(('source', name) in sources, 'Missing compiler policy source: ' + name)
+    for name in objects:
+        obj = (QMK / name).resolve()
+        require(obj.is_relative_to(build), 'Compiler object escapes build')
+        bound(obj.with_suffix('.o.compile.json'))
+        dep = bound(obj.with_suffix('.d'))
+        for path in dependency_paths(dep, QMK):
+            if path.is_relative_to(QMK.resolve()):
+                identity = ('source', path.relative_to(QMK.resolve()).as_posix())
+            elif path.is_relative_to(toolchain):
+                identity = ('toolchain', path.relative_to(toolchain).as_posix())
+            else:
+                raise ValueError('Compiler dependency escapes trusted roots')
+            require(identity in sources, 'Unbound compiler dependency: ' + str(path))
+    commands = [row for row in report.get('commands', []) if row.get('label') == 'compile']
+    require(len(commands) == 1 and isinstance(commands[0].get('argv'), list), 'Missing compiler command')
+    qmk = [arg[len('QMK_BIN='):] for arg in commands[0]['argv']
+           if isinstance(arg, str) and arg.startswith('QMK_BIN=')]
+    require(len(qmk) == 1 and Path(qmk[0]).is_absolute(), 'Missing QMK command path')
+    if selected == profiles.configuration('pointer'):
+        require(validate_pointer_commands(QMK, build, objects, toolchain, qmk[0]) == POINTER_POLICY,
+                'Pointer compiler input policy failed')
+    if marker == CANONICAL_POLICY:
+        require(validate_canonical_commands(QMK, build, objects, toolchain, qmk[0], selected) == CANONICAL_POLICY,
+                'Canonical compiler input policy failed')
+
+
+def check_feature_defines(report, build, selected, *, toolchain=None):
     """Bind inline options as well as standalone handlers to compiler inputs."""
     flags = build / 'obj_ajazz_ak820_vial/cflags.txt'
     relative = flags.relative_to(QMK).as_posix()
@@ -240,6 +313,42 @@ def check_feature_defines(report, build, selected):
         expected = ['-D' + define] if feature in selected['optional_features'] else []
         require(actual == expected, 'Compiler feature flag differs from profile: ' + feature)
 
+    mouse = selected.get('mouse_keys', profiles.MOUSE_DEFAULTS)
+    def source_hash(path):
+        rows = [row for row in report.get('sources', []) if row.get('origin') == 'source'
+                and row.get('path', '').replace('\\', '/') == path]
+        require(len(rows) == 1, 'Missing or ambiguous Mouse Keys build provenance: ' + path)
+        return rows[0].get('sha256')
+    builder_hash = source_hash('util/build_ak820.py')
+    mouse_hash = source_hash('keyboards/ajazz/ak820/ak820_mousekey.c')
+    require(report.get('builder_sha256') == builder_hash, 'Builder provenance differs from report')
+    current_builder = (builder_hash == sha(QMK / 'util/build_ak820.py') and
+                       mouse_hash == sha(QMK / 'keyboards/ajazz/ak820/ak820_mousekey.c'))
+    historical_builder = profiles.historical_compiler_inputs(report)
+    check_compiler_marker(report)
+    require(current_builder or (historical_builder and 'mouse_keys' not in selected),
+            'Unknown Mouse Keys build provenance')
+    if current_builder:
+        commands = [row for row in report.get('commands', []) if row.get('label') == 'compile']
+        require(len(commands) == 1 and isinstance(commands[0].get('argv'), list), 'Missing compiler command')
+        log = build / 'compile.log'
+        require(commands[0].get('exit_code') == 0 and log.is_file() and
+                commands[0].get('log') == log.relative_to(QMK).as_posix() and
+                commands[0].get('log_sha256') == sha(log), 'Unbound compiler log')
+        argv = commands[0]['argv']
+        for name, value in [('NOLTO_CFLAGS', ''), ('INIT_HOOK_CFLAGS', '')] + [
+                (define, str(mouse[key])) for key, define in profiles.MOUSE_DEFINES.items()]:
+            require([arg for arg in argv if isinstance(arg, str) and arg.startswith(name + '=')] == [name + '=' + value],
+                    'Compiler Make option differs from configuration: ' + name)
+    for key, define in profiles.MOUSE_DEFINES.items():
+        actual = [token for token in tokens if re.match(r'^-[DU]' + re.escape(define) + r'(?:=|$)', token)]
+        expected = (['-D' + define + '=' + str(mouse[key])]
+                    if current_builder and 'mouse-keys' in selected['optional_features'] else [])
+        require(actual == expected,
+                'Compiler Mouse Keys flag differs from configuration: ' + key)
+        require(not any(token == define or token.startswith(define + '=') for token in tokens),
+                'Unbound split compiler Mouse Keys flag: ' + key)
+
     for feature, define, enabled in (
             ('nkro', 'NKRO_ENABLE', True), ('grave-escape', 'GRAVE_ESC_ENABLE', True),
             ('vialrgb-direct', 'VIALRGB_NO_DIRECT', False)):
@@ -248,6 +357,14 @@ def check_feature_defines(report, build, selected):
         require(actual == expected, 'Compiler core feature flag differs from profile: ' + feature)
     require(not any('AK820_DIAG_' in token or 'AK820_OMIT_' in token for token in tokens),
             'Diagnostic feature switches cannot qualify')
+    if current_builder:
+        require(toolchain is not None and report.get('compiler_input_contract') == CANONICAL_POLICY,
+                'Current compiler-input contract is not closed; configured build cannot qualify')
+        require(selected == profiles.validate_build_configuration(report.get('configuration')),
+                'Compiler-input configuration differs from report')
+        validate_inputs(report, QMK, toolchain)
+        require(check_compiler_marker(report), 'Missing canonical compiler-input contract')
+        check_pointer_compiler_inputs(report, build, toolchain, selected)
 
 
 def memory_report(code, symbols, memory, *, historical=False):
@@ -461,6 +578,7 @@ def _replay_pass30(report, build, toolchain):
     import ak820_parameter_spills as spills
     import ak820_register_saves as registers
     import ak820_tailshare as tails
+    import ak820_tailshare_xmod as tails_xmod
     import ak820_outline_audit as outlines
     from ak820_build_inputs import input_snapshot
     expected_flags = ('--opt-code-size -DAK820_READ_HOOK_PRESERVES_RN=1'
@@ -508,6 +626,10 @@ def _replay_pass30(report, build, toolchain):
                           ('tailshare', 'ak820_tailshare')):
         require(report.get(field + '_sha256') == sha(QMK / 'util' / (module + '.py')),
                 'Pass30 implementation differs: ' + module)
+    xmod_summary = report.get('tail_share_xmod')
+    if xmod_summary is not None:
+        require(report.get('tailshare_xmod_sha256') == sha(QMK / 'util/ak820_tailshare_xmod.py'),
+                'Pass30 implementation differs: ak820_tailshare_xmod')
     obj = build / 'obj_ajazz_ak820_vial'
     compiled = saved(obj / 'cflags.txt').read_text().split()
     for define in ('AK820_COMPRESS_DEFAULT_KEYMAP', 'AK820_KEYMAP_WORDS_ASM',
@@ -544,10 +666,11 @@ def _replay_pass30(report, build, toolchain):
         require(report.get('external_roots') == roots, 'Pass30 external roots differ')
         dce.optimize(obj, temporary / 'dce', roots)
         same_asm(temporary / 'dce', build / 'parameter-spills-input')
+        tails_target = 'tailshare-xmod-input' if xmod_summary is not None else 'shortcalls-input'
         for field, source, target, module in (
                 ('parameter_spills', 'parameter-spills-input', 'parameter-spills-output', spills),
                 ('register_saves', 'register-saves-input', 'register-saves-output', registers),
-                ('tail_share', 'tailshare-input', 'shortcalls-input', tails)):
+                ('tail_share', 'tailshare-input', tails_target, tails)):
             summary = report.get(field)
             require(isinstance(summary, dict), 'Missing pass30 transform: ' + field)
             proof_path = saved(QMK / summary.get('report', ''))
@@ -602,6 +725,29 @@ def _replay_pass30(report, build, toolchain):
                     summary.get('extra_stack_bytes') == 0,
                     'Pass30 saved-byte or stack summary differs')
             summaries[field] = sha(proof_path)
+        if xmod_summary is not None:
+            # Cross-module tail sharing after the per-module pass; the saved
+            # shortcalls-input tree is the renamed xmod output.
+            require(isinstance(xmod_summary, dict), 'Missing pass30 transform: tail_share_xmod')
+            proof_path = saved(QMK / xmod_summary.get('report', ''))
+            require(xmod_summary.get('report_sha256') == sha(proof_path), 'Pass30 report hash differs')
+            proof = load_json(proof_path)
+            source, target = build / 'tailshare-xmod-input', build / 'shortcalls-input'
+            tree(source)
+            tree(target)
+            replay_path = temporary / 'tail_share_xmod.json'
+            replay_target = temporary / 'tail_share_xmod'
+            replay = tails_xmod.prepare(source, replay_target, replay_path)
+            for key, value in replay.items():
+                require(value == proof.get(key), 'Transform replay differs: tail_share_xmod/' + key)
+            same_asm(replay_target, target)
+            checked = copy.deepcopy(proof)
+            tails_xmod.verify_assembled(source, target, replay_path, checked)
+            require(checked == proof, 'Saved assembled proof differs: tail_share_xmod')
+            require(xmod_summary.get('object_saved_bytes') == proof.get('object_saved_bytes') and
+                    xmod_summary.get('extra_stack_bytes') == 0,
+                    'Pass30 saved-byte or stack summary differs')
+            summaries['tail_share_xmod'] = sha(proof_path)
         # The replayed stages must be adjacent, without an unrecorded rewrite.
         same_asm(build / 'parameter-spills-output', build / 'register-saves-input')
         same_asm(build / 'register-saves-output', build / 'dce-input')
@@ -622,11 +768,14 @@ def _replay_pass30(report, build, toolchain):
 
 
 def inspect(build, toolchain):
+    # The trusted runner owns the build tree; concurrent writers are outside this check's contract.
     build, toolchain = Path(build).resolve(), validate_tools(toolchain)
     require(build.is_relative_to(QMK.resolve()), 'Build must be beneath the QMK source root')
     report_path = build / 'build-report.json'
-    report = load_json(report_path)
-    selected = profiles.validate_configuration(report.get('configuration'))
+    report_bytes = report_path.read_bytes()
+    report = parse_json(report_bytes)
+    report_sha = hashlib.sha256(report_bytes).hexdigest()
+    selected = profiles.validate_build_configuration(report.get('configuration'))
     require(report.get('keyboard') == 'ajazz/ak820' and report.get('keymap') == 'vial' and
             report.get('build_id') == selected['nvm_schema'] and report.get('hardware_validated') is False,
             'Wrong target, saved schema or hardware claim')
@@ -634,7 +783,8 @@ def inspect(build, toolchain):
             {tuple(window) for window in report.get('code_windows', [])} == set(WINDOWS) and
             report.get('xram_window') in ([0x400, 0x1000], [0x440, 0x1000]), 'Experimental linker windows cannot qualify')
     validate_inputs(report, QMK, toolchain)
-    check_feature_defines(report, build, selected)
+    check_compiler_marker(report)
+    check_feature_defines(report, build, selected, toolchain=toolchain)
     historical = report.get('xram_window') == [0x400, 0x1000]
     expected_flags = '--opt-code-size --callee-saves ' + ','.join(AK820_CALLEE_SAVES)
     require(report.get('compiler_sha256') == SDCC46_PINS['sdcc'] and
@@ -647,6 +797,11 @@ def inspect(build, toolchain):
                 isinstance(report.get('outlining'), dict), 'Unqualified compiler/ABI/transform configuration')
         optimization = {'contract': 'historical-baseline'}
     ihx, mapfile, mem = (artifact(report, build, suffix) for suffix in ('ihx', 'map', 'mem'))
+    artifact_hashes = {suffix: sha(path) for suffix, path in zip(('ihx', 'map', 'mem'), (ihx, mapfile, mem))}
+    for suffix, path in zip(('ihx', 'map', 'mem'), (ihx, mapfile, mem)):
+        records = [row for row in report['artifacts'] if row.get('path', '').replace('\\', '/').endswith('/' + path.name)]
+        require(len(records) == 1 and records[0].get('sha256') == artifact_hashes[suffix],
+                'Artifact changed: ' + suffix)
     short_summary = check_short_calls(report, build, ihx)
     code = diagnostic_build(ihx, mapfile, report_path)
     symbols = linked_symbols(mapfile)
@@ -668,9 +823,13 @@ def inspect(build, toolchain):
         require(window['occupied_bytes'] == report.get('code_' + window['name'] + '_bytes'),
                 'CODE window count disagrees')
     source_manifest_sha = hashlib.sha256(canonical(report['sources'])).hexdigest()
+    require(sha(report_path) == report_sha and all(
+        sha(path) == artifact_hashes[suffix]
+        for suffix, path in zip(('ihx', 'map', 'mem'), (ihx, mapfile, mem))),
+        'Build report or artifact changed during inspection')
     identity = {'profile': selected['profile'], 'configuration_sha256': hashlib.sha256(canonical(selected)).hexdigest(),
-                'ihx_sha256': sha(ihx), 'map_sha256': sha(mapfile), 'mem_sha256': sha(mem),
-                'build_report_sha256': sha(report_path), 'source_manifest_sha256': source_manifest_sha,
+                'ihx_sha256': artifact_hashes['ihx'], 'map_sha256': artifact_hashes['map'], 'mem_sha256': artifact_hashes['mem'],
+                'build_report_sha256': report_sha, 'source_manifest_sha256': source_manifest_sha,
                 'compiler_sha256': report['compiler_sha256'], 'nvm_schema': selected['nvm_schema']}
     return {'format': FORMAT, 'configuration': selected, 'identity': identity,
             'short_calls': short_summary, 'optimization': optimization,
@@ -718,7 +877,7 @@ def require_release_approval(report, build_report=None, build=None, toolchain=No
             'Configuration has no complete exact-image offline pass')
     qualification = validate_tests(build / 'qualification.json', report['identity'])
     validate_profile_tests(load_json(build / 'profile-tests/results.json'),
-                           report['configuration']['profile'], report['identity'], build, toolchain)
+                           report['configuration']['profile'], report['identity'], build, toolchain, report['configuration'])
     report['resources']['internal_ram'].update(runtime_stack_bound=proof['stack_bound'],
         stack_margin=proof['stack_margin'], stack_qualified=True)
     report.update(release_approved=True, release_blockers=[], release_safety=proof,
@@ -813,8 +972,9 @@ def apply_runtime_safety(result, proof):
     result['release_blockers'] = list(RELEASE_BLOCKERS[1:])
 
 
-def profile_test_plan(name, build, toolchain):
-    selected = profiles.configuration(name)
+def profile_test_plan(name, build, toolchain, selected=None):
+    selected = profiles.configuration(name) if selected is None else profiles.validate_build_configuration(selected)
+    require(selected['profile'] == name, 'Profile test configuration differs')
     output = build / 'profile-tests'
     plan = [('gates', ROOT, [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'tools',
                              '-p', 'test_configure_firmware.py'])]
@@ -886,10 +1046,15 @@ def profile_test_plan(name, build, toolchain):
                      [sys.executable, 'tests/ak820_tapping/run.py', '--space-cadet', '--negative-controls',
                       '--output', str(output / 'space-cadet-host.json')]))
     if 'mouse-keys' in selected['optional_features']:
-        plan.append(('mouse-keys-host', QMK, [sys.executable, 'tests/ak820_mousekeys/host.py']))
+        plan.append(('mouse-keys-config-gates', ROOT, [sys.executable, '-B', '-m', 'unittest',
+                    'discover', '-s', 'tools', '-p', 'test_mouse_overrides.py']))
+        mouse = selected.get('mouse_keys', profiles.MOUSE_DEFAULTS)
+        options = [item for key in profiles.MOUSE_DEFAULTS
+                   for item in ('--mouse-' + key.replace('_', '-'), str(mouse[key]))]
+        plan.append(('mouse-keys-host', QMK, [sys.executable, 'tests/ak820_mousekeys/host.py', *options]))
         plan.append(('mouse-keys-linked', QMK, [sys.executable, 'tests/ak820_mousekeys/run.py',
                     '--build-dir', str(build), '--s51', str(toolchain / 'bin/s51'),
-                    '--output-dir', str(output / 'mouse-keys')]))
+                    '--output-dir', str(output / 'mouse-keys'), *options]))
     if 'auto-shift' in selected['optional_features']:
         plan.append(('auto-shift-host', QMK, [sys.executable, 'tests/ak820_autoshift/host.py',
                     '--output', str(output / 'auto-shift-host.json')]))
@@ -958,12 +1123,12 @@ def test_source_snapshot():
     return selected
 
 
-def validate_profile_tests(report, name, identity, build, toolchain):
+def validate_profile_tests(report, name, identity, build, toolchain, selected=None):
     require(report.get('format') == 'ak820-profile-tests-1' and report.get('profile') == name and
             report.get('identity') == identity and report.get('passed') is True and
             report.get('hardware_validated') is False and report.get('physical_device_commands') == 0,
             'Profile tests failed or belong to another image')
-    expected = profile_test_plan(name, build, toolchain)
+    expected = profile_test_plan(name, build, toolchain, selected)
     rows = report.get('tests', [])
     require(len(rows) == len(expected), 'Profile qualification omitted or duplicated a suite')
     require(report.get('source_files') == test_source_snapshot(), 'Profile test sources changed')
@@ -978,7 +1143,7 @@ def validate_profile_tests(report, name, identity, build, toolchain):
             require(counts['run'] > 0 and counts['skipped'] == 0, 'Gate tests are empty or skipped')
 
 
-def run_profile_tests(name, build, toolchain, identity):
+def run_profile_tests(name, build, toolchain, identity, selected=None):
     output = build / 'profile-tests'
     require(not output.is_symlink(), 'Profile test output must not be a symlink')
     if output.exists():
@@ -987,7 +1152,7 @@ def run_profile_tests(name, build, toolchain, identity):
     sources = test_source_snapshot()
     records = []
     test_env = dict(os.environ, AK820_SDCC_BIN=str((Path(toolchain) / 'bin').resolve()))
-    for identifier, cwd, command in profile_test_plan(name, build, toolchain):
+    for identifier, cwd, command in profile_test_plan(name, build, toolchain, selected):
         started = time.monotonic()
         before = inspect(build, toolchain)['identity']
         require(before == identity, 'Build changed before profile tests')
@@ -1013,7 +1178,7 @@ def run_profile_tests(name, build, toolchain, identity):
               f'(test {test_seconds:.3f}s)', flush=True)
     require(test_source_snapshot() == sources, 'Test sources changed during profile qualification')
     report['passed'] = True
-    validate_profile_tests(report, name, identity, build, toolchain)
+    validate_profile_tests(report, name, identity, build, toolchain, selected)
     (output / 'results.json').write_bytes(canonical(report))
     return {'sha256': sha(output / 'results.json'), 'suites': [row['id'] for row in records],
             'source_files_sha256': hashlib.sha256(canonical(sources)).hexdigest()}
@@ -1037,7 +1202,7 @@ def qualify(directory, toolchain, before=None):
     require(fresh['identity'] == result['identity'], 'Build changed during qualification')
     require(source_identity() == before, 'Git source changed during qualification')
     result['qualification'] = validate_tests(qualification, result['identity'])
-    result['profile_tests'] = run_profile_tests(name, directory, toolchain, result['identity'])
+    result['profile_tests'] = run_profile_tests(name, directory, toolchain, result['identity'], result['configuration'])
     apply_runtime_safety(result, result['runtime_analysis'])
     result['offline_tests_passed'] = True
     output.write_bytes(canonical(result))
@@ -1056,6 +1221,8 @@ def main(argv=None):
                        help='Verified foreground ACALL/AJMP relaxation; default for curated profiles')
     build.add_argument('--parameter-spills-context', type=Path,
                        help='Fresh reviewed source/IRQ context required for the audited release transform chain')
+    for key in profiles.MOUSE_DEFAULTS:
+        build.add_argument('--mouse-' + key.replace('_', '-'), type=int, default=None)
     build.add_argument('--build-dir', type=Path, required=True)
     build.add_argument('--toolchain', type=Path, default=ROOT / 'toolchains/sdcc-4.6.0')
     build.add_argument('--qmk-bin', type=Path, default=QMK / '.venv/bin/qmk')
@@ -1082,13 +1249,19 @@ def main(argv=None):
     if args.command == 'build':
         name = (args.profile if args.profile else profiles.select(args.features)
                 if args.features is not None else profiles.DEFAULT_PROFILE)
-        profiles.configuration(name)
+        overrides = {key: getattr(args, 'mouse_' + key) for key in profiles.MOUSE_DEFAULTS}
+        mouse = ({key: value if value is not None else profiles.MOUSE_DEFAULTS[key] for key, value in overrides.items()}
+                 if any(value is not None for value in overrides.values()) else None)
+        profiles.configuration(name, mouse_keys=mouse)
         require(not directory.exists() and directory.is_relative_to(QMK.resolve()),
                 'Select a fresh build directory beneath the QMK source root')
         before = source_identity()
-        command = [str(args.python.resolve()), str(QMK / 'util/build_ak820.py'),
+        command = [str(args.python.resolve()), '-s', str(QMK / 'util/build_ak820.py'),
                    '--profile', name, '--toolchain', str(toolchain),
                    '--qmk-bin', str(args.qmk_bin.resolve()), '--build-dir', str(directory)]
+        for key, value in overrides.items():
+            if value is not None:
+                command += ['--mouse-' + key.replace('_', '-'), str(value)]
         if name in profiles.RELEASE_PROFILES:
             require(args.short_calls is not False, 'Release profiles require audited short calls')
             require(args.parameter_spills_context is not None and args.parameter_spills_context.is_file(),
@@ -1096,10 +1269,10 @@ def main(argv=None):
             command += ['--compress-default-keymap', '--nvm-update-block-asm', '--nvm-read-block-asm',
                         '--keymap-words-asm', '--trim-parameter-spills', '--parameter-spills-context',
                         str(args.parameter_spills_context.resolve()), '--trim-register-saves',
-                        '--tail-share', '--outline-max-helpers', '400']
+                        '--tail-share', '--tail-share-xmod', '--outline-max-helpers', '400']
         if args.short_calls is not None:
             command.append('--short-calls' if args.short_calls else '--no-short-calls')
-        subprocess.run(command, cwd=QMK, check=True)
+        subprocess.run(command, cwd=QMK, env=build_environment(os.environ), check=True)
         result = qualify(directory, toolchain, before)
     elif args.command == 'qualify':
         result = qualify(directory, toolchain)

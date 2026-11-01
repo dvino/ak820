@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "quantum.h"
 #include "ak820_combo.h"
+#if defined(AK820_COMBO_AUTOSHIFT) && (!defined(AK820_COMPACT_COMBO) || !defined(AK820_COMPACT_AUTOSHIFT) || !defined(AK820_COMPACT_TAPPING))
+#    error "AK820_COMBO_AUTOSHIFT requires compact Combo, Auto Shift and tapping"
+#endif
+#ifdef AK820_COMPACT_AUTOSHIFT
+#    include "ak820_autoshift.h"
+#endif
 #ifdef AK820_QMK_SETTINGS
 #    include "ak820_settings.h"
 #    define AK820_COMBO_TERM ak820_settings_combo_term()
@@ -25,6 +31,10 @@ static __data uint8_t first = NONE;
 static uint8_t first = NONE;
 #endif
 static uint8_t second = NONE;
+#ifdef AK820_COMBO_AUTOSHIFT
+static bool combo_shift_owner;
+#endif
+static uint8_t combo_cancel_generation;
 #if defined(__SDCC_mcs51)
 static __bit active;
 #else
@@ -53,7 +63,39 @@ ak820_combo_result_t ak820_combo_valid(const vial_combo_entry_t AK820_STATE_MEM 
 }
 /* A Combo settings write or unlock calls clear_keyboard(), whose shared cancellation
  * path drops every owner and blocks still-held physical sources. */
-void ak820_combo_cancel(void) { first = second = NONE; active = false; }
+void ak820_combo_cancel(void) {
+    first = second = NONE; active = false;
+#ifdef AK820_COMBO_AUTOSHIFT
+    combo_shift_owner = false;
+#endif
+    ++combo_cancel_generation;
+}
+#ifdef AK820_COMBO_AUTOSHIFT
+/* Tapping has admitted the release, but Auto Shift has not consumed it yet. */
+bool ak820_combo_before(const keyevent_t AK820_STATE_MEM *event) {
+    if (!active || IS_NOEVENT(*event) || event->pressed ||
+        event->key.row >= MATRIX_ROWS || event->key.col >= MATRIX_COLS) return true;
+    uint8_t id = event->key.row * MATRIX_COLS + event->key.col;
+    if (id != first && id != second) return true;
+    if (!combo_shift_owner && !ak820_autoshift_before(event)) return false;
+    if (!active) return false; /* A callback may have cleared the keyboard. */
+    if (id == first) first = NONE;
+    else second = NONE;
+    if (first == NONE && second == NONE) active = false;
+    if (saved.event.pressed) {
+        saved.event.pressed = false;
+        if (combo_shift_owner) {
+            keyevent_t owner_release = *event;
+            owner_release.key = saved.event.key;
+            combo_shift_owner = false;
+            ak820_autoshift_before(&owner_release);
+        } else {
+            process_record(&saved);
+        }
+    }
+    return false;
+}
+#endif
 void ak820_combo_reload(void) {
     for (uint8_t i = 0; i < VIAL_COMBO_ENTRIES; ++i) {
         vial_combo_entry_t entry;
@@ -65,19 +107,22 @@ void ak820_combo_reload(void) {
         }
     }
 }
-static void flush(void) {
+static bool flush(void) {
+    uint8_t generation = combo_cancel_generation;
     first = NONE;
     process_record(&saved);
+    return generation == combo_cancel_generation;
 }
-void ak820_combo_tick(uint16_t now) {
-    if (first != NONE && !active && (uint16_t)(now - saved.event.time) >= AK820_COMBO_TERM) flush();
+bool ak820_combo_tick(uint16_t now) {
+    if (first != NONE && !active && (uint16_t)(now - saved.event.time) >= AK820_COMBO_TERM) return flush();
+    return true;
 }
 ak820_combo_result_t ak820_combo_process(keyrecord_t AK820_STATE_MEM *record) {
     uint8_t id, code = record->keycode;
     if (IS_NOEVENT(record->event)) return true;
     /* Encoder pulses never become candidates. */
     if (record->event.key.row >= MATRIX_ROWS || record->event.key.col >= MATRIX_COLS) {
-        if (first != NONE && !active) flush();
+        if (first != NONE && !active) return flush();
         return true;
     }
     id = record->event.key.row * MATRIX_COLS + record->event.key.col;
@@ -85,9 +130,9 @@ ak820_combo_result_t ak820_combo_process(keyrecord_t AK820_STATE_MEM *record) {
      * before broad cancellation so a pending press is never silently lost. */
     if (record->keycode >= QK_COMBO_ON && record->keycode <= QK_COMBO_TOGGLE) {
         if (record->event.pressed) {
-            bool next = record->keycode == QK_COMBO_TOGGLE ? !enabled : record->keycode == QK_COMBO_ON;
+            bool next = record->keycode == QK_COMBO_ON || (record->keycode == QK_COMBO_TOGGLE && !enabled);
             if (next != enabled) {
-                if (first != NONE && !active) flush();
+                if (first != NONE && !active && !flush()) return false;
                 enabled = next;
                 /* Shared clear releases generated outputs and blocks their
                  * still-held physical sources, including unrelated actions. */
@@ -120,14 +165,21 @@ ak820_combo_result_t ak820_combo_process(keyrecord_t AK820_STATE_MEM *record) {
                 if (first != NONE && code != previous && (a == previous || b == previous)) {
                     second = id;
                     active = true;
+#ifdef AK820_COMBO_AUTOSHIFT
+                    saved = *record;
+#endif
                     saved.keycode = combos[i].output;
-                    process_record(&saved);
+#ifdef AK820_COMBO_AUTOSHIFT
+                    combo_shift_owner = !ak820_autoshift_process(&saved);
+                    if (!combo_shift_owner)
+#endif
+                        process_record(&saved);
                     return false;
                 }
             }
         }
     }
-    if (first != NONE) flush();
+    if (first != NONE && !flush()) return false;
     if (eligible) {
         first = id;
         saved = *record;

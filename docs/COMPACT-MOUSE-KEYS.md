@@ -4,10 +4,14 @@
 
 Move the pointer, scroll or hold mouse buttons with keyboard keys.
 
-The `mouse` and `mouse-typing` packages include the compact AK820 implementation
-and
-`MOUSEKEY_ENABLE`. It uses the existing HID mouse report and shared USB endpoint.
-Map these keycodes in Vial when using a firmware build that includes the option:
+**Before changing assignments:** The published beta.5 catalog does not authorize
+settings writes. See [settings backup](SETTINGS-BACKUP.md) and [write-failure limits](QMK-SETTINGS.md).
+
+The `pointer` and `onehand` catalog profiles include the compact AK820 implementation
+and `MOUSEKEY_ENABLE`. It uses the existing HID mouse report and shared USB endpoint.
+Map these keycodes to physical keys in Vial when using a firmware build that
+includes the option. For example, assign `KC_MS_UP` to move up and
+`KC_MS_BTN1` to click; hold both to drag upward:
 
 | Action | Keycodes in this QMK version |
 | --- | --- |
@@ -25,7 +29,22 @@ Hold a button while moving to drag. Button events and direction releases do
 not add movement.
 Pressing another direction restarts the interval for its cursor or wheel group.
 
-Speed is fixed. Acceleration keys `KC_MS_ACCEL0` through `KC_MS_ACCEL2` and
+These are the defaults, including in published beta.5. The speed cannot be
+changed in Vial or AK Configurator while using the keyboard. For a source-only
+development build with Mouse Keys, the lower-level
+`tools/configure_firmware.py build` command accepts `--mouse-cursor-step`,
+`--mouse-cursor-period`, `--mouse-wheel-step` and `--mouse-wheel-period`.
+Steps are integer report units from 1 to 127; periods are integer milliseconds
+from 1 to 255. Omitted values retain the defaults. For example, add
+`--profile pointer --mouse-cursor-step 12 --mouse-wheel-period 60` to the usual
+build command. These are compile-time values, not Vial or runtime settings.
+Published beta.5 does not support these build options. A modified build is a
+distinct, unqualified development image: the profile name does not approve it
+for installation. Exact-image safety, regression and installer
+approval are still required. The canonical firmware matrix rejects modified
+builds. The Custom firmware builder is unchanged.
+
+Speed is fixed within a build. Acceleration keys `KC_MS_ACCEL0` through `KC_MS_ACCEL2` and
 buttons 6–8 have no effect. The standard QMK mouse acceleration settings do
 not configure this implementation. Key names and their general meanings are
 listed in the [QMK Mouse Keys documentation](https://docs.qmk.fm/features/mouse_keys).

@@ -100,7 +100,7 @@ def module_contract(configuration, limits):
     This is descriptive metadata only. Entry qualification is still performed
     by inspect_entry's exact-image evidence pipeline.
     """
-    configured.profiles.validate_configuration(configuration)
+    configured.profiles.validate_build_configuration(configuration)
     enabled = set(configuration['optional_features'])
     schema03 = configuration['nvm_schema'] == extensions.SCHEMA
     modules = {}
@@ -119,16 +119,18 @@ def module_contract(configuration, limits):
              7: ('tapping_term_ms', ['compact-mod-tap','compact-layer-tap','space-cadet']),
              18: ('tap_code_delay_ms', ['tap_code','tap_code16']),
              19: ('caps_lock_delay_ms', ['tap_code','tap_code16'])}
-    names.update({3: ('auto_shift_flags', ['auto-shift']), 6: ('one_shot_timeout_ms', ['one-shot']), 22: ('caps_word_language', ['caps-word'])})
+    names.update({3: ('auto_shift_flags', ['auto-shift']), 6: ('one_shot_timeout_ms', ['one-shot']), 22: ('caps_word_language', ['caps-word']), 23: ('leader_timeout_ms', ['leader'])})
     qsids = configuration['runtime_qmk_settings']
     settings = []
     if schema03:
-        for qsid, (offset,width,low,high,default) in sorted((extensions.FIELDS if configuration.get('compact_controls_version') == 2 else extensions.LEGACY_FIELDS).items()):
+        version = configuration.get('compact_controls_version', 1)
+        for qsid, (offset,width,low,high,default) in sorted(extensions.fields_for(version).items()):
             name, consumers = names[qsid]
             settings.append({'qsid': qsid, 'name': name, 'stored': True,
                 'enabled': qsid in qsids, 'offset': extensions.SETTINGS_ADDR+offset,
                 'width_bytes': width, 'encoding': 'uint8' if width == 1 else 'uint16-le',
                 'minimum': low, 'maximum': high, 'default': default,
+                **({'default_source': 'exact-image-marker-required'} if qsid == 23 else {}),
                 **({'allowed_mask': 0x1d} if qsid == 3 else {}),
                 **({'zero_means': 'unlimited'} if qsid == 6 else {}),
                 'consumers': consumers if qsid in qsids else [],
@@ -136,7 +138,7 @@ def module_contract(configuration, limits):
     modules['qmk_settings'] = {'enabled': 'qmk-settings' in enabled,
         'stored_record_bytes': 24 if schema03 else 0,
         'record_version': configuration.get('compact_controls_version', 1) if schema03 else None,
-        'accepted_record_versions': ([1,2] if configuration.get('compact_controls_version') == 2 else [1]) if schema03 else [],
+        'accepted_record_versions': list(range(1, configuration.get('compact_controls_version', 1) + 1)) if schema03 else [],
         'record_offset': extensions.SETTINGS_ADDR if schema03 else None,
         'enabled_qsids': list(qsids), 'fields': settings,
         'wire_commands': {'query': 9, 'get': 10, 'set': 11, 'reset': 12}}
@@ -225,11 +227,11 @@ def inspect_entry(build, toolchain):
     validate_base_logs(build)
     profile_path = build / 'profile-tests/results.json'
     configured.validate_profile_tests(configured.load_json(profile_path),
-        inspected['configuration']['profile'], identity, build, toolchain)
+        inspected['configuration']['profile'], identity, build, toolchain, inspected['configuration'])
     inspected.update(offline_tests_passed=True, qualification=qualification,
         profile_tests={'sha256': configured.sha(profile_path),
                        'suites': [row[0] for row in configured.profile_test_plan(
-                           inspected['configuration']['profile'], build, toolchain)],
+                           inspected['configuration']['profile'], build, toolchain, inspected['configuration'])],
                        'hardware_validated': False})
     # Compare independently reconstructed fields; source Git metadata is descriptive.
     for key in ('format', 'configuration', 'identity', 'short_calls', 'resources',
@@ -249,6 +251,7 @@ def inspect_entry(build, toolchain):
               'code_identity': code_identity(code), 'build_identity': identity,
               'features': sorted(configuration['base_features'] + configuration['optional_features']),
               'timing_ms': configuration['timing_ms'], 'fixed_limits': limits,
+              **({'mouse_keys': configuration['mouse_keys']} if 'mouse_keys' in configuration else {}),
               'module_storage': module_contract(configuration, limits),
               'direct': direct_contract(build, configuration),
               'resources': inspected['resources'],

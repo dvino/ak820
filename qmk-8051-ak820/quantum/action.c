@@ -28,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "action_tapping.h"
 #include "action_util.h"
 #include "action.h"
+#if defined(AK820_COMBO_AUTOSHIFT) && (!defined(AK820_COMPACT_COMBO) || !defined(AK820_COMPACT_AUTOSHIFT) || !defined(AK820_COMPACT_TAPPING))
+#    error "AK820_COMBO_AUTOSHIFT requires compact Combo, Auto Shift and tapping"
+#endif
 #include "wait.h"
 #include "qmk_settings.h"
 #include "keycode_config.h"
@@ -101,7 +104,12 @@ void action_exec(keyevent_t event) {
     ak820_dynamic_macro_task(event.time);
 #endif
 #ifdef AK820_COMPACT_COMBO
-    ak820_combo_tick(event.time);
+    if (!ak820_combo_tick(event.time)) {
+#    ifdef AK820_COMPACT_TAPPING
+        ak820_tapping_discard(&event);
+#    endif
+        return;
+    }
 #endif
 #ifdef AK820_COMPACT_TAPPING
     if (!ak820_tapping_before(&event)) return;
@@ -110,6 +118,9 @@ void action_exec(keyevent_t event) {
     if (!ak820_tap_dance_before(&event)) return;
 #    endif
 #    ifdef AK820_COMPACT_AUTOSHIFT
+#        ifdef AK820_COMBO_AUTOSHIFT
+    if (!ak820_combo_before(&event)) return;
+#        endif
     if (!ak820_autoshift_before(&event)) return;
 #    endif
 #endif
@@ -201,6 +212,129 @@ if (QS_oneshot_timeout > 0) {
     if (IS_NOEVENT(event)) ak820_leader_task(event.time);
 #endif
 }
+
+#ifdef AK820_PH_ACTION_SEAM
+void ak820_ph_action_continue(ak820_ph_action_context_t AK820_RECORD_MEM *context)
+#    ifdef __SDCC_mcs51
+    __reentrant
+#    endif
+{
+#ifdef AK820_COMPACT_ONESHOT
+    ak820_oneshot_tick(context->event.time);
+#endif
+#ifdef AK820_COMPACT_DYNAMIC_MACRO
+    ak820_dynamic_macro_task(context->event.time);
+#endif
+#ifdef AK820_COMPACT_COMBO
+    if (!ak820_combo_tick(context->event.time)) {
+#    ifdef AK820_COMPACT_TAPPING
+        ak820_tapping_discard(&context->event);
+#    endif
+        return;
+    }
+#endif
+#ifdef AK820_COMPACT_TAPPING
+    if (!ak820_tapping_before(&context->event)) return;
+#    ifdef AK820_COMPACT_TAP_DANCE
+    ak820_tap_dance_task(context->event.time);
+    if (!ak820_tap_dance_before(&context->event)) return;
+#    endif
+#    ifdef AK820_COMPACT_AUTOSHIFT
+#        ifdef AK820_COMBO_AUTOSHIFT
+    if (!ak820_combo_before(&context->event)) return;
+#        endif
+    if (!ak820_autoshift_before(&context->event)) return;
+#    endif
+#endif
+#if !defined(AK820_BOARD) || !defined(NO_DEBUG) || defined(RETRO_TAPPING) || defined(RETRO_TAPPING_PER_KEY) || (defined(AUTO_SHIFT_ENABLE) && defined(RETRO_SHIFT))
+    /* Retain the runtime predicate only when this block has observable work. */
+    if (IS_EVENT(context->event)) {
+        ac_dprintf("\n---- action_exec: start -----\n");
+        ac_dprintf("EVENT: ");
+        debug_event(context->event);
+        ac_dprintf("\n");
+#if defined(RETRO_TAPPING) || defined(RETRO_TAPPING_PER_KEY) || (defined(AUTO_SHIFT_ENABLE) && defined(RETRO_SHIFT))
+        retro_tapping_counter++;
+#endif
+    }
+#endif
+
+    if (context->event.pressed) {
+        // clear the potential weak mods left by previously pressed keys
+        clear_weak_mods();
+    }
+
+#ifdef SWAP_HANDS_ENABLE
+    // Swap hands handles both keys and encoders, if ENCODER_MAP_ENABLE is defined.
+    if (IS_EVENT(context->event)) {
+        process_hand_swap(&context->event);
+    }
+#endif
+
+    //keyrecord_t record = {.event = event};
+    context->record.event = context->event;
+#ifdef AK820_COMPACT_TAPPING
+    context->record.tap.count = 0;
+#endif
+#if defined(COMBO_ENABLE) || defined(REPEAT_KEY_ENABLE)
+    /* Synthetic Repeat records carry an explicit keycode. Physical and
+     * encoder events must always start with a fresh position lookup. */
+    context->record.keycode = 0;
+#endif
+
+#ifndef NO_ACTION_ONESHOT
+    if (keymap_config.oneshot_enable) {
+if (QS_oneshot_timeout > 0) {
+        if (has_oneshot_layer_timed_out()) {
+            clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
+        }
+        if (has_oneshot_mods_timed_out()) {
+            clear_oneshot_mods();
+        }
+#        ifdef SWAP_HANDS_ENABLE
+        if (has_oneshot_swaphands_timed_out()) {
+            clear_oneshot_swaphands();
+        }
+#        endif
+}
+    }
+#endif
+
+#ifndef NO_ACTION_TAPPING
+#    if defined(AUTO_SHIFT_ENABLE) && defined(RETRO_SHIFT)
+    if (context->event.pressed) {
+        retroshift_poll_time(&context->event);
+    }
+#    endif
+    if (IS_NOEVENT(context->record.event) || pre_process_record_quantum(&context->record)) {
+        action_tapping_process(context->record);
+    }
+#else
+    if (IS_NOEVENT(context->record.event) || pre_process_record_quantum(&context->record)) {
+#ifdef AK820_COMPACT_TAPPING
+        if (!ak820_tapping_process(&context->record)) return;
+#    ifdef AK820_COMPACT_AUTOSHIFT
+        if (!ak820_autoshift_process(&context->record)) return;
+#    endif
+#endif
+        process_record(&context->record);
+    }
+#if !defined(AK820_BOARD) || !defined(NO_DEBUG)
+    if (IS_EVENT(context->record.event)) {
+        ac_dprintf("processed: ");
+        debug_record(context->record);
+        dprintln();
+    }
+#endif
+#endif
+#ifdef AK820_COMPACT_LEADER
+    /* Only idle ticks dispatch macros, after every use of event/record.
+     * Extended macros re-enter action_exec and overwrite SDCC static locals. */
+    if (IS_NOEVENT(context->event)) ak820_leader_task(context->event.time);
+#endif
+}
+
+#endif
 
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
 #if defined(__SDCC_MODEL_LARGE)

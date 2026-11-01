@@ -4,8 +4,10 @@ Hashes bind evidence; they are not signatures and cannot establish reviewer
 independence. These checks grant no permission to access hardware.
 """
 from __future__ import annotations
+import errno
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import pack_ak820 as pack
@@ -19,7 +21,14 @@ def digest(data: bytes) -> str:
 
 
 def symbols_sha256(mapfile: Path) -> str:
-    symbols = pack.read_symbols(mapfile)
+    return _symbols_sha256(pack.read_symbols(mapfile))
+
+
+def symbols_sha256_bytes(mapfile: bytes) -> str:
+    return _symbols_sha256(pack.parse_symbols_bytes(mapfile))
+
+
+def _symbols_sha256(symbols: dict) -> str:
     if not symbols:
         raise ValueError('MAP has no packing symbols')
     return digest(json.dumps(symbols, sort_keys=True, separators=(',', ':')).encode('utf-8'))
@@ -87,14 +96,28 @@ def validate_policy(policy: dict, host_files: dict, receipt_bytes: bytes,
 
 def validate_bundle_authorization(bundle: Path, manifest: dict, record: dict) -> None:
     """Validate CI evidence after ordinary manifest/file/build/host validation."""
+    _validate_bundle_authorization(manifest, record, lambda name: (bundle / name).read_bytes(),
+                                   lambda: symbols_sha256(bundle / 'firmware/application.map'))
+
+
+def validate_bundle_authorization_bytes(files: dict[str, bytes], manifest: dict, record: dict) -> None:
+    """Validate retained bytes; missing artifacts raise FileNotFoundError."""
+    def data(name):
+        try:
+            return files[name]
+        except KeyError:
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), name) from None
+    _validate_bundle_authorization(manifest, record, data,
+                                   lambda: symbols_sha256_bytes(data('firmware/application.map')))
+
+
+def _validate_bundle_authorization(manifest: dict, record: dict, data, symbols_hash) -> None:
     files = manifest['files']
     is_ci = record.get('format') == 'ak820-reproduced-review-1'
     require((set(files) & CI_EXTRA_FILES) == (CI_EXTRA_FILES if is_ci else set()),
             'Mixed exact-build and CI authorization evidence')
     if not is_ci:
         return
-    def data(name):
-        return (bundle / name).read_bytes()
     def sha(name):
         return digest(data(name))
     policy_bytes = data('reviews/program-policy.json')
@@ -121,7 +144,7 @@ def validate_bundle_authorization(bundle: Path, manifest: dict, record: dict) ->
                      and configuration['nvm_schema'] == program['schema'])),
             'Build report schema differs from reviewed program')
     require(program['ihx_sha256'] == sha('firmware/application.ihx')
-            and program['symbols_sha256'] == symbols_sha256(bundle / 'firmware/application.map'),
+            and program['symbols_sha256'] == symbols_hash(),
             'Fresh build differs from the reviewed program')
     policy_sha = digest(policy_bytes)
     review = _record(review_bytes, 'ak820-ci-program-review-1')

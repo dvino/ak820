@@ -15,6 +15,31 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+class LeaderMarkerBindingTests(unittest.TestCase):
+    def test_final_linked_marker_matches_static_identity(self):
+        def ihex(data):
+            row = bytes([len(data), 0x31, 0, 0]) + data
+            return ':0130270000A8\n:' + (row + bytes([-sum(row) & 255])).hex().upper() + '\n:00000001FF\n'
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory)
+            ihx = build / 'ajazz_ak820_vial.ihx'
+            mapfile = build / 'ajazz_ak820_vial.map'
+            line = 'C:   00003100  _ak820_leader_default_marker module\n'
+            identity = {'settings_record_version': 3, 'leader_default':
+                        {'format': 'ak820-leader-default-1', 'milliseconds': 300}}
+            ihx.write_text(ihex(b'AKL\x01\x2c\x01'), encoding='ascii')
+            mapfile.write_text(line, encoding='ascii')
+            ci.verify_linked_leader_default(build, identity)
+            for changed in ('', line + line):
+                mapfile.write_text(changed, encoding='ascii')
+                with self.assertRaises(ValueError):
+                    ci.verify_linked_leader_default(build, identity)
+            mapfile.write_text(line, encoding='ascii')
+            ihx.write_text(ihex(b'AKL\x01\x2d\x01'), encoding='ascii')
+            with self.assertRaisesRegex(ValueError, 'differs'):
+                ci.verify_linked_leader_default(build, identity)
+
+
 class QualificationTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

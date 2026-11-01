@@ -1,8 +1,10 @@
 """Shared offline release identities; no USB access or approval generation."""
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 
@@ -14,7 +16,7 @@ HOST_FILES = frozenset((
     'tools/build_release_bundle.py',
     'qmk-8051-ak820/util/ak820_profiles.py', 'qmk-8051-ak820/util/ak820_extension_settings.py',
     'tools/installer/ak820.py', 'tools/installer/i18n.py',
-    'tools/ak820_device_protocol.py', 'tools/installer/settings_backup.py',
+    'tools/ak820_device_protocol.py', 'tools/ak820_leader_marker.py', 'tools/installer/settings_backup.py',
     'tools/installer/settings_workflow.py',
     'tools/installer/profile-catalog.json', 'tools/installer/settings-catalog.json',
     'tools/installer/requirements.txt', 'tools/installer/70-ak820.rules',
@@ -33,10 +35,24 @@ def host_manifest(root: Path) -> dict:
 
 
 def validate_host_manifest(manifest: dict, root: Path) -> None:
+    _validate_host_manifest(manifest, lambda: host_manifest(root))
+
+
+def validate_host_manifest_bytes(manifest: dict, files: dict[str, bytes]) -> None:
+    def records():
+        for name in sorted(HOST_FILES):
+            if name not in files:
+                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), name)
+        return {name: {'size': len(files[name]), 'sha256': hashlib.sha256(files[name]).hexdigest()}
+                for name in sorted(HOST_FILES)}
+    _validate_host_manifest(manifest, records)
+
+
+def _validate_host_manifest(manifest: dict, actual_records) -> None:
     recorded = manifest.get('host_files')
     if not isinstance(recorded, dict) or set(recorded) != HOST_FILES:
         raise ValueError('Incomplete or unexpected host-code manifest')
-    actual = host_manifest(root)
+    actual = actual_records()
     for name in sorted(HOST_FILES):
         if recorded[name] != actual[name]:
             raise ValueError('Host code differs from the reviewed release: ' + name)

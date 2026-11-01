@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import binascii
+import io
 import json
 from pathlib import Path
 import sys
@@ -18,7 +19,8 @@ import time
 
 from pack_ak820 import (APP_END, APP_START, BUILD_ID, CODE_END, CODE_START,
                        EXTENSION_BUILD_ID, LOW_END, LOW_START, MANIFEST_START, NVM_END, NVM_START,
-                       digest, read_ihex, read_symbols, verify_payload, nvm_layout)
+                       digest, read_ihex, read_symbols, parse_ihex_bytes, parse_symbols_bytes,
+                       verify_payload, nvm_layout)
 
 NVM_FAULT_NAMES = (
     'none', 'recovery_page', 'recovery_crc', 'recovery_write', 'recovery_cleanup',
@@ -125,18 +127,36 @@ def diagnostic_build(ihx: Path | None, mapfile: Path | None, build_report: Path 
         return None
     if ihx is None or mapfile is None or build_report is None:
         raise ValueError("FD01 requires --ihx, --map and --build-report; FD00 needs none of them")
+    return _diagnostic_build(lambda: build_report.read_text(encoding="utf-8"),
+                             ihx.read_bytes, mapfile.read_bytes,
+                             lambda: read_symbols(mapfile), lambda: read_ihex(ihx))
+
+
+def diagnostic_build_bytes(ihx: bytes | None, mapfile: bytes | None, build_report: bytes | None):
+    if ihx is None and mapfile is None and build_report is None:
+        return None
+    if ihx is None or mapfile is None or build_report is None:
+        raise ValueError("FD01 requires --ihx, --map and --build-report; FD00 needs none of them")
+    def report_text():
+        with io.TextIOWrapper(io.BytesIO(build_report), encoding="utf-8") as stream:
+            return stream.read()
+    return _diagnostic_build(report_text, lambda: ihx, lambda: mapfile,
+                             lambda: parse_symbols_bytes(mapfile), lambda: parse_ihex_bytes(ihx))
+
+
+def _diagnostic_build(report_text, ihx_bytes, map_bytes, symbols, code):
     # The symbol alone is insufficient: a new MAP mixed with an old IHX can
     # point into otherwise valid old CODE. Bind both files to one build first.
-    report = json.loads(build_report.read_text(encoding="utf-8"))
+    report = json.loads(report_text())
     if report.get("code_window") != [CODE_START, CODE_END]:
         raise ValueError("Unexpected diagnostic build CODE window")
-    for path, suffix in ((ihx, ".ihx"), (mapfile, ".map")):
+    for read_bytes, suffix in ((ihx_bytes, ".ihx"), (map_bytes, ".map")):
         artifacts = [item for item in report.get("artifacts", [])
                      if isinstance(item, dict) and str(item.get("path", "")).endswith(suffix)]
-        if len(artifacts) != 1 or artifacts[0].get("sha256") != digest(path.read_bytes()):
+        if len(artifacts) != 1 or artifacts[0].get("sha256") != digest(read_bytes()):
             raise ValueError("IHX/MAP pair does not match the build report")
-    symbols = read_symbols(mapfile)
-    code = read_ihex(ihx)
+    symbols = symbols()
+    code = code()
     address = symbols.get("_ak820_nvm_diagnostic")
     if address is None or address not in code:
         raise ValueError("This build does not declare the FD01 diagnostic implementation")

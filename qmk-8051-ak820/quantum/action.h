@@ -67,6 +67,27 @@ typedef struct {
 /* Execute action per keyevent */
 void action_exec(keyevent_t event);
 
+#ifdef AK820_PH_ACTION_SEAM
+/* Unwired foreground experiment. Caller owns both objects throughout all
+ * synchronous callbacks; no alias may escape. Downstream ABI is not qualified. */
+typedef struct {
+    keyevent_t event;
+    keyrecord_t record;
+} ak820_ph_action_context_t;
+#    ifdef __SDCC_mcs51
+void ak820_ph_action_continue(ak820_ph_action_context_t AK820_RECORD_MEM *context) __reentrant;
+#    else
+void ak820_ph_action_continue(ak820_ph_action_context_t *context);
+#    endif
+#endif
+
+/* Unwired experiment path: compiled only when a test harness defines
+ * AK820_PH_ACTION_SEAM (no release profile does). The body is a deliberate
+ * alternative pipeline, NOT a synced copy of action_exec; any edit to
+ * action_exec breaks tests/ak820_tapping/ph_action_seam_test.py, which pins
+ * the action_exec body to ph_action_seam_legacy.fixture and proves this seam
+ * adds zero instructions when disabled. */
+
 #if defined(AK820_BOARD) && defined(__SDCC_mcs51)
 /* The pinned callers own model-large XDATA events. Share SDCC's aggregate
  * argument copy without changing action_exec's public by-value contract. */

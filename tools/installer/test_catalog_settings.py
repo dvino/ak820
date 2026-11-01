@@ -3,8 +3,9 @@ import copy
 import json
 from pathlib import Path
 import tempfile
+import threading
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 import test_settings_backup as model
 
 s = model.settings
@@ -21,20 +22,40 @@ def legacy_profile_for(name, seed):
     return _profile_for(name, seed)
 
 
-def _profile_for(name, seed):
+def pre_v3_profile_for(name, seed):
+    assert name in s.ak820_profiles.RELEASE_PROFILES
+    return _profile_for(name, seed, pre_v3=True)
+
+
+def _profile_for(name, seed, *, pre_v3=False):
     profile = model.synthetic_profile()
-    config = s.ak820_profiles.configuration(name)
+    config = (s.ak820_profiles._configuration(name, s.ak820_profiles.PROFILES[name], current=True)
+              if pre_v3 else s.ak820_profiles.configuration(name))
     nvm = model.base_nvm()
     if config['nvm_schema'] != p.BUILD_ID:
         nvm, _ = p.migrate_vial_nvm(nvm, p.BUILD_ID, target_build_id=config['nvm_schema'])
+        nvm = bytearray(nvm)
+        nvm[s.extensions.SETTINGS_ADDR:s.extensions.SETTINGS_ADDR+24] = (
+            s.extensions.settings_record(version=2) if pre_v3 else
+            s.extensions.settings_record(version=3, default_leader=350))
     payload = bytearray(profile['payload'])
     payload[:p.CODE_END-p.APP_START] = bytes((seed,)) * (p.CODE_END-p.APP_START)
+    leader_default = {'format': 'ak820-leader-default-1', 'milliseconds': 350}
+    if not pre_v3 and 'qmk-settings' in config['optional_features']:
+        marker = b'AKL\x01' + leader_default['milliseconds'].to_bytes(2, 'little')
+        offset = 0x28a0 - p.APP_START
+        payload[offset:offset+len(marker)] = marker
+    else:
+        leader_default = None
     code_hash = p.digest(payload[:p.CODE_END-p.APP_START])
     at = p.MANIFEST_START-p.APP_START
     payload[at:at+48] = p.MAGIC + b'\1\0\0\0' + config['nvm_schema'].to_bytes(4, 'little') + bytes.fromhex(code_hash)
     payload[p.NVM_START-p.APP_START:p.NVM_END-p.APP_START] = nvm
     profile.update(payload=bytes(payload), ihx_sha256=p.digest(bytes((seed,))), code_sha256=code_hash, schema=config['nvm_schema'])
-    contract = s.catalog_settings_identity(config, profile['ihx_sha256'], code_hash, profile['definition_sha256'])
+    contract = (s._settings_identity(config, profile['ihx_sha256'], code_hash, profile['definition_sha256'],
+                                     combo_actions=['caps-word-toggle'], macro_layer_tap=True)
+                if pre_v3 else s.catalog_settings_identity(config, profile['ihx_sha256'], code_hash,
+                                                            profile['definition_sha256'], leader_default=leader_default))
     row = {'profile': name, 'configuration': config, 'identity': {'ihx_sha256': profile['ihx_sha256'], 'nvm_schema': config['nvm_schema']}, 'settings_identity': contract}
     return profile, row
 
@@ -53,7 +74,7 @@ def bind(catalog, *profiles):
 def backup_at(folder, profile, nvm=None):
     nvm = bytes(nvm if nvm is not None else profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
     image = s._profile_images(profile)[profile['ihx_sha256']]
-    data = s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32], image=image), combos=True, settings_version=image.get('settings_record_version',1))
+    data = s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32], image=image), combos=True, settings_version=image.get('settings_record_version',1), default_leader=image.get('leader_default', {}).get('milliseconds'))
     files = {'settings.json': s.canonical(data), 'before-full-rom.bin': model.WireDevice(profile, nvm).rom(),
              'saved-nvm.bin': nvm, 'read-log.jsonl': b'', '.gitignore': b'*\n'}
     manifest = {'format': s.FORMAT_V2 if profile['schema'] == s.extensions.SCHEMA else s.FORMAT,
@@ -68,9 +89,159 @@ def backup_at(folder, profile, nvm=None):
 
 
 class CatalogSettings(unittest.TestCase):
+    def test_v3_explicit_records_normalize_with_synthetic_packed_marker(self):
+        # These artificial bytes exercise codec semantics, not image approval or planning.
+        for name, qsid22, default in (('main', 1, 517), ('game', 0, 713)):
+            with self.subTest(profile=name, qsid22=qsid22, default=default):
+                profile, row = profile_for(name, 171)
+                payload = bytearray(profile['payload'])
+                marker_offset = 0x28a0 - p.APP_START
+                payload[marker_offset:marker_offset+6] = b'AKL\x01' + default.to_bytes(2, 'little')
+                code_hash = p.digest(payload[:p.CODE_END-p.APP_START])
+                manifest = p.MANIFEST_START-p.APP_START
+                payload[manifest+16:manifest+48] = bytes.fromhex(code_hash)
+                record = p.NVM_START-p.APP_START+s.extensions.SETTINGS_ADDR
+                payload[record:record+24] = s.extensions.settings_record(version=3, default_leader=default)
+                profile.update(payload=bytes(payload), code_sha256=code_hash)
+                row['settings_identity'] = s.catalog_settings_identity(row['configuration'],
+                    profile['ihx_sha256'], code_hash, profile['definition_sha256'],
+                    leader_default={'format': 'ak820-leader-default-1', 'milliseconds': default})
+                bind(catalog_for(row), profile)
+                target_nvm = profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START]
+                s.validate_rom(model.WireDevice(profile, target_nvm).rom(), profile,
+                               (profile['ihx_sha256'], code_hash))
+                image = s._profile_images(profile)[profile['ihx_sha256']]
+                start = p.NVM_START - p.APP_START
+                nvm = bytearray(profile['payload'][start:start + p.NVM_END - p.NVM_START])
+                target_record = s._extensions_from_explicit_record(nvm, version=3, default_leader=default)
+                self.assertEqual(target_record['qmk_settings']['23'], default)
+                packed_code = profile['payload'][:p.CODE_END-p.APP_START]
+                at = 0x28a0
+                marker_bytes = packed_code[at-p.APP_START:at-p.APP_START+6]
+                linked = {at+i: value for i, value in enumerate(marker_bytes)}
+                map_text = f'C:   {at:08X}  {s.ak820_leader_marker.SYMBOL} module\n'
+                marker = s.ak820_leader_marker.extract(map_text, linked, packed_code)
+                self.assertEqual(p.digest(packed_code), image['code_sha256'])
+                self.assertEqual(marker, image['leader_default'])
+
+                values = {'1': 5, '2': 321, '3': 29, '4': 488, '6': 9876,
+                          '7': 87, '18': 51, '19': 49, '22': qsid22}
+                begin = s.extensions.SETTINGS_ADDR
+                tap = bytes.fromhex('0400050000000000c800')
+                override = bytes.fromhex('04000500010000000001')
+                tap_at = s.extensions.slot_offset('tap_dance', 6)
+                override_at = s.extensions.slot_offset('key_overrides', 7)
+                nvm[tap_at:tap_at+10] = tap
+                nvm[override_at:override_at+10] = override
+                nvm[begin:begin+24] = s.extensions.settings_record(values, version=2)
+                before = bytes(nvm)
+                source = s._extensions_from_explicit_record(nvm, version=2)
+                self.assertEqual(source['qmk_settings'], values)
+                migrated = s.extensions.normalize_settings(source['qmk_settings'], version=3,
+                    source_version=2, default_leader=marker['milliseconds'])
+                self.assertEqual(migrated, {**values, '23': marker['milliseconds']})
+                encoded = s.extensions.settings_record(migrated, version=3)
+                self.assertEqual(s.extensions.decode_settings(encoded, version=3,
+                    default_leader=marker['milliseconds']), migrated)
+                self.assertEqual(bytes(nvm), before)
+                self.assertEqual(source['tap_dance'][6], tap.hex())
+                self.assertEqual(source['key_overrides'][7], override.hex())
+
+                current = {**values, '23': 777 if name == 'main' else marker['milliseconds']}
+                nvm[begin:begin+24] = s.extensions.settings_record(current, version=3)
+                explicit = s._extensions_from_explicit_record(nvm, version=3,
+                    default_leader=marker['milliseconds'])
+                self.assertEqual(explicit['qmk_settings'], current)
+                self.assertEqual(explicit['tap_dance'], source['tap_dance'])
+                self.assertEqual(explicit['key_overrides'], source['key_overrides'])
+                self.assertEqual(s.extensions.normalize_settings(explicit['qmk_settings'], version=3,
+                    source_version=3, default_leader=marker['milliseconds']), current)
+
+    def test_v3_marker_and_explicit_record_negative_controls(self):
+        profile, row = profile_for('main', 171)
+        bind(catalog_for(row), profile)
+        start = p.NVM_START - p.APP_START
+        nvm = bytearray(profile['payload'][start:start + p.NVM_END - p.NVM_START])
+        packed = profile['payload'][:p.CODE_END-p.APP_START]
+        at = 0x28a0
+        raw = packed[at-p.APP_START:at-p.APP_START+6]
+        code = {at+i: value for i, value in enumerate(raw)}
+        text = f'C:   {at:08X}  {s.ak820_leader_marker.SYMBOL} module\n'
+        stale = bytearray(packed)
+        stale[at-p.APP_START+4] ^= 1
+        for args in (('', code, packed), (text, code, bytes(stale)),
+                     (text, {k: v for k, v in code.items() if k != at+5}, packed)):
+            with self.subTest(kind=args[0][:10]), self.assertRaises(ValueError):
+                s.ak820_leader_marker.extract(*args)
+        begin = s.extensions.SETTINGS_ADDR
+        for fill in (0, 255):
+            nvm[begin:begin+24] = bytes((fill,)) * 24
+            with self.assertRaisesRegex(ValueError, 'authenticated QSID 22'):
+                s._extensions_from_explicit_record(nvm, version=3, default_leader=350)
+        invalid = bytearray(s.extensions.settings_record(version=2))
+        invalid[17] = 2
+        invalid[22:] = s.extensions.binascii.crc_hqx(invalid[:22], 0xffff).to_bytes(2, 'little')
+        nvm[begin:begin+24] = invalid
+        with self.assertRaises(ValueError):
+            s._extensions_from_explicit_record(nvm, version=2)
+        current = s.extensions.decode_settings(s.extensions.settings_record(version=3, default_leader=350))
+        with self.assertRaisesRegex(ValueError, 'downgrade'):
+            s.extensions.normalize_settings(current, version=2, source_version=3)
+        with self.assertRaises(ValueError):
+            s.extensions.decode_settings(s.extensions.settings_record(version=2), version=3, default_leader=None)
+        bad = catalog_for(row, transitions=[{'source': 'f' * 64, 'target': profile['ihx_sha256']}])
+        with self.assertRaisesRegex(ValueError, 'transition'):
+            s._catalog_images(bad)
+
+    def test_v3_plan_stop_precedes_transition_authorization(self):
+        source, source_row = profile_for('main', 181)
+        target, target_row = profile_for('main', 182)
+        bind(catalog_for(source_row, target_row), source, target)
+        with tempfile.TemporaryDirectory() as temp:
+            backup = backup_at(Path(temp), source)
+            original = (Path(temp) / 'settings.json').read_bytes()
+            for profile in (source, target):
+                with self.subTest(same_image=profile is source), \
+                     self.assertRaisesRegex(ValueError, 'qualification and identity gates are pending'):
+                    s.plan_restore(backup, profile)
+            self.assertEqual((Path(temp) / 'settings.json').read_bytes(), original)
+
+    def test_v3_synthetic_identity_and_erased_record_fail_closed(self):
+        profile, row = profile_for('main', 171)
+        bind(catalog_for(row), profile)
+        image = s._profile_images(profile)[profile['ihx_sha256']]
+        self.assertEqual(image['leader_default']['milliseconds'], 350)
+        for default in (None, {'format': 'ak820-leader-default-1', 'milliseconds': 0},
+                        {'format': 'ak820-leader-default-1', 'milliseconds': 1001}):
+            bad = copy.deepcopy(row)
+            bad['settings_identity']['leader_default'] = default
+            with self.subTest(default=default), self.assertRaises(ValueError):
+                s._catalog_images(catalog_for(bad))
+        nvm = bytearray(profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
+        for fill in (0, 255):
+            nvm[s.extensions.SETTINGS_ADDR:s.extensions.SETTINGS_ADDR+24] = bytes([fill]) * 24
+            with self.subTest(fill=fill), self.assertRaisesRegex(ValueError, 'authenticated QSID 22'):
+                s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32], image=image),
+                                    settings_version=3, default_leader=350)
+            for version in (None, 2, 3):
+                with self.subTest(fill=fill, version=version), self.assertRaisesRegex(ValueError, 'authenticated QSID 22'):
+                    s._extensions_from_explicit_record(nvm, version=version, default_leader=350)
+
+    def test_v3_inactive_leader_still_has_authenticated_storage_default(self):
+        profile, row = profile_for('game', 172)
+        bind(catalog_for(row), profile)
+        image = s._profile_images(profile)[profile['ihx_sha256']]
+        self.assertNotIn('leader', image['features'])
+        self.assertNotIn(23, row['configuration']['runtime_qmk_settings'])
+        self.assertEqual(image['leader_default']['milliseconds'], 350)
+        malformed = copy.deepcopy(row)
+        malformed['settings_identity']['leader_default']['milliseconds'] = True
+        with self.assertRaises(ValueError):
+            s._catalog_images(catalog_for(malformed))
+
     def test_explicit_transition_cannot_downgrade_settings_record(self):
         source, source_row = profile_for('main', 121)
-        target, target_row = profile_for('main', 122)
+        target, target_row = pre_v3_profile_for('main', 122)
         config = s.ak820_profiles._configuration('main', s.ak820_profiles.PROFILES['main'])
         target_row['configuration'] = config
         target_row['settings_identity'] = s._settings_identity(config, target['ihx_sha256'],
@@ -94,7 +265,7 @@ class CatalogSettings(unittest.TestCase):
         # the real current MAIN has changed.
         old_features = profiles.historical_configuration('main')['optional_features']
         with patch.dict(profiles.PROFILES, main=tuple(old_features)):
-            old, row = profile_for('main', 112)
+            old, row = pre_v3_profile_for('main', 112)
         row['configuration'] = profiles.historical_configuration('main')
         row['settings_identity'] = s._settings_identity(row['configuration'], old['ihx_sha256'], old['code_sha256'], old['definition_sha256'], combo_actions=[], macro_layer_tap=False)
         old_nvm = bytearray(old['payload'])
@@ -107,7 +278,7 @@ class CatalogSettings(unittest.TestCase):
             if not s.macro_layer_tap_keycode(code)]
         del row['settings_identity']['macro_layer_tap']
         with patch.dict(profiles.PROFILES, main=tuple(old_features) + ('gui-lock', 'auto-shift')):
-            new, current = profile_for('main', 113)
+            new, current = pre_v3_profile_for('main', 113)
             catalog = catalog_for(current, transitions=[
                 {'source': old['ihx_sha256'], 'target': new['ihx_sha256']}])
             catalog['historical_profiles'] = [row]
@@ -148,8 +319,8 @@ class CatalogSettings(unittest.TestCase):
                 s.catalog_settings_identity(row['configuration'], '1'*64, '2'*64, '3'*64)
 
     def test_macro_layer_tap_exact_image_contract(self):
-        new, row = profile_for('main', 110)
-        old, oldrow = profile_for('main', 111)
+        new, row = pre_v3_profile_for('main', 110)
+        old, oldrow = pre_v3_profile_for('main', 111)
         identity = oldrow['settings_identity']
         identity['supported_keycodes'] = [code for code in identity['supported_keycodes']
                                           if not s.macro_layer_tap_keycode(code)]
@@ -211,12 +382,20 @@ class CatalogSettings(unittest.TestCase):
                 self.assertEqual(row['settings_identity']['supported_keycodes'], sorted(set(row['settings_identity']['supported_keycodes'])))
                 with tempfile.TemporaryDirectory() as temp:
                     backup = backup_at(Path(temp), profile)
-                    self.assertEqual(s.plan_restore(backup, profile)['key_count'], 498)
+                    with self.assertRaisesRegex(ValueError, 'qualification and identity gates are pending'):
+                        s.plan_restore(backup, profile)
+        for i, name in enumerate(s.ak820_profiles.RELEASE_PROFILES, 20):
+            with self.subTest(pre_v3=name), tempfile.TemporaryDirectory() as temp:
+                profile, row = pre_v3_profile_for(name, i)
+                bind(catalog_for(row), profile)
+                backup = backup_at(Path(temp), profile)
+                self.assertEqual(len(backup['settings']['keys']), 498)
+                self.assertEqual(s.plan_restore(backup, profile)['key_count'], 498)
 
     def test_caps_word_combo_exact_image_migration_and_old_target_stop(self):
-        source, sr = profile_for('main', 101)
-        target, tr = profile_for('main', 102)
-        old, oldrow = profile_for('main', 103)
+        source, sr = pre_v3_profile_for('main', 101)
+        target, tr = pre_v3_profile_for('main', 102)
+        old, oldrow = pre_v3_profile_for('main', 103)
         del oldrow['settings_identity']['combo_actions']
         catalog = catalog_for(sr, tr, oldrow, transitions=[
             {'source': source['ihx_sha256'], 'target': target['ihx_sha256']},
@@ -232,18 +411,18 @@ class CatalogSettings(unittest.TestCase):
             self.assertEqual(s.plan_restore(saved, target)['combo_entries'][0], data.hex())
             before_dir = root/'before'; before_dir.mkdir()
             before = backup_at(before_dir, old)
-            api = Mock(allow_writes=True)
+            api = Mock(allow_writes=True, _operation_lock=threading.RLock(), _restore_active=False, _guard_active=False)
             with self.assertRaisesRegex(ValueError, 'Caps Word Combo'):
                 s.restore_settings(api, saved, old, target_backup=before)
-            self.assertEqual(api.mock_calls, [])
+            self.assertEqual(api.mock_calls, [call._invalidate_write_identity()])
         # An old source cannot claim this action merely because the reader knows it.
         with tempfile.TemporaryDirectory() as temp:
             with self.assertRaisesRegex(ValueError, 'Caps Word Combo'):
                 backup_at(Path(temp), old, nvm)
 
     def test_typed_historical_profiles_remain_strict_and_source_only(self):
-        old, row = profile_for('main', 104)
-        new, current = profile_for('main', 105)
+        old, row = pre_v3_profile_for('main', 104)
+        new, current = pre_v3_profile_for('main', 105)
         del row['settings_identity']['combo_actions']
         catalog = catalog_for(current, transitions=[{'source':old['ihx_sha256'], 'target':new['ihx_sha256']}])
         catalog['historical_profiles'] = [row]
@@ -290,6 +469,64 @@ class CatalogSettings(unittest.TestCase):
         rom = bytearray(model.WireDevice(profile).rom()); rom[p.APP_START] ^= 1
         with self.assertRaisesRegex(ValueError, 'exact reviewed'): s.validate_rom(rom, profile)
 
+    def test_catalog_identity_uses_code_and_validated_owner_settings_not_full_rom_hash(self):
+        source, sr = profile_for('main', 124)
+        target, tr = profile_for('main', 125)
+        edge = {'source': source['ihx_sha256'], 'target': target['ihx_sha256']}
+        bind(catalog_for(sr, tr, transitions=[edge]), source, target)
+        original = source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START]
+        snapshots = []
+        with tempfile.TemporaryDirectory() as temp:
+            for index, (key, left, right) in enumerate(((4, 5, 6), (7, 8, 9))):
+                nvm = bytearray(original)
+                # Layer 0 row 0 column 0, then encoder directions 0 and 1.
+                for offset, value in ((0x40, key), (0x642, left), (0x640, right)):
+                    nvm[offset:offset+2] = value.to_bytes(2, 'big')
+                folder = Path(temp)/str(index); folder.mkdir()
+                backup_at(folder, source, nvm)
+                saved = s.validate_backup(folder, target)
+                self.assertEqual(saved['source_identity'], (source['ihx_sha256'], source['code_sha256']))
+                self.assertEqual(saved['rom'][p.APP_START:p.CODE_END], source['payload'][:p.CODE_END-p.APP_START])
+                self.assertEqual(saved['nvm'], bytes(nvm))
+                self.assertEqual(saved['settings']['keys'][0],
+                                 {'layer': 0, 'row': 0, 'column': 0, 'keycode': key})
+                self.assertEqual(saved['settings']['encoders'][:2], [
+                    {'layer': 0, 'direction': 0, 'keycode': left},
+                    {'layer': 0, 'direction': 1, 'keycode': right}])
+                with self.assertRaisesRegex(ValueError, 'qualification and identity gates are pending'):
+                    s.plan_restore(saved, target)
+                snapshots.append(saved)
+            self.assertNotEqual(p.digest(snapshots[0]['rom']), p.digest(snapshots[1]['rom']))
+            self.assertNotEqual(snapshots[0]['settings'], snapshots[1]['settings'])
+
+            folder = Path(temp)/'0'
+            manifest = json.loads((folder/'manifest.json').read_bytes())
+            for name, offset, error in (('code', p.APP_START, 'exact reviewed'),
+                                        ('loader', 0, 'Protected loader/tail'),
+                                        ('tail', p.APP_END, 'Protected loader/tail'),
+                                        ('marker', 0x27c0, 'boot marker'),
+                                        ('journal', p.NVM_END+64, 'Journal header'),
+                                        ('nvm', p.NVM_START, 'NVM magic/schema'),
+                                        ('manifest', p.MANIFEST_START, 'manifest/build')):
+                with self.subTest(name=name):
+                    rom = bytearray(snapshots[0]['rom']); rom[offset] ^= 1
+                    (folder/'before-full-rom.bin').write_bytes(rom)
+                    manifest['files']['before-full-rom.bin'] = s._record(bytes(rom))
+                    (folder/'manifest.json').write_bytes(s.canonical(manifest))
+                    with self.assertRaisesRegex(ValueError, error):
+                        s.validate_backup(folder, target)
+
+            (folder/'before-full-rom.bin').write_bytes(snapshots[0]['rom'])
+            manifest['files']['before-full-rom.bin'] = s._record(snapshots[0]['rom'])
+            settings = json.loads((folder/'settings.json').read_bytes())
+            settings['keys'][0]['keycode'] = 10
+            data = s.canonical(settings)
+            (folder/'settings.json').write_bytes(data)
+            manifest['files']['settings.json'] = s._record(data)
+            (folder/'manifest.json').write_bytes(s.canonical(manifest))
+            with self.assertRaisesRegex(ValueError, 'Settings JSON differs'):
+                s.validate_backup(folder, target)
+
     def test_command_domains_and_source_restrictions(self):
         domains = {'nkro-control': (0x7011,0x7012,0x7013), 'space-cadet': (0x7C1A,0x7C1B,0x7C1E),
                    'gui-lock': (0x7009,0x700A,0x700B), 'ctrl-gui-swap': (0x701B,0x701C,0x701D),
@@ -309,7 +546,7 @@ class CatalogSettings(unittest.TestCase):
             for context in ('encoder','macro'): self.assertFalse(s.image_keycode_supported(code,image,context=context))
 
     def test_reviewed_transition_does_not_override_module_or_schema(self):
-        work, wr = profile_for('main', 40); mouse, mr = profile_for('game', 41)
+        work, wr = pre_v3_profile_for('main', 40); mouse, mr = pre_v3_profile_for('game', 41)
         transition = {'source': work['ihx_sha256'], 'target': mouse['ihx_sha256']}
         catalog = catalog_for(wr,mr); bind(catalog,work,mouse)
         with tempfile.TemporaryDirectory() as temp:
@@ -324,7 +561,7 @@ class CatalogSettings(unittest.TestCase):
             backup=backup_at(Path(temp),work,nvm)
             with self.assertRaisesRegex(ValueError,'Unsupported keycode'): s.plan_restore(backup,mouse)
         legacy, lr = legacy_profile_for('work', 42)
-        typed, tr = profile_for('main', 43)
+        typed, tr = pre_v3_profile_for('main', 43)
         catalog = catalog_for(lr, tr, transitions=[
             {'source': legacy['ihx_sha256'], 'target': typed['ihx_sha256']},
             {'source': typed['ihx_sha256'], 'target': legacy['ihx_sha256']}])
@@ -341,7 +578,7 @@ class CatalogSettings(unittest.TestCase):
         for name, code, context in [('main',0x7C58,'encoder'), ('typing',0x7C13,'encoder'),
                                      ('creative',0x5700,'encoder'), ('main',0x7C58,'macro')]:
             with self.subTest(name=name,context=context):
-                profile,row=profile_for(name,60);bind(catalog_for(row),profile)
+                profile,row=pre_v3_profile_for(name,60);bind(catalog_for(row),profile)
                 nvm=bytearray(profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
                 if context=='encoder':
                     at=s.DeviceAPI.encoder_offset(0,0);nvm[at:at+2]=code.to_bytes(2,'big')
@@ -354,7 +591,7 @@ class CatalogSettings(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError,'Unsupported keycode'):s.plan_restore(backup,profile)
 
     def test_dynamic_macro_controls_require_physical_matrix_for_every_opcode(self):
-        profile,row=profile_for('main',63);bind(catalog_for(row),profile)
+        profile,row=pre_v3_profile_for('main',63);bind(catalog_for(row),profile)
         image=profile['compatible_images'][profile['ihx_sha256']]
         for code in range(0x7C53,0x7C58):
             self.assertTrue(s.image_keycode_supported(code,image,context='matrix'))
@@ -373,7 +610,7 @@ class CatalogSettings(unittest.TestCase):
                         with self.assertRaisesRegex(ValueError,'Unsupported keycode'):s.plan_restore(backup,profile)
 
     def test_key_override_macro_controls_accept_tap_and_reject_down_up(self):
-        profile,row=profile_for('main',64);bind(catalog_for(row),profile)
+        profile,row=pre_v3_profile_for('main',64);bind(catalog_for(row),profile)
         image=profile['compatible_images'][profile['ihx_sha256']]
         for code in range(0x7C5D,0x7C60):
             for opcode,context in ((5,'macro-tap'),(6,'macro-down'),(7,'macro-up')):
@@ -390,7 +627,7 @@ class CatalogSettings(unittest.TestCase):
                             with self.assertRaisesRegex(ValueError,'Unsupported keycode in macro'):s.plan_restore(backup,profile)
 
     def test_macro_module_keycode_cannot_cross_profile_even_with_transition(self):
-        source,sr=profile_for('game',61);target,tr=profile_for('main',62)
+        source,sr=pre_v3_profile_for('game',61);target,tr=pre_v3_profile_for('main',62)
         catalog=catalog_for(sr,tr,transitions=[{'source':source['ihx_sha256'],'target':target['ihx_sha256']}])
         bind(catalog,source,target)
         nvm=bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
@@ -422,8 +659,8 @@ class CatalogSettings(unittest.TestCase):
 
     def test_reactive_mode_translates_between_direct_and_no_direct_enums(self):
         for source_name,target_name,enum in [('typing','main',5),('main','typing',6)]:
-            source,row = profile_for(source_name,61)
-            target,target_row = profile_for(target_name,62)
+            source,row = pre_v3_profile_for(source_name,61)
+            target,target_row = pre_v3_profile_for(target_name,62)
             edge = {'source': source['ihx_sha256'], 'target': target['ihx_sha256']}
             bind(catalog_for(row,target_row,transitions=[edge]),source,target)
             nvm = bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
@@ -434,8 +671,8 @@ class CatalogSettings(unittest.TestCase):
                 self.assertEqual(int.from_bytes(plan['rgb_saved_mode'][:2],'little'),31)
 
     def test_direct_palette_is_blocked_before_restore_into_no_direct_image(self):
-        source,row = profile_for('main',63)
-        target,target_row = profile_for('typing',64)
+        source,row = pre_v3_profile_for('main',63)
+        target,target_row = pre_v3_profile_for('typing',64)
         edge = {'source':source['ihx_sha256'],'target':target['ihx_sha256']}
         bind(catalog_for(row,target_row,transitions=[edge]),source,target)
         nvm = bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
@@ -447,10 +684,10 @@ class CatalogSettings(unittest.TestCase):
             target_dir = Path(temp)/'target-snapshot'
             target_dir.mkdir()
             before = backup_at(target_dir,target)
-            api = Mock(allow_writes=True)
+            api = Mock(allow_writes=True, _operation_lock=threading.RLock(), _restore_active=False, _guard_active=False)
             with self.assertRaisesRegex(ValueError,'unsupported by the selected target'):
                 s.restore_settings(api,backup,target,target_backup=before)
-            self.assertEqual(api.mock_calls, [])
+            self.assertEqual(api.mock_calls, [call._invalidate_write_identity()])
 
     def test_known_beta1_work_source_requires_exact_pins_and_explicit_transition(self):
         # These are historical image descriptors, not invented ROM contents.
@@ -494,11 +731,35 @@ class CatalogSettings(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Unknown or duplicate historical'):
             s._catalog_images(catalog)
 
+    def test_fabricated_approval_stops_before_write(self):
+        # Snapshot inputs are synthetic; the approval verifier itself is not mocked.
+        import test_release_snapshot as release_tests
+        case = release_tests.SnapshotTests('test_success_snapshot_and_path_wrapper')
+        case.setUp()
+        try:
+            case.approval.write_text('{}', encoding='utf-8')
+            output = case.root / 'wire-output'
+            output.mkdir()
+            wire = Mock()
+            api = s.DeviceAPI({}, output, lambda: wire, allow_writes=True,
+                              verification=(case.bundle, case.root / 'session', case.approval))
+            try:
+                with patch('ak820_device_protocol._installer', return_value=release_tests.app), \
+                     patch.object(release_tests.app, 'BUNDLE'), patch.object(release_tests.app, 'APPROVAL'), \
+                     patch.object(release_tests.app, 'RELEASE'):
+                    with self.assertRaisesRegex(ValueError, 'Approval does not match exact release bytes'):
+                        api.exchange(api.packet(9))
+                wire.raw.assert_not_called()
+            finally:
+                api.close()
+        finally:
+            case.doCleanups()
+
     def test_restore_reapplies_saved_controls_without_rewriting_v1_or_v2(self):
         for record_version in (1,2):
             with self.subTest(record_version=record_version), tempfile.TemporaryDirectory() as temp:
                 root=Path(temp)
-                profile,row=profile_for('main',123)
+                profile,row=pre_v3_profile_for('main',123)
                 bind(catalog_for(row),profile)
                 nvm=bytearray(profile['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
                 nvm[0x6a8:0x6c0]=s.extensions.settings_record(version=record_version)
@@ -509,13 +770,15 @@ class CatalogSettings(unittest.TestCase):
                 raw=model.WireDevice(profile,bytes(nvm))
                 raw.runtime_controls={3:0,22:1}
                 (root/'wire').mkdir()
-                api=s.DeviceAPI(profile,root/'wire',lambda:raw,allow_writes=True)
-                api.settings_query=Mock(return_value=s.ak820_profiles.configuration('main')['runtime_qmk_settings'])
+                api=s.DeviceAPI(profile,root/'wire',lambda:raw,allow_writes=True,verification=())
+                api.settings_query=Mock(return_value=row['configuration']['runtime_qmk_settings'])
                 api.get_setting=lambda qsid:s.extensions.decode_settings(bytes(raw.nvm[0x6a8:0x6c0]),version=2)[str(qsid)]
                 api.dynamic_entry_counts=Mock(return_value=(0,8,8))
                 api.get_extension=lambda kind,index:bytes(raw.nvm[s.extensions.slot_offset(kind,index):s.extensions.slot_offset(kind,index)+10])
                 try:
-                    with patch('ak820_device_protocol.time.sleep'):
+                    # Synthetic approval lookup; live ROM validation and restore checks remain real.
+                    with patch('ak820_device_protocol.time.sleep'), \
+                         patch('ak820_device_protocol._approved_write_profile', return_value=(s, profile)):
                         result=s.restore_settings(api,saved,profile,target_backup=saved)
                     self.assertTrue(result['verified'])
                     self.assertEqual(raw.runtime_controls,{3:1,22:0})
@@ -528,8 +791,8 @@ class CatalogSettings(unittest.TestCase):
             for enabled in (0,1):
                 with self.subTest(source=source_name,target=target_name,enabled=enabled), tempfile.TemporaryDirectory() as temp:
                     root = Path(temp)
-                    source,row = profile_for(source_name,71)
-                    target,target_row = profile_for(target_name,72)
+                    source,row = pre_v3_profile_for(source_name,71)
+                    target,target_row = pre_v3_profile_for(target_name,72)
                     edge = {'source':source['ihx_sha256'],'target':target['ihx_sha256']}
                     bind(catalog_for(row,target_row,transitions=[edge]),source,target)
                     nvm = bytearray(source['payload'][p.NVM_START-p.APP_START:p.NVM_END-p.APP_START])
@@ -542,14 +805,16 @@ class CatalogSettings(unittest.TestCase):
                     raw = model.WireDevice(target,target_nvm)
                     raw.mode_ids = ({1:2,2:6,3:13,4:14,5:31} if target_name=='typing' else {1:2,2:6,3:13,4:14,5:1,6:31})
                     (root/'wire').mkdir()
-                    api = s.DeviceAPI(target,root/'wire',lambda:raw,allow_writes=True)
-                    config = s.ak820_profiles.configuration(target_name)
+                    api = s.DeviceAPI(target,root/'wire',lambda:raw,allow_writes=True,verification=())
+                    config = target_row['configuration']
                     api.settings_query = Mock(return_value=config['runtime_qmk_settings'])
                     api.get_setting = lambda qsid:s.extensions.decode_settings(bytes(raw.nvm[0x6a8:0x6c0]))[str(qsid)]
                     api.dynamic_entry_counts = Mock(return_value=(8 if 'tap-dance' in config['optional_features'] else 0,8,8))
                     api.get_extension = lambda kind,index:bytes(raw.nvm[s.extensions.slot_offset(kind,index):s.extensions.slot_offset(kind,index)+10])
                     try:
-                        with patch('ak820_device_protocol.time.sleep'):
+                        # Synthetic approval lookup; live ROM validation and restore checks remain real.
+                        with patch('ak820_device_protocol.time.sleep'), \
+                             patch('ak820_device_protocol._approved_write_profile', return_value=(s, target)):
                             result = s.restore_settings(api,saved,target,target_backup=before)
                         self.assertTrue(result['verified'])
                         self.assertEqual(raw.nvm[24],target_enum*4+enabled)
@@ -566,10 +831,18 @@ class CatalogSettings(unittest.TestCase):
             ihx=b'synthetic ihx';(bundle/'firmware/application.ihx').write_bytes(ihx)
             row['identity']['ihx_sha256']=p.digest(ihx);row['settings_identity']['ihx_sha256']=p.digest(ihx)
             (bundle/'reference/vial.json').write_bytes(s.canonical(profile['definition']))
-            with patch.object(p,'validate_native'),patch.object(s.diagnostic,'diagnostic_build',return_value={}),patch.object(p,'read_symbols',return_value={}),patch.object(p,'migrate',return_value=(model.base_nvm(),{})),patch.object(p,'pack',return_value=profile['payload']) as packed:
-                result=s.load_profile(bundle,profile['backup'],trusted_catalog=catalog_for(row))
-                self.assertEqual(result['schema'],s.extensions.SCHEMA)
+            mapfile = bundle/'firmware/application.map'
+            mapfile.write_text('C:   000028A0  _ak820_leader_default_marker synthetic\n', encoding='ascii')
+            code = {at: profile['payload'][at-p.APP_START]
+                    for lo, hi in s.ak820_leader_marker.WINDOWS for at in range(lo, hi)}
+            with patch.object(p,'validate_native'),patch.object(s.diagnostic,'diagnostic_build',return_value=code),patch.object(p,'read_symbols',return_value={}),patch.object(p,'migrate',return_value=(model.base_nvm(),{})),patch.object(p,'pack',return_value=profile['payload']) as packed:
+                with self.assertRaisesRegex(ValueError, 'qualification and identity gates are pending'):
+                    s.load_profile(bundle,profile['backup'],trusted_catalog=catalog_for(row))
                 self.assertEqual(packed.call_args.kwargs['target_build_id'],s.extensions.SCHEMA)
+                mapfile.write_text('', encoding='ascii')
+                with self.assertRaisesRegex(ValueError, 'Missing or duplicate Leader marker'):
+                    s.load_profile(bundle,profile['backup'],trusted_catalog=catalog_for(row))
+                mapfile.write_text('C:   000028A0  _ak820_leader_default_marker synthetic\n', encoding='ascii')
                 row['settings_identity']['code_sha256']='0'*64
                 with self.assertRaisesRegex(ValueError,'CODE does not match'):s.load_profile(bundle,profile['backup'],trusted_catalog=catalog_for(row))
                 with self.assertRaisesRegex(ValueError,'Unsupported firmware'):s.load_profile(bundle,profile['backup'])

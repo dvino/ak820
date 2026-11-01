@@ -74,6 +74,11 @@ with `sudo`.
 
 ## Prepare and install
 
+**Beta.5 does not authorize settings writes.** Catalog approval, image
+recognition and offline migration checks do not authorize restoring or
+transferring settings. Update and settings-restore guidance below is conditional
+on settings writes becoming authorized.
+
 `verify` checks the downloaded profile files and release approval without
 accessing USB. To inspect a profile, add `--profile` before the command, for
 example `./AK820.sh --profile game verify` on Linux or
@@ -91,7 +96,22 @@ before writing, then verifies the installed image and checks typing after restar
 Keep the complete session directory, including `permanent-session`, in a
 private backup. Stop on an error; do not retry, reset or restore blindly.
 
-To update an existing supported QMK/Vial installation, use
+After package setup, run `prepare` and then `install` from `AK820-Python`:
+
+```powershell
+.\AK820.cmd prepare
+.\AK820.cmd install
+```
+
+On Linux, use `./AK820.sh prepare` and `./AK820.sh install` instead. Device
+preparation reads the OEM firmware without reset, erase or flash; installation
+still makes its own fresh backup. The script prints `Session folder:` with
+the path at the end of each operation. Keep the whole installation session
+folder private. For `OEM_DIR` below, use its `permanent-session` child, not the
+earlier preparation session.
+
+If settings writes become authorized, to update an existing supported QMK/Vial
+installation, use
 `update --session OEM_DIR --backup-dir NEW_BACKUP_DIR`. Keep the original OEM
 recovery session and choose a new backup directory. The script saves current
 settings and checks their transfer before requesting a fresh three-second
@@ -101,8 +121,8 @@ restoring settings after the update.
 ## OEM recovery
 
 For a supported recovery, use `recover --session OEM_DIR` only when the
-keyboard is already in its loader. For a settings restore, use the saved
-settings session and the `restore` command described in
+keyboard is already in its loader. If settings writes become authorized, use the original OEM recovery session,
+the separate settings backup and the `restore` command described in
 [Settings backup and restore](SETTINGS-BACKUP.md). Restore only after the
 installer confirms that the selected source and target images are compatible.
 

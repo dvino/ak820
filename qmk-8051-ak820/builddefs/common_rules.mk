@@ -344,9 +344,9 @@ $1/%.o : %.c $1/%.d $1/cflags.txt $1/compiler.txt | $(BEGIN)
 	$$(if $$(filter $$(notdir $$(VERBOSE_C_INCLUDE)),$$(notdir $$<)),$$(eval CC_EXEC += -H))
     endif
     ifeq ($(AK820_COMPRESS_DEFAULT_KEYMAP),yes)
-	$$(if $$(filter keymap_introspection.c,$$(notdir $$<)),$$(eval CC_EXEC := python3 util/ak820_default_keymap.py $$(CC_EXEC)))
+	$$(if $$(filter keymap_introspection.c,$$(notdir $$<)),$$(eval CC_EXEC := python3 -s util/ak820_default_keymap.py $$(CC_EXEC)))
     endif
-	$$(eval CMD := $$(CC_EXEC) -c $$($1_CFLAGS) $$(INIT_HOOK_CFLAGS) $$(GENDEPFLAGS) $$< -o $$@ && $$(MOVE_DEP))
+	$$(eval CMD := $$(if $$(filter yes,$$(AK820_CAPTURE_COMPILE)),python3 -s util/ak820_capture_compile.py $$@.compile.json $(BUILD_DIR) $1 -- )$$(CC_EXEC) -c $$($1_CFLAGS) $$(INIT_HOOK_CFLAGS) $$(GENDEPFLAGS) $$< -o $$@ && $$(MOVE_DEP))
 	$$(BUILD_CMD)
     ifeq ($(PLATFORM),MCS51)
 	$$(if $$(filter ak820_flash.c,$$(notdir $$<)),$$(eval CMD := mkdir -p $$(@D)/../allocation && $$(CC_EXEC) -S $$($1_CFLAGS) $$(INIT_HOOK_CFLAGS) --debug $$< -o $$(@D)/../allocation/ak820_flash.asm))

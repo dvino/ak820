@@ -16,8 +16,28 @@
 #endif
 #define HOLD_ON_OTHER_KEY_PRESS
 #define NO_ACTION_TAPPING
+/* Build-time gesture controls only; no settings record or runtime interface. */
+#ifndef AK820_CAPS_WORD_BOTH_SHIFTS
+#define AK820_CAPS_WORD_BOTH_SHIFTS 1
+#endif
+#ifndef AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT
+#define AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT 1
+#endif
+#if (AK820_CAPS_WORD_BOTH_SHIFTS != 0 && AK820_CAPS_WORD_BOTH_SHIFTS != 1) || (AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT != 0 && AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT != 1)
+#error "Caps Word gesture switches must be 0 or 1"
+#endif
+#if AK820_CAPS_WORD_BOTH_SHIFTS
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+#endif
+#if AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT
 #define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
+#endif
+/* Leave undefined to use the shared GET_TAPPING_TERM(keycode, record). */
+#ifdef AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM
+#if AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM < 1 || AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM > 32767
+#error "AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM must be between 1 and 32767 ms"
+#endif
+#endif
 #define AK820_COMPACT_TAPPING
 #define AK820_COMPACT_COMBO
 #define VIAL_COMBO_ENTRIES 8

@@ -27,6 +27,8 @@ class ProfileTests(unittest.TestCase):
             build.mkdir()
             mapfile = build / 'ajazz_ak820_vial.map'
             ihx, mem = build / 'ajazz_ak820_vial.ihx', build / 'ajazz_ak820_vial.mem'
+            ihx.write_text('')
+            mem.write_text('')
             symbols = {name: 0x3027 for name in
                 ('_ak820_eeprom_read_block_xdata', '_ak820_eeprom_update_block_xdata',
                  '_dynamic_keymap_get_keycode', '_dynamic_keymap_set_keycode',
@@ -47,10 +49,13 @@ class ProfileTests(unittest.TestCase):
                     'compiler_sha256': config.SDCC46_PINS['sdcc'],
                     'assembler_sha256': config.SDCC46_PINS['sdas8051']}
                 mapfile.write_text(records)
+                report['artifacts'] = [{'path': path.relative_to(root).as_posix(),
+                                        'sha256': config.sha(path)}
+                                       for path in (ihx, mapfile, mem)]
+                (build / 'build-report.json').write_text(json.dumps(report))
                 with self.subTest(profile=profile, records=records), \
                      patch.object(config, 'QMK', root), \
                      patch.object(config, 'validate_tools', return_value=root), \
-                     patch.object(config, 'load_json', return_value=report), \
                      patch.object(config, 'validate_inputs'), \
                      patch.object(config, 'check_feature_defines'), \
                      patch.object(config, 'check_pass30'), \
@@ -242,10 +247,13 @@ class ProfileTests(unittest.TestCase):
         code = {0x3027: 0x22}
         current = config.profiles.configuration('main')
         historical = config.profiles.historical_configuration('main')
-        self.assertEqual(current['compact_controls_version'], 2)
+        self.assertEqual(current['compact_controls_version'], 3)
+        previous = config.profiles._configuration('main', config.profiles.PROFILES['main'], current=True)
+        self.assertEqual(previous['compact_controls_version'], 2)
         self.assertNotIn('compact_controls_version', historical)
         for selected, expected, wrong in (
                 (current, config.COMPACT_SETTINGS_SYMBOL, config.SYMBOLS['qmk-settings']),
+                (previous, config.COMPACT_SETTINGS_SYMBOL, config.SYMBOLS['qmk-settings']),
                 (historical, config.SYMBOLS['qmk-settings'], config.COMPACT_SETTINGS_SYMBOL)):
             with self.subTest(version=selected.get('compact_controls_version')):
                 other = {symbol: 0x3027 for feature, symbol in config.SYMBOLS.items()
@@ -375,12 +383,20 @@ class ProfileTests(unittest.TestCase):
             build = root / 'candidate'
             flags = build / 'obj_ajazz_ak820_vial/cflags.txt'
             flags.parent.mkdir(parents=True)
+            for source in ('util/build_ak820.py', 'keyboards/ajazz/ak820/ak820_mousekey.c'):
+                (root / source).parent.mkdir(parents=True, exist_ok=True)
+                (root / source).write_text('different current source')
+            sources = [{'origin': 'source', 'path': 'util/build_ak820.py',
+                        'sha256': '5d6e4f9eacab8bfe5e2b6e34f376f5825e60eba3a5c9b60900755bee3fd7bc01'},
+                       {'origin': 'source', 'path': 'keyboards/ajazz/ak820/ak820_mousekey.c',
+                        'sha256': '359a0fc97c2239090b84812a5000ed5dd8b6a91bdb5b14e62489857cb5949b25'}]
             selected = config.profiles.configuration('full')
             text = ' '.join('-D' + config.profiles.SWITCHES[feature]
                             for feature in selected['optional_features']) + ' -DNKRO_ENABLE -DGRAVE_ESC_ENABLE'
             def report(value):
                 flags.write_text(value)
-                return {'artifacts': [{'path': flags.relative_to(root).as_posix(),
+                return {'sources': sources, 'builder_sha256': sources[0]['sha256'],
+                        'artifacts': [{'path': flags.relative_to(root).as_posix(),
                                        'sha256': config.sha(flags), 'size': flags.stat().st_size}]}
             with patch.object(config, 'QMK', root):
                 valid = report(text)

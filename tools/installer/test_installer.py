@@ -50,7 +50,7 @@ class BaseCase(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.log = Log(self.root)
-        catalog_patch = patch.object(app, 'profile_catalog', return_value=None)
+        catalog_patch = patch.object(app, '_profile_catalog_bytes', return_value=None)
         catalog_patch.start()
         self.addCleanup(catalog_patch.stop)
         # Synthetic ROMs exercise validation/orchestration without redistributing
@@ -95,8 +95,12 @@ class BaseCase(unittest.TestCase):
             patcher.start()
             self.addCleanup(patcher.stop)
 
-        self.context = app.ReleaseContext('legacy', fixture, app.APPROVAL, {
-            'files': {'firmware/application.ihx': {'sha256': app.sha((fixture/'firmware/application.ihx').read_bytes())}}})
+        files = {name: (fixture / name).read_bytes() for name in
+                 ('firmware/application.ihx', 'firmware/application.map')}
+        files['reports/build-report.json'] = b'{}'
+        manifest = {'files': {name: {'sha256': app.sha(data)} for name, data in files.items()}}
+        snapshot = app.ReleaseSnapshot(json.dumps(manifest).encode(), files, {}, None)
+        self.context = app.ReleaseContext('legacy', fixture, app.APPROVAL, manifest, snapshot=snapshot)
 
         # Generated factory bytes form a synthetic ORIGINAL session so checks for
         # session integrity never depend on a machine's private evidence folder.
@@ -129,7 +133,7 @@ class OfflineTests(BaseCase):
         backup = (app.BUNDLE / 'reference/stock-full.bin').read_bytes()
         (app.BUNDLE / 'installer-release.json').write_text('synthetic approved manifest')
         context = app.ReleaseContext('main', app.BUNDLE, app.APPROVAL,
-            self.context.manifest, nvm_schema=app.packer.EXTENSION_BUILD_ID)
+            self.context.manifest, nvm_schema=app.packer.EXTENSION_BUILD_ID, snapshot=self.context.snapshot)
         with contextlib.redirect_stdout(io.StringIO()):
             session, _ = app.prepare_trial(self.log, backup, context=context)
         for mode in ('trial', 'permanent'):
@@ -271,8 +275,11 @@ class OfflineTests(BaseCase):
                     'install_modes': ['permanent', 'trial']}), patch.object(app, 'check_original'), \
                  patch.object(app, 'inventory', return_value=('OEM_APP', descriptor('OEM_APP'))), \
                  patch.object(app, 'capture_native', return_value=b'personal backup') as capture, \
+                 patch.object(app, 'capture_references'), patch.object(app.packer, 'validate_native'), \
                  patch.object(app, 'prepare_trial', return_value=(self.root, {
                      'image': 'ak820-vial-permanent.bin', 'sha256': 'digest', 'size': 51136})) as prepare, \
+                 patch.object(app, 'expected_install_payload', return_value=b'fake'), \
+                 patch.object(app, 'require_operation_recovery'), \
                  patch.object(app.transport, 'flash') as flash, \
                  patch('builtins.input', side_effect=['y', answer]), contextlib.redirect_stdout(io.StringIO()):
                 with self.assertRaises(app.Cancelled):
@@ -457,7 +464,7 @@ class OfflineTests(BaseCase):
             with self.subTest(reproduction=reproduction):
                 bundle, approval, _ = self.fixture_release(reproduction=reproduction)
                 with patch.object(app, 'BUNDLE', bundle), patch.object(app, 'APPROVAL', approval), \
-                     patch.object(app.diagnostic, 'diagnostic_build', return_value={}), \
+                     patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={}), \
                      patch.object(app, 'hid_module') as hid:
                     app.load_release(approved=True)
                     hid.assert_not_called()
@@ -469,7 +476,7 @@ class OfflineTests(BaseCase):
         manifest['files'][app.REPRODUCTION_BUILDER] = {
             'size': path.stat().st_size, 'sha256': app.sha(path.read_bytes())}
         app.json_write(bundle / 'installer-release.json', manifest)
-        with patch.object(app, 'BUNDLE', bundle), patch.object(app.diagnostic, 'diagnostic_build') as diagnostics:
+        with patch.object(app, 'BUNDLE', bundle), patch.object(app.diagnostic, 'diagnostic_build_bytes') as diagnostics:
             with self.assertRaisesRegex(ValueError, 'Reproduction builder differs'):
                 app.load_release(approved=False)
             diagnostics.assert_not_called()
@@ -497,7 +504,7 @@ class OfflineTests(BaseCase):
         self.assertFalse((bundle / 'reference/native-installed.bin').exists())
         with patch.object(app, 'BUNDLE', bundle), patch.object(app, 'APPROVAL', approval), \
              patch.object(app, 'RUNS', self.root / 'runs'), \
-             patch.object(app.diagnostic, 'diagnostic_build', return_value={}), \
+             patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={}), \
              patch.object(app, 'hid_module') as hid, contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(app.main(['verify']), 0)
             hid.assert_not_called()
@@ -505,7 +512,7 @@ class OfflineTests(BaseCase):
     def test_known_bad_rc3_is_rejected_even_with_renamed_manifest_and_approval(self):
         bundle, approval, _ = self.fixture_release(use_bad_rc3=True)
         with patch.object(app, 'BUNDLE', bundle), patch.object(app, 'APPROVAL', approval), \
-             patch.object(app.diagnostic, 'diagnostic_build') as diagnostics:
+             patch.object(app.diagnostic, 'diagnostic_build_bytes') as diagnostics:
             with self.assertRaisesRegex(ValueError, 'RC3'):
                 app.load_release(approved=True)
             diagnostics.assert_not_called()
@@ -513,7 +520,7 @@ class OfflineTests(BaseCase):
     def test_corrupt_mixed_and_unapproved_artifacts_rejected_before_hid(self):
         bundle, approval, manifest = self.fixture_release()
         with patch.object(app, 'BUNDLE', bundle), patch.object(app, 'APPROVAL', approval), \
-             patch.object(app.diagnostic, 'diagnostic_build', return_value={}):
+             patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={}):
             app.load_release(approved=True)
             approval.write_text('{}')
             with self.assertRaisesRegex(ValueError, 'Approval'):
@@ -527,7 +534,7 @@ class OfflineTests(BaseCase):
     def test_every_distributed_release_file_is_hash_checked(self):
         bundle, approval, _ = self.fixture_release()
         with patch.object(app, 'BUNDLE', bundle), patch.object(app, 'APPROVAL', approval), \
-             patch.object(app.diagnostic, 'diagnostic_build', return_value={}):
+             patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={}):
             app.load_release(approved=True)
             for name in sorted(app.REQUIRED_FILES):
                 path = bundle / name
@@ -543,7 +550,7 @@ class OfflineTests(BaseCase):
         approval.unlink()
         with patch.object(app, 'BUNDLE', bundle), patch.object(app, 'APPROVAL', approval), \
              patch.object(app, 'RUNS', self.root / 'runs'), patch.object(app.sys.stdin, 'isatty', return_value=True), \
-             patch.object(app.diagnostic, 'diagnostic_build', return_value={}), \
+             patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={}), \
              patch.object(app, 'hid_module') as hid, contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(app.main(['install']), 1)
             hid.assert_not_called()
@@ -560,7 +567,7 @@ class OfflineTests(BaseCase):
         with patch.object(app, 'ROOT', copied_root), patch.object(app, 'BUNDLE', bundle), \
              patch.object(app, 'APPROVAL', approval), patch.object(app, 'RUNS', self.root / 'runs'), \
              patch.object(app.sys.stdin, 'isatty', return_value=True), \
-             patch.object(app.diagnostic, 'diagnostic_build', return_value={}), \
+             patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={}), \
              patch.object(app, 'hid_module') as hid, contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(app.main(['install']), 1)
             hid.assert_not_called()
@@ -570,7 +577,7 @@ class OfflineTests(BaseCase):
         del manifest['host_files']
         app.json_write(bundle / 'installer-release.json', manifest)
         with patch.object(app, 'BUNDLE', bundle), \
-             patch.object(app.diagnostic, 'diagnostic_build', return_value={}):
+             patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={}):
             with self.assertRaisesRegex(ValueError, 'host-code'):
                 app.load_release(approved=False)
 
@@ -584,7 +591,7 @@ class OfflineTests(BaseCase):
             'size': path.stat().st_size, 'sha256': app.sha(path.read_bytes())}
         app.json_write(bundle / 'installer-release.json', manifest)
         with patch.object(app, 'BUNDLE', bundle), \
-             patch.object(app.diagnostic, 'diagnostic_build', return_value={}):
+             patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={}):
             with self.assertRaisesRegex(ValueError, 'different build'):
                 app.load_release(approved=False)
 
@@ -828,9 +835,11 @@ class InstallFlowTests(BaseCase):
         session = self.root / 'trial-session'
         session.mkdir()
         plan = {'image': 'ak820-vial-trial.bin', 'sha256': app.sha(trial), 'size': len(trial)}
-        manifest = {'ihx_sha256': 'ihx-identity', 'map_sha256': 'map-identity'}
-        release = {'install_modes': ['permanent', 'trial'], 'files': {'firmware/application.ihx': {'sha256': 'ihx-identity'},
-                             'firmware/application.map': {'sha256': 'map-identity'}}}
+        manifest = {'ihx_sha256': app.sha(self.context.snapshot.files['firmware/application.ihx']),
+                    'map_sha256': app.sha(self.context.snapshot.files['firmware/application.map'])}
+        release = {'install_modes': ['permanent', 'trial'], 'files': {
+            'firmware/application.ihx': {'sha256': manifest['ihx_sha256']},
+            'firmware/application.map': {'sha256': manifest['map_sha256']}}}
         answers = iter(['y', 'yes', 'ak820'])
 
         def prompt(message):
@@ -874,11 +883,13 @@ class InstallFlowTests(BaseCase):
         with patch.object(app, 'BUNDLE', bundle), \
              patch.object(app, 'load_release', return_value=release), patch.object(app, 'check_original'), \
              patch.object(app, 'capture_native', side_effect=capture_native), \
+             patch.object(app, 'capture_references'), patch.object(app.packer, 'validate_native'), \
              patch.object(app, 'prepare_trial', side_effect=prepare), \
+             patch.object(app, 'expected_install_payload', return_value=trial), \
              patch.object(app.transport, 'flash', side_effect=flash) as flashing, \
              patch.object(app.transport, 'session_image', return_value=(manifest, trial, backup)), \
              patch.object(app.transport, 'verify_live') as verify_code, \
-             patch.object(app.diagnostic, 'diagnostic_build', return_value={1: 2}), \
+             patch.object(app.diagnostic, 'diagnostic_build_bytes', return_value={1: 2}), \
              patch.object(app.diagnostic, 'capture', side_effect=capture) as code_capture, \
              patch.object(app.time, 'sleep'), patch('builtins.input', side_effect=prompt), \
              contextlib.redirect_stdout(io.StringIO()):

@@ -22,10 +22,14 @@ from ak820_dce import optimize
 from ak820_outline_audit import outline_assembled
 import ak820_shortcalls as shortcalls
 import ak820_tailshare as tailshare
+import ak820_tailshare_xmod as tailshare_xmod
 import ak820_register_saves as register_saves
 import ak820_parameter_spills as parameter_spills
 from ak820_build_inputs import FORMAT as INPUT_FORMAT, collect_inputs, input_snapshot
-from ak820_profiles import DEFAULT_PROFILE, PROFILES, RELEASE_PROFILES, configuration
+from ak820_capture_compile import validate_default_keymap, validate_manifest as validate_capture_manifest
+from ak820_pointer_compile_policy import validate_pointer_commands
+from ak820_profiles_compile_policy import FEATURES as CANONICAL_FEATURES, expected_units as canonical_units, validate_commands as validate_canonical_commands
+from ak820_profiles import DEFAULT_PROFILE, PROFILES, RELEASE_PROFILES, MOUSE_DEFAULTS, MOUSE_DEFINES, configuration
 
 
 # Audited C functions only: SDCC emits their register-preserving prologues and
@@ -160,6 +164,11 @@ def ihex_data(path):
     return result
 
 
+def build_environment(environ):
+    # Make imports arbitrary variable names; do not inherit compiler or loader settings.
+    return {name: environ[name] for name in ('PATH', 'SYSTEMROOT', 'WINDIR') if name in environ}
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--keyboard', default='ajazz/ak820')
@@ -172,6 +181,8 @@ def main():
     p.add_argument('--build-dir', type=Path, default=Path('.build/ak820'))
     p.add_argument('--profile', choices=tuple(PROFILES), default=DEFAULT_PROFILE,
                    help='Explicit development feature set; this does not approve an installer')
+    for key in MOUSE_DEFAULTS:
+        p.add_argument('--mouse-' + key.replace('_', '-'), type=int, default=None)
     p.add_argument('--code-start', type=integer, default=0x3027)
     p.add_argument('--code-end', type=integer, default=0xc700)
     p.add_argument('--low-code-start', type=integer, default=0x28a0)
@@ -196,6 +207,7 @@ def main():
     p.add_argument('--trim-register-saves', action='store_true', help='Experimental conservative assembled register-save trimming')
     p.add_argument('--outline-max-helpers', type=int, default=200, help='Maximum exact outliner helpers (default: 200)')
     p.add_argument('--tail-share', action='store_true', help='Experimental exact RET tail sharing (opt-in; no added stack frame)')
+    p.add_argument('--tail-share-xmod', action='store_true', help='Experimental exact cross-module RET tail sharing after --tail-share (opt-in; no added stack frame)')
     p.add_argument('--no-outline', action='store_true', help='Disable AK820 exact instruction outlining for comparison builds')
     p.add_argument('--no-callee-saves', action='store_true', help='Disable the audited AK820 callee-saves list for comparison builds')
     args = p.parse_args()
@@ -208,12 +220,17 @@ def main():
             p.error('--trim-parameter-spills requires --parameter-spills-context FILE')
         if [args.xram_start,args.xram_end] != [0x440,0x1000]:
             p.error('--trim-parameter-spills requires ordinary XRAM 0x440..0x1000')
-    selected = configuration(args.profile)
+    overrides = {key: getattr(args, 'mouse_' + key) for key in MOUSE_DEFAULTS}
+    mouse = ({key: value if value is not None else MOUSE_DEFAULTS[key] for key, value in overrides.items()}
+             if any(value is not None for value in overrides.values()) else None)
+    selected = configuration(args.profile, mouse_keys=mouse)
     if args.keymap_words_asm and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
         p.error('--keymap-words-asm requires ajazz/ak820 and pinned SDCC 4.6.0')
     if args.keymap_words_asm and any(flag in shlex.split(args.extra_flags) for flag in
                                     ('--model-small', '--model-medium', '--model-huge')):
         p.error('--keymap-words-asm requires the large memory model')
+    if args.tail_share_xmod and not args.tail_share:
+        p.error('--tail-share-xmod requires --tail-share')
     if args.outline_max_helpers < 1:
         p.error('--outline-max-helpers must be positive')
     if args.trim_register_saves and (args.keyboard != 'ajazz/ak820' or args.sdcc_version != '4.6.0'):
@@ -236,18 +253,17 @@ def main():
     if args.compress_default_keymap and (args.keyboard != 'ajazz/ak820' or args.keymap != 'vial' or args.sdcc_version != '4.6.0'):
         raise ValueError('Default compression requires AK820 Vial and SDCC 4.6.0')
     root = Path(__file__).resolve().parents[1]
-    build = args.build_dir if args.build_dir.is_absolute() else root/args.build_dir
+    build = (args.build_dir if args.build_dir.is_absolute() else root/args.build_dir).resolve()
     if not re.fullmatch(r'[A-Za-z0-9_/]+', args.keyboard) or not re.fullmatch(r'[A-Za-z0-9_]+', args.keymap):
         raise ValueError('Invalid target name')
     if build.exists():
         raise ValueError('Build directory already exists; select a fresh --build-dir')
-    if not build.resolve().is_relative_to(root):
+    if not build.is_relative_to(root) or build == root:
         raise ValueError('Build directory must be beneath source root')
+    if not re.fullmatch(r'[A-Za-z0-9_./-]+', str(build.relative_to(root))):
+        raise ValueError('Unsupported build directory characters')
     build.mkdir(parents=True)
-    env = os.environ.copy()
-    # Do not inherit Make's -e or command-line overrides from a parent build.
-    for name in ('MAKEFLAGS', 'MFLAGS', 'GNUMAKEFLAGS', 'MAKEOVERRIDES'):
-        env.pop(name, None)
+    env = build_environment(os.environ)
     extra_paths = []
     if args.toolchain:
         extra_paths.append(str(args.toolchain.resolve()/'bin'))
@@ -278,6 +294,8 @@ def main():
 
     target = args.keyboard.replace('/','_')+'_'+args.keymap
     relative_build = str(build.relative_to(root))
+    env['AK820_CAPTURE_BUILD_ROOT'] = str(build.resolve())
+    env['AK820_CAPTURE_OBJECT_ROOT'] = str((build / ('obj_' + target)).resolve())
     callee_saves = AK820_CALLEE_SAVES if args.keyboard == 'ajazz/ak820' and not args.no_callee_saves else ()
     read_abi = read_block_abi_flag(args.nvm_read_block_asm, args.keyboard, args.sdcc_version, callee_saves, args.extra_flags)
     update_abi = update_block_abi_flag(args.nvm_update_block_asm, args.keyboard, args.sdcc_version, callee_saves, args.extra_flags)
@@ -294,7 +312,10 @@ def main():
     run('compile',['make','-r','-R','-f','builddefs/build_keyboard.mk','sdcc-objects',
         'KEYBOARD='+args.keyboard,'KEYMAP='+args.keymap,'QMK_BIN='+qmk,'SILENT=false','COLOR=false',
         'SKIP_GIT=yes','SKIP_VERSION=yes','BUILD_DIR='+relative_build,'EXTRAFLAGS='+compile_flags,
+        'NOLTO_CFLAGS=', 'INIT_HOOK_CFLAGS=', 'AK820_CAPTURE_COMPILE=yes',
         *(name+'='+value for name,value in selected['make_options'].items()),
+        *(define+'='+str(selected.get('mouse_keys', MOUSE_DEFAULTS)[key])
+          for key, define in MOUSE_DEFINES.items()),
         'AK820_NVM_UPDATE_BLOCK_ASM='+('yes' if args.nvm_update_block_asm else 'no'),
         'AK820_NVM_READ_BLOCK_ASM='+('yes' if args.nvm_read_block_asm else 'no'),
         'AK820_COMPRESS_DEFAULT_KEYMAP='+('yes' if args.compress_default_keymap else 'no'),
@@ -303,6 +324,7 @@ def main():
     expected = (obj/'obj.txt').read_text().split()
     if not expected or any(not name.endswith('.rel') or not (root/name).is_file() for name in expected):
         raise ValueError('Not every expected object was produced')
+    captures = validate_capture_manifest(root, build, expected, obj)
     asm_paths = sorted(obj.rglob('*.asm'))
     expected_stems = {str((root/name).resolve().with_suffix('')) for name in expected}
     actual_stems = {str(path.resolve().with_suffix('')) for path in asm_paths}
@@ -346,12 +368,19 @@ def main():
         outlining = outline_assembled(dce_input, dce, max_helpers=args.outline_max_helpers, min_saving=1)
         assemble_tree(dce, 'assemble-outlined-')
     tail_result = None
+    xmod_result = None
     if args.tail_share:
         tail_input = build/'tailshare-input'
         dce.rename(tail_input)
         tail_result = tailshare.prepare(tail_input, dce, build/'tail-share.json')
         assemble_tree(dce, 'assemble-tailshare-')
         tailshare.verify_assembled(tail_input, dce, build/'tail-share.json', tail_result)
+        if args.tail_share_xmod:
+            xmod_input = build/'tailshare-xmod-input'
+            dce.rename(xmod_input)
+            xmod_result = tailshare_xmod.prepare(xmod_input, dce, build/'tail-share-xmod.json')
+            assemble_tree(dce, 'assemble-tailshare-xmod-')
+            tailshare_xmod.verify_assembled(xmod_input, dce, build/'tail-share-xmod.json', xmod_result)
     ihx = build/(target+'.ihx')
     extra_link = []
     windows = [(args.code_start,args.code_end)]
@@ -444,6 +473,10 @@ def main():
         artifacts.extend(sorted((build/'tailshare-input').rglob('*.lst')))
         artifacts.extend(sorted((build/'tailshare-input').rglob('*.rel')))
         artifacts.extend(sorted(dce.rglob('*.asm')))
+    if xmod_result is not None:
+        artifacts.append(build/'tail-share-xmod.json')
+        for pattern in ('*.asm', '*.lst', '*.rel'):
+            artifacts.extend(sorted((build/'tailshare-xmod-input').rglob(pattern)))
     if register_result is not None:
         artifacts.append(build/'register-saves.json')
         for pattern in ('*.asm','*.lst','*.rel'):
@@ -460,15 +493,35 @@ def main():
         artifacts.extend(sorted(path for path in (build/'overlay-proof-src').rglob('*') if path.is_file()))
         artifacts.extend(sorted(dce.rglob('*.asm')))
     artifacts.extend(asm_paths)
+    artifacts.extend(captures)
     if args.keyboard == 'ajazz/ak820':
         allocation_paths = [build/'allocation'/'ak820_flash.asm', build/'allocation'/'ak820_flash.adb']
         if any(not path.is_file() for path in allocation_paths):
             raise ValueError('Missing compiler allocation metadata')
         artifacts.extend(allocation_paths)
     artifacts.extend(sorted(dce.rglob('*.rst')))
-    source_records, dependency_evidence = collect_inputs(root, toolchain, build, expected, inputs_before)
+    contract = 'unverified'
+    if (sys.flags.no_user_site and not any(name.startswith('PYTHON') for name in os.environ)
+            and args.profile in CANONICAL_FEATURES and selected == configuration(args.profile)
+            and args.keyboard == 'ajazz/ak820' and args.keymap == 'vial'
+            and args.compress_default_keymap and args.nvm_update_block_asm and args.nvm_read_block_asm
+            and args.keymap_words_asm and parameter_result is not None and register_result is not None
+            and tail_result is not None and short_result is not None and outlining is not None
+            and (xmod_result is not None) == bool(args.tail_share_xmod)
+            and args.outline_max_helpers == 400 and args.iram_overlay_diagnostic is None
+            and [args.code_start, args.code_end, args.low_code_start, args.low_code_end] ==
+                [0x3027, 0xc700, 0x28a0, 0x3000] and [args.xram_start, args.xram_end] == [0x440, 0x1000]):
+        if selected == configuration('pointer'):
+            validate_pointer_commands(root, build, expected, toolchain, qmk)
+        contract = validate_canonical_commands(root, build, expected, toolchain, qmk, selected)
+    approved_sources = (canonical_units(selected['profile'],
+                        (build / 'obj_ajazz_ak820_vial').relative_to(root).as_posix())
+                        if contract != 'unverified' else None)
+    source_records, dependency_evidence = collect_inputs(root, toolchain, build, expected, inputs_before,
+                                                         approved_sources=approved_sources)
     artifacts.extend(dependency_evidence)
     if args.compress_default_keymap:
+        validate_default_keymap(captures, build)
         generation_files = sorted((build/'default-keymap').iterdir())
         artifacts.extend(generation_files)
         generator = root/'util/ak820_default_keymap.py'
@@ -487,6 +540,7 @@ def main():
     artifacts = list(dict.fromkeys(path.resolve() for path in artifacts))
     report = {
         'configuration': selected,
+        'compiler_input_contract': contract,
         'keyboard':args.keyboard,'keymap':args.keymap,'compiler_version':version.strip(),
         'build_id':args.build_id,'skip_version':True,
         'experimental_iram_overlay':overlay_result,
@@ -521,6 +575,14 @@ def main():
             'report_sha256':sha(build/'tail-share.json'),
             'estimated_object_saved_bytes':tail_result['estimated_object_saved_bytes'],
             'object_saved_bytes':tail_result['object_saved_bytes'],
+            'linked_saved_bytes':None, 'extra_stack_bytes':0,
+        },
+        'tailshare_xmod_sha256':sha(root/'util/ak820_tailshare_xmod.py'),
+        'tail_share_xmod': None if xmod_result is None else {
+            'report':(build/'tail-share-xmod.json').relative_to(root).as_posix(),
+            'report_sha256':sha(build/'tail-share-xmod.json'),
+            'estimated_object_saved_bytes':xmod_result['estimated_object_saved_bytes'],
+            'object_saved_bytes':xmod_result['object_saved_bytes'],
             'linked_saved_bytes':None, 'extra_stack_bytes':0,
         },
         'shortcalls_sha256':sha(root/'util/ak820_shortcalls.py'),

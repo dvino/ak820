@@ -92,6 +92,7 @@ def settings_identity(build, inspected, native_reference):
     sys.path.insert(0, str(ROOT / 'tools/installer'))
     import settings_backup as settings
     from build_capability_catalog import direct_contract
+    from ak820_leader_marker import extract as extract_leader_marker
     native = Path(native_reference).read_bytes()
     pack.validate_native(native)
     schema = inspected['configuration']['nvm_schema']
@@ -108,7 +109,10 @@ def settings_identity(build, inspected, native_reference):
         pack.digest(payload[:pack.CODE_END - pack.APP_START]),
         pack.digest(settings.canonical(definition)),
         direct_protocol=(1 if direct_contract(
-            build, inspected['configuration'])['available'] else None))
+            build, inspected['configuration'])['available'] else None),
+        leader_default=(extract_leader_marker((build / 'ajazz_ak820_vial.map').read_text(), code,
+                        payload[:pack.CODE_END - pack.APP_START])
+                        if 'qmk-settings' in inspected['configuration']['optional_features'] else None))
 
 
 def measured_row(build, toolchain, native_reference=None):
@@ -119,6 +123,8 @@ def measured_row(build, toolchain, native_reference=None):
     name = fresh['configuration']['profile']
     if name not in candidate_names():
         raise ValueError('Build is outside the curated catalog: ' + name)
+    if fresh['configuration'] != profiles.configuration(name):
+        raise ValueError('Build differs from canonical catalog profile: ' + name)
     row = default_row(name)
     row.update(measurement_status='linked-memory-pass', resources=fresh['resources'],
                identity=fresh['identity'], short_calls=fresh['short_calls'])

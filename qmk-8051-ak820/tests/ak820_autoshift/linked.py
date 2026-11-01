@@ -112,6 +112,37 @@ def cases(fw):
         ('up_again','_actual_keyboard_report',8,report(),fw.transition(rows(),440)),
     ])
 
+def require_fresh_output(output):
+    if (output/'results.json').exists():
+        raise ValueError('Output already contains results.json from an earlier run; choose a fresh output directory')
+
+class ComboReportAlternatives(list):
+    def __init__(self, plain, shifted):
+        super().__init__(plain);self.shifted=shifted
+    def __eq__(self, other):
+        return list.__eq__(self,other) or other==self.shifted
+
+def combo_trace_result(result):
+    oracles={
+        'plain': ([report(4),report(),report(6),report()], {'combo_report':report(6),'combo_held_report':report(6)}),
+        'shifted': ([report(4),report(),report(6,2),report(0,2),report()], {'combo_report':report(),'combo_held_report':report(6,2)}),
+    }
+    matches=[mode for mode,(trace,_) in oracles.items() if result['hid_send_trace']==trace]
+    mode=matches[0] if len(matches)==1 else None
+    result['observed_combo_behavior']=mode
+    result['combo_behavior_evidence']='Behavioral inference only; not proof of configured option. Independent release provenance gate remains closed.'
+    result['expected_hid_send_trace']=oracles[mode][0] if mode else None
+    checks_ok=False
+    if mode:
+        expected_checks=oracles[mode][1]
+        selected=[c for c in result['checks'] if c['label'] in expected_checks]
+        checks_ok=len(selected)==len(expected_checks) and {c['label'] for c in selected}==set(expected_checks)
+        for check in selected:
+            check['expected']=expected_checks[check['label']]
+            checks_ok &= check['actual']==check['expected']
+    result['pass']=result.pop('pass_') and checks_ok
+    return result
+
 def direct_cases(fw):
     spec=importlib.util.spec_from_file_location('tap_linked',ROOT/'tests/ak820_tapping/emitted.py')
     tap=importlib.util.module_from_spec(spec);spec.loader.exec_module(tap)
@@ -120,12 +151,12 @@ def direct_cases(fw):
         t.event((0,0),1,100);t.check('pending',report());t.event((0,0),0,100+duration);t.check('released',report())
         result=t.run();expected=[report(4),report()] if duration==174 else [report(4,2),report(0,2),report()]
         result['expected_hid_send_trace']=expected;result['pass']=result.pop('pass_') and result['hid_send_trace']==expected;yield result
-    t=tap.Trace(fw,'as-combo-fallback-output-bypass');t.map((0,0),4);t.map((0,1),5)
+    t=tap.Trace(fw,'as-combo-fallback-and-output');t.map((0,0),4);t.map((0,1),5)
     combo=[4,0,5,0,0x20,8,1,0,6,0]
     t.commands+=[emitted.memory('rom',0xc700+0x658,combo)]+fw.call('_ak820_combo_reload')
-    t.event((0,0),1,100);t.tick(140);t.check('fallback',report(4));t.event((0,0),0,150)
-    t.event((0,0),1,200);t.event((0,1),1,220);t.check('combo',report(6));t.tick(500);t.check('still_plain',report(6));t.event((0,0),0,510);t.event((0,1),0,520);t.check('up',report())
-    r=t.run();r['pass']=r.pop('pass_');yield r
+    t.event((0,0),1,100);t.tick(139);t.check('before_combo_deadline',report());t.tick(140);t.check('fallback_plain',report(4));t.tick(275);t.check('fallback_still_plain',report(4));t.event((0,0),0,280);t.check('fallback_up',report());t.tick(300);t.check('fallback_no_revival',report())
+    t.event((0,0),1,400);t.event((0,1),1,420);t.check('combo',ComboReportAlternatives(report(6),report()));t.tick(700);t.check('combo_held',ComboReportAlternatives(report(6),report(6,2)));t.event((0,0),0,710);t.check('combo_first_up',report());t.event((0,1),0,720);t.check('up',report());t.tick(900);t.check('combo_no_revival',report())
+    yield combo_trace_result(t.run())
     t=tap.Trace(fw,'as-encoder-macro-dual-role-bypass');t.commands+=[emitted.memory('rom',0xcd40,[0,4])]
     t.event((253,0),1,100);t.check('encoder_immediate',report(4));t.event((253,0),0,110);t.check('encoder_up',report())
     t.map((0,0),0x2104);t.event((0,0),1,200);t.event((0,0),0,220);t.check('mt_up',report());t.macro([1,2,4]);t.check('macro_down',report(4));t.macro([1,3,4]);t.check('macro_up',report())
@@ -133,8 +164,7 @@ def direct_cases(fw):
     has_nkro=fw.compiled_feature('nkro')
     t=tap.Trace(fw,'as-nkro-held-and-release' if has_nkro else 'as-nkro-disabled-stale-setting-held-and-release')
     if has_nkro:
-        t.width=32
-        t.commands=[c.replace(f'{fw.address("_actual_keyboard_report")+7:#x} 16;',f'{fw.address("_actual_keyboard_report")+31:#x} 16;') for c in t.commands]
+        t.set_report_width(32)
     t.commands+=fw.write('_keymap_config',[128,0])+fw.write('_keyboard_protocol',[1]);t.map((0,0),4)
     t.event((0,0),1,100);t.tick(275);t.check('shifted_report',[6,2,16]+[0]*29 if has_nkro else report(4,2))
     t.event((0,0),0,300);t.check('released_report',[6]+[0]*31 if has_nkro else report())
@@ -183,7 +213,7 @@ def mouse_cases(fw):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-dir',required=True,type=Path);parser.add_argument('--s51',required=True,type=Path);parser.add_argument('--output-dir',required=True,type=Path)
-    args=parser.parse_args();fw=emitted.Firmware(args.build_dir.resolve(),args.s51.resolve(),args.output_dir.resolve(),auto_shift=True)
+    args=parser.parse_args();require_fresh_output(args.output_dir.resolve());fw=emitted.Firmware(args.build_dir.resolve(),args.s51.resolve(),args.output_dir.resolve(),auto_shift=True)
     if max(fw.code)>=0xc700:raise ValueError('Requires a bounded image below fake NVM')
     result={'linked_image_sha256':hashlib.sha256(fw.image.read_bytes()).hexdigest(),'level':'uCsim generic C52, exact linked pipeline; no hardware/USB/IRQ timing proof','hardware_validated':False,'tests':list(cases(fw))+list(direct_cases(fw))+list(mouse_cases(fw))}
     result['pass']=all(t['pass'] and t['fixture_auto_shift']=='enabled-default' for t in result['tests']);(fw.output/'results.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2));raise SystemExit(not result['pass'])

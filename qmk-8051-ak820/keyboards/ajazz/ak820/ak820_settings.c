@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "ak820_settings.h"
 #include "ak820_crc.h"
+#include "ak820_leader_timeout.h"
 #ifdef AK820_COMPACT_AUTOSHIFT
 void ak820_autoshift_configure(uint8_t flags);
 #endif
@@ -36,9 +37,8 @@ static uint16_t word(const uint8_t AK820_XDATA *p) {
     return (uint16_t)p[0] | ((uint16_t)p[1] << 8);
 }
 #endif
-static void put_word(uint8_t AK820_XDATA *p, uint16_t v) { p[0] = v; p[1] = v >> 8; }
 static uint16_t checksum(void) { return ak820_crc16(candidate, 22); }
-static void seal(void) { put_word(candidate + 22, checksum()); }
+static void seal(void) { uint16_t crc = checksum(); candidate[22] = (uint8_t)crc; candidate[23] = (uint8_t)(crc >> 8); }
 #ifdef __SDCC_mcs51
 static const __code uint8_t default_record[AK820_SETTINGS_SIZE] = {
 #else
@@ -46,10 +46,25 @@ static const uint8_t default_record[AK820_SETTINGS_SIZE] = {
 #endif
     0x51, 0x53, 0x2, 0xf, 0x7f, 0x0, 0x28, 0x0, 0xc8, 0x0, 0x0, 0x0, 0x50, 0x0, 0xaf, 0x0, 0x1, 0x1, 0x0, 0x0, 0x0, 0x0, 0xdf, 0xcb
 };
+#ifdef __SDCC_mcs51
+const __code uint8_t ak820_leader_default_marker[6] = {
+#else
+const uint8_t ak820_leader_default_marker[6] = {
+#endif
+    'A', 'K', 'L', 1, AK820_LEADER_TIMEOUT & 255, AK820_LEADER_TIMEOUT >> 8
+};
+static void leader_default(void) {
+    candidate[20] = ak820_leader_default_marker[4];
+    candidate[21] = ak820_leader_default_marker[5];
+}
 static void defaults(void) {
     for (uint8_t i = 0; i < AK820_SETTINGS_SIZE; ++i) candidate[i] = default_record[i];
+    candidate[2] = AK820_SETTINGS_VERSION;
+    candidate[3] = 17;
+    candidate[4] = AK820_SETTINGS_CAPABILITIES;
+    leader_default();
+    seal();
 }
-static uint8_t field_width(uint8_t pos) { return pos == 5 || (pos & 0xFEu) == 16 ? 1 : 2; }
 /* The stored record and a typed Set use the same field bounds. */
 #ifdef __SDCC_mcs51
 #    define SETTINGS_BOOL __bit
@@ -72,11 +87,13 @@ static SETTINGS_BOOL valid(void) {
     if (candidate[2] == 1) {
         if (candidate[3] != 11 || candidate[4] != 0x3F) return false;
         for (i = 16; i < 22; ++i) if (candidate[i]) return false;
+    } else if (candidate[2] == 2) {
+        if (candidate[3] != 15 || candidate[4] != 0x7F || candidate[20] || candidate[21]) return false;
     } else {
-        if (candidate[2] != AK820_SETTINGS_VERSION || candidate[3] != 15 || candidate[4] != AK820_SETTINGS_CAPABILITIES) return false;
-        if (candidate[20] || candidate[21]) return false;
+        if (candidate[2] != AK820_SETTINGS_VERSION || candidate[3] != 17 || candidate[4] != AK820_SETTINGS_CAPABILITIES || !field_valid(20, candidate + 20)) return false;
     }
-    for (i = 5; i < 20; i += field_width(i))
+    /* Visited positions: 5, 6, 8, 10, 12, 14, 16, 17, 18. */
+    for (i = 5; i < 20; i += ((i & 1u) || i == 16) ? 1 : 2)
         if (!field_valid(i, candidate + i)) return false;
     return word(candidate + 22) == checksum();
 }
@@ -112,25 +129,31 @@ static int8_t commit(void) {
 }
 void ak820_settings_init(void) {
     uint8_t i;
-    uint8_t any = 0, all = 0xFF;
     ak820_eeprom_read_block_xdata(candidate, (const void *)AK820_SETTINGS_ADDR, sizeof(candidate));
     if (!valid()) {
         /* Schema migration constructs a valid record. A corrupt or
          * unknown record never silently writes defaults over saved data. */
-        for (i = 0; i < sizeof(candidate); ++i) {
-            any |= candidate[i];
-            all &= candidate[i];
+        uint8_t reference = candidate[0];
+        if (reference != 0 && reference != 0xFF) {
+            ak820_nvm_schema_fault();
+        } else {
+            for (i = 1; i < sizeof(candidate); ++i) {
+                if (candidate[i] != reference) {
+                    ak820_nvm_schema_fault();
+                    break;
+                }
+            }
         }
-        if (any && all != 0xFF) ak820_nvm_schema_fault();
         defaults();
     }
-    /* Upgrade a validated v1 record in RAM. Startup does not write flash;
-     * the first changed setting commits the v2 record atomically. */
-    if (candidate[2] == 1) {
+    /* Upgrade a validated older record in RAM. Startup does not write flash;
+     * the first changed setting commits the current record atomically. */
+    if (candidate[2] < AK820_SETTINGS_VERSION) {
+        if (candidate[2] == 1) candidate[16] = 1;
         candidate[2] = AK820_SETTINGS_VERSION;
-        candidate[3] = 15;
+        candidate[3] = 17;
         candidate[4] = AK820_SETTINGS_CAPABILITIES;
-        candidate[16] = 1;
+        leader_default();
         seal();
     }
     publish();
@@ -143,9 +166,9 @@ void ak820_settings_init(void) {
 #endif
 /* Direct QSID indexing avoids two tables and a linear search per Get/Set.
  * A zero position is unavailable; all actual fields start at byte five. */
-static const SETTINGS_CODE uint8_t positions[23] = {0, 5, 6,
+static const SETTINGS_CODE uint8_t positions[24] = {0, 0x80u | 5, 6,
 #ifdef AK820_COMPACT_AUTOSHIFT
-    16, 14,
+    0x80u | 16, 14,
 #else
     0, 0,
 #endif
@@ -155,7 +178,13 @@ static const SETTINGS_CODE uint8_t positions[23] = {0, 5, 6,
 #else
     0,
 #endif
-    8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 12, 0, 0, 17};
+    8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 12, 0, 0, 0x80u | 17,
+#ifdef AK820_COMPACT_LEADER
+    20
+#else
+    0
+#endif
+};
 #ifdef __SDCC_mcs51
 /* Vial admits only its fixed 32-byte raw packet before reaching these calls.
  * Keep its wire offsets here so pointer/capacity argument setup disappears. */
@@ -169,7 +198,7 @@ void ak820_settings_query(uint16_t greater_than, uint8_t AK820_XDATA *buffer, ui
 #endif
     uint8_t i, used = 0;
     for (i = 0; i < size; ++i) buffer[i] = 0xFF;
-    if (greater_than >= 22) return;
+    if (greater_than >= 23) return;
     for (i = (uint8_t)greater_than + 1; i < sizeof(positions)
 #ifndef __SDCC_mcs51
          && used + 2 <= size
@@ -192,10 +221,11 @@ int ak820_settings_get(uint16_t id, uint8_t AK820_XDATA *buffer, uint8_t capacit
     uint8_t pos, width;
     if (id >= sizeof(positions)) return -1;
     pos = positions[(uint8_t)id];
-    width = field_width(pos);
+    width = (pos & 0x80u) ? 1 : 2;
+    pos &= 0x7Fu;
     if (!pos || capacity < width) return -1;
     out[0] = current[pos];
-    if (width == 2) out[1] = current[pos + 1];
+    if (width == 2) out[1] = current[(uint8_t)(pos + 1u)];
     return 0;
 }
 #ifdef __SDCC_mcs51
@@ -212,14 +242,15 @@ int ak820_settings_set(uint16_t id, const uint8_t AK820_XDATA *buffer, uint8_t c
     uint8_t pos, width;
     if (id >= sizeof(positions)) return -1;
     pos = positions[(uint8_t)id];
-    width = field_width(pos);
+    width = (pos & 0x80u) ? 1 : 2;
+    pos &= 0x7Fu;
     if (!pos || capacity < width || !ak820_nvm_ok()) return -1;
     /* current is validated at initialization and every published change keeps
      * its schema intact. Check only this incoming field before sealing once. */
     if (!field_valid(pos, in)) return -1;
     for (uint8_t i = 0; i < AK820_SETTINGS_SIZE; ++i) candidate[i] = current[i];
     candidate[pos] = in[0];
-    if (width == 2) candidate[pos + 1] = in[1];
+    if (width == 2) candidate[(uint8_t)(pos + 1u)] = in[1];
     seal();
     if (commit()) return -1;
     apply_controls((uint8_t)id);
@@ -244,3 +275,4 @@ uint16_t ak820_settings_autoshift_timeout(void) { return word(current + 14); }
 uint8_t ak820_settings_autoshift_flags(void) { return current[16]; }
 uint8_t ak820_settings_caps_word_language(void) { return current[17]; }
 uint16_t ak820_settings_oneshot_timeout(void) { return word(current + 18); }
+uint16_t ak820_settings_leader_timeout(void) { return word(current + 20); }

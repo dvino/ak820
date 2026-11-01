@@ -13,6 +13,16 @@ config = catalog.configured
 
 
 class CatalogTests(unittest.TestCase):
+    def test_v3_leader_storage_is_descriptive_not_image_proof(self):
+        for name in ('main', 'game'):
+            contract = catalog.module_contract(config.profiles.configuration(name), {'tap_dance': 8, 'key_overrides': 8})
+            settings = contract['modules']['qmk_settings']
+            leader = next(field for field in settings['fields'] if field['qsid'] == 23)
+            self.assertEqual(settings['accepted_record_versions'], [1, 2, 3])
+            self.assertEqual(leader['enabled'], name == 'main')
+            self.assertEqual((leader['minimum'], leader['maximum'], leader['default']), (1, 1000, None))
+            self.assertFalse(contract['restore']['write_authorization_granted'])
+
     def test_ten_current_profile_contracts_use_main_default_and_schema03(self):
         names = ('main', 'game', 'mmo', 'typing', 'code', 'pointer',
                  'onehand', 'creative', 'shortcuts', 'multios')
@@ -25,15 +35,16 @@ class CatalogTests(unittest.TestCase):
             for feature, module in (('tap-dance', 'tap_dance'), ('key-overrides', 'key_overrides')):
                 self.assertEqual(contract['modules'][module]['enabled_entries'],
                                  8 if feature in selected['optional_features'] else 0)
+            expected = [1,2,3,4,6,7,18,19,22] if name in ('main', 'typing') else [1,2,6,7,18,19,22]
             self.assertEqual(contract['modules']['qmk_settings']['enabled_qsids'],
-                             [1,2,3,4,6,7,18,19,22] if name in ('main', 'typing') else [1,2,6,7,18,19,22])
+                             expected + ([23] if name not in ('game', 'mmo') else []))
             self.assertFalse(contract['restore']['write_authorization_granted'])
             self.assertFalse(contract['physical_behavior_verified'])
 
     def test_individual_module_contracts_are_capability_aware(self):
         limits={'tap_dance':8,'key_overrides':8}
-        for name,td,ko,qsids in (('creative',8,0,[1,2,6,7,18,19,22]),
-                ('main',0,8,[1,2,3,4,6,7,18,19,22]), ('onehand',8,0,[1,2,6,7,18,19,22])):
+        for name,td,ko,qsids in (('creative',8,0,[1,2,6,7,18,19,22,23]),
+                ('main',0,8,[1,2,3,4,6,7,18,19,22,23]), ('onehand',8,0,[1,2,6,7,18,19,22,23])):
             with self.subTest(name=name):
                 contract=catalog.module_contract(config.profiles.configuration(name),limits)
                 modules=contract['modules']

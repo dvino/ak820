@@ -40,7 +40,7 @@ ak820_key_override_result_t ak820_key_override_valid(const vial_key_override_ent
 static ak820_key_override_result_t eligible(uint8_t index) {
     vial_key_override_entry_t AK820_STATE_MEM *e = &entries[index];
     uint8_t low = e->trigger_mods & 15, high = e->trigger_mods >> 4;
-    if (current_layer >= 6 || !((uint8_t)e->layers & ((uint8_t)1 << current_layer)) ||
+    if (current_layer >= 6 || !(((uint8_t)e->layers >> current_layer) & 1u) ||
         (current_mods & e->negative_mod_mask)) return false;
     if (e->options & 8) return !(low | high) || (current_mods & e->trigger_mods);
     return ((current_mods & low) | ((current_mods >> 4) & high)) == (low | high);

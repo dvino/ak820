@@ -1,5 +1,6 @@
 """Regression for constant-only headers omitted by the RC4 ASM-comment manifest."""
 import copy
+import json
 import os
 from pathlib import Path
 import shutil
@@ -30,6 +31,8 @@ class BuildInputTests(unittest.TestCase):
             'requirements-ak820-build.txt': '',
             'util/build_id.py': '', 'util/vial_generate_definition.py': '',
             'util/ak820_dce.py': '', 'util/build_ak820.py': '', 'util/ak820_build_inputs.py': '',
+            'util/ak820_capture_compile.py': '', 'util/ak820_pointer_compile_policy.py': '',
+            'util/ak820_pointer_compile_environment.py': '', 'util/ak820_profiles_compile_policy.py': '',
             'util/ak820_outline_audit.py': '', 'util/ak820_profiles.py': '',
             'util/ak820_shortcalls.py': '', 'util/ak820_linked_inventory.py': '',
             'quantum/effects.inc': 'EFFECT(test)\n',
@@ -44,12 +47,19 @@ class BuildInputTests(unittest.TestCase):
             path.write_bytes(b'pinned fixture input')
         (self.obj / 'main.d').write_text('main.o: main.c constants.h quantum/effects.inc \\\n ../toolchain/share/sdcc/include/stdint.h\n')
         (self.obj / 'makefiles.txt').write_text('Makefile\n')
+        self.output = '.build/test/obj_fixture/main.o'
+        self.capture = self.obj / 'main.o.compile.json'
+        self.capture_data = {'cwd': str(self.source), 'exit_code': 0,
+                             'fresh_dependency': '.build/test/obj_fixture/main.d', 'generated_inputs': {},
+                             'argv': ['sdcc', '-c', 'main.c', '-o', self.output]}
+        self.capture.write_text(json.dumps(self.capture_data))
 
     def report(self, before=None):
         if before is None:
             before = input_snapshot(self.source, self.toolchain)
         records, evidence = collect_inputs(self.source, self.toolchain, self.build,
-                                          [self.object_name], before)
+                                          [self.object_name], before,
+                                          approved_sources={self.output: 'main.c'})
         self.assertEqual(len(evidence), 2)
         return {'source_manifest_format': FORMAT, 'sources': records}
 
@@ -57,7 +67,7 @@ class BuildInputTests(unittest.TestCase):
         report = self.report()
         names = {(item['origin'], item['path']) for item in report['sources']}
         for item in (('source', 'constants.h'), ('source', 'quantum/effects.inc'),
-                     ('source', 'util/ak820_outline_audit.py'),
+                     ('source', 'util/ak820_outline_audit.py'), ('source', 'util/ak820_capture_compile.py'),
                      ('toolchain', 'share/sdcc/include/stdint.h'),
                      ('toolchain', 'share/sdcc/lib/large/mcs51.lib')):
             self.assertIn(item, names)
@@ -126,6 +136,46 @@ class BuildInputTests(unittest.TestCase):
         depfile = self.obj / 'space.d'
         depfile.write_text('space.o: main.c a\\ header.h\n')
         self.assertEqual(dependency_paths(depfile, self.source), {self.source / 'main.c', header})
+
+    def test_target_source_and_single_rule_are_checked(self):
+        depfile = self.obj / 'main.d'
+        self.assertIn(self.source / 'main.c', dependency_paths(
+            depfile, self.source, target='main.o', primary='main.c'))
+        for text in ('wrong.o: main.c\n', 'main.o other.o: main.c\n',
+                     'main.o: constants.h\n', 'main.o: main.c\nother.o: main.c\n',
+                     'main.o: main.c \\x.h\n'):
+            with self.subTest(text=text):
+                depfile.write_text(text)
+                with self.assertRaises(ValueError):
+                    dependency_paths(depfile, self.source, target='main.o', primary='main.c')
+
+    def test_collect_rejects_dependency_and_capture_inconsistencies(self):
+        dep = self.obj / 'main.d'
+        valid = dep.read_text()
+        for text in ('wrong.o: main.c constants.h\n', 'main.o: constants.h\n',
+                     'main.o: main.c\nother.o: main.c\n'):
+            dep.write_text(text)
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                self.report()
+        dep.write_text(valid)
+        for update in ({'fresh_dependency': None}, {'exit_code': 1},
+                       {'argv': ['sdcc', '-c', 'constants.c', '-o', self.output]}):
+            self.capture.write_text(json.dumps({**self.capture_data, **update}))
+            with self.subTest(update=update), self.assertRaises(ValueError):
+                self.report()
+        self.capture.unlink()
+        with self.assertRaises(FileNotFoundError):
+            self.report()
+
+    def test_make_dollar_escape_is_preserved(self):
+        header = self.source / 'a$dollar.h'
+        header.write_text('')
+        dep = self.obj / 'dollar.d'
+        dep.write_text('main.o: main.c a$$dollar.h\n')
+        self.assertIn(header, dependency_paths(dep, self.source, target='main.o', primary='main.c'))
+        dep.write_text('main.o: main.c a$dollar.h\n')
+        with self.assertRaises(ValueError):
+            dependency_paths(dep, self.source, target='main.o', primary='main.c')
 
     def test_real_sdcc_dependency_generation_includes_macro_header(self):
         sdcc_dir = os.environ.get('AK820_SDCC_BIN')

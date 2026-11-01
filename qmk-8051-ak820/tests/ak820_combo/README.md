@@ -7,7 +7,8 @@ extracted production `dynamic_keymap_get_combo` and `dynamic_keymap_set_combo`
 functions and an EEPROM/NVM model. Both runs use UBSan.
 
 The event fixture checks the local state machine, including Caps Word toggle
-outputs in both key and release orders. The storage fixture checks record
+outputs in both key and release orders, Combo control transitions and
+cancellation. The storage fixture checks record
 validation, slot bounds, version markers, wire conversion, empty entries,
 Caps Word toggle acceptance, rejection of other unsupported outputs, latched
 NVM failure and failure returned by verified flush. The existing flash journal

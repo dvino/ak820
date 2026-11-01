@@ -1,4 +1,9 @@
 static bool has(uint8_t code) {for(unsigned i=0;i<6;i++)if(keyboard_report->keys[i]==code)return true;return false;}
+static bool report_has(unsigned i,uint8_t code) { assert(i<log_count);for(unsigned j=2;j<8;j++)if(log_reports[i][j]==code)return true;return false; }
+static unsigned report_find(unsigned start,uint8_t code,bool present,uint8_t mods) {
+ for(unsigned i=start;i<log_count;i++)if(report_has(i,code)==present&&log_reports[i][0]==mods)return i;
+ assert(!"expected report not found");return log_count;
+}
 static void fresh(void) {reset();ak820_autoshift_configure(1);ak820_caps_word_configure(0);assign(0,KC_A);assign(1,KC_B);assign(2,KC_LSFT);assign(3,KC_LCTL);}
 int main(void) {
  /* All accepted basic keys, exact threshold and rollover. */
@@ -29,9 +34,38 @@ int main(void) {
  /* Repeat captures owned auto Shift; AltRepeat resolves bracket opposite. */
  fresh();assign(4,QK_REPEAT_KEY);event(0,true,100);tick(275);event(0,false,280);event(4,true,300);assert(has(KC_A)&&(get_mods()|get_weak_mods())==2);event(4,false,310);assert(!has(KC_A)&&!(get_mods()|get_weak_mods()));
  fresh();assign(0,KC_LBRC);assign(4,QK_ALT_REPEAT_KEY);event(0,true,100);tick(275);event(0,false,280);event(4,true,300);assert(has(KC_RBRC)&&(get_mods()|get_weak_mods())==2);event(4,false,310);
- /* Combo input fallback and combo output bypass AS. */
- fresh();fixture_combos[0].input[0]=KC_A;fixture_combos[0].input[1]=KC_B;fixture_combos[0].output=KC_C;ak820_combo_reload();event(0,true,100);tick(140);assert(has(KC_A)&&!as_state);event(0,false,150);
+ /* Failed Combo input bypasses Auto Shift even when held past its timeout. */
+ fresh();fixture_combos[0].input[0]=KC_A;fixture_combos[0].input[1]=KC_B;fixture_combos[0].output=KC_C;ak820_combo_reload();event(0,true,100);tick(140);assert(has(KC_A)&&!as_state&&!get_mods());tick(275);assert(has(KC_A)&&!get_mods());event(0,false,280);assert(!has(KC_A)&&!get_mods());
+ fresh();fixture_combos[0].input[0]=KC_A;fixture_combos[0].input[1]=KC_B;fixture_combos[0].output=KC_C;ak820_combo_reload();event(0,true,100);event(0,false,120);assert(!has(KC_A)&&!as_state);assert(log_reports[log_count-2][2]==KC_A&&log_reports[log_count-2][0]==0);
+ fresh();fixture_combos[0].input[0]=KC_A;fixture_combos[0].input[1]=KC_B;fixture_combos[0].output=KC_C;ak820_combo_reload();event(0,true,100);event(2,true,120);assert(has(KC_A)&&get_mods()==2);event(2,false,130);event(0,false,140);assert(!has(KC_A)&&!get_mods());
+ fresh();fixture_combos[0].input[0]=KC_A;fixture_combos[0].input[1]=KC_B;fixture_combos[0].output=KC_C;ak820_combo_reload();assign(4,KC_D);event(0,true,100);event(4,true,120);assert(has(KC_A)&&!has(KC_D)&&as_state==1&&!get_mods());event(0,false,130);event(4,false,140);assert(!has(KC_A)&&!has(KC_D)&&!as_state);
+ fresh();fixture_combos[0].input[0]=KC_A;fixture_combos[0].input[1]=KC_B;fixture_combos[0].output=KC_C;ak820_combo_reload();event(0,true,65520);tick(24);assert(has(KC_A)&&!as_state);tick(159);assert(has(KC_A)&&!get_mods());event(0,false,160);assert(!has(KC_A)&&!get_mods());
+ fresh();fixture_combos[0].input[0]=KC_A;fixture_combos[0].input[1]=KC_B;fixture_combos[0].output=KC_C;ak820_combo_reload();event(0,true,100);tick(140);clear_keyboard();event(0,false,150);tick(300);assert(!has(KC_A)&&!as_state&&!get_mods());
+ /* Successful Combo output still bypasses Auto Shift. */
  fresh();fixture_combos[0].input[0]=KC_A;fixture_combos[0].input[1]=KC_B;fixture_combos[0].output=KC_C;ak820_combo_reload();event(0,true,100);event(1,true,120);assert(has(KC_C)&&!as_state);event(0,false,130);event(1,false,140);assert(!has(KC_C));
+ /* Failed Combo flush respects disabled and alpha-filtered Auto Shift. */
+ for(unsigned flags=0;flags<=17;flags+=17) {
+  fresh();ak820_autoshift_configure(flags);fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();event(0,true,100);tick(140);assert(has(KC_A)&&!as_state);event(0,false,150);assert(!has(KC_A));
+ }
+ /* Held modifier and queued One Shot survive the deferred Combo press. */
+ fresh();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();event(3,true,90);event(0,true,100);tick(140);assert(has(KC_A)&&get_mods()==1&&!as_state);event(0,false,150);assert(!has(KC_A)&&get_mods()==1);event(3,false,160);assert(!get_mods());
+ fresh();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(4,OSM(MOD_LSFT));event(4,true,80);event(4,false,90);event(0,true,100);tick(140);assert(has(KC_A)&&get_mods()==2&&!as_state);event(0,false,150);assert(!get_mods()&&!ak820_oneshot_mods&&!ak820_oneshot_consumed);assign(5,KC_D);event(5,true,160);event(5,false,170);unsigned osm_report=report_find(0,KC_D,true,0);assert(osm_report<log_count);
+ /* Caps Word and Repeat see the emitted failed Combo input. */
+ fresh();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();caps_word_on();event(0,true,100);event(0,false,120);assert(is_caps_word_on());unsigned cw_down=report_find(0,KC_A,true,2);bool cw_released=false;for(unsigned i=cw_down+1;i<log_count;i++)if(!report_has(i,KC_A))cw_released=true;assert(cw_released&&!has(KC_A));assign(5,KC_SPC);event(5,true,130);assert(!is_caps_word_on());event(5,false,140);
+ fresh();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(4,QK_REPEAT_KEY);event(0,true,100);tick(140);tick(275);event(0,false,280);event(4,true,300);assert(has(KC_A)&&!(get_mods()|get_weak_mods()));event(4,false,310);assert(!has(KC_A)&&!(get_mods()|get_weak_mods()));
+ /* Repeat remembers unshifted failed input and successful Combo output. */
+ fresh();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(4,QK_REPEAT_KEY);event(0,true,100);event(0,false,120);event(4,true,130);assert(has(KC_A)&&!(get_mods()|get_weak_mods()));event(4,false,140);assert(!has(KC_A));
+ fresh();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(4,QK_REPEAT_KEY);event(0,true,100);event(1,true,120);event(0,false,130);event(1,false,140);event(4,true,150);assert(has(KC_C)&&!(get_mods()|get_weak_mods()));event(4,false,160);assert(!has(KC_C));
+ /* Both encoder directions report A alone before A plus encoder output. */
+ for(unsigned dir=0;dir<2;dir++) {
+  fresh();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();enc[0][dir]=KC_D;
+  event(0,true,100);encoder(dir,true,120);unsigned a=report_find(0,KC_A,true,0);for(unsigned i=0;i<=a;i++)assert(!report_has(i,KC_D));unsigned d=report_find(a+1,KC_D,true,0);assert(report_has(d,KC_A));
+  encoder(dir,false,130);event(0,false,140);assert(!has(KC_A)&&!has(KC_D));
+ }
+ /* Combo off flushes A before clear, and ON restores Combo admission. */
+ fresh();fixture_combos[0]=(vial_combo_entry_t){{KC_A,KC_B,0,0},KC_C};ak820_combo_reload();assign(4,QK_COMBO_OFF);assign(5,QK_COMBO_ON);
+ event(0,true,100);event(4,true,120);unsigned off_down=report_find(0,KC_A,true,0);assert(report_find(off_down+1,KC_A,false,0)<log_count);event(4,false,121);event(0,false,130);assert(!has(KC_A)&&!get_mods()&&!as_state);
+ event(5,true,140);event(5,false,141);event(0,true,150);event(1,true,160);assert(has(KC_C)&&!has(KC_A)&&!has(KC_B));event(0,false,170);event(1,false,180);assert(!has(KC_C));
  /* Dual-role and SpaceCadet taps stay in the existing synthetic path. */
  fresh();assign(0,MT(MOD_LCTL,KC_A));event(0,true,100);event(0,false,120);assert(!as_state&&!get_mods()&&!has(KC_A));
  fresh();assign(0,SC_LSPO);event(0,true,100);event(0,false,120);assert(!as_state&&!get_mods()&&!has(KC_9));

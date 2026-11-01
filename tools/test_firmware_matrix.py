@@ -100,6 +100,19 @@ class MatrixTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'link failed'):
                     matrix.measured_row(directory, directory)
 
+    def test_import_rejects_variants_before_and_after_qualification(self):
+        import configure_firmware as configured
+        selected = matrix.profiles.configuration('pointer', mouse_keys=dict(matrix.profiles.MOUSE_DEFAULTS, wheel_step=2))
+        fresh = {'configuration': selected, 'identity': {'ihx_sha256': 'variant'},
+                 'resources': {}, 'short_calls': None}
+        with tempfile.TemporaryDirectory() as tmp, patch.object(configured, 'inspect', return_value=fresh):
+            directory = Path(tmp)
+            for qualified in (False, True):
+                (directory / 'configuration-report.json').write_text(json.dumps(
+                    {'identity': fresh['identity'], 'offline_tests_passed': qualified}))
+                with self.assertRaisesRegex(ValueError, 'canonical catalog profile'):
+                    matrix.measured_row(directory, directory)
+
     def test_import_does_not_promote_unproved_pass_claim(self):
         import configure_firmware as configured
         fresh = {'configuration': matrix.profiles.configuration('main'),
@@ -139,7 +152,9 @@ class MatrixTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             native = Path(tmp) / 'native.bin'
             native.write_bytes(b'native')
+            (Path(tmp) / 'ajazz_ak820_vial.map').write_text('; test fixture\n')
             with patch.dict(sys.modules, {'settings_backup': settings}), \
+                    patch('ak820_leader_marker.extract', return_value={'format': 'ak820-leader-default-1', 'milliseconds': 300}) as leader, \
                     patch.object(pack, 'validate_native') as validate, \
                     patch.object(pack, 'read_ihex', return_value={}), \
                     patch.object(pack, 'read_symbols', return_value={}), \
@@ -152,6 +167,8 @@ class MatrixTests(unittest.TestCase):
             self.assertEqual(result['code'], pack.digest(payload[:pack.CODE_END - pack.APP_START]))
             self.assertEqual(result['ihx'], 'linked-hash')
             self.assertEqual(result['direct_protocol'], 1)
+            self.assertEqual(result['leader_default'], {'format': 'ak820-leader-default-1', 'milliseconds': 300})
+            self.assertTrue(leader.called)
 
     def test_matrix_does_not_modify_measurement(self):
         measured = matrix.default_row('main')

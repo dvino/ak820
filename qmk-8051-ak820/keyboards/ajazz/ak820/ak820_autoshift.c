@@ -46,7 +46,10 @@ bool ak820_autoshift_before(const keyevent_t AK820_STATE_MEM *event) {
         }
         return false;
     }
-    if (as_state == 1 && event->pressed) as_emit(false);
+    if (as_state == 1 && event->pressed) {
+        as_emit(false);
+        if (!as_state) return false;
+    }
     return true;
 }
 bool ak820_autoshift_process(keyrecord_t AK820_STATE_MEM *record) {

@@ -3,8 +3,8 @@
 #include "ak820_nvm.h"
 
 #include "ak820_extensions.h"
-#define AK820_SETTINGS_VERSION 2u
-#define AK820_SETTINGS_CAPABILITIES 0x7Fu
+#define AK820_SETTINGS_VERSION 3u
+#define AK820_SETTINGS_CAPABILITIES 0xFFu
 
 /* Vial buffers may contain trailing packet padding; capacity is the buffer size,
  * not the setting width. Values themselves have exactly the documented width. */
@@ -29,3 +29,4 @@ uint16_t ak820_settings_autoshift_timeout(void);
 uint8_t ak820_settings_autoshift_flags(void);
 uint16_t ak820_settings_oneshot_timeout(void);
 uint8_t ak820_settings_caps_word_language(void);
+uint16_t ak820_settings_leader_timeout(void);

@@ -22,7 +22,41 @@ def write_trial(ihx: Path, mapfile: Path, stockpath: Path, nativepath: Path,
                 source_build_id: int = packer.BUILD_ID) -> dict:
     stock, native = stockpath.read_bytes(), nativepath.read_bytes()
     packer.validate_native(backup, stock, native)
-    data, symbols = packer.read_ihex(ihx), packer.read_symbols(mapfile)
+    ihx_bytes = ihx.read_bytes()
+    data = packer.parse_ihex_bytes(ihx_bytes)
+    map_bytes = mapfile.read_bytes()
+    symbols = packer.parse_symbols_bytes(map_bytes)
+    return _write_trial(data, symbols, ihx_bytes, map_bytes, stock, backup, out,
+                        current_rom=current_rom, current_trial=current_trial,
+                        target_build_id=target_build_id, source_build_id=source_build_id)
+
+
+def write_trial_bytes(ihx_bytes: bytes, map_bytes: bytes, stockpath: Path, nativepath: Path,
+                      backup: bytes, out: Path, *, current_rom: bytes | None = None,
+                      current_trial: bytes | None = None,
+                      target_build_id: int = packer.BUILD_ID,
+                      source_build_id: int = packer.BUILD_ID) -> dict:
+    stock, native = stockpath.read_bytes(), nativepath.read_bytes()
+    return write_trial_retained(ihx_bytes, map_bytes, stock, native, backup, out,
+                                current_rom=current_rom, current_trial=current_trial,
+                                target_build_id=target_build_id, source_build_id=source_build_id)
+
+
+def write_trial_retained(ihx_bytes: bytes, map_bytes: bytes, stock: bytes, native: bytes,
+                         backup: bytes, out: Path, *, current_rom: bytes | None = None,
+                         current_trial: bytes | None = None,
+                         target_build_id: int = packer.BUILD_ID,
+                         source_build_id: int = packer.BUILD_ID) -> dict:
+    packer.validate_native(backup, stock, native)
+    data = packer.parse_ihex_bytes(ihx_bytes)
+    symbols = packer.parse_symbols_bytes(map_bytes)
+    return _write_trial(data, symbols, ihx_bytes, map_bytes, stock, backup, out,
+                        current_rom=current_rom, current_trial=current_trial,
+                        target_build_id=target_build_id, source_build_id=source_build_id)
+
+
+def _write_trial(data, symbols, ihx_bytes, map_bytes, stock, backup, out, *,
+                 current_rom, current_trial, target_build_id, source_build_id):
     if (current_rom is None) != (current_trial is None):
         raise ValueError("Existing trial migration requires both readback and exact current trial image")
     if current_rom is None:
@@ -55,8 +89,8 @@ def write_trial(ihx: Path, mapfile: Path, stockpath: Path, nativepath: Path,
                 'address': packer.APP_START, 'length': len(trial),
                 'preserved': [[0, packer.APP_START], [packer.APP_END, 65536]],
                 'backup_sha256': packer.digest(backup),
-                'ihx_sha256': packer.digest(ihx.read_bytes()),
-                'map_sha256': packer.digest(mapfile.read_bytes()),
+                'ihx_sha256': packer.digest(ihx_bytes),
+                'map_sha256': packer.digest(map_bytes),
                 'images': {updater.IMAGES['trial']: info,
                            updater.IMAGES['restore']: {'size': len(recovery), 'sha256': packer.digest(recovery),
                                'restores': 'native application/settings from the original recovery backup'}},

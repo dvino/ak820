@@ -251,7 +251,8 @@ def make_backup(folder, rom, profile):
     values = s.settings_from_nvm(nvm, s.rgb_wire(nvm[24:32], image=image),
                                  combos=s._combo_capable(profile, image['ihx_sha256']),
                                  direct_capable=image.get('direct_protocol') == 1,
-                                 settings_version=image.get('settings_record_version', 1))
+                                 settings_version=image.get('settings_record_version', 1),
+                                 default_leader=image.get('leader_default', {}).get('milliseconds'))
     files = {'settings.json': s.canonical(values), 'before-full-rom.bin': rom,
              'saved-nvm.bin': nvm, 'read-log.jsonl': s.canonical({
                  'offline_derived': True, 'physical_device_commands': 0}), '.gitignore': b'*\n'}

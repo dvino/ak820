@@ -28,6 +28,9 @@
 #ifdef AK820_COMPACT_COMBO
 #    include "ak820_combo.h"
 #endif
+#ifdef AK820_COMPACT_AUTOSHIFT
+#    include "ak820_autoshift.h"
+#endif
 #include "magic.h"
 #include "qmk_settings.h"
 
@@ -336,14 +339,18 @@ bool pre_process_record_quantum(keyrecord_t AK820_RECORD_MEM *record_argument) {
 #ifdef AK820_COMPACT_LEADER
 #    ifdef AK820_COMPACT_COMBO
     /* Resolve earlier buffered typing before admitting a Leader prefix. */
-    if (keycode == QK_LEAD && record->event.pressed && record->event.key.row < MATRIX_ROWS && record->event.key.col < MATRIX_COLS)
-        ak820_combo_tick(record->event.time +
+    if (keycode == QK_LEAD && record->event.pressed && record->event.key.row < MATRIX_ROWS && record->event.key.col < MATRIX_COLS) {
+        if (!ak820_combo_tick(record->event.time +
 #    ifdef AK820_QMK_SETTINGS
             ak820_settings_combo_term()
 #    else
             40
 #    endif
-        );
+        )) return false;
+#        ifdef AK820_COMPACT_AUTOSHIFT
+        if (!ak820_autoshift_before(&record->event)) return false;
+#        endif
+    }
 #    endif
     if (!ak820_leader_process((keyrecord_t AK820_STATE_MEM *)record)) return false;
 #endif

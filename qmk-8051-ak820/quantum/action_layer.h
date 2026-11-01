@@ -187,6 +187,10 @@ uint16_t store_or_get_action(bool pressed, keypos_t key);
 uint8_t layer_switch_get_layer(keypos_t key);
 #ifdef AK820_BOARD
 uint8_t ak820_layer_for_key(uint16_t position);
+#ifdef AK820_PH_SEAM
+/* Observe the current mapping without changing the press/release cache. */
+uint16_t ak820_observe_key(uint16_t position);
+#endif
 uint16_t ak820_resolve_key(uint16_t position, bool cache_press);
 #endif
 

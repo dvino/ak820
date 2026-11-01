@@ -32,6 +32,8 @@ class Console:
         self.log, self.sequence = "", 0
 
     def command(self, commands: str | list[str]) -> str:
+        if getattr(self, "invalid_observation", False):
+            raise RuntimeError("Simulator console unusable after malformed observation")
         self.sequence += 1
         marker = f"__DONE_{self.sequence}__"
         if isinstance(commands, str): commands = [commands]
@@ -53,14 +55,50 @@ class Console:
 
     def read(self, space: str, address: int, length: int) -> list[int]:
         label = f"read{self.sequence}"
-        output = self.command(emitted.Firmware.dump(label, space, address, length))
-        if space != "sfr": return emitted.Firmware.extract(output, label, address, length)
-        values = {}
-        for row, data in re.findall(r"^0x([0-9a-f]+)\s+((?:[0-9a-f]{2}\s+)+)", output, re.M):
-            for offset, value in enumerate(data.split()): values[int(row, 16) + offset] = int(value, 16)
-        for row, value in re.findall(r"^0x([0-9a-f]+)\s+\w+:\s+0b[01]+\s+0x([0-9a-f]+)", output, re.M):
-            values[int(row, 16)] = int(value, 16)
-        return [values[address + index] for index in range(length)]
+        try:
+            output = self.command(emitted.Firmware.dump(label, space, address, length))
+            if space != "sfr":
+                return emitted.Firmware.extract(output, label, address, length,
+                                                console_space=space, terminal=f"__DONE_{self.sequence}__")
+            lines = output.splitlines()
+            terminal = f"__DONE_{self.sequence}__"
+            prefix = emitted.Firmware.dump(label, space, address, length) + ['echo ' + terminal, '@@' + label]
+            if lines[:4] != prefix or not lines or lines[-1] != terminal:
+                raise ValueError(f"Invalid console observation framing: {label}")
+            values = []
+            for line in lines[4:-1]:
+                named = re.fullmatch(r"0x([0-9a-f]+) (\w+): +0b([01]{8}) 0x([0-9a-f]{2}) '(.)' +([0-9]+)(?: \( *(-[0-9]+)\))?", line)
+                raw = re.fullmatch(r"0x([0-9a-f]+) +(.+)", line)
+                if named:
+                    value = int(named[4], 16)
+                    char = chr(value) if 32 <= value <= 126 else '.'
+                    if (int(named[3], 2) != value or named[5] != char or int(named[6]) != value or
+                            (int(named[7]) if named[7] else None) != (value - 256 if value >= 128 else None)):
+                        raise ValueError(f"Malformed simulator rendering: {label}")
+                    row, data = int(named[1], 16), [value]
+                elif raw:
+                    row, candidates = int(raw[1], 16), []
+                    for size in range(1, min(16, length - len(values)) + 1):
+                        padding = 3 * (min(16, length) - size)
+                        match = re.fullmatch(r'((?:[0-9a-f]{2} ){' + str(size) + r'}) {' + str(padding) + r'}(.{' + str(size) + r'})', raw[2])
+                        if match:
+                            data = [int(v, 16) for v in match[1].split()]
+                            if match[2] == ''.join(chr(v) if 32 <= v <= 126 else '.' for v in data):
+                                candidates.append(data)
+                    if len(candidates) != 1:
+                        raise ValueError(f"Malformed simulator rendering: {label}")
+                    data = candidates[0]
+                else:
+                    raise ValueError(f"Malformed simulator observation: {label}")
+                if row != address + len(values) or len(values) + len(data) > length:
+                    raise ValueError(f"Unexpected simulator addresses: {label}")
+                values.extend(data)
+            if len(values) != length:
+                raise ValueError(f"Incomplete simulator observation: {label}")
+            return values
+        except (ValueError, OSError, RuntimeError):
+            self.invalid_observation = True
+            raise
 
     def close(self):
         try:

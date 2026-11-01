@@ -8,7 +8,9 @@ validate the same evidence. This module never accesses a USB device.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
+import re
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import shlex
 
@@ -19,19 +21,24 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def dependency_paths(depfile: Path, source: Path) -> set[Path]:
-    """Read one compiler-produced Make rule, with escaped spaces/continuations."""
+def dependency_paths(depfile: Path, source: Path, *, target: str | None = None,
+                     primary: str | None = None) -> set[Path]:
+    """Read one SDCC Make rule; reject syntax not supported by this parser."""
     text = depfile.read_text(encoding="utf-8").replace("\\\n", " ")
-    target, separator, prerequisites = text.partition(":")
-    if not separator or not target.strip():
+    rule_target, separator, prerequisites = text.partition(":")
+    if not separator or not rule_target.strip():
         raise ValueError("Malformed dependency file: " + str(depfile))
-    # We request -MD without -MP, hence there must be exactly one rule.
-    if "\n" in prerequisites.strip():
-        raise ValueError("Unexpected dependency rules: " + str(depfile))
+    if target is not None and rule_target.strip() != target:
+        raise ValueError("Unexpected dependency target: " + str(depfile))
+    if ("\n" in prerequisites.strip() or any(c in prerequisites for c in "#:'\"`|;") or
+            re.search(r"\\(?![\\ \t])", prerequisites) or '$' in prerequisites.replace('$$', '')):
+        raise ValueError("Unsupported dependency syntax: " + str(depfile))
     names = shlex.split(prerequisites.replace("$$", "$"), comments=False)
     if not names:
         raise ValueError("Empty dependency file: " + str(depfile))
     paths = {(source / name).resolve() for name in names}
+    if primary is not None and (source / primary).resolve() not in paths:
+        raise ValueError("Missing primary source: " + str(depfile))
     for path in paths:
         if not path.is_file():
             raise ValueError("Missing compiler dependency: " + str(path))
@@ -65,15 +72,34 @@ files are compiled and hashed in their fresh, private build directory.
 
 
 def collect_inputs(source: Path, toolchain: Path, build: Path, objects: list[str],
-                   before: dict[Path, str]) -> tuple[list[dict], list[Path]]:
+                   before: dict[Path, str], approved_sources: dict[str, str] | None = None) -> tuple[list[dict], list[Path]]:
     source, toolchain, build = source.resolve(), toolchain.resolve(), build.resolve()
+    outputs = [str(Path(name).with_suffix('.o')) for name in objects]
+    if approved_sources is not None and (len(set(outputs)) != len(outputs) or set(outputs) != set(approved_sources)):
+        raise ValueError('Approved compiler object membership differs')
     paths: set[Path] = set()
     evidence: list[Path] = []
     for name in objects:
         depfile = (source / name).with_suffix(".d")
         if not depfile.is_file():
             raise ValueError("Missing compiler dependency file: " + str(depfile))
-        paths.update(dependency_paths(depfile, source))
+        capture_path = (source / name).with_suffix('.o.compile.json')
+        capture = json.loads(capture_path.read_text(encoding='utf-8'))
+        argv = capture.get('argv')
+        output = str(Path(name).with_suffix('.o'))
+        expected_dep = str(Path(name).with_suffix('.d'))
+        if (capture.get('cwd') != str(source) or capture.get('exit_code') != 0 or
+                capture.get('fresh_dependency') != expected_dep or
+                not isinstance(argv, list) or len(argv) < 5 or
+                not all(isinstance(arg, str) for arg in argv) or
+                argv[-2:] != ['-o', output] or not argv[-3].endswith('.c') or
+                (approved_sources is not None and approved_sources.get(output) != argv[-3])):
+            raise ValueError('Invalid or missing fresh compiler capture: ' + str(capture_path))
+        dependencies = dependency_paths(depfile, source, target=Path(output).name, primary=argv[-3])
+        generated = {str(path): digest(path) for path in dependencies if path.is_relative_to(build)}
+        if capture.get('generated_inputs') != generated:
+            raise ValueError('Generated compiler input evidence differs: ' + str(capture_path))
+        paths.update(dependencies)
         evidence.append(depfile)
     makefile_lists = list(build.glob("obj_*/makefiles.txt"))
     if len(makefile_lists) != 1:
@@ -92,7 +118,10 @@ def collect_inputs(source: Path, toolchain: Path, build: Path, objects: list[str
         paths.update(path.resolve() for path in (source / folder).rglob(pattern))
     for name in ("requirements-ak820-build.txt", "util/build_id.py",
                  "util/vial_generate_definition.py", "util/ak820_dce.py",
-                 "util/build_ak820.py", "util/ak820_build_inputs.py", "util/ak820_outline_audit.py",
+                 "util/build_ak820.py", "util/ak820_build_inputs.py", "util/ak820_capture_compile.py",
+                 "util/ak820_pointer_compile_policy.py", "util/ak820_pointer_compile_environment.py",
+                 "util/ak820_profiles_compile_policy.py",
+                 "util/ak820_outline_audit.py",
                  "util/ak820_profiles.py", "util/ak820_shortcalls.py", "util/ak820_linked_inventory.py"):
         paths.add((source / name).resolve())
     for name in ("sdcc", "sdcpp", "sdas8051", "sdld"):

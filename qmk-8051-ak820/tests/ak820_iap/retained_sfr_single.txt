@@ -1,0 +1,12 @@
+echo @@read2
+dump sfr 0x80 0x80 16
+echo __DONE_3__
+@@read2
+0x80 P0:                  0b11111111 0xff '.' 255 ( -1)
+__DONE_3__
+echo @@read4
+dump sfr 0xf1 0xf1 16
+echo __DONE_5__
+@@read4
+0xf1                      fd .
+__DONE_5__

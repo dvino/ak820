@@ -489,6 +489,15 @@ uint8_t read_source_layers_cache(keypos_t key) {
  * event as they may get stuck otherwise.
  */
 #ifdef AK820_BOARD
+#ifdef AK820_PH_SEAM
+uint16_t ak820_observe_key(uint16_t position) {
+#    ifdef VIAL_ENABLE
+    if (vial_unlock_in_progress) return KC_NO;
+    if (position == (((uint16_t)VIAL_MATRIX_MAGIC << 8) | VIAL_MATRIX_MAGIC)) return g_vial_magic_keycode_override;
+#    endif
+    return ak820_keycode_at(ak820_layer_for_key(position), position);
+}
+#endif
 uint16_t ak820_resolve_key(uint16_t position, bool cache_press) {
     if (disable_action_cache) {
         return ak820_keycode_at(ak820_layer_for_key(position), position);

@@ -52,7 +52,7 @@ class ProtocolFailure(unittest.TestCase):
         raw = Mock()
         raw.raw.side_effect = lambda packet: b'\0' + packet[1:]
         with tempfile.TemporaryDirectory() as directory:
-            api = protocol.DeviceAPI({'payload': bytes(payload)}, Path(directory), lambda: raw, allow_writes=True)
+            api = protocol.DeviceAPI({'payload': bytes(payload)}, Path(directory), lambda: raw, allow_writes=True, verification=())
             try:
                 api.read_nvm = Mock(return_value=nvm)
                 api.status = Mock()
@@ -73,7 +73,7 @@ class ProtocolFailure(unittest.TestCase):
             with tempfile.TemporaryDirectory() as directory:
                 raw=Mock()
                 raw.raw.side_effect=lambda packet:b'\0'+packet[1:]
-                api=protocol.DeviceAPI({'payload':bytes(payload)},Path(directory),lambda:raw,allow_writes=True)
+                api=protocol.DeviceAPI({'payload':bytes(payload)},Path(directory),lambda:raw,allow_writes=True,verification=())
                 try:
                     api.read_nvm=Mock(return_value=before)
                     api.status=Mock()
@@ -87,7 +87,7 @@ class ProtocolFailure(unittest.TestCase):
     def test_widths_rejected_before_transport(self):
         with tempfile.TemporaryDirectory() as directory:
             raw=Mock()
-            api=protocol.DeviceAPI({},Path(directory),lambda:raw,allow_writes=True)
+            api=protocol.DeviceAPI({},Path(directory),lambda:raw,allow_writes=True,verification=())
             try:
                 for qsid,value in ((1,16),(2,0),(7,1001),(18,101),(4,True)):
                     with self.assertRaises(ValueError): api.set_setting(qsid,value)

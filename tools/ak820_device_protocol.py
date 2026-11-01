@@ -1,10 +1,14 @@
 """Restricted VIA/Vial adapter. Importing this module never imports HID."""
 from __future__ import annotations
 import importlib.util
+import copy
+from functools import wraps
+import io
 import json
 from pathlib import Path
 import re
 import sys
+import threading
 import time
 import lzma
 
@@ -22,8 +26,7 @@ def require(ok, message):
         raise ValueError(message)
 
 
-def bind(release: Path, session: Path, approval: Path):
-    """Validate reviewed release and personal recovery inputs before opening HID."""
+def _installer():
     spec = importlib.util.spec_from_file_location('ak820_test_installer', ROOT / 'tools/installer/ak820.py')
     installer = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = installer
@@ -32,11 +35,20 @@ def bind(release: Path, session: Path, approval: Path):
     except BaseException:
         sys.modules.pop(spec.name, None)
         raise
+    return installer
+
+
+def bind(release: Path, session: Path, approval: Path):
+    """Validate reviewed release and personal recovery inputs before opening HID."""
+    installer = _installer()
     installer.BUNDLE, installer.APPROVAL = release, approval
-    manifest = json.loads((release / 'installer-release.json').read_text(encoding='utf-8'))
+    manifest_bytes = (release / 'installer-release.json').read_bytes()
+    with io.TextIOWrapper(io.BytesIO(manifest_bytes), encoding='utf-8') as stream:
+        manifest = json.loads(stream.read())
     installer.RELEASE = manifest['release']
-    installer._load_release(release, approval, approved=True)
-    build_report = json.loads((release / 'reports/build-report.json').read_text(encoding='utf-8'))
+    snapshot = installer._release_snapshot(release, approval, approved=True, manifest_bytes=manifest_bytes)
+    manifest = snapshot.manifest
+    build_report = json.loads(snapshot.files['reports/build-report.json'].decode('utf-8'))
     configuration = build_report.get('configuration')
     require(isinstance(configuration, dict), 'Missing approved build configuration')
     selected = (profiles.validate_configuration(configuration)
@@ -46,24 +58,76 @@ def bind(release: Path, session: Path, approval: Path):
     images, payload, backup = transport.session_image(session, 'permanent', target_build_id=schema)
     pack.validate_native(backup)
     for key, name in (('ihx_sha256', 'firmware/application.ihx'), ('map_sha256', 'firmware/application.map')):
-        require(images.get(key) == pack.digest((release / name).read_bytes()), 'Personal image belongs to a different build')
-    code = diag.diagnostic_build(release / 'firmware/application.ihx', release / 'firmware/application.map',
-                                 release / 'reports/build-report.json')
+        require(images.get(key) == pack.digest(snapshot.files[name]), 'Personal image belongs to a different build')
+    code = diag.diagnostic_build_bytes(snapshot.files['firmware/application.ihx'], snapshot.files['firmware/application.map'],
+                                      snapshot.files['reports/build-report.json'])
     # The manifest binds CODE, while the personal payload binds its own NVM.
     require(all(payload[a-pack.APP_START] == v for a, v in code.items()
                 if pack.APP_START <= a < pack.CODE_END), 'Personal payload CODE differs from release')
-    return {'combo_media': selected.get('compact_controls_version') == 2,
+    return {'combo_media': selected.get('compact_controls_version', 1) >= 2,
             'settings_record_version': selected.get('compact_controls_version', 1), 'nvm_schema': schema, 'release': manifest['release'], 'release_dir': str(release.resolve()),
-            'session': str(session.resolve()), 'payload_sha256': pack.digest(payload),
+            'session': str(session.resolve()), 'approval': str(approval.resolve()), 'payload_sha256': pack.digest(payload),
             'backup_sha256': pack.digest(backup), 'payload': payload, 'backup': backup,
-            'code': code, 'definition': json.loads((release / 'reference/vial.json').read_text(encoding='utf-8'))}
+            'code': code, 'definition': json.loads(snapshot.files['reference/vial.json'].decode('utf-8'))}
+
+
+def _approved_write_profile(paths):
+    """Reconstruct an exact target from freshly checked release and recovery files."""
+    require(type(paths) is tuple and len(paths) == 3 and all(isinstance(p, (str, Path)) and p for p in paths),
+            'Approved release, recovery session and approval are required')
+    release, session, approval = map(Path, paths)
+    checked = bind(release, session, approval)
+    installer = _installer()
+    installer.RELEASE = checked['release']
+    snapshot = installer._release_snapshot(release, approval, approved=True)
+    require('tools/installer/settings-catalog.json' in snapshot.host_files,
+            'Approved settings catalog is missing')
+    catalog = json.loads(snapshot.host_files['tools/installer/settings-catalog.json'].decode('utf-8'))
+    spec = importlib.util.spec_from_file_location('ak820_device_settings_backup', ROOT / 'tools/installer/settings_backup.py')
+    settings = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(settings)
+    profile = settings.load_profile(release, checked['backup'], trusted_catalog=catalog,
+                                    release_files=snapshot.files)
+    require(profile['payload'] == checked['payload'], 'Approved target payload changed')
+    return settings, profile
+
+
+def owned_setter(method):
+    @wraps(method)
+    def invoke(self, *args, **kwargs):
+        require(self._operation_lock.acquire(blocking=False), 'DeviceAPI is owned by another operation')
+        try:
+            require(not self._guard_active, 'Reentrant setter from guard is forbidden')
+            self._setter_depth += 1
+            try:
+                return method(self, *args, **kwargs)
+            finally:
+                self._setter_depth -= 1
+                if not self._setter_depth and not self._restore_active:
+                    self._invalidate_write_identity()
+        finally:
+            self._operation_lock.release()
+    return invoke
 
 
 class DeviceAPI:
-    def __init__(self, binding, output, app_factory=None, *, allow_writes=False):
+    def __init__(self, binding, output, app_factory=None, *, allow_writes=False, verification=None):
         self.binding, self.output = binding, output
+        # verification=None derives the approved triple from the binding.
+        # verification=() explicitly selects the non-production unverified
+        # write context (offline test doubles and models); partial triples
+        # are refused by _require_writes.
+        self._verification_paths = verification if verification is not None else tuple(
+            binding.get(name) for name in ('release_dir', 'session', 'approval'))
+        self._verified_handle = None
+        self._verified_binding = None
+        self._direct_active = None
+        self._setter_depth = 0
         require(type(allow_writes) is bool, 'allow_writes must be an explicit boolean')
         self.allow_writes = allow_writes
+        self._operation_lock = threading.RLock()
+        self._restore_active = False
+        self._guard_active = False
         self.trace = (output / 'transport.jsonl').open('a', encoding='utf-8')
         self.app = None
         try:
@@ -81,22 +145,67 @@ class DeviceAPI:
         self.pending = None
 
     def close(self):
+        require(self._operation_lock.acquire(blocking=False), 'DeviceAPI is owned by another operation')
         try:
-            if self.app is not None:
-                self.app.close()
+            require(not self._restore_active, 'Cannot close DeviceAPI during settings restore')
+            try:
+                self._invalidate_write_identity()
+                if self.app is not None:
+                    self.app.close()
+            finally:
+                self.trace.close()
         finally:
-            self.trace.close()
+            self._operation_lock.release()
 
     def packet(self, *values):
         return bytes(values) + bytes(32-len(values))
 
     def exchange(self, packet):
-        self._validate_request(packet)
+        require(self._operation_lock.acquire(blocking=False), 'DeviceAPI is owned by another operation')
+        try:
+            try:
+                return self._exchange(packet)
+            except BaseException:
+                self._invalidate_write_identity()
+                raise
+            finally:
+                if not self._setter_depth and not self._restore_active and self._direct_active is None:
+                    self._invalidate_write_identity()
+        finally:
+            self._operation_lock.release()
+
+    def _exchange(self, packet):
+        write = self._validate_request(packet)
+        if write:
+            require(not self._guard_active, 'Reentrant setter from guard is forbidden')
+            if self._direct_active is not None:
+                ident, deadline = self._direct_active
+                require(time.monotonic() < deadline and packet[0] == 7 and packet[1] in (0x44, 0x45, 0x46)
+                        and packet[2:4] == ident, 'Direct transaction changed or expired')
+            elif packet[0] == 7 and packet[1] in (0x44, 0x45):
+                raise ValueError('Direct transaction has no verified begin')
+            guard = getattr(self, '_before_setter', None)
+            if guard is not None:
+                self._guard_active = True
+                try:
+                    guard()
+                finally:
+                    self._guard_active = False
         row = {'request_hex': packet.hex()}
         try:
+            sent_at = time.monotonic()
             reply = bytes(self.app.raw(packet))
             row['reply_hex'] = reply.hex()
             require(len(reply) == 32, 'Short protocol response')
+            if write and packet[0] == 7 and packet[1] in (0x43, 0x44, 0x45, 0x46):
+                if reply[:2] != packet[:2] or reply[2] != 0 or reply[3:] != packet[3:]:
+                    self._invalidate_write_identity()
+                elif packet[1] == 0x43:
+                    self._direct_active = (packet[4:6], sent_at + 1)
+                elif packet[1] == 0x44:
+                    self._direct_active = (packet[2:4], sent_at + 1)
+                elif packet[1] in (0x45, 0x46):
+                    self._direct_active = None
             return reply
         except Exception as exc:
             row['error'] = repr(exc)
@@ -175,8 +284,9 @@ class DeviceAPI:
                     write = True
                     require(zero_tail(2), 'Malformed settings reset')
                 else:
-                    require(qsid in extensions.FIELDS, 'Unknown settings ID')
-                    width = extensions.FIELDS[qsid][1]
+                    fields = extensions.fields_for(self._settings_record_version())
+                    require(qsid in fields, 'Unknown settings ID for exact image')
+                    width = fields[qsid][1]
                     if sub == 10:
                         require(zero_tail(4), 'Malformed settings getter')
                     else:
@@ -206,7 +316,8 @@ class DeviceAPI:
         else:
             raise ValueError('Forbidden command')
         if write:
-            require(self.allow_writes, 'Writes are disabled for this DeviceAPI instance')
+            self._require_writes()
+        return write
 
     def _require_extension_schema(self):
         payload = self.binding.get('payload', b'')
@@ -214,8 +325,31 @@ class DeviceAPI:
         require(int.from_bytes(payload[offset:offset+3], 'little') == extensions.SCHEMA,
                 'Typed extensions require a schema03 bound image')
 
+    def _invalidate_write_identity(self):
+        self._verified_handle = None
+        self._verified_binding = None
+        self._direct_active = None
+
     def _require_writes(self):
         require(self.allow_writes, 'Writes are disabled for this DeviceAPI instance')
+        if self._verified_handle is self.app and self._verified_handle is not None:
+            require(self.binding == self._verified_binding, 'Verified image binding changed during transaction')
+            return
+        if self._verification_paths == ():
+            # Explicit non-production unverified write context: no approved
+            # release is bound, so the exact approved-write gate does not
+            # apply. Only test doubles and offline models may pass ().
+            return
+        require(all(self._verification_paths),
+                'Approved release, recovery session and approval are required')
+        self._invalidate_write_identity()
+        settings, profile = _approved_write_profile(self._verification_paths)
+        rom = self.read_code(0, 65536)
+        settings.validate_rom(rom, profile, (profile['ihx_sha256'], profile['code_sha256']))
+        self.binding = profile
+        require(self._settings_record_version() != 3, 'Settings v3 exact-image qualification and identity gates are pending')
+        self._verified_binding = copy.deepcopy(profile)
+        self._verified_handle = self.app
 
     def read_code(self, address, size):
         require(0 <= address <= 65536 and 0 <= size <= 65536 and address <= 65536-size,
@@ -278,14 +412,16 @@ class DeviceAPI:
                 and not status['vial_unlock_in_progress'], 'Storage failure, busy storage or unlock in progress')
         return status
 
-    def read_nvm(self):
+    def read_nvm(self, *, require_unlocked=False):
         region = self.read_code(pack.NVM_START, pack.MANIFEST_START-pack.NVM_START)
         (self.output / 'current-nvm-journal.bin').write_bytes(region)
         require(not any(region[pack.NVM_END-pack.NVM_START+64:]), 'Dirty journal header')
         nvm = region[:pack.NVM_END-pack.NVM_START]
         pack.validate_nvm(nvm, int.from_bytes(nvm[37:40], 'little'))
         require(self.read_code(pack.NVM_START, len(nvm)) == nvm, 'Unstable NVM')
-        self.status()
+        status = self.status()
+        if require_unlocked:
+            require(status['vial_unlocked'], 'Vial locked during pre-write NVM read')
         return nvm
 
     def definition(self):
@@ -333,6 +469,7 @@ class DeviceAPI:
         reply = self.exchange(self.packet(254, 3, layer, 0))
         return int.from_bytes(reply[direction*2:direction*2+2], 'big')
 
+    @owned_setter
     def set_key(self, layer, key, value):
         self._require_writes()
         require(0 <= layer < 6 and len(key) == 2 and 0 <= key[0] < 16 and 0 <= key[1] < 6
@@ -340,6 +477,7 @@ class DeviceAPI:
         packet = self.packet(5, layer, *key, value >> 8, value & 255)
         return self.exchange(packet) == packet
 
+    @owned_setter
     def set_encoder(self, layer, direction, value):
         self._require_writes()
         require(0 <= layer < 6 and direction in (0, 1) and 0 <= value <= 0xFFFF, 'Invalid encoder setter arguments')
@@ -381,6 +519,7 @@ class DeviceAPI:
         require(reply[0] == 0 and reply[11:] == packet[11:], 'Combo getter ACK mismatch')
         return self.validate_combo(reply[1:11])
 
+    @owned_setter
     def set_combo(self, index, data):
         self._require_writes()
         require(type(index) is int and 0 <= index < 8, 'Invalid Combo index')
@@ -388,8 +527,8 @@ class DeviceAPI:
         image = self.binding.get('compatible_images', {}).get(self.binding.get('ihx_sha256'))
         output = int.from_bytes(data[8:10], 'little')
         capability = image if image is not None else self.binding
-        require(not 0xA8 <= output <= 0xC2 or (capability.get('combo_media') is True and self._settings_record_version() == 2), 'Media Combo unsupported by exact image')
-        before = self.read_nvm()
+        require(not 0xA8 <= output <= 0xC2 or (capability.get('combo_media') is True and self._settings_record_version() >= 2), 'Media Combo unsupported by exact image')
+        before = self.read_nvm(require_unlocked=True)
         packet = self.packet(254, 13, 4, index, *data)
         require(self.exchange(packet) == b'\0' + packet[1:], 'Combo setter ACK mismatch')
         self.status()
@@ -408,11 +547,12 @@ class DeviceAPI:
         require(reply[0] == 0 and reply[11:] == packet[11:], 'Extension getter ACK mismatch')
         return extensions.validate_entry(kind, reply[1:11])
 
+    @owned_setter
     def set_extension(self, kind, index, data):
         self._require_writes()
         offset = extensions.slot_offset(kind, index)
         extensions.validate_entry(kind, data)
-        before = self.read_nvm()
+        before = self.read_nvm(require_unlocked=True)
         require(int.from_bytes(before[37:40], 'little') == extensions.SCHEMA, 'Extension schema differs')
         packet = self.packet(254, 13, 2 if kind == 'tap_dance' else 6, index, *data)
         require(self.exchange(packet) == b'\0' + packet[1:], 'Extension setter ACK mismatch')
@@ -429,12 +569,12 @@ class DeviceAPI:
         ids = [int.from_bytes(reply[i:i+2], 'little') for i in range(0,32,2)]
         values = [i for i in ids if i != 65535]
         require(ids == values + [65535]*(16-len(values)) and values == sorted(set(values))
-                and all(i in (extensions.FIELDS if self._settings_record_version() == 2 else extensions.LEGACY_FIELDS) and i > greater_than for i in values), 'Invalid settings capabilities')
+                and all(i in extensions.fields_for(self._settings_record_version()) and i > greater_than for i in values), 'Invalid settings capabilities')
         return values
 
     def get_setting(self, qsid):
         require(type(qsid) is int and qsid in extensions.FIELDS, 'Unknown settings ID')
-        require(self._settings_record_version() == 2 or qsid in extensions.LEGACY_FIELDS, 'Setting unsupported by exact image')
+        require(qsid in extensions.fields_for(self._settings_record_version()), 'Setting unsupported by exact image')
         reply = self.exchange(self.packet(254, 10, qsid & 255, qsid >> 8))
         require(reply[0] == 0, 'Settings getter failed')
         width = extensions.FIELDS[qsid][1]
@@ -448,12 +588,22 @@ class DeviceAPI:
             return image.get('settings_record_version', 1)
         return self.binding.get('settings_record_version', 2)
 
+    def _leader_default(self):
+        if self._settings_record_version() != 3:
+            return None
+        image = self.binding.get('compatible_images', {}).get(self.binding.get('ihx_sha256'), self.binding)
+        marker = image.get('leader_default')
+        require(type(marker) is dict and set(marker) == {'format', 'milliseconds'} and
+                marker['format'] == 'ak820-leader-default-1', 'Missing exact-image Leader default')
+        return extensions.leader_default(marker['milliseconds'])
+
+    @owned_setter
     def set_setting(self, qsid, value):
         self._require_writes()
         data = extensions.field_value(qsid, value)
-        require(self._settings_record_version() == 2 or qsid in extensions.LEGACY_FIELDS, 'Setting unsupported by exact image')
-        before = self.read_nvm()
-        values = extensions.decode_settings(before[0x6A8:0x6C0], version=self._settings_record_version())
+        require(qsid in extensions.fields_for(self._settings_record_version()), 'Setting unsupported by exact image')
+        before = self.read_nvm(require_unlocked=True)
+        values = extensions.decode_settings(before[0x6A8:0x6C0], version=self._settings_record_version(), default_leader=self._leader_default())
         unchanged = values[str(qsid)] == value
         # Saved control getters do not expose physical session overrides. An
         # explicit Set must reapply these controls even when storage is equal.
@@ -472,21 +622,24 @@ class DeviceAPI:
         require(self.read_nvm() == bytes(expected), 'Settings durable readback or neighboring bytes differ')
         return True
 
+    @owned_setter
     def reset_settings(self):
         self._require_writes()
-        before = self.read_nvm()
-        values = extensions.from_nvm(before, version=self._settings_record_version())['qmk_settings']
-        unchanged = values == extensions.decode_settings(extensions.settings_record(version=self._settings_record_version()))
+        before = self.read_nvm(require_unlocked=True)
+        default = self._leader_default()
+        values = extensions.from_nvm(before, version=self._settings_record_version(), default_leader=default)['qmk_settings']
+        defaults = extensions.settings_record(version=self._settings_record_version(), default_leader=default)
+        unchanged = values == extensions.decode_settings(defaults)
         # Reset also reapplies volatile controls. Firmware leaves durable bytes
         # untouched when the effective saved record already contains defaults.
         packet = self.packet(254, 12)
         require(self.exchange(packet) == b'\0' + packet[1:], 'Settings reset ACK mismatch')
         self.status()
         for qsid in self.settings_query():
-            require(self.get_setting(qsid) == extensions.FIELDS[qsid][4], 'Settings reset getter differs')
+            require(self.get_setting(qsid) == extensions.decode_settings(defaults)[str(qsid)], 'Settings reset getter differs')
         expected = bytearray(before)
         if not unchanged:
-            expected[0x6A8:0x6C0] = extensions.settings_record(version=self._settings_record_version())
+            expected[0x6A8:0x6C0] = defaults
         require(self.read_nvm() == bytes(expected), 'Settings reset durable readback differs')
         return True
 
@@ -535,6 +688,7 @@ class DeviceAPI:
         require(reply[:2] == b'\x08\x41', 'RGB mode response mismatch')
         return reply[2:8]
 
+    @owned_setter
     def set_rgb_mode(self, mode):
         self._require_writes()
         require(isinstance(mode, (bytes, bytearray)) and len(mode) == 6, 'RGB mode requires six bytes')
@@ -547,12 +701,14 @@ class DeviceAPI:
         require(reply[2:5] == bytes(3), 'Layout options exceed the persisted one-byte field')
         return int.from_bytes(reply[2:6], 'big')
 
+    @owned_setter
     def set_layout_options(self, value):
         self._require_writes()
         require(0 <= value <= 0xFF, 'Layout options must fit the persisted one-byte field')
         packet = self.packet(3, 2, value >> 24, (value >> 16) & 255, (value >> 8) & 255, value & 255)
         return self.exchange(packet) == packet
 
+    @owned_setter
     def upload_macro_chunk(self, offset, data):
         """Upload one existing VIA macro chunk; caller must satisfy Vial unlock."""
         self._require_writes()
@@ -561,6 +717,7 @@ class DeviceAPI:
         packet = self.packet(15, offset >> 8, offset & 255, len(data), *data)
         return self.exchange(packet) == packet
 
+    @owned_setter
     def save_rgb(self):
         """Persist current VialRGB values through VIA lighting-save command."""
         self._require_writes()
@@ -648,6 +805,7 @@ class DeviceAPI:
                             'generation': generation, 'flags': status['flags'], 'hsv_hex': hsv.hex()}
         raise ValueError('Direct palette changed during bounded snapshot')
 
+    @owned_setter
     def _direct_set(self, command, payload):
         self._require_writes()
         packet = self.packet(7, command, *payload)
@@ -656,12 +814,14 @@ class DeviceAPI:
         require(reply[2] == 0, 'Direct setter failed: status ' + str(reply[2]))
         return True
 
+    @owned_setter
     def direct_abort(self, frame_id):
         self._require_writes()
         require(type(frame_id) is int and 1 <= frame_id <= 65535, 'Invalid Direct frame ID')
         require(self.direct_info() is not None, 'Direct unavailable')
         return self._direct_set(0x46, frame_id.to_bytes(2, 'little'))
 
+    @owned_setter
     def set_direct_frame(self, hsv, *, frame_id, expected_generation):
         """Commit a full RAM frame; clamp each V byte to negotiated maximum 160.
 

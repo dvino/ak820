@@ -11,6 +11,22 @@
 #    include "usb_ak820.h"
 #endif
 
+#ifndef AK820_MOUSE_CURSOR_STEP
+#    define AK820_MOUSE_CURSOR_STEP 8
+#endif
+#ifndef AK820_MOUSE_CURSOR_PERIOD
+#    define AK820_MOUSE_CURSOR_PERIOD 20
+#endif
+#ifndef AK820_MOUSE_WHEEL_STEP
+#    define AK820_MOUSE_WHEEL_STEP 1
+#endif
+#ifndef AK820_MOUSE_WHEEL_PERIOD
+#    define AK820_MOUSE_WHEEL_PERIOD 80
+#endif
+#if AK820_MOUSE_CURSOR_STEP < 1 || AK820_MOUSE_CURSOR_STEP > 127 || AK820_MOUSE_WHEEL_STEP < 1 || AK820_MOUSE_WHEEL_STEP > 127 || AK820_MOUSE_CURSOR_PERIOD < 1 || AK820_MOUSE_CURSOR_PERIOD > 255 || AK820_MOUSE_WHEEL_PERIOD < 1 || AK820_MOUSE_WHEEL_PERIOD > 255
+#    error Invalid Mouse Keys build parameters
+#endif
+
 static uint8_t directions;
 static uint8_t immediate;
 static uint8_t buttons;
@@ -61,21 +77,21 @@ void mousekey_send(void) {
     mouse_report.report_id = REPORT_ID_MOUSE;
 #endif
     mouse_report.buttons = buttons;
-    mouse_report.x = axis(selected >> 2) * 8;
-    mouse_report.y = axis(selected) * 8;
-    mouse_report.v = (selected & 0x20) ? -1 : ((selected & 0x10) ? 1 : 0);
-    mouse_report.h = axis(selected >> 6);
+    mouse_report.x = axis(selected >> 2) * AK820_MOUSE_CURSOR_STEP;
+    mouse_report.y = axis(selected) * AK820_MOUSE_CURSOR_STEP;
+    mouse_report.v = ((selected & 0x20) ? -1 : ((selected & 0x10) ? 1 : 0)) * AK820_MOUSE_WHEEL_STEP;
+    mouse_report.h = axis(selected >> 6) * AK820_MOUSE_WHEEL_STEP;
     if (!(mouse_report.x || mouse_report.y || mouse_report.v || mouse_report.h || buttons != accepted_buttons)) return;
     if (ak820_usb_try_send(MOUSE_IN_EPNUM, (const uint8_t __xdata *)&mouse_report, sizeof(mouse_report))) accepted_buttons = buttons;
 }
 
 void mousekey_task(void) {
     uint16_t now = timer_read();
-    if ((uint16_t)(now - cursor_time) >= 20) {
+    if ((uint16_t)(now - cursor_time) >= AK820_MOUSE_CURSOR_PERIOD) {
         cursor_time = now;
         immediate |= directions & 0x0f;
     }
-    if ((uint16_t)(now - wheel_time) >= 80) {
+    if ((uint16_t)(now - wheel_time) >= AK820_MOUSE_WHEEL_PERIOD) {
         wheel_time = now;
         immediate |= directions & 0xf0;
     }

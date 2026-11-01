@@ -33,7 +33,7 @@ class ProtocolTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         raw = Raw()
-        api = protocol.DeviceAPI({}, Path(self.tmp.name), lambda: raw, allow_writes=allow_writes)
+        api = protocol.DeviceAPI({}, Path(self.tmp.name), lambda: raw, allow_writes=allow_writes, verification=())
         self.addCleanup(api.close)
         return api, raw
 
@@ -218,7 +218,7 @@ class DirectTests(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         raw = DirectRaw()
-        api = protocol.DeviceAPI({},Path(temporary.name),lambda:raw,allow_writes=writes)
+        api = protocol.DeviceAPI({},Path(temporary.name),lambda:raw,allow_writes=writes,verification=())
         self.addCleanup(api.close)
         return api,raw
 

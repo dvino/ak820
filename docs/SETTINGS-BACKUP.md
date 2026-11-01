@@ -2,11 +2,21 @@
 
 # Settings backup and restore
 
-Use the Python installer script to save or restore settings. The script checks
-the exact firmware image and stops if the saved data is unsupported. Settings
+**Beta.5 does not authorize settings writes.** Catalog approval, image
+recognition and offline migration checks do not authorize restore or settings
+transfer. The guidance below describes restore only if writes become authorized.
+
+Use the Python installer script to save settings. For a permitted restore, the
+script checks the exact firmware image and stops if the saved data is unsupported. Settings
 restore does not change the selected profile or save Direct colors to EEPROM.
 The selected profile must have its complete, exactly approved release assets.
 A mismatched or absent beta.5 profile catalog/approval blocks restore before USB access; an older image is never silently substituted.
+
+During a permitted restore, close other keyboard clients and do not press keys,
+reset the keyboard or enter its loader. The open HID handle does not exclude
+other clients: a separate raw-HID command can change the loader marker after
+an image check. The adapter cannot eliminate that race. A transport failure
+stops the operation; do not retry or restore blindly.
 
 ## Run the script
 
@@ -19,10 +29,13 @@ python3 tools/installer/ak820.py --profile main backup --help
 python3 tools/installer/ak820.py --profile main restore --help
 ```
 
-Follow the command prompts and use the local OEM recovery session and backup
-paths requested by the script. A settings backup does not replace the OEM
-recovery files. Keep backups private and outside source control. See
-[installation](INSTALL.md) for downloading, checksum verification and setup.
+Supply paths as arguments: `backup --session OEM_DIR --output BACKUP_DIR`
+uses the original private OEM recovery session (`permanent-session` inside
+the installation session folder) and a separate settings backup directory. If settings writes become authorized, restore uses
+`restore --session OEM_DIR --backup BACKUP_DIR`. These are subcommands of the
+script; after package setup, use `AK820.cmd` on Windows or `./AK820.sh` on Linux.
+A settings backup does not replace the OEM recovery files. Keep both private
+and outside source control. See [installation](INSTALL.md) for setup.
 
 ## What is saved
 
@@ -44,7 +57,7 @@ palette readback. This API does not select Direct mode or save the palette to
 EEPROM. Older backups without the sidecar cannot recover Direct colors. See
 [Direct palette](DIRECT.md) for the protocol and limits.
 
-For beta.5, recognized settings sources are the exact published beta.3, beta.4,
+For the original published beta.5, recognized settings sources are the exact published beta.3, beta.4,
 beta.4.1 and beta.5 images; targets must be beta.5 images. This recognition and
 offline transition testing do not authorize settings writes: the beta.5 catalog
 keeps `settings_writes_authorized` false. Other release sources are unsupported.
@@ -52,6 +65,13 @@ Transitions between profiles of the current release must be explicitly listed
 and still pass schema, feature and value checks. Keep configuration
 software closed during backup; the firmware does not pause while settings are
 read. A failed read, timeout or mismatch stops the operation.
+
+The current, unqualified candidate admits only authenticated published beta.4.1
+profile image identities and its own current profile image identities as settings
+sources; restore targets are candidate profiles only. Beta.3 sources are not
+admitted. Beta.4 and beta.4.1 images have identical image identities, so they
+cannot be distinguished by image identity. This policy does not qualify the
+candidate, authorize settings writes or establish physical restore behavior.
 
 The backup format and migration rules are described in
 [module storage](MODULE-STORAGE.md). Current release identities and status are

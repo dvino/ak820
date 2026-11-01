@@ -48,10 +48,12 @@ def _accept(expected, response):
         raise ValueError('Validation worker returned an invalid cache digest')
     result = entry[1]
     fields = {'parameter_spills', 'register_saves', 'tail_share'}
+    reports = result.get('reports') if isinstance(result, dict) else None
+    reports_ok = isinstance(reports, dict) and set(reports) in (
+        fields, fields | {'tail_share_xmod'}) and all(digest(value) for value in reports.values())
     if (not isinstance(result, dict) or set(result) != {'contract', 'reports'}
             or result['contract'] != 'ak820-audited-pass30-1'
-            or not isinstance(result['reports'], dict) or set(result['reports']) != fields
-            or not all(digest(value) for value in result['reports'].values())):
+            or not reports_ok):
         raise ValueError('Validation worker returned an invalid replay result')
     configured._PASS30_CACHE[expected] = copy.deepcopy(entry)
 

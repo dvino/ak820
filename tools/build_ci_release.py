@@ -28,6 +28,8 @@ import ak820_ci_authorization as authorization
 import ak820_release_safety as release_safety
 import build_release_bundle as release
 import build_capability_catalog as capability_catalog
+import configure_firmware
+from ak820_profiles_compile_policy import POLICY as CANONICAL_POLICY
 from ak820_profiles import require_release_qualification, validate_configuration
 from ak820_release_manifest import RELEASE, MANIFEST_FORMAT, host_manifest
 
@@ -208,6 +210,24 @@ def _qualification(report: dict, path: Path, ihx: Path, mapfile: Path, toolchain
             raise ValueError('Qualification includes a failed, skipped or changed-build test')
 
 
+def qualify_build_report(report: dict, report_path: Path, build_dir: Path, toolchain: Path) -> dict | None:
+    if report.get('compiler_input_contract') != CANONICAL_POLICY:
+        require_release_qualification(report)
+        return
+    before = sha(report_path)
+    if load_json(report_path) != report:
+        raise ValueError('Build report changed before compiler-input validation')
+    inspected = configure_firmware.inspect(build_dir, toolchain)
+    if (inspected['identity']['build_report_sha256'] != before or sha(report_path) != before
+            or inspected['configuration'] != report.get('configuration')):
+        raise ValueError('Build report or configuration changed during compiler-input validation')
+    validate_configuration(report['configuration'])
+    release_safety.validate(report)
+    if sha(report_path) != before:
+        raise ValueError('Build report changed during safety validation')
+    return inspected['identity']
+
+
 def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
              program_review_path: Path, packing_receipt_path: Path, output: Path,
              toolchain: Path, source_commit: str, *, expected_profile: str | None = None) -> dict:
@@ -236,7 +256,7 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
     report_path = build_dir / 'build-report.json'
     ihx, mapfile, mem = (build_dir / f'ajazz_ak820_vial.{ext}' for ext in ('ihx', 'map', 'mem'))
     report = load_json(report_path)
-    require_release_qualification(report)
+    inspected_identity = qualify_build_report(report, report_path, build_dir, toolchain)
     actual_profile = report.get('configuration', {}).get('profile')
     if expected_profile is not None and actual_profile != expected_profile:
         raise ValueError(f'Build profile mismatch: expected {expected_profile}, got {actual_profile}')
@@ -306,6 +326,13 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
             dest = output / name
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(path, dest)
+        if inspected_identity is not None:
+            for name, key in (('firmware/application.ihx', 'ihx_sha256'),
+                              ('firmware/application.map', 'map_sha256'),
+                              ('firmware/application.mem', 'mem_sha256'),
+                              ('reports/build-report.json', 'build_report_sha256')):
+                if sha(output / name) != inspected_identity[key]:
+                    raise ValueError('Copied release input differs from inspected build: ' + name)
         (output / 'reports').mkdir(exist_ok=True)
         shutil.copyfile(packing_receipt_path, output / 'reports/packing-validation.json')
         shutil.copyfile(qualification_path, output / 'reports/qualification.json')
@@ -319,8 +346,10 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
         (output / 'reviews/independent-review.md').write_text(review_doc, encoding='utf-8')
         attestation = {
             'format': 'ak820-ci-build-attestation-1', 'source_commit': source_commit,
-            'build': {'ihx_sha256': sha(ihx), 'map_sha256': sha(mapfile), 'mem_sha256': sha(mem),
-                      'build_report_sha256': sha(report_path)},
+            'build': {'ihx_sha256': sha(output / 'firmware/application.ihx'),
+                      'map_sha256': sha(output / 'firmware/application.map'),
+                      'mem_sha256': sha(output / 'firmware/application.mem'),
+                      'build_report_sha256': sha(output / 'reports/build-report.json')},
             'policy_sha256': digest(policy_bytes), 'program_review_sha256': digest(review_bytes),
             'qualification_sha256': digest(qualification_bytes), 'host_files': current_host,
             'hardware_validated': False,
@@ -341,8 +370,9 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
         }
         write_json(output / 'installer-release.json', manifest)
         record = dict(reproduced, build={
-            'ihx_sha256': sha(ihx), 'map_sha256': sha(mapfile),
-            'build_report_sha256': sha(report_path)}, host_files=current_host,
+            'ihx_sha256': sha(output / 'firmware/application.ihx'),
+            'map_sha256': sha(output / 'firmware/application.map'),
+            'build_report_sha256': sha(output / 'reports/build-report.json')}, host_files=current_host,
             attestation_sha256=sha(output / 'reports/build-attestation.json'))
         # Rebind the machine record with all generated evidence before running
         # the canonical installer validation gate.
@@ -367,6 +397,15 @@ def assemble(build_dir: Path, qualification_path: Path, policy_path: Path,
             for name in PUBLIC_FILES:
                 zf.write(output / name, name)
             zf.write(output / 'approved-release.json', 'approved-release.json')
+        if inspected_identity is not None:
+            with zipfile.ZipFile(archive) as packaged:
+                for name, key in (('firmware/application.ihx', 'ihx_sha256'),
+                                  ('firmware/application.map', 'map_sha256'),
+                                  ('firmware/application.mem', 'mem_sha256'),
+                                  ('reports/build-report.json', 'build_report_sha256')):
+                    if (sha(output / name) != inspected_identity[key]
+                            or digest(packaged.read(name)) != inspected_identity[key]):
+                        raise ValueError('Packaged release input differs from inspected build: ' + name)
         checksum.write_text(f'{sha(archive)}  {archive.name}\n', encoding='ascii')
     except Exception:
         shutil.rmtree(output, ignore_errors=True)
@@ -413,6 +452,18 @@ def reproducible_identity(build: Path, measured_identity: dict) -> dict:
         raise ValueError('Missing or unsafe MAP for reproducible identity')
     return {**{field: measured_identity[field] for field in fields},
             'symbols_sha256': authorization.symbols_sha256(mapfile)}
+
+
+def verify_linked_leader_default(build: Path, identity: dict) -> None:
+    """Bind static metadata to final linked evidence, not release authorization."""
+    import ak820_leader_marker
+    import pack_ak820
+    if identity.get('settings_record_version') == 3:
+        linked = ak820_leader_marker.extract_linked(
+            (build / 'ajazz_ak820_vial.map').read_text(encoding='ascii'),
+            pack_ak820.read_ihex(build / 'ajazz_ak820_vial.ihx'))
+        if linked != identity.get('leader_default'):
+            raise ValueError('Linked Leader default differs from exact settings identity')
 
 
 def settings_matrix_from_builds(builds_root: Path, toolchain: Path,
@@ -468,6 +519,7 @@ def settings_matrix_from_builds(builds_root: Path, toolchain: Path,
                 identity.get('nvm_schema') != ak820_profiles.configuration(name)['nvm_schema'] or
                 approved.get('configuration') != row.get('configuration')):
             raise ValueError('Static settings contract does not bind the measured profile: ' + name)
+        verify_linked_leader_default(build, identity)
         row['reproducible_identity'] = measured_identity
         row['settings_identity'] = identity
         row['settings_status'] = 'exact-image-contract'

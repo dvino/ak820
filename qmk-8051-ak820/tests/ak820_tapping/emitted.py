@@ -7,6 +7,94 @@ linked=importlib.util.module_from_spec(spec);spec.loader.exec_module(linked)
 pack_spec=importlib.util.spec_from_file_location('packer',Path(__file__).parents[2]/'util/pack_ak820.py')
 packer=importlib.util.module_from_spec(pack_spec);pack_spec.loader.exec_module(packer)
 
+def hid_dump(lines, start, address, count):
+    values=[]
+    while len(values)<count:
+        size=min(16,count-len(values))
+        if start>=len(lines):raise ValueError('Missing HID dump row')
+        match=re.fullmatch(r'0x([0-9a-f]+)\s+((?:[0-9a-f]{2} ){%d})(.{%d})' % (size,size),lines[start])
+        if not match or int(match[1],16)!=address+len(values):raise ValueError('Malformed HID dump row')
+        row=[int(value,16) for value in match[2].split()]
+        if match[3]!=''.join(chr(value) if 32<=value<=126 else '.' for value in row):raise ValueError('Malformed HID dump rendering')
+        values.extend(row);start+=1
+    return values,start
+
+def observe_hid(log, commands, callback, address, width, *, capture_b=True, extra_callback=None, extra_address=None):
+    lines=log.splitlines()
+    setup=f'break {callback:#x}'
+    installs=[i for i,line in enumerate(lines) if line==setup]
+    if len(installs)!=1 or commands.count(setup)!=1:raise ValueError('Missing or ambiguous HID breakpoint')
+    pos=installs[0]
+    if pos+1>=len(lines) or lines[pos+1]!=f'Breakpoint 1 at 0x{callback:06x} (cond="")':raise ValueError('HID breakpoint address not installed')
+    bindings=[c for c in commands if c.startswith('commands 1 "')]
+    if len(bindings)!=1 or lines.count(bindings[0])!=1 or lines.index(bindings[0])<=pos:raise ValueError('Missing HID breakpoint commands')
+    suffix='echo @@HIDB; dump sfr 0xf0 0xf0 16; ' if capture_b else ''
+    expected=f'commands 1 "echo @@HID; dump xram {address:#x} {address+width-1:#x} 16; echo @@HIDPTR; dump sfr 0x82 0x83 16; {suffix}fill xram 0x2201 0x2203 0x12; run"'
+    if bindings[0]!=expected:raise ValueError('Unexpected HID breakpoint commands')
+    binding=lines.index(bindings[0])
+    allowed_extra=None;extra_binding_index=None
+    if extra_callback is not None:
+        if extra_address is None or extra_callback==callback:raise ValueError('Invalid extra callback')
+        allowed_extra=f'break {extra_callback:#x}'
+        extra_binding=f'commands 2 "echo @@EXTRA; dump xram {extra_address:#x} {extra_address+2:#x} 16; fill xram 0x2201 0x2203 0x12; run"'
+        extra_installs=[i for i,line in enumerate(lines) if line==allowed_extra]
+        if len(extra_installs)!=1 or commands.count(allowed_extra)!=1 or commands.count(extra_binding)!=1 or extra_installs[0]+1>=len(lines) or lines[extra_installs[0]+1]!=f'Breakpoint 2 at 0x{extra_callback:06x} (cond="")' or lines.count(extra_binding)!=1 or lines.index(extra_binding)<=extra_installs[0]:raise ValueError('Extra breakpoint not installed')
+        extra_binding_index=lines.index(extra_binding)
+    for line in commands[commands.index(bindings[0])+1:]+lines[binding+1:]:
+        if re.match(r'^(?:delete|disable|clear|reset|commands [12]|break)(?:\s|$)',line) and line not in (allowed_extra,extra_binding if extra_callback is not None else None):raise ValueError('HID breakpoint may have been changed')
+    requested=[c for c in commands if re.fullmatch(r'run 0x[0-9a-f]+ 0x[0-9a-f]+',c)]
+    actual=[(i,line) for i,line in enumerate(lines) if re.fullmatch(r'run 0x[0-9a-f]+ 0x[0-9a-f]+',line)]
+    if not requested or [line for _,line in actual]!=requested:raise ValueError('Missing or unexpected execution window')
+    if not any(start>binding for start,_ in actual):raise ValueError('No execution after HID setup')
+    hid=[];pointers=[];spaces=[];resumes=0;covered=set()
+    for i,(start,command) in enumerate(actual):
+        _,first,last=command.split();first,last=int(first,16),int(last,16)
+        limit=actual[i+1][0] if i+1<len(actual) else len(lines)
+        if start+1>=limit or lines[start+1]!=f'Simulation started, PC=0x{first:06x}':raise ValueError('Missing execution start')
+        stops=[j for j in range(start+2,limit) if lines[j].startswith('Stop at ')]
+        if len(stops)!=1 or lines[stops[0]]!=f'Stop at 0x{last:06x}: (104) Breakpoint':raise ValueError('Missing or unexpected execution completion')
+        end=stops[0]
+        if start<binding<end:raise ValueError('HID setup inside execution window')
+        if start<binding:continue
+        if extra_binding_index is not None and start<extra_binding_index:raise ValueError('Extra callback not installed before execution')
+        covered.update(range(start+2,end))
+        window=lines[start+2:end];found=[]
+        for n,line in enumerate(window):
+            if line=='@@HID':
+                packet,k=hid_dump(window,n+1,address,width)
+                if k>=len(window) or window[k]!='@@HIDPTR':raise ValueError('Missing HID pointer marker')
+                pointer,k=hid_dump(window,k+1,0x82,2)
+                space=None
+                if capture_b:
+                    if k>=len(window) or window[k]!='@@HIDB':raise ValueError('Missing HID space marker')
+                    k+=1
+                    b=re.fullmatch(r"0xf0 B:\s+0b([01]{8}) 0x([0-9a-f]{2}) '(.)'\s+(\d+)(?: \(\s*(-\d+)\))?",window[k] if k<len(window) else '')
+                    if not b:raise ValueError('Malformed HID space byte')
+                    space=int(b[2],16)
+                    if int(b[1],2)!=space or int(b[4])!=space or b[3]!=(chr(space) if 32<=space<=126 else '.') or (b[5] is not None and int(b[5])!=space-256):raise ValueError('Malformed HID space byte')
+                    k+=1
+                if k>=len(window) or window[k]!=f'Simulation started, PC=0x{callback:06x}':raise ValueError('Wrong HID callback resume')
+                if pointer!=[address&255,address>>8]:raise ValueError('Wrong HID pointer')
+                hid.append(packet);pointers.append(pointer);spaces.append(space);found.append(k)
+        extra_found=[]
+        for n,line in enumerate(window):
+            if line=='@@EXTRA':
+                if extra_callback is None:raise ValueError('Unexpected extra callback')
+                _,k=hid_dump(window,n+1,extra_address,3)
+                if k>=len(window) or window[k]!=f'Simulation started, PC=0x{extra_callback:06x}':raise ValueError('Wrong extra callback resume')
+                extra_found.append(k)
+        if extra_callback is not None and extra_found!=[n for n,line in enumerate(window) if line==f'Simulation started, PC=0x{extra_callback:06x}']:raise ValueError('Unmatched extra callback')
+        callbacks=[n for n,line in enumerate(window) if line==f'Simulation started, PC=0x{callback:06x}']
+        allowed={f'Simulation started, PC=0x{callback:06x}'}
+        if extra_callback is not None:allowed.add(f'Simulation started, PC=0x{extra_callback:06x}')
+        if any(line.startswith('Simulation started, PC=') and line not in allowed for line in window):raise ValueError('Unexpected callback resume')
+        if callbacks!=found or window.count('@@HIDPTR')!=len(found) or (capture_b and window.count('@@HIDB')!=len(found)):raise ValueError('Unmatched HID callback')
+        resumes+=len(callbacks)
+    markers={'@@HID','@@HIDPTR','@@HIDB','@@EXTRA',f'Simulation started, PC=0x{callback:06x}'}
+    if extra_callback is not None:markers.add(f'Simulation started, PC=0x{extra_callback:06x}')
+    if any(line in markers and i not in covered for i,line in enumerate(lines) if i>binding):raise ValueError('Callback outside execution window')
+    return hid,pointers,spaces,resumes
+
 class Trace:
     def __init__(self,fw,name):
         self.fw,self.name=fw,name;self.commands=fw.initialize();self.expected=[];self.event_index=0;self.width=8;self.extra_address=None;self.macro_fixtures=[]
@@ -17,9 +105,14 @@ class Trace:
         self.report_symbol=projected[0] if projected else '_actual_keyboard_report'
         addr=self.report_address=fw.address(self.report_symbol)
         # Observe after host_keyboard_send assigns the outgoing NKRO report ID.
-        self.commands += ['timer add event','timer add macro',f'break {fw.address("_ak820_host_send_keyboard"):#x}',f'commands 1 "echo @@HID; dump xram {addr:#x} {addr+7:#x} 16; echo @@HIDPTR; dump sfr 0x82 0x83 16; fill xram 0x2201 0x2203 0x12; run"']
+        self.commands += ['timer add event','timer add macro',f'break {fw.address("_ak820_host_send_keyboard"):#x}',f'commands 1 "echo @@HID; dump xram {addr:#x} {addr+7:#x} 16; echo @@HIDPTR; dump sfr 0x82 0x83 16; echo @@HIDB; dump sfr 0xf0 0xf0 16; fill xram 0x2201 0x2203 0x12; run"']
         self.commands += [linked.memory('rom',0xc740,[0]*256)]
         for layer in range(1,6):self.commands += [linked.memory('rom',0xc740+layer*256,[0,1]*128)]
+    def set_report_width(self,width):
+        old=f'dump xram {self.report_address:#x} {self.report_address+7:#x} 16;'
+        new=f'dump xram {self.report_address:#x} {self.report_address+width-1:#x} 16;'
+        if sum(c.count(old) for c in self.commands)!=1:raise ValueError('Missing or ambiguous HID dump command')
+        self.commands=[c.replace(old,new) for c in self.commands];self.width=width
     def capture_extra(self):
         self.extra_address=self.fw.address(next(n for n in self.fw.symbols if n.startswith('_host_extra_send_report_100')))
         self.commands += [f'break {self.fw.address("_send_extra"):#x}',f'commands 2 "echo @@EXTRA; dump xram {self.extra_address:#x} {self.extra_address+2:#x} 16; fill xram 0x2201 0x2203 0x12; run"']
@@ -53,12 +146,7 @@ class Trace:
     def run(self):
         log,stack=self.fw.execute(self.name,self.commands)
         checks=[{'label':tag,'actual':self.fw.extract(log,tag,self.fw.address(sym),len(value)),'expected':value} for tag,sym,value in self.expected]
-        hid=[]
-        for section in log.split('@@HID\n')[1:]:
-            try:hid.append(self.fw.extract('@@packet\n'+section,'packet',self.report_address,self.width))
-            except ValueError:pass
-        pointers=[self.fw.extract('@@pointer\n'+section,'pointer',0x82,2) for section in log.split('@@HIDPTR\n')[1:]]
-        pointer_ok=len(pointers)==len(hid) and all(p==[self.report_address&255,self.report_address>>8] for p in pointers)
+        hid,pointers,spaces,resumes=observe_hid(log,self.commands,self.fw.address('_ak820_host_send_keyboard'),self.report_address,self.width,extra_callback=self.fw.address('_send_extra') if self.extra_address is not None else None,extra_address=self.extra_address)
         extra=[]
         if self.extra_address is not None:
             for section in log.split('@@EXTRA\n')[1:]:
@@ -67,7 +155,7 @@ class Trace:
         macro_clocks=[int(n) for n in re.findall(r'timer #\d+\("macro"\).*?\((\d+) clks\)',log)]
         event_clocks=[int(n) for n in re.findall(r'timer #\d+\("event"\).*?\((\d+) clks\)',log)]
         clocks=re.findall(r'Total time since last reset=.*?\((\d+) clks\)',log)
-        return dict(name=self.name,pass_=pointer_ok and all(c['actual']==c['expected'] for c in checks),checks=checks,hid_send_trace=hid,outgoing_report_address=self.report_address,outgoing_pointer_checks=pointers,extra_callback_trace=extra,macro_fixtures=self.macro_fixtures,macro_clock_samples=macro_clocks,event_clock_samples=event_clocks,max_event_clocks=max(event_clocks,default=0),simulated_clocks=int(clocks[-1]) if clocks else None,**stack)
+        return dict(name=self.name,pass_=all(c['actual']==c['expected'] for c in checks),checks=checks,hid_send_trace=hid,outgoing_report_address=self.report_address,outgoing_pointer_checks=pointers,outgoing_pointer_space_bytes=spaces,outgoing_pointer_space_validated=False,hid_callback_resumes=resumes,extra_callback_trace=extra,macro_fixtures=self.macro_fixtures,macro_clock_samples=macro_clocks,event_clock_samples=event_clocks,max_event_clocks=max(event_clocks,default=0),simulated_clocks=int(clocks[-1]) if clocks else None,**stack)
 
 def vial(fw,command):
     return [linked.memory('xram',fw.address('_raw_buffer'),[0xfe,command]+[0]*30)]+fw.write('_vial_handle_cmd_PARM_2',[32])+fw.call('_vial_handle_cmd',fw.address('_raw_buffer'))

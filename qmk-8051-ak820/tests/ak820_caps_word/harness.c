@@ -60,6 +60,7 @@ static void cancel_shift_candidate(void) {
     caps_word_off(); clear_weak_mods(); mods = 0;
 }
 
+#if AK820_CAPS_WORD_BOTH_SHIFTS && AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT && !defined(AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM)
 static void shift_activation(void) {
     /* Physical left+right Shift activates on the second press, while the
      * existing real Shift owner remains intact after Caps Word cleanup. */
@@ -154,6 +155,46 @@ static void shift_activation(void) {
     puts("PASS: physical both-Shift and double-left-Shift Caps Word gestures, exact deadline, cancellation, held modifiers, and timer wrap/idle.");
 }
 
+#endif
+
+static void gesture_controls(void) {
+#ifdef AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM
+    const uint16_t term = AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM;
+#else
+    const uint16_t term = GET_TAPPING_TERM(KC_LSFT, 0);
+#endif
+    for (unsigned generated = 0; generated < 4; ++generated) {
+        for (unsigned order = 0; order < 2; ++order) {
+            cancel_shift_candidate();
+            owned_mods = MOD_BIT(order ? KC_RSFT : KC_LSFT);
+            repeat_count = generated == 1;
+            ak820_macro_primitive = generated == 2;
+            physical_event(order ? KC_LSFT : KC_RSFT, true, 10, generated == 3 ? MATRIX_ROWS : 1, 0);
+            assert(is_caps_word_on() == (AK820_CAPS_WORD_BOTH_SHIFTS && !generated));
+            owned_mods = 0; repeat_count = 0; ak820_macro_primitive = false;
+        }
+        for (unsigned boundary = 0; boundary < 3; ++boundary) {
+            cancel_shift_candidate();
+            const uint16_t start = 65500;
+            physical_event(KC_LSFT, true, start, 1, 0);
+            physical_event(KC_LSFT, false, start, 1, 0);
+            repeat_count = generated == 1;
+            ak820_macro_primitive = generated == 2;
+            physical_event(KC_LSFT, true, (uint16_t)(start + term - 1 + boundary), generated == 3 ? MATRIX_ROWS : 1, 0);
+            assert(is_caps_word_on() == (AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT && !generated && boundary == 0));
+            repeat_count = 0; ak820_macro_primitive = false;
+        }
+    }
+    cancel_shift_candidate();
+    physical_event(KC_LSFT, true, 100, 1, 0);
+    physical_event(KC_LSFT, true, 100, 1, 0);
+    assert(!is_caps_word_on());
+    cancel_shift_candidate();
+    assert(!key(QK_CAPS_WORD_TOGGLE, true) && is_caps_word_on());
+    caps_word_off();
+    puts("PASS: independent gestures, generated exclusions and wrapped interval boundaries.");
+}
+
 #ifdef TEST_ACTION_TAPPING
 static void layer_tap_bounds(void) {
     /* All 16 layers and all 256 tap keycodes: holding LT preserves Caps
@@ -182,7 +223,10 @@ static void layer_tap_bounds(void) {
 
 int main(void) {
     assert(!is_caps_word_on());
+#if AK820_CAPS_WORD_BOTH_SHIFTS && AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT && !defined(AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM)
     shift_activation();
+#endif
+    gesture_controls();
 #ifdef AK820_BOARD
     /* A physical selector press changes only the Caps Word ruleset; release
      * must not toggle it a second time. A change ends the active word. */

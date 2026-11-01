@@ -135,6 +135,7 @@ class Analyzer:
         self.active = []
         self.owners = {pc + i: pc for pc, raw in instructions.items() for i in range(len(raw))}
         self.decoded_from_image = set()
+        self._proof_claims = None
         self.pointer_transfers = {}
         self.guarded_callback_transfers = {}
         self.guard_reads = {}
@@ -298,7 +299,26 @@ class Analyzer:
         self.instructions[pc] = raw
         self.owners.update((pc+i, pc) for i in range(size))
         self.decoded_from_image.add(pc)
+        if self._proof_claims is not None:
+            self._proof_claims.append(pc)
         return raw
+
+    def claim_proof(self, recognizer, *args):
+        """Commit decoded instruction ownership only for a successful proof."""
+        assert self._proof_claims is None
+        self._proof_claims = []
+        result = None
+        try:
+            result = recognizer(*args)
+            return result
+        finally:
+            if result is None:
+                for pc in self._proof_claims:
+                    raw = self.instructions.pop(pc)
+                    for address in range(pc, pc + len(raw)):
+                        del self.owners[address]
+                    self.decoded_from_image.remove(pc)
+            self._proof_claims = None
 
     def split_dispatch(self, pc):
         """Recognize one complete SDCC bounded split-table idiom, not a JMP alone.
@@ -409,7 +429,9 @@ class Analyzer:
         return targets
 
     def peek_instruction(self, pc):
-        """Read a candidate idiom without claiming speculative instruction bytes."""
+        """Read an idiom, claiming bytes only within a proof transaction."""
+        if self._proof_claims is not None:
+            return self.instruction(pc)
         if pc in self.owners and self.owners[pc] != pc:
             return None
         if pc in self.instructions:
@@ -744,8 +766,16 @@ class Analyzer:
             active.remove(entry)
             return None
         getter_peak = getter(int.from_bytes(r[14][1:], 'big'))
-        def body(call, expected):
+        def body(call, expected, allow_tail=False):
             cursor = int.from_bytes(call[1:], 'big')
+            row = self.peek_instruction(cursor)
+            if allow_tail and row:
+                if len(row) == 2 and row[0] & 0x1f == 0x01:
+                    seen.add(cursor)
+                    cursor = ((cursor + 2) & 0xf800) | ((row[0] & 0xe0) << 3) | row[1]
+                elif len(row) == 3 and row[0] == 0x02:
+                    seen.add(cursor)
+                    cursor = int.from_bytes(row[1:], 'big')
             offset = 0
             while offset < len(expected):
                 row = self.peek_instruction(cursor+offset)
@@ -756,9 +786,16 @@ class Analyzer:
         if (multiply_call is not None and not body(multiply_call, b'\x75\xf0\x02\xa4\x22')):
             return None
         if (getter_peak is None or not body(r[29], b'\x35\xf0\xf5\x83\xe4\x93\x22')
-                or not body(r[37], b'\x8d\x82\x8e\x83\x22')
+                or not body(r[37], b'\x8d\x82\x8e\x83\x22', allow_tail=True)
                 or not body(r[38], b'\xe4\x73')):
             return None
+        # Speculative image decoding does not claim bytes; check the whole proof.
+        end = -1
+        for address in sorted(set(addresses) | seen):
+            row = self.peek_instruction(address)
+            if row is None or address < end:
+                return None
+            end = address + len(row)
         # Nonzero normalized action and carry guard prove 1..count-1.
         count = 256-r[7][1]
         indices = {index ^ shift for index in range(count-1) for shift in (0,1)}
@@ -801,13 +838,21 @@ class Analyzer:
             if not raw:
                 fail(pc, 'missing, reserved or overlapping image instruction'); continue
             if pc in self.guard_reads and self.guard_reads[pc][0] in flags:
+                def guard_proof():
+                    if (self.peek_instruction(pc+3) == b'\xe0'
+                            and self.peek_instruction(pc+4) == b'\x60\x01'
+                            and self.peek_instruction(pc+6) == b'\x22'):
+                        return True
+                    return None
+                if self.claim_proof(guard_proof) is None:
+                    fail(pc, 'missing, reserved or overlapping guard instruction'); continue
                 transitive.update((pc+3,pc+4))
                 work.append((self.guard_reads[pc][1], height, flags))
                 continue
             if pc in self.guard_writes:
                 cell, owned = self.guard_writes[pc]
                 flags = flags | {cell} if owned else flags - {cell}
-            callback_dispatch = self.guarded_rom_callback_dispatch(pc)
+            callback_dispatch = self.claim_proof(self.guarded_rom_callback_dispatch, pc)
             if callback_dispatch is not None:
                 self.guarded_callback_transfers[pc] = callback_dispatch
                 work.append((callback_dispatch['default'], height, flags))
@@ -819,7 +864,7 @@ class Analyzer:
                     transitive.update(child['reachable'])
                     failures.extend(item for item in child['unresolved'] if item not in failures)
                 continue
-            compact = self.compact_rom_callback_dispatch(pc)
+            compact = self.claim_proof(self.compact_rom_callback_dispatch, pc)
             if compact is not None:
                 self.guarded_callback_transfers[pc] = compact
                 transitive.update(compact['reachable'])
@@ -834,7 +879,7 @@ class Analyzer:
                     transitive.update(child['reachable'])
                     failures.extend(item for item in child['unresolved'] if item not in failures)
                 continue
-            pointer = self.rom_pointer_thunk(pc)
+            pointer = self.claim_proof(self.rom_pointer_thunk, pc)
             if pointer is not None:
                 child = self.bound(pointer['target'], flags)
                 maximum = max(maximum, height + pointer['peak'],
@@ -845,38 +890,38 @@ class Analyzer:
                 self.pointer_transfers[pc] = pointer
                 work.append((pointer['continuation'], height + pointer['height_after_return'], flags))
                 continue
-            pop_split = self.guarded_pop_split_dispatch(pc)
+            pop_split = self.claim_proof(self.guarded_pop_split_dispatch, pc)
             if pop_split is not None:
                 transitive.update(pop_split['reachable'])
                 work.extend((target, height + pop_split['stack_delta'], flags)
                             for target in pop_split['targets'])
                 continue
-            dispatch = self.split_dispatch(pc)
+            dispatch = self.claim_proof(self.split_dispatch, pc)
             if dispatch is not None:
                 work.extend((target, height - 1, flags) for target in dispatch)
                 continue
-            helper_dispatch = self.register_helper_dispatch(pc)
+            helper_dispatch = self.claim_proof(self.register_helper_dispatch, pc)
             if helper_dispatch is None:
-                helper_dispatch = self.masked_helper_dispatch(pc)
+                helper_dispatch = self.claim_proof(self.masked_helper_dispatch, pc)
             if helper_dispatch is not None:
                 targets, helper_seen = helper_dispatch
                 maximum = max(maximum, height + 2)
                 transitive.update(helper_seen)
                 work.extend((target, height, flags) for target in targets)
                 continue
-            dispatch = self.range16_dispatch(pc)
+            dispatch = self.claim_proof(self.range16_dispatch, pc)
             if dispatch is not None:
                 work.extend((target, height, flags) for target in dispatch)
                 continue
-            dispatch = self.masked_bit_dispatch(pc)
+            dispatch = self.claim_proof(self.masked_bit_dispatch, pc)
             if dispatch is not None:
                 work.extend((target, height, flags) for target in dispatch)
                 continue
-            dispatch = self.register_dispatch(pc)
+            dispatch = self.claim_proof(self.register_dispatch, pc)
             if dispatch is not None:
                 work.extend((target, height, flags) for target in dispatch)
                 continue
-            dispatch = self.short_dispatch(pc)
+            dispatch = self.claim_proof(self.short_dispatch, pc)
             if dispatch is not None:
                 work.extend((target, height, flags) for target in dispatch)
                 continue

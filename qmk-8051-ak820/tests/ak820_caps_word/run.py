@@ -34,12 +34,18 @@ def main():
         work = Path(temp)
         (work / '_timer.h').write_text('#define FAST_TIMER_T_SIZE 16\n')
         (work / 'host.c').write_text((HERE / 'harness.c').read_text().replace('/* ACTUAL_CAPS_WORD */', '\n'.join(fragments)))
-        for profile in args.profile or ('active', 'tapping'):
+        variants = [(profile, []) for profile in args.profile or ('active', 'tapping')]
+        variants += [(f'gestures-{both}-{double}-{term}',
+                      [f'-DAK820_CAPS_WORD_BOTH_SHIFTS={both}',
+                       f'-DAK820_CAPS_WORD_DOUBLE_LEFT_SHIFT={double}',
+                       *([] if term is None else [f'-DAK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM={term}'])])
+                     for both in (0, 1) for double in (0, 1) for term in (None, 1, 73, 32767)]
+        for profile, defines in variants:
             binary = work / profile
             command = [os.environ.get('CC', 'cc'), '-std=gnu11', '-O1', '-g', '-Wall', '-Wextra',
                        '-Werror', '-Wno-unused-parameter', '-Wno-unknown-pragmas',
                        '-Wno-old-style-declaration', '-fsanitize=address,undefined', '-fno-omit-frame-pointer',
-                       '-DREPEAT_KEY_ENABLE',
+                       '-DREPEAT_KEY_ENABLE', *defines,
                        *(['-DTEST_ACTION_TAPPING'] if profile == 'tapping' else []),
                        '-include', str(root / 'keyboards/ajazz/ak820/config.h'),
                        *['-I' + str(path) for path in (work, root / 'quantum', root / 'quantum/keymap_extras', root / 'quantum/sequencer',
@@ -52,6 +58,14 @@ def main():
             print(profile + ': ' + result.stdout.strip() + result.stderr.strip(), flush=True)
             results.append({'profile': profile, 'pass': result.returncode == 0, 'return_code': result.returncode,
                             'stdout': result.stdout.strip(), 'stderr': result.stderr.strip()})
+    for define in ('AK820_CAPS_WORD_BOTH_SHIFTS=2', 'AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT=-1',
+                   'AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM=0', 'AK820_CAPS_WORD_DOUBLE_LEFT_SHIFT_TERM=32768'):
+        result = subprocess.run([os.environ.get('CC', 'cc'), '-E', '-x', 'c', '-D' + define,
+                                 str(root / 'keyboards/ajazz/ak820/config.h')],
+                                text=True, capture_output=True)
+        rejected = result.returncode != 0 and 'error:' in result.stderr
+        results.append({'profile': 'reject-' + define, 'pass': rejected, 'return_code': result.returncode})
+        print('reject-' + define + ': ' + ('PASS' if rejected else 'FAIL'))
     paths = sources + [root / 'keyboards/ajazz/ak820/config.h', HERE / 'harness.c', HERE / 'run.py']
     report = {'pass': all(item['pass'] for item in results), 'level': 'Host C with ASan/UBSan; no SDCC ABI or hardware proof',
               'tests': results, 'source_sha256': {str(p.relative_to(root) if p.is_relative_to(root) else p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
