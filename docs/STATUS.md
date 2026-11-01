@@ -2,18 +2,19 @@
 
 # Project status
 
-## Current candidate
+## Current release: v0.6.0-beta.5
 
-The current main image ends at `0xc6a5`, below the exclusive `0xc700` CODE
-limit. Its offline stack bound is 165 of 183 bytes. All ten profiles passed
-CI qualification in [CI run 41297661542](https://github.com/dvino/ak820/actions/runs/41297661542),
-but release assembly failed on stale exact-image safety witnesses; publication
-and physical validation remain unconfirmed.
+Beta.5 is published at [GitHub Releases](https://github.com/dvino/ak820/releases/tag/v0.6.0-beta.5),
+from tag source `dfd0770f9ef64bf5c7ab6d40e9f9e7b4354cd2cd`. [CI run
+41351933676](https://github.com/dvino/ak820/actions/runs/41351933676) succeeded
+for all ten offline profiles and release assembly. The release assets were
+validated against API digests and sizes; `SHA256SUMS` contains 234 entries, and
+the ten release IHX files were byte-compared with retained offline-qualified
+original builds.
 
-A fresh split offline run qualified all ten images and remeasured their linked,
-stack, interrupt and regression evidence together. Draft release preparation
-then stopped at the pending settings v3 identity gate; this run does not approve
-a release, a settings write or a physical restore.
+These results establish offline qualification and release assembly, not physical
+keyboard behavior. Physical validation, device writes and persistent settings
+remain untested. Settings v3 public backup/restore gates remain closed.
 
 ## Earlier source experiments
 
@@ -229,12 +230,13 @@ successful Combo outputs. Host tests do not qualify an image: exact-image stack,
 interrupt and regression checks are pending. Catalog profile names and existing
 build metadata do not identify this option; see [Compact Auto Shift](COMPACT_AUTOSHIFT.md).
 
-## v0.6.0-beta.5
+## v0.6.0-beta.5 publication record
 
-The current beta.5 candidate is not yet published. The ten profiles passed offline qualification in
-CI run 41297661542, but release assembly failed because the configuration differs from the reviewed
-exact-image witness. The safety evidence must be updated and checked before
-release. No physical keyboard test is claimed.
+The publication and offline validation details are recorded under [Current release](#current-release-v060-beta5).
+Beta.4's offline test counts and measurements below are historical beta.4
+results, not beta.5 results. The published catalog's own README may still
+contain pre-publication wording; this repository update does not establish that
+packaged documentation was corrected.
 
 ## v0.6.0-beta.4, published 2026-10-28
 
