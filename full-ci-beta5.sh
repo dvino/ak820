@@ -14,9 +14,9 @@ exec docker run --rm --name ak820-beta5-ci --pull=never --network=none \
   --workdir /home/agent/work/ak820 \
   sha256:f611ccf71db2e2d1ad0bb6b40d0218748e41af009fd7eaf7762b41df719a5b9e \
   /usr/bin/env -i PATH=/opt/ak820/venv/bin:/usr/bin:/bin HOME=/tmp LC_ALL=C TZ=UTC \
-  /bin/sh -c "/opt/ak820/venv/bin/python -s tools/build_profile_catalog.py \
+  /bin/sh -c "/usr/bin/python3.12 -s tools/build_profile_catalog.py \
     --build-root qmk-8051-ak820/.build/beta5-ci \
     --output dist/beta5-ci \
     --toolchain /toolchain \
     --qmk-bin /opt/ak820/venv/bin/qmk \
-    --python /opt/ak820/venv/bin/python"
+    --python /usr/bin/python3.12"
