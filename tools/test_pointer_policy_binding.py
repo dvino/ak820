@@ -21,7 +21,9 @@ class PointerBindingTest(unittest.TestCase):
         compiler.write_text('synthetic compiler')
         compiler.chmod(0o755)
         qmk.parent.mkdir(parents=True)
-        environment = {'PATH': str(compiler.parent) + ':' + str(qmk.parent)}
+        environment = {'PATH': str(compiler.parent) + ':' + str(qmk.parent),
+                       'AK820_CAPTURE_BUILD_ROOT': str(build.resolve()),
+                       'AK820_CAPTURE_OBJECT_ROOT': str((root / obj).resolve())}
         units, flags = expected_units('main', obj), expected_flags('main', obj)
         objects = [output[:-2] + '.rel' for output in units]
         sources, artifacts = set(), []
@@ -56,7 +58,7 @@ class PointerBindingTest(unittest.TestCase):
             if wrapper:
                 outer, wrapper_output = argv[4:], output
 
-        directory = '.build/example/default-keymap'
+        directory = str(build / 'default-keymap')
         base = [str(compiler)] + outer
         bootstrap = []
         skip = False
@@ -75,10 +77,19 @@ class PointerBindingTest(unittest.TestCase):
         dependency = bootstrap[:-2].copy()
         dependency[dependency.index('-S')] = '-E'
         final = base + ['-I' + directory]
-        discovery = [arg for arg in final if arg not in ('-c', '-o', wrapper_output)
-                     and not arg.startswith('-Wp,-MD,-MF,')]
-        discovery.insert(1, '-E')
-        discovery.insert(1 + len(flags), '-Wp,-MD,-MF,' + directory + '/final-discovery.d')
+        discovery = []
+        skip = False
+        for arg in final:
+            if skip:
+                skip = False
+            elif arg == '-o':
+                skip = True
+            elif arg == '-c':
+                discovery.append('-E')
+            elif arg.startswith('-Wp,-MD,-MF,'):
+                discovery.append('-Wp,-MD,-MF,' + directory + '/final-discovery.d')
+            else:
+                discovery.append(arg)
         invocations = [{'argv': command, 'cwd': str(root), 'environment': environment, 'exit_code': 0,
                         **({'fresh_dependency': next(arg.removeprefix('-Wp,-MD,-MF,') for arg in command
                                                     if arg.startswith('-Wp,-MD,-MF,'))} if index else {})}

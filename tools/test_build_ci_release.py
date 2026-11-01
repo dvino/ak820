@@ -217,10 +217,17 @@ class AssemblyPreflightTests(unittest.TestCase):
             source_map = ci.ROOT / 'releases/rc6/firmware/application.map'
             rows = []
             measured = {}
+            marker = b'AKL\x01' + (300).to_bytes(2, 'little')
+            marker_record = ':0628A000' + marker.hex().upper()
+            marker_record += f'{(-(0x06 + 0x28 + 0xA0 + sum(marker))) & 0xff:02X}'
+            start_record = ':0130270000' + f'{(-(0x01 + 0x30 + 0x27)) & 0xff:02X}'
             for index, name in enumerate(names):
                 (builds_root/name).mkdir()
                 mapfile = builds_root/name/'ajazz_ak820_vial.map'
-                mapfile.write_bytes(source_map.read_bytes() + f'\npath: /local/{name}\n'.encode())
+                mapfile.write_text('; synthetic test fixture\nC: 000028A0  _ak820_leader_default_marker\n'
+                                   + f'path: /local/{name}\n', encoding='ascii')
+                (builds_root/name/'ajazz_ak820_vial.ihx').write_text(
+                    marker_record + '\n' + start_record + '\n:00000001FF\n', encoding='ascii')
                 ihx = f'{index:064x}'
                 configuration = ak820_profiles.configuration(name)
                 artifact_identity = {'profile': name, 'configuration_sha256': f'{index+60:064x}',
@@ -251,7 +258,8 @@ class AssemblyPreflightTests(unittest.TestCase):
             self.assertEqual(tuple(builds), names)
             # CI map/report paths change raw hashes, while linked symbols stay stable.
             changed_map = builds_root/'main'/'ajazz_ak820_vial.map'
-            changed_map.write_bytes(source_map.read_bytes() + b'\npath: /ci/profiles/main\n')
+            changed_map.write_text('; synthetic test fixture\nC: 000028A0  _ak820_leader_default_marker\n'
+                                   'path: /ci/profiles/main\n', encoding='ascii')
             measured['main']['identity']['map_sha256'] = ci.sha(changed_map)
             measured['main']['identity']['build_report_sha256'] = 'e' * 64
             measured['main']['identity']['source_manifest_sha256'] = 'd' * 64
