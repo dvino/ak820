@@ -34,6 +34,8 @@ validator passed there for each retained image and its staged witnesses. The
 lead-run `work-logs/beta5-verify-policy-20261101.py` and its JSON result also
 record the source, catalog, staged-policy and test-log cross-checks. This is an
 offline pre-commit check: the final committed tree, CI rebuild, release
-assembly and downloaded assets still require validation. There was no hardware
+assembly and downloaded assets still require validation. The first local policy
+commit omitted eleven required logs because Git ignored them; the follow-up
+commit explicitly adds those unchanged logs before committed-tree validation. There was no hardware
 access, device write, reset or flash; physical behavior and settings persistence
 remain untested. Public settings v3 and device-write gates remain closed.
