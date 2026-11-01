@@ -1,0 +1,71 @@
+{
+  "foreground_bound": 105,
+  "format": "ak820-runtime-safety-1",
+  "hardware_validated": false,
+  "identity": {
+    "build_report_sha256": "d13d88be6e5fdeac20487b88a803caa773261433c1ab5b10024c7cc06ed3c715",
+    "compiler_sha256": "3387975f6c295af8913065804c2f7f8d54a668849237ba98b119ad9b38d27891",
+    "configuration_sha256": "ca8a06c312850c8bf4f19381f19cd0db2ae2ed07a5228af91d58d06a2b544374",
+    "ihx_sha256": "ed78426a8c0841c2ec26ba9a72dc676cb61b7a579fda066215118e850972d360",
+    "map_sha256": "971525549e48e813406bf9d2791a79d00b3651c54e4750b90aaf9fcf196e7f53",
+    "mem_sha256": "6d1f9827a54f1f5a977a5e4cb4cf14f9e818de63f3bca8f8aa5c80c0822463ab",
+    "nvm_schema": 532483,
+    "profile": "mmo",
+    "source_manifest_sha256": "b92b14d815ee079df9deaeacb03327903dc5bf1585734632cec8169d4fbd7265"
+  },
+  "irq_bound": 60,
+  "limits": [
+    "Control-stack bound from CRT entry with IE=IE_EX=0, valid memory accesses and the bank-0 SDCC ABI.",
+    "MCS-51 in-service/RETI semantics bound all three distinct interrupt sources; no priority-count assumption.",
+    "OEM wrapper instructions are a pinned public reference, not a connected-device identity check.",
+    "The packer supplies disabled IRQs at CRT entry; pre-CRT trial erase is checked separately.",
+    "No physical timing, flash, power-loss or device test; release and settings-transition approval are separate."
+  ],
+  "logs": {
+    "irq": "8deffffbaf180810e1c711be6636c31151a31879d5892f5449c283b835c7ec93",
+    "startup": "95ac75225e330a4a5741068c773c9169d82ec776e8e3b55d3e499327151b6bcc"
+  },
+  "main_entry_frame_bound": 2,
+  "passed": true,
+  "physical_device_commands": 0,
+  "pre_main_bound": 2,
+  "release_approved": false,
+  "reports": {
+    "foreground": {
+      "path": "runtime-stack.json",
+      "sha256": "a45e501e68503415aec3ee0f2fc680add2d0c1b57c0e14a5dbdaadfb5e3de0e1"
+    },
+    "irq": {
+      "path": "runtime-safety/irq/results.json",
+      "sha256": "8deffffbaf180810e1c711be6636c31151a31879d5892f5449c283b835c7ec93"
+    },
+    "startup": {
+      "path": "runtime-safety/startup.json",
+      "sha256": "469115ef442654d7f28f2cfe56986212bcf0eb2059ba715b0faad62987ecc488"
+    }
+  },
+  "root_bounds": {
+    "_USB_DeviceInterrupt": 5,
+    "_ak820_led_irq": 2,
+    "_ak820_timer_irq": 2,
+    "_main": 105
+  },
+  "simulator_sha256": "61b7a6a84d3f5702c7e45df5b019cf0610d13f9d74046e69820291290d1e5cdd",
+  "source_files": {
+    "qmk-8051-ak820/tests/ak820_emitted/run.py": "799edceaf7d53540aa4f435b249c837edfdd2ba41132d6649ebd54edcac3e6a3",
+    "qmk-8051-ak820/tests/ak820_iap/run.py": "2305ac8cfc95e369d6b556445961a31fb932e4b223aaf2c60802b17cbf355b97",
+    "qmk-8051-ak820/tests/ak820_irq/oem-wrappers.json": "7c0cf2c9853e8ad8153a7e3abc95c246b4a485c410c7bdf3804236370933b0ab",
+    "qmk-8051-ak820/tests/ak820_irq/run.py": "9423f4b07973440e682bd78b9d7f4493f5c668abed10070687a6d153e2d971e4",
+    "qmk-8051-ak820/tests/ak820_stack/analyze.py": "461f9437ea47dfd62a21f34c5120f743370b3223785213d72e0abfde6e92bcc9",
+    "qmk-8051-ak820/tests/ak820_startup/stack_contract.py": "5f607382c0aa7d9f1deeb309cb44243d2657f9d73db30cbe9d6df9a56b34b4ed",
+    "qmk-8051-ak820/util/ak820_linked_inventory.py": "b2cd080da7dcce101105c9a3ed1e22aa35fab63b26d6d0d1628428f61dd189b1",
+    "qmk-8051-ak820/util/pack_ak820.py": "1714b3ed879232326326422ab852e1cbf6984ef40e18ceb1c425d4025b67dcb3",
+    "tools/ak820_runtime_safety.py": "09276f2659e53dfbee17e59887ef8e4d6052fb3e3c4232d617d9c6f4ccbe1503",
+    "tools/configure_firmware.py": "6b00a2b98a35b9b73cfd42a7066e61c0260a6ad23d5911bfe64803de335c99b5"
+  },
+  "stack_bound": 167,
+  "stack_capacity": 181,
+  "stack_margin": 14,
+  "unresolved_roots": [],
+  "whole_program_stack_qualified": true
+}
