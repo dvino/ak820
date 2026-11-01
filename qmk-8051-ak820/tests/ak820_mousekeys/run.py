@@ -54,9 +54,10 @@ def cadence_case(fw, setup, name, code, period, expected, start):
     observations = {}
     for label, _, count, report in steps:
         begin, end = '@@BEGIN_' + label + '\n', '@@END_' + label + '\n'
-        if log.count(begin) != 1 or log.count(end) != 1:
+        lines = log.splitlines(keepends=True)
+        if sum(1 for line in lines if line == begin) != 1 or sum(1 for line in lines if line == end) != 1:
             raise ValueError('Missing or ambiguous cadence markers: ' + label)
-        segment = log.split(begin, 1)[1].split(end, 1)[0]
+        segment = ''.join(lines[lines.index(begin) + 1:lines.index(end)])
         observations[label] = {'attempts': segment.count('@@MOUSE_SEND\n'),
                                'report': fw.extract(segment, label + '@', fw.address('_mouse_snapshot'), 6)}
     expected_steps = {label: {'attempts': count, 'report': report} for label, _, count, report in steps}
